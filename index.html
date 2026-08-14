@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.2.1</title>
+<title>Mini&Me Basketball v0.2.2</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -139,6 +139,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 
 
 .leagueModeTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 12px}
+.leagueModeTabs.three{grid-template-columns:repeat(3,1fr)}
 .leagueModeTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:11px;border-radius:12px;font-weight:800}
 .leagueModeTabs button.active{background:var(--accent);color:#17100a;border-color:var(--accent)}
 .scheduleRow{display:grid;grid-template-columns:70px 1fr 74px;gap:8px;align-items:center;padding:11px 4px;border-top:1px solid #222b36;font-size:12px}
@@ -177,6 +178,22 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .boxRow .pname b{display:block;font-size:12px}.boxRow .pname small{color:var(--muted);font-size:9px}
 .boxRow .num{text-align:center}
 
+
+.leaderSection{margin:14px 0}
+.leaderTitle{display:flex;justify-content:space-between;align-items:end;margin:0 2px 7px}
+.leaderTitle b{font-size:14px}.leaderTitle small{color:var(--muted);font-size:10px}
+.leaderRow{display:grid;grid-template-columns:28px 1fr 58px;gap:8px;align-items:center;padding:10px 4px;border-top:1px solid #222b36;cursor:pointer}
+.leaderRow:first-child{border-top:0}
+.leaderRank{font-weight:900;color:var(--muted);text-align:center}
+.leaderPlayer b{display:block;font-size:13px}.leaderPlayer small{color:var(--muted);font-size:10px}
+.leaderValue{text-align:right;font-size:17px;font-weight:950;color:var(--accent2)}
+.shootingLine{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:7px}
+.shootingLine span{text-align:center;background:#141b24;border-radius:9px;padding:8px 4px}
+.shootingLine b{display:block;font-size:15px}.shootingLine small{color:var(--muted);font-size:8px}
+.secondaryStats{margin-top:6px}
+.seasonEndBanner{background:linear-gradient(180deg,#1b2532,#121820);border:1px solid var(--accent);border-radius:16px;padding:15px;margin:10px 0}
+.seasonEndBanner b{display:block;font-size:18px;margin:4px 0}.seasonEndBanner p{margin:0;color:var(--muted);font-size:12px;line-height:1.4}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -189,7 +206,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.2.1 • Game Detail</div>
+      <div class="build">v0.2.2 • League Leaders</div>
     </div>
   </section>
 
@@ -220,7 +237,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>Player box scores and persistent season statistics are now recorded for every simulated game.</p></div>
+      <div class="feed"><div class="dot"></div><p>League leaders and expanded player season statistics are now available throughout the season.</p></div>
     </div>
   </section>
 
@@ -246,8 +263,9 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 
   <section id="league" class="screen">
     <div class="header"><div><div class="kicker">League</div><div class="teamName">2026/27 Season</div><div class="season">30 Teams • 82 Games • East & West</div></div></div>
-    <div class="leagueModeTabs">
+    <div class="leagueModeTabs three">
       <button id="standingsTab" class="active" onclick="setLeagueMode('standings',this)">Standings</button>
+      <button id="leadersTab" onclick="setLeagueMode('leaders',this)">Leaders</button>
       <button id="scheduleTab" onclick="setLeagueMode('schedule',this)">Schedule</button>
     </div>
     <div id="leagueUniverse"></div>
@@ -257,10 +275,10 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.2.1</p></div>
-      <div class="feed"><p><b>Milestone:</b> Player box scores, player of the game, team shooting/rebounding summaries and persistent season statistics.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.2.2</p></div>
+      <div class="feed"><p><b>Milestone:</b> League leaders, expanded player season cards, leaderboard navigation and season-end statistical visibility.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> v0.2.2 league leaders, player season cards and deeper statistical presentation.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.2.3 season review foundation and end-of-season progression shell.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -314,8 +332,18 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     </div>
     <div class="profileStrip"><span id="playerArchetype">Two-Way Wing</span><span id="playerRole">Starter</span></div>
     <div class="careerPlaceholder">
-      <div class="kicker">2026/27</div>
+      <div class="kicker">2026/27 Season</div>
       <div class="profileStatLine"><span><b id="playerPpg">—</b><small>PPG</small></span><span><b id="playerRpg">—</b><small>RPG</small></span><span><b id="playerApg">—</b><small>APG</small></span></div>
+      <div class="profileStatLine secondaryStats">
+        <span><b id="playerSpg">—</b><small>SPG</small></span>
+        <span><b id="playerBpg">—</b><small>BPG</small></span>
+        <span><b id="playerMpg">—</b><small>MPG</small></span>
+      </div>
+      <div class="shootingLine" id="playerShootingLine">
+        <span><b>—</b><small>FG%</small></span>
+        <span><b>—</b><small>3PT%</small></span>
+        <span><b>—</b><small>GP/GS</small></span>
+      </div>
       <p id="playerSeasonDetail">Season statistics will populate after games are played.</p>
     </div>
     <button class="secondary" onclick="closePlayer()">Close Player</button>
@@ -334,7 +362,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.2.1";
+const VERSION="0.2.2";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -607,16 +635,20 @@ function openPlayer(id){
   document.getElementById('playerRole').textContent=p.role;
   const s=activeSave?.seasonState?.playerStats?.[p.id];
   if(s&&s.gp){
-    document.getElementById('playerPpg').textContent=(s.pts/s.gp).toFixed(1);
-    document.getElementById('playerRpg').textContent=(s.reb/s.gp).toFixed(1);
-    document.getElementById('playerApg').textContent=(s.ast/s.gp).toFixed(1);
-    const fg=s.fga?(100*s.fgm/s.fga).toFixed(1):"—";
-    const tp=s.tpa?(100*s.tpm/s.tpa).toFixed(1):"—";
-    document.getElementById('playerSeasonDetail').textContent=`${s.gp} GP • ${s.gs} GS • ${(s.min/s.gp).toFixed(1)} MPG • ${fg}% FG • ${tp}% 3PT`;
+    const ppg=s.pts/s.gp,rpg=s.reb/s.gp,apg=s.ast/s.gp,spg=s.stl/s.gp,bpg=s.blk/s.gp,mpg=s.min/s.gp;
+    const fg=s.fga?(100*s.fgm/s.fga):0;
+    const tp=s.tpa?(100*s.tpm/s.tpa):0;
+    document.getElementById('playerPpg').textContent=ppg.toFixed(1);
+    document.getElementById('playerRpg').textContent=rpg.toFixed(1);
+    document.getElementById('playerApg').textContent=apg.toFixed(1);
+    document.getElementById('playerSpg').textContent=spg.toFixed(1);
+    document.getElementById('playerBpg').textContent=bpg.toFixed(1);
+    document.getElementById('playerMpg').textContent=mpg.toFixed(1);
+    document.getElementById('playerShootingLine').innerHTML=`<span><b>${fg.toFixed(1)}%</b><small>FG%</small></span><span><b>${tp.toFixed(1)}%</b><small>3PT%</small></span><span><b>${s.gp}/${s.gs}</b><small>GP/GS</small></span>`;
+    document.getElementById('playerSeasonDetail').textContent=`${s.pts} PTS • ${s.reb} REB • ${s.ast} AST • ${s.stl} STL • ${s.blk} BLK total`;
   }else{
-    document.getElementById('playerPpg').textContent="—";
-    document.getElementById('playerRpg').textContent="—";
-    document.getElementById('playerApg').textContent="—";
+    ["playerPpg","playerRpg","playerApg","playerSpg","playerBpg","playerMpg"].forEach(x=>document.getElementById(x).textContent="—");
+    document.getElementById('playerShootingLine').innerHTML='<span><b>—</b><small>FG%</small></span><span><b>—</b><small>3PT%</small></span><span><b>—</b><small>GP/GS</small></span>';
     document.getElementById('playerSeasonDetail').textContent="Season statistics will populate after games are played.";
   }
   document.getElementById('playerModal').classList.add('show');
@@ -1017,13 +1049,32 @@ function refreshSeasonUI(){
   }else{
     document.getElementById('nextOpponent').textContent="Regular Season Complete";
     document.getElementById('nextVenue').textContent="82 GAMES";
-    document.getElementById('nextMeta').textContent="Playoffs arrive in a later v0.4.x phase";
+    document.getElementById('nextMeta').textContent="Season Review progression begins in the next development phase";
     document.getElementById('simGameBtn').disabled=true;
     document.getElementById('simWeekBtn').disabled=true;
   }
   renderLastResult();
+  renderSeasonEndBanner();
   renderLeague();
 }
+
+function renderSeasonEndBanner(){
+  const nextCard=document.querySelector('#home .card.next');
+  if(!nextCard||!activeSave?.seasonState)return;
+  let banner=document.getElementById('seasonEndBanner');
+  const st=activeSave.seasonState.standings[activeSave.teamId];
+  const complete=(st.w+st.l)>=82;
+  if(!complete){
+    if(banner)banner.remove();
+    return;
+  }
+  if(!banner){
+    banner=document.createElement('div');banner.id='seasonEndBanner';banner.className='seasonEndBanner';
+    nextCard.insertAdjacentElement('afterend',banner);
+  }
+  banner.innerHTML=`<div class="kicker">Regular Season Complete</div><b>${st.w}–${st.l} • ${userConferenceRank()} Conference</b><p>Your full season statistics and league leaders are now available. Playoffs and formal Season Review progression will be introduced in the next major phase.</p>`;
+}
+
 function renderLastResult(){
   const wrap=document.getElementById('lastResultCard');if(!wrap||!activeSave?.seasonState)return;
   const id=activeSave.seasonState.lastGameId;
@@ -1071,9 +1122,65 @@ function setLeagueConference(conf,btn){
   if(btn)btn.classList.add('active');
   renderLeague();
 }
+
+function statAverage(playerId,key){
+  const s=activeSave?.seasonState?.playerStats?.[playerId];
+  if(!s||!s.gp)return 0;
+  return (s[key]||0)/s.gp;
+}
+function qualifiedPlayers(){
+  if(!activeSave?.seasonState?.playerStats)return [];
+  const teamGames=Object.values(activeSave.seasonState.standings||{}).map(s=>(s.w||0)+(s.l||0));
+  const leagueMax=Math.max(1,...teamGames);
+  const minGames=Math.max(1,Math.floor(leagueMax*.45));
+  return PLAYERS.filter(p=>{
+    const s=activeSave.seasonState.playerStats[p.id];
+    return s&&s.gp>=minGames;
+  });
+}
+function topPlayersBy(key,count=5){
+  return qualifiedPlayers().map(p=>{
+    const s=activeSave.seasonState.playerStats[p.id];
+    return {p,s,value:statAverage(p.id,key)};
+  }).sort((a,b)=>b.value-a.value||b.p.ovr-a.p.ovr).slice(0,count);
+}
+function shootingPercent(playerId,madeKey,attKey){
+  const s=activeSave?.seasonState?.playerStats?.[playerId];
+  if(!s||!s[attKey])return 0;
+  return 100*s[madeKey]/s[attKey];
+}
+function renderLeaders(){
+  const el=document.getElementById('leagueUniverse');if(!el||!activeSave)return;
+  const sections=[
+    ["Scoring","PTS",topPlayersBy("pts"),"PPG"],
+    ["Rebounding","REB",topPlayersBy("reb"),"RPG"],
+    ["Assists","AST",topPlayersBy("ast"),"APG"],
+    ["Steals","STL",topPlayersBy("stl"),"SPG"],
+    ["Blocks","BLK",topPlayersBy("blk"),"BPG"]
+  ];
+  el.innerHTML='<div class="notice">League leaders use per-game averages and require a meaningful number of games played relative to the current point of the season.</div>';
+  sections.forEach(([title,abbr,rows,suffix])=>{
+    const wrap=document.createElement('div');wrap.className='leaderSection';
+    wrap.innerHTML=`<div class="leaderTitle"><b>${title}</b><small>${abbr} PER GAME</small></div><div class="card"></div>`;
+    const card=wrap.querySelector('.card');
+    if(!rows.length){
+      card.innerHTML='<div class="empty" style="padding:22px">No qualified players yet.</div>';
+    }else{
+      rows.forEach((x,i)=>{
+        const t=TEAMS.find(z=>z.id===x.p.teamId);
+        const r=document.createElement('div');r.className='leaderRow';r.onclick=()=>openPlayer(x.p.id);
+        r.innerHTML=`<div class="leaderRank">${i+1}</div><div class="leaderPlayer"><b>${x.p.name}</b><small>${t?.mark||""} • ${x.p.pos}</small></div><div class="leaderValue">${x.value.toFixed(1)}</div>`;
+        card.appendChild(r);
+      });
+    }
+    el.appendChild(wrap);
+  });
+}
+
 function renderLeague(){
   const el=document.getElementById('leagueUniverse'); if(!el)return;
   if(leagueMode==="schedule" && activeSave){renderScheduleView();return}
+  if(leagueMode==="leaders" && activeSave){renderLeaders();return}
   const conf=leagueConference;
   const table=activeSave?standingsFor(conf):TEAMS.filter(t=>t.conference===conf).map(t=>({...t,w:0,l:0,pct:0,diff:0}));
   const divs=conf==="East"?["Atlantic","Central","Southeast"]:["Northwest","Pacific","Southwest"];
@@ -1082,7 +1189,7 @@ function renderLeague(){
       <button class="${conf==="East"?"active":""}" onclick="setLeagueConference('East',this)">Eastern Conference</button>
       <button class="${conf==="West"?"active":""}" onclick="setLeagueConference('West',this)">Western Conference</button>
     </div>
-    <div class="notice">v0.2.1 now records individual box scores and season statistics alongside every simulated league game. Conference rank still uses win percentage, then point differential.</div>
+    <div class="notice">v0.2.2 adds league leaderboards and expanded season cards while retaining persistent box scores and standings.</div>
   `;
   const card=document.createElement('div');card.className='card';
   card.innerHTML='<div class="legend"><div>#</div><div>TEAM</div><div>W–L</div><div>PCT</div></div>';
