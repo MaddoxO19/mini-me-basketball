@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.1.2</title>
+<title>Mini&Me Basketball v0.1.3</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -124,6 +124,19 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .rosterMeta{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 10px}
 .rosterMeta span{font-size:10px;background:var(--panel2);padding:6px 8px;border-radius:999px;color:#cad2dc}
 
+
+.rotationStatus{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rotationStatus b{display:block;margin-top:4px;font-size:17px}
+.rotationStatus.invalid{border-color:var(--bad)}
+.rotationStatus.valid{border-color:var(--good)}
+.compactBtn{width:auto;margin:0;padding:9px 12px;font-size:12px}
+.minuteControl{display:flex;align-items:center;justify-content:flex-end;gap:5px}
+.minuteControl button{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);background:#1a222d;color:white;font-weight:900;padding:0}
+.minuteControl span{min-width:24px;text-align:center;font-weight:900;color:var(--accent2)}
+.starterToggle{border:1px solid var(--line);background:#1a222d;color:#b8c2ce;border-radius:8px;padding:5px 7px;font-size:9px;font-weight:900;margin-top:5px}
+.starterToggle.on{background:var(--accent);color:#17100a;border-color:var(--accent)}
+.rotationHelp{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.45}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -136,7 +149,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.1.2 • Player Universe</div>
+      <div class="build">v0.1.3 • Rotation Management</div>
     </div>
   </section>
 
@@ -162,7 +175,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>All 30 franchises now carry persistent player rosters and Starting Five identities.</p></div>
+      <div class="feed"><div class="dot"></div><p>Your Starting Five and 240-minute rotation now persist with the career save.</p></div>
     </div>
   </section>
 
@@ -171,15 +184,19 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div><div class="kicker">Roster</div><div class="teamName" id="rosterTeamName">Starting Five</div><div class="season" id="rosterSummary">Loading roster...</div></div>
       <div class="badge" id="rosterCountBadge">12 Players</div>
     </div>
+    <div class="rotationStatus card" id="rotationStatus">
+      <div><div class="kicker">Rotation Status</div><b id="rotationStatusText">240 / 240 minutes</b></div>
+      <button class="secondary compactBtn" onclick="autoRotation()">Auto Set</button>
+    </div>
     <div class="court" id="court">
       <div class="paint"></div><div class="hoop"></div>
       <div id="courtPlayers"></div>
     </div>
-    <div class="sectionTitle">Rotation Preview</div>
+    <div class="sectionTitle">Rotation Minutes</div>
     <div class="card" id="rotationList"></div>
     <div class="sectionTitle">Full Roster</div>
     <div class="card" id="fullRoster"></div>
-    <div class="notice">The Player Universe is now persistent and franchise-specific. Tap any player to open his profile. Starting Five and minutes remain system-selected in v0.1.2; editable rotation management is the next build so we can validate the player model before allowing GM changes.</div>
+    <div class="notice">Your Starting Five and rotation are now editable and stored in the career save. A valid rotation must contain exactly five starters and 240 total minutes before the match engine begins using it.</div>
   </section>
 
   <section id="league" class="screen">
@@ -191,10 +208,10 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.1.2</p></div>
-      <div class="feed"><p><b>Milestone:</b> Persistent 360-player league universe, franchise-specific rosters, Starting Five selection logic and player cards.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.1.3</p></div>
+      <div class="feed"><p><b>Milestone:</b> Editable Starting Five, persistent 240-minute rotations, validation and rotation-ready career saves.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> v0.1.3 editable Starting Five and 240-minute rotation management, followed by v0.2.0 schedule generation and the first basketball match engine.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.2.0 full 82-game schedule, standings and the first basketball match engine.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -245,7 +262,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.1.2";
+const VERSION="0.1.3";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -283,6 +300,8 @@ const PLAYERS=[{"id":"ATL-P01","teamId":"ATL","name":"C. McColl","pos":"PG","age
 
 let selectedTeam=TEAMS.find(t=>t.id==='LAG');
 let leagueConference='East';
+let activeSave=null;
+let activeRotation=null;
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -308,12 +327,14 @@ function openNewCareer(){
 function closeNewCareer(){document.getElementById('newCareer').classList.remove('show')}
 function createCareer(){
   const gm=(document.getElementById('gmName').value||'GM').trim();
-  const save={schema:1,playerUniverse:1,version:VERSION,gm,teamId:selectedTeam.id,team:selectedTeam.name,season:"2026/27",created:new Date().toISOString()};
+  const save={schema:1,playerUniverse:1,rotationSchema:1,version:VERSION,gm,teamId:selectedTeam.id,team:selectedTeam.name,season:"2026/27",created:new Date().toISOString()};
   localStorage.setItem(SAVE_KEY,JSON.stringify(save)); applyCareer(save); closeNewCareer();
 }
 function applyCareer(save){
   const team=TEAMS.find(t=>t.id===save.teamId)||TEAMS.find(t=>t.name===save.team)||TEAMS.find(t=>t.id==="LAG");
   selectedTeam=team;
+  activeSave=save;
+  activeRotation=ensureRotation(save,team.id);
   document.documentElement.style.setProperty('--accent',team.color);
   document.getElementById('homeTeam').textContent=team.name;
   document.getElementById('gmBadge').textContent=save.gm;
@@ -332,9 +353,81 @@ function applyCareer(save){
 }
 
 
+
+function defaultRotation(teamId){
+  const starters=starterFive(teamId);
+  const roster=teamPlayers(teamId).slice().sort((a,b)=>b.ovr-a.ovr);
+  const bench=roster.filter(p=>!starters.some(s=>s.id===p.id));
+  const order=[...starters,...bench];
+  const mins=[35,34,33,32,30,24,20,17,15,0,0,0];
+  const minutes={}; order.forEach((p,i)=>minutes[p.id]=mins[i]||0);
+  return {starters:starters.map(p=>p.id),minutes};
+}
+function ensureRotation(save,teamId){
+  if(!save.rotation || !Array.isArray(save.rotation.starters) || !save.rotation.minutes){
+    save.rotation=defaultRotation(teamId);
+    persistSave(save);
+  }
+  const rosterIds=new Set(teamPlayers(teamId).map(p=>p.id));
+  save.rotation.starters=save.rotation.starters.filter(id=>rosterIds.has(id)).slice(0,5);
+  if(save.rotation.starters.length<5){
+    const defaults=starterFive(teamId).map(p=>p.id);
+    defaults.forEach(id=>{if(save.rotation.starters.length<5&&!save.rotation.starters.includes(id))save.rotation.starters.push(id)});
+  }
+  teamPlayers(teamId).forEach(p=>{if(typeof save.rotation.minutes[p.id]!=="number")save.rotation.minutes[p.id]=0});
+  return save.rotation;
+}
+function persistSave(save=activeSave){
+  if(!save)return;
+  save.version=VERSION;
+  localStorage.setItem(SAVE_KEY,JSON.stringify(save));
+}
+function totalMinutes(){
+  if(!activeRotation)return 0;
+  return Object.values(activeRotation.minutes).reduce((a,b)=>a+(Number(b)||0),0);
+}
+function updateRotationStatus(){
+  const el=document.getElementById('rotationStatus'),txt=document.getElementById('rotationStatusText');
+  if(!el||!txt||!activeRotation)return;
+  const total=totalMinutes(), starters=activeRotation.starters.length;
+  txt.textContent=`${total} / 240 minutes • ${starters} / 5 starters`;
+  const good=total===240&&starters===5;
+  el.classList.toggle('valid',good);el.classList.toggle('invalid',!good);
+}
+function changeMinutes(id,delta){
+  if(!activeRotation)return;
+  const current=Number(activeRotation.minutes[id]||0);
+  const next=Math.max(0,Math.min(48,current+delta));
+  activeRotation.minutes[id]=next;
+  persistSave();renderRoster(selectedTeam);
+}
+function toggleStarter(id){
+  if(!activeRotation)return;
+  const idx=activeRotation.starters.indexOf(id);
+  if(idx>=0){
+    if(activeRotation.starters.length<=5){
+      activeRotation.starters.splice(idx,1);
+    }
+  }else{
+    if(activeRotation.starters.length>=5)activeRotation.starters.shift();
+    activeRotation.starters.push(id);
+  }
+  persistSave();renderRoster(selectedTeam);
+}
+function autoRotation(){
+  if(!selectedTeam||!activeSave)return;
+  activeSave.rotation=defaultRotation(selectedTeam.id);
+  activeRotation=activeSave.rotation;
+  persistSave();renderRoster(selectedTeam);
+}
+
 function teamPlayers(teamId){return PLAYERS.filter(p=>p.teamId===teamId)}
 function primaryPos(p){return p.pos.split("/")[0]}
 function starterFive(teamId){
+  if(activeRotation && activeSave && activeSave.teamId===teamId && activeRotation.starters?.length){
+    const mapped=activeRotation.starters.map(id=>PLAYERS.find(p=>p.id===id)).filter(Boolean);
+    if(mapped.length===5)return mapped;
+  }
   const roster=teamPlayers(teamId);
   const slots=["PG","SG","SF","PF","C"], chosen=[];
   slots.forEach(slot=>{
@@ -346,8 +439,11 @@ function starterFive(teamId){
   return chosen;
 }
 function rotationNine(teamId){
-  const roster=teamPlayers(teamId).slice().sort((a,b)=>b.ovr-a.ovr);
-  const starters=starterFive(teamId), rest=roster.filter(p=>!starters.some(s=>s.id===p.id));
+  const roster=teamPlayers(teamId).slice();
+  if(activeRotation && activeSave && activeSave.teamId===teamId){
+    return roster.sort((a,b)=>(activeRotation.minutes[b.id]||0)-(activeRotation.minutes[a.id]||0)||b.ovr-a.ovr).slice(0,9);
+  }
+  const starters=starterFive(teamId), rest=roster.filter(p=>!starters.some(s=>s.id===p.id)).sort((a,b)=>b.ovr-a.ovr);
   return [...starters,...rest].slice(0,9);
 }
 function renderRoster(team){
@@ -366,22 +462,30 @@ function renderRoster(team){
     d.innerHTML=`<div class="avatar">${p.ovr}</div><small>${p.name} • ${["PG","SG","SF","PF","C"][i]}</small>`;
     court.appendChild(d);
   });
-  const rotation=rotationNine(team.id);
-  const minutes=[35,34,33,32,30,24,20,17,15];
+  const rotation=teamPlayers(team.id).slice().sort((a,b)=>(activeRotation?.minutes[b.id]||0)-(activeRotation?.minutes[a.id]||0)||b.ovr-a.ovr);
   const rot=document.getElementById('rotationList');
   rot.innerHTML='<div class="rosterPlayerRow" style="color:var(--muted);font-size:10px"><div>PLAYER</div><div>POS</div><div>OVR</div><div>MIN</div></div>';
-  rotation.forEach((p,i)=>{
-    const r=document.createElement('div');r.className='rosterPlayerRow playerClick';r.onclick=()=>openPlayer(p.id);
-    r.innerHTML=`<div class="name"><b>${p.name}</b><small>${p.archetype}</small></div><div class="posText">${p.pos}</div><div class="ovrText">${p.ovr}</div><div class="potential">${minutes[i]}</div>`;
+  rotation.forEach((p)=>{
+    const mins=activeRotation?.minutes[p.id]||0;
+    const r=document.createElement('div');r.className='rosterPlayerRow';
+    r.innerHTML=`<div class="name playerClick" onclick="openPlayer('${p.id}')"><b>${p.name}</b><small>${p.archetype}</small></div>
+      <div class="posText">${p.pos}</div><div class="ovrText">${p.ovr}</div>
+      <div class="minuteControl"><button onclick="changeMinutes('${p.id}',-1)">−</button><span>${mins}</span><button onclick="changeMinutes('${p.id}',1)">+</button></div>`;
     rot.appendChild(r);
   });
+  const help=document.createElement('div');help.className='rotationHelp';help.textContent='Allocate exactly 240 minutes. Players may be set from 0 to 48 minutes. The match engine will use these minutes as the planned rotation.';
+  rot.appendChild(help);
+
   const full=document.getElementById('fullRoster');
-  full.innerHTML=`<div class="rosterMeta"><span>${roster.length} Active Players</span><span>${starters.filter(p=>p.ovr>=89).length} Elite Starters</span><span>Persistent Player IDs</span></div>`;
+  full.innerHTML=`<div class="rosterMeta"><span>${roster.length} Active Players</span><span>${starters.length} Starters</span><span>240 Minute Rotation</span></div>`;
   roster.forEach(p=>{
-    const r=document.createElement('div');r.className='rosterPlayerRow playerClick';r.onclick=()=>openPlayer(p.id);
-    r.innerHTML=`<div class="name"><b>${p.name}</b><small>${p.archetype}</small><span class="roleTag">${p.role}</span></div><div class="posText">${p.pos}</div><div class="ovrText">${p.ovr}</div><div class="potential">P${p.pot}</div>`;
+    const isStarter=activeRotation?.starters.includes(p.id);
+    const r=document.createElement('div');r.className='rosterPlayerRow';
+    r.innerHTML=`<div class="name"><b class="playerClick" onclick="openPlayer('${p.id}')">${p.name}</b><small>${p.archetype}</small><button class="starterToggle ${isStarter?'on':''}" onclick="toggleStarter('${p.id}')">${isStarter?'STARTER':'MAKE STARTER'}</button></div>
+      <div class="posText">${p.pos}</div><div class="ovrText">${p.ovr}</div><div class="potential">P${p.pot}</div>`;
     full.appendChild(r);
   });
+  updateRotationStatus();
 }
 function openPlayer(id){
   const p=PLAYERS.find(x=>x.id===id);if(!p)return;
@@ -419,7 +523,7 @@ function renderLeague(){
       <button class="${conf==="East"?"active":""}" onclick="setLeagueConference('East',this)">Eastern Conference</button>
       <button class="${conf==="West"?"active":""}" onclick="setLeagueConference('West',this)">Western Conference</button>
     </div>
-    <div class="notice">v0.1.2 now links every franchise to a persistent 12-player roster. Records remain 0–0 until the schedule and match engine arrive.</div>
+    <div class="notice">v0.1.3 adds persistent GM-controlled Starting Five and rotation minutes to every career. Records remain 0–0 until the schedule and match engine arrive.</div>
   `;
   divs.forEach(div=>{
     const block=document.createElement('div');block.className='divisionBlock';
@@ -439,6 +543,7 @@ function loadCareer(){
     const save=JSON.parse(localStorage.getItem(SAVE_KEY));
     if(!save){alert('No Mini&Me Basketball career save exists yet.');return}
     if(save.schema!==1){alert('This save uses an unsupported schema.');return}
+    if(!save.rotationSchema)save.rotationSchema=1;
     if(!save.teamId){
       const migrated=TEAMS.find(t=>t.name===save.team);
       if(migrated){save.teamId=migrated.id;localStorage.setItem(SAVE_KEY,JSON.stringify(save));}
