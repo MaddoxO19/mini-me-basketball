@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Mini&Me Basketball v0.1.0</title>
+<style>
+:root{
+  --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
+  --text:#f4f6f8; --muted:#98a3b2; --accent:#f4a340; --accent2:#ffd28a;
+  --good:#55c889; --bad:#e56b6f;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:linear-gradient(180deg,#090c11,#10151c 55%,#0a0d12);
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+}
+button,input{font:inherit}
+.app{max-width:520px;margin:0 auto;min-height:100vh;padding:env(safe-area-inset-top) 16px calc(84px + env(safe-area-inset-bottom))}
+.screen{display:none}.screen.active{display:block}
+.brand{text-align:center;padding:68px 18px 30px}
+.ball{width:84px;height:84px;border-radius:50%;margin:0 auto 20px;background:
+  radial-gradient(circle at 32% 30%,#ffbd63 0 8%,#f39b34 9% 62%,#d77d1f 63% 100%);
+  border:3px solid #25170c;box-shadow:0 14px 35px #0008;position:relative;overflow:hidden}
+.ball:before,.ball:after{content:"";position:absolute;border:3px solid #25170c;border-radius:50%}
+.ball:before{width:105px;height:38px;left:-14px;top:20px;transform:rotate(18deg)}
+.ball:after{width:38px;height:105px;left:20px;top:-13px;transform:rotate(18deg)}
+h1{font-size:32px;margin:0 0 7px;letter-spacing:.4px}
+.subtitle{color:var(--muted);margin-bottom:40px}
+.primary,.secondary{
+  width:100%;border:0;border-radius:14px;padding:15px 18px;margin:7px 0;font-weight:800;
+}
+.primary{background:var(--accent);color:#17100a}
+.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}
+.build{margin-top:24px;color:#66717f;font-size:12px}
+.header{padding:22px 2px 14px;display:flex;align-items:flex-start;justify-content:space-between}
+.kicker{color:var(--accent);font-weight:800;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.teamName{font-size:25px;font-weight:900;margin-top:3px}
+.season{font-size:13px;color:var(--muted);margin-top:3px}
+.badge{background:#1c2430;border:1px solid var(--line);padding:8px 10px;border-radius:12px;font-size:12px;color:var(--accent2)}
+.card{background:rgba(18,23,32,.96);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0;box-shadow:0 9px 28px #0003}
+.record{display:flex;gap:12px;align-items:end}.record strong{font-size:38px}.record span{color:var(--muted);padding-bottom:5px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.stat{background:var(--panel2);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:18px}.stat small{color:var(--muted)}
+.next{text-align:center;padding:8px 0}.next .vs{font-size:13px;color:var(--muted);margin:5px}
+.next .opp{font-size:24px;font-weight:900}.next .meta{font-size:13px;color:var(--muted);margin:6px 0 10px}
+.sectionTitle{font-weight:900;font-size:15px;margin:18px 2px 8px}
+.feed{display:flex;gap:10px;padding:10px 0;border-top:1px solid #222c38}
+.feed:first-of-type{border-top:0}.dot{width:8px;height:8px;border-radius:50%;background:var(--accent);margin-top:6px;flex:none}
+.feed p{margin:0;color:#d8dde4;font-size:14px;line-height:1.4}
+.nav{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);
+  background:#0d1219ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(4,1fr);z-index:5
+}
+.nav.show{display:grid}.nav button{background:none;border:0;color:#8692a2;font-size:11px;padding:6px}.nav button.active{color:var(--accent);font-weight:800}
+.nav .ico{display:block;font-size:20px;margin-bottom:3px}
+.court{
+  background:#b67a45;border-radius:16px;height:350px;position:relative;overflow:hidden;margin-top:8px;border:4px solid #d8b18b;
+  box-shadow:inset 0 0 0 2px #9b6434
+}
+.court:before{content:"";position:absolute;inset:22px;border:2px solid #ead6bd;border-radius:4px}
+.court:after{content:"";position:absolute;width:150px;height:150px;border:2px solid #ead6bd;border-radius:50%;left:50%;top:-75px;transform:translateX(-50%)}
+.hoop{position:absolute;left:50%;top:33px;transform:translateX(-50%);width:52px;border-top:3px solid #fff}
+.paint{position:absolute;left:50%;top:22px;transform:translateX(-50%);height:110px;width:120px;border:2px solid #ead6bd}
+.player{position:absolute;transform:translate(-50%,-50%);text-align:center}
+.avatar{width:46px;height:46px;border-radius:50%;background:#111923;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;font-weight:900;box-shadow:0 4px 12px #0005}
+.player small{display:block;background:#0a0d12dd;padding:3px 6px;border-radius:7px;margin-top:3px;font-size:10px;white-space:nowrap}
+.p-pg{left:50%;top:77%}.p-sg{left:23%;top:55%}.p-sf{left:77%;top:55%}.p-pf{left:30%;top:29%}.p-c{left:64%;top:23%}
+.rosterRow{display:grid;grid-template-columns:1fr 52px 48px 62px;gap:8px;align-items:center;padding:11px 4px;border-top:1px solid #222b36;font-size:13px}
+.rosterRow.head{color:var(--muted);font-size:11px;border-top:0;padding-top:4px}
+.rosterRow b{font-size:14px}.mins{color:var(--accent2)}
+.notice{padding:12px;border-radius:12px;background:#182130;border:1px solid #293849;color:#cbd3dc;font-size:13px;line-height:1.5}
+.modal{position:fixed;inset:0;background:#05070acb;display:none;align-items:center;justify-content:center;padding:20px;z-index:10}
+.modal.show{display:flex}.modalBox{width:min(460px,100%);background:#121820;border:1px solid var(--line);border-radius:20px;padding:18px}
+.modal h2{margin:2px 0 4px}.modal p{color:var(--muted);font-size:13px}
+label{font-size:12px;color:var(--muted);display:block;margin:12px 0 5px}
+input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);background:#0d1219;color:white}
+.teamGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:320px;overflow:auto;margin-top:10px}
+.teamPick{background:#171e28;border:1px solid var(--line);color:white;border-radius:12px;padding:11px;text-align:left}
+.teamPick.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.empty{text-align:center;color:var(--muted);padding:70px 25px}
+@media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="landing" class="screen active">
+    <div class="brand">
+      <div class="ball"></div>
+      <h1>Mini&Me Basketball</h1>
+      <div class="subtitle">Build Your Team. Build Your Legacy.</div>
+      <button class="primary" onclick="openNewCareer()">New Career</button>
+      <button class="secondary" onclick="loadCareer()">Load Career</button>
+      <div class="build">v0.1.0 • Foundation Build</div>
+    </div>
+  </section>
+
+  <section id="home" class="screen">
+    <div class="header">
+      <div><div class="kicker">My Franchise</div><div class="teamName" id="homeTeam">Los Angeles Gold</div><div class="season">Western Conference • Season 2026/27</div></div>
+      <div class="badge">GM <span id="gmBadge">Fitz</span></div>
+    </div>
+    <div class="card">
+      <div class="record"><strong>0–0</strong><span>Regular Season</span></div>
+      <div class="stats"><div class="stat"><b>—</b><small>Conference</small></div><div class="stat"><b>86</b><small>Team OVR</small></div><div class="stat"><b>82%</b><small>Chemistry</small></div></div>
+    </div>
+    <div class="card next">
+      <div class="kicker">Opening Night</div><div class="vs">HOME</div><div class="opp">Phoenix Fire</div><div class="meta">Game 1 of 82 • October 2026</div>
+      <button class="primary" onclick="alert('Game simulation arrives in v0.2.0. This build establishes the stable career shell first.')">Sim Game</button>
+    </div>
+    <div class="sectionTitle">Around the League</div>
+    <div class="card">
+      <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
+      <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
+      <div class="feed"><div class="dot"></div><p>Roster and rotation management is available in this foundation build.</p></div>
+    </div>
+  </section>
+
+  <section id="squad" class="screen">
+    <div class="header"><div><div class="kicker">Roster</div><div class="teamName">Starting Five</div><div class="season">88 Starting Five OVR • 240 rotation minutes planned</div></div></div>
+    <div class="court">
+      <div class="paint"></div><div class="hoop"></div>
+      <div class="player p-pg"><div class="avatar">95</div><small>L. Donic • PG</small></div>
+      <div class="player p-sg"><div class="avatar">83</div><small>A. Reeve • SG</small></div>
+      <div class="player p-sf"><div class="avatar">81</div><small>R. Hachim • SF</small></div>
+      <div class="player p-pf"><div class="avatar">88</div><small>L. James • PF</small></div>
+      <div class="player p-c"><div class="avatar">84</div><small>D. Ayton • C</small></div>
+    </div>
+    <div class="sectionTitle">Rotation</div>
+    <div class="card">
+      <div class="rosterRow head"><div>PLAYER</div><div>POS</div><div>OVR</div><div>MIN</div></div>
+      <div class="rosterRow"><b>L. Donic</b><div>PG</div><div>95</div><div class="mins">36</div></div>
+      <div class="rosterRow"><b>L. James</b><div>SF/PF</div><div>88</div><div class="mins">33</div></div>
+      <div class="rosterRow"><b>D. Ayton</b><div>C</div><div>84</div><div class="mins">31</div></div>
+      <div class="rosterRow"><b>A. Reeve</b><div>SG</div><div>83</div><div class="mins">30</div></div>
+      <div class="rosterRow"><b>R. Hachim</b><div>SF/PF</div><div>81</div><div class="mins">27</div></div>
+      <div class="rosterRow"><b>M. Smart</b><div>PG/SG</div><div>80</div><div class="mins">24</div></div>
+      <div class="rosterRow"><b>D. Knecht</b><div>SG/SF</div><div>78</div><div class="mins">19</div></div>
+      <div class="rosterRow"><b>J. Hayes</b><div>C</div><div>77</div><div class="mins">14</div></div>
+      <div class="rosterRow"><b>Reserve Unit</b><div>—</div><div>74</div><div class="mins">26</div></div>
+    </div>
+    <div class="notice">v0.1.0 establishes the roster data model and presentation. Editable starters, rotation minutes and positional validation will be activated progressively rather than layered in before the core data model is stable.</div>
+  </section>
+
+  <section id="league" class="screen">
+    <div class="header"><div><div class="kicker">League</div><div class="teamName">2026/27 Season</div><div class="season">30 Teams • 82 Games • East & West</div></div></div>
+    <div class="card empty">Standings, league leaders and the full 82 game schedule are planned for v0.2.x once the game simulation layer is introduced.</div>
+  </section>
+
+  <section id="more" class="screen">
+    <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
+    <div class="card">
+      <div class="sectionTitle" style="margin-top:0">Build Information</div>
+      <div class="feed"><p><b>Version:</b> v0.1.0</p></div>
+      <div class="feed"><p><b>Milestone:</b> Career shell, team selection, local save, mobile navigation and roster presentation.</p></div>
+      <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
+      <div class="feed"><p><b>Next:</b> Schedule generation, standings and match engine.</p></div>
+    </div>
+    <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
+  </section>
+</div>
+
+<div id="nav" class="nav">
+  <button class="active" data-screen="home" onclick="go('home',this)"><span class="ico">⌂</span>Home</button>
+  <button data-screen="squad" onclick="go('squad',this)"><span class="ico">◉</span>Roster</button>
+  <button data-screen="league" onclick="go('league',this)"><span class="ico">▦</span>League</button>
+  <button data-screen="more" onclick="go('more',this)"><span class="ico">•••</span>More</button>
+</div>
+
+<div id="newCareer" class="modal">
+  <div class="modalBox">
+    <div class="kicker">New Career</div><h2>Choose Your Franchise</h2><p>This first build uses a small representative set in the selector while the 30 team league dataset is finalised.</p>
+    <label>GM Name</label><input id="gmName" value="Fitz" maxlength="20" />
+    <label>Franchise</label>
+    <div class="teamGrid" id="teamGrid"></div>
+    <button class="primary" onclick="createCareer()">Begin Career</button>
+    <button class="secondary" onclick="closeNewCareer()">Cancel</button>
+  </div>
+</div>
+
+<script>
+const VERSION="0.1.0";
+const SAVE_KEY="MMB_SAVE_1";
+const TEAMS=[
+  "Los Angeles Gold","Boston Heritage","Chicago Flight","New York Empire",
+  "Miami Waves","Phoenix Fire","Denver Peaks","Dallas Wranglers",
+  "San Francisco Bay","Philadelphia Foundry","Milwaukee North","Oklahoma Storm"
+];
+let selectedTeam=TEAMS[0];
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function go(id,btn){
+  showScreen(id);
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+}
+function openNewCareer(){
+  const grid=document.getElementById('teamGrid'); grid.innerHTML='';
+  TEAMS.forEach((t,i)=>{
+    const b=document.createElement('button'); b.className='teamPick'+(i===0?' selected':''); b.textContent=t;
+    b.onclick=()=>{selectedTeam=t;document.querySelectorAll('.teamPick').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};
+    grid.appendChild(b);
+  });
+  document.getElementById('newCareer').classList.add('show');
+}
+function closeNewCareer(){document.getElementById('newCareer').classList.remove('show')}
+function createCareer(){
+  const gm=(document.getElementById('gmName').value||'GM').trim();
+  const save={schema:1,version:VERSION,gm,team:selectedTeam,season:"2026/27",created:new Date().toISOString()};
+  localStorage.setItem(SAVE_KEY,JSON.stringify(save)); applyCareer(save); closeNewCareer();
+}
+function applyCareer(save){
+  document.getElementById('homeTeam').textContent=save.team;
+  document.getElementById('gmBadge').textContent=save.gm;
+  showScreen('home'); document.getElementById('nav').classList.add('show');
+  document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('active',i===0));
+}
+function loadCareer(){
+  try{
+    const save=JSON.parse(localStorage.getItem(SAVE_KEY));
+    if(!save){alert('No Mini&Me Basketball career save exists yet.');return}
+    if(save.schema!==1){alert('This save uses an unsupported schema.');return}
+    applyCareer(save);
+  }catch(e){alert('The local save could not be read.')}
+}
+function returnToMenu(){
+  showScreen('landing');document.getElementById('nav').classList.remove('show');
+}
+</script>
+</body>
+</html>
