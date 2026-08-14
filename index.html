@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.3.2</title>
+<title>Mini&Me Basketball v0.3.3</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -235,6 +235,23 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .dataStatus{display:inline-block;padding:4px 7px;border-radius:999px;background:#202a36;color:var(--accent2);font-size:10px;font-weight:800}
 .postBoxToggle{margin-top:8px}
 
+
+.seriesProgress{display:flex;gap:4px;margin:8px 0 2px}
+.seriesDot{width:18px;height:6px;border-radius:999px;background:#25303d}
+.seriesDot.win{background:var(--good)}.seriesDot.loss{background:var(--bad)}
+.seriesHistory{margin-top:8px;border-top:1px solid #222b36;padding-top:7px}
+.seriesGameRow{display:grid;grid-template-columns:56px 1fr 58px;gap:8px;align-items:center;padding:6px 0;font-size:10px}
+.seriesGameRow .gno{color:var(--muted)}
+.seriesGameRow .teams{color:#d8dee6}
+.seriesGameRow .score{text-align:right;font-weight:900}
+.postSummary{background:linear-gradient(180deg,#17202b,#111820);border:1px solid var(--line);border-radius:16px;padding:14px;margin:10px 0}
+.postSummaryGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
+.postSummaryMetric{background:var(--panel2);border-radius:11px;padding:9px}
+.postSummaryMetric b{display:block;font-size:17px}.postSummaryMetric small{color:var(--muted);font-size:9px}
+.userSeries{border-color:var(--accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 45%, transparent)}
+.eliminatedBanner{background:#241619;border:1px solid #5a2d34;border-radius:14px;padding:12px;margin:10px 0}
+.eliminatedBanner b{display:block;font-size:16px}.eliminatedBanner p{margin:4px 0 0;color:var(--muted);font-size:11px}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -247,7 +264,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.3.2 • Postseason Stats</div>
+      <div class="build">v0.3.3 • Postseason History</div>
     </div>
   </section>
 
@@ -278,7 +295,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>Postseason box scores and player stats are now recorded, Finals MVP uses actual Finals production, and league JSON can be imported or exported directly on device.</p></div>
+      <div class="feed"><div class="dot"></div><p>Postseason series now show game-by-game history, your playoff status and a clearer championship summary while retaining full postseason statistics.</p></div>
     </div>
   </section>
 
@@ -338,15 +355,15 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.3.2</p></div>
-      <div class="feed"><p><b>Milestone:</b> Postseason box scores and player statistics, actual-performance Finals MVP, plus iPhone-friendly league JSON import/export.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.3.3</p></div>
+      <div class="feed"><p><b>Milestone:</b> Improved playoff UX, series game history, postseason summary and clearer championship presentation.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div><div class="feed"><p><b>League Data:</b> <span id="dataSourceLabel">Loading...</span></p></div>
       <div class="feed"><p><b>League Data Tools:</b> Import or export the editable league database directly on this device.</p></div>
       <input id="leagueJsonInput" type="file" accept=".json,application/json" style="display:none" onchange="importLeagueJson(event)" />
       <button class="secondary" onclick="document.getElementById('leagueJsonInput').click()">Import League JSON</button>
       <button class="secondary" onclick="exportLeagueJson()">Export League JSON</button>
 
-      <div class="feed"><p><b>Next:</b> v0.3.3 playoff UX polish and postseason history presentation.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.4.0 offseason foundation: retirements, season rollover and draft/free-agency scaffolding. Postseason history and series game logs are now retained in the career save.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -429,7 +446,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.3.2";
+const VERSION="0.3.3";
 const SAVE_KEY="MMB_SAVE_1";
 let TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -1406,14 +1423,85 @@ function showLatestPostseasonBox(seriesId){
   showGameResult(game,hs,as);
 }
 
+
+function postseasonUserStatus(){
+  const ps=activeSave?.seasonState?.postseason;
+  if(!ps)return {status:"not_started"};
+  if(ps.champion?.teamId===activeSave.teamId)return {status:"champion"};
+  const allSeries=[];
+  ["East","West"].forEach(conf=>{
+    const c=ps[conf];
+    allSeries.push(...(c.round1||[]),...(c.semis||[]),...(c.finals||[]));
+  });
+  if(ps.finals)allSeries.push(ps.finals);
+  const lostSeries=allSeries.find(s=>s.complete && (s.a.teamId===activeSave.teamId||s.b.teamId===activeSave.teamId) && s.winner.teamId!==activeSave.teamId);
+  if(lostSeries)return {status:"eliminated",series:lostSeries};
+  for(const conf of ["East","West"]){
+    const c=ps[conf];
+    for(const m of c.playIn||[]){
+      if(m.played && m.loser?.teamId===activeSave.teamId){
+        // 7/8 loser is not eliminated if still progressing to final play-in
+        if(m.id.endsWith("PI78"))continue;
+        return {status:"eliminated_playin",match:m};
+      }
+    }
+  }
+  return {status:"alive"};
+}
+function seriesGameHistory(series){
+  if(!series.games?.length)return "";
+  const rows=series.games.map((g,i)=>{
+    const ht=TEAMS.find(t=>t.id===g.home),at=TEAMS.find(t=>t.id===g.away);
+    return `<div class="seriesGameRow"><div class="gno">Game ${i+1}</div><div class="teams">${at.mark} @ ${ht.mark}</div><div class="score">${g.awayScore}–${g.homeScore}</div></div>`;
+  }).join("");
+  return `<div class="seriesHistory">${rows}</div>`;
+}
+function seriesProgressDots(series){
+  if(!series.games?.length)return "";
+  const userId=activeSave?.teamId;
+  const dots=series.games.map(g=>{
+    let cls="";
+    if(userId && (series.a.teamId===userId||series.b.teamId===userId)){
+      cls=g.winner===userId?"win":"loss";
+    }else{
+      cls=g.winner===series.a.teamId?"win":"loss";
+    }
+    return `<span class="seriesDot ${cls}"></span>`;
+  }).join("");
+  return `<div class="seriesProgress">${dots}</div>`;
+}
+function renderPostseasonSummary(){
+  const ps=activeSave?.seasonState?.postseason;
+  if(!ps)return "";
+  const games=activeSave.seasonState.postseasonGames||[];
+  const userGames=games.filter(g=>g.home===activeSave.teamId||g.away===activeSave.teamId);
+  let w=0,l=0,pf=0,pa=0;
+  userGames.forEach(g=>{
+    const home=g.home===activeSave.teamId;
+    const us=home?g.homeScore:g.awayScore,them=home?g.awayScore:g.homeScore;
+    pf+=us;pa+=them;if(us>them)w++;else l++;
+  });
+  const status=postseasonUserStatus();
+  let label="Postseason Active";
+  if(status.status==="champion")label="Champions";
+  if(status.status.startsWith("eliminated"))label="Eliminated";
+  return `<div class="postSummary"><div class="kicker">Your Postseason</div><b>${label}</b><div class="postSummaryGrid">
+    <div class="postSummaryMetric"><b>${w}–${l}</b><small>Postseason Record</small></div>
+    <div class="postSummaryMetric"><b>${userGames.length?((pf-pa)/userGames.length).toFixed(1):"—"}</b><small>Point Diff / Game</small></div>
+  </div></div>`;
+}
+
 function renderSeries(series,label){
   const a=TEAMS.find(t=>t.id===series.a.teamId),b=TEAMS.find(t=>t.id===series.b.teamId);
-  return `<div class="matchup">
+  const includesUser=series.a.teamId===activeSave?.teamId||series.b.teamId===activeSave?.teamId;
+  return `<div class="matchup ${includesUser?'userSeries':''}">
     <div class="matchupTop"><b>${label}</b><small>${series.complete?"FINAL":"Best of 7"}</small></div>
-    <div class="seriesTeam"><div class="seriesSeed">${series.a.seed}</div><div class="name"><b>${a.name}</b><small>${a.conference} • ${a.division}</small></div><div class="seriesWins">${series.aWins}</div></div>
-    <div class="seriesTeam"><div class="seriesSeed">${series.b.seed}</div><div class="name"><b>${b.name}</b><small>${b.conference} • ${b.division}</small></div><div class="seriesWins">${series.bWins}</div></div>
+    <div class="seriesTeam"><div class="seriesSeed">${series.a.seed}</div><div class="name"><b>${a.name}${series.a.teamId===activeSave?.teamId?' • YOU':''}</b><small>${a.conference} • ${a.division}</small></div><div class="seriesWins">${series.aWins}</div></div>
+    <div class="seriesTeam"><div class="seriesSeed">${series.b.seed}</div><div class="name"><b>${b.name}${series.b.teamId===activeSave?.teamId?' • YOU':''}</b><small>${b.conference} • ${b.division}</small></div><div class="seriesWins">${series.bWins}</div></div>
+    ${seriesProgressDots(series)}
     ${series.complete?`<div class="postComplete">${TEAMS.find(t=>t.id===series.winner.teamId).name} wins series ${Math.max(series.aWins,series.bWins)}–${Math.min(series.aWins,series.bWins)}</div>`:`<button class="secondary postAction" onclick="simPostseasonSeries('${series.id}')">Sim Next Game</button>`}
     ${series.games.length?`<button class="secondary postAction postBoxToggle" onclick="showLatestPostseasonBox('${series.id}')">Latest Box Score</button>`:""}
+    ${seriesGameHistory(series)}
   </div>`;
 }
 function renderPlayIn(conf){
@@ -1441,13 +1529,15 @@ function renderPlayoffs(){
     finalizePlayInIfReady(conf);
   }
 
-  let out="";
+  let out=renderPostseasonSummary();
+  const userStatus=postseasonUserStatus();
+  if(userStatus.status.startsWith("eliminated"))out+=`<div class="eliminatedBanner"><b>Your season is over.</b><p>Your team has been eliminated from the postseason. You can continue simulating the remaining bracket to determine the champion.</p></div>`;
   if(ps.champion){
     recordChampionshipIfNeeded();
     const champ=TEAMS.find(t=>t.id===ps.champion.teamId);
     const fmvp=PLAYERS.find(p=>p.id===ps.finalsMvp);
     const record=activeSave.seasonState.championshipHistory.find(x=>x.season===activeSave.season);
-    out+=`<div class="championBanner"><div class="trophy">★</div><div class="kicker">2027 Champions</div><h2>${champ.name}</h2><p>${record?`Finals ${record.series}`:"Mini&Me Basketball champions"}</p>${fmvp?`<div class="finalsMvp"><small>FINALS MVP</small><b>${fmvp.name}</b><span>${fmvp.pos} • ${fmvp.ovr} OVR</span></div>`:""}</div>`;
+    out+=`<div class="championBanner"><div class="trophy">★</div><div class="kicker">2027 Champions</div><h2>${champ.name}</h2><p>${record?`Finals ${record.series}`:"Mini&Me Basketball champions"}</p><div class="postComplete">Champion recorded in Season Review history</div>${fmvp?`<div class="finalsMvp"><small>FINALS MVP</small><b>${fmvp.name}</b><span>${fmvp.pos} • ${fmvp.ovr} OVR</span></div>`:""}</div>`;
   }
 
   for(const conf of ["East","West"]){
