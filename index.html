@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.1.0</title>
+<title>Mini&Me Basketball v0.1.1</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -82,6 +82,25 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .teamPick{background:#171e28;border:1px solid var(--line);color:white;border-radius:12px;padding:11px;text-align:left}
 .teamPick.selected{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .empty{text-align:center;color:var(--muted);padding:70px 25px}
+
+.identityRow{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.identityRow b{font-size:17px}.identityRow small{display:block;color:var(--muted);margin-top:3px}
+.identityMeta{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.identityMeta span{font-size:11px;color:#dbe2ea;background:var(--panel2);border:1px solid var(--line);padding:6px 8px;border-radius:999px}
+.teamMark{width:54px;height:54px;border-radius:16px;background:var(--accent);color:#17100a;display:flex;align-items:center;justify-content:center;font-weight:950;letter-spacing:.4px}
+.confTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:4px 0 12px}
+.confTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:11px;border-radius:12px;font-weight:800}
+.confTabs button.active{background:var(--accent);color:#17100a;border-color:var(--accent)}
+.divisionBlock{margin:12px 0}
+.divisionTitle{font-size:12px;color:var(--accent2);font-weight:900;text-transform:uppercase;letter-spacing:.8px;margin:8px 2px}
+.teamStandRow{display:grid;grid-template-columns:34px 1fr 54px 52px;gap:8px;align-items:center;padding:11px 5px;border-top:1px solid #222b36;font-size:13px}
+.teamStandRow:first-child{border-top:0}
+.miniMark{width:29px;height:29px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:950;color:#111}
+.teamStandRow .teamInfo b{display:block;font-size:13px}.teamStandRow .teamInfo small{color:var(--muted)}
+.teamStandRow .zero{text-align:center;color:#dce2e8}
+.legend{display:grid;grid-template-columns:34px 1fr 54px 52px;gap:8px;color:var(--muted);font-size:10px;padding:0 5px 5px}
+.selectorHead{font-size:11px;color:var(--accent2);font-weight:900;text-transform:uppercase;letter-spacing:.8px;margin:10px 2px 5px;grid-column:1/-1}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -94,7 +113,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.1.0 • Foundation Build</div>
+      <div class="build">v0.1.1 • League Universe</div>
     </div>
   </section>
 
@@ -105,10 +124,15 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     </div>
     <div class="card">
       <div class="record"><strong>0–0</strong><span>Regular Season</span></div>
-      <div class="stats"><div class="stat"><b>—</b><small>Conference</small></div><div class="stat"><b>86</b><small>Team OVR</small></div><div class="stat"><b>82%</b><small>Chemistry</small></div></div>
+      <div class="stats"><div class="stat"><b id="confRank">—</b><small>Conference Rank</small></div><div class="stat"><b>86</b><small>Team OVR</small></div><div class="stat"><b>82%</b><small>Chemistry</small></div></div>
+    </div>
+    <div class="card identityCard">
+      <div class="kicker">Franchise Identity</div>
+      <div class="identityRow"><div><b id="identityConference">Western Conference</b><small id="identityDivision">Pacific Division</small></div><div class="teamMark" id="teamMark">LAG</div></div>
+      <div class="identityMeta"><span id="identityMarket">Los Angeles</span><span id="identityStyle">Legacy Market</span></div>
     </div>
     <div class="card next">
-      <div class="kicker">Opening Night</div><div class="vs">HOME</div><div class="opp">Phoenix Fire</div><div class="meta">Game 1 of 82 • October 2026</div>
+      <div class="kicker">Opening Night</div><div class="vs">HOME</div><div class="opp" id="nextOpponent">Phoenix Fire</div><div class="meta">Game 1 of 82 • October 2026</div>
       <button class="primary" onclick="alert('Game simulation arrives in v0.2.0. This build establishes the stable career shell first.')">Sim Game</button>
     </div>
     <div class="sectionTitle">Around the League</div>
@@ -142,22 +166,22 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="rosterRow"><b>J. Hayes</b><div>C</div><div>77</div><div class="mins">14</div></div>
       <div class="rosterRow"><b>Reserve Unit</b><div>—</div><div>74</div><div class="mins">26</div></div>
     </div>
-    <div class="notice">v0.1.0 establishes the roster data model and presentation. Editable starters, rotation minutes and positional validation will be activated progressively rather than layered in before the core data model is stable.</div>
+    <div class="notice">v0.1.1 keeps this roster as a presentation preview only. The selected franchise now has a stable team identity; franchise-specific players arrive in v0.1.2 so roster history is attached to permanent player and team IDs from the start.</div>
   </section>
 
   <section id="league" class="screen">
     <div class="header"><div><div class="kicker">League</div><div class="teamName">2026/27 Season</div><div class="season">30 Teams • 82 Games • East & West</div></div></div>
-    <div class="card empty">Standings, league leaders and the full 82 game schedule are planned for v0.2.x once the game simulation layer is introduced.</div>
+    <div class="card empty"><div id="leagueUniverse"></div></div>
   </section>
 
   <section id="more" class="screen">
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.1.0</p></div>
-      <div class="feed"><p><b>Milestone:</b> Career shell, team selection, local save, mobile navigation and roster presentation.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.1.1</p></div>
+      <div class="feed"><p><b>Milestone:</b> Full 30-franchise league universe, conference/division structure, franchise identity and persistent team metadata.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> Schedule generation, standings and match engine.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.1.2 Player Universe, followed by v0.2.0 schedule generation, standings and the first basketball match engine.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -172,7 +196,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 
 <div id="newCareer" class="modal">
   <div class="modalBox">
-    <div class="kicker">New Career</div><h2>Choose Your Franchise</h2><p>This first build uses a small representative set in the selector while the 30 team league dataset is finalised.</p>
+    <div class="kicker">New Career</div><h2>Choose Your Franchise</h2><p>Choose from the complete 30-franchise Mini&Me Basketball league. Conference and division identity will persist with your career.</p>
     <label>GM Name</label><input id="gmName" value="Fitz" maxlength="20" />
     <label>Franchise</label>
     <div class="teamGrid" id="teamGrid"></div>
@@ -182,14 +206,42 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.1.0";
+const VERSION="0.1.1";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
-  "Los Angeles Gold","Boston Heritage","Chicago Flight","New York Empire",
-  "Miami Waves","Phoenix Fire","Denver Peaks","Dallas Wranglers",
-  "San Francisco Bay","Philadelphia Foundry","Milwaukee North","Oklahoma Storm"
+  {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
+  {id:"BOS",name:"Boston Heritage",city:"Boston",conference:"East",division:"Atlantic",mark:"BOS",market:"Boston",style:"Historic Power",color:"#55B68A"},
+  {id:"BKN",name:"Brooklyn Borough",city:"Brooklyn",conference:"East",division:"Atlantic",mark:"BKN",market:"New York",style:"Modern Market",color:"#D8D8D8"},
+  {id:"CHA",name:"Charlotte Crown",city:"Charlotte",conference:"East",division:"Southeast",mark:"CHA",market:"Charlotte",style:"Young Core",color:"#6DC7D4"},
+  {id:"CHI",name:"Chicago Flight",city:"Chicago",conference:"East",division:"Central",mark:"CHI",market:"Chicago",style:"Legacy Market",color:"#E85D64"},
+  {id:"CLE",name:"Cleveland Forge",city:"Cleveland",conference:"East",division:"Central",mark:"CLE",market:"Cleveland",style:"Two-Way Core",color:"#D7A758"},
+  {id:"DET",name:"Detroit Motors",city:"Detroit",conference:"East",division:"Central",mark:"DET",market:"Detroit",style:"Rebuild Rising",color:"#6F9ED6"},
+  {id:"IND",name:"Indiana Racers",city:"Indianapolis",conference:"East",division:"Central",mark:"IND",market:"Indianapolis",style:"Fast Offence",color:"#E2C65B"},
+  {id:"MIA",name:"Miami Waves",city:"Miami",conference:"East",division:"Southeast",mark:"MIA",market:"Miami",style:"Culture Club",color:"#E56F85"},
+  {id:"MIL",name:"Milwaukee North",city:"Milwaukee",conference:"East",division:"Central",mark:"MIL",market:"Milwaukee",style:"Contender",color:"#78B884"},
+  {id:"NYE",name:"New York Empire",city:"New York",conference:"East",division:"Atlantic",mark:"NYE",market:"New York",style:"Big Market",color:"#E68B4F"},
+  {id:"ORL",name:"Orlando Kingdom",city:"Orlando",conference:"East",division:"Southeast",mark:"ORL",market:"Orlando",style:"Defence First",color:"#68A9DB"},
+  {id:"PHI",name:"Philadelphia Foundry",city:"Philadelphia",conference:"East",division:"Atlantic",mark:"PHI",market:"Philadelphia",style:"Star Driven",color:"#6D97D4"},
+  {id:"TOR",name:"Toronto North",city:"Toronto",conference:"East",division:"Atlantic",mark:"TOR",market:"Toronto",style:"International Market",color:"#D96464"},
+  {id:"WAS",name:"Washington Capitol",city:"Washington",conference:"East",division:"Southeast",mark:"WAS",market:"Washington",style:"Rebuild",color:"#788DAF"},
+  {id:"DAL",name:"Dallas Wranglers",city:"Dallas",conference:"West",division:"Southwest",mark:"DAL",market:"Dallas",style:"Skilled Offence",color:"#5F9ED4"},
+  {id:"DEN",name:"Denver Peaks",city:"Denver",conference:"West",division:"Northwest",mark:"DEN",market:"Denver",style:"Championship Core",color:"#E0B95F"},
+  {id:"GSB",name:"Golden State Bay",city:"San Francisco",conference:"West",division:"Pacific",mark:"GSB",market:"Bay Area",style:"Perimeter Dynasty",color:"#E8BD55"},
+  {id:"HOU",name:"Houston Orbit",city:"Houston",conference:"West",division:"Southwest",mark:"HOU",market:"Houston",style:"Young Contender",color:"#DE6262"},
+  {id:"LAC",name:"Los Angeles Coast",city:"Los Angeles",conference:"West",division:"Pacific",mark:"LAC",market:"Los Angeles",style:"Veteran Depth",color:"#6D9AD6"},
+  {id:"LAG",name:"Los Angeles Gold",city:"Los Angeles",conference:"West",division:"Pacific",mark:"LAG",market:"Los Angeles",style:"Legacy Market",color:"#E6B953"},
+  {id:"MEM",name:"Memphis Blues",city:"Memphis",conference:"West",division:"Southwest",mark:"MEM",market:"Memphis",style:"Physical Tempo",color:"#7D9FCB"},
+  {id:"MIN",name:"Minnesota Frost",city:"Minneapolis",conference:"West",division:"Northwest",mark:"MIN",market:"Minnesota",style:"Elite Defence",color:"#74B6A1"},
+  {id:"NOP",name:"New Orleans Rhythm",city:"New Orleans",conference:"West",division:"Southwest",mark:"NOP",market:"New Orleans",style:"Athletic Core",color:"#D3B35C"},
+  {id:"OKC",name:"Oklahoma Storm",city:"Oklahoma City",conference:"West",division:"Northwest",mark:"OKC",market:"Oklahoma City",style:"Young Power",color:"#6FB6DD"},
+  {id:"PHX",name:"Phoenix Fire",city:"Phoenix",conference:"West",division:"Pacific",mark:"PHX",market:"Phoenix",style:"Scoring Talent",color:"#E58D4F"},
+  {id:"POR",name:"Portland Pines",city:"Portland",conference:"West",division:"Northwest",mark:"POR",market:"Portland",style:"Development Club",color:"#D36C6C"},
+  {id:"SAC",name:"Sacramento Royals",city:"Sacramento",conference:"West",division:"Pacific",mark:"SAC",market:"Sacramento",style:"Fast Offence",color:"#9A7FC1"},
+  {id:"SAS",name:"San Antonio Riders",city:"San Antonio",conference:"West",division:"Southwest",mark:"SAS",market:"San Antonio",style:"Generational Build",color:"#C6CCD2"},
+  {id:"UTA",name:"Utah Summit",city:"Salt Lake City",conference:"West",division:"Northwest",mark:"UTA",market:"Utah",style:"Asset Rich",color:"#8EBB6D"}
 ];
-let selectedTeam=TEAMS[0];
+let selectedTeam=TEAMS.find(t=>t.id==='LAG');
+let leagueConference='East';
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -202,33 +254,89 @@ function go(id,btn){
 }
 function openNewCareer(){
   const grid=document.getElementById('teamGrid'); grid.innerHTML='';
-  TEAMS.forEach((t,i)=>{
-    const b=document.createElement('button'); b.className='teamPick'+(i===0?' selected':''); b.textContent=t;
-    b.onclick=()=>{selectedTeam=t;document.querySelectorAll('.teamPick').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};
-    grid.appendChild(b);
+  ["East","West"].forEach(conf=>{
+    const head=document.createElement('div');head.className='selectorHead';head.textContent=conf+"ern Conference";grid.appendChild(head);
+    TEAMS.filter(t=>t.conference===conf).sort((a,b)=>a.name.localeCompare(b.name)).forEach(t=>{
+      const b=document.createElement('button'); b.className='teamPick'+(t.id===selectedTeam.id?' selected':''); b.textContent=t.name;
+      b.onclick=()=>{selectedTeam=t;document.querySelectorAll('.teamPick').forEach(x=>x.classList.remove('selected'));b.classList.add('selected')};
+      grid.appendChild(b);
+    });
   });
   document.getElementById('newCareer').classList.add('show');
 }
 function closeNewCareer(){document.getElementById('newCareer').classList.remove('show')}
 function createCareer(){
   const gm=(document.getElementById('gmName').value||'GM').trim();
-  const save={schema:1,version:VERSION,gm,team:selectedTeam,season:"2026/27",created:new Date().toISOString()};
+  const save={schema:1,version:VERSION,gm,teamId:selectedTeam.id,team:selectedTeam.name,season:"2026/27",created:new Date().toISOString()};
   localStorage.setItem(SAVE_KEY,JSON.stringify(save)); applyCareer(save); closeNewCareer();
 }
 function applyCareer(save){
-  document.getElementById('homeTeam').textContent=save.team;
+  const team=TEAMS.find(t=>t.id===save.teamId)||TEAMS.find(t=>t.name===save.team)||TEAMS.find(t=>t.id==="LAG");
+  selectedTeam=team;
+  document.documentElement.style.setProperty('--accent',team.color);
+  document.getElementById('homeTeam').textContent=team.name;
   document.getElementById('gmBadge').textContent=save.gm;
+  document.querySelector('#home .season').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} Division • Season ${save.season||"2026/27"}`;
+  document.getElementById('identityConference').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference`;
+  document.getElementById('identityDivision').textContent=`${team.division} Division`;
+  document.getElementById('identityMarket').textContent=team.market;
+  document.getElementById('identityStyle').textContent=team.style;
+  document.getElementById('teamMark').textContent=team.mark;
+  const opp=openingOpponent(team);
+  document.getElementById('nextOpponent').textContent=opp.name;
+  renderLeague();
   showScreen('home'); document.getElementById('nav').classList.add('show');
   document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('active',i===0));
 }
+
+function openingOpponent(team){
+  const pool=TEAMS.filter(t=>t.id!==team.id && t.conference===team.conference);
+  const index=TEAMS.findIndex(t=>t.id===team.id);
+  return pool[index % pool.length] || TEAMS.find(t=>t.id!==team.id);
+}
+function setLeagueConference(conf,btn){
+  leagueConference=conf;
+  document.querySelectorAll('.confTabs button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderLeague();
+}
+function renderLeague(){
+  const el=document.getElementById('leagueUniverse'); if(!el)return;
+  const conf=leagueConference;
+  const divs=conf==="East"?["Atlantic","Central","Southeast"]:["Northwest","Pacific","Southwest"];
+  el.innerHTML=`
+    <div class="confTabs">
+      <button class="${conf==="East"?"active":""}" onclick="setLeagueConference('East',this)">Eastern Conference</button>
+      <button class="${conf==="West"?"active":""}" onclick="setLeagueConference('West',this)">Western Conference</button>
+    </div>
+    <div class="notice">v0.1.1 establishes all 30 franchises and their permanent league alignment. Records remain 0–0 until the schedule and match engine arrive.</div>
+  `;
+  divs.forEach(div=>{
+    const block=document.createElement('div');block.className='divisionBlock';
+    block.innerHTML=`<div class="divisionTitle">${div} Division</div><div class="card"><div class="legend"><div></div><div>TEAM</div><div>W–L</div><div>OVR</div></div></div>`;
+    const card=block.querySelector('.card');
+    TEAMS.filter(t=>t.conference===conf&&t.division===div).sort((a,b)=>a.name.localeCompare(b.name)).forEach(t=>{
+      const row=document.createElement('div');row.className='teamStandRow';
+      row.innerHTML=`<div class="miniMark" style="background:${t.color}">${t.mark.slice(0,2)}</div><div class="teamInfo"><b>${t.name}${selectedTeam&&t.id===selectedTeam.id?' • YOU':''}</b><small>${t.city}</small></div><div class="zero">0–0</div><div class="zero">—</div>`;
+      card.appendChild(row);
+    });
+    el.appendChild(block);
+  });
+}
+
 function loadCareer(){
   try{
     const save=JSON.parse(localStorage.getItem(SAVE_KEY));
     if(!save){alert('No Mini&Me Basketball career save exists yet.');return}
     if(save.schema!==1){alert('This save uses an unsupported schema.');return}
+    if(!save.teamId){
+      const migrated=TEAMS.find(t=>t.name===save.team);
+      if(migrated){save.teamId=migrated.id;localStorage.setItem(SAVE_KEY,JSON.stringify(save));}
+    }
     applyCareer(save);
   }catch(e){alert('The local save could not be read.')}
 }
+document.addEventListener('DOMContentLoaded',()=>renderLeague());
 function returnToMenu(){
   showScreen('landing');document.getElementById('nav').classList.remove('show');
 }
