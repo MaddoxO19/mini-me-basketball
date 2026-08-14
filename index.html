@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.4.0</title>
+<title>Mini&Me Basketball v0.5.0</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -53,7 +53,7 @@ h1{font-size:32px;margin:0 0 7px;letter-spacing:.4px}
 .nav{
   position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);
   background:#0d1219ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);
-  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(7,1fr);z-index:5
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(5,1fr);z-index:5
 }
 .nav.show{display:grid}.nav button{background:none;border:0;color:#8692a2;font-size:11px;padding:6px}.nav button.active{color:var(--accent);font-weight:800}
 .nav .ico{display:block;font-size:20px;margin-bottom:3px}
@@ -262,6 +262,73 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .stageDone{color:var(--good);font-weight:900;font-size:11px}
 .stagePending{color:var(--accent2);font-weight:900;font-size:11px}
 
+
+.draftBoard{margin-top:8px}
+.draftPickRow{display:grid;grid-template-columns:34px 1fr 58px 54px;gap:8px;align-items:center;padding:9px 2px;border-top:1px solid #222b36;font-size:11px}
+.draftPickRow:first-child{border-top:0}
+.draftPickRow b{display:block;font-size:12px}.draftPickRow small{color:var(--muted);font-size:9px}
+.draftPickNo{font-weight:950;color:var(--accent2);text-align:center}
+.draftAction button{padding:6px 8px;font-size:10px;margin:0}
+.faRow{display:grid;grid-template-columns:1fr 52px 48px 66px;gap:8px;align-items:center;padding:9px 2px;border-top:1px solid #222b36;font-size:11px}
+.faRow:first-child{border-top:0}.faRow b{display:block;font-size:12px}.faRow small{color:var(--muted)}
+.offseasonSummary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+.offseasonSummary div{background:var(--panel2);border-radius:11px;padding:9px}
+.offseasonSummary b{display:block;font-size:16px}.offseasonSummary small{color:var(--muted);font-size:9px}
+
+
+.contractBadge{display:inline-block;margin-top:3px;padding:3px 6px;border-radius:999px;background:#202a36;color:#c7d1dc;font-size:9px}
+.payrollBar{height:8px;background:#202a36;border-radius:999px;overflow:hidden;margin-top:7px}
+.payrollFill{height:100%;background:var(--accent)}
+.rosterRule{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.rosterRule div{background:var(--panel2);border-radius:11px;padding:9px}
+.rosterRule b{display:block;font-size:16px}.rosterRule small{color:var(--muted);font-size:9px}
+.contractRow{display:grid;grid-template-columns:1fr 62px 58px 52px;gap:8px;align-items:center;padding:9px 2px;border-top:1px solid #222b36;font-size:11px}
+.contractRow:first-child{border-top:0}.contractRow b{display:block;font-size:12px}.contractRow small{color:var(--muted);font-size:9px}
+.capWarn{color:var(--bad);font-size:10px;font-weight:800;margin-top:8px}
+.capOk{color:var(--good);font-size:10px;font-weight:800;margin-top:8px}
+
+
+/* v0.5.0 UI/UX refinement */
+body{background:linear-gradient(180deg,#090c11,#0d1219 45%,#090c11)}
+.app{padding-left:14px;padding-right:14px}
+.header{padding:18px 2px 10px}
+.teamName{font-size:23px;line-height:1.05}
+.card{border-radius:16px;padding:14px;margin:8px 0;box-shadow:0 7px 20px #0002}
+.sectionTitle{margin:15px 2px 7px}
+.primary,.secondary{border-radius:12px;padding:13px 15px}
+.nav{padding-top:7px;padding-bottom:calc(7px + env(safe-area-inset-bottom))}
+.nav button{font-size:10px;padding:5px 2px}
+.nav .ico{font-size:18px;margin-bottom:2px}
+.homeShortcuts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.homeShortcuts button,.hubGrid button{background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:14px;padding:12px;text-align:left}
+.homeShortcuts span,.hubGrid span{display:block;font-size:18px;color:var(--accent);margin-bottom:4px}
+.homeShortcuts b,.hubGrid b{display:block;font-size:13px}
+.homeShortcuts small,.hubGrid small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.hubGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0 14px}
+.identityCard{padding:12px}
+.identityRow{margin-top:7px}
+.stats{gap:6px;margin-top:10px}
+.stat{padding:8px}
+.stat b{font-size:16px}
+.next{padding:4px 0}
+.next .opp{font-size:21px}
+.next .meta{margin-bottom:8px}
+.court{height:325px;margin-top:6px}
+.rosterRow,.rosterPlayerRow,.contractRow,.faRow,.draftPickRow{padding-top:8px;padding-bottom:8px}
+.leagueModeTabs,.confTabs{position:sticky;top:0;z-index:3;background:#0d1219;padding:6px 0;margin-top:0}
+.leagueModeTabs button,.confTabs button{padding:9px 6px;font-size:11px}
+.postStage{margin:10px 0}
+.matchup{padding:10px;border-radius:12px}
+.matchupTop{margin-bottom:6px}
+.seriesTeam{padding:6px 0}
+.postAction{padding:10px 12px}
+.offseasonStage{padding:12px;border-radius:14px}
+.reviewHero{padding:14px}
+.reviewHero .bigRecord{font-size:34px}
+.empty{padding:42px 18px}
+.modalBox{max-height:88vh;overflow:auto}
+.playerModalBox,.gameModalBox{padding:16px}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -274,7 +341,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.4.0 • Offseason Foundation</div>
+      <div class="build">v0.5.0 • UI / UX Refinement</div>
     </div>
   </section>
 
@@ -301,11 +368,19 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <button class="secondary" id="simWeekBtn" onclick="simWeek()">Sim 1 Week</button>
     </div>
     <div id="lastResultCard"></div>
-    <div class="sectionTitle">Around the League</div>
+    
+    <div class="homeShortcuts">
+      <button onclick="goShortcut('league')"><span>▦</span><b>League</b><small>Standings & leaders</small></button>
+      <button onclick="goShortcut('playoffs')"><span>◆</span><b>Postseason</b><small>Bracket & history</small></button>
+      <button onclick="goShortcut('review')"><span>★</span><b>Review</b><small>Season summary</small></button>
+      <button onclick="goShortcut('offseason')"><span>↻</span><b>Offseason</b><small>Draft & free agency</small></button>
+    </div>
+
+<div class="sectionTitle">Around the League</div>
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>Multi-season careers now begin with offseason ageing, retirements, rookie generation and season rollover.</p></div>
+      <div class="feed"><div class="dot"></div><p>Navigation, layout density and mobile presentation have been refined across the core game without changing simulation logic.</p></div>
     </div>
   </section>
 
@@ -324,13 +399,15 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     </div>
     <div class="sectionTitle">Rotation Minutes</div>
     <div class="card" id="rotationList"></div>
+    <div class="sectionTitle">Roster Overview</div>
+    <div class="card" id="payrollCard"></div>
     <div class="sectionTitle">Full Roster</div>
     <div class="card" id="fullRoster"></div>
     <div class="notice">Your Starting Five and rotation are now editable and stored in the career save. A valid rotation must contain exactly five starters and 240 total minutes before the match engine begins using it.</div>
   </section>
 
   <section id="league" class="screen">
-    <div class="header"><div><div class="kicker">League</div><div class="teamName">2026/27 Season</div><div class="season">30 Teams • 82 Games • East & West</div></div></div>
+    <div class="header"><div><div class="kicker">League</div><div class="teamName">League</div><div class="season">Standings, leaders and your 82-game schedule</div></div></div>
     <div class="leagueModeTabs three">
       <button id="standingsTab" class="active" onclick="setLeagueMode('standings',this)">Standings</button>
       <button id="leadersTab" onclick="setLeagueMode('leaders',this)">Leaders</button>
@@ -373,18 +450,30 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
   </section>
 
 <section id="more" class="screen">
-    <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
+    <div class="header">
+      <div><div class="kicker">Career Hub</div><div class="teamName">More</div><div class="season">Season review, offseason, data and build tools</div></div>
+    </div>
+
+    <div class="hubGrid">
+      <button onclick="goShortcut('review')"><span>★</span><b>Season Review</b><small>Final standings & champions</small></button>
+      <button onclick="goShortcut('offseason')"><span>↻</span><b>Offseason</b><small>Draft, contracts & free agency</small></button>
+    </div>
+
+    <div class="sectionTitle">League Data</div>
     <div class="card">
-      <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.4.0</p></div>
-      <div class="feed"><p><b>Milestone:</b> Multi-season career foundation with ageing, retirements, generated draft class, rookie intake and season rollover.</p></div>
-      <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div><div class="feed"><p><b>League Data:</b> <span id="dataSourceLabel">Loading...</span></p></div>
-      <div class="feed"><p><b>League Data Tools:</b> Import or export the editable league database directly on this device.</p></div>
+      <div class="feed"><p><b>Source:</b> <span id="dataSourceLabel">Loading...</span></p></div>
+      <div class="feed"><p>Import or export the editable league database directly on this device.</p></div>
       <input id="leagueJsonInput" type="file" accept=".json,application/json" style="display:none" onchange="importLeagueJson(event)" />
       <button class="secondary" onclick="document.getElementById('leagueJsonInput').click()">Import League JSON</button>
       <button class="secondary" onclick="exportLeagueJson()">Export League JSON</button>
+    </div>
 
-      <div class="feed"><p><b>Next:</b> v0.4.1 draft order, rookie selection and free-agency decision layer.</p></div>
+    <div class="sectionTitle">Build Information</div>
+    <div class="card">
+      <div class="feed"><p><b>Version:</b> v0.5.0</p></div>
+      <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
+      <div class="feed"><p><b>Milestone:</b> Mobile-first UI/UX refinement across navigation, Home, Roster, League, Postseason and Offseason without changing core game logic.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.5.1 targeted presentation fixes from testing, then return to deeper roster systems.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -394,9 +483,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
   <button class="active" data-screen="home" onclick="go('home',this)"><span class="ico">⌂</span>Home</button>
   <button data-screen="squad" onclick="go('squad',this)"><span class="ico">◉</span>Roster</button>
   <button data-screen="league" onclick="go('league',this)"><span class="ico">▦</span>League</button>
-  <button data-screen="playoffs" onclick="go('playoffs',this)"><span class="ico">◆</span>Playoffs</button>
-  <button data-screen="review" onclick="go('review',this)"><span class="ico">★</span>Review</button>
-  <button data-screen="offseason" onclick="go('offseason',this)"><span class="ico">↻</span>Offseason</button>
+  <button data-screen="playoffs" onclick="go('playoffs',this)"><span class="ico">◆</span>Postseason</button>
   <button data-screen="more" onclick="go('more',this)"><span class="ico">•••</span>More</button>
 </div>
 
@@ -468,7 +555,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.4.0";
+const VERSION="0.5.0";
 const SAVE_KEY="MMB_SAVE_1";
 let TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -534,6 +621,7 @@ function applyLeagueData(data,sourceLabel){
   validateLeagueData(data);
   TEAMS=data.league.teams;
   PLAYERS=data.league.players;
+  ensureContracts();
   importedLeagueData=data;
   leagueDataSource=sourceLabel;
   selectedTeam=TEAMS.find(t=>t.id===activeSave?.teamId)||TEAMS.find(t=>t.id==="LAG")||TEAMS[0];
@@ -591,11 +679,27 @@ async function loadExternalLeagueData(){
     leagueDataSource="Embedded fallback";
   }finally{
     leagueDataReady=true;
+    ensureContracts();
     selectedTeam=TEAMS.find(t=>t.id==="LAG")||TEAMS[0];
     const source=document.getElementById("dataSourceLabel");
     if(source)source.textContent=leagueDataSource;
     renderLeague();
   }
+}
+
+
+function goShortcut(id){
+  showScreen(id);
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  const navBtn=document.querySelector(`.nav button[data-screen="${id}"]`);
+  if(navBtn)navBtn.classList.add('active');
+  else{
+    const moreBtn=document.querySelector('.nav button[data-screen="more"]');
+    if(moreBtn)moreBtn.classList.add('active');
+  }
+  if(id==="review")renderSeasonReview();
+  if(id==="playoffs")renderPlayoffs();
+  if(id==="offseason")renderOffseason();
 }
 
 function showScreen(id){
@@ -626,6 +730,7 @@ function openNewCareer(){
 function closeNewCareer(){document.getElementById('newCareer').classList.remove('show')}
 function createCareer(){
   const gm=(document.getElementById('gmName').value||'GM').trim();
+  ensureContracts();
   const save={
     schema:1,
     playerUniverse:1,
@@ -752,6 +857,32 @@ function autoRotation(){
   persistSave();renderRoster(selectedTeam);
 }
 
+
+const ROSTER_MIN=12;
+const ROSTER_MAX=15;
+const SOFT_CAP=180;
+
+function ensureContracts(){
+  PLAYERS.forEach(p=>{
+    if(!p.contract){
+      const years=p.age>=35?1:(p.ovr>=90?3:(p.ovr>=82?2:1));
+      const salary=Math.max(2,Math.round((p.ovr-68)*1.55 + (p.pot-p.ovr)*0.25));
+      p.contract={years,salary};
+    }
+  });
+}
+function teamPayroll(teamId){
+  return teamPlayers(teamId).reduce((s,p)=>s+(p.contract?.salary||0),0);
+}
+function expiringPlayers(teamId){
+  return teamPlayers(teamId).filter(p=>(p.contract?.years||0)<=1);
+}
+function rosterStatus(teamId){
+  const count=teamPlayers(teamId).length;
+  const payroll=teamPayroll(teamId);
+  return {count,payroll,overMax:count>ROSTER_MAX,underMin:count<ROSTER_MIN,overCap:payroll>SOFT_CAP};
+}
+
 function teamPlayers(teamId){return PLAYERS.filter(p=>p.teamId===teamId)}
 function primaryPos(p){return p.pos.split("/")[0]}
 function starterFive(teamId){
@@ -807,12 +938,19 @@ function renderRoster(team){
   const help=document.createElement('div');help.className='rotationHelp';help.textContent='Allocate exactly 240 minutes. Players may be set from 0 to 48 minutes. The match engine will use these minutes as the planned rotation.';
   rot.appendChild(help);
 
+  const payroll=document.getElementById('payrollCard');
+  if(payroll){
+    const rs=rosterStatus(team.id);
+    payroll.innerHTML=`<div class="rosterRule"><div><b>${rs.count}/${ROSTER_MAX}</b><small>Roster Size</small></div><div><b>$${rs.payroll}m</b><small>Payroll</small></div><div><b>${expiringPlayers(team.id).length}</b><small>Expiring</small></div></div>
+      <div class="payrollBar"><div class="payrollFill" style="width:${Math.min(100,(rs.payroll/SOFT_CAP)*100)}%"></div></div>
+      <div class="${rs.overCap?'capWarn':'capOk'}">${rs.overCap?`Over soft cap by $${rs.payroll-SOFT_CAP}m`:`$${SOFT_CAP-rs.payroll}m below soft cap`}</div>`;
+  }
   const full=document.getElementById('fullRoster');
   full.innerHTML=`<div class="rosterMeta"><span>${roster.length} Active Players</span><span>${starters.length} Starters</span><span>240 Minute Rotation</span></div>`;
   roster.forEach(p=>{
     const isStarter=activeRotation?.starters.includes(p.id);
     const r=document.createElement('div');r.className='rosterPlayerRow';
-    r.innerHTML=`<div class="name"><b class="playerClick" onclick="openPlayer('${p.id}')">${p.name}</b><small>${p.archetype}</small><button class="starterToggle ${isStarter?'on':''}" onclick="toggleStarter('${p.id}')">${isStarter?'STARTER':'MAKE STARTER'}</button></div>
+    r.innerHTML=`<div class="name"><b class="playerClick" onclick="openPlayer('${p.id}')">${p.name}</b><small>${p.archetype}</small><span class="contractBadge">$${p.contract?.salary||0}m • ${p.contract?.years||0} yr</span><button class="starterToggle ${isStarter?'on':''}" onclick="toggleStarter('${p.id}')">${isStarter?'STARTER':'MAKE STARTER'}</button></div>
       <div class="posText">${p.pos}</div><div class="ovrText">${p.ovr}</div><div class="potential">P${p.pot}</div>`;
     full.appendChild(r);
   });
@@ -829,7 +967,7 @@ function openPlayer(id){
   document.getElementById('playerDef').textContent=p.defn;
   document.getElementById('playerPot').textContent=p.pot;
   document.getElementById('playerArchetype').textContent=p.archetype;
-  document.getElementById('playerRole').textContent=p.role;
+  document.getElementById('playerRole').textContent=`${p.role} • $${p.contract?.salary||0}m • ${p.contract?.years||0} yr`;
   const s=activeSave?.seasonState?.playerStats?.[p.id];
   if(s&&s.gp){
     const ppg=s.pts/s.gp,rpg=s.reb/s.gp,apg=s.ast/s.gp,spg=s.stl/s.gp,bpg=s.blk/s.gp,mpg=s.min/s.gp;
@@ -1594,11 +1732,25 @@ function initOffseason(){
   const state=activeSave.seasonState;
   if(state.offseason)return state.offseason;
   const next=nextSeasonLabel(activeSave.season);
+  const retired=processRetirements();
+  const draftClass=generateDraftClass(next,30);
+  const standings=Object.entries(state.standings).map(([teamId,s])=>({teamId,w:s.w,l:s.l,pct:(s.w+s.l)?s.w/(s.w+s.l):0}));
+  const draftOrder=standings.sort((a,b)=>a.pct-b.pct||a.w-b.w).map((x,i)=>({pick:i+1,teamId:x.teamId}));
+  const freeAgents=PLAYERS
+    .filter(p=>!retired.some(r=>r.id===p.id))
+    .slice()
+    .sort((a,b)=>a.ovr-b.ovr)
+    .slice(0,18)
+    .map(p=>({...p,asking:Math.max(2,Math.round((p.ovr-70)*1.4)),offerYears:p.age>=34?1:2}));
   state.offseason={
     stage:"summary",
-    retired:processRetirements(),
-    draftClass:generateDraftClass(next,30),
+    retired,
+    draftClass,
     rookieAdditions:[],
+    draftOrder,
+    draftResults:[],
+    freeAgents,
+    freeAgentSignings:[],
     completed:false
   };
   persistSave();
@@ -1622,20 +1774,76 @@ function applyAgeingAndRetirements(){
   const retiredIds=new Set(off.retired.map(p=>p.id));
   PLAYERS=PLAYERS.filter(p=>!retiredIds.has(p.id)).map(p=>({...p,age:(p.age||25)+1}));
   off.stage="draft";
+  persistSave();advanceDraftToUser();
+}
+function currentDraftPick(){
+  const off=initOffseason();if(!off)return null;
+  return off.draftOrder[off.draftResults.length]||null;
+}
+function aiSelectDraftPick(){
+  const off=initOffseason();const pick=currentDraftPick();if(!off||!pick)return;
+  const prospect=off.draftClass[0];
+  if(!prospect)return;
+  off.draftClass.shift();
+  const rookie={...prospect,teamId:pick.teamId,id:`${pick.teamId}-${prospect.id}`,contract:{years:4,salary:Math.max(3,Math.round(12-pick.pick*.25))}};
+  PLAYERS.push(rookie);
+  off.draftResults.push({pick:pick.pick,teamId:pick.teamId,playerId:rookie.id});
+}
+function advanceDraftToUser(){
+  const off=initOffseason();if(!off)return;
+  let pick=currentDraftPick();
+  while(pick && pick.teamId!==activeSave.teamId){
+    aiSelectDraftPick();
+    pick=currentDraftPick();
+  }
+  if(!pick){
+    off.stage="freeagency";
+  }
   persistSave();renderOffseason();renderRoster(selectedTeam);
 }
-function addTopRookie(){
-  const off=initOffseason();if(!off||!off.draftClass.length)return;
-  const pick=off.draftClass.shift();
-  const rookie={...pick,teamId:activeSave.teamId,id:`${activeSave.teamId}-${pick.id}`};
+function userDraftPlayer(prospectId){
+  const off=initOffseason();const pick=currentDraftPick();
+  if(!off||!pick||pick.teamId!==activeSave.teamId)return;
+  const idx=off.draftClass.findIndex(p=>p.id===prospectId);if(idx<0)return;
+  const prospect=off.draftClass.splice(idx,1)[0];
+  const rookie={...prospect,teamId:activeSave.teamId,id:`${activeSave.teamId}-${prospect.id}`,contract:{years:4,salary:Math.max(3,Math.round(12-current.pick*.25))}};
   PLAYERS.push(rookie);
   off.rookieAdditions.push(rookie);
-  off.stage="rollover";
+  off.draftResults.push({pick:pick.pick,teamId:activeSave.teamId,playerId:rookie.id});
+  advanceDraftToUser();
+}
+function signFreeAgent(playerId){
+  const off=initOffseason();if(!off||off.stage!=="freeagency")return;
+  const idx=off.freeAgents.findIndex(p=>p.id===playerId);if(idx<0)return;
+  const current=rosterStatus(activeSave.teamId);
+  if(current.count>=ROSTER_MAX){alert(`Roster limit reached. Maximum ${ROSTER_MAX} players.`);return}
+  const p=off.freeAgents[idx];
+  if(current.payroll+p.asking>SOFT_CAP+25){
+    alert("This signing would push the team too far above the simplified soft-cap allowance.");
+    return;
+  }
+  off.freeAgents.splice(idx,1);
+  const existing=PLAYERS.find(x=>x.id===p.id);
+  if(existing){
+    existing.teamId=activeSave.teamId;
+    existing.contract={years:p.offerYears||2,salary:p.asking};
+  }else{
+    PLAYERS.push({...p,teamId:activeSave.teamId,contract:{years:p.offerYears||2,salary:p.asking}});
+  }
+  off.freeAgentSignings.push({playerId:p.id,teamId:activeSave.teamId,years:p.offerYears||2,salary:p.asking});
   persistSave();renderOffseason();renderRoster(selectedTeam);
+}
+function finishFreeAgency(){
+  const off=initOffseason();if(!off)return;
+  off.stage="rollover";
+  persistSave();renderOffseason();
 }
 function beginNextSeason(){
   const off=initOffseason();if(!off)return;
   archiveCurrentSeason();
+  PLAYERS.forEach(p=>{
+    if(p.contract)p.contract.years=Math.max(0,(p.contract.years||0)-1);
+  });
   activeSave.season=nextSeasonLabel(activeSave.season);
   activeSave.seasonState=null;
   initSeason(activeSave);
@@ -1658,29 +1866,58 @@ function renderOffseason(){
   const off=initOffseason();badge.textContent=off.completed?"COMPLETE":"OPEN";
   sub.textContent=`${activeSave.season} → ${nextSeasonLabel(activeSave.season)}`;
 
-  let retiredHtml=off.retired.length?off.retired.map(p=>{
+  const userPick=off.draftOrder.find(x=>x.teamId===activeSave.teamId);
+  const current=currentDraftPick();
+  const retiredHtml=off.retired.length?off.retired.map(p=>{
     const t=TEAMS.find(x=>x.id===p.teamId);
     return `<div class="retireRow"><div><b>${p.name}</b><small>${t?.name||""} • ${p.pos}</small></div><div>${p.age} yrs</div><div>${p.ovr} OVR</div></div>`;
   }).join(""):'<div class="empty" style="padding:18px">No retirements this offseason.</div>';
 
-  let rookies=off.draftClass.slice(0,8).map((p,i)=>`<div class="rookieRow"><div><b>${p.name}</b><small>${p.pos} • POT ${p.pot}</small></div><div>${p.age} yrs</div><div>${p.ovr} OVR</div></div>`).join("");
+  let draftHtml="";
+  if(off.stage==="draft"){
+    draftHtml=`<div class="offseasonSummary"><div><b>#${userPick?.pick||"—"}</b><small>Your Draft Pick</small></div><div><b>${off.draftResults.length}/30</b><small>Picks Complete</small></div></div>`;
+    if(current?.teamId===activeSave.teamId){
+      draftHtml+=`<div class="draftBoard">${off.draftClass.slice(0,10).map(p=>`<div class="draftPickRow"><div class="draftPickNo">#${current.pick}</div><div><b>${p.name}</b><small>${p.pos} • ${p.archetype} • POT ${p.pot}</small></div><div>${p.ovr} OVR</div><div class="draftAction"><button class="secondary" onclick="userDraftPlayer('${p.id}')">Draft</button></div></div>`).join("")}</div>`;
+    }else{
+      draftHtml+='<button class="primary" onclick="advanceDraftToUser()">Sim to Your Pick</button>';
+    }
+  }else{
+    const recent=off.draftResults.slice(-6).map(r=>{
+      const t=TEAMS.find(x=>x.id===r.teamId),p=PLAYERS.find(x=>x.id===r.playerId);
+      return `<div class="draftPickRow"><div class="draftPickNo">#${r.pick}</div><div><b>${p?.name||"Rookie"}</b><small>${t?.name||""}</small></div><div>${p?.ovr||"—"} OVR</div><div></div></div>`;
+    }).join("");
+    draftHtml=recent||'<div class="empty" style="padding:18px">Draft not started.</div>';
+  }
 
-  let action="";
-  if(off.stage==="summary")action='<button class="primary" onclick="applyAgeingAndRetirements()">Process Ageing & Retirements</button>';
-  else if(off.stage==="draft")action='<button class="primary" onclick="addTopRookie()">Add Rookie Prospect</button>';
-  else if(off.stage==="rollover")action='<button class="primary" onclick="beginNextSeason()">Begin Next Season</button>';
+  const expiring=expiringPlayers(activeSave.teamId);
+  let contractHtml=expiring.length?expiring.map(p=>`<div class="contractRow"><div><b>${p.name}</b><small>${p.pos} • ${p.archetype}</small></div><div>$${p.contract.salary}m</div><div>${p.contract.years} yr</div><div>${p.ovr} OVR</div></div>`).join(""):'<div class="empty" style="padding:18px">No expiring contracts.</div>';
+
+  let faHtml="";
+  if(off.stage==="freeagency"){
+    faHtml=`<div class="offseasonSummary"><div><b>${off.freeAgentSignings.length}</b><small>Your Signings</small></div><div><b>${teamPlayers(activeSave.teamId).length}</b><small>Current Roster</small></div></div>
+    ${off.freeAgents.slice().sort((a,b)=>b.ovr-a.ovr).slice(0,12).map(p=>`<div class="faRow"><div><b>${p.name}</b><small>${p.pos} • $${p.asking}m × ${p.offerYears} yr</small></div><div>${p.ovr} OVR</div><div>${p.age} yrs</div><div><button class="secondary" style="padding:6px 8px;margin:0" onclick="signFreeAgent('${p.id}')">Sign</button></div></div>`).join("")}
+    <button class="primary" onclick="finishFreeAgency()">Finish Free Agency</button>`;
+  }else{
+    faHtml='<div class="empty" style="padding:18px">Free agency opens after the draft.</div>';
+  }
+
+  let rolloverAction="";
+  if(off.stage==="summary")rolloverAction='<button class="primary" onclick="applyAgeingAndRetirements()">Process Ageing & Retirements</button>';
+  else if(off.stage==="rollover")rolloverAction='<button class="primary" onclick="beginNextSeason()">Begin Next Season</button>';
 
   wrap.innerHTML=`
-    <div class="offseasonStage"><div class="kicker">Step 1</div><h3>Retirements & Ageing</h3><p>Veteran players age one year. Players at advanced ages may retire and are removed from the active player universe.</p>${retiredHtml}</div>
-    <div class="offseasonStage"><div class="kicker">Step 2</div><h3>Draft Class Preview</h3><p>This foundation build generates a 30-player rookie class. Full draft order and selection logic arrive next.</p>${rookies}</div>
-    <div class="offseasonStage"><div class="kicker">Step 3</div><h3>Season Rollover</h3><p>Your completed season is archived into career history before a fresh 82-game season is generated.</p>${action}</div>`;
+    <div class="offseasonStage"><div class="kicker">Step 1</div><h3>Retirements & Ageing</h3><p>Veteran players age one year and may retire from the active league universe.</p>${retiredHtml}</div>
+    <div class="offseasonStage"><div class="kicker">Step 2</div><h3>Draft</h3><p>The draft order is based on the reverse regular-season standings. AI teams select automatically until your pick.</p>${draftHtml}</div>
+    <div class="offseasonStage"><div class="kicker">Step 3</div><h3>Contracts</h3><p>Expiring contracts are now visible. Renewal decisions will be added in a later contract-management pass.</p>${contractHtml}</div>
+    <div class="offseasonStage"><div class="kicker">Step 4</div><h3>Free Agency</h3><p>Signings now carry simplified salary and years, with roster-limit and soft-cap checks.</p>${faHtml}</div>
+    <div class="offseasonStage"><div class="kicker">Step 5</div><h3>Season Rollover</h3><p>Your completed season is archived before a fresh 82-game schedule is generated.</p>${rolloverAction}</div>`;
 }
 
 function renderPlayoffs(){
   const wrap=document.getElementById('playoffContent'),sub=document.getElementById('playoffSubtitle'),badge=document.getElementById('playoffBadge');
   if(!wrap||!sub||!badge)return;
   if(!activeSave||!seasonComplete()){
-    badge.textContent="LOCKED";sub.textContent="Complete the regular season to begin postseason play.";
+    badge.textContent="LOCKED";sub.textContent="Complete all 82 regular-season games to unlock postseason play.";
     wrap.innerHTML='<div class="card empty">The Play-In and Playoffs unlock after all 82 regular-season games are complete.</div>';return;
   }
   const ps=initPostseason();badge.textContent=ps.phase==="complete"?"COMPLETE":"LIVE";
