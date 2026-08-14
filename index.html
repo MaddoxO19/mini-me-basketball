@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.5.0</title>
+<title>Mini&Me Basketball v0.5.1</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -329,6 +329,56 @@ body{background:linear-gradient(180deg,#090c11,#0d1219 45%,#090c11)}
 .modalBox{max-height:88vh;overflow:auto}
 .playerModalBox,.gameModalBox{padding:16px}
 
+
+/* v0.5.1 Football-inspired Home */
+.homeHeader{padding-bottom:7px}
+.matchCentre{padding:0;overflow:hidden}
+.matchCentreTop{display:flex;justify-content:space-between;gap:10px;padding:11px 13px;background:#0e141c;border-bottom:1px solid var(--line);font-size:10px;font-weight:900;color:var(--accent2);letter-spacing:.5px}
+.matchCentreTop span:last-child{color:var(--muted);font-weight:700;letter-spacing:0}
+.matchTeams{display:grid;grid-template-columns:1fr 50px 1fr;align-items:center;gap:5px;padding:19px 10px 14px}
+.matchSide{text-align:center;min-width:0}
+.matchSide b{display:block;font-size:14px;line-height:1.15;margin-top:8px}
+.matchSide small{display:block;color:var(--muted);font-size:9px;margin-top:4px}
+.matchMark{width:58px;height:58px;margin:auto;border-radius:17px;background:var(--accent);color:#17100a;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:14px;box-shadow:0 7px 18px #0004}
+.matchMark.opponent{background:#25303d;color:#f2f4f7}
+.matchVs{text-align:center}.matchVs strong{display:block;font-size:16px}.matchVs span{display:block;color:var(--muted);font-size:9px;margin-top:4px;font-weight:900}
+.matchContext{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.matchContext div{text-align:center;padding:9px 3px;border-left:1px solid var(--line)}
+.matchContext div:first-child{border-left:0}.matchContext b{display:block;font-size:14px}.matchContext small{display:block;color:var(--muted);font-size:8px;margin-top:2px}
+.matchActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px}.matchActions button{margin:0}
+.homeSnapshot{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:8px 0}
+.homeSnapshot div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 4px;text-align:center}
+.homeSnapshot b{display:block;font-size:15px}.homeSnapshot small{color:var(--muted);font-size:8px}
+.splitTitle{display:flex;justify-content:space-between;align-items:end}.splitTitle small{color:var(--muted);font-size:9px;font-weight:500}
+.rivalryGame{display:grid;grid-template-columns:58px 1fr 54px;gap:8px;align-items:center;padding:9px 2px;border-top:1px solid #222b36}
+.rivalryGame:first-child{border-top:0}.rivalryGame .date{font-size:9px;color:var(--muted)}
+.rivalryGame b{font-size:12px}.rivalryGame small{display:block;color:var(--muted);font-size:9px}
+.rivalryScore{text-align:right;font-size:14px;font-weight:950}.rivalryScore.win{color:var(--good)}.rivalryScore.loss{color:var(--bad)}
+.newsItem{display:grid;grid-template-columns:8px 1fr;gap:9px;padding:9px 1px;border-top:1px solid #222b36}
+.newsItem:first-child{border-top:0}.newsItem .newsDot{width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:5px}
+.newsItem b{display:block;font-size:12px}.newsItem p{margin:2px 0 0;color:var(--muted);font-size:10px;line-height:1.35}
+
+/* Bracket presentation */
+.bracketToolbar{display:grid;grid-template-columns:1fr;gap:8px;margin:8px 0 12px}
+.bracketToolbar button{margin:0}
+.bracketConference{margin:14px 0}
+.bracketConferenceTitle{display:flex;justify-content:space-between;align-items:center;margin:0 2px 7px}
+.bracketConferenceTitle b{font-size:13px}.bracketConferenceTitle small{color:var(--muted);font-size:9px}
+.bracketScroller{overflow-x:auto;padding-bottom:5px;-webkit-overflow-scrolling:touch}
+.bracketGrid{display:grid;grid-template-columns:repeat(3,190px);gap:10px;min-width:590px;align-items:start}
+.bracketColumn{display:flex;flex-direction:column;gap:8px}
+.bracketColumnTitle{text-align:center;color:var(--accent2);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.6px;margin-bottom:2px}
+.bracketSeries{background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:8px}
+.bracketSeries.userSeries{border-color:var(--accent)}
+.bracketSeries .roundLabel{font-size:8px;color:var(--muted);margin-bottom:4px}
+.bracketTeam{display:grid;grid-template-columns:22px 1fr 22px;gap:5px;align-items:center;padding:5px 0;border-top:1px solid #222b36}
+.bracketTeam:first-of-type{border-top:0}.bracketTeam .seed{font-size:9px;color:var(--muted);text-align:center}
+.bracketTeam b{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bracketTeam .wins{text-align:center;font-weight:950;color:var(--accent2)}
+.bracketFinal{margin:14px 0}
+.playInGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.playInConf{min-width:0}
+.concurrentNote{font-size:9px;color:var(--muted);text-align:center;margin-top:5px}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -341,46 +391,79 @@ body{background:linear-gradient(180deg,#090c11,#0d1219 45%,#090c11)}
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.5.0 • UI / UX Refinement</div>
+      <div class="build">v0.5.1 • Football-Inspired Home & Bracket</div>
     </div>
   </section>
 
   <section id="home" class="screen">
-    <div class="header">
-      <div><div class="kicker">My Franchise</div><div class="teamName" id="homeTeam">Los Angeles Gold</div><div class="season">Western Conference • Season 2026/27</div></div>
+    <div class="header homeHeader">
+      <div>
+        <div class="kicker">Mini&Me Basketball</div>
+        <div class="teamName" id="homeTeam">Los Angeles Gold</div>
+        <div class="season" id="homeSeasonLine">Western Conference • Season 2026/27</div>
+      </div>
       <div class="badge">GM <span id="gmBadge">Fitz</span></div>
     </div>
-    <div class="card">
-      <div class="record"><strong id="homeRecord">0–0</strong><span>Regular Season</span></div>
-      <div class="stats"><div class="stat"><b id="confRank">—</b><small>Conference Rank</small></div><div class="stat"><b id="homeTeamOvr">—</b><small>Rotation Strength</small></div><div class="stat"><b id="homeGameNo">0/82</b><small>Games Played</small></div></div>
+
+    <div class="matchCentre card">
+      <div class="matchCentreTop">
+        <span id="nextGameLabel">NEXT GAME</span>
+        <span id="nextMeta">Game 1 of 82</span>
+      </div>
+      <div class="matchTeams">
+        <div class="matchSide">
+          <div class="matchMark" id="homeMatchMark">LAG</div>
+          <b id="homeMatchTeam">Los Angeles Gold</b>
+          <small id="homeMatchRecord">0–0 • — West</small>
+        </div>
+        <div class="matchVs">
+          <strong>VS</strong>
+          <span id="nextVenue">HOME</span>
+        </div>
+        <div class="matchSide">
+          <div class="matchMark opponent" id="oppMatchMark">PHX</div>
+          <b id="nextOpponent">Phoenix Fire</b>
+          <small id="oppMatchRecord">0–0 • — West</small>
+        </div>
+      </div>
+
+      <div class="matchContext">
+        <div><b id="seasonSeries">0–0</b><small>Season Series</small></div>
+        <div><b id="rivalryRecord">0–0</b><small>Career H2H</small></div>
+        <div><b id="recentForm">—</b><small>Last 5</small></div>
+      </div>
+
+      <div class="matchActions">
+        <button class="primary" id="simGameBtn" onclick="simNextGame()">Sim Game</button>
+        <button class="secondary" id="simWeekBtn" onclick="simWeek()">Sim 1 Week</button>
+      </div>
     </div>
-    <div class="card identityCard">
-      <div class="kicker">Franchise Identity</div>
-      <div class="identityRow"><div><b id="identityConference">Western Conference</b><small id="identityDivision">Pacific Division</small></div><div class="teamMark" id="teamMark">LAG</div></div>
-      <div class="identityMeta"><span id="identityMarket">Los Angeles</span><span id="identityStyle">Legacy Market</span></div>
+
+    <div class="homeSnapshot">
+      <div><b id="homeRecord">0–0</b><small>Season</small></div>
+      <div><b id="confRank">—</b><small>Conference</small></div>
+      <div><b id="homeTeamOvr">—</b><small>Rotation</small></div>
+      <div><b id="homeGameNo">0/82</b><small>Games</small></div>
     </div>
-    <div class="card next">
-      <div class="kicker" id="nextGameLabel">Next Game</div>
-      <div class="vs" id="nextVenue">HOME</div>
-      <div class="opp" id="nextOpponent">Phoenix Fire</div>
-      <div class="meta" id="nextMeta">Game 1 of 82</div>
-      <button class="primary" id="simGameBtn" onclick="simNextGame()">Sim Game</button>
-      <button class="secondary" id="simWeekBtn" onclick="simWeek()">Sim 1 Week</button>
-    </div>
+
     <div id="lastResultCard"></div>
-    
+
+    <div class="sectionTitle splitTitle"><span>Rivalry History</span><small id="rivalryLabel">vs Next Opponent</small></div>
+    <div class="card rivalryCard" id="rivalryHistory">
+      <div class="empty" style="padding:20px">No previous meetings yet.</div>
+    </div>
+
+    <div class="sectionTitle">GM News</div>
+    <div class="card newsCard" id="gmNews"></div>
+
+    <div class="sectionTitle">Club News</div>
+    <div class="card newsCard" id="clubNews"></div>
+
     <div class="homeShortcuts">
       <button onclick="goShortcut('league')"><span>▦</span><b>League</b><small>Standings & leaders</small></button>
       <button onclick="goShortcut('playoffs')"><span>◆</span><b>Postseason</b><small>Bracket & history</small></button>
       <button onclick="goShortcut('review')"><span>★</span><b>Review</b><small>Season summary</small></button>
       <button onclick="goShortcut('offseason')"><span>↻</span><b>Offseason</b><small>Draft & free agency</small></button>
-    </div>
-
-<div class="sectionTitle">Around the League</div>
-    <div class="card">
-      <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
-      <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>Navigation, layout density and mobile presentation have been refined across the core game without changing simulation logic.</p></div>
     </div>
   </section>
 
@@ -470,10 +553,10 @@ body{background:linear-gradient(180deg,#090c11,#0d1219 45%,#090c11)}
 
     <div class="sectionTitle">Build Information</div>
     <div class="card">
-      <div class="feed"><p><b>Version:</b> v0.5.0</p></div>
+      <div class="feed"><p><b>Version:</b> v0.5.1</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Milestone:</b> Mobile-first UI/UX refinement across navigation, Home, Roster, League, Postseason and Offseason without changing core game logic.</p></div>
-      <div class="feed"><p><b>Next:</b> v0.5.1 targeted presentation fixes from testing, then return to deeper roster systems.</p></div>
+      <div class="feed"><p><b>Milestone:</b> Football-inspired Home matchup centre, persistent rivalry history, GM/Club news and concurrent East-West bracket simulation.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.5.2 targeted UI polish and bracket tuning from iPhone testing.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -555,7 +638,7 @@ body{background:linear-gradient(180deg,#090c11,#0d1219 45%,#090c11)}
 </div>
 
 <script>
-const VERSION="0.5.0";
+const VERSION="0.5.1";
 const SAVE_KEY="MMB_SAVE_1";
 let TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -763,6 +846,7 @@ function applyCareer(save){
   if(!save.team)save.team=team.name;
   if(!save.season)save.season="2026/27";
   if(!Array.isArray(save.careerSeasons))save.careerSeasons=[];
+  if(!Array.isArray(save.rivalryHistory))save.rivalryHistory=[];
 
   selectedTeam=team;
   activeSave=save; // MUST be assigned before ensureRotation/initSeason, both may persist.
@@ -773,12 +857,7 @@ function applyCareer(save){
   document.documentElement.style.setProperty('--accent',team.color);
   document.getElementById('homeTeam').textContent=team.name;
   document.getElementById('gmBadge').textContent=save.gm||"GM";
-  document.querySelector('#home .season').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} Division • Season ${save.season}`;
-  document.getElementById('identityConference').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference`;
-  document.getElementById('identityDivision').textContent=`${team.division} Division`;
-  document.getElementById('identityMarket').textContent=team.market;
-  document.getElementById('identityStyle').textContent=team.style;
-  document.getElementById('teamMark').textContent=team.mark;
+  document.getElementById('homeSeasonLine').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} • Season ${save.season}`;
 
   renderRoster(team);
   refreshSeasonUI();
@@ -1243,6 +1322,138 @@ function playerGameScore(r){
   return r.pts + r.reb*0.7 + r.ast*0.8 + r.stl*1.5 + r.blk*1.5;
 }
 
+
+function recordRivalryGame(game,competition="Regular Season"){
+  if(!activeSave || !(game.home===activeSave.teamId||game.away===activeSave.teamId))return;
+  if(!Array.isArray(activeSave.rivalryHistory))activeSave.rivalryHistory=[];
+  const key=`${activeSave.season}|${competition}|${game.id}`;
+  if(activeSave.rivalryHistory.some(x=>x.key===key))return;
+  const userHome=game.home===activeSave.teamId;
+  const opponentId=userHome?game.away:game.home;
+  const us=userHome?game.homeScore:game.awayScore;
+  const them=userHome?game.awayScore:game.homeScore;
+  activeSave.rivalryHistory.push({
+    key,season:activeSave.season,competition,date:game.date||"",
+    opponentId,home:userHome,userScore:us,oppScore:them,result:us>them?"W":"L"
+  });
+}
+function syncRivalryHistory(){
+  if(!activeSave?.seasonState)return;
+  if(!Array.isArray(activeSave.rivalryHistory))activeSave.rivalryHistory=[];
+  activeSave.seasonState.schedule.filter(g=>g.played&&(g.home===activeSave.teamId||g.away===activeSave.teamId)).forEach(g=>recordRivalryGame(g,"Regular Season"));
+  (activeSave.seasonState.postseasonGames||[]).forEach(g=>{
+    if(g.home===activeSave.teamId||g.away===activeSave.teamId){
+      recordRivalryGame({...g,date:activeSave.seasonState.currentDate||""},"Postseason");
+    }
+  });
+}
+function opponentRecord(teamId){
+  const s=activeSave?.seasonState?.standings?.[teamId];
+  if(!s)return "0–0";
+  return `${s.w}–${s.l}`;
+}
+function conferenceRankForTeam(teamId){
+  const t=TEAMS.find(x=>x.id===teamId);if(!t)return "—";
+  const rows=standingsFor(t.conference);
+  const idx=rows.findIndex(x=>x.id===teamId);
+  return idx>=0?ordinal(idx+1):"—";
+}
+function recentUserGames(limit=5){
+  if(!activeSave?.seasonState)return [];
+  return activeSave.seasonState.schedule.filter(g=>g.played&&(g.home===activeSave.teamId||g.away===activeSave.teamId)).slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,limit);
+}
+function currentSeasonH2H(opponentId){
+  const games=activeSave?.seasonState?.schedule?.filter(g=>g.played && ((g.home===activeSave.teamId&&g.away===opponentId)||(g.away===activeSave.teamId&&g.home===opponentId)))||[];
+  let w=0,l=0;
+  games.forEach(g=>{
+    const us=g.home===activeSave.teamId?g.homeScore:g.awayScore;
+    const them=g.home===activeSave.teamId?g.awayScore:g.homeScore;
+    if(us>them)w++;else l++;
+  });
+  return {w,l,games};
+}
+function careerH2H(opponentId){
+  const games=(activeSave?.rivalryHistory||[]).filter(x=>x.opponentId===opponentId);
+  return {w:games.filter(x=>x.result==="W").length,l:games.filter(x=>x.result==="L").length,games};
+}
+function renderHomeContext(next){
+  if(!activeSave)return;
+  syncRivalryHistory();
+  const team=TEAMS.find(t=>t.id===activeSave.teamId);
+  const st=activeSave.seasonState.standings[activeSave.teamId];
+  document.getElementById("homeSeasonLine").textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} • Season ${activeSave.season}`;
+  document.getElementById("homeMatchMark").textContent=team.mark;
+  document.getElementById("homeMatchTeam").textContent=team.name;
+  document.getElementById("homeMatchRecord").textContent=`${st.w}–${st.l} • ${userConferenceRank()} ${team.conference}`;
+  const recent=recentUserGames(5);
+  document.getElementById("recentForm").textContent=recent.length?recent.reverse().map(g=>{
+    const us=g.home===activeSave.teamId?g.homeScore:g.awayScore;
+    const them=g.home===activeSave.teamId?g.awayScore:g.homeScore;
+    return us>them?"W":"L";
+  }).join(" "):"—";
+  if(next){
+    const oppId=next.home===activeSave.teamId?next.away:next.home;
+    const opp=TEAMS.find(t=>t.id===oppId);
+    document.getElementById("oppMatchMark").textContent=opp.mark;
+    document.getElementById("oppMatchMark").style.background=opp.color||"#25303d";
+    document.getElementById("oppMatchMark").style.color="#17100a";
+    document.getElementById("oppMatchRecord").textContent=`${opponentRecord(oppId)} • ${conferenceRankForTeam(oppId)} ${opp.conference}`;
+    const ss=currentSeasonH2H(oppId),ch=careerH2H(oppId);
+    document.getElementById("seasonSeries").textContent=`${ss.w}–${ss.l}`;
+    document.getElementById("rivalryRecord").textContent=`${ch.w}–${ch.l}`;
+    document.getElementById("rivalryLabel").textContent=`vs ${opp.name}`;
+    renderRivalryHistory(oppId);
+  }else{
+    document.getElementById("oppMatchMark").textContent="—";
+    document.getElementById("oppMatchRecord").textContent="Season complete";
+    document.getElementById("seasonSeries").textContent="—";
+    document.getElementById("rivalryRecord").textContent="—";
+    document.getElementById("rivalryLabel").textContent="Season Complete";
+    document.getElementById("rivalryHistory").innerHTML='<div class="empty" style="padding:20px">The regular season is complete.</div>';
+  }
+  renderGMNews();
+  renderClubNews(next);
+}
+function renderRivalryHistory(opponentId){
+  const el=document.getElementById("rivalryHistory");if(!el)return;
+  const opp=TEAMS.find(t=>t.id===opponentId);
+  const rows=(activeSave.rivalryHistory||[]).filter(x=>x.opponentId===opponentId).slice().reverse().slice(0,5);
+  if(!rows.length){el.innerHTML='<div class="empty" style="padding:20px">No previous meetings yet.</div>';return}
+  el.innerHTML=rows.map(x=>`<div class="rivalryGame"><div class="date">${x.season}<br>${x.competition}</div><div><b>${x.home?"vs":"@"} ${opp.name}</b><small>${x.date?formatDate(x.date):""}</small></div><div class="rivalryScore ${x.result==="W"?"win":"loss"}">${x.result} ${x.userScore}–${x.oppScore}</div></div>`).join("");
+}
+function renderGMNews(){
+  const el=document.getElementById("gmNews");if(!el||!activeSave)return;
+  const st=activeSave.seasonState.standings[activeSave.teamId];
+  const rank=userConferenceRank();
+  const rs=rosterStatus(activeSave.teamId);
+  const leader=teamPlayers(activeSave.teamId).map(p=>({p,ppg:statAverage(p.id,"pts")})).sort((a,b)=>b.ppg-a.ppg)[0];
+  const items=[
+    [`${rank} in conference`,`${st.w}–${st.l} through ${st.w+st.l} games. ${st.w>=st.l?"The club remains in a positive position.":"The next stretch is important for the GM."}`],
+    ["Roster outlook",`${rs.count}/${ROSTER_MAX} roster spots used with a $${rs.payroll}m payroll.`]
+  ];
+  if(leader&&leader.ppg)items.push([`${leader.p.name} leads the club`,`${leader.ppg.toFixed(1)} points per game this season.`]);
+  else items.push(["Rotation established","Player production will build as the season progresses."]);
+  el.innerHTML=items.map(([h,p])=>`<div class="newsItem"><div class="newsDot"></div><div><b>${h}</b><p>${p}</p></div></div>`).join("");
+}
+function renderClubNews(next){
+  const el=document.getElementById("clubNews");if(!el||!activeSave)return;
+  const last=recentUserGames(1)[0];
+  const items=[];
+  if(last){
+    const oppId=last.home===activeSave.teamId?last.away:last.home,opp=TEAMS.find(t=>t.id===oppId);
+    const us=last.home===activeSave.teamId?last.homeScore:last.awayScore,them=last.home===activeSave.teamId?last.awayScore:last.homeScore;
+    items.push([us>them?`Win over ${opp.name}`:`Loss to ${opp.name}`,`${us}–${them} in the club's most recent game.`]);
+  }else items.push(["Opening night approaches","The roster is set for the beginning of the season."]);
+  if(next){
+    const oppId=next.home===activeSave.teamId?next.away:next.home,opp=TEAMS.find(t=>t.id===oppId);
+    const h2h=careerH2H(oppId);
+    items.push([`Next: ${opp.name}`,`${next.home===activeSave.teamId?"Home":"Away"} • Career series ${h2h.w}–${h2h.l}.`]);
+  }
+  const exp=expiringPlayers(activeSave.teamId);
+  items.push([exp.length?`${exp.length} contract${exp.length===1?"":"s"} expiring`:"Contract position stable",exp.length?"The front office will need to address these deals in the offseason.":"No immediate contract expiry pressure on the roster."]);
+  el.innerHTML=items.map(([h,p])=>`<div class="newsItem"><div class="newsDot"></div><div><b>${h}</b><p>${p}</p></div></div>`).join("");
+}
+
 function simulateGameObject(game,showModal=false){
   if(game.played)return game;
   const homeS=getTeamRotationStrength(game.home), awayS=getTeamRotationStrength(game.away);
@@ -1259,6 +1470,7 @@ function simulateGameObject(game,showModal=false){
     if(rng()>.5)hs+=4+Math.floor(rng()*7);else as+=4+Math.floor(rng()*7);
   }
   game.homeScore=hs;game.awayScore=as;game.played=true;
+  recordRivalryGame(game,"Regular Season");
 
   const homeBox=buildTeamBox(game.home,hs,true,game);
   const awayBox=buildTeamBox(game.away,as,false,game);
@@ -1448,6 +1660,7 @@ function neutralGame(teamA,teamB,gameId,homeAdvTeam=null){
   const awayBox=buildTeamBox(fake.away,a,false,fake);
   recordPostseasonBox(homeBox);recordPostseasonBox(awayBox);
   storePostseasonGame(gameId,fake.home,fake.away,h,a,homeBox,awayBox);
+  recordRivalryGame({...fake,homeScore:h,awayScore:a},"Postseason");
   return {home:fake.home,away:fake.away,homeScore:h,awayScore:a,winner:h>a?fake.home:fake.away,loser:h>a?fake.away:fake.home,homeBox,awayBox};
 }
 function playPlayInMatch(conf,key){
@@ -1551,6 +1764,54 @@ function recordChampionshipIfNeeded(){
     finalsMvpId:mvp?mvp.id:null
   });
   persistSave();
+}
+
+
+function activeSeriesForRound(){
+  const ps=activeSave?.seasonState?.postseason;if(!ps)return [];
+  if(ps.finals && !ps.finals.complete)return [ps.finals];
+  const cf=["East","West"].flatMap(conf=>ps[conf].finals||[]).filter(s=>!s.complete);
+  if(cf.length)return cf;
+  const sf=["East","West"].flatMap(conf=>ps[conf].semis||[]).filter(s=>!s.complete);
+  if(sf.length)return sf;
+  const r1=["East","West"].flatMap(conf=>ps[conf].round1||[]).filter(s=>!s.complete);
+  return r1;
+}
+function simConcurrentPostseason(){
+  const ps=initPostseason();if(!ps)return;
+  // Play-In progresses East and West in lockstep.
+  let didPlay=false;
+  for(const idx of [0,1,2]){
+    const east=ps.East.playIn[idx],west=ps.West.playIn[idx];
+    const ready=[["East",east],["West",west]].filter(([c,m])=>m&&!m.played&&m.a&&m.b);
+    if(ready.length){
+      ready.forEach(([conf,m])=>playPlayInMatchSilent(conf,m.id));
+      didPlay=true;break;
+    }
+  }
+  if(didPlay){
+    for(const conf of ["East","West"])finalizePlayInIfReady(conf);
+    persistSave();renderPlayoffs();return;
+  }
+
+  const active=activeSeriesForRound();
+  if(!active.length){renderPlayoffs();return}
+  active.forEach(series=>simSeriesGame(series));
+  for(const conf of ["East","West"])advanceConference(conf);
+  maybeCreateFinals();
+  if(ps.finals?.complete&&!ps.champion){ps.champion=ps.finals.winner;ps.phase="complete";}
+  recordChampionshipIfNeeded();
+  persistSave();renderPlayoffs();
+}
+function playPlayInMatchSilent(conf,key){
+  const ps=initPostseason(),c=ps[conf];
+  const m=c.playIn.find(x=>x.id===key);if(!m||m.played||!m.a||!m.b)return;
+  const high=m.a.seed<m.b.seed?m.a:m.b;
+  const r=neutralGame(m.a.teamId,m.b.teamId,m.id,high.teamId);
+  m.played=true;m.winner={teamId:r.winner,seed:(m.a.teamId===r.winner?m.a.seed:m.b.seed)};m.loser={teamId:r.loser,seed:(m.a.teamId===r.loser?m.a.seed:m.b.seed)};
+  m.score=r;
+  if(key.endsWith("PI78"))c.playIn.find(x=>x.id.endsWith("PI8")).a=m.loser;
+  else if(key.endsWith("PI910"))c.playIn.find(x=>x.id.endsWith("PI8")).b=m.winner;
 }
 
 function simPostseasonSeries(seriesId){
@@ -1663,7 +1924,7 @@ function renderSeries(series,label){
     <div class="seriesTeam"><div class="seriesSeed">${series.a.seed}</div><div class="name"><b>${a.name}${series.a.teamId===activeSave?.teamId?' • YOU':''}</b><small>${a.conference} • ${a.division}</small></div><div class="seriesWins">${series.aWins}</div></div>
     <div class="seriesTeam"><div class="seriesSeed">${series.b.seed}</div><div class="name"><b>${b.name}${series.b.teamId===activeSave?.teamId?' • YOU':''}</b><small>${b.conference} • ${b.division}</small></div><div class="seriesWins">${series.bWins}</div></div>
     ${seriesProgressDots(series)}
-    ${series.complete?`<div class="postComplete">${TEAMS.find(t=>t.id===series.winner.teamId).name} wins series ${Math.max(series.aWins,series.bWins)}–${Math.min(series.aWins,series.bWins)}</div>`:`<button class="secondary postAction" onclick="simPostseasonSeries('${series.id}')">Sim Next Game</button>`}
+    ${series.complete?`<div class="postComplete">${TEAMS.find(t=>t.id===series.winner.teamId).name} wins series ${Math.max(series.aWins,series.bWins)}–${Math.min(series.aWins,series.bWins)}</div>`:`<div class="postComplete">Series active • Sim from bracket controls</div>`}
     ${series.games.length?`<button class="secondary postAction postBoxToggle" onclick="showLatestPostseasonBox('${series.id}')">Latest Box Score</button>`:""}
     ${seriesGameHistory(series)}
   </div>`;
@@ -1675,7 +1936,7 @@ function renderPlayIn(conf){
     return `<div class="matchup"><div class="matchupTop"><b>${labels[i]}</b><small>${m.played?"FINAL":"Single Game"}</small></div>
       <div class="seriesTeam"><div class="seriesSeed">${m.a?.seed||"—"}</div><div class="name"><b>${a?.name||"TBD"}</b></div><div class="seriesWins">${m.played?(m.score.home===m.a.teamId?m.score.homeScore:m.score.awayScore):"—"}</div></div>
       <div class="seriesTeam"><div class="seriesSeed">${m.b?.seed||"—"}</div><div class="name"><b>${b?.name||"TBD"}</b></div><div class="seriesWins">${m.played?(m.score.home===m.b.teamId?m.score.homeScore:m.score.awayScore):"—"}</div></div>
-      ${!m.played&&m.a&&m.b?`<button class="secondary postAction" onclick="playPlayInMatch('${conf}','${m.id}')">Sim Play-In Game</button>`:""}
+      
     </div>`;
   }).join("");
 }
@@ -1913,6 +2174,35 @@ function renderOffseason(){
     <div class="offseasonStage"><div class="kicker">Step 5</div><h3>Season Rollover</h3><p>Your completed season is archived before a fresh 82-game schedule is generated.</p>${rolloverAction}</div>`;
 }
 
+
+function bracketSeriesCard(series,label){
+  if(!series)return `<div class="bracketSeries"><div class="roundLabel">${label}</div><div class="bracketTeam"><div class="seed">—</div><b>TBD</b><div class="wins">—</div></div><div class="bracketTeam"><div class="seed">—</div><b>TBD</b><div class="wins">—</div></div></div>`;
+  const a=TEAMS.find(t=>t.id===series.a.teamId),b=TEAMS.find(t=>t.id===series.b.teamId);
+  const user=series.a.teamId===activeSave.teamId||series.b.teamId===activeSave.teamId;
+  return `<div class="bracketSeries ${user?"userSeries":""}">
+    <div class="roundLabel">${label}${series.complete?" • FINAL":""}</div>
+    <div class="bracketTeam"><div class="seed">${series.a.seed}</div><b>${a.mark} ${a.name}${series.a.teamId===activeSave.teamId?" • YOU":""}</b><div class="wins">${series.aWins}</div></div>
+    <div class="bracketTeam"><div class="seed">${series.b.seed}</div><b>${b.mark} ${b.name}${series.b.teamId===activeSave.teamId?" • YOU":""}</b><div class="wins">${series.bWins}</div></div>
+  </div>`;
+}
+function renderConferenceBracket(conf){
+  const c=activeSave.seasonState.postseason[conf];
+  const name=conf==="East"?"Eastern":"Western";
+  const r1=c.round1||[],sf=c.semis||[],cf=c.finals||[];
+  return `<div class="bracketConference">
+    <div class="bracketConferenceTitle"><b>${name} Conference</b><small>Swipe bracket horizontally</small></div>
+    <div class="bracketScroller"><div class="bracketGrid">
+      <div class="bracketColumn"><div class="bracketColumnTitle">First Round</div>${[0,1,2,3].map(i=>bracketSeriesCard(r1[i],`R1 • ${i+1}`)).join("")}</div>
+      <div class="bracketColumn"><div class="bracketColumnTitle">Semifinals</div>${[0,1].map(i=>bracketSeriesCard(sf[i],`SF • ${i+1}`)).join("")}</div>
+      <div class="bracketColumn"><div class="bracketColumnTitle">Conference Finals</div>${bracketSeriesCard(cf[0],"Conference Final")}</div>
+    </div></div>
+  </div>`;
+}
+function renderCompactPlayIn(conf){
+  const c=activeSave.seasonState.postseason[conf],name=conf==="East"?"East":"West";
+  return `<div class="playInConf"><div class="postStageTitle">${name} Play-In</div>${renderPlayIn(conf)}</div>`;
+}
+
 function renderPlayoffs(){
   const wrap=document.getElementById('playoffContent'),sub=document.getElementById('playoffSubtitle'),badge=document.getElementById('playoffBadge');
   if(!wrap||!sub||!badge)return;
@@ -1921,31 +2211,35 @@ function renderPlayoffs(){
     wrap.innerHTML='<div class="card empty">The Play-In and Playoffs unlock after all 82 regular-season games are complete.</div>';return;
   }
   const ps=initPostseason();badge.textContent=ps.phase==="complete"?"COMPLETE":"LIVE";
-  sub.textContent="Top 6 qualify directly • Seeds 7–10 enter the Play-In";
+  sub.textContent="East and West advance concurrently • Best of 7";
 
-  for(const conf of ["East","West"]){
-    finalizePlayInIfReady(conf);
-  }
+  for(const conf of ["East","West"])finalizePlayInIfReady(conf);
 
   let out=renderPostseasonSummary();
   const userStatus=postseasonUserStatus();
-  if(userStatus.status.startsWith("eliminated"))out+=`<div class="eliminatedBanner"><b>Your season is over.</b><p>Your team has been eliminated from the postseason. You can continue simulating the remaining bracket to determine the champion.</p></div>`;
+  if(userStatus.status.startsWith("eliminated"))out+=`<div class="eliminatedBanner"><b>Your season is over.</b><p>Your team has been eliminated. Continue simulating to determine the league champion.</p></div>`;
+
   if(ps.champion){
     recordChampionshipIfNeeded();
     const champ=TEAMS.find(t=>t.id===ps.champion.teamId);
     const fmvp=PLAYERS.find(p=>p.id===ps.finalsMvp);
     const record=activeSave.seasonState.championshipHistory.find(x=>x.season===activeSave.season);
-    out+=`<div class="championBanner"><div class="trophy">★</div><div class="kicker">2027 Champions</div><h2>${champ.name}</h2><p>${record?`Finals ${record.series}`:"Mini&Me Basketball champions"}</p><div class="postComplete">Champion recorded in Season Review history</div>${fmvp?`<div class="finalsMvp"><small>FINALS MVP</small><b>${fmvp.name}</b><span>${fmvp.pos} • ${fmvp.ovr} OVR</span></div>`:""}</div>`;
+    out+=`<div class="championBanner"><div class="trophy">★</div><div class="kicker">2027 Champions</div><h2>${champ.name}</h2><p>${record?`Finals ${record.series}`:"Mini&Me Basketball champions"}</p>${fmvp?`<div class="finalsMvp"><small>FINALS MVP</small><b>${fmvp.name}</b><span>${fmvp.pos} • ${fmvp.ovr} OVR</span></div>`:""}</div>`;
   }
 
-  for(const conf of ["East","West"]){
-    const c=ps[conf],name=conf==="East"?"Eastern":"Western";
-    out+=`<div class="postStage"><div class="postStageTitle">${name} Conference Play-In</div>${renderPlayIn(conf)}</div>`;
-    if(c.round1.length)out+=`<div class="postStage"><div class="postStageTitle">${name} First Round</div>${c.round1.map((s,i)=>renderSeries(s,`Series ${i+1}`)).join("")}</div>`;
-    if(c.semis.length)out+=`<div class="postStage"><div class="postStageTitle">${name} Semifinals</div>${c.semis.map((s,i)=>renderSeries(s,`Semifinal ${i+1}`)).join("")}</div>`;
-    if(c.finals.length)out+=`<div class="postStage"><div class="postStageTitle">${name} Conference Finals</div>${renderSeries(c.finals[0],"Conference Finals")}</div>`;
+  if(ps.phase!=="complete"){
+    out+=`<div class="bracketToolbar"><button class="primary" onclick="simConcurrentPostseason()">Sim Next Postseason Games</button><div class="concurrentNote">All active East and West matchups advance together.</div></div>`;
   }
-  if(ps.finals)out+=`<div class="postStage"><div class="postStageTitle">Mini&Me Basketball Finals</div>${renderSeries(ps.finals,"Championship Series")}</div>`;
+
+  const playInStillRelevant=["East","West"].some(conf=>ps[conf].playIn.some(m=>!m.played));
+  if(playInStillRelevant)out+=`<div class="postStage"><div class="playInGrid">${renderCompactPlayIn("East")}${renderCompactPlayIn("West")}</div></div>`;
+
+  out+=renderConferenceBracket("East");
+  out+=renderConferenceBracket("West");
+
+  if(ps.finals){
+    out+=`<div class="bracketFinal"><div class="postStageTitle">Mini&Me Basketball Finals</div>${renderSeries(ps.finals,"Championship Series")}</div>`;
+  }
   wrap.innerHTML=out;
 }
 
@@ -2038,12 +2332,14 @@ function refreshSeasonUI(){
     document.getElementById('nextMeta').textContent=`${formatDate(next.date)} • Game ${st.w+st.l+1} of 82`;
     document.getElementById('simGameBtn').disabled=false;
     document.getElementById('simWeekBtn').disabled=false;
+    renderHomeContext(next);
   }else{
     document.getElementById('nextOpponent').textContent="Regular Season Complete";
     document.getElementById('nextVenue').textContent="82 GAMES";
     document.getElementById('nextMeta').textContent="Open Review and Postseason to complete the year";
     document.getElementById('simGameBtn').disabled=true;
     document.getElementById('simWeekBtn').disabled=true;
+    renderHomeContext(null);
   }
   renderLastResult();
   renderSeasonEndBanner();
