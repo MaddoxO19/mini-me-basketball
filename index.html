@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.3.1</title>
+<title>Mini&Me Basketball v0.3.2</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -231,6 +231,10 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .historyRow:first-child{border-top:0}.historyRow b{display:block;font-size:13px}.historyRow small{display:block;color:var(--muted);font-size:10px;margin-top:2px}
 .historyMark{width:42px;height:42px;border-radius:12px;background:var(--accent);color:#17100a;display:flex;align-items:center;justify-content:center;font-weight:950;font-size:11px}
 
+
+.dataStatus{display:inline-block;padding:4px 7px;border-radius:999px;background:#202a36;color:var(--accent2);font-size:10px;font-weight:800}
+.postBoxToggle{margin-top:8px}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -243,7 +247,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.3.1 • Championship History</div>
+      <div class="build">v0.3.2 • Postseason Stats</div>
     </div>
   </section>
 
@@ -274,7 +278,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>Championship history and Finals MVP are now recorded, and league rosters can be maintained through league_data.json.</p></div>
+      <div class="feed"><div class="dot"></div><p>Postseason box scores and player stats are now recorded, Finals MVP uses actual Finals production, and league JSON can be imported or exported directly on device.</p></div>
     </div>
   </section>
 
@@ -334,10 +338,15 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.3.1</p></div>
-      <div class="feed"><p><b>Milestone:</b> External editable league JSON, improved playoff presentation, Finals MVP and persistent championship history.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.3.2</p></div>
+      <div class="feed"><p><b>Milestone:</b> Postseason box scores and player statistics, actual-performance Finals MVP, plus iPhone-friendly league JSON import/export.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div><div class="feed"><p><b>League Data:</b> <span id="dataSourceLabel">Loading...</span></p></div>
-      <div class="feed"><p><b>Next:</b> v0.3.2 postseason stat integration and playoff box-score history. Edit league_data.json in GitHub to customise teams and players without changing index.html.</p></div>
+      <div class="feed"><p><b>League Data Tools:</b> Import or export the editable league database directly on this device.</p></div>
+      <input id="leagueJsonInput" type="file" accept=".json,application/json" style="display:none" onchange="importLeagueJson(event)" />
+      <button class="secondary" onclick="document.getElementById('leagueJsonInput').click()">Import League JSON</button>
+      <button class="secondary" onclick="exportLeagueJson()">Export League JSON</button>
+
+      <div class="feed"><p><b>Next:</b> v0.3.3 playoff UX polish and postseason history presentation.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -420,7 +429,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.3.1";
+const VERSION="0.3.2";
 const SAVE_KEY="MMB_SAVE_1";
 let TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -465,17 +474,78 @@ let activeGameDetail=null;
 let activeBoxSide='away';
 let leagueDataSource='Embedded';
 let leagueDataReady=false;
+let importedLeagueData=null;
 
+
+
+function validateLeagueData(data){
+  if(!data?.league?.teams || !data?.league?.players)throw new Error("Missing league.teams or league.players");
+  if(!Array.isArray(data.league.teams)||data.league.teams.length!==30)throw new Error("League JSON must contain exactly 30 teams");
+  if(!Array.isArray(data.league.players)||data.league.players.length<300)throw new Error("League JSON must contain the player universe");
+  const teamIds=new Set(data.league.teams.map(t=>t.id));
+  if(teamIds.size!==30)throw new Error("Team IDs must be unique");
+  const playerIds=new Set(data.league.players.map(p=>p.id));
+  if(playerIds.size!==data.league.players.length)throw new Error("Player IDs must be unique");
+  for(const p of data.league.players){
+    if(!teamIds.has(p.teamId))throw new Error(`Player ${p.id} references unknown team ${p.teamId}`);
+  }
+  return true;
+}
+function applyLeagueData(data,sourceLabel){
+  validateLeagueData(data);
+  TEAMS=data.league.teams;
+  PLAYERS=data.league.players;
+  importedLeagueData=data;
+  leagueDataSource=sourceLabel;
+  selectedTeam=TEAMS.find(t=>t.id===activeSave?.teamId)||TEAMS.find(t=>t.id==="LAG")||TEAMS[0];
+  const source=document.getElementById("dataSourceLabel");
+  if(source)source.textContent=leagueDataSource;
+  if(activeSave){
+    // keep existing save IDs where possible; new ratings/names flow through immediately
+    activeRotation=ensureRotation(activeSave,selectedTeam.id);
+    renderRoster(selectedTeam);
+    refreshSeasonUI();
+  }else{
+    renderLeague();
+  }
+}
+function importLeagueJson(event){
+  const file=event.target.files?.[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      applyLeagueData(data,`Custom Import: ${file.name}`);
+      alert("League JSON imported successfully.");
+    }catch(err){
+      console.error(err);
+      alert(`League JSON could not be imported: ${err.message}`);
+    }finally{
+      event.target.value="";
+    }
+  };
+  reader.readAsText(file);
+}
+function exportLeagueJson(){
+  const payload=importedLeagueData || {schema:1,version:VERSION,league:{name:"Mini&Me Basketball",season:activeSave?.season||"2026/27",teams:TEAMS,players:PLAYERS}};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="league_data.json";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),500);
+}
 
 async function loadExternalLeagueData(){
   try{
     const res=await fetch(`league_data.json?v=${VERSION}`,{cache:"no-store"});
     if(!res.ok)throw new Error(`HTTP ${res.status}`);
     const data=await res.json();
-    if(!data?.league?.teams || !data?.league?.players)throw new Error("Invalid league_data.json");
-    if(data.league.teams.length!==30)throw new Error("league_data.json must contain 30 teams");
+    validateLeagueData(data);
     TEAMS=data.league.teams;
     PLAYERS=data.league.players;
+    importedLeagueData=data;
     leagueDataSource="league_data.json";
   }catch(err){
     console.warn("Using embedded league data fallback:",err);
@@ -731,7 +801,9 @@ function openPlayer(id){
     document.getElementById('playerBpg').textContent=bpg.toFixed(1);
     document.getElementById('playerMpg').textContent=mpg.toFixed(1);
     document.getElementById('playerShootingLine').innerHTML=`<span><b>${fg.toFixed(1)}%</b><small>FG%</small></span><span><b>${tp.toFixed(1)}%</b><small>3PT%</small></span><span><b>${s.gp}/${s.gs}</b><small>GP/GS</small></span>`;
-    document.getElementById('playerSeasonDetail').textContent=`${s.pts} PTS • ${s.reb} REB • ${s.ast} AST • ${s.stl} STL • ${s.blk} BLK total`;
+    const ps=activeSave?.seasonState?.postseasonPlayerStats?.[p.id];
+    const postText=ps&&ps.gp?` • Playoffs: ${(ps.pts/ps.gp).toFixed(1)} PPG, ${(ps.reb/ps.gp).toFixed(1)} RPG, ${(ps.ast/ps.gp).toFixed(1)} APG`:"";
+    document.getElementById('playerSeasonDetail').textContent=`${s.pts} PTS • ${s.reb} REB • ${s.ast} AST • ${s.stl} STL • ${s.blk} BLK total${postText}`;
   }else{
     ["playerPpg","playerRpg","playerApg","playerSpg","playerBpg","playerMpg"].forEach(x=>document.getElementById(x).textContent="—");
     document.getElementById('playerShootingLine').innerHTML='<span><b>—</b><small>FG%</small></span><span><b>—</b><small>3PT%</small></span><span><b>—</b><small>GP/GS</small></span>';
@@ -879,6 +951,8 @@ function initSeason(save){
       playerStats:Object.fromEntries(PLAYERS.map(p=>[p.id,{gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0}])),
       postseason:null,
       championshipHistory:[],
+      postseasonPlayerStats:{},
+      postseasonGames:[],
       lastGameId:null
     };
     save.seasonSchema=1;
@@ -890,6 +964,8 @@ function initSeason(save){
   if(!save.seasonState.playerStats)save.seasonState.playerStats={};
   if(save.seasonState.postseason===undefined)save.seasonState.postseason=null;
   if(!Array.isArray(save.seasonState.championshipHistory))save.seasonState.championshipHistory=[];
+  if(!save.seasonState.postseasonPlayerStats)save.seasonState.postseasonPlayerStats={};
+  if(!Array.isArray(save.seasonState.postseasonGames))save.seasonState.postseasonGames=[];
   PLAYERS.forEach(p=>{
     if(!save.seasonState.playerStats[p.id])save.seasonState.playerStats[p.id]={gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0};
   });
@@ -1158,6 +1234,25 @@ function initPostseason(){
   persistSave();
   return state.postseason;
 }
+
+function ensurePostPlayerStat(id){
+  const store=activeSave.seasonState.postseasonPlayerStats;
+  if(!store[id])store[id]={gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0};
+  return store[id];
+}
+function recordPostseasonBox(box){
+  box.rows.forEach(r=>{
+    const s=ensurePostPlayerStat(r.id);
+    s.gp++;if(r.starter)s.gs++;
+    s.min+=r.min;s.pts+=r.pts;s.reb+=r.reb;s.ast+=r.ast;s.stl+=r.stl;s.blk+=r.blk;s.fgm+=r.fgm;s.fga+=r.fga;s.tpm+=r.tpm;s.tpa+=r.tpa;
+  });
+}
+function storePostseasonGame(gameId,home,away,homeScore,awayScore,homeBox,awayBox){
+  const arr=activeSave.seasonState.postseasonGames;
+  if(arr.some(g=>g.id===gameId))return;
+  arr.push({id:gameId,home,away,homeScore,awayScore,homeBox,awayBox});
+}
+
 function neutralGame(teamA,teamB,gameId,homeAdvTeam=null){
   const fake={id:gameId,date:activeSave.seasonState.currentDate||"2027-04-15",home:homeAdvTeam||teamA,away:(homeAdvTeam||teamA)===teamA?teamB:teamA,played:false};
   const hs=getTeamRotationStrength(fake.home),as=getTeamRotationStrength(fake.away);
@@ -1168,7 +1263,11 @@ function neutralGame(teamA,teamB,gameId,homeAdvTeam=null){
   let a=Math.round(base+(as.off-82)*.62-(hs.def-82)*.48+((rng()+rng()+rng()+rng())-2)*8);
   h=Math.max(82,Math.min(145,h));a=Math.max(82,Math.min(145,a));
   if(h===a){if(rng()>.5)h+=5;else a+=5}
-  return {home:fake.home,away:fake.away,homeScore:h,awayScore:a,winner:h>a?fake.home:fake.away,loser:h>a?fake.away:fake.home};
+  const homeBox=buildTeamBox(fake.home,h,true,fake);
+  const awayBox=buildTeamBox(fake.away,a,false,fake);
+  recordPostseasonBox(homeBox);recordPostseasonBox(awayBox);
+  storePostseasonGame(gameId,fake.home,fake.away,h,a,homeBox,awayBox);
+  return {home:fake.home,away:fake.away,homeScore:h,awayScore:a,winner:h>a?fake.home:fake.away,loser:h>a?fake.away:fake.home,homeBox,awayBox};
 }
 function playPlayInMatch(conf,key){
   const ps=initPostseason(),c=ps[conf];
@@ -1238,15 +1337,22 @@ function maybeCreateFinals(){
 function finalsMvpFromSeries(series){
   if(!series?.winner)return null;
   const champId=series.winner.teamId;
-  const roster=teamPlayers(champId).slice().sort((a,b)=>b.ovr-a.ovr);
-  // v0.3.1 uses a weighted playoff-profile estimate because postseason box scores
-  // are not yet being recorded player-by-player. v0.3.2 will replace this with real playoff stats.
-  return roster.map(p=>{
-    let boost=0;
-    if(/Scorer|Engine|Creator|Star|MVP|Generational|Dominant|Playmaker/.test(p.archetype))boost+=3;
-    if(/Defensive|Anchor|Rim/.test(p.archetype))boost+=1;
-    return {player:p,score:p.ovr+p.off*.12+p.defn*.05+boost};
-  }).sort((a,b)=>b.score-a.score)[0]?.player||null;
+  const finalsIds=new Set(series.games.map((g,i)=>`${series.id}-G${i+1}`));
+  const finalsGames=activeSave.seasonState.postseasonGames.filter(g=>finalsIds.has(g.id));
+  const totals={};
+  finalsGames.forEach(g=>{
+    const box=g.home===champId?g.homeBox:(g.away===champId?g.awayBox:null);
+    if(!box)return;
+    box.rows.forEach(r=>{
+      if(!totals[r.id])totals[r.id]={gp:0,pts:0,reb:0,ast:0,stl:0,blk:0};
+      const s=totals[r.id];s.gp++;s.pts+=r.pts;s.reb+=r.reb;s.ast+=r.ast;s.stl+=r.stl;s.blk+=r.blk;
+    });
+  });
+  const ranked=Object.entries(totals).map(([id,s])=>({
+    player:PLAYERS.find(p=>p.id===id),
+    score:(s.pts+s.reb*.7+s.ast*.8+s.stl*1.5+s.blk*1.5)/Math.max(1,s.gp)
+  })).filter(x=>x.player).sort((a,b)=>b.score-a.score);
+  return ranked[0]?.player || teamPlayers(champId).slice().sort((a,b)=>b.ovr-a.ovr)[0] || null;
 }
 function recordChampionshipIfNeeded(){
   const state=activeSave?.seasonState;
@@ -1285,6 +1391,21 @@ function simPostseasonSeries(seriesId){
   recordChampionshipIfNeeded();
   persistSave();renderPlayoffs();
 }
+
+function showLatestPostseasonBox(seriesId){
+  const games=activeSave?.seasonState?.postseasonGames||[];
+  const matching=games.filter(g=>g.id.startsWith(seriesId+"-G"));
+  if(!matching.length)return;
+  const g=matching[matching.length-1];
+  const game={
+    id:g.id,date:activeSave.seasonState.currentDate||"2027-04-15",
+    home:g.home,away:g.away,homeScore:g.homeScore,awayScore:g.awayScore,
+    box:{home:g.homeBox,away:g.awayBox}
+  };
+  const hs=getTeamRotationStrength(g.home),as=getTeamRotationStrength(g.away);
+  showGameResult(game,hs,as);
+}
+
 function renderSeries(series,label){
   const a=TEAMS.find(t=>t.id===series.a.teamId),b=TEAMS.find(t=>t.id===series.b.teamId);
   return `<div class="matchup">
@@ -1292,6 +1413,7 @@ function renderSeries(series,label){
     <div class="seriesTeam"><div class="seriesSeed">${series.a.seed}</div><div class="name"><b>${a.name}</b><small>${a.conference} • ${a.division}</small></div><div class="seriesWins">${series.aWins}</div></div>
     <div class="seriesTeam"><div class="seriesSeed">${series.b.seed}</div><div class="name"><b>${b.name}</b><small>${b.conference} • ${b.division}</small></div><div class="seriesWins">${series.bWins}</div></div>
     ${series.complete?`<div class="postComplete">${TEAMS.find(t=>t.id===series.winner.teamId).name} wins series ${Math.max(series.aWins,series.bWins)}–${Math.min(series.aWins,series.bWins)}</div>`:`<button class="secondary postAction" onclick="simPostseasonSeries('${series.id}')">Sim Next Game</button>`}
+    ${series.games.length?`<button class="secondary postAction postBoxToggle" onclick="showLatestPostseasonBox('${series.id}')">Latest Box Score</button>`:""}
   </div>`;
 }
 function renderPlayIn(conf){
