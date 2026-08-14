@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.2.0</title>
+<title>Mini&Me Basketball v0.2.0.1</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -173,7 +173,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.2.0 • Season Engine</div>
+      <div class="build">v0.2.0.1 • Career Start Fix</div>
     </div>
   </section>
 
@@ -241,10 +241,10 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.2.0</p></div>
-      <div class="feed"><p><b>Milestone:</b> Full 82-game schedule, persistent standings, next-game progression and first rotation-driven match simulation engine.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.2.0.1</p></div>
+      <div class="feed"><p><b>Milestone:</b> v0.2.0 season engine with repaired New Career initialisation and backward-compatible save loading.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> v0.2.1 box scores, league leaders and deeper game presentation.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.2.1 box scores, league leaders and deeper game presentation. v0.2.0.1 is a stability patch for career creation/loading.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -311,7 +311,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.2.0";
+const VERSION="0.2.0.1";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -377,27 +377,58 @@ function openNewCareer(){
 function closeNewCareer(){document.getElementById('newCareer').classList.remove('show')}
 function createCareer(){
   const gm=(document.getElementById('gmName').value||'GM').trim();
-  const save={schema:1,playerUniverse:1,rotationSchema:1,seasonSchema:1,version:VERSION,gm,teamId:selectedTeam.id,team:selectedTeam.name,season:"2026/27",created:new Date().toISOString()};
-  localStorage.setItem(SAVE_KEY,JSON.stringify(save)); applyCareer(save); closeNewCareer();
+  const save={
+    schema:1,
+    playerUniverse:1,
+    rotationSchema:1,
+    seasonSchema:1,
+    version:VERSION,
+    gm,
+    teamId:selectedTeam.id,
+    team:selectedTeam.name,
+    season:"2026/27",
+    created:new Date().toISOString()
+  };
+  // Seed the career in storage first, then let applyCareer build dependent systems.
+  // This avoids season/rotation functions touching a null activeSave during career creation.
+  localStorage.setItem(SAVE_KEY,JSON.stringify(save));
+  applyCareer(save);
+  closeNewCareer();
 }
 function applyCareer(save){
+  if(!save || typeof save!=="object"){alert("This career save could not be read.");return}
   const team=TEAMS.find(t=>t.id===save.teamId)||TEAMS.find(t=>t.name===save.team)||TEAMS.find(t=>t.id==="LAG");
+  if(!team){alert("This career references a team that is no longer available.");return}
+
+  // Migrate old saves before any dependent system is initialized.
+  save.schema=1;
+  if(!save.playerUniverse)save.playerUniverse=1;
+  if(!save.rotationSchema)save.rotationSchema=1;
+  if(!save.seasonSchema)save.seasonSchema=1;
+  if(!save.teamId)save.teamId=team.id;
+  if(!save.team)save.team=team.name;
+  if(!save.season)save.season="2026/27";
+
   selectedTeam=team;
-  activeSave=save;
-  activeRotation=ensureRotation(save,team.id);
-  initSeason(save);
+  activeSave=save; // MUST be assigned before ensureRotation/initSeason, both may persist.
+  activeRotation=ensureRotation(activeSave,team.id);
+  initSeason(activeSave);
+  persistSave(activeSave);
+
   document.documentElement.style.setProperty('--accent',team.color);
   document.getElementById('homeTeam').textContent=team.name;
-  document.getElementById('gmBadge').textContent=save.gm;
-  document.querySelector('#home .season').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} Division • Season ${save.season||"2026/27"}`;
+  document.getElementById('gmBadge').textContent=save.gm||"GM";
+  document.querySelector('#home .season').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference • ${team.division} Division • Season ${save.season}`;
   document.getElementById('identityConference').textContent=`${team.conference==="East"?"Eastern":"Western"} Conference`;
   document.getElementById('identityDivision').textContent=`${team.division} Division`;
   document.getElementById('identityMarket').textContent=team.market;
   document.getElementById('identityStyle').textContent=team.style;
   document.getElementById('teamMark').textContent=team.mark;
+
   renderRoster(team);
   refreshSeasonUI();
-  showScreen('home'); document.getElementById('nav').classList.add('show');
+  showScreen('home');
+  document.getElementById('nav').classList.add('show');
   document.querySelectorAll('.nav button').forEach((b,i)=>b.classList.toggle('active',i===0));
 }
 
@@ -427,9 +458,10 @@ function ensureRotation(save,teamId){
   return save.rotation;
 }
 function persistSave(save=activeSave){
-  if(!save)return;
+  if(!save || typeof save!=="object")return;
   save.version=VERSION;
-  localStorage.setItem(SAVE_KEY,JSON.stringify(save));
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(save));}
+  catch(e){console.error("Save failed:",e);}
 }
 function totalMinutes(){
   if(!activeRotation)return 0;
@@ -915,17 +947,21 @@ function renderLeague(){
 
 function loadCareer(){
   try{
-    const save=JSON.parse(localStorage.getItem(SAVE_KEY));
-    if(!save){alert('No Mini&Me Basketball career save exists yet.');return}
-    if(save.schema!==1){alert('This save uses an unsupported schema.');return}
-    if(!save.rotationSchema)save.rotationSchema=1;
-    if(!save.seasonSchema)save.seasonSchema=1;
-    if(!save.teamId){
-      const migrated=TEAMS.find(t=>t.name===save.team);
-      if(migrated){save.teamId=migrated.id;localStorage.setItem(SAVE_KEY,JSON.stringify(save));}
+    const raw=localStorage.getItem(SAVE_KEY);
+    if(!raw){alert('No Mini&Me Basketball career save exists yet.');return}
+    const save=JSON.parse(raw);
+    if(!save || typeof save!=="object"){alert('The local career save is invalid.');return}
+
+    // Accept all v0.1.x/v0.2.x schema-1 saves and migrate forward in applyCareer.
+    if(save.schema!=null && Number(save.schema)!==1){
+      alert('This save uses an unsupported schema.');
+      return;
     }
     applyCareer(save);
-  }catch(e){alert('The local save could not be read.')}
+  }catch(e){
+    console.error("Load career failed:",e);
+    alert('The local save could not be loaded. Please keep this file and report the issue rather than deleting the save.');
+  }
 }
 document.addEventListener('DOMContentLoaded',()=>renderLeague());
 function returnToMenu(){
