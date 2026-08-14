@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.2.0.1</title>
+<title>Mini&Me Basketball v0.2.1</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -161,6 +161,22 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .resultMini .resultTop b{font-size:18px}
 .resultMini small{color:var(--muted)}
 
+
+.potgCard{background:linear-gradient(180deg,#1a222e,#121820);border:1px solid var(--line);border-radius:14px;padding:13px;margin:10px 0}
+.potgCard .name{font-size:18px;font-weight:900}.potgCard .line{color:var(--accent2);font-weight:800;margin-top:3px;font-size:12px}
+.teamSummaryGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.teamSummaryGrid .teamSum{background:var(--panel2);border-radius:13px;padding:10px}
+.teamSummaryGrid .teamSum b{display:block;font-size:13px;margin-bottom:7px}
+.teamSummaryGrid .miniLine{display:flex;justify-content:space-between;color:var(--muted);font-size:11px;margin:4px 0}
+.boxTabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.boxTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:9px;border-radius:10px;font-weight:800}
+.boxTabs button.active{background:var(--accent);color:#17100a;border-color:var(--accent)}
+.boxScoreWrap{max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:12px}
+.boxRow{display:grid;grid-template-columns:1fr 38px 38px 38px 38px 38px;gap:4px;align-items:center;padding:9px 8px;border-top:1px solid #222b36;font-size:11px}
+.boxRow:first-child{border-top:0}.boxRow.head{position:sticky;top:0;background:#121820;color:var(--muted);z-index:1}
+.boxRow .pname b{display:block;font-size:12px}.boxRow .pname small{color:var(--muted);font-size:9px}
+.boxRow .num{text-align:center}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -173,7 +189,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.2.0.1 • Career Start Fix</div>
+      <div class="build">v0.2.1 • Game Detail</div>
     </div>
   </section>
 
@@ -204,7 +220,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>The full 82-game season, standings and rotation-driven match engine are now active.</p></div>
+      <div class="feed"><div class="dot"></div><p>Player box scores and persistent season statistics are now recorded for every simulated game.</p></div>
     </div>
   </section>
 
@@ -241,10 +257,10 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.2.0.1</p></div>
-      <div class="feed"><p><b>Milestone:</b> v0.2.0 season engine with repaired New Career initialisation and backward-compatible save loading.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.2.1</p></div>
+      <div class="feed"><p><b>Milestone:</b> Player box scores, player of the game, team shooting/rebounding summaries and persistent season statistics.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> v0.2.1 box scores, league leaders and deeper game presentation. v0.2.0.1 is a stability patch for career creation/loading.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.2.2 league leaders, player season cards and deeper statistical presentation.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -259,6 +275,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 
 
 
+
 <div id="gameModal" class="modal">
   <div class="modalBox gameModalBox">
     <div class="kicker">FINAL</div>
@@ -269,11 +286,17 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div><span id="homeTeamNameModal">Home</span><b id="homeScore">0</b></div>
     </div>
     <div id="gameWinnerText" class="gameWinner"></div>
-    <div class="gameFactors" id="gameFactors"></div>
+    <div class="potgCard" id="potgCard"></div>
+    <div class="teamSummaryGrid" id="teamSummaryGrid"></div>
+    <div class="sectionTitle">Box Score</div>
+    <div class="boxTabs">
+      <button id="awayBoxTab" class="active" onclick="setBoxTeam('away',this)">Away</button>
+      <button id="homeBoxTab" onclick="setBoxTeam('home',this)">Home</button>
+    </div>
+    <div class="boxScoreWrap" id="boxScoreWrap"></div>
     <button class="primary" onclick="closeGameModal()">Continue</button>
   </div>
 </div>
-
 <div id="playerModal" class="modal">
   <div class="modalBox playerModalBox">
     <div class="playerHero">
@@ -292,8 +315,8 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="profileStrip"><span id="playerArchetype">Two-Way Wing</span><span id="playerRole">Starter</span></div>
     <div class="careerPlaceholder">
       <div class="kicker">2026/27</div>
-      <div class="profileStatLine"><span><b>—</b><small>PPG</small></span><span><b>—</b><small>RPG</small></span><span><b>—</b><small>APG</small></span></div>
-      <p>Season statistics activate when the match engine begins recording games.</p>
+      <div class="profileStatLine"><span><b id="playerPpg">—</b><small>PPG</small></span><span><b id="playerRpg">—</b><small>RPG</small></span><span><b id="playerApg">—</b><small>APG</small></span></div>
+      <p id="playerSeasonDetail">Season statistics will populate after games are played.</p>
     </div>
     <button class="secondary" onclick="closePlayer()">Close Player</button>
   </div>
@@ -311,7 +334,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.2.0.1";
+const VERSION="0.2.1";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -352,6 +375,8 @@ let leagueConference='East';
 let activeSave=null;
 let activeRotation=null;
 let leagueMode='standings';
+let activeGameDetail=null;
+let activeBoxSide='away';
 
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -580,6 +605,20 @@ function openPlayer(id){
   document.getElementById('playerPot').textContent=p.pot;
   document.getElementById('playerArchetype').textContent=p.archetype;
   document.getElementById('playerRole').textContent=p.role;
+  const s=activeSave?.seasonState?.playerStats?.[p.id];
+  if(s&&s.gp){
+    document.getElementById('playerPpg').textContent=(s.pts/s.gp).toFixed(1);
+    document.getElementById('playerRpg').textContent=(s.reb/s.gp).toFixed(1);
+    document.getElementById('playerApg').textContent=(s.ast/s.gp).toFixed(1);
+    const fg=s.fga?(100*s.fgm/s.fga).toFixed(1):"—";
+    const tp=s.tpa?(100*s.tpm/s.tpa).toFixed(1):"—";
+    document.getElementById('playerSeasonDetail').textContent=`${s.gp} GP • ${s.gs} GS • ${(s.min/s.gp).toFixed(1)} MPG • ${fg}% FG • ${tp}% 3PT`;
+  }else{
+    document.getElementById('playerPpg').textContent="—";
+    document.getElementById('playerRpg').textContent="—";
+    document.getElementById('playerApg').textContent="—";
+    document.getElementById('playerSeasonDetail').textContent="Season statistics will populate after games are played.";
+  }
   document.getElementById('playerModal').classList.add('show');
 }
 function closePlayer(){document.getElementById('playerModal').classList.remove('show')}
@@ -719,6 +758,7 @@ function initSeason(save){
       schedule:buildSeasonSchedule(),
       currentDate:"2026-10-20",
       standings:Object.fromEntries(TEAMS.map(t=>[t.id,{w:0,l:0,pf:0,pa:0}])),
+      playerStats:Object.fromEntries(PLAYERS.map(p=>[p.id,{gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0}])),
       lastGameId:null
     };
     save.seasonSchema=1;
@@ -726,6 +766,10 @@ function initSeason(save){
   }
   TEAMS.forEach(t=>{
     if(!save.seasonState.standings[t.id])save.seasonState.standings[t.id]={w:0,l:0,pf:0,pa:0};
+  });
+  if(!save.seasonState.playerStats)save.seasonState.playerStats={};
+  PLAYERS.forEach(p=>{
+    if(!save.seasonState.playerStats[p.id])save.seasonState.playerStats[p.id]={gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0};
   });
   return save.seasonState;
 }
@@ -748,6 +792,78 @@ function getTeamRotationStrength(teamId){
   const starterBonus=starters.map(id=>PLAYERS.find(p=>p.id===id)).filter(Boolean).reduce((s,p)=>s+p.ovr,0)/Math.max(1,starters.length);
   return {off,def,ovr:ovr*.82+starterBonus*.18};
 }
+
+function allocateStat(total,weights){
+  const out=weights.map(()=>0);
+  const sum=weights.reduce((a,b)=>a+b,0)||1;
+  const raw=weights.map(w=>total*w/sum);
+  raw.forEach((v,i)=>out[i]=Math.floor(v));
+  let rem=total-out.reduce((a,b)=>a+b,0);
+  const frac=raw.map((v,i)=>({i,f:v-Math.floor(v)})).sort((a,b)=>b.f-a.f);
+  for(let k=0;k<rem;k++)out[frac[k%frac.length].i]++;
+  return out;
+}
+function buildTeamBox(teamId,score,isHome,game){
+  const roster=teamPlayers(teamId).slice();
+  let rotation;
+  if(activeSave && activeSave.teamId===teamId && activeRotation){
+    rotation={starters:activeRotation.starters,minutes:activeRotation.minutes};
+  }else rotation=defaultRotation(teamId);
+
+  const active=roster.filter(p=>(rotation.minutes[p.id]||0)>0).sort((a,b)=>(rotation.minutes[b.id]||0)-(rotation.minutes[a.id]||0));
+  const rng=mulberry32(hashSeed(game.id+"|"+teamId+"|BOX"));
+  const minWeights=active.map(p=>Math.max(1,rotation.minutes[p.id]||0));
+  const minutes=allocateStat(240,minWeights);
+
+  // points weighted by offense, archetype and minutes
+  const pointWeights=active.map((p,i)=>{
+    let bias=1;
+    if(/Scorer|Engine|Creator|Star|Shooter|MVP|Generational|Dominant/.test(p.archetype))bias+=0.18;
+    if(/Defensive|Rim Protector|Anchor/.test(p.archetype))bias-=0.08;
+    return Math.max(.25,(p.off/82)*minutes[i]*bias*(0.92+rng()*.16));
+  });
+  const pts=allocateStat(score,pointWeights);
+
+  const teamReb=Math.round(38 + (teamPlayers(teamId).reduce((s,p)=>s+p.defn,0)/teamPlayers(teamId).length-80)*0.25 + rng()*12);
+  const teamAst=Math.round(20 + rng()*12);
+  const teamStl=Math.round(5 + rng()*7);
+  const teamBlk=Math.round(3 + rng()*6);
+
+  const rebWeights=active.map((p,i)=>minutes[i]*(/C|PF/.test(p.pos)?1.45:1)*(p.defn/82));
+  const astWeights=active.map((p,i)=>minutes[i]*(/PG/.test(p.pos)?1.65:/SG/.test(p.pos)?1.15:.75)*(p.off/82));
+  const stlWeights=active.map((p,i)=>minutes[i]*(p.defn/82));
+  const blkWeights=active.map((p,i)=>minutes[i]*(/C|PF/.test(p.pos)?1.7:.55)*(p.defn/82));
+
+  const rebs=allocateStat(teamReb,rebWeights);
+  const asts=allocateStat(teamAst,astWeights);
+  const stls=allocateStat(teamStl,stlWeights);
+  const blks=allocateStat(teamBlk,blkWeights);
+
+  const rows=active.map((p,i)=>{
+    const fga=Math.max(1,Math.round(pts[i]/2.05 + rng()*4));
+    const tpa=Math.max(0,Math.round(fga*(/Shooter|Scorer|Guard|Wing|Range/.test(p.archetype)?0.42:0.25)*(0.8+rng()*.4)));
+    const tpm=Math.min(tpa,Math.round(tpa*(0.30+rng()*.16)));
+    const twoPts=Math.max(0,pts[i]-3*tpm);
+    const fgm2=Math.min(Math.max(0,fga-tpm),Math.round(twoPts/2));
+    const fgm=Math.min(fga,fgm2+tpm);
+    return {id:p.id,name:p.name,pos:p.pos,min:minutes[i],pts:pts[i],reb:rebs[i],ast:asts[i],stl:stls[i],blk:blks[i],fgm,fga,tpm,tpa,starter:rotation.starters.includes(p.id)};
+  });
+
+  const fgm=rows.reduce((s,r)=>s+r.fgm,0), fga=rows.reduce((s,r)=>s+r.fga,0), tpm=rows.reduce((s,r)=>s+r.tpm,0), tpa=rows.reduce((s,r)=>s+r.tpa,0);
+  return {teamId,score,rows,summary:{reb:teamReb,ast:teamAst,stl:teamStl,blk:teamBlk,fgm,fga,tpm,tpa}};
+}
+function recordBoxStats(box){
+  const state=activeSave.seasonState.playerStats;
+  box.rows.forEach(r=>{
+    const s=state[r.id]||(state[r.id]={gp:0,gs:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,fgm:0,fga:0,tpm:0,tpa:0});
+    s.gp++; if(r.starter)s.gs++;
+    s.min+=r.min;s.pts+=r.pts;s.reb+=r.reb;s.ast+=r.ast;s.stl+=r.stl;s.blk+=r.blk;s.fgm+=r.fgm;s.fga+=r.fga;s.tpm+=r.tpm;s.tpa+=r.tpa;
+  });
+}
+function playerGameScore(r){
+  return r.pts + r.reb*0.7 + r.ast*0.8 + r.stl*1.5 + r.blk*1.5;
+}
+
 function simulateGameObject(game,showModal=false){
   if(game.played)return game;
   const homeS=getTeamRotationStrength(game.home), awayS=getTeamRotationStrength(game.away);
@@ -764,6 +880,11 @@ function simulateGameObject(game,showModal=false){
     if(rng()>.5)hs+=4+Math.floor(rng()*7);else as+=4+Math.floor(rng()*7);
   }
   game.homeScore=hs;game.awayScore=as;game.played=true;
+
+  const homeBox=buildTeamBox(game.home,hs,true,game);
+  const awayBox=buildTeamBox(game.away,as,false,game);
+  game.box={home:homeBox,away:awayBox};
+  recordBoxStats(homeBox);recordBoxStats(awayBox);
 
   const s=activeSave.seasonState.standings;
   const h=s[game.home],a=s[game.away];
@@ -821,14 +942,42 @@ function showGameResult(game,homeS,awayS){
   document.getElementById('gameTitle').textContent=`${formatDate(game.date)} • ${game.id}`;
   const userWon=(game.home===activeSave.teamId&&game.homeScore>game.awayScore)||(game.away===activeSave.teamId&&game.awayScore>game.homeScore);
   document.getElementById('gameWinnerText').textContent=userWon?"WIN":"LOSS";
-  const userStrength=game.home===activeSave.teamId?homeS:awayS;
-  const oppStrength=game.home===activeSave.teamId?awayS:homeS;
-  document.getElementById('gameFactors').innerHTML=`
-    <div><b>${userStrength.ovr.toFixed(1)}</b><small>Your Rotation</small></div>
-    <div><b>${oppStrength.ovr.toFixed(1)}</b><small>Opponent Rotation</small></div>
-    <div><b>${userStrength.off.toFixed(1)}</b><small>Your OFF</small></div>
-    <div><b>${userStrength.def.toFixed(1)}</b><small>Your DEF</small></div>`;
+
+  const allRows=[...game.box.away.rows.map(r=>({...r,teamId:game.away})),...game.box.home.rows.map(r=>({...r,teamId:game.home}))];
+  allRows.sort((a,b)=>playerGameScore(b)-playerGameScore(a));
+  const potg=allRows[0],pt=TEAMS.find(t=>t.id===potg.teamId);
+  document.getElementById('potgCard').innerHTML=`<div class="kicker">Player of the Game</div><div class="name">${potg.name} • ${pt.name}</div><div class="line">${potg.pts} PTS • ${potg.reb} REB • ${potg.ast} AST</div>`;
+
+  const renderSum=(box,team)=>`<div class="teamSum"><b>${team.name}</b>
+      <div class="miniLine"><span>FG</span><span>${box.summary.fgm}/${box.summary.fga}</span></div>
+      <div class="miniLine"><span>3PT</span><span>${box.summary.tpm}/${box.summary.tpa}</span></div>
+      <div class="miniLine"><span>REB</span><span>${box.summary.reb}</span></div>
+      <div class="miniLine"><span>AST</span><span>${box.summary.ast}</span></div></div>`;
+  document.getElementById('teamSummaryGrid').innerHTML=renderSum(game.box.away,at)+renderSum(game.box.home,ht);
+
+  activeGameDetail=game;activeBoxSide='away';
+  document.querySelectorAll('.boxTabs button').forEach((b,i)=>b.classList.toggle('active',i===0));
+  document.getElementById('awayBoxTab').textContent=at.mark;
+  document.getElementById('homeBoxTab').textContent=ht.mark;
+  renderBoxScore();
   document.getElementById('gameModal').classList.add('show');
+}
+function setBoxTeam(side,btn){
+  activeBoxSide=side;
+  document.querySelectorAll('.boxTabs button').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  renderBoxScore();
+}
+function renderBoxScore(){
+  if(!activeGameDetail?.box)return;
+  const box=activeGameDetail.box[activeBoxSide];
+  const el=document.getElementById('boxScoreWrap');
+  el.innerHTML='<div class="boxRow head"><div>PLAYER</div><div class="num">MIN</div><div class="num">PTS</div><div class="num">REB</div><div class="num">AST</div><div class="num">FG</div></div>';
+  box.rows.forEach(r=>{
+    const row=document.createElement('div');row.className='boxRow';
+    row.innerHTML=`<div class="pname"><b>${r.name}${r.starter?' • S':''}</b><small>${r.pos}</small></div><div class="num">${r.min}</div><div class="num">${r.pts}</div><div class="num">${r.reb}</div><div class="num">${r.ast}</div><div class="num">${r.fgm}/${r.fga}</div>`;
+    el.appendChild(row);
+  });
 }
 function closeGameModal(){document.getElementById('gameModal').classList.remove('show')}
 function standingsFor(conf){
@@ -933,7 +1082,7 @@ function renderLeague(){
       <button class="${conf==="East"?"active":""}" onclick="setLeagueConference('East',this)">Eastern Conference</button>
       <button class="${conf==="West"?"active":""}" onclick="setLeagueConference('West',this)">Western Conference</button>
     </div>
-    <div class="notice">v0.2.0 standings update after every simulated league game. Conference rank uses win percentage, then point differential as the first tie-breaker.</div>
+    <div class="notice">v0.2.1 now records individual box scores and season statistics alongside every simulated league game. Conference rank still uses win percentage, then point differential.</div>
   `;
   const card=document.createElement('div');card.className='card';
   card.innerHTML='<div class="legend"><div>#</div><div>TEAM</div><div>W–L</div><div>PCT</div></div>';
