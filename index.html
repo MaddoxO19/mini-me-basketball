@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-<title>Mini&Me Basketball v0.2.2</title>
+<title>Mini&Me Basketball v0.2.3</title>
 <style>
 :root{
   --bg:#0a0d12; --panel:#121720; --panel2:#171d27; --line:#2a3442;
@@ -53,7 +53,7 @@ h1{font-size:32px;margin:0 0 7px;letter-spacing:.4px}
 .nav{
   position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100%);
   background:#0d1219ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);
-  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(4,1fr);z-index:5
+  padding:9px 12px calc(9px + env(safe-area-inset-bottom));display:none;grid-template-columns:repeat(5,1fr);z-index:5
 }
 .nav.show{display:grid}.nav button{background:none;border:0;color:#8692a2;font-size:11px;padding:6px}.nav button.active{color:var(--accent);font-weight:800}
 .nav .ico{display:block;font-size:20px;margin-bottom:3px}
@@ -194,6 +194,20 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 .seasonEndBanner{background:linear-gradient(180deg,#1b2532,#121820);border:1px solid var(--accent);border-radius:16px;padding:15px;margin:10px 0}
 .seasonEndBanner b{display:block;font-size:18px;margin:4px 0}.seasonEndBanner p{margin:0;color:var(--muted);font-size:12px;line-height:1.4}
 
+
+.reviewHero{background:linear-gradient(180deg,#1b2633,#111820);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0}
+.reviewHero .bigRecord{font-size:38px;font-weight:950;margin:4px 0}
+.reviewHero .finish{color:var(--accent2);font-weight:900;font-size:13px}
+.reviewGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}
+.reviewMetric{background:var(--panel2);border-radius:13px;padding:11px}
+.reviewMetric b{display:block;font-size:20px}.reviewMetric small{color:var(--muted);font-size:10px}
+.reviewTable .teamStandRow{grid-template-columns:34px 1fr 54px 52px}
+.championRow{display:grid;grid-template-columns:1fr 64px;gap:10px;align-items:center;padding:11px 3px;border-top:1px solid #222b36;cursor:pointer}
+.championRow:first-child{border-top:0}
+.championRow b{display:block;font-size:13px}.championRow small{color:var(--muted);font-size:10px}
+.championValue{text-align:right;font-size:18px;font-weight:950;color:var(--accent2)}
+.reviewNote{font-size:11px;color:var(--muted);line-height:1.45;margin-top:8px}
+
 @media(max-width:360px){.teamName{font-size:21px}.stats{grid-template-columns:1fr 1fr}.court{height:320px}}
 </style>
 </head>
@@ -206,7 +220,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
       <div class="subtitle">Build Your Team. Build Your Legacy.</div>
       <button class="primary" onclick="openNewCareer()">New Career</button>
       <button class="secondary" onclick="loadCareer()">Load Career</button>
-      <div class="build">v0.2.2 • League Leaders</div>
+      <div class="build">v0.2.3 • Season Review</div>
     </div>
   </section>
 
@@ -237,7 +251,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div class="card">
       <div class="feed"><div class="dot"></div><p>Opening night is approaching across the Mini&Me Basketball league.</p></div>
       <div class="feed"><div class="dot"></div><p>Thirty franchises begin the chase for the inaugural championship.</p></div>
-      <div class="feed"><div class="dot"></div><p>League leaders and expanded player season statistics are now available throughout the season.</p></div>
+      <div class="feed"><div class="dot"></div><p>Season Review now summarises final standings, team outcome and statistical champions after Game 82.</p></div>
     </div>
   </section>
 
@@ -271,14 +285,25 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
     <div id="leagueUniverse"></div>
   </section>
 
-  <section id="more" class="screen">
+  
+  <section id="review" class="screen">
+    <div class="header">
+      <div><div class="kicker">Season Review</div><div class="teamName">2026/27 Regular Season</div><div class="season" id="reviewSubtitle">Complete all 82 games to unlock the review.</div></div>
+      <div class="badge" id="reviewBadge">LOCKED</div>
+    </div>
+    <div id="reviewContent">
+      <div class="card empty">Season Review becomes available once your 82-game regular season is complete.</div>
+    </div>
+  </section>
+
+<section id="more" class="screen">
     <div class="header"><div><div class="kicker">Career</div><div class="teamName">Mini&Me Basketball</div><div class="season">Foundation systems</div></div></div>
     <div class="card">
       <div class="sectionTitle" style="margin-top:0">Build Information</div>
-      <div class="feed"><p><b>Version:</b> v0.2.2</p></div>
-      <div class="feed"><p><b>Milestone:</b> League leaders, expanded player season cards, leaderboard navigation and season-end statistical visibility.</p></div>
+      <div class="feed"><p><b>Version:</b> v0.2.3</p></div>
+      <div class="feed"><p><b>Milestone:</b> Formal Season Review with team outcome, final conference tables, statistical champions and end-of-season progression state.</p></div>
       <div class="feed"><p><b>Save Schema:</b> MMB_SAVE_1</p></div>
-      <div class="feed"><p><b>Next:</b> v0.2.3 season review foundation and end-of-season progression shell.</p></div>
+      <div class="feed"><p><b>Next:</b> v0.3.0 Play-In and Playoff bracket foundation.</p></div>
     </div>
     <button class="secondary" onclick="returnToMenu()">Return to Main Menu</button>
   </section>
@@ -288,11 +313,9 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
   <button class="active" data-screen="home" onclick="go('home',this)"><span class="ico">⌂</span>Home</button>
   <button data-screen="squad" onclick="go('squad',this)"><span class="ico">◉</span>Roster</button>
   <button data-screen="league" onclick="go('league',this)"><span class="ico">▦</span>League</button>
+  <button data-screen="review" onclick="go('review',this)"><span class="ico">★</span>Review</button>
   <button data-screen="more" onclick="go('more',this)"><span class="ico">•••</span>More</button>
 </div>
-
-
-
 
 <div id="gameModal" class="modal">
   <div class="modalBox gameModalBox">
@@ -362,7 +385,7 @@ input{width:100%;padding:13px;border-radius:12px;border:1px solid var(--line);ba
 </div>
 
 <script>
-const VERSION="0.2.2";
+const VERSION="0.2.3";
 const SAVE_KEY="MMB_SAVE_1";
 const TEAMS=[
   {id:"ATL",name:"Atlanta Flight",city:"Atlanta",conference:"East",division:"Southeast",mark:"ATL",market:"Atlanta",style:"Athletic Tempo",color:"#E26A4A"},
@@ -414,6 +437,7 @@ function go(id,btn){
   showScreen(id);
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
   if(btn)btn.classList.add('active');
+  if(id==="review")renderSeasonReview();
 }
 function openNewCareer(){
   const grid=document.getElementById('teamGrid'); grid.innerHTML='';
@@ -1030,6 +1054,82 @@ function formatDate(s){
   const d=new Date(s+"T12:00:00");
   return d.toLocaleDateString(undefined,{month:"short",day:"numeric"});
 }
+
+function seasonComplete(){
+  if(!activeSave?.seasonState)return false;
+  const st=activeSave.seasonState.standings[activeSave.teamId];
+  return !!st && (st.w+st.l)>=82;
+}
+function finalConferencePosition(teamId){
+  const team=TEAMS.find(t=>t.id===teamId);if(!team)return null;
+  const table=standingsFor(team.conference);
+  const idx=table.findIndex(t=>t.id===teamId);
+  return idx>=0?idx+1:null;
+}
+function statisticalChampion(key){
+  const rows=topPlayersBy(key,1);
+  return rows.length?rows[0]:null;
+}
+function renderSeasonReview(){
+  const wrap=document.getElementById('reviewContent');
+  const sub=document.getElementById('reviewSubtitle');
+  const badge=document.getElementById('reviewBadge');
+  if(!wrap||!sub||!badge)return;
+  if(!activeSave || !seasonComplete()){
+    sub.textContent="Complete all 82 games to unlock the review.";
+    badge.textContent="LOCKED";
+    wrap.innerHTML='<div class="card empty">Season Review becomes available once your 82-game regular season is complete.</div>';
+    return;
+  }
+
+  const team=TEAMS.find(t=>t.id===activeSave.teamId);
+  const st=activeSave.seasonState.standings[activeSave.teamId];
+  const pos=finalConferencePosition(activeSave.teamId);
+  const confName=team.conference==="East"?"Eastern":"Western";
+  const pfpg=(st.pf/82).toFixed(1),papg=(st.pa/82).toFixed(1),diff=((st.pf-st.pa)/82).toFixed(1);
+  const champs=[
+    ["Scoring","pts","PPG"],["Rebounding","reb","RPG"],["Assists","ast","APG"],["Steals","stl","SPG"],["Blocks","blk","BPG"]
+  ];
+
+  sub.textContent=`${team.name} • ${st.w}–${st.l} • ${ordinal(pos)} ${confName}`;
+  badge.textContent="COMPLETE";
+
+  const east=standingsFor("East"),west=standingsFor("West");
+  const tableHtml=(rows)=>rows.map((t,i)=>`<div class="teamStandRow"><div class="zero">${i+1}</div><div class="teamInfo"><b>${t.name}${t.id===activeSave.teamId?' • YOU':''}</b><small>${t.division}</small></div><div class="zero">${t.w}–${t.l}</div><div class="zero">${t.pct.toFixed(3).replace(/^0/,"")}</div></div>`).join("");
+
+  let champsHtml="";
+  champs.forEach(([label,key,suffix])=>{
+    const c=statisticalChampion(key);
+    if(!c)return;
+    const tm=TEAMS.find(t=>t.id===c.p.teamId);
+    champsHtml+=`<div class="championRow" onclick="openPlayer('${c.p.id}')"><div><b>${label}: ${c.p.name}</b><small>${tm?.name||""} • ${c.p.pos}</small></div><div class="championValue">${c.value.toFixed(1)}</div></div>`;
+  });
+
+  wrap.innerHTML=`
+    <div class="reviewHero">
+      <div class="kicker">Your Season</div>
+      <div class="bigRecord">${st.w}–${st.l}</div>
+      <div class="finish">${ordinal(pos)} in the ${confName} Conference</div>
+      <div class="reviewGrid">
+        <div class="reviewMetric"><b>${pfpg}</b><small>Points For / Game</small></div>
+        <div class="reviewMetric"><b>${papg}</b><small>Points Against / Game</small></div>
+        <div class="reviewMetric"><b>${Number(diff)>=0?"+":""}${diff}</b><small>Point Differential / Game</small></div>
+        <div class="reviewMetric"><b>${((st.w/82)*100).toFixed(1)}%</b><small>Win Percentage</small></div>
+      </div>
+      <div class="reviewNote">This review closes the regular season only. Play-In, Playoffs and championship progression will be connected to this screen in the next development phase.</div>
+    </div>
+
+    <div class="sectionTitle">Statistical Champions</div>
+    <div class="card">${champsHtml||'<div class="empty" style="padding:20px">No qualified statistical leaders.</div>'}</div>
+
+    <div class="sectionTitle">Eastern Conference Final Standings</div>
+    <div class="card reviewTable"><div class="legend"><div>#</div><div>TEAM</div><div>W–L</div><div>PCT</div></div>${tableHtml(east)}</div>
+
+    <div class="sectionTitle">Western Conference Final Standings</div>
+    <div class="card reviewTable"><div class="legend"><div>#</div><div>TEAM</div><div>W–L</div><div>PCT</div></div>${tableHtml(west)}</div>
+  `;
+}
+
 function refreshSeasonUI(){
   if(!activeSave?.seasonState)return;
   const st=activeSave.seasonState.standings[activeSave.teamId];
@@ -1049,12 +1149,13 @@ function refreshSeasonUI(){
   }else{
     document.getElementById('nextOpponent').textContent="Regular Season Complete";
     document.getElementById('nextVenue').textContent="82 GAMES";
-    document.getElementById('nextMeta').textContent="Season Review progression begins in the next development phase";
+    document.getElementById('nextMeta').textContent="Open Review to see your final season outcome";
     document.getElementById('simGameBtn').disabled=true;
     document.getElementById('simWeekBtn').disabled=true;
   }
   renderLastResult();
   renderSeasonEndBanner();
+  renderSeasonReview();
   renderLeague();
 }
 
@@ -1072,7 +1173,7 @@ function renderSeasonEndBanner(){
     banner=document.createElement('div');banner.id='seasonEndBanner';banner.className='seasonEndBanner';
     nextCard.insertAdjacentElement('afterend',banner);
   }
-  banner.innerHTML=`<div class="kicker">Regular Season Complete</div><b>${st.w}–${st.l} • ${userConferenceRank()} Conference</b><p>Your full season statistics and league leaders are now available. Playoffs and formal Season Review progression will be introduced in the next major phase.</p>`;
+  banner.innerHTML=`<div class="kicker">Regular Season Complete</div><b>${st.w}–${st.l} • ${userConferenceRank()} Conference</b><p>Your full season statistics, league leaders and formal Season Review are now available. Play-In and Playoffs will connect to this review in the next development phase.</p>`;
 }
 
 function renderLastResult(){
@@ -1189,7 +1290,7 @@ function renderLeague(){
       <button class="${conf==="East"?"active":""}" onclick="setLeagueConference('East',this)">Eastern Conference</button>
       <button class="${conf==="West"?"active":""}" onclick="setLeagueConference('West',this)">Western Conference</button>
     </div>
-    <div class="notice">v0.2.2 adds league leaderboards and expanded season cards while retaining persistent box scores and standings.</div>
+    <div class="notice">v0.2.3 retains league leaderboards and now closes the 82-game regular season with a formal Season Review.</div>
   `;
   const card=document.createElement('div');card.className='card';
   card.innerHTML='<div class="legend"><div>#</div><div>TEAM</div><div>W–L</div><div>PCT</div></div>';
