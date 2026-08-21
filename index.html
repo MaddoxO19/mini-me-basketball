@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1017">
-<title>Mini&Me Basketball v0.2.0 — Phase 2 Franchise World</title>
+<title>Mini&Me Basketball v0.2.1 — Phase 2 Franchise World</title>
 <style>
 :root{
   --bg:#0b1017;--panel:#121925;--panel2:#182131;--panel3:#0f1621;--line:#283449;
@@ -40,7 +40,7 @@ body{padding-bottom:36px}button,input,select{font:inherit}.hidden{display:none!i
 <body>
 <header class="topbar">
   <div class="brand"><div class="ball">M&M</div><div><h1>Mini&Me Basketball</h1><small>Phase 2 • Franchise World</small></div></div>
-  <div class="version">v0.2.0</div>
+  <div class="version">v0.2.1</div>
 </header>
 <nav class="tabs" id="tabs">
   <button class="active" data-page="world">Franchise World</button>
@@ -78,7 +78,7 @@ body{padding-bottom:36px}button,input,select{font:inherit}.hidden{display:none!i
 
 <section id="page-tracker" class="page hidden">
   <section class="hero"><div class="eyebrow">Development tracker</div><h2>Phase 2 implementation.</h2><p>This release closes the structural gap between the simulation engine and the future career season. Franchise and standings data now have stable contracts for later schedule, playoff, player and international systems.</p></section>
-  <section class="card"><div class="cardHead"><div><h3>Build Tracker</h3><small>Phase status for the current baseline</small></div><small>v0.2.0</small></div><div class="cardBody archGrid">
+  <section class="card"><div class="cardHead"><div><h3>Build Tracker</h3><small>Phase status for the current baseline</small></div><small>v0.2.1</small></div><div class="cardBody archGrid">
     <div class="arch"><b>Phase 0 • Architecture</b><small>G-object schema and subsystem boundaries.</small><span class="activeTag">COMPLETE</span></div>
     <div class="arch"><b>Phase 1 • Possession Engine</b><small>PPP, pace, four quarters, overtime and Monte Carlo validation.</small><span class="activeTag">COMPLETE</span></div>
     <div class="arch"><b>Phase 2 • Franchises</b><small>30 teams, conferences, divisions, persistent ratings and standings logic.</small><span class="activeTag">ACTIVE BUILD</span></div>
@@ -90,7 +90,7 @@ body{padding-bottom:36px}button,input,select{font:inherit}.hidden{display:none!i
   </div></section>
   <section class="card"><div class="cardHead"><div><h3>Phase 2 Data Contract</h3><small>What later systems can now rely on</small></div></div><div class="cardBody"><div class="note good">Every franchise has a stable id, name, shortName, conference, division, sport, founded year, offensive rating, defensive rating, pace and derived OVR. Standings are keyed by franchise id and derive conference seed independently from division presentation. No correction layer has been added to the Phase 1 engine.</div></div></section>
 </section>
-<div class="foot">Mini&Me Basketball v0.2.0. Single-file HTML development baseline. Phase 2 test standings are validation data only and are not saved as an 82-game career season.</div>
+<div class="foot">Mini&Me Basketball v0.2.1. Single-file HTML development baseline. Phase 2 test standings are validation data only and are not saved as an 82-game career season.</div>
 </main>
 
 <div id="franchiseModal" class="modal hidden" onclick="if(event.target===this)closeFranchise()"><div class="sheet"><div class="sheetTop"><button class="close" onclick="closeFranchise()">×</button></div><div id="franchiseDetail"></div></div></div>
@@ -133,7 +133,7 @@ function standingRows(conference){return G.franchises.filter(f=>f.conference===c
 function tableHTML(rows,conferenceMode=true){return `<div class="tableWrap"><table class="standings"><thead><tr><th>#</th><th class="team">Team</th><th>W</th><th>L</th><th>PCT</th><th>DIFF</th><th>OVR</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${conferenceMode&&i<6?'seed ':''}${conferenceMode&&i>=6&&i<10?'playin':''}"><td class="seedNo ${conferenceMode&&i<8?'top8':''}">${i+1}</td><td class="team"><div class="standingTeam"><div class="miniLogo">${initials(r.f)}</div><div><b>${r.f.name}</b><span>${r.f.division}</span></div></div></td><td>${r.w}</td><td>${r.l}</td><td>${r.gp?r.pct.toFixed(3).replace(/^0/,''):'.000'}</td><td>${r.diff>0?'+':''}${r.diff}</td><td>${r.f.ovr}</td></tr>`).join('')}</tbody></table></div>`}
 function renderStandings(){['East','West'].forEach(conf=>{const rows=standingRows(conf);document.getElementById(conf.toLowerCase()+'Standings').innerHTML=`<section class="card"><div class="cardHead"><div><h3>${conf} Conference</h3><small>Top 6 direct playoff positions • 7–10 future play-in</small></div><small>15 TEAMS</small></div><div class="cardBody" style="padding:0">${tableHTML(rows,true)}</div></section>`});
  const divs=['Atlantic','Central','Southeast','Northwest','Pacific','Southwest'];document.getElementById('divisionStandings').innerHTML=divs.map(d=>{const rows=G.franchises.filter(f=>f.division===d).map(f=>{const s=G.standings[f.id],gp=s.w+s.l;return{...s,f,gp,pct:gp?s.w/gp:0,diff:s.pf-s.pa}}).sort((a,b)=>b.pct-a.pct||b.diff-a.diff||b.f.ovr-a.f.ovr);return `<div class="divisionBlock"><div class="divisionTitle"><b>${d}</b><span>${rows[0].f.conference.toUpperCase()}</span></div>${tableHTML(rows,false)}</div>`}).join('')}
-function pairRound(ids,round){const n=ids.length,arr=ids.slice();if(n%2)arr.push(null);const fixed=arr[0],rest=arr.slice(1);for(let r=0;r<round;r++)rest.unshift(rest.pop());const cur=[fixed,...rest],pairs=[];for(let i=0;i<cur.length/2;i++){let a=cur[i],b=cur[cur.length-1-i];if(a&&b)pairs.push(r%2?[b,a]:[a,b])}return pairs}
+function pairRound(ids,round){const n=ids.length,arr=ids.slice();if(n%2)arr.push(null);const fixed=arr[0],rest=arr.slice(1);for(let r=0;r<round;r++)rest.unshift(rest.pop());const cur=[fixed,...rest],pairs=[];for(let i=0;i<cur.length/2;i++){let a=cur[i],b=cur[cur.length-1-i];if(a&&b)pairs.push(round%2?[b,a]:[a,b])}return pairs}
 function generateStandingsTest(gamesPerTeam){initStandings();let seed=G.seed,round=0,played={};G.franchises.forEach(f=>played[f.id]=0);let guard=0;while(Object.values(played).some(x=>x<gamesPerTeam)&&guard<400){const east=pairRound(G.franchises.filter(f=>f.conference==='East').map(f=>f.id),round);const west=pairRound(G.franchises.filter(f=>f.conference==='West').map(f=>f.id),round);for(const [h,a] of [...east,...west]){if(played[h]>=gamesPerTeam||played[a]>=gamesPerTeam)continue;const r=simulateMatch({sport:'basketball',home:team(h),away:team(a)},seed++);recordResult(h,a,r);played[h]++;played[a]++}round++;guard++}
  G.seed=seed>>>0;renderStandings();renderFranchises();document.getElementById('testStatus').textContent=gamesPerTeam+' GAMES EACH';document.getElementById('standingsNote').className='note good';document.getElementById('standingsNote').textContent=`Standings test complete: ${gamesPerTeam} games per franchise using conference-only round-robin test pairings. Ranking is win percentage, then point differential, then franchise OVR as a deterministic development tiebreaker. The career scheduler remains a Phase 3 deliverable.`}
 function resetStandings(){initStandings();renderStandings();renderFranchises();document.getElementById('testStatus').textContent='PRESEASON';document.getElementById('standingsNote').className='note';document.getElementById('standingsNote').textContent='All clubs begin 0–0. Test mode creates balanced synthetic matchups using the validated possession engine. It does not represent the Phase 3 82-game schedule.'}
