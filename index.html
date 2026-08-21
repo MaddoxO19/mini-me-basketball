@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball v0.1.0 — Phase 1 Engine Lab</title>
+<meta name="theme-color" content="#0b1017">
+<title>Mini&Me Basketball v0.2.0 — Phase 2 Franchise World</title>
 <style>
 :root{
   --bg:#0b1017;--panel:#121925;--panel2:#182131;--panel3:#0f1621;--line:#283449;
@@ -13,175 +14,135 @@
   --space-4:22px;--space-5:30px;--max:1180px;--nav-h:64px;
   font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
 }
-*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 20% 0,#172236 0,#0b1017 38%,#080c12 100%);color:var(--text);min-height:100%}
-body{padding-bottom:36px}button,input{font:inherit}.app{max-width:var(--max);margin:auto;padding:18px}
-.topbar{position:sticky;top:0;z-index:20;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;background:rgba(11,16,23,.93);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 max(18px,calc((100vw - var(--max))/2 + 18px))}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;background:radial-gradient(circle at 20% 0,#172236 0,#0b1017 38%,#080c12 100%);color:var(--text);min-height:100%}
+body{padding-bottom:36px}button,input,select{font:inherit}.hidden{display:none!important}.app{max-width:var(--max);margin:auto;padding:18px}
+.topbar{position:sticky;top:0;z-index:20;height:var(--nav-h);display:flex;align-items:center;justify-content:space-between;background:rgba(11,16,23,.95);backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06);padding:0 max(18px,calc((100vw - var(--max))/2 + 18px))}
 .brand{display:flex;gap:12px;align-items:center}.ball{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#ffb45d,#e3781b);color:#201207;font-weight:900;box-shadow:inset -5px -5px 10px rgba(0,0,0,.18)}
 .brand h1{font-size:16px;margin:0;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.version{font-size:12px;color:var(--accent2);border:1px solid #5a3d21;background:#21170f;padding:7px 10px;border-radius:999px}
-.hero{padding:34px 2px 20px}.eyebrow{color:var(--accent2);font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.hero h2{font-size:clamp(28px,5vw,46px);line-height:1.02;margin:7px 0 10px}.hero p{max-width:760px;color:var(--muted);font-size:15px;line-height:1.55;margin:0}
-.grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px}.card{background:linear-gradient(180deg,rgba(24,33,49,.98),rgba(15,22,33,.98));border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden}.cardHead{padding:18px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center}.cardHead h3{font-size:16px;margin:0}.cardHead small{color:var(--muted)}.cardBody{padding:20px}
-.teams{display:grid;grid-template-columns:1fr 64px 1fr;gap:14px;align-items:start}.teamBox{background:var(--panel3);border:1px solid var(--line);border-radius:16px;padding:16px}.teamTitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.teamTitle b{font-size:16px}.teamTitle span{font-size:11px;color:var(--muted);padding:4px 7px;border:1px solid var(--line);border-radius:8px}.vs{display:grid;place-items:center;height:100%;min-height:180px;color:#6f7d93;font-size:12px;font-weight:900;letter-spacing:.12em}
-.field{margin:12px 0}.field label{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:6px}.field strong{color:var(--text)}input[type=range]{width:100%;accent-color:var(--accent)}
-.metricRow{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.metric{background:#0c121c;border:1px solid #253147;border-radius:12px;padding:10px}.metric span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.metric b{display:block;margin-top:4px;font-size:16px}.buttons{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}.btn{border:1px solid #36445b;background:#182234;color:var(--text);padding:11px 14px;border-radius:11px;font-weight:750;cursor:pointer}.btn:hover{filter:brightness(1.08)}.btn.primary{background:linear-gradient(180deg,#f6a646,#dc7b1b);color:#211205;border-color:#ffa84b}.btn.secondary{background:#172031}.btn.ghost{background:transparent;color:var(--muted)}
-.scoreCard{text-align:center;padding:18px;background:#0c121b;border:1px solid var(--line);border-radius:16px}.scoreTop{display:flex;justify-content:center;gap:9px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}.score{font-size:56px;font-weight:900;line-height:1;margin:9px 0 5px;letter-spacing:-.05em}.scoreNames{display:grid;grid-template-columns:1fr 1fr;gap:20px;font-size:12px;color:var(--muted)}
-.quarters{display:grid;grid-template-columns:1.2fr repeat(6,.72fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px}.qcell{background:#101722;padding:9px 7px;text-align:center;font-size:12px}.qcell.label{text-align:left;font-weight:750}.qcell.head{color:var(--muted);font-size:10px;text-transform:uppercase}
-.insight{margin-top:14px;padding:12px 14px;border-radius:12px;border:1px solid #344156;background:#121c29;color:#cbd5e5;font-size:12px;line-height:1.5}.insight.good{border-color:#315c49;background:#102219;color:#bce8cc}.insight.warn{border-color:#725b30;background:#241d10;color:#ffe2a5}
-.statsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{background:#0d141f;border:1px solid var(--line);border-radius:14px;padding:13px}.stat span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.08em}.stat b{display:block;font-size:22px;margin-top:3px}.barWrap{margin-top:15px}.barLine{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:6px}.bar{height:9px;background:#0b111a;border-radius:999px;overflow:hidden;border:1px solid #263247}.bar>i{display:block;height:100%;background:linear-gradient(90deg,#c96b18,#ffb257);width:50%}
-.foot{margin-top:18px;color:#8794a9;font-size:11px;line-height:1.55}.architecture{margin-top:18px}.archGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.arch{background:#0e151f;border:1px solid var(--line);padding:13px;border-radius:13px}.arch b{display:block;font-size:12px}.arch small{display:block;margin-top:4px;color:var(--muted);line-height:1.4}.activeTag{color:#172111;background:var(--good);font-weight:850;font-size:9px;padding:3px 6px;border-radius:999px;display:inline-block;margin-top:8px}.futureTag{color:#c9d2e1;background:#222c3c;font-weight:750;font-size:9px;padding:3px 6px;border-radius:999px;display:inline-block;margin-top:8px}
-@media(max-width:820px){.grid{grid-template-columns:1fr}.teams{grid-template-columns:1fr}.vs{min-height:28px}.archGrid{grid-template-columns:repeat(2,1fr)}.topbar{padding-left:14px;padding-right:14px}.app{padding:14px}.score{font-size:46px}}
-@media(max-width:520px){.metricRow,.statsGrid{grid-template-columns:1fr 1fr}.archGrid{grid-template-columns:1fr}.version{display:none}.quarters{font-size:10px;overflow:auto}.qcell{padding:8px 5px}.hero{padding-top:24px}}
+.tabs{position:sticky;top:var(--nav-h);z-index:18;display:flex;gap:7px;overflow-x:auto;background:rgba(11,16,23,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.05);padding:8px max(14px,calc((100vw - var(--max))/2 + 18px));scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}.tabs button{flex:0 0 auto;border:1px solid var(--line);background:#111925;color:var(--muted);border-radius:999px;padding:9px 13px;font-size:11px;font-weight:800}.tabs button.active{color:#211205;border-color:#f2a043;background:linear-gradient(180deg,#ffb052,#e98929)}
+.hero{padding:30px 2px 18px}.eyebrow{color:var(--accent2);font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase}.hero h2{font-size:clamp(27px,5vw,44px);line-height:1.02;margin:7px 0 10px}.hero p{max-width:800px;color:var(--muted);font-size:14px;line-height:1.55;margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{background:linear-gradient(180deg,rgba(24,33,49,.98),rgba(15,22,33,.98));border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow);overflow:hidden;margin-bottom:16px}.cardHead{padding:17px 19px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;align-items:center}.cardHead h3{font-size:16px;margin:0}.cardHead small{color:var(--muted);line-height:1.35}.cardBody{padding:18px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.kpi{background:#0d141f;border:1px solid var(--line);border-radius:14px;padding:13px}.kpi span{display:block;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.09em}.kpi b{display:block;font-size:24px;margin-top:4px}.kpi small{display:block;color:var(--muted);font-size:10px;margin-top:4px;line-height:1.35}
+.franchiseGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.franchise{background:#0d141f;border:1px solid var(--line);border-radius:15px;padding:13px;cursor:pointer}.franchise:active{transform:scale(.99)}.franchiseTop{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:950;color:#1b1208;background:linear-gradient(145deg,#ffb45d,#d9761e);flex:0 0 auto}.fname{min-width:0}.fname b{display:block;font-size:13px;line-height:1.2}.fname span{display:block;color:var(--muted);font-size:9px;margin-top:3px}.ratings{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:11px}.ratingBox{border:1px solid #243149;background:#111a27;border-radius:9px;padding:7px;text-align:center}.ratingBox span{display:block;color:var(--muted);font-size:7px;letter-spacing:.07em}.ratingBox b{display:block;margin-top:2px;font-size:12px}.strength{color:var(--accent2)!important}
+.confHead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 10px}.confHead b{font-size:18px}.confHead span{color:var(--muted);font-size:10px}.divisionBlock{margin-bottom:14px;border:1px solid var(--line);border-radius:15px;overflow:hidden;background:#0e151f}.divisionTitle{padding:10px 12px;background:#151e2b;border-bottom:1px solid var(--line);display:flex;justify-content:space-between}.divisionTitle b{font-size:12px}.divisionTitle span{font-size:9px;color:var(--muted)}
+.tableWrap{overflow-x:auto}.standings{width:100%;border-collapse:collapse;min-width:560px}.standings th,.standings td{padding:9px 8px;border-bottom:1px solid #202c3d;text-align:center;font-size:11px;font-variant-numeric:tabular-nums}.standings th{color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.08em;background:#101722}.standings th.team,.standings td.team{text-align:left}.standings tr:last-child td{border-bottom:0}.standings tr.seed td:first-child{color:var(--accent2);font-weight:900}.standings tr.playin{background:#f29b3808}.standingTeam{display:flex;gap:8px;align-items:center;min-width:150px}.miniLogo{width:27px;height:27px;border-radius:50%;display:grid;place-items:center;background:#df8427;color:#1e1207;font-size:8px;font-weight:900;flex:0 0 auto}.standingTeam b{font-size:11px}.standingTeam span{display:block;color:var(--muted);font-size:8px;margin-top:2px}.seedNo{font-weight:900;color:var(--muted)}.seedNo.top8{color:var(--accent2)}
+.buttons{display:flex;flex-wrap:wrap;gap:9px}.btn{border:1px solid #36445b;background:#182234;color:var(--text);padding:11px 14px;border-radius:11px;font-weight:750;cursor:pointer}.btn.primary{background:linear-gradient(180deg,#f6a646,#dc7b1b);color:#211205;border-color:#ffa84b}.btn.ghost{background:transparent;color:var(--muted)}
+.note{padding:11px 13px;border:1px solid #39475c;background:#121b28;border-radius:12px;color:#c8d2e2;font-size:11px;line-height:1.5}.note.good{border-color:#315c49;background:#102219;color:#bce8cc}.note.warn{border-color:#725b30;background:#241d10;color:#ffe2a5}
+.detailHero{display:grid;grid-template-columns:auto 1fr auto;gap:13px;align-items:center}.detailHero .logo{width:58px;height:58px;font-size:15px}.detailHero h3{margin:0;font-size:21px}.detailHero p{margin:5px 0 0;color:var(--muted);font-size:10px}.overall{font-size:28px;font-weight:950;color:var(--accent2);text-align:right}.overall span{display:block;color:var(--muted);font-size:8px;letter-spacing:.08em}.detailGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px}.detailStat{background:#0d141f;border:1px solid var(--line);border-radius:12px;padding:11px}.detailStat span{display:block;color:var(--muted);font-size:8px}.detailStat b{display:block;font-size:18px;margin-top:3px}.modal{position:fixed;inset:0;z-index:50;background:#000a;display:flex;align-items:flex-end;justify-content:center;padding:14px}.modal.hidden{display:none}.sheet{width:min(100%,620px);background:#0e151f;border:1px solid var(--line);border-radius:22px 22px 14px 14px;padding:17px;box-shadow:0 -22px 55px #0009;max-height:88dvh;overflow:auto}.sheetTop{display:flex;justify-content:flex-end}.close{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:#182234;color:var(--text);font-size:21px}
+.labGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.teamSelect{width:100%;min-height:44px;border:1px solid var(--line);border-radius:10px;background:#0d141f;color:var(--text);padding:10px}.scoreBox{text-align:center;background:#0d141f;border:1px solid var(--line);border-radius:15px;padding:17px}.scoreBox .score{font-size:48px;font-weight:950;letter-spacing:-.05em}.scoreBox small{color:var(--muted)}
+.quarters{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:auto;margin-top:12px}.qcell{background:#101722;padding:9px 7px;text-align:center;font-size:11px;min-width:45px}.qcell.label{text-align:left;font-weight:750;min-width:94px}.qcell.head{color:var(--muted);font-size:9px;text-transform:uppercase}
+.archGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.arch{background:#0e151f;border:1px solid var(--line);padding:13px;border-radius:13px}.arch b{display:block;font-size:12px}.arch small{display:block;margin-top:4px;color:var(--muted);line-height:1.4}.activeTag,.futureTag{font-weight:850;font-size:9px;padding:3px 6px;border-radius:999px;display:inline-block;margin-top:8px}.activeTag{color:#172111;background:var(--good)}.futureTag{color:#c9d2e1;background:#222c3c}.foot{margin-top:18px;color:#8794a9;font-size:10px;line-height:1.55}
+@media(max-width:900px){.franchiseGrid{grid-template-columns:repeat(2,1fr)}.archGrid{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.grid2,.labGrid{grid-template-columns:1fr}.franchiseGrid{grid-template-columns:1fr}.app{padding:13px}.topbar{padding-left:13px;padding-right:13px}.hero{padding-top:23px}.detailGrid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:440px){.version{display:none}.brand h1{font-size:15px}.brand small{font-size:10px}.kpi b{font-size:21px}.cardHead{padding:14px}.cardBody{padding:14px}.tabs{padding-left:12px;padding-right:12px}.tabs button{font-size:10px}.archGrid{grid-template-columns:1fr}.hero h2{font-size:29px}}
 </style>
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><div class="ball">M&M</div><div><h1>Mini&Me Basketball</h1><small>Phase 1 • Possession Engine Lab</small></div></div>
-  <div class="version">v0.1.0</div>
+  <div class="brand"><div class="ball">M&M</div><div><h1>Mini&Me Basketball</h1><small>Phase 2 • Franchise World</small></div></div>
+  <div class="version">v0.2.0</div>
 </header>
+<nav class="tabs" id="tabs">
+  <button class="active" data-page="world">Franchise World</button>
+  <button data-page="standings">Standings</button>
+  <button data-page="lab">Engine Lab</button>
+  <button data-page="tracker">Build Tracker</button>
+</nav>
 <main class="app">
-  <section class="hero">
-    <div class="eyebrow">Engineering baseline</div>
-    <h2>Build the game from the engine out.</h2>
-    <p>This release validates basketball scoring before franchise content is introduced. Adjust two synthetic teams, run individual games, then stress-test the same matchup across thousands of simulations using the same seeded engine.</p>
-  </section>
+<section id="page-world" class="page">
+  <section class="hero"><div class="eyebrow">Phase 2</div><h2>The league now has a world.</h2><p>Thirty fictional basketball franchises are split across two conferences and six divisions. Each franchise now carries a persistent identity, offensive rating, defensive rating, pace profile and derived overall strength. These records are the foundation the 82-game season scheduler will consume in Phase 3.</p></section>
+  <div class="kpis">
+    <div class="kpi"><span>Franchises</span><b>30</b><small>Persistent records in G.franchises</small></div>
+    <div class="kpi"><span>Conferences</span><b>2</b><small>East and West</small></div>
+    <div class="kpi"><span>Divisions</span><b>6</b><small>Five franchises per division</small></div>
+    <div class="kpi"><span>Engine</span><b>Locked</b><small>Phase 1 possession model unchanged</small></div>
+  </div>
+  <section class="card" style="margin-top:16px"><div class="cardHead"><div><h3>Franchise Directory</h3><small>Tap a franchise to inspect its Phase 2 profile</small></div><small id="worldCount">30 TEAMS</small></div><div class="cardBody"><div class="franchiseGrid" id="franchiseGrid"></div></div></section>
+</section>
 
-  <section class="grid">
-    <article class="card">
-      <div class="cardHead"><div><h3>Single Matchup</h3><small>Live inputs into the possession engine</small></div><small id="seedLabel">Seed —</small></div>
-      <div class="cardBody">
-        <div class="teams">
-          <div class="teamBox">
-            <div class="teamTitle"><b>Home Test Team</b><span>HOME</span></div>
-            <div class="field"><label>Offensive rating <strong id="homeOffVal">84</strong></label><input id="homeOff" type="range" min="65" max="99" value="84"></div>
-            <div class="field"><label>Defensive rating <strong id="homeDefVal">82</strong></label><input id="homeDef" type="range" min="65" max="99" value="82"></div>
-            <div class="field"><label>Pace <strong id="homePaceVal">78</strong></label><input id="homePace" type="range" min="65" max="95" value="78"></div>
-            <div class="metricRow"><div class="metric"><span>Expected PPP</span><b id="homePPP">—</b></div><div class="metric"><span>Possessions</span><b id="homePoss">—</b></div><div class="metric"><span>Expected pts</span><b id="homeExp">—</b></div></div>
-          </div>
-          <div class="vs">VERSUS</div>
-          <div class="teamBox">
-            <div class="teamTitle"><b>Away Test Team</b><span>AWAY</span></div>
-            <div class="field"><label>Offensive rating <strong id="awayOffVal">80</strong></label><input id="awayOff" type="range" min="65" max="99" value="80"></div>
-            <div class="field"><label>Defensive rating <strong id="awayDefVal">79</strong></label><input id="awayDef" type="range" min="65" max="99" value="79"></div>
-            <div class="field"><label>Pace <strong id="awayPaceVal">80</strong></label><input id="awayPace" type="range" min="65" max="95" value="80"></div>
-            <div class="metricRow"><div class="metric"><span>Expected PPP</span><b id="awayPPP">—</b></div><div class="metric"><span>Possessions</span><b id="awayPoss">—</b></div><div class="metric"><span>Expected pts</span><b id="awayExp">—</b></div></div>
-          </div>
-        </div>
-        <div class="buttons">
-          <button class="btn primary" onclick="playOne()">Simulate Game</button>
-          <button class="btn secondary" onclick="runMonteCarlo(1000)">Run 1,000 Sims</button>
-          <button class="btn secondary" onclick="runMonteCarlo(10000)">Run 10,000 Sims</button>
-          <button class="btn ghost" onclick="newSeed()">New Seed</button>
-        </div>
-      </div>
-    </article>
+<section id="page-standings" class="page hidden">
+  <section class="hero"><div class="eyebrow">League table logic</div><h2>Conference and division standings.</h2><p>Phase 2 establishes the ranking rules the career season will use. The test records below are deliberately temporary and exist only to validate wins, losses, win percentage, point differential, division grouping and conference seeding before the 82-game scheduler is introduced.</p></section>
+  <section class="card"><div class="cardHead"><div><h3>Standings Test Controls</h3><small>No career schedule exists yet</small></div><small id="testStatus">PRESEASON</small></div><div class="cardBody"><div class="buttons"><button class="btn primary" onclick="generateStandingsTest(16)">Generate 16-Game Test</button><button class="btn" onclick="generateStandingsTest(40)">Generate 40-Game Test</button><button class="btn ghost" onclick="resetStandings()">Reset Standings</button></div><div class="note" style="margin-top:12px" id="standingsNote">All clubs begin 0–0. Test mode creates balanced synthetic matchups using the validated possession engine. It does not represent the Phase 3 82-game schedule.</div></div></section>
+  <div class="grid2"><div id="eastStandings"></div><div id="westStandings"></div></div>
+  <section class="card"><div class="cardHead"><div><h3>Division View</h3><small>Five franchises in each division</small></div><small>6 DIVISIONS</small></div><div class="cardBody" id="divisionStandings"></div></section>
+</section>
 
-    <article class="card">
-      <div class="cardHead"><div><h3>Game Output</h3><small>Four quarters plus overtime if required</small></div><small id="gameStatus">READY</small></div>
-      <div class="cardBody">
-        <div class="scoreCard">
-          <div class="scoreTop"><span id="winnerLabel">Engine ready</span></div>
-          <div class="score" id="score">— : —</div>
-          <div class="scoreNames"><span>HOME TEST TEAM</span><span>AWAY TEST TEAM</span></div>
-        </div>
-        <div id="quarterWrap"></div>
-        <div class="insight" id="gameInsight">The engine currently contains no fatigue, roster, player or playoff modifiers. That isolation is intentional for Phase 1.</div>
-      </div>
-    </article>
-  </section>
+<section id="page-lab" class="page hidden">
+  <section class="hero"><div class="eyebrow">Phase 1 retained</div><h2>Franchise engine lab.</h2><p>The exact validated possession engine is still available. It now consumes real Phase 2 franchise ratings rather than synthetic sliders, allowing us to spot-check any matchup without changing the core mathematics.</p></section>
+  <section class="card"><div class="cardHead"><div><h3>Franchise Matchup</h3><small>Single-game engine test</small></div><small id="labStatus">READY</small></div><div class="cardBody">
+    <div class="labGrid"><div><label class="eyebrow">Home Franchise</label><select id="homeSelect" class="teamSelect"></select></div><div><label class="eyebrow">Away Franchise</label><select id="awaySelect" class="teamSelect"></select></div></div>
+    <div class="buttons" style="margin-top:14px"><button class="btn primary" onclick="playFranchiseGame()">Simulate Game</button><button class="btn" onclick="runFranchiseMonteCarlo(10000)">Run 10,000 Sims</button></div>
+    <div class="scoreBox" style="margin-top:14px"><small id="labWinner">No game simulated</small><div class="score" id="labScore">— : —</div><small id="labExpectation">Select two franchises and simulate.</small></div><div id="quarterWrap"></div><div class="note" style="margin-top:12px" id="labNote">Phase 1 settings remain locked: home advantage 0.026 PPP, base PPP 1.08, rating scale 0.0075 and score sigma 6.7.</div>
+  </div></section>
+</section>
 
-  <section class="card" style="margin-top:18px">
-    <div class="cardHead"><div><h3>Monte Carlo Validation</h3><small>Checks the core model before content or correction layers</small></div><small id="mcStatus">NOT RUN</small></div>
-    <div class="cardBody">
-      <div class="statsGrid">
-        <div class="stat"><span>Home win rate</span><b id="mcHomeWin">—</b></div>
-        <div class="stat"><span>Away win rate</span><b id="mcAwayWin">—</b></div>
-        <div class="stat"><span>Average home score</span><b id="mcHomeAvg">—</b></div>
-        <div class="stat"><span>Average away score</span><b id="mcAwayAvg">—</b></div>
-        <div class="stat"><span>Average margin</span><b id="mcMargin">—</b></div>
-        <div class="stat"><span>Overtime games</span><b id="mcOT">—</b></div>
-      </div>
-      <div class="barWrap"><div class="barLine"><span>Away</span><span>Win split</span><span>Home</span></div><div class="bar"><i id="winBar"></i></div></div>
-      <div class="insight" id="mcInsight">Use the 1,000 simulation run for quick tuning and 10,000 simulations when we want to validate a change to the engine.</div>
-    </div>
-  </section>
-
-  <section class="card architecture">
-    <div class="cardHead"><div><h3>Build Tracker</h3><small>Only Phase 1 systems are live in this release</small></div><small>Architecture locked</small></div>
-    <div class="cardBody archGrid">
-      <div class="arch"><b>Phase 0 • Architecture</b><small>Shared G state, basketball schema and subsystem boundaries.</small><span class="activeTag">COMPLETE</span></div>
-      <div class="arch"><b>Phase 1 • Possession Engine</b><small>PPP, pace, score variance, quarters, overtime and Monte Carlo validation.</small><span class="activeTag">ACTIVE BUILD</span></div>
-      <div class="arch"><b>Phase 2 • Franchises</b><small>30 teams, two conferences, six divisions and standings.</small><span class="futureTag">NEXT</span></div>
-      <div class="arch"><b>Phase 3 • 82 Games</b><small>Season scheduler, results and standings progression.</small><span class="futureTag">PLANNED</span></div>
-      <div class="arch"><b>Phase 4 • Play-In</b><small>Seeds 7 to 10 resolve the final two playoff positions.</small><span class="futureTag">PLANNED</span></div>
-      <div class="arch"><b>Phase 5 • Playoffs</b><small>Best-of-seven rounds with 2-2-1-1-1 home court.</small><span class="futureTag">PLANNED</span></div>
-      <div class="arch"><b>Phase 8 • Fatigue</b><small>Separate rotation and back-to-back model. Not mixed into the core engine.</small><span class="futureTag">ISOLATED</span></div>
-      <div class="arch"><b>International Layer</b><small>Federation qualification, World Cup and later club competition.</small><span class="futureTag">LATER PHASE</span></div>
-    </div>
-  </section>
-  <div class="foot">Mini&Me Basketball v0.1.0. Single-file HTML baseline. Seeded simulation is deterministic for the same seed and inputs. This release deliberately uses synthetic team ratings rather than franchise or player content.</div>
+<section id="page-tracker" class="page hidden">
+  <section class="hero"><div class="eyebrow">Development tracker</div><h2>Phase 2 implementation.</h2><p>This release closes the structural gap between the simulation engine and the future career season. Franchise and standings data now have stable contracts for later schedule, playoff, player and international systems.</p></section>
+  <section class="card"><div class="cardHead"><div><h3>Build Tracker</h3><small>Phase status for the current baseline</small></div><small>v0.2.0</small></div><div class="cardBody archGrid">
+    <div class="arch"><b>Phase 0 • Architecture</b><small>G-object schema and subsystem boundaries.</small><span class="activeTag">COMPLETE</span></div>
+    <div class="arch"><b>Phase 1 • Possession Engine</b><small>PPP, pace, four quarters, overtime and Monte Carlo validation.</small><span class="activeTag">COMPLETE</span></div>
+    <div class="arch"><b>Phase 2 • Franchises</b><small>30 teams, conferences, divisions, persistent ratings and standings logic.</small><span class="activeTag">ACTIVE BUILD</span></div>
+    <div class="arch"><b>Phase 3 • 82 Games</b><small>Balanced scheduler, results progression and season UI.</small><span class="futureTag">NEXT</span></div>
+    <div class="arch"><b>Phase 4 • Play-In</b><small>Seeds 7–10 resolve the final two playoff positions.</small><span class="futureTag">PLANNED</span></div>
+    <div class="arch"><b>Phase 5 • Playoffs</b><small>Best-of-seven rounds with 2-2-1-1-1 home court.</small><span class="futureTag">PLANNED</span></div>
+    <div class="arch"><b>Phase 8 • Fatigue</b><small>Minutes, rest and back-to-back effects remain isolated.</small><span class="futureTag">LATER</span></div>
+    <div class="arch"><b>International Layer</b><small>Federations, World Cup and club competition remain later phases.</small><span class="futureTag">LATER</span></div>
+  </div></section>
+  <section class="card"><div class="cardHead"><div><h3>Phase 2 Data Contract</h3><small>What later systems can now rely on</small></div></div><div class="cardBody"><div class="note good">Every franchise has a stable id, name, shortName, conference, division, sport, founded year, offensive rating, defensive rating, pace and derived OVR. Standings are keyed by franchise id and derive conference seed independently from division presentation. No correction layer has been added to the Phase 1 engine.</div></div></section>
+</section>
+<div class="foot">Mini&Me Basketball v0.2.0. Single-file HTML development baseline. Phase 2 test standings are validation data only and are not saved as an 82-game career season.</div>
 </main>
+
+<div id="franchiseModal" class="modal hidden" onclick="if(event.target===this)closeFranchise()"><div class="sheet"><div class="sheetTop"><button class="close" onclick="closeFranchise()">×</button></div><div id="franchiseDetail"></div></div></div>
 <script>
 const G={
-  version:"0.1.0", sport:"basketball", phase:1, season:2026, week:0, club:null,
+  version:"0.2.0",sport:"basketball",phase:2,season:2026,week:0,club:null,
   seed:(Date.now() ^ Math.floor(Math.random()*0xffffffff))>>>0,
-  franchises:[], players:[], conference:{}, division:{}, playInBracket:null, playoffBracket:null,
-  federations:{}, worldCupBBL:null, euroLeague:null, intercontinentalCup:null, worldClubChampionship:null,
+  franchises:[],players:[],conference:{},division:{},standings:{},playInBracket:null,playoffBracket:null,
+  federations:{},worldCupBBL:null,euroLeague:null,intercontinentalCup:null,worldClubChampionship:null,
   engine:{homeAdvantage:0.026,basePPP:1.08,pppScale:0.0075,scoreSigma:6.7,paceBase:95}
 };
+const FRANCHISE_DATA=[
+[1,'Boston Harbours','BOS','East','Atlantic',1948,86,84,80],[2,'New York Empire','NYE','East','Atlantic',1947,88,82,77],[3,'Brooklyn Forge','BKF','East','Atlantic',1974,80,79,83],[4,'Philadelphia Foundry','PHF','East','Atlantic',1951,84,85,76],[5,'Toronto Northstars','TOR','East','Atlantic',1995,82,83,81],
+[6,'Chicago Union','CHU','East','Central',1966,85,80,79],[7,'Detroit Motors','DET','East','Central',1957,78,82,78],[8,'Cleveland Ironworks','CLG','East','Central',1970,83,87,75],[9,'Milwaukee Lakefront','MIL','East','Central',1968,87,85,77],[10,'Indianapolis Velocity','IND','East','Central',1976,86,79,86],
+[11,'Miami Waves','MIA','East','Southeast',1988,88,86,78],[12,'Orlando Orbit','ORL','East','Southeast',1989,81,84,82],[13,'Atlanta Flight','ATL','East','Southeast',1968,84,78,87],[14,'Charlotte Crown','CHA','East','Southeast',1988,77,80,84],[15,'Washington Monuments','WAS','East','Southeast',1961,79,77,80],
+[16,'Seattle Cascades','SEA','West','Northwest',1967,87,84,83],[17,'Portland Pines','POR','West','Northwest',1970,82,83,79],[18,'Denver Peaks','DEN','West','Northwest',1967,90,85,80],[19,'Salt Lake Summit','SLS','West','Northwest',1974,83,88,74],[20,'Minnesota Frost','MIN','West','Northwest',1989,86,87,82],
+[21,'Los Angeles Gold','LAG','West','Pacific',1960,89,82,81],[22,'Los Angeles Tide','LAT','West','Pacific',1970,84,86,78],[23,'San Francisco Bay','SFB','West','Pacific',1946,91,81,88],[24,'Sacramento Goldrush','SAC','West','Pacific',1985,85,79,85],[25,'Phoenix Firebirds','PHX','West','Pacific',1968,88,78,89],
+[26,'Dallas Stampede','DAL','West','Southwest',1980,89,84,80],[27,'Houston Launch','HOU','West','Southwest',1967,86,80,86],[28,'San Antonio Mission','SAM','West','Southwest',1976,82,89,73],[29,'Memphis Blues','MEM','West','Southwest',2001,80,86,76],[30,'New Orleans Crescents','NOC','West','Southwest',2002,81,79,84]
+];
+function deriveOVR(f){return Math.round(f.off*.45+f.def*.45+f.pace*.10)}
+function loadFranchises(){
+ G.franchises=FRANCHISE_DATA.map(([id,name,shortName,conference,division,founded,off,def,pace])=>({id,name,shortName,conference,division,founded,off,def,pace,sport:'basketball',ovr:deriveOVR({off,def,pace})}));
+ G.franchises.forEach(f=>{G.conference[f.id]=f.conference;G.division[f.id]=f.division});initStandings();
+}
+function initStandings(){G.standings={};G.franchises.forEach(f=>G.standings[f.id]={teamId:f.id,w:0,l:0,pf:0,pa:0});}
 function mulberry32(a){return function(){let t=a+=0x6D2B79F5;t=Math.imul(t^t>>>15,t|1);t^=t+Math.imul(t^t>>>7,t|61);return((t^t>>>14)>>>0)/4294967296}}
 function normal(rng){let u=0,v=0;while(!u)u=rng();while(!v)v=rng();return Math.sqrt(-2*Math.log(u))*Math.cos(2*Math.PI*v)}
 function clamp(n,a,b){return Math.max(a,Math.min(b,n))}
-function val(id){return +document.getElementById(id).value}
-function inputs(){return {home:{off:val('homeOff'),def:val('homeDef'),pace:val('homePace')},away:{off:val('awayOff'),def:val('awayDef'),pace:val('awayPace')}}}
-function matchupExpectations(home,away){
-  const pace=clamp(G.engine.paceBase + ((home.pace+away.pace)/2-80)*0.72,88,104);
-  const hp=clamp(G.engine.basePPP + (home.off-away.def)*G.engine.pppScale + G.engine.homeAdvantage,0.88,1.34);
-  const ap=clamp(G.engine.basePPP + (away.off-home.def)*G.engine.pppScale,0.88,1.34);
-  return {possessions:pace,homePPP:hp,awayPPP:ap,homeExpected:pace*hp,awayExpected:pace*ap};
-}
-function distributeQuarters(total,rng){
-  const weights=[.25+normal(rng)*.018,.25+normal(rng)*.018,.25+normal(rng)*.018,.25+normal(rng)*.018];
-  const sum=weights.reduce((a,b)=>a+b,0);let q=weights.map(w=>Math.max(10,Math.round(total*w/sum)));
-  let diff=total-q.reduce((a,b)=>a+b,0);q[3]+=diff;return q;
-}
-function simulateBasketballGame(home,away,seed){
-  const rng=mulberry32(seed>>>0),e=matchupExpectations(home,away);
-  let hs=Math.max(70,Math.round(e.homeExpected+normal(rng)*G.engine.scoreSigma));
-  let as=Math.max(70,Math.round(e.awayExpected+normal(rng)*G.engine.scoreSigma));
-  const hq=distributeQuarters(hs,rng),aq=distributeQuarters(as,rng);hs=hq.reduce((a,b)=>a+b,0);as=aq.reduce((a,b)=>a+b,0);
-  const hot=[],aot=[];let ot=0;
-  while(hs===as && ot<5){ot++;let h=Math.max(4,Math.round(10.5+normal(rng)*3.2)),a=Math.max(4,Math.round(10.2+normal(rng)*3.2));if(ot===5&&h===a)h++;hot.push(h);aot.push(a);hs+=h;as+=a}
-  return {homeScore:hs,awayScore:as,quartersHome:hq,quartersAway:aq,otHome:hot,otAway:aot,ot,expectations:e,winner:hs>as?'home':'away'};
-}
-function simulateMatch(fixture,seed=G.seed){if(fixture.sport!=="basketball")throw new Error("Phase 1 build only supports basketball fixtures");return simulateBasketballGame(fixture.home,fixture.away,seed)}
-function refreshInputs(){
-  const x=inputs(),e=matchupExpectations(x.home,x.away);
-  ['homeOff','homeDef','homePace','awayOff','awayDef','awayPace'].forEach(id=>document.getElementById(id+'Val').textContent=val(id));
-  document.getElementById('homePPP').textContent=e.homePPP.toFixed(3);document.getElementById('awayPPP').textContent=e.awayPPP.toFixed(3);
-  document.getElementById('homePoss').textContent=e.possessions.toFixed(1);document.getElementById('awayPoss').textContent=e.possessions.toFixed(1);
-  document.getElementById('homeExp').textContent=e.homeExpected.toFixed(1);document.getElementById('awayExp').textContent=e.awayExpected.toFixed(1);
-  document.getElementById('seedLabel').textContent='Seed '+G.seed;
-}
-function newSeed(){G.seed=(Date.now() ^ Math.floor(Math.random()*0xffffffff))>>>0;refreshInputs();document.getElementById('gameStatus').textContent='READY'}
-function playOne(){
-  const x=inputs(),r=simulateMatch({sport:'basketball',home:x.home,away:x.away},G.seed);
-  document.getElementById('score').textContent=r.homeScore+' : '+r.awayScore;document.getElementById('winnerLabel').textContent=r.winner==='home'?'Home Test Team wins':'Away Test Team wins';
-  document.getElementById('gameStatus').textContent=r.ot?('FINAL • '+r.ot+'OT'):'FINAL';
-  let heads=['TEAM','Q1','Q2','Q3','Q4'];for(let i=0;i<r.ot;i++)heads.push('OT'+(i+1));heads.push('TOT');
-  const row=(name,q,ots,total)=>[name,...q,...ots,total];const hr=row('HOME',r.quartersHome,r.otHome,r.homeScore),ar=row('AWAY',r.quartersAway,r.otAway,r.awayScore);
-  document.getElementById('quarterWrap').innerHTML='<div class="quarters">'+heads.map((h,i)=>`<div class="qcell ${i===0?'label ':''}head">${h}</div>`).join('')+hr.map((n,i)=>`<div class="qcell ${i===0?'label':''}">${n}</div>`).join('')+ar.map((n,i)=>`<div class="qcell ${i===0?'label':''}">${n}</div>`).join('')+'</div>';
-  const delta=Math.abs(r.expectations.homeExpected-r.expectations.awayExpected).toFixed(1);document.getElementById('gameInsight').className='insight';document.getElementById('gameInsight').textContent=`Model expectation was ${r.expectations.homeExpected.toFixed(1)} to ${r.expectations.awayExpected.toFixed(1)} across ${r.expectations.possessions.toFixed(1)} possessions. Expected score separation: ${delta} points. The final result includes normal game-to-game variance.`;
-  G.seed=(G.seed+1)>>>0;refreshInputs();
-}
-function runMonteCarlo(n){
-  const x=inputs(),start=performance.now();let hw=0,aw=0,hs=0,as=0,ot=0,marg=0;let seed=G.seed;
-  for(let i=0;i<n;i++){const r=simulateMatch({sport:'basketball',home:x.home,away:x.away},(seed+i)>>>0);if(r.winner==='home')hw++;else aw++;hs+=r.homeScore;as+=r.awayScore;ot+=r.ot>0?1:0;marg+=Math.abs(r.homeScore-r.awayScore)}
-  const elapsed=performance.now()-start,p=hw/n*100;
-  document.getElementById('mcHomeWin').textContent=p.toFixed(1)+'%';document.getElementById('mcAwayWin').textContent=(100-p).toFixed(1)+'%';
-  document.getElementById('mcHomeAvg').textContent=(hs/n).toFixed(1);document.getElementById('mcAwayAvg').textContent=(as/n).toFixed(1);document.getElementById('mcMargin').textContent=(marg/n).toFixed(1);document.getElementById('mcOT').textContent=(ot/n*100).toFixed(1)+'%';
-  document.getElementById('winBar').style.width=p+'%';document.getElementById('mcStatus').textContent=n.toLocaleString()+' RUNS • '+elapsed.toFixed(0)+'ms';
-  const diff=(hs-as)/n;const insight=document.getElementById('mcInsight');insight.className='insight '+(Math.abs(diff)<18?'good':'warn');insight.textContent=`${n.toLocaleString()} simulations completed in ${elapsed.toFixed(1)} ms. Home average margin: ${diff>=0?'+':''}${diff.toFixed(1)}. This harness is the calibration gate: we should tune the core PPP/pace model here before adding player, fatigue or playoff correction layers.`;
-}
-document.querySelectorAll('input[type=range]').forEach(x=>x.addEventListener('input',refreshInputs));refreshInputs();
+function matchupExpectations(home,away){const pace=clamp(G.engine.paceBase+((home.pace+away.pace)/2-80)*.72,88,104);const hp=clamp(G.engine.basePPP+(home.off-away.def)*G.engine.pppScale+G.engine.homeAdvantage,.88,1.34);const ap=clamp(G.engine.basePPP+(away.off-home.def)*G.engine.pppScale,.88,1.34);return{possessions:pace,homePPP:hp,awayPPP:ap,homeExpected:pace*hp,awayExpected:pace*ap}}
+function distributeQuarters(total,rng){const weights=[.25+normal(rng)*.018,.25+normal(rng)*.018,.25+normal(rng)*.018,.25+normal(rng)*.018],sum=weights.reduce((a,b)=>a+b,0);let q=weights.map(w=>Math.max(10,Math.round(total*w/sum))),diff=total-q.reduce((a,b)=>a+b,0);q[3]+=diff;return q}
+function simulateBasketballGame(home,away,seed){const rng=mulberry32(seed>>>0),e=matchupExpectations(home,away);let hs=Math.max(70,Math.round(e.homeExpected+normal(rng)*G.engine.scoreSigma)),as=Math.max(70,Math.round(e.awayExpected+normal(rng)*G.engine.scoreSigma));const hq=distributeQuarters(hs,rng),aq=distributeQuarters(as,rng);hs=hq.reduce((a,b)=>a+b,0);as=aq.reduce((a,b)=>a+b,0);const hot=[],aot=[];let ot=0;while(hs===as&&ot<5){ot++;let h=Math.max(4,Math.round(10.5+normal(rng)*3.2)),a=Math.max(4,Math.round(10.2+normal(rng)*3.2));if(ot===5&&h===a)h++;hot.push(h);aot.push(a);hs+=h;as+=a}return{homeScore:hs,awayScore:as,quartersHome:hq,quartersAway:aq,otHome:hot,otAway:aot,ot,expectations:e,winner:hs>as?'home':'away'}}
+function simulateMatch(fixture,seed=G.seed){if(fixture.sport!=='basketball')throw new Error('Basketball fixture required');return simulateBasketballGame(fixture.home,fixture.away,seed)}
+function team(id){return G.franchises.find(f=>f.id===+id)}
+function initials(f){return f.shortName.slice(0,3)}
+function renderFranchises(){document.getElementById('franchiseGrid').innerHTML=G.franchises.map(f=>`<div class="franchise" onclick="openFranchise(${f.id})"><div class="franchiseTop"><div class="logo">${initials(f)}</div><div class="fname"><b>${f.name}</b><span>${f.conference} • ${f.division}</span></div></div><div class="ratings"><div class="ratingBox"><span>OVR</span><b class="strength">${f.ovr}</b></div><div class="ratingBox"><span>OFF</span><b>${f.off}</b></div><div class="ratingBox"><span>DEF</span><b>${f.def}</b></div><div class="ratingBox"><span>PACE</span><b>${f.pace}</b></div></div></div>`).join('')}
+function openFranchise(id){const f=team(id),s=G.standings[id];document.getElementById('franchiseDetail').innerHTML=`<div class="detailHero"><div class="logo">${initials(f)}</div><div><div class="eyebrow">${f.conference} • ${f.division}</div><h3>${f.name}</h3><p>Founded ${f.founded} • Franchise ID ${f.id}</p></div><div class="overall"><span>OVR</span>${f.ovr}</div></div><div class="detailGrid"><div class="detailStat"><span>Offense</span><b>${f.off}</b></div><div class="detailStat"><span>Defense</span><b>${f.def}</b></div><div class="detailStat"><span>Pace</span><b>${f.pace}</b></div><div class="detailStat"><span>Test Record</span><b>${s.w}-${s.l}</b></div></div><div class="note" style="margin-top:14px">Phase 2 ratings are franchise-level placeholders. Player-derived lineup ratings replace them once roster and five-man optimisation phases are implemented.</div>`;document.getElementById('franchiseModal').classList.remove('hidden')}
+function closeFranchise(){document.getElementById('franchiseModal').classList.add('hidden')}
+function recordResult(homeId,awayId,r){const h=G.standings[homeId],a=G.standings[awayId];h.pf+=r.homeScore;h.pa+=r.awayScore;a.pf+=r.awayScore;a.pa+=r.homeScore;if(r.homeScore>r.awayScore){h.w++;a.l++}else{a.w++;h.l++}}
+function standingRows(conference){return G.franchises.filter(f=>f.conference===conference).map(f=>{const s=G.standings[f.id],gp=s.w+s.l;return{...s,f,gp,pct:gp?s.w/gp:0,diff:s.pf-s.pa}}).sort((a,b)=>b.pct-a.pct||b.diff-a.diff||b.f.ovr-a.f.ovr||a.f.name.localeCompare(b.f.name))}
+function tableHTML(rows,conferenceMode=true){return `<div class="tableWrap"><table class="standings"><thead><tr><th>#</th><th class="team">Team</th><th>W</th><th>L</th><th>PCT</th><th>DIFF</th><th>OVR</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${conferenceMode&&i<6?'seed ':''}${conferenceMode&&i>=6&&i<10?'playin':''}"><td class="seedNo ${conferenceMode&&i<8?'top8':''}">${i+1}</td><td class="team"><div class="standingTeam"><div class="miniLogo">${initials(r.f)}</div><div><b>${r.f.name}</b><span>${r.f.division}</span></div></div></td><td>${r.w}</td><td>${r.l}</td><td>${r.gp?r.pct.toFixed(3).replace(/^0/,''):'.000'}</td><td>${r.diff>0?'+':''}${r.diff}</td><td>${r.f.ovr}</td></tr>`).join('')}</tbody></table></div>`}
+function renderStandings(){['East','West'].forEach(conf=>{const rows=standingRows(conf);document.getElementById(conf.toLowerCase()+'Standings').innerHTML=`<section class="card"><div class="cardHead"><div><h3>${conf} Conference</h3><small>Top 6 direct playoff positions • 7–10 future play-in</small></div><small>15 TEAMS</small></div><div class="cardBody" style="padding:0">${tableHTML(rows,true)}</div></section>`});
+ const divs=['Atlantic','Central','Southeast','Northwest','Pacific','Southwest'];document.getElementById('divisionStandings').innerHTML=divs.map(d=>{const rows=G.franchises.filter(f=>f.division===d).map(f=>{const s=G.standings[f.id],gp=s.w+s.l;return{...s,f,gp,pct:gp?s.w/gp:0,diff:s.pf-s.pa}}).sort((a,b)=>b.pct-a.pct||b.diff-a.diff||b.f.ovr-a.f.ovr);return `<div class="divisionBlock"><div class="divisionTitle"><b>${d}</b><span>${rows[0].f.conference.toUpperCase()}</span></div>${tableHTML(rows,false)}</div>`}).join('')}
+function pairRound(ids,round){const n=ids.length,arr=ids.slice();if(n%2)arr.push(null);const fixed=arr[0],rest=arr.slice(1);for(let r=0;r<round;r++)rest.unshift(rest.pop());const cur=[fixed,...rest],pairs=[];for(let i=0;i<cur.length/2;i++){let a=cur[i],b=cur[cur.length-1-i];if(a&&b)pairs.push(r%2?[b,a]:[a,b])}return pairs}
+function generateStandingsTest(gamesPerTeam){initStandings();let seed=G.seed,round=0,played={};G.franchises.forEach(f=>played[f.id]=0);let guard=0;while(Object.values(played).some(x=>x<gamesPerTeam)&&guard<400){const east=pairRound(G.franchises.filter(f=>f.conference==='East').map(f=>f.id),round);const west=pairRound(G.franchises.filter(f=>f.conference==='West').map(f=>f.id),round);for(const [h,a] of [...east,...west]){if(played[h]>=gamesPerTeam||played[a]>=gamesPerTeam)continue;const r=simulateMatch({sport:'basketball',home:team(h),away:team(a)},seed++);recordResult(h,a,r);played[h]++;played[a]++}round++;guard++}
+ G.seed=seed>>>0;renderStandings();renderFranchises();document.getElementById('testStatus').textContent=gamesPerTeam+' GAMES EACH';document.getElementById('standingsNote').className='note good';document.getElementById('standingsNote').textContent=`Standings test complete: ${gamesPerTeam} games per franchise using conference-only round-robin test pairings. Ranking is win percentage, then point differential, then franchise OVR as a deterministic development tiebreaker. The career scheduler remains a Phase 3 deliverable.`}
+function resetStandings(){initStandings();renderStandings();renderFranchises();document.getElementById('testStatus').textContent='PRESEASON';document.getElementById('standingsNote').className='note';document.getElementById('standingsNote').textContent='All clubs begin 0–0. Test mode creates balanced synthetic matchups using the validated possession engine. It does not represent the Phase 3 82-game schedule.'}
+function populateLab(){const opts=G.franchises.map(f=>`<option value="${f.id}">${f.name} • ${f.ovr} OVR</option>`).join('');document.getElementById('homeSelect').innerHTML=opts;document.getElementById('awaySelect').innerHTML=opts;document.getElementById('homeSelect').value='18';document.getElementById('awaySelect').value='2'}
+function playFranchiseGame(){const h=team(document.getElementById('homeSelect').value),a=team(document.getElementById('awaySelect').value);if(h.id===a.id){document.getElementById('labNote').className='note warn';document.getElementById('labNote').textContent='Choose two different franchises.';return}const r=simulateMatch({sport:'basketball',home:h,away:a},G.seed++);document.getElementById('labStatus').textContent=r.ot?`FINAL • ${r.ot}OT`:'FINAL';document.getElementById('labWinner').textContent=(r.winner==='home'?h.name:a.name)+' wins';document.getElementById('labScore').textContent=r.homeScore+' : '+r.awayScore;document.getElementById('labExpectation').textContent=`Expected ${r.expectations.homeExpected.toFixed(1)} to ${r.expectations.awayExpected.toFixed(1)} across ${r.expectations.possessions.toFixed(1)} possessions.`;let heads=['TEAM','Q1','Q2','Q3','Q4'];for(let i=0;i<r.ot;i++)heads.push('OT'+(i+1));heads.push('TOT');const hr=[h.shortName,...r.quartersHome,...r.otHome,r.homeScore],ar=[a.shortName,...r.quartersAway,...r.otAway,r.awayScore],cols=`1.2fr repeat(${heads.length-1},.72fr)`;document.getElementById('quarterWrap').innerHTML=`<div class="quarters" style="grid-template-columns:${cols}">${heads.map((x,i)=>`<div class="qcell ${i===0?'label ':''}head">${x}</div>`).join('')}${hr.map((x,i)=>`<div class="qcell ${i===0?'label':''}">${x}</div>`).join('')}${ar.map((x,i)=>`<div class="qcell ${i===0?'label':''}">${x}</div>`).join('')}</div>`;document.getElementById('labNote').className='note';document.getElementById('labNote').textContent='This matchup used the same locked Phase 1 engine with Phase 2 franchise ratings.'}
+function runFranchiseMonteCarlo(n){const h=team(document.getElementById('homeSelect').value),a=team(document.getElementById('awaySelect').value);if(h.id===a.id)return;let hw=0,hs=0,as=0,ot=0;const start=performance.now();for(let i=0;i<n;i++){const r=simulateMatch({sport:'basketball',home:h,away:a},(G.seed+i)>>>0);if(r.winner==='home')hw++;hs+=r.homeScore;as+=r.awayScore;if(r.ot)ot++}const ms=performance.now()-start;document.getElementById('labStatus').textContent=n.toLocaleString()+' RUNS';document.getElementById('labWinner').textContent=`${h.name} home win rate ${(hw/n*100).toFixed(1)}%`;document.getElementById('labScore').textContent=(hs/n).toFixed(1)+' : '+(as/n).toFixed(1);document.getElementById('labExpectation').textContent=`Average scores over ${n.toLocaleString()} simulations • OT ${(ot/n*100).toFixed(1)}% • ${ms.toFixed(0)}ms`;document.getElementById('quarterWrap').innerHTML='';document.getElementById('labNote').className='note good';document.getElementById('labNote').textContent='Monte Carlo completed against actual Phase 2 franchise ratings. No additional franchise-specific correction factors are used.'}
+function showPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.add('hidden'));document.getElementById('page-'+name).classList.remove('hidden');document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('active',b.dataset.page===name));window.scrollTo({top:0,behavior:'instant'})}
+document.querySelectorAll('#tabs button').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+loadFranchises();renderFranchises();renderStandings();populateLab();
 </script>
 </body>
 </html>
