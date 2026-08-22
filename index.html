@@ -27,6 +27,25 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .globalTabs button{border:1px solid var(--line);background:#111821;color:var(--muted);border-radius:10px;padding:7px 9px;font-size:9px;font-weight:900}
 .globalTabs button.active{background:#202719;color:var(--accent2);border-color:#6b5632}
 .homeStatus{padding:0;overflow:hidden}
+.transitionHero{padding:0;overflow:hidden;border-color:#3a4654}
+.transitionTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;background:linear-gradient(90deg,#171e27,#11171e);border-bottom:1px solid var(--line)}
+.transitionTop b{font-size:10px;color:var(--accent2);letter-spacing:.8px;text-transform:uppercase}
+.transitionTop small{font-size:8px;color:var(--muted)}
+.transitionBody{padding:15px}
+.transitionBody h3{font-size:20px;margin:0 0 5px}.transitionBody p{font-size:10px;line-height:1.5;color:var(--muted);margin:0}
+.transitionMetrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
+.transitionMetric{background:#0f151d;border:1px solid #29343f;border-radius:11px;padding:10px;text-align:center}
+.transitionMetric b{display:block;font-size:16px}.transitionMetric small{display:block;font-size:7px;color:var(--muted);margin-top:2px;text-transform:uppercase}
+.transitionActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 15px 15px}
+.transitionActions.one{grid-template-columns:1fr}
+.transitionActions button{border-radius:11px;padding:12px;font-weight:950}
+.transitionPrimary{border:0;background:var(--accent);color:#17100a}
+.transitionSecondary{border:1px solid var(--line);background:#1b2430;color:white}
+.miniBracket{margin-top:12px;border-top:1px solid #27313c;padding-top:10px}
+.miniBracketRow{display:flex;justify-content:space-between;gap:8px;padding:7px 0;border-top:1px solid #222b36}
+.miniBracketRow:first-child{border-top:0}.miniBracketRow b{font-size:9px}.miniBracketRow small{font-size:8px;color:var(--muted)}
+.rosterGood{color:#72d798}.rosterWarn{color:#e7bd63}.rosterBad{color:#ef8d91}
+
 .homeStatusHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#161c24,#11171e)}
 .homeStatusHead .phaseWord{font-size:11px;font-weight:950;letter-spacing:1px;color:var(--accent2);text-transform:uppercase}
 .homeStatusHead .seasonWord{font-size:9px;color:var(--muted);font-weight:750}
@@ -171,7 +190,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.5 Box Score Repair</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.6 Phase Transitions</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2015,8 +2034,10 @@ function summerPerformanceScore(stats) {
 function summerLeagueSnapshot(G) {
   const live=G.summerLeagueLive;
   if(!live) return G.summerLeague;
-  const standings=[...live.teams].map(t=>({clubId:t.clubId,w:t.w,l:t.l,pf:t.pf,pa:t.pa,diff:t.pf-t.pa}))
-    .sort((a,b)=>b.w-a.w||b.diff-a.diff);
+  const standings=(live.regularStandings?.length
+    ? live.regularStandings.map(x=>({...x}))
+    : [...live.teams].map(t=>({clubId:t.clubId,w:t.w,l:t.l,pf:t.pf,pa:t.pa,diff:t.pf-t.pa}))
+      .sort((a,b)=>b.w-a.w||b.diff-a.diff));
   const participants=G.clubs.flatMap(c=>[
     ...c.roster.filter(p=>p.summerLeagueStats?.gp>0),
     ...(c.twoWayRoster||[]).filter(p=>p.summerLeagueStats?.gp>0),
@@ -2029,7 +2050,7 @@ function summerLeagueSnapshot(G) {
     rpg:Math.round(p.summerLeagueStats.reb/p.summerLeagueStats.gp*10)/10,
     apg:Math.round(p.summerLeagueStats.ast/p.summerLeagueStats.gp*10)/10,
     performanceScore:Math.round(summerPerformanceScore(p.summerLeagueStats)*10)/10
-  })),complete:live.complete,currentRound:live.roundIndex};
+  })),championship:live.championship||null,complete:live.complete,currentRound:live.roundIndex};
   return G.summerLeague;
 }
 
@@ -2182,6 +2203,38 @@ function simulateSummerGameLive(G,homeId,awayId,round){
     boxScore:{home:boxH,away:boxA}};
 }
 
+function runSummerLeagueChampionship(G){
+  const live=G.summerLeagueLive;
+  if(!live || live.championship?.complete) return live?.championship||null;
+  const regularStandings=[...live.teams]
+    .map(t=>({clubId:t.clubId,w:t.w,l:t.l,pf:t.pf,pa:t.pa,diff:t.pf-t.pa}))
+    .sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);
+  live.regularStandings=regularStandings.map(x=>({...x}));
+  const seeds=regularStandings.slice(0,4);
+  if(seeds.length<4)return null;
+
+  const semi1=simulateSummerGameLive(G,seeds[0].clubId,seeds[3].clubId,"Semifinal 1");
+  semi1.stage="SUMMER_SEMIFINAL"; live.games.push(semi1);
+  const semi2=simulateSummerGameLive(G,seeds[1].clubId,seeds[2].clubId,"Semifinal 2");
+  semi2.stage="SUMMER_SEMIFINAL"; live.games.push(semi2);
+
+  const final=simulateSummerGameLive(G,semi1.winnerClubId,semi2.winnerClubId,"Championship");
+  final.stage="SUMMER_CHAMPIONSHIP"; live.games.push(final);
+
+  const runnerUpId=final.homeClubId===final.winnerClubId?final.awayClubId:final.homeClubId;
+  live.championship={
+    complete:true,
+    seeds:seeds.map((s,i)=>({seed:i+1,...s})),
+    semifinalGameIds:[semi1.id,semi2.id],
+    finalGameId:final.id,
+    championClubId:final.winnerClubId,
+    runnerUpClubId:runnerUpId
+  };
+  G.awards[`S${G.season}_SummerLeagueChampion`]=final.winnerClubId;
+  logEvent(G,`Summer League champion: ${G.clubs.find(c=>c.id===final.winnerClubId)?.name||final.winnerClubId}.`);
+  return live.championship;
+}
+
 function finalizeSummerLeagueLive(G){
   const live=G.summerLeagueLive;if(!live||live.complete)return;
   live.complete=true; summerLeagueSnapshot(G);
@@ -2202,7 +2255,10 @@ function finalizeSummerLeagueLive(G){
   for(const p of contracted){const perf=summerPerformanceScore(p.summerLeagueStats);let n=perf>=hi?1:perf<=lo?-1:0;if(perf>=hi&&p.potential>=85&&Math.random()<.35)n=2;if(p.ovr>=p.potential&&n>0)n=Math.min(n,1);p.ovr=Math.max(35,Math.min(99,p.ovr+n));development.push({playerId:p.id,nudge:n,performanceScore:Math.round(perf*10)/10});}
   Object.assign(G.summerLeague,{mvpPlayerId:mvp?.id||null,allSummerFirstTeam:first.map(p=>p.id),allSummerSecondTeam:second.map(p=>p.id),development,complete:true});
   G.awards[`S${G.season}_SummerLeagueMVP`]=mvp?.id||null;G.awards[`S${G.season}_AllSummerFirstTeam`]=first.map(p=>p.id);G.awards[`S${G.season}_AllSummerSecondTeam`]=second.map(p=>p.id);
-  logEvent(G,`Summer League complete: ${live.games.length} games, MVP ${mvp?.name||"n/a"}.`);G.phase="PRESEASON";
+  runSummerLeagueChampionship(G);
+  summerLeagueSnapshot(G);
+  logEvent(G,`Summer League complete: ${live.games.length} games, MVP ${mvp?.name||"n/a"}.`);
+  G.phase="SUMMER_LEAGUE_COMPLETE";
 }
 
 function advanceSummerLeagueRound(G){
@@ -2214,6 +2270,25 @@ function advanceSummerLeagueRound(G){
 }
 
 function runSummerLeague(G){initializeSummerLeagueLive(G);while(G.phase==="SUMMER_LEAGUE"){const r=advanceSummerLeagueRound(G);if(!r.ok)throw new Error(r.reason);}}
+
+function continueFromSummerLeague(G){
+  if(G.phase!=="SUMMER_LEAGUE_COMPLETE")return {ok:false,reason:"Summer League is not complete"};
+  G.phase="PRESEASON_READINESS";
+  G.preseasonReadiness={season:G.season,enteredAt:Date.now()};
+  logEvent(G,"Preseason readiness opened. GM must review standard and two-way roster positions.");
+  return {ok:true};
+}
+function beginPreseasonFromReadiness(G){
+  if(G.phase!=="PRESEASON_READINESS")return {ok:false,reason:"Preseason readiness is not active"};
+  G.phase="PRESEASON";
+  const live=initializePreseasonLive(G);
+  if(!live){
+    G.phase="PRESEASON_READINESS";
+    return {ok:false,reason:"Roster compliance required before preseason can begin"};
+  }
+  logEvent(G,"Preseason schedule opened.");
+  return {ok:true};
+}
 
 // ---------------------------------------------------------------------
 // PHASE: PRESEASON
@@ -2283,12 +2358,48 @@ function initializePreseasonLive(G){
 }
 
 function simulatePreseasonGameLive(G,homeId,awayId,round){
-  const hc=G.clubs.find(c=>c.id===homeId),ac=G.clubs.find(c=>c.id===awayId),hr=hc.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10),ar=ac.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10);
-  const sim=(club,rot,opp,oppRot)=>{const raw=rot.map(p=>Math.max(8,p.targetMinutes+rand(-4,4))),scale=240/Math.max(1,raw.reduce((a,b)=>a+b,0)),mins=raw.map(m=>Math.max(6,Math.round(m*scale)));if(mins.length)mins[0]+=240-mins.reduce((a,b)=>a+b,0);const lines=rot.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));const tr=rot.reduce((s,p)=>s+p.ovr,0)/Math.max(1,rot.length),or=oppRot.reduce((s,p)=>s+p.ovr,0)/Math.max(1,oppRot.length),target=Math.max(82,Math.min(128,Math.round(104+(tr-or)*.55+(club.chemistry-opp.chemistry)*.08+rand(-10,10))));let score=lines.reduce((s,x)=>s+x.line.pts,0);if(lines.length){lines[0].line.pts=Math.max(0,lines[0].line.pts+(target-score));score=lines.reduce((s,x)=>s+x.line.pts,0);}return{lines,score};};
-  let h=sim(hc,hr,ac,ar),a=sim(ac,ar,hc,hr);if(h.score===a.score){h.lines[0].line.pts+=rand(1,5);h.score=h.lines.reduce((s,x)=>s+x.line.pts,0);}const margin=h.score-a.score;
-  const apply=(sim,pm)=>sim.lines.map(({player,line})=>{const st=player.preseasonStats;st.gp++;for(const k of["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])st[k]+=line[k]||0;st.plusMinus+=pm;player.fatigue=Math.max(0,Math.min(100,player.fatigue+Math.round(line.min/18)));return{playerId:player.id,name:player.name,position:player.position,role:player.rotationRole,...line,plusMinus:pm};});
-  const bh=apply(h,margin),ba=apply(a,-margin),hw=h.score>a.score;if(hw){hc.preseasonRecord.w++;ac.preseasonRecord.l++;}else{ac.preseasonRecord.w++;hc.preseasonRecord.l++;}hc.chemistry=Math.max(35,Math.min(100,hc.chemistry+(hw?1:0)));ac.chemistry=Math.max(35,Math.min(100,ac.chemistry+(!hw?1:0)));
-  return{id:nextId("pre"),round,homeClubId:homeId,awayClubId:awayId,homeScore:h.score,awayScore:a.score,winnerClubId:hw?homeId:awayId,boxScore:{home:bh,away:ba}};
+  const hc=G.clubs.find(c=>c.id===homeId),ac=G.clubs.find(c=>c.id===awayId),
+    hr=hc.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10),
+    ar=ac.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10);
+
+  const sim=(club,rot,opp,oppRot)=>{
+    const raw=rot.map(p=>Math.max(8,p.targetMinutes+rand(-4,4))),
+      scale=240/Math.max(1,raw.reduce((a,b)=>a+b,0)),
+      mins=raw.map(m=>Math.max(6,Math.round(m*scale)));
+    if(mins.length)mins[0]+=240-mins.reduce((a,b)=>a+b,0);
+    const lines=rot.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));
+    const tr=rot.reduce((s,p)=>s+p.ovr,0)/Math.max(1,rot.length),
+      or=oppRot.reduce((s,p)=>s+p.ovr,0)/Math.max(1,oppRot.length),
+      target=Math.max(82,Math.min(128,Math.round(104+(tr-or)*.55+(club.chemistry-opp.chemistry)*.08+rand(-10,10))));
+    const score=adjustSummerTeamToTarget(lines,target);
+    return{lines,score};
+  };
+
+  let h=sim(hc,hr,ac,ar),a=sim(ac,ar,hc,hr);
+  if(h.score===a.score){
+    const hero=weightedPick(h.lines,x=>Math.max(1,(x.line.min||1)*(x.player.ovr||60)));
+    hero.line.fta=(hero.line.fta||0)+1;hero.line.ftm=(hero.line.ftm||0)+1;
+    hero.line.pts=summerLinePoints(hero.line);h.score++;
+  }
+  const margin=h.score-a.score,pmH=summerPlusMinus(h.lines,margin),pmA=summerPlusMinus(a.lines,-margin);
+
+  const apply=(sim,pms)=>sim.lines.map(({player,line},idx)=>{
+    line.pts=summerLinePoints(line);
+    const pm=pms[idx]||0,st=player.preseasonStats;st.gp++;
+    for(const k of["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])st[k]+=line[k]||0;
+    st.plusMinus+=pm;
+    player.fatigue=Math.max(0,Math.min(100,player.fatigue+Math.round(line.min/18)));
+    return{playerId:player.id,name:player.name,position:player.position,role:player.rotationRole,...line,plusMinus:pm};
+  });
+
+  const bh=apply(h,pmH),ba=apply(a,pmA),hw=h.score>a.score;
+  if(hw){hc.preseasonRecord.w++;ac.preseasonRecord.l++;}else{ac.preseasonRecord.w++;hc.preseasonRecord.l++;}
+  hc.chemistry=Math.max(35,Math.min(100,hc.chemistry+(hw?1:0)));
+  ac.chemistry=Math.max(35,Math.min(100,ac.chemistry+(!hw?1:0)));
+  return{id:nextId("pre"),round,phaseTag:"preseason",homeClubId:homeId,awayClubId:awayId,
+    homeScore:h.score,awayScore:a.score,winnerClubId:hw?homeId:awayId,overtime:0,
+    quarters:{home:splitScoreIntoFourQuarters(h.score),away:splitScoreIntoFourQuarters(a.score)},
+    overtimePeriods:{home:[],away:[]},boxScore:{home:bh,away:ba}};
 }
 
 function advancePreseasonRound(G){
@@ -3126,12 +3237,12 @@ function simSeasons(G, count) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
+  module.exports = { continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
 }
 
 </script>
 <script>
-const BUILD_ID="v0.1.1.5 Box Score Repair";console.info("Mini&Me Basketball",BUILD_ID);
+const BUILD_ID="v0.1.1.6 Phase Transitions";console.info("Mini&Me Basketball",BUILD_ID);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -3139,7 +3250,7 @@ function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+i
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
 function c(id){return G?.clubs?.find(x=>x.id===id)}function me(){return c(G?.userClubGM?.clubId)}function nat(id){return G?.nationalTeams?.find(x=>x.code===id)}
 function teamMark(t,cl="bigmark"){return `<span class="${cl}" style="background:${t?.color||"#e6b953"}">${t?.mark||t?.name?.slice(0,3).toUpperCase()||"—"}</span>`}
-function phaseName(){return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
+function phaseName(){return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
 let memorySlots={};
 function openSaveDB(){
   return new Promise((resolve,reject)=>{
@@ -3288,6 +3399,7 @@ function boardExpectation(club){
   return {title:"Develop the Core",copy:"Prioritise player development, asset value and a clear path toward sustained improvement."};
 }
 function actionSpec(){
+  if(G.phase==="SUMMER_LEAGUE_COMPLETE"||G.phase==="PRESEASON_READINESS")return null;
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return{main:"Play FIBA Matchday",alt:"Sim Window",type:"event"};
   if(G.inSeasonCup?.finalPending)return{main:"Play NBA Cup Final",type:"event"};
   if(G.allStarLive&&!G.allStarLive.complete)return{main:"Play All-Star Event",type:"event"};
@@ -3325,6 +3437,8 @@ function phaseStatusCopy(){
   if(G.phase==="OFFSEASON")return["Offseason","Basketball operations are open. Review contracts, roster decisions and draft assets before moving into Draft Night."];
   if(G.phase==="DRAFT_NIGHT")return["Draft Night",G.draftState?.pendingUserPick?`Your club owns the current selection. The Draft Board is ready.`:"The two-round draft is underway. Open the Draft Board to follow your selections."];
   if(G.phase==="SUMMER_LEAGUE")return["Summer League","Evaluate rookies, two-way players and development talent before the main roster returns."];
+  if(G.phase==="SUMMER_LEAGUE_COMPLETE")return["Summer League Complete","Summer League is complete. Review the final standings, championship result and your final game before moving into roster preparation."];
+  if(G.phase==="PRESEASON_READINESS")return["Preseason Readiness","Finalise your standard roster and consider filling available two-way positions before the preseason schedule begins."];
   if(G.phase==="PRESEASON")return["Preseason","Rotation roles, chemistry and roster readiness are being tested before opening night."];
   if(G.phase==="PLAY_IN")return["Play-In Tournament","The season is on the line. Win through to secure a playoff berth."];
   if(G.phase==="PLAYOFFS")return["NBA Playoffs","Every game matters. Advance the series and pursue the championship."];
@@ -3489,8 +3603,28 @@ function draftHomeContext(){
   let next=s.pending?`#${s.pending.overallPickNum}`:(picks[0]?`#${picks[0].overallPickNum}`:"—");
   return `<div class="card homeStatus"><div class="homeStatusBody"><h3>Your Draft Position</h3><p>Review your assets and the remaining class before making your next selection.</p></div><div class="draftMetrics"><div class="draftMetric"><b>${pickText}</b><small>Your Picks</small></div><div class="draftMetric"><b>${prospects.length}</b><small>Prospects Left</small></div><div class="draftMetric"><b>${avg}</b><small>Class OVR Avg</small></div><div class="draftMetric"><b>${top}</b><small>Top OVR</small></div><div class="draftMetric"><b>${next}</b><small>Next Pick</small></div></div>${homeActionHtml()}</div>`;
 }
+function summerLeagueCompletionHtml(){
+  const x=me(),sl=G.summerLeague||summerLeagueSnapshot(G),standings=sl?.standings||[];
+  const idx=standings.findIndex(s=>s.clubId===x.id),userStanding=idx>=0?standings[idx]:null;
+  const champ=sl?.championship,champClub=champ?.championClubId?c(champ.championClubId):null;
+  const qualified=!!champ?.seeds?.some(s=>s.clubId===x.id);
+  const userTournamentGames=(sl?.games||[]).filter(g=>(g.stage==="SUMMER_SEMIFINAL"||g.stage==="SUMMER_CHAMPIONSHIP")&&(g.homeClubId===x.id||g.awayClubId===x.id));
+  const finalGame=champ?.finalGameId?(sl.games||[]).find(g=>g.id===champ.finalGameId):null;
+  const finalText=finalGame?`${c(finalGame.awayClubId)?.name} ${finalGame.awayScore} – ${finalGame.homeScore} ${c(finalGame.homeClubId)?.name}`:"Championship result unavailable";
+  return `<div class="card transitionHero"><div class="transitionTop"><b>Summer League Complete</b><small>Season ${G.season}</small></div><div class="transitionBody"><h3>${champClub?`${champClub.name} crowned champion`:"Summer League complete"}</h3><p>The top four clubs advanced to the Summer League championship stage. Review your final position and move into preseason roster preparation when ready.</p><div class="transitionMetrics"><div class="transitionMetric"><b>${userStanding?`${userStanding.w}–${userStanding.l}`:"—"}</b><small>Final Record</small></div><div class="transitionMetric"><b>${idx>=0?`#${idx+1}`:"—"}</b><small>League Finish</small></div><div class="transitionMetric"><b>${qualified?"YES":"NO"}</b><small>Top Four</small></div></div><div class="miniBracket"><div class="miniBracketRow"><div><b>Championship</b><small>${champClub?.name||"—"}</small></div><b>${finalText}</b></div>${userTournamentGames.length?`<div class="miniBracketRow"><div><b>Your Championship Stage</b><small>${userTournamentGames.length} game${userTournamentGames.length===1?"":"s"}</small></div><b>${userTournamentGames.map(g=>g.winnerClubId===x.id?"W":"L").join(" · ")}</b></div>`:""}</div></div><div class="transitionActions one"><button id="continueToPreseasonReadiness" class="transitionPrimary">Continue to Preseason</button></div></div>`;
+}
+function preseasonReadinessHtml(){
+  const x=me(),standard=x.roster.length,twoWay=(x.twoWayRoster||[]).length,openStandard=Math.max(0,15-standard),openTwoWay=Math.max(0,3-twoWay);
+  const totalOpen=openStandard+openTwoWay;
+  const standardClass=standard===15?"rosterGood":standard>=12?"rosterWarn":"rosterBad";
+  const twoWayClass=twoWay===3?"rosterGood":"rosterWarn";
+  const canBegin=standard>=12&&standard<=15;
+  return `<div class="card transitionHero"><div class="transitionTop"><b>Preseason Readiness</b><small>Season ${G.season}</small></div><div class="transitionBody"><h3>Prepare your roster for preseason</h3><p>Review standard contracts, roster depth and two-way opportunities before the preseason schedule opens. A full 15-player standard roster is recommended, with up to three additional two-way players.</p><div class="transitionMetrics"><div class="transitionMetric"><b class="${standardClass}">${standard}/15</b><small>Standard Roster</small></div><div class="transitionMetric"><b class="${twoWayClass}">${twoWay}/3</b><small>Two-Way</small></div><div class="transitionMetric"><b>${totalOpen}</b><small>Open Spots</small></div></div><div class="miniBracket"><div class="miniBracketRow"><div><b>GM Recommendation</b><small>${standard===15?"Standard roster is set.":`${openStandard} standard roster spot${openStandard===1?"":"s"} remain.`}</small></div><b>${twoWay<3?`Consider ${openTwoWay} two-way signing${openTwoWay===1?"":"s"}`:"Two-way roster full"}</b></div></div></div><div class="transitionActions"><button id="manageRosterReadiness" class="transitionSecondary">Manage Roster</button><button id="beginPreseasonReadiness" class="transitionPrimary" ${canBegin?"":"disabled"}>Begin Preseason</button></div></div>`;
+}
 function home(){
   let f=nextFixture(),last=recentGame();
+  if(G.phase==="SUMMER_LEAGUE_COMPLETE")return summerLeagueCompletionHtml()+latestResultHtml(last);
+  if(G.phase==="PRESEASON_READINESS")return preseasonReadinessHtml();
   let centre="";
   if(G.phase==="DRAFT_NIGHT") centre=draftHomeContext();
   else if(f)centre=gameHub(f);
@@ -3599,9 +3733,19 @@ function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["dr
 function standings(){let rows=G.regularSeason?.standings?.length?G.regularSeason.standings:G.clubs.map(x=>({clubId:x.id,conference:x.conference,division:x.division,w:x.standings.w,l:x.standings.l,diff:(x.standings.pf||0)-(x.standings.pa||0)})),o="";for(let conf of ["East","West"]){o+=`<div class="sectionTitle">${conf}ern Conference</div><div class="table"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th></tr></thead><tbody>${rows.filter(x=>x.conference===conf).sort((a,b)=>b.w-a.w||b.diff-a.diff).map((x,i)=>`<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId).name}</b><small>${x.division}</small></td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff||0}</td></tr>`).join("")}</tbody></table></div>`}return o}
 function league(){let tabs=[["standings","Standings"],["leaders","Leaders"],["post","Postseason"],["cup","NBA Cup"]],body;if(ui.leagueTab==="standings")body=standings();else if(ui.leagueTab==="leaders"){let l=G.regularSeason?.leaders;body=!l?.points?.length?`<div class="card empty">League leaders will populate during the regular season.</div>`:["points","rebounds","assists"].map(k=>`<div class="sectionTitle">${({points:"Points",rebounds:"Rebounds",assists:"Assists"})[k]}</div><div class="card">${l[k].slice(0,5).map((p,i)=>`<div class="more"><div><b>${i+1}. ${p.name}</b><small>${c(p.clubId)?.name||""}</small></div><b>${p.value}</b></div>`).join("")}</div>`).join("")}else if(ui.leagueTab==="post")body=!G.playoffs?.series?.length?`<div class="card empty">Play-In and playoff series will appear here.</div>`:G.playoffs.series.map(s=>`<div class="card"><div class="eyebrow">${String(s.stage).replaceAll("_"," ")}</div><div class="more"><b>${c(s.teamAId)?.name}</b><b>${s.winsA}–${s.winsB}</b></div><div class="more"><b>${c(s.teamBId)?.name}</b></div></div>`).join("");else body=G.inSeasonCup?`<div class="card"><div class="eyebrow">NBA Cup</div><h3>${G.inSeasonCup.stage||"Group Play"}</h3><div class="smallcopy">${G.inSeasonCup.winnerClubId?`${c(G.inSeasonCup.winnerClubId)?.name} are the Cup champions.`:"The NBA Cup is integrated into the regular-season schedule."}</div></div>`:`<div class="card empty">NBA Cup begins with the regular season.</div>`;return header("League","Standings, leaders and competitions")+`<div class="tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
 function international(){let code=G.userNationalGM?.nationCode;if(!code)return header("International","Take your career onto the international stage")+`<div class="card"><h3>Manage a Nation</h3><div class="smallcopy">Club and national management use the same player universe.</div><label>NATION</label><select id="nation">${G.nationalTeams.map(n=>`<option value="${n.code}">${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`;let n=nat(code),g=currentQualificationGroup(G,code),tabs=[["home","Overview"],["squad","Squad"],["qual","Qualification"],["wc","World Cup"]],body;if(ui.intlTab==="home")body=`<div class="metrics"><div class="metric"><b>${n.record.w}–${n.record.l}</b><small>National Record</small></div><div class="metric"><b>${G.nationalQualification.window}</b><small>Window</small></div><div class="metric"><b>${n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length}</b><small>Squad</small></div></div><div class="sectionTitle">News</div><div class="card">${news()}</div>`;else if(ui.intlTab==="squad"){let cands=nationalCandidates(G,code).slice(0,40);if(!ui.natSelected||ui.natCode!==code){ui.natCode=code;ui.natSelected=n.selectedSquadPlayerIds.length?[...n.selectedSquadPlayerIds]:cands.filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id)}let rows=cands.map(p=>{let checked=ui.natSelected.includes(p.id),unavailable=p.injured||p.nationalStatus==="Opted Out";return `<label class="assetrow ${unavailable?"disabled":""}"><input type="checkbox" data-natpick="${p.id}" ${checked?"checked":""} ${unavailable?"disabled":""}><span><b>${p.name}</b><small>${p.position} · OVR ${p.ovr} · ${G.clubs.find(cl=>cl.roster.some(x=>x.id===p.id))?.name||"Free Agent"}${unavailable?" · UNAVAILABLE":""}</small></span></label>`}).join("");body=`<div class="card"><div class="eyebrow">SELECTED</div><h3>${ui.natSelected.length}/12</h3></div><div class="quick"><button id="autoSquadBtn" class="btn secondary" style="margin:0">Auto-Select Best 12</button><button id="saveSquadBtn" class="btn primary" style="margin:0">Save Squad</button></div><div class="sectionTitle">Candidates</div><div class="card">${rows}</div>`}else if(ui.intlTab==="qual"){if(!g)body=`<div class="card empty">No active qualification group.</div>`;else{let r=qualificationTable(G,g.id);body=`<div class="card"><div class="eyebrow">${G.nationalQualification.round.replaceAll("_"," ")}</div><h3>${g.label||g.id}</h3></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>GP</th><th>W</th><th>L</th><th>PTS</th></tr></thead><tbody>${r.map((x,i)=>`<tr><td>${i+1}</td><td>${nat(x.code)?.name||x.code}</td><td>${x.gp}</td><td>${x.w}</td><td>${x.l}</td><td>${x.points}</td></tr>`).join("")}</tbody></table></div>`}}else{let w=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:(G.worldCupHistory||[]).slice(-1)[0];body=!w?`<div class="card empty">No World Cup has been played yet.</div>`:w.status==="LIVE"?`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${w.stage.replaceAll("_"," ")}</h3><div class="smallcopy">${w.games.length}/92 games complete.</div></div>`:`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${nat(w.championCode)?.name} · Champions</h3><div class="smallcopy">Runner-up: ${nat(w.runnerUpCode)?.name} · Bronze: ${nat(w.bronzeCode)?.name}</div></div>`}return header(n.name,`${n.region} · Ranking ${Math.round(n.rankingPoints)}`)+`<div class="tabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
-function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.5 Box Score Repair</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
+function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.6 Phase Transitions</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
 function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
+if($("#continueToPreseasonReadiness"))$("#continueToPreseasonReadiness").onclick=()=>{const r=continueFromSummerLeague(G);if(!r.ok)toast(r.reason);else{save();render()}};
+if($("#manageRosterReadiness"))$("#manageRosterReadiness").onclick=()=>{ui.page="team";ui.teamTab="squad";render()};
+if($("#beginPreseasonReadiness"))$("#beginPreseasonReadiness").onclick=()=>{
+  const x=me(),standard=x.roster.length,twoWay=(x.twoWayRoster||[]).length;
+  if(standard<15||twoWay<3){
+    if(!confirm(`Begin preseason with ${standard}/15 standard players and ${twoWay}/3 two-way players?`))return;
+  }
+  const r=beginPreseasonFromReadiness(G);if(!r.ok){toast(r.reason);if(G.rosterCompliancePending){ui.page="team";ui.teamTab="squad";}render();return}
+  save();render();
+};
 if($("#openDraftFromTeam"))$("#openDraftFromTeam").onclick=openDraftWindow;
 if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
