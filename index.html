@@ -54,6 +54,33 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .broadcastContext b{display:block;font-size:13px}
 .broadcastContext small{display:block;color:var(--muted);font-size:7px;text-transform:uppercase;margin-top:2px}
 .resultHeader{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.resultCard{padding:0;overflow:hidden}
+.resultTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:#0c1117;border-bottom:1px solid var(--line)}
+.resultTop b{font-size:10px;letter-spacing:.8px}.resultTop small{font-size:8px;color:var(--muted)}
+.lineScoreWrap{overflow-x:auto;border-bottom:1px solid var(--line)}
+.lineScore{width:100%;min-width:430px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.lineScore th,.lineScore td{padding:10px 8px;text-align:center;border-bottom:1px solid #222b36;font-size:9px}
+.lineScore thead th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.5px;position:static}
+.lineScore th.teamCol,.lineScore td.teamCol{text-align:left;min-width:145px;position:sticky;left:0;background:#121720;z-index:1}
+.lineScore thead th.teamCol{background:#111820;z-index:2}
+.lineScore .teamCell{display:flex;align-items:center;gap:7px}.lineScore .teamCell .mark{width:26px;height:26px;border-radius:8px;flex:none;font-size:8px}
+.lineScore .teamCell b{font-size:9px;white-space:normal;line-height:1.15}
+.lineScore td.total,.lineScore th.total{font-weight:950;color:var(--accent2);background:#171d27}
+.boxScoreSection{padding:12px}
+.boxTabs{margin:0 0 8px}
+.playerBoxScroll{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:11px;-webkit-overflow-scrolling:touch}
+.playerBox{border-collapse:collapse;min-width:900px;width:100%;font-variant-numeric:tabular-nums}
+.playerBox th,.playerBox td{padding:8px 7px;border-bottom:1px solid #222b36;text-align:right;font-size:8px;white-space:nowrap}
+.playerBox th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.45px;position:sticky;top:0;z-index:2}
+.playerBox th.player,.playerBox td.player{text-align:left;position:sticky;left:0;background:#121720;z-index:1;min-width:150px;max-width:150px}
+.playerBox th.player{background:#111820;z-index:3}
+.playerBox td.player b{display:block;font-size:9px;overflow:hidden;text-overflow:ellipsis}
+.playerBox td.player small{display:block;color:var(--muted);font-size:7px;margin-top:2px}
+.playerBox tr:last-child td{border-bottom:0}
+.playerBox .hi{font-weight:950;color:#fff}
+.playerBox .pos{color:#78d69d}.playerBox .neg{color:#ef8d91}
+.boxHint{font-size:7px;color:var(--muted);text-align:right;margin-top:5px}
+
 .resultHeader b{font-size:12px}.resultHeader small{color:var(--muted);font-size:8px}
 .boxTabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:11px 0 7px}
 .boxTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:9px;padding:7px;font-size:8px;font-weight:900}
@@ -2343,6 +2370,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   playSide(linesB, linesA, pace, qB, clubB, clubA);
   let scoreA = qA.reduce((a,b)=>a+b,0), scoreB = qB.reduce((a,b)=>a+b,0);
   let overtime = 0;
+  const otA=[], otB=[];
   while (scoreA === scoreB && overtime < 4) {
     overtime++;
     const beforeA = linesA.reduce((a,x)=>a+x.line.pts,0), beforeB = linesB.reduce((a,x)=>a+x.line.pts,0);
@@ -2351,11 +2379,13 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
     playSide(linesB, linesA, 10, tmpB, clubB, clubA);
     const addA = linesA.reduce((a,x)=>a+x.line.pts,0)-beforeA;
     const addB = linesB.reduce((a,x)=>a+x.line.pts,0)-beforeB;
+    otA.push(addA); otB.push(addB);
     scoreA += addA; scoreB += addB;
   }
   if (scoreA === scoreB) { // vanishingly rare safety: one real free throw decides it
     const hero = weightedPick(linesA, x => playerUsageWeight(x.player));
     hero.line.fta++; hero.line.ftm++; hero.line.pts++; scoreA++;
+    if(otA.length) otA[otA.length-1]++; else { otA.push(1); otB.push(0); overtime=1; }
   }
   const margin = scoreA - scoreB;
 
@@ -2385,7 +2415,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   for (const p of [...clubA.roster,...clubB.roster]) p.fatigue=Math.max(0,(p.fatigue||0)-rand(2,4));
   return { id:nextId("game"), round, phaseTag, homeClubId:clubA.id, awayClubId:clubB.id,
     homeScore:scoreA, awayScore:scoreB, winnerClubId:winner, possessions:{home:pace,away:pace}, overtime,
-    quarters:{home:qA,away:qB}, boxScore:{home:boxA,away:boxB} };
+    quarters:{home:qA,away:qB}, overtimePeriods:{home:otA,away:otB}, boxScore:{home:boxA,away:boxB} };
 }
 
 function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
@@ -3203,16 +3233,32 @@ function phaseStatusCopy(){
   if(G.phase==="CHAMPION")return["Season Complete",`${G.champion?.name||"The champion"} has been crowned. Career history and season honours are recorded.`];
   return[phaseName(),"Continue the current career phase."]
 }
+function shootingText(made,attempted){return `${made||0}-${attempted||0}`}
+function plusMinusText(v){v=+v||0;return `${v>0?"+":""}${v}`}
 function boxScoreHtml(g){
   if(!g?.boxScore)return"";
   let side=ui.boxSide==="away"?"away":"home",team=side==="home"?c(g.homeClubId):c(g.awayClubId),lines=g.boxScore[side]||[];
   if(!lines.length)return"";
-  return `<div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="boxTable"><div class="boxLine head"><div>PLAYER</div><div class="n">MIN</div><div class="n">PTS</div><div class="n">REB</div><div class="n">AST</div></div>${[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min)).map(p=>`<div class="boxLine"><div class="pn"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.position||""}</small></div><div class="n">${p.min}</div><div class="n">${p.pts}</div><div class="n">${p.reb}</div><div class="n">${p.ast}</div></div>`).join("")}</div>`;
+  const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
+  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox"><thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.position||""}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for full player statistics</div></div>`;
+}
+function lineScoreHtml(g){
+  const away=c(g.awayClubId),home=c(g.homeClubId),aq=g.quarters?.away||[],hq=g.quarters?.home||[];
+  let aOT=g.overtimePeriods?.away||[],hOT=g.overtimePeriods?.home||[];
+  const otCount=Math.max(g.overtime||0,aOT.length,hOT.length);
+  // Older saves only stored the number of overtime periods. Preserve a useful aggregate OT score for those games.
+  if(otCount && !aOT.length && !hOT.length){
+    const aReg=aq.reduce((s,x)=>s+(+x||0),0),hReg=hq.reduce((s,x)=>s+(+x||0),0);
+    aOT=[Math.max(0,(g.awayScore||0)-aReg)];hOT=[Math.max(0,(g.homeScore||0)-hReg)];
+  }
+  const periodHeads=["Q1","Q2","Q3","Q4",...Array.from({length:Math.max(aOT.length,hOT.length)},(_,i)=>aOT.length===1&&hOT.length===1&&otCount>1?"OT":`OT${i+1}`)];
+  const row=(club,qs,ots,total)=>`<tr><td class="teamCol"><div class="teamCell">${teamMark(club,"mark")}<b>${club?.name||""}</b></div></td>${[...qs,...ots].map(x=>`<td>${x??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
+  return `<div class="lineScoreWrap"><table class="lineScore"><thead><tr><th class="teamCol">TEAM</th>${periodHeads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(away,aq,aOT,g.awayScore)}${row(home,hq,hOT,g.homeScore)}</tbody></table></div>`;
 }
 function latestResultHtml(g){
   if(!g)return"";
-  let h=c(g.homeClubId),a=c(g.awayClubId);
-  return `<div class="sectionTitle">Latest Result</div><div class="card"><div class="resultHeader"><b>FINAL</b><small>${phaseName()}</small></div><div class="score"><div>${teamMark(a,"mark")}<b>${a?.name||""}</b><strong>${g.awayScore}</strong></div><div class="dash">–</div><div>${teamMark(h,"mark")}<b>${h?.name||""}</b><strong>${g.homeScore}</strong></div></div>${boxScoreHtml(g)}</div>`;
+  const ot=g.overtime>0?`${g.overtime>1?g.overtime+"OT":"OT"}`:"FINAL";
+  return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${String(g.phaseTag||phaseName()).replaceAll("_"," ").toUpperCase()}</small></div>${lineScoreHtml(g)}${boxScoreHtml(g)}</div>`;
 }
 function gameHub(f){
   let x=me(),h=c(f.homeClubId),a=c(f.awayClubId),spec=actionSpec();
