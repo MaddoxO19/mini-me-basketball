@@ -2074,6 +2074,74 @@ function splitScoreIntoFourQuarters(total){
   return q;
 }
 
+function summerLinePoints(line){
+  return Math.max(0,2*((line.fgm||0)-(line.tpm||0))+3*(line.tpm||0)+(line.ftm||0));
+}
+function adjustSummerTeamToTarget(lines,target){
+  if(!lines.length)return 0;
+  for(const x of lines)x.line.pts=summerLinePoints(x.line);
+  let score=lines.reduce((s,x)=>s+x.line.pts,0);
+  let delta=target-score,guard=0;
+
+  const usagePick=()=>weightedPick(lines,x=>Math.max(1,(x.line.min||1)*(0.75+(x.player.ovr||60)/100)));
+
+  while(delta!==0 && guard++<250){
+    const x=usagePick(),l=x.line;
+    if(delta>0){
+      if(delta>=3 && Math.random()<0.34){
+        l.tpa=(l.tpa||0)+1;l.tpm=(l.tpm||0)+1;l.fga=(l.fga||0)+1;l.fgm=(l.fgm||0)+1;delta-=3;
+      }else if(delta>=2){
+        l.fga=(l.fga||0)+1;l.fgm=(l.fgm||0)+1;delta-=2;
+      }else{
+        l.fta=(l.fta||0)+1;l.ftm=(l.ftm||0)+1;delta-=1;
+      }
+    }else{
+      // Remove real made scoring events rather than editing PTS directly.
+      if(delta<=-3 && (l.tpm||0)>0){
+        l.tpm--;l.fgm--;delta+=3;
+      }else if(delta<=-2 && ((l.fgm||0)-(l.tpm||0))>0){
+        l.fgm--;delta+=2;
+      }else if((l.ftm||0)>0){
+        l.ftm--;delta+=1;
+      }else{
+        const donor=lines.find(y=>(y.line.tpm||0)>0 || ((y.line.fgm||0)-(y.line.tpm||0))>0 || (y.line.ftm||0)>0);
+        if(!donor)break;
+        const d=donor.line;
+        if(delta<=-3 && (d.tpm||0)>0){d.tpm--;d.fgm--;delta+=3;}
+        else if(delta<=-2 && ((d.fgm||0)-(d.tpm||0))>0){d.fgm--;delta+=2;}
+        else if((d.ftm||0)>0){d.ftm--;delta+=1;}
+        else break;
+      }
+    }
+  }
+  for(const x of lines)x.line.pts=summerLinePoints(x.line);
+  return lines.reduce((s,x)=>s+x.line.pts,0);
+}
+function summerPlusMinus(lines,teamMargin){
+  if(!lines.length)return [];
+  // Individual +/- sums to five times the team margin.
+  const target=teamMargin*5,totalMin=Math.max(1,lines.reduce((s,x)=>s+(x.line.min||0),0));
+  const raw=lines.map(x=>{
+    const min=x.line.min||0;
+    const base=target*(min/totalMin);
+    const perf=((x.line.pts||0)*0.08+(x.line.reb||0)*0.04+(x.line.ast||0)*0.05-(x.line.tov||0)*0.06);
+    const noise=(Math.random()-.5)*5;
+    return base+perf+noise;
+  });
+  // Remove the average performance/noise drift, then round.
+  const drift=raw.reduce((a,b)=>a+b,0)-target;
+  const weights=lines.map(x=>(x.line.min||0)/totalMin);
+  const vals=raw.map((v,i)=>Math.round(v-drift*weights[i]));
+  let diff=target-vals.reduce((a,b)=>a+b,0);
+  const order=lines.map((x,i)=>({i,min:x.line.min||0})).sort((a,b)=>b.min-a.min);
+  let k=0;
+  while(diff!==0 && k<500){
+    const idx=order[k%order.length].i;
+    vals[idx]+=diff>0?1:-1;
+    diff+=diff>0?-1:1;k++;
+  }
+  return vals;
+}
 function simulateSummerGameLive(G,homeId,awayId,round){
   const home=G.clubs.find(c=>c.id===homeId),away=G.clubs.find(c=>c.id===awayId);
   const rosterH=summerRosterForClub(G,homeId),rosterA=summerRosterForClub(G,awayId);
@@ -2083,20 +2151,29 @@ function simulateSummerGameLive(G,homeId,awayId,round){
     const scale=200/Math.max(1,raw.reduce((a,b)=>a+b,0));
     const mins=raw.map(m=>Math.max(5,Math.round(m*scale))); if(mins.length)mins[0]+=200-mins.reduce((a,b)=>a+b,0);
     const lines=sorted.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));
-    let score=lines.reduce((s,x)=>s+x.line.pts,0);
     const rating=sorted.reduce((s,p)=>s+p.ovr,0)/Math.max(1,sorted.length);
     const target=Math.max(72,Math.min(118,Math.round(91+(rating-oppRating)*0.45+rand(-8,8))));
-    if(lines.length){lines[0].line.pts=Math.max(0,lines[0].line.pts+(target-score));score=lines.reduce((s,x)=>s+x.line.pts,0);}
+    const score=adjustSummerTeamToTarget(lines,target);
     return {lines,score};
   };
   const rh=rosterH.reduce((s,p)=>s+p.ovr,0)/Math.max(1,rosterH.length),ra=rosterA.reduce((s,p)=>s+p.ovr,0)/Math.max(1,rosterA.length);
-  let h=simTeam(rosterH,ra),a=simTeam(rosterA,rh); if(h.score===a.score){h.lines[0].line.pts+=rand(1,6);h.score=h.lines.reduce((s,x)=>s+x.line.pts,0);}
+  let h=simTeam(rosterH,ra),a=simTeam(rosterA,rh);
+  if(h.score===a.score){
+    // One valid made FT decides the game and remains reflected in the player's shooting line.
+    const hero=weightedPick(h.lines,x=>Math.max(1,(x.line.min||1)*(x.player.ovr||60)));
+    hero.line.fta=(hero.line.fta||0)+1;hero.line.ftm=(hero.line.ftm||0)+1;hero.line.pts=summerLinePoints(hero.line);h.score++;
+  }
   const margin=h.score-a.score;
-  const apply=(sim,pm)=>sim.lines.map(({player,line})=>{
-    const s=player.summerLeagueStats; s.gp++; for(const k of ["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])s[k]+=line[k]||0;s.plusMinus+=pm;
+  const pmH=summerPlusMinus(h.lines,margin),pmA=summerPlusMinus(a.lines,-margin);
+  const apply=(sim,pms)=>sim.lines.map(({player,line},idx)=>{
+    line.pts=summerLinePoints(line);
+    const pm=pms[idx]||0;
+    const s=player.summerLeagueStats;s.gp++;
+    for(const k of ["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])s[k]+=line[k]||0;
+    s.plusMinus+=pm;
     return {playerId:player.id,name:player.name,position:player.position,...line,plusMinus:pm};
   });
-  const boxH=apply(h,margin),boxA=apply(a,-margin);
+  const boxH=apply(h,pmH),boxA=apply(a,pmA);
   const th=G.summerLeagueLive.teams.find(x=>x.clubId===homeId),ta=G.summerLeagueLive.teams.find(x=>x.clubId===awayId);
   th.pf+=h.score;th.pa+=a.score;ta.pf+=a.score;ta.pa+=h.score;if(h.score>a.score){th.w++;ta.l++;}else{ta.w++;th.l++;}
   const qHome=splitScoreIntoFourQuarters(h.score),qAway=splitScoreIntoFourQuarters(a.score);
