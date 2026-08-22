@@ -77,7 +77,16 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .leaderCard h4{margin:0;padding:10px 11px;border-bottom:1px solid var(--line);font-size:10px;color:var(--accent2);letter-spacing:.5px}
 .leaderRow{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:7px;align-items:center;padding:8px 10px;border-top:1px solid #222b36}
 .leaderRow:first-of-type{border-top:0}.leaderRow>span{font-size:8px;color:var(--muted)}.leaderRow b{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.leaderRow small{display:block;color:var(--muted);font-size:7px;margin-top:1px}.leaderValue{font-size:10px!important;color:#fff!important;font-weight:950}
-.awardsRaceIntro{margin-bottom:10px}
+.awardsRaceIntro{margin-bottom:12px}
+.awardsRaceIntro h3{font-size:22px;line-height:1.15;margin:3px 0 7px}
+.awardsRaceIntro .smallcopy{font-size:10px;line-height:1.5}
+.awardsRaceGrid{display:grid;gap:12px}
+.awardsRaceGrid .leaderCard h4{padding:13px 14px;font-size:12px;letter-spacing:.5px}
+.awardsRaceGrid .leaderRow{grid-template-columns:24px minmax(0,1fr);gap:9px;padding:13px 14px;align-items:start}
+.awardsRaceGrid .leaderRow>span{font-size:9px;padding-top:2px}
+.awardsRaceGrid .leaderRow b{font-size:11px;line-height:1.25;white-space:normal}
+.awardsRaceGrid .leaderRow small{font-size:8.5px;line-height:1.35;margin-top:3px}
+
 .cupGroupGrid{display:grid;gap:10px}.cupStageCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
 .cupStageCard h4{margin:0 0 7px;font-size:11px}
 .allStarHero{background:linear-gradient(135deg,#171e29,#10151d);border:1px solid #364351;border-radius:18px;overflow:hidden;margin-bottom:12px}
@@ -274,7 +283,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.13 Postseason Rollover & Awards UI</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.14 Postseason Save Repair & Awards Readability</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3391,7 +3400,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.1.13 Postseason Rollover & Awards UI",ENGINE_VERSION="E1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.1.14 Postseason Save Repair & Awards Readability",ENGINE_VERSION="E1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -3928,6 +3937,62 @@ function userPostseasonState(){
   }
   return{alive:true,stage:null};
 }
+function repairPlayoffSaveState(){
+  const live=G.playoffsLive;
+  if(!live||G.phase!=="PLAYOFFS")return false;
+  let changed=false;
+
+  if(!live.seedMap){live.seedMap={};changed=true}
+  if(!live.conferenceWinners){live.conferenceWinners={East:null,West:null};changed=true}
+  if(!Array.isArray(live.games)){live.games=[];changed=true}
+  if(!Array.isArray(live.series)){live.series=[];changed=true}
+  if(!live.round){live.round="R1";changed=true}
+
+  // Recover original seeds from Round 1 series where possible.
+  for(const s of live.series.filter(s=>String(s.stage||"").endsWith("_R1"))){
+    if(s.teamAId&&!live.seedMap[s.teamAId]&&s.seedA){live.seedMap[s.teamAId]=s.seedA;changed=true}
+    if(s.teamBId&&!live.seedMap[s.teamBId]&&s.seedB){live.seedMap[s.teamBId]=s.seedB;changed=true}
+  }
+
+  // Older saves may have no seed fields at all. Seed identity is helpful
+  // presentation data, but never allow its absence to block the bracket.
+  for(const s of live.series){
+    if(s.teamAId && live.seedMap[s.teamAId]==null)live.seedMap[s.teamAId]=null;
+    if(s.teamBId && live.seedMap[s.teamBId]==null)live.seedMap[s.teamBId]=null;
+  }
+
+  // If a recorded round is already fully complete, roll it forward now.
+  // Repeat because an old save may have been stranded more than one stage behind.
+  let guard=0;
+  while(G.phase==="PLAYOFFS"&&guard++<5){
+    const round=live.round||"R1";
+    const active=live.series.filter(s=>round==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${round}`));
+    if(!active.length||!active.every(s=>s.complete))break;
+    const beforeRound=live.round;
+    try{
+      const progressed=buildNextPlayoffRound(G);
+      if(!progressed)break;
+      changed=true;
+      if(G.phase!=="PLAYOFFS"||live.round===beforeRound)break;
+    }catch(err){
+      console.error("Postseason save repair failed",err);
+      break;
+    }
+  }
+
+  if(changed&&G.phase==="PLAYOFFS"){
+    G.playoffs={
+      round:live.round,
+      seedMap:{...(live.seedMap||{})},
+      conferenceWinners:{...(live.conferenceWinners||{East:null,West:null})},
+      series:live.series.map(s=>({...s})),
+      games:live.games,
+      live:true,
+      complete:false
+    };
+  }
+  return changed;
+}
 function playoffSeriesSnapshot(){
   const p=G.playoffsLive||G.playoffs,map={};for(const s of (p?.series||[]))map[s.id]={id:s.id,stage:s.stage,conference:s.conference,teamAId:s.teamAId,teamBId:s.teamBId,winsA:s.winsA,winsB:s.winsB,complete:s.complete,winnerClubId:s.winnerClubId};return map;
 }
@@ -3950,6 +4015,7 @@ function renderPostseasonUpdate(){
   $("#postUpdateContinue").onclick=()=>{ui.postUpdate=null;show("game");ui.page="home";render()};
 }
 function advancePostseasonObserver(){
+  if(G.phase==="PLAYOFFS"){repairPlayoffSaveState();save()}
   const phaseBefore=G.phase;
   const roundCodeBefore=phaseBefore==="PLAY_IN"?"PLAY_IN":(G.playoffsLive?.round||G.playoffs?.round||"R1");
   const roundBefore=phaseBefore==="PLAY_IN"?"Play-In":postseasonRoundLabel(roundCodeBefore);
@@ -4004,12 +4070,18 @@ function advancePostseasonObserver(){
   save();show("postseasonUpdateWindow");renderPostseasonUpdate();
 }
 function postseasonObserverHome(){
-  const st=userPostseasonState(),leagueStage=G.phase==="PLAY_IN"?"Play-In":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1"),s=st.series,active=postseasonActiveSeriesCount(),latest=latestLeaguePostseasonGame();
-  const latestText=latest?`${c(latest.homeClubId)?.name||latest.homeClubId} ${latest.homeScore}–${latest.awayScore} ${c(latest.awayClubId)?.name||latest.awayClubId}`:"No postseason result yet";
-  return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Observer Mode</b><small>Season ${G.season}</small></div><div class="postObserverBody"><h3>Your season has ended</h3><p>${me().name} were eliminated in ${st.eliminatedStage||"the postseason"}. Continue following the league here; full round history remains under League → Postseason.</p><div class="postObserverMetrics"><div class="postObserverMetric"><b>${st.seed?`#${st.seed}`:"—"}</b><small>Your Seed</small></div><div class="postObserverMetric"><b>${leagueStage}</b><small>Current Stage</small></div><div class="postObserverMetric"><b>${active}</b><small>Active Series</small></div></div><div class="miniBracket"><div class="miniBracketRow"><div><b>Latest Postseason Result</b><small>${latestText}</small></div><b>${postseasonRoundFromGame(latest)}</b></div>${s?`<div class="miniBracketRow"><div><b>Your Final Series</b><small>${c(s.teamAId)?.name} ${s.winsA}–${s.winsB} ${c(s.teamBId)?.name}</small></div><b>${c(s.winnerClubId)?.name||"Winner"} advanced</b></div>`:""}</div></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Sim Current Round</button></div></div>`;
+  const st=userPostseasonState();
+  const leagueStage=G.phase==="PLAY_IN"?"Play-In":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1");
+  const active=postseasonActiveSeriesCount();
+  const remaining=G.phase==="PLAYOFFS"?(G.playoffsLive?.series||[]).filter(s=>{
+    const r=G.playoffsLive?.round||"R1";
+    return !s.complete&&(r==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${r}`));
+  }).length*2:0;
+  return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Observer Mode</b><small>Season ${G.season}</small></div><div class="postObserverBody"><h3>Your season has ended</h3><p>${me().name} were eliminated in ${st.eliminatedStage||"the postseason"}. You can continue the remaining NBA postseason from here, with the complete bracket available under League → Postseason.</p><div class="postObserverMetrics"><div class="postObserverMetric"><b>${st.eliminatedStage||"Eliminated"}</b><small>Your Finish</small></div><div class="postObserverMetric"><b>${leagueStage}</b><small>Current Stage</small></div><div class="postObserverMetric"><b>${active}</b><small>Active Series</small></div></div></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Sim Current Round</button></div></div>`;
 }
 function home(){
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
+  if(G.phase==="PLAYOFFS"&&repairPlayoffSaveState())save();
   if((G.phase==="PLAY_IN"||G.phase==="PLAYOFFS")&&!userPostseasonState().alive)return postseasonObserverHome();
   let f=nextFixture();
   if(G.phase==="SUMMER_LEAGUE_COMPLETE")return summerLeagueCompletionHtml();
@@ -4172,7 +4244,7 @@ function awardRace(){
   };
   const race=(title,list,type="off")=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${x.p.name}</b><small>${x.p.position}${x.p.secondaryPosition?`/${x.p.secondaryPosition}`:""} · ${x.club.name}</small><small>${statLine(x,type)}</small></div></div>`).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
 
-  return `<div class="card awardsRaceIntro"><div class="eyebrow">Season ${G.season}</div><h3>Awards Race</h3><div class="smallcopy">Live shortlist based on recorded production, efficiency, defence and team performance. Player ratings and internal award scores are intentionally hidden.</div></div><div class="leaderGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player",dpoy,"def")}</div>`;
+  return `<div class="card awardsRaceIntro"><div class="eyebrow">Season ${G.season}</div><h3>Awards Race</h3><div class="smallcopy">Projected award leaders based on recorded season performance. Final awards are confirmed at season end.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player",dpoy,"def")}</div>`;
 }
 function cupStageName(stage){
   return ({GROUP_PLAY:"Group Play",QUARTERFINALS:"Quarterfinals",SEMIFINALS:"Semifinals",CHAMPIONSHIP:"Championship",COMPLETE:"Complete"})[stage]||String(stage||"Group Play").replaceAll("_"," ");
@@ -4244,7 +4316,7 @@ function league(){
   return header("League","Standings, leaders, awards and competitions")+`<div class="tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 function international(){let code=G.userNationalGM?.nationCode;if(!code)return header("International","Take your career onto the international stage")+`<div class="card"><h3>Manage a Nation</h3><div class="smallcopy">Club and national management use the same player universe.</div><label>NATION</label><select id="nation">${G.nationalTeams.map(n=>`<option value="${n.code}">${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`;let n=nat(code),g=currentQualificationGroup(G,code),tabs=[["home","Overview"],["squad","Squad"],["qual","Qualification"],["wc","World Cup"]],body;if(ui.intlTab==="home")body=`<div class="metrics"><div class="metric"><b>${n.record.w}–${n.record.l}</b><small>National Record</small></div><div class="metric"><b>${G.nationalQualification.window}</b><small>Window</small></div><div class="metric"><b>${n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length}</b><small>Squad</small></div></div><div class="sectionTitle">News</div><div class="card">${news()}</div>`;else if(ui.intlTab==="squad"){let cands=nationalCandidates(G,code).slice(0,40);if(!ui.natSelected||ui.natCode!==code){ui.natCode=code;ui.natSelected=n.selectedSquadPlayerIds.length?[...n.selectedSquadPlayerIds]:cands.filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id)}let rows=cands.map(p=>{let checked=ui.natSelected.includes(p.id),unavailable=p.injured||p.nationalStatus==="Opted Out";return `<label class="assetrow ${unavailable?"disabled":""}"><input type="checkbox" data-natpick="${p.id}" ${checked?"checked":""} ${unavailable?"disabled":""}><span><b>${p.name}</b><small>${p.position} · OVR ${p.ovr} · ${G.clubs.find(cl=>cl.roster.some(x=>x.id===p.id))?.name||"Free Agent"}${unavailable?" · UNAVAILABLE":""}</small></span></label>`}).join("");body=`<div class="card"><div class="eyebrow">SELECTED</div><h3>${ui.natSelected.length}/12</h3></div><div class="quick"><button id="autoSquadBtn" class="btn secondary" style="margin:0">Auto-Select Best 12</button><button id="saveSquadBtn" class="btn primary" style="margin:0">Save Squad</button></div><div class="sectionTitle">Candidates</div><div class="card">${rows}</div>`}else if(ui.intlTab==="qual"){if(!g)body=`<div class="card empty">No active qualification group.</div>`;else{let r=qualificationTable(G,g.id);body=`<div class="card"><div class="eyebrow">${G.nationalQualification.round.replaceAll("_"," ")}</div><h3>${g.label||g.id}</h3></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>GP</th><th>W</th><th>L</th><th>PTS</th></tr></thead><tbody>${r.map((x,i)=>`<tr><td>${i+1}</td><td>${nat(x.code)?.name||x.code}</td><td>${x.gp}</td><td>${x.w}</td><td>${x.l}</td><td>${x.points}</td></tr>`).join("")}</tbody></table></div>`}}else{let w=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:(G.worldCupHistory||[]).slice(-1)[0];body=!w?`<div class="card empty">No World Cup has been played yet.</div>`:w.status==="LIVE"?`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${w.stage.replaceAll("_"," ")}</h3><div class="smallcopy">${w.games.length}/92 games complete.</div></div>`:`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${nat(w.championCode)?.name} · Champions</h3><div class="smallcopy">Runner-up: ${nat(w.runnerUpCode)?.name} · Bronze: ${nat(w.bronzeCode)?.name}</div></div>`}return header(n.name,`${n.region} · Ranking ${Math.round(n.rankingPoints)}`)+`<div class="tabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
-function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.13 Postseason Rollover & Awards UI</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
+function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.14 Postseason Save Repair & Awards Readability</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
 function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
 if($("#openAllStarEvent"))$("#openAllStarEvent").onclick=openAllStarWindow;
