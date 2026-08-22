@@ -39,7 +39,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .transitionMetric b{display:block;font-size:clamp(12px,3.6vw,16px);line-height:1.15;white-space:normal;overflow-wrap:anywhere}
 .transitionMetric small{display:block;font-size:7px;line-height:1.25;color:var(--muted);margin-top:3px;text-transform:uppercase;white-space:normal}
 .transitionHero,.transitionBody,.transitionActions,.miniBracketRow>div{min-width:0}
-.miniBracketRow{align-items:flex-start}
+.miniBracketRow{align-items:flex-start;flex-wrap:wrap}.miniBracketRow>div{min-width:160px}.miniBracketRow>b{flex:1;min-width:130px}
 .miniBracketRow>div{flex:1}
 .miniBracketRow>b{max-width:48%;text-align:right;white-space:normal;overflow-wrap:anywhere;line-height:1.3}
 .eventHero{background:linear-gradient(135deg,#161d26,#0f151c);border:1px solid #36424f;border-radius:18px;overflow:hidden;margin-bottom:10px}
@@ -56,7 +56,32 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .awardCard small{display:block;color:var(--accent2);font-size:7px;font-weight:900;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px}
 .awardCard b{display:block;font-size:11px;line-height:1.2;overflow-wrap:anywhere}.awardCard span{display:block;color:var(--muted);font-size:8px;margin-top:3px;line-height:1.3}
 .resultStandalone{padding-bottom:30px}
+
 .resultStandalone .sectionTitle:first-child{margin-top:0}
+.primaryProgress{display:block;width:100%;border:0;background:var(--accent);color:#17100a;border-radius:12px;padding:13px 16px;font-weight:950;font-size:11px;text-align:center}
+.resultNextWrap{padding:14px 0 4px}
+.responsiveRow{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;min-width:0}
+.responsiveRow>*{min-width:0}.responsiveRow b,.responsiveRow small{white-space:normal;overflow-wrap:anywhere}
+.standingSwitch{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}
+.standingSwitch button{border:1px solid var(--line);background:#171e28;color:var(--muted);border-radius:11px;padding:10px;font-weight:900}
+.standingSwitch button.active{background:var(--accent);border-color:var(--accent);color:#17100a}
+.compactStandings{overflow:hidden;border:1px solid var(--line);border-radius:12px}
+.compactStandings table{width:100%;min-width:0;table-layout:fixed}
+.compactStandings th,.compactStandings td{padding:8px 5px;font-size:8px}
+.compactStandings th:nth-child(1),.compactStandings td:nth-child(1){width:8%}
+.compactStandings th:nth-child(2),.compactStandings td:nth-child(2){width:44%;text-align:left}
+.compactStandings th:nth-child(n+3),.compactStandings td:nth-child(n+3){width:12%;text-align:center}
+.compactStandings .pname b{font-size:9px;white-space:normal;overflow-wrap:anywhere}.compactStandings .pname small{font-size:7px}
+.leaderGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.leaderCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.leaderCard h4{margin:0;padding:10px 11px;border-bottom:1px solid var(--line);font-size:10px;color:var(--accent2);letter-spacing:.5px}
+.leaderRow{display:grid;grid-template-columns:20px minmax(0,1fr) auto;gap:7px;align-items:center;padding:8px 10px;border-top:1px solid #222b36}
+.leaderRow:first-of-type{border-top:0}.leaderRow>span{font-size:8px;color:var(--muted)}.leaderRow b{font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.leaderRow small{display:block;color:var(--muted);font-size:7px;margin-top:1px}.leaderValue{font-size:10px!important;color:#fff!important;font-weight:950}
+.awardsRaceIntro{margin-bottom:10px}
+.cupGroupGrid{display:grid;gap:10px}.cupStageCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+.cupStageCard h4{margin:0 0 7px;font-size:11px}.cupTie{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:8px 0;border-top:1px solid #252f3a}.cupTie:first-of-type{border-top:0}.cupTie b{font-size:9px;white-space:normal}.cupTie small{font-size:7px;color:var(--muted)}
+@media(max-width:430px){.leaderGrid{grid-template-columns:1fr}.compactStandings th,.compactStandings td{padding:8px 4px}.compactStandings th:nth-child(2),.compactStandings td:nth-child(2){width:48%}}
+
 @media(max-width:390px){.awardGrid{grid-template-columns:1fr}.eventMetrics{gap:5px}.eventHeroBody{padding:12px}.transitionActions{grid-template-columns:1fr}}
 
 .transitionActions{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 15px 15px}
@@ -213,7 +238,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.7 Event Presentation</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.8 League & NBA Cup</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -223,7 +248,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </div></section>
 
 <section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">MINI&ME BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div id="phaseBadge" class="phaseBadge"></div></div><div class="globalTabs"><button data-global="gm">GM Brief</button><button data-global="news">News</button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav"><button class="active" data-page="home"><span>⌂</span>Home</button><button data-page="team"><span>▦</span>My Team</button><button data-page="league"><span>≡</span>League</button><button data-page="international"><span>◎</span>International</button><button data-page="more"><span>•••</span>More</button></nav></div></section>
-<section id="resultWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="resultWindowTitle">Game Result</b></div><button id="resultWindowClose" class="draftClose">Next Game</button></div></div><div id="resultWindowHost"></div></div></section>
+<section id="resultWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="resultWindowTitle">Game Result</b></div></div></div><div id="resultWindowHost"></div></div></section>
 <section id="draftWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Mini&Me Draft</div><b id="draftWindowStatus">Draft Night</b></div><button id="draftWindowClose" class="draftClose">Return Home</button></div></div><div id="draftWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
@@ -245,6 +270,15 @@ const DIVISIONS = {
   West: ["Northwest", "Pacific", "Southwest"],
 };
 const POSITIONS = ["PG", "SG", "SF", "PF", "C"];
+const SECONDARY_POSITION_OPTIONS = {
+  PG:["SG"], SG:["PG","SF"], SF:["SG","PF"], PF:["SF","C"], C:["PF"]
+};
+function canPlayPosition(player,pos){
+  return !!player && (player.position===pos || player.secondaryPosition===pos);
+}
+function positionLabel(player){
+  return player?.secondaryPosition ? `${player.position}/${player.secondaryPosition}` : (player?.position||"—");
+}
 const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#55B68A"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#D8D8D8"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#E68B4F"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#6D97D4"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#D96464"},{"id":"CHI","name":"Chicago Flight","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#E85D64"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#D7A758"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#6F9ED6"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#E2C65B"},{"id":"MIL","name":"Milwaukee North","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#78B884"},{"id":"ATL","name":"Atlanta Flight","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E26A4A"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#6DC7D4"},{"id":"MIA","name":"Miami Waves","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#E56F85"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#68A9DB"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#788DAF"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#E0B95F"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#74B6A1"},{"id":"OKC","name":"Oklahoma Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#6FB6DD"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#D36C6C"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#8EBB6D"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#E8BD55"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#6D9AD6"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#E6B953"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#E58D4F"},{"id":"SAC","name":"Sacramento Royals","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#9A7FC1"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#5F9ED4"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#DE6262"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#7D9FCB"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#D3B35C"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C6CCD2"}];
 
 // International player distribution. Tier influences the strength of the
@@ -447,6 +481,7 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     name: `Player ${_idCounter}`,
     nationality: nationality || weightedNationality(),
     position: pos,
+    secondaryPosition: Math.random()<0.56 ? pick(SECONDARY_POSITION_OPTIONS[pos]) : null,
     heightCm: rand(hMin, hMax),
     archetype: pick(ARCHETYPES_BY_POSITION[pos]),
     origin: origin || (isProspect ? pick(PROSPECT_ORIGINS) : "NBA"),
@@ -974,7 +1009,7 @@ function basketballRecordBook(G){
 // ---------------------------------------------------------------------
 
 function needAwareScore(club, player) {
-  const posCount = club.roster.filter((p) => p.position === player.position).length;
+  const posCount = club.roster.filter((p) => canPlayPosition(p,player.position)).length;
   const needWeight = Math.max(0, 3 - posCount) * 5; // thin roster at that spot = higher weight
   return player.ovr + needWeight;
 }
@@ -1001,7 +1036,7 @@ function selectNationalRoster(G, nationCode) {
 function buildNationalDepthChart(roster) {
   const chart=[];
   for (const pos of POSITIONS) {
-    const pool=[...roster].filter(p=>p.position===pos).sort((a,b)=>nationalSelectionScore(b)-nationalSelectionScore(a));
+    const pool=[...roster].filter(p=>canPlayPosition(p,pos)).sort((a,b)=>nationalSelectionScore(b)-nationalSelectionScore(a));
     pool.forEach((p,idx)=>chart.push({playerId:p.id,name:p.name,position:pos,ovr:p.ovr,depthRank:idx+1,role:idx===0?"Starter":idx===1?"Second Unit":"Reserve",selectionScore:Math.round(nationalSelectionScore(p)*10)/10}));
   }
   for (const p of [...roster].sort((a,b)=>nationalSelectionScore(b)-nationalSelectionScore(a))) {
@@ -2216,7 +2251,7 @@ function simulateSummerGameLive(G,homeId,awayId,round){
     const s=player.summerLeagueStats;s.gp++;
     for(const k of ["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])s[k]+=line[k]||0;
     s.plusMinus+=pm;
-    return {playerId:player.id,name:player.name,position:player.position,...line,plusMinus:pm};
+    return {playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,...line,plusMinus:pm};
   });
   const boxH=apply(h,pmH),boxA=apply(a,pmA);
   const th=G.summerLeagueLive.teams.find(x=>x.clubId===homeId),ta=G.summerLeagueLive.teams.find(x=>x.clubId===awayId);
@@ -2269,7 +2304,7 @@ function finalizeSummerLeagueLive(G){
   ]).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
   const ranked=[...participants].sort((a,b)=>summerPerformanceScore(b.summerLeagueStats)-summerPerformanceScore(a.summerLeagueStats));
   const mvp=ranked[0]||null,first=[];
-  for(const pos of POSITIONS){const p=ranked.find(x=>x.position===pos&&!first.includes(x));if(p)first.push(p);}
+  for(const pos of POSITIONS){const p=ranked.find(x=>canPlayPosition(x,pos)&&!first.includes(x));if(p)first.push(p);}
   for(const p of ranked){if(first.length>=5)break;if(!first.includes(p))first.push(p);}
   const second=ranked.filter(p=>!first.includes(p)).slice(0,5);
   if(mvp)mvp.awardHistory.push({season:G.season,award:"Summer League MVP"});for(const p of first)p.awardHistory.push({season:G.season,award:"All-Summer First Team"});for(const p of second)p.awardHistory.push({season:G.season,award:"All-Summer Second Team"});
@@ -2336,7 +2371,7 @@ function buildPreseasonRotation(club) {
   const starters = [];
   for (const pos of POSITIONS) {
     const best = club.roster
-      .filter((p) => p.position === pos && !starters.includes(p))
+      .filter((p) => canPlayPosition(p,pos) && !starters.includes(p))
       .sort((a, b) => b.ovr - a.ovr)[0];
     if (best) starters.push(best);
   }
@@ -2413,7 +2448,7 @@ function simulatePreseasonGameLive(G,homeId,awayId,round){
     for(const k of["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])st[k]+=line[k]||0;
     st.plusMinus+=pm;
     player.fatigue=Math.max(0,Math.min(100,player.fatigue+Math.round(line.min/18)));
-    return{playerId:player.id,name:player.name,position:player.position,role:player.rotationRole,...line,plusMinus:pm};
+    return{playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,role:player.rotationRole,...line,plusMinus:pm};
   });
 
   const bh=apply(h,pmH),ba=apply(a,pmA),hw=h.score>a.score;
@@ -2630,7 +2665,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       const form = Math.round(playerGameScore(line)*10)/10;
       player.recentForm = [...(player.recentForm||[]), form].slice(-5);
     }
-    return { playerId:player.id, name:player.name, position:player.position, role:player.rotationRole, age:player.age, ovr:player.ovr, starter, ...line };
+    return { playerId:player.id, name:player.name, position:player.position, secondaryPosition:player.secondaryPosition||null, role:player.rotationRole, age:player.age, ovr:player.ovr, starter, ...line };
   });
   const boxA=applyStats(clubA,linesA,margin), boxB=applyStats(clubB,linesB,-margin);
   if(options.allowInjuries!==false && options.gameState?.settings?.injuries!==false && statsField==='seasonStats'){
@@ -2654,19 +2689,31 @@ function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
 
 function regularSeasonLeadersSnapshot(G) {
   const players = G.clubs.flatMap(c => c.roster).filter(p => p.seasonStats?.gp > 0);
-  const leadersBy = (key, n=10) => [...players].sort((a,b) => (b.seasonStats[key]/b.seasonStats.gp) - (a.seasonStats[key]/a.seasonStats.gp)).slice(0,n).map(p => ({
-    playerId:p.id, name:p.name, position:p.position, age:p.age, ovr:p.ovr,
-    gp:p.seasonStats.gp, value:Math.round((p.seasonStats[key]/p.seasonStats.gp)*10)/10,
-    clubId:G.clubs.find(c => c.roster.includes(p))?.id || null,
-  }));
+  const clubIdFor=p=>G.clubs.find(c=>c.roster.includes(p))?.id||null;
+  const leadersBy = (key, n=10) => [...players]
+    .sort((a,b) => (b.seasonStats[key]/b.seasonStats.gp) - (a.seasonStats[key]/a.seasonStats.gp))
+    .slice(0,n).map(p => ({
+      playerId:p.id,name:p.name,position:p.position,secondaryPosition:p.secondaryPosition||null,age:p.age,ovr:p.ovr,
+      gp:p.seasonStats.gp,value:Math.round((p.seasonStats[key]/p.seasonStats.gp)*10)/10,clubId:clubIdFor(p)
+    }));
+  const pctLeaders=(made,att,minPerGame,n=10)=>players
+    .filter(p=>p.seasonStats.gp>=5 && (p.seasonStats[att]||0)/p.seasonStats.gp>=minPerGame)
+    .sort((a,b)=>(b.seasonStats[made]/Math.max(1,b.seasonStats[att]))-(a.seasonStats[made]/Math.max(1,a.seasonStats[att])))
+    .slice(0,n).map(p=>({
+      playerId:p.id,name:p.name,position:p.position,secondaryPosition:p.secondaryPosition||null,age:p.age,ovr:p.ovr,gp:p.seasonStats.gp,
+      value:Math.round((p.seasonStats[made]/Math.max(1,p.seasonStats[att]))*1000)/10,clubId:clubIdFor(p)
+    }));
   const allAround = [...players].sort((a,b) => summerPerformanceScore(b.seasonStats)-summerPerformanceScore(a.seasonStats)).slice(0,20).map(p => ({
-    playerId:p.id, name:p.name, clubId:G.clubs.find(c => c.roster.includes(p))?.id || null,
+    playerId:p.id,name:p.name,clubId:clubIdFor(p),
     ppg:Math.round(p.seasonStats.pts/p.seasonStats.gp*10)/10,
     rpg:Math.round(p.seasonStats.reb/p.seasonStats.gp*10)/10,
     apg:Math.round(p.seasonStats.ast/p.seasonStats.gp*10)/10,
     form:p.recentForm?.length ? Math.round(p.recentForm.reduce((a,b)=>a+b,0)/p.recentForm.length*10)/10 : 0,
   }));
-  return { points:leadersBy("pts"), rebounds:leadersBy("reb"), assists:leadersBy("ast"), steals:leadersBy("stl"), blocks:leadersBy("blk"), allAround };
+  return {
+    points:leadersBy("pts"),rebounds:leadersBy("reb"),assists:leadersBy("ast"),steals:leadersBy("stl"),blocks:leadersBy("blk"),
+    fgPct:pctLeaders("fgm","fga",4),threePct:pctLeaders("tpm","tpa",2),ftPct:pctLeaders("ftm","fta",1.5),allAround
+  };
 }
 
 function refreshRegularSeasonSnapshot(G) {
@@ -3266,9 +3313,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.1.7 Event Presentation";console.info("Mini&Me Basketball",BUILD_ID);
+const BUILD_ID="v0.1.1.8 League & NBA Cup";console.info("Mini&Me Basketball",BUILD_ID);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -3411,12 +3458,26 @@ function openResultWindow(game){
   repairLegacyGameBox(game);
   ui.resultGameId=game.id;show("resultWindow");renderResultWindow();return true;
 }
+function competitionGameLabel(g){
+  const tag=String(g?.phaseTag||"").toLowerCase();
+  if(tag==="nba_cup_group")return "NBA Cup · Group Play";
+  if(tag==="nba_cup_quarterfinal")return "NBA Cup · Quarterfinal";
+  if(tag==="nba_cup_semifinal")return "NBA Cup · Semifinal";
+  if(tag==="nba_cup_championship")return "NBA Cup · Championship";
+  if(tag==="regular")return "Regular Season";
+  if(tag==="preseason")return "Preseason";
+  if(tag==="summer_league")return "Summer League";
+  if(tag.includes("play_in"))return "Play-In Tournament";
+  if(tag.includes("playoff")||tag.includes("first_round")||tag.includes("semifinal")||tag.includes("conference_finals")||tag==="finals")return "NBA Playoffs";
+  return String(g?.phaseTag||phaseName()).replaceAll("_"," ");
+}
 function renderResultWindow(){
   const g=gameById(ui.resultGameId);
   if(!g){show("game");ui.page="home";render();return}
-  $("#resultWindowTitle").textContent=`${String(g.phaseTag||phaseName()).replaceAll("_"," ")} · Final`;
-  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}</div>`;
+  $("#resultWindowTitle").textContent=competitionGameLabel(g);
+  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">Next Game</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
+  $("#resultWindowNext").onclick=()=>{ui.resultGameId=null;ui.page="home";show("game");render()};
 }
 function recentGame(){
   let x=me();for(let a of [G.playoffs?.games,G.playIn?.games,G.regularSeason?.games,G.preseason?.games,G.summerLeague?.games].filter(Boolean)){
@@ -3591,7 +3652,7 @@ function boxScoreHtml(g){
   if(!lines.length)return"";
   const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
   const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
-  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.position||""}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for FG, 3PT, FT and advanced box-score statistics</div></div>`;
+  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for FG, 3PT, FT and advanced box-score statistics</div></div>`;
 }
 function deterministicQuarterFallback(total,key="game"){
   total=Math.max(0,Math.round(total||0));
@@ -3626,7 +3687,7 @@ function latestResultHtml(g){
   if(!g)return"";
   repairLegacyGameBox(g);
   const ot=g.overtime>0?`${g.overtime>1?g.overtime+"OT":"OT"}`:"FINAL";
-  return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${String(g.phaseTag||phaseName()).replaceAll("_"," ").toUpperCase()}</small></div>${lineScoreHtml(g)}${boxScoreHtml(g)}</div>`;
+  return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${competitionGameLabel(g).toUpperCase()}</small></div>${lineScoreHtml(g)}${boxScoreHtml(g)}</div>`;
 }
 function phaseRecord(club){
   if(!club)return{w:0,l:0};
@@ -3803,10 +3864,94 @@ let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" styl
 let ev=ui.tradeEval;let evalHtml=ev?(ev.valid?`<div class="card evalcard ${ev.accepted?"":"rej"}"><div class="eyebrow">${ev.accepted?"AI ACCEPTS":"AI REJECTS"}</div><div class="smallcopy">${ev.reason}</div><div class="metrics" style="margin-top:9px"><div class="metric"><b>${ev.aSendsValue}</b><small>You Send</small></div><div class="metric"><b>${ev.bSendsValue}</b><small>They Send</small></div><div class="metric"><b>${ev.ratio}</b><small>Value Ratio</small></div></div></div>`:`<div class="card evalcard rej"><div class="eyebrow">INVALID</div><div class="smallcopy">${ev.reason}</div></div>`):"";
 return `<div class="card"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div><div class="sectionTitle">${c(myId).name} Sends</div><div class="card">${assetRows(snap.club.players,"out","players")}${assetRows(snap.club.picks,"out","picks")}</div><div class="sectionTitle">${snap.partner.clubName} Sends</div><div class="card">${assetRows(snap.partner.players,"in","players")}${assetRows(snap.partner.picks,"in","picks")}</div>${evalHtml}<div class="quick" style="margin-top:10px"><button id="evalTradeBtn" class="btn secondary" style="margin:0">Evaluate</button><button id="execTradeBtn" class="btn primary" style="margin:0">Execute</button></div>`}
 function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
-function standings(){let rows=G.regularSeason?.standings?.length?G.regularSeason.standings:G.clubs.map(x=>({clubId:x.id,conference:x.conference,division:x.division,w:x.standings.w,l:x.standings.l,diff:(x.standings.pf||0)-(x.standings.pa||0)})),o="";for(let conf of ["East","West"]){o+=`<div class="sectionTitle">${conf}ern Conference</div><div class="table"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th></tr></thead><tbody>${rows.filter(x=>x.conference===conf).sort((a,b)=>b.w-a.w||b.diff-a.diff).map((x,i)=>`<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId).name}</b><small>${x.division}</small></td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff||0}</td></tr>`).join("")}</tbody></table></div>`}return o}
-function league(){let tabs=[["standings","Standings"],["leaders","Leaders"],["post","Postseason"],["cup","NBA Cup"]],body;if(ui.leagueTab==="standings")body=standings();else if(ui.leagueTab==="leaders"){let l=G.regularSeason?.leaders;body=!l?.points?.length?`<div class="card empty">League leaders will populate during the regular season.</div>`:["points","rebounds","assists"].map(k=>`<div class="sectionTitle">${({points:"Points",rebounds:"Rebounds",assists:"Assists"})[k]}</div><div class="card">${l[k].slice(0,5).map((p,i)=>`<div class="more"><div><b>${i+1}. ${p.name}</b><small>${c(p.clubId)?.name||""}</small></div><b>${p.value}</b></div>`).join("")}</div>`).join("")}else if(ui.leagueTab==="post")body=!G.playoffs?.series?.length?`<div class="card empty">Play-In and playoff series will appear here.</div>`:G.playoffs.series.map(s=>`<div class="card"><div class="eyebrow">${String(s.stage).replaceAll("_"," ")}</div><div class="more"><b>${c(s.teamAId)?.name}</b><b>${s.winsA}–${s.winsB}</b></div><div class="more"><b>${c(s.teamBId)?.name}</b></div></div>`).join("");else body=G.inSeasonCup?`<div class="card"><div class="eyebrow">NBA Cup</div><h3>${G.inSeasonCup.stage||"Group Play"}</h3><div class="smallcopy">${G.inSeasonCup.winnerClubId?`${c(G.inSeasonCup.winnerClubId)?.name} are the Cup champions.`:"The NBA Cup is integrated into the regular-season schedule."}</div></div>`:`<div class="card empty">NBA Cup begins with the regular season.</div>`;return header("League","Standings, leaders and competitions")+`<div class="tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
+function standingsRows(){
+  return G.regularSeason?.standings?.length?G.regularSeason.standings:G.clubs.map(x=>({
+    clubId:x.id,conference:x.conference,division:x.division,w:x.standings.w,l:x.standings.l,
+    pf:x.standings.pf||0,pa:x.standings.pa||0,diff:(x.standings.pf||0)-(x.standings.pa||0)
+  }));
+}
+function standingTable(rows,label){
+  const sorted=[...rows].sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);
+  const leader=sorted[0],leaderPct=(leader?.w||0)/Math.max(1,(leader?.w||0)+(leader?.l||0));
+  return `<div class="sectionTitle">${label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead><tbody>${sorted.map((x,i)=>{
+    const gp=x.w+x.l,pct=gp?x.w/gp:0,gb=i===0?"—":Math.max(0,((leader.w-x.w)+(x.l-leader.l))/2).toFixed(1);
+    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId)?.name||x.clubId}</b><small>${x.division}</small></td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
+  }).join("")}</tbody></table></div>`;
+}
+function standings(){
+  const rows=standingsRows();
+  const switcher=`<div class="standingSwitch"><button data-standingview="conference" class="${ui.standingsView==="conference"?"active":""}">Conference</button><button data-standingview="division" class="${ui.standingsView==="division"?"active":""}">Division</button></div>`;
+  if(ui.standingsView==="division"){
+    const myDiv=me()?.division;
+    const divisions=[myDiv,...Object.values(DIVISIONS).flat().filter(d=>d!==myDiv)];
+    return switcher+divisions.map(div=>standingTable(rows.filter(x=>x.division===div),`${div} Division`)).join("");
+  }
+  return switcher+["East","West"].map(conf=>standingTable(rows.filter(x=>x.conference===conf),`${conf}ern Conference`)).join("");
+}
+function leagueLeaders(){
+  const l=G.regularSeason?.leaders;
+  if(!l?.points?.length)return `<div class="card empty">League leaders will populate once regular-season games are played.</div>`;
+  const cats=[
+    ["points","Points","PPG"],["rebounds","Rebounds","RPG"],["assists","Assists","APG"],["steals","Steals","SPG"],["blocks","Blocks","BPG"],
+    ["fgPct","Field Goal %","FG%"],["threePct","Three Point %","3PT%"],["ftPct","Free Throw %","FT%"]
+  ];
+  return `<div class="leaderGrid">${cats.map(([key,title,suffix])=>`<div class="leaderCard"><h4>${title}</h4>${(l[key]||[]).slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position} · ${c(p.clubId)?.name||""}</small></div><b class="leaderValue">${p.value}${key.includes("Pct")?"%":""}</b></div>`).join("")}</div>`).join("")}</div>`;
+}
+function awardRace(){
+  const round=G.regularSeasonLive?.roundIndex||G.regularSeason?.currentRound||0;
+  if(round<41 && !G.allStarDone)return `<div class="card awardsRaceIntro"><div class="eyebrow">Awards Race</div><h3>Opens after the All-Star period</h3><div class="smallcopy">MVP, Rookie of the Year and Defensive Player of the Year shortlists become meaningful once the season has enough games behind it.</div></div>`;
+  const players=G.clubs.flatMap(cl=>cl.roster.map(p=>({p,club:cl}))).filter(x=>x.p.seasonStats?.gp>=20);
+  const mvp=[...players].sort((a,b)=>awardCandidateScore(G,b.p)-awardCandidateScore(G,a.p)).slice(0,5);
+  const rookies=players.filter(x=>x.p.draftYear===G.season).sort((a,b)=>awardCandidateScore(G,b.p)-awardCandidateScore(G,a.p)).slice(0,5);
+  const dpoy=[...players].sort((a,b)=>defensiveAwardScore(G,b.p)-defensiveAwardScore(G,a.p)).slice(0,5);
+  const race=(title,list)=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>{const s=x.p.seasonStats,gp=Math.max(1,s.gp);return `<div class="leaderRow"><span>${i+1}</span><div><b>${x.p.name}</b><small>${x.club.name} · ${(s.pts/gp).toFixed(1)} PPG · ${(s.reb/gp).toFixed(1)} RPG · ${(s.ast/gp).toFixed(1)} APG</small></div><b class="leaderValue">${x.p.ovr}</b></div>`}).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
+  return `<div class="card awardsRaceIntro"><div class="eyebrow">Season ${G.season}</div><h3>Awards Race</h3><div class="smallcopy">Live shortlist based on recorded production, efficiency, defence and team performance. These are projections, not final awards.</div></div><div class="leaderGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player",dpoy)}</div>`;
+}
+function cupStageName(stage){
+  return ({GROUP_PLAY:"Group Play",QUARTERFINALS:"Quarterfinals",SEMIFINALS:"Semifinals",CHAMPIONSHIP:"Championship",COMPLETE:"Complete"})[stage]||String(stage||"Group Play").replaceAll("_"," ");
+}
+function cupTieHtml(tie,label){
+  if(!tie)return"";
+  const a=c(tie.aId),b=c(tie.bId),g=tie.gameId?gameById(tie.gameId):null;
+  return `<div class="cupTie"><div><b>${a?.name||"TBD"} vs ${b?.name||"TBD"}</b><small>${label}${tie.complete?" · Final":" · Upcoming"}</small></div><b>${g?`${g.homeScore}–${g.awayScore}`:(tie.winnerClubId?c(tie.winnerClubId)?.name:"")}</b></div>`;
+}
+function nbaCupPage(){
+  const cup=G.inSeasonCup;
+  if(!cup)return `<div class="card empty">NBA Cup begins with the regular season.</div>`;
+  const userGroup=cup.groups?.find(g=>g.teamIds.includes(me().id));
+  const groupTable=g=>{
+    const rows=cupGroupTable(G,g.id);
+    return `<div class="sectionTitle">${g.label}${g.id===userGroup?.id?" · Your Group":""}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th><th>GP</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId)?.name||x.clubId}</b><small>${i===0?"Group leader":""}</small></td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff}</td><td>${x.gp}</td></tr>`).join("")}</tbody></table></div>`;
+  };
+  if(cup.complete){
+    const winner=c(cup.winnerClubId),final=cup.final?.gameId?gameById(cup.final.gameId):null;
+    const runnerId=final?(final.winnerClubId===final.homeClubId?final.awayClubId:final.homeClubId):null,runner=c(runnerId);
+    const mvp=allPlayers(G).find(p=>p.id===cup.mvpPlayerId);
+    return `${eventSummaryCard({label:"NBA Cup · Final Summary",title:`${winner?.name||"Champion"} win the NBA Cup`,subtitle:runner?`${runner.name} finished runner-up.`:"Tournament complete.",metrics:[{label:"Champion",value:winner?.mark||"—"},{label:"Final",value:final?`${final.homeScore}–${final.awayScore}`:"—"},{label:"Cup MVP",value:mvp?.name||"—"}]})}
+      <div class="sectionTitle">Knockout Results</div><div class="cupStageCard"><h4>Quarterfinals</h4>${(cup.quarterfinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
+      <div class="cupStageCard" style="margin-top:9px"><h4>Semifinals</h4>${(cup.semifinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
+      <div class="cupStageCard" style="margin-top:9px"><h4>Championship</h4>${cupTieHtml(cup.final,"NBA Cup Final")}</div>`;
+  }
+  let groupOrder=[userGroup,...(cup.groups||[]).filter(g=>g.id!==userGroup?.id)].filter(Boolean);
+  let knockout="";
+  if((cup.quarterfinals||[]).length)knockout+=`<div class="sectionTitle">Quarterfinals</div><div class="cupStageCard">${cup.quarterfinals.map(t=>cupTieHtml(t,t.conference)).join("")}</div>`;
+  if((cup.semifinals||[]).length)knockout+=`<div class="sectionTitle">Semifinals</div><div class="cupStageCard">${cup.semifinals.map(t=>cupTieHtml(t,t.conference)).join("")}</div>`;
+  if(cup.final)knockout+=`<div class="sectionTitle">Championship</div><div class="cupStageCard">${cupTieHtml(cup.final,"NBA Cup Final")}</div>`;
+  return `${eventSummaryCard({label:"NBA Cup",title:cupStageName(cup.stage),subtitle:"Cup games are integrated into the regular-season calendar. Group winners and wild cards progress to the knockout stage.",metrics:[{label:"Stage",value:cupStageName(cup.stage)},{label:"Your Group",value:userGroup?.label?.replace(/East |West /,"")||"—"},{label:"Your Cup Record",value:userGroup?`${cup.standings[me().id]?.w||0}–${cup.standings[me().id]?.l||0}`:"—"}]})}${groupOrder.map(groupTable).join("")}${knockout}`;
+}
+function postseasonPage(){
+  if(G.playIn?.games?.length && !G.playoffs?.series?.length){
+    return `<div class="card"><div class="eyebrow">Play-In</div><h3>Play-In Tournament</h3><div class="smallcopy">${G.playIn.games.length} games recorded.</div></div>`;
+  }
+  return !G.playoffs?.series?.length?`<div class="card empty">Play-In and playoff series will appear here.</div>`:G.playoffs.series.map(s=>`<div class="card"><div class="eyebrow">${String(s.stage).replaceAll("_"," ")}</div><div class="more"><b>${c(s.teamAId)?.name}</b><b>${s.winsA}–${s.winsB}</b></div><div class="more"><b>${c(s.teamBId)?.name}</b></div></div>`).join("");
+}
+function league(){
+  const tabs=[["standings","Standings"],["leaders","Leaders"],["awards","Awards"],["post","Postseason"],["cup","NBA Cup"]];
+  let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="leaders"?leagueLeaders():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="post"?postseasonPage():nbaCupPage();
+  return header("League","Standings, leaders, awards and competitions")+`<div class="tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+}
 function international(){let code=G.userNationalGM?.nationCode;if(!code)return header("International","Take your career onto the international stage")+`<div class="card"><h3>Manage a Nation</h3><div class="smallcopy">Club and national management use the same player universe.</div><label>NATION</label><select id="nation">${G.nationalTeams.map(n=>`<option value="${n.code}">${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`;let n=nat(code),g=currentQualificationGroup(G,code),tabs=[["home","Overview"],["squad","Squad"],["qual","Qualification"],["wc","World Cup"]],body;if(ui.intlTab==="home")body=`<div class="metrics"><div class="metric"><b>${n.record.w}–${n.record.l}</b><small>National Record</small></div><div class="metric"><b>${G.nationalQualification.window}</b><small>Window</small></div><div class="metric"><b>${n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length}</b><small>Squad</small></div></div><div class="sectionTitle">News</div><div class="card">${news()}</div>`;else if(ui.intlTab==="squad"){let cands=nationalCandidates(G,code).slice(0,40);if(!ui.natSelected||ui.natCode!==code){ui.natCode=code;ui.natSelected=n.selectedSquadPlayerIds.length?[...n.selectedSquadPlayerIds]:cands.filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id)}let rows=cands.map(p=>{let checked=ui.natSelected.includes(p.id),unavailable=p.injured||p.nationalStatus==="Opted Out";return `<label class="assetrow ${unavailable?"disabled":""}"><input type="checkbox" data-natpick="${p.id}" ${checked?"checked":""} ${unavailable?"disabled":""}><span><b>${p.name}</b><small>${p.position} · OVR ${p.ovr} · ${G.clubs.find(cl=>cl.roster.some(x=>x.id===p.id))?.name||"Free Agent"}${unavailable?" · UNAVAILABLE":""}</small></span></label>`}).join("");body=`<div class="card"><div class="eyebrow">SELECTED</div><h3>${ui.natSelected.length}/12</h3></div><div class="quick"><button id="autoSquadBtn" class="btn secondary" style="margin:0">Auto-Select Best 12</button><button id="saveSquadBtn" class="btn primary" style="margin:0">Save Squad</button></div><div class="sectionTitle">Candidates</div><div class="card">${rows}</div>`}else if(ui.intlTab==="qual"){if(!g)body=`<div class="card empty">No active qualification group.</div>`;else{let r=qualificationTable(G,g.id);body=`<div class="card"><div class="eyebrow">${G.nationalQualification.round.replaceAll("_"," ")}</div><h3>${g.label||g.id}</h3></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>GP</th><th>W</th><th>L</th><th>PTS</th></tr></thead><tbody>${r.map((x,i)=>`<tr><td>${i+1}</td><td>${nat(x.code)?.name||x.code}</td><td>${x.gp}</td><td>${x.w}</td><td>${x.l}</td><td>${x.points}</td></tr>`).join("")}</tbody></table></div>`}}else{let w=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:(G.worldCupHistory||[]).slice(-1)[0];body=!w?`<div class="card empty">No World Cup has been played yet.</div>`:w.status==="LIVE"?`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${w.stage.replaceAll("_"," ")}</h3><div class="smallcopy">${w.games.length}/92 games complete.</div></div>`:`<div class="card"><div class="eyebrow">World Cup ${w.cycle}</div><h3>${nat(w.championCode)?.name} · Champions</h3><div class="smallcopy">Runner-up: ${nat(w.runnerUpCode)?.name} · Bronze: ${nat(w.bronzeCode)?.name}</div></div>`}return header(n.name,`${n.region} · Ranking ${Math.round(n.rankingPoints)}`)+`<div class="tabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
-function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.7 Event Presentation</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
+function more(){let gm=gmCareerState(G),rb=basketballRecordBook(G);return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div><div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build</small></div><b>v0.1.1.8 League & NBA Cup</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`}
 function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
 if($("#continueToPreseasonReadiness"))$("#continueToPreseasonReadiness").onclick=()=>{const r=continueFromSummerLeague(G);if(!r.ok)toast(r.reason);else{save();render()}};
@@ -3824,6 +3969,7 @@ if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
+$$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
 $$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
 $$("[data-extend]").forEach(b=>b.onclick=()=>{let ok=extendPlayerContract(G,me().id,b.dataset.extend,2);toast(ok?"Extension agreed":"Player declined the extension offer");save();render()});
 $$("[data-waive]").forEach(b=>b.onclick=()=>{releasePlayer(G,me().id,b.dataset.waive);toast("Player waived");save();render()});
@@ -3839,6 +3985,5 @@ $$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.na
 if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode;ui.natSelected=nationalCandidates(G,code).filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id);render()};
 if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
 }
-$("#resultWindowClose").onclick=()=>{ui.resultGameId=null;ui.page="home";show("game");render()};
 $("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;render()});drawTeams();
 </script></body></html>
