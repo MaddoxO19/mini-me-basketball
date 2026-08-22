@@ -58,24 +58,26 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .resultTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:#0c1117;border-bottom:1px solid var(--line)}
 .resultTop b{font-size:10px;letter-spacing:.8px}.resultTop small{font-size:8px;color:var(--muted)}
 .lineScoreWrap{overflow-x:auto;border-bottom:1px solid var(--line)}
-.lineScore{width:100%;min-width:430px;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.lineScore{width:100%;border-collapse:collapse;table-layout:fixed;font-variant-numeric:tabular-nums}
+.lineScore.hasOT{min-width:430px;table-layout:auto}
 .lineScore th,.lineScore td{padding:10px 8px;text-align:center;border-bottom:1px solid #222b36;font-size:9px}
 .lineScore thead th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.5px;position:static}
-.lineScore th.teamCol,.lineScore td.teamCol{text-align:left;min-width:145px;position:sticky;left:0;background:#121720;z-index:1}
-.lineScore thead th.teamCol{background:#111820;z-index:2}
+.lineScore th.teamCol,.lineScore td.teamCol{text-align:left;width:42%;background:#121720}
+.lineScore thead th.teamCol{background:#111820}
 .lineScore .teamCell{display:flex;align-items:center;gap:7px}.lineScore .teamCell .mark{width:26px;height:26px;border-radius:8px;flex:none;font-size:8px}
 .lineScore .teamCell b{font-size:9px;white-space:normal;line-height:1.15}
 .lineScore td.total,.lineScore th.total{font-weight:950;color:var(--accent2);background:#171d27}
 .boxScoreSection{padding:12px}
 .boxTabs{margin:0 0 8px}
 .playerBoxScroll{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:11px;-webkit-overflow-scrolling:touch}
-.playerBox{border-collapse:collapse;min-width:900px;width:100%;font-variant-numeric:tabular-nums}
-.playerBox th,.playerBox td{padding:8px 7px;border-bottom:1px solid #222b36;text-align:right;font-size:8px;white-space:nowrap}
-.playerBox th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.45px;position:sticky;top:0;z-index:2}
-.playerBox th.player,.playerBox td.player{text-align:left;position:sticky;left:0;background:#121720;z-index:1;min-width:150px;max-width:150px}
-.playerBox th.player{background:#111820;z-index:3}
-.playerBox td.player b{display:block;font-size:9px;overflow:hidden;text-overflow:ellipsis}
-.playerBox td.player small{display:block;color:var(--muted);font-size:7px;margin-top:2px}
+.playerBox{border-collapse:collapse;min-width:720px;width:720px;table-layout:fixed;font-variant-numeric:tabular-nums}
+.playerBox col.playerCol{width:118px}.playerBox col.minCol{width:42px}.playerBox col.statCol{width:43px}.playerBox col.shootCol{width:58px}.playerBox col.pmCol{width:46px}
+.playerBox th,.playerBox td{padding:8px 5px;border-bottom:1px solid #222b36;text-align:right;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.playerBox th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.35px;position:sticky;top:0;z-index:2}
+.playerBox th.player,.playerBox td.player{text-align:left;position:static;background:#121720;width:118px;max-width:118px}
+.playerBox th.player{background:#111820}
+.playerBox td.player b{display:block;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.playerBox td.player small{display:block;color:var(--muted);font-size:7px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .playerBox tr:last-child td{border-bottom:0}
 .playerBox .hi{font-weight:950;color:#fff}
 .playerBox .pos{color:#78d69d}.playerBox .neg{color:#ef8d91}
@@ -2059,6 +2061,19 @@ function summerRosterForClub(G,clubId){
   return (t?.playerIds||[]).map(id=>all.find(p=>p.id===id)).filter(Boolean);
 }
 
+function splitScoreIntoFourQuarters(total){
+  total=Math.max(0,Math.round(total||0));
+  const base=Math.floor(total/4), rem=total-base*4;
+  let q=[base,base,base,base];
+  for(let i=0;i<rem;i++) q[i]++;
+  // Shift a few points between periods while preserving the exact total.
+  for(let i=0;i<5;i++){
+    const from=rand(0,3),to=rand(0,3);
+    if(from!==to && q[from]>14){const move=rand(1,Math.min(3,q[from]-14));q[from]-=move;q[to]+=move;}
+  }
+  return q;
+}
+
 function simulateSummerGameLive(G,homeId,awayId,round){
   const home=G.clubs.find(c=>c.id===homeId),away=G.clubs.find(c=>c.id===awayId);
   const rosterH=summerRosterForClub(G,homeId),rosterA=summerRosterForClub(G,awayId);
@@ -2084,7 +2099,10 @@ function simulateSummerGameLive(G,homeId,awayId,round){
   const boxH=apply(h,margin),boxA=apply(a,-margin);
   const th=G.summerLeagueLive.teams.find(x=>x.clubId===homeId),ta=G.summerLeagueLive.teams.find(x=>x.clubId===awayId);
   th.pf+=h.score;th.pa+=a.score;ta.pf+=a.score;ta.pa+=h.score;if(h.score>a.score){th.w++;ta.l++;}else{ta.w++;th.l++;}
-  return {id:nextId("slg"),round,homeClubId:homeId,awayClubId:awayId,homeScore:h.score,awayScore:a.score,winnerClubId:h.score>a.score?homeId:awayId,boxScore:{home:boxH,away:boxA}};
+  const qHome=splitScoreIntoFourQuarters(h.score),qAway=splitScoreIntoFourQuarters(a.score);
+  return {id:nextId("slg"),round,phaseTag:"summer_league",homeClubId:homeId,awayClubId:awayId,homeScore:h.score,awayScore:a.score,
+    winnerClubId:h.score>a.score?homeId:awayId,overtime:0,quarters:{home:qHome,away:qAway},overtimePeriods:{home:[],away:[]},
+    boxScore:{home:boxH,away:boxA}};
 }
 
 function finalizeSummerLeagueLive(G){
@@ -3237,32 +3255,61 @@ function shootingText(made,attempted){return `${made||0}-${attempted||0}`}
 function plusMinusText(v){v=+v||0;return `${v>0?"+":""}${v}`}
 function boxScoreHtml(g){
   if(!g?.boxScore)return"";
-  let side=ui.boxSide==="away"?"away":"home",team=side==="home"?c(g.homeClubId):c(g.awayClubId),lines=g.boxScore[side]||[];
+  let side=ui.boxSide==="away"?"away":"home",lines=g.boxScore[side]||[];
   if(!lines.length)return"";
   const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
-  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox"><thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.position||""}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for full player statistics</div></div>`;
+  const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
+  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.position||""}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for FG, 3PT, FT and advanced box-score statistics</div></div>`;
+}
+function deterministicQuarterFallback(total,key="game"){
+  total=Math.max(0,Math.round(total||0));
+  let hash=0;for(const ch of String(key))hash=((hash*31)+ch.charCodeAt(0))>>>0;
+  const base=Math.floor(total/4),rem=total-base*4,q=[base,base,base,base];
+  for(let i=0;i<rem;i++)q[(hash+i)%4]++;
+  for(let i=0;i<4;i++){
+    const from=(hash+i*3)%4,to=(from+1+(hash%2))%4,move=1+((hash>>i)&1);
+    if(from!==to&&q[from]>16){q[from]-=move;q[to]+=move;}
+  }
+  return q;
+}
+function normalizedQuarters(g,side){
+  const stored=g.quarters?.[side];
+  if(Array.isArray(stored)&&stored.length===4&&stored.some(x=>(+x||0)>0))return stored.map(x=>+x||0);
+  const total=side==="home"?g.homeScore:g.awayScore;
+  return deterministicQuarterFallback(total,`${g.id||g.round||"game"}-${side}`);
 }
 function lineScoreHtml(g){
-  const away=c(g.awayClubId),home=c(g.homeClubId),aq=g.quarters?.away||[],hq=g.quarters?.home||[];
+  const away=c(g.awayClubId),home=c(g.homeClubId),aq=normalizedQuarters(g,"away"),hq=normalizedQuarters(g,"home");
   let aOT=g.overtimePeriods?.away||[],hOT=g.overtimePeriods?.home||[];
   const otCount=Math.max(g.overtime||0,aOT.length,hOT.length);
-  // Older saves only stored the number of overtime periods. Preserve a useful aggregate OT score for those games.
   if(otCount && !aOT.length && !hOT.length){
     const aReg=aq.reduce((s,x)=>s+(+x||0),0),hReg=hq.reduce((s,x)=>s+(+x||0),0);
     aOT=[Math.max(0,(g.awayScore||0)-aReg)];hOT=[Math.max(0,(g.homeScore||0)-hReg)];
   }
-  const periodHeads=["Q1","Q2","Q3","Q4",...Array.from({length:Math.max(aOT.length,hOT.length)},(_,i)=>aOT.length===1&&hOT.length===1&&otCount>1?"OT":`OT${i+1}`)];
+  const periodHeads=["Q1","Q2","Q3","Q4",...Array.from({length:Math.max(aOT.length,hOT.length)},(_,i)=>`OT${i+1}`)];
   const row=(club,qs,ots,total)=>`<tr><td class="teamCol"><div class="teamCell">${teamMark(club,"mark")}<b>${club?.name||""}</b></div></td>${[...qs,...ots].map(x=>`<td>${x??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
-  return `<div class="lineScoreWrap"><table class="lineScore"><thead><tr><th class="teamCol">TEAM</th>${periodHeads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(away,aq,aOT,g.awayScore)}${row(home,hq,hOT,g.homeScore)}</tbody></table></div>`;
+  return `<div class="lineScoreWrap"><table class="lineScore ${otCount?"hasOT":""}"><thead><tr><th class="teamCol">TEAM</th>${periodHeads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(away,aq,aOT,g.awayScore)}${row(home,hq,hOT,g.homeScore)}</tbody></table></div>`;
 }
 function latestResultHtml(g){
   if(!g)return"";
   const ot=g.overtime>0?`${g.overtime>1?g.overtime+"OT":"OT"}`:"FINAL";
   return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${String(g.phaseTag||phaseName()).replaceAll("_"," ").toUpperCase()}</small></div>${lineScoreHtml(g)}${boxScoreHtml(g)}</div>`;
 }
+function phaseRecord(club){
+  if(!club)return{w:0,l:0};
+  if(G.phase==="SUMMER_LEAGUE"){
+    const r=G.summerLeagueLive?.teams?.find(x=>x.clubId===club.id) || G.summerLeague?.clubs?.find(x=>x.clubId===club.id);
+    if(r)return{w:r.w??r.record?.w??0,l:r.l??r.record?.l??0};
+  }
+  if(G.phase==="PRESEASON"){
+    return{w:club.preseasonRecord?.w||0,l:club.preseasonRecord?.l||0};
+  }
+  return{w:club.standings?.w||0,l:club.standings?.l||0};
+}
 function gameHub(f){
   let x=me(),h=c(f.homeClubId),a=c(f.awayClubId),spec=actionSpec();
-  return `<div class="card broadcast"><div class="broadcastTop"><div class="broadcastBrand">COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${phaseName()} · ${typeof f.round==="number"?`Game ${f.round}`:f.round||""}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${a.standings.w||0}–${a.standings.l||0}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${h.standings.w||0}–${h.standings.l||0}</small></div></div><div class="broadcastContext"><div><b>${x.standings.w||0}–${x.standings.l||0}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  const xr=phaseRecord(x),hr=phaseRecord(h),ar=phaseRecord(a);
+  return `<div class="card broadcast"><div class="broadcastTop"><div class="broadcastBrand">COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${phaseName()} · ${typeof f.round==="number"?`Game ${f.round}`:f.round||""}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${ar.w}–${ar.l}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${hr.w}–${hr.l}</small></div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
 }
 function draftHomeContext(){
   if(G.phase!=="DRAFT_NIGHT")return"";
