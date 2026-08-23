@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.1 Fix Home Context</title>
+<title>Mini&Me Basketball — v0.1.1.35 Season QA Closeout</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -110,7 +110,29 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .postStageTabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.postStageTabs::-webkit-scrollbar{display:none}.postStageTabs button{flex:0 0 auto;border:1px solid var(--line);background:#171e28;color:var(--muted);border-radius:11px;padding:9px 12px;font-size:8px;font-weight:900;white-space:nowrap}.postStageTabs button.active{background:var(--accent);border-color:var(--accent);color:#17100a}
 .seriesGrid{display:grid;gap:9px}.seriesCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;min-width:0}.seriesCard.userSeries{border-color:#7a5d26;box-shadow:inset 3px 0 0 var(--accent)}
 .seriesMeta{display:flex;justify-content:space-between;gap:8px;margin-bottom:7px}.seriesMeta small{font-size:7px;color:var(--accent2);font-weight:900;text-transform:uppercase;letter-spacing:.45px}.seriesMeta span{font-size:7px;color:var(--muted)}
-.seriesTeams{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #25303a}.seriesTeams:first-of-type{border-top:0}.seriesTeam b{font-size:10px;line-height:1.2}.seriesTeam small{display:block;font-size:7px;color:var(--muted);margin-top:2px}.seriesScore{font-size:15px;font-weight:950}.seriesOutcome{margin-top:7px;padding-top:8px;border-top:1px solid #25303a;font-size:8px;color:var(--muted)}.seriesOutcome b{color:#fff}
+.seriesTeams{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid #25303a}.seriesTeams:first-of-type{border-top:0}.seriesTeam b{font-size:10px;line-height:1.2}.seriesTeam small{display:block;font-size:7px;color:var(--muted);margin-top:2px}.seriesScore{font-size:15px;font-weight:950}.seriesOutcome{margin-top:7px;padding-top:8px;border-top:1px solid #25303a;font-size:8px;color:var(--muted)}
+.postseasonHome{background:var(--panel);border:1px solid #394653;border-radius:18px;overflow:hidden}
+.postseasonHomeTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);background:#0f151c}
+.postseasonHomeTop b{font-size:9px;color:var(--accent2);letter-spacing:.75px;text-transform:uppercase}.postseasonHomeTop span{font-size:8px;color:var(--muted)}
+.postseasonHomeBody{padding:16px}.postseasonHomeBody h3{font-size:22px;line-height:1.12;margin:0 0 5px}.postseasonHomeBody>p{font-size:9px;line-height:1.45;color:var(--muted);margin:0}
+.postSeriesStatus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:13px}
+.postSeriesStat{border:1px solid #2d3945;background:#10161e;border-radius:11px;padding:10px 7px;text-align:center;min-width:0}
+.postSeriesStat b{display:block;font-size:14px;line-height:1.15;overflow-wrap:anywhere}.postSeriesStat small{display:block;font-size:7px;color:var(--muted);text-transform:uppercase;margin-top:4px}
+.postMatchup{display:grid;grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);align-items:center;gap:8px;margin-top:13px;padding:12px;border:1px solid #313d49;background:#0e141b;border-radius:13px}
+.postMatchupTeam{text-align:center;min-width:0}.postMatchupTeam b{display:block;font-size:11px;line-height:1.2}.postMatchupTeam small{display:block;font-size:7.5px;color:var(--muted);margin-top:3px}.postMatchupVs{text-align:center;color:var(--muted);font-weight:900}
+.postHomeActions{display:grid;grid-template-columns:minmax(0,2fr) minmax(108px,.72fr);gap:7px;margin-top:12px}.postHomeActions button{margin:0;min-height:40px!important;padding:8px 11px!important;border-radius:10px!important;font-size:9.5px!important}.postHomeActions .primaryProgress{font-size:9.5px!important}
+@media(max-width:430px){.postHomeActions{grid-template-columns:minmax(0,1fr) 104px}.postHomeActions button{min-height:38px!important;padding:7px 8px!important;font-size:9px!important}}
+.postConfTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:9px 0}.postConfTabs button{border:1px solid var(--line);background:#111821;color:var(--muted);padding:9px;border-radius:10px;font-weight:900}.postConfTabs button.active{background:var(--accent);color:#16110b;border-color:var(--accent)}
+.seriesCard{cursor:pointer}.seriesCard:hover{border-color:#526170}.seriesMatchupLabel{font-size:8px;color:var(--accent2);font-weight:950;letter-spacing:.25px}
+.seriesDrill{background:var(--panel);border:1px solid #35424e;border-radius:16px;overflow:hidden}.seriesDrillTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;border-bottom:1px solid var(--line)}
+.seriesDrillTop b{font-size:12px}.seriesBack{border:1px solid var(--line);background:#111821;color:var(--text);border-radius:9px;padding:7px 10px;font-weight:900}
+.seriesGameList{padding:0 12px 12px}.seriesGameRow{width:100%;display:grid;grid-template-columns:65px minmax(0,1fr) auto;gap:9px;align-items:center;text-align:left;padding:11px 0;border:0;border-top:1px solid var(--line);background:transparent;color:var(--text)}
+.seriesGameRow:first-child{border-top:0}.seriesGameRow span{font-size:7.5px;color:var(--accent2);font-weight:950}.seriesGameRow b{font-size:9px;line-height:1.3}.seriesGameRow strong{font-size:10px;color:#f3ce82}.seriesGameRow small{display:block;color:var(--muted);font-size:7px;margin-top:2px}
+.postResultContext{margin-bottom:10px;padding:10px 12px;border:1px solid #36434f;background:#111821;border-radius:12px}
+.postResultContext b{display:block;font-size:10px}.postResultContext small{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+.postUpdateSeriesGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.postUpdateSeries.compact{margin:0;min-width:0}.postUpdateSeries.compact b{font-size:9px}.postUpdateSeries.compact small{font-size:7.5px;line-height:1.35}.postUpdateSeries.compact[data-update-series]{cursor:pointer}.postUpdateSeries.compact[data-update-series]:hover{border-color:#526170}.postUpdateSeries.compact .reviewCue{display:block;margin-top:4px;color:var(--accent2);font-weight:900;font-size:7px}
+@media(max-width:500px){.postHomeActions{grid-template-columns:1fr}.postSeriesStatus{grid-template-columns:1fr 1fr}.postSeriesStat:last-child{grid-column:1/-1}.postUpdateSeriesGrid{grid-template-columns:1fr}.seriesGameRow{grid-template-columns:54px minmax(0,1fr) auto}}
+.seriesOutcome b{color:#fff}
 .playInConf{margin-bottom:13px}.playInCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;margin-top:8px}.playInCard.userSeries{border-color:#7a5d26;box-shadow:inset 3px 0 0 var(--accent)}.playInTitle{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}.playInTitle b{font-size:9px;color:var(--accent2)}.playInTitle small{font-size:7px;color:var(--muted)}.playInTeams{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:7px 0;border-top:1px solid #25303a}.playInTeams:first-of-type{border-top:0}.playInTeams b{font-size:9px}.playInTeams small{display:block;color:var(--muted);font-size:7px}.playInScore{font-weight:950;font-size:11px}
 .postUpdateWrap{padding-bottom:28px}
 .postUpdateHero{background:linear-gradient(135deg,#171e28,#10161e);border:1px solid #374351;border-radius:16px;padding:14px;margin-bottom:11px}
@@ -271,7 +293,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .draftSelection strong{font-size:10px;color:var(--accent2)}
 .prospectTable .pick{background:var(--accent);color:#17100a;border-color:var(--accent);font-weight:950}
 .prospectTable tr.bestAvailable{background:#171b17}
-.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#0d1219ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));z-index:30}.nav button{background:none;border:0;color:#8591a1;font-size:8px;padding:4px 2px}.nav button.active{color:var(--accent);font-weight:900}.nav span{display:block;font-size:17px;margin-bottom:2px}
+.nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(560px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#0d1219ee;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));z-index:1000;pointer-events:auto}.nav button{background:none;border:0;color:#8591a1;font-size:8px;padding:4px 2px;pointer-events:auto;touch-action:manipulation;cursor:pointer}.nav button.active{color:var(--accent);font-weight:900}.nav span{display:block;font-size:17px;margin-bottom:2px}
 .debug{display:none}.debug.show{display:block}.debug pre{white-space:pre-wrap;background:#090d13;border-radius:10px;padding:9px;max-height:240px;overflow:auto;font-size:8px}
 
 .saveWrap{min-height:100vh;padding:calc(24px + env(safe-area-inset-top)) 16px calc(28px + env(safe-area-inset-bottom))}
@@ -300,11 +322,89 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .draftAudit table{min-width:640px}
 .toast{position:fixed;left:50%;bottom:85px;transform:translateX(-50%) translateY(12px);opacity:0;transition:.17s;background:#1b2430;border:1px solid #394657;padding:9px 12px;border-radius:11px;font-size:10px;z-index:99}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:360px){.teamGrid{grid-template-columns:1fr}.head h2{font-size:20px}}
+
+.draftScoutBrief{margin-top:12px;background:linear-gradient(135deg,#151d26,#10161d);border:1px solid #34414d;border-radius:15px;overflow:hidden}
+.draftScoutHead{display:flex;justify-content:space-between;gap:10px;padding:11px 13px;border-bottom:1px solid var(--line)}
+.draftScoutHead b{font-size:9px;color:var(--accent2);letter-spacing:.6px;text-transform:uppercase}.draftScoutHead small{font-size:7px;color:var(--muted)}
+.draftScoutBody{padding:12px}.draftNeedLine{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.draftNeedChip{padding:6px 8px;border:1px solid #394654;background:#111820;border-radius:999px;font-size:7px;color:#dce4ed;font-weight:850}
+.draftNeedChip strong{color:var(--accent2)}
+.draftRecList{display:grid;gap:8px}.draftRec{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px;background:#0f151c;border:1px solid #29343f;border-radius:12px}
+.draftRecRank{font-size:13px;font-weight:950;color:var(--accent2);text-align:center}.draftRecMain{min-width:0}.draftRecMain b{display:block;font-size:10px;line-height:1.2}.draftRecMain small{display:block;font-size:7.5px;color:var(--muted);line-height:1.35;margin-top:2px}
+.draftRecTag{font-size:7px;font-weight:950;color:#17100a;background:var(--accent);border-radius:999px;padding:6px 7px;white-space:nowrap}.draftScoutNote{margin-top:9px;color:var(--muted);font-size:7.5px;line-height:1.4}
+.contractEconomy{margin:12px 0 16px;border:1px solid #34414d;background:linear-gradient(135deg,#151c25,#10161d);border-radius:15px;overflow:hidden}
+.contractEconomyHead{padding:12px 14px;border-bottom:1px solid var(--line)}.contractEconomyHead b{display:block;font-size:11px}.contractEconomyHead small{display:block;color:var(--muted);font-size:7.5px;margin-top:3px;line-height:1.4}
+.salaryBandGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:12px}.salaryBandCard{padding:10px;background:#0f151c;border:1px solid #2d3945;border-radius:11px;min-width:0}
+.salaryBandCard b{display:block;font-size:10px}.salaryBandCard span{display:block;font-size:7px;color:var(--accent2);font-weight:850;margin-top:3px}.salaryBandCard small{display:block;font-size:7px;color:var(--muted);margin-top:3px}
+.contractGroupTitle{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:15px 2px 7px}.contractGroupTitle b{font-size:13px}.contractGroupTitle span{font-size:7.5px;color:var(--muted)}
+.contractTable table{min-width:860px}.contractTable .band{font-size:7.5px;font-weight:850}.contractTable .market{font-size:7px;color:var(--muted);display:block;margin-top:2px}.contractValue{font-size:7px;font-weight:850;white-space:nowrap}.contractValue.above{color:#f0a4a8}.contractValue.value{color:#88d4a2}.contractValue.market{color:var(--muted)}
+.contractTable .contractValue{display:block;margin-top:3px;line-height:1.2;white-space:normal}
+
+.fibaResultContext{border:1px solid var(--line);background:var(--panel);border-radius:16px;overflow:hidden;margin-top:12px}
+.fibaResultHead{display:flex;justify-content:space-between;align-items:center;padding:11px 13px;border-bottom:1px solid var(--line)}
+.fibaResultHead b{font-size:11px}.fibaResultHead small{font-size:8px;color:var(--accent2);font-weight:900;text-transform:uppercase}
+.fibaLineScoreWrap{overflow-x:auto}
+.fibaLineScore{border-collapse:collapse;width:100%;min-width:520px;table-layout:fixed;font-variant-numeric:tabular-nums}
+.fibaLineScore th,.fibaLineScore td{padding:10px 7px;border-bottom:1px solid #222b36;text-align:center;font-size:9px}
+.fibaLineScore th{background:#111820;color:var(--muted);font-size:7px;letter-spacing:.4px}
+.fibaLineScore .nationCol{text-align:left;width:205px}
+.fibaNationCell{display:flex;align-items:center;gap:9px}
+.fibaNationMark{width:34px;height:34px;border-radius:10px;background:#d9b45f;color:#17100a;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:950;flex:0 0 auto}
+.fibaNationCell b{font-size:10px}.fibaLineScore .total{font-size:12px;font-weight:950;color:var(--accent2)}
+.fibaBoxTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:11px 11px 4px}
+.fibaBoxTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:9px;padding:8px;font-size:9px;font-weight:900}
+.fibaBoxTabs button.active{background:var(--accent);color:#17100a;border-color:var(--accent)}
+.fibaOtherResults{margin-top:13px}.fibaOtherResults h4{margin:0 0 7px;font-size:12px}
+.fibaOtherRow{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-top:1px solid #27313a;background:#121820}
+.fibaOtherRow:first-of-type{border-top:0}.fibaOtherRow span{font-size:8.5px;color:var(--muted)}.fibaOtherRow b{font-size:9px}
+.fibaResultAction{margin-top:12px}
+.upcomingFixtures{margin-top:13px;border:1px solid #34414d;background:linear-gradient(135deg,#151c25,#10161d);border-radius:16px;overflow:hidden}
+.upcomingFixturesHead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 13px;border-bottom:1px solid var(--line)}
+.upcomingFixturesHead b{font-size:13px}.upcomingFixturesHead small{font-size:8.5px;color:var(--muted)}
+.fixtureSection{display:grid;grid-template-columns:105px minmax(0,1fr);border-bottom:1px solid var(--line)}.fixtureSection:last-child{border-bottom:0}
+.fixtureLabel{padding:11px 12px;background:#0f151c;border-right:1px solid var(--line)}.fixtureLabel b{display:block;font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:.4px}.fixtureLabel small{display:block;font-size:8px;color:var(--muted);margin-top:3px}
+.fixtureRows{padding:5px 11px}.fixtureRow{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #27313a}.fixtureRow:last-child{border-bottom:0}
+.fixtureRow span{font-size:9px;color:var(--muted);font-weight:800}.fixtureRow b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fixtureRow strong{font-size:9px;color:var(--muted);font-weight:800}
+.fixtureNone{padding:10px 0;font-size:10px;color:var(--muted)}
+@media(max-width:600px){.fixtureSection{grid-template-columns:88px minmax(0,1fr)}.fixtureRow{grid-template-columns:64px minmax(0,1fr)}.fixtureRow strong{display:none}}
+
+.contractTable.compact table{min-width:0;width:100%;table-layout:fixed}
+.contractTable.compact th:nth-child(1){width:31%}.contractTable.compact th:nth-child(2){width:20%}.contractTable.compact th:nth-child(3){width:10%}.contractTable.compact th:nth-child(4){width:13%}.contractTable.compact th:nth-child(5){width:13%}.contractTable.compact th:nth-child(6){width:13%}
+.contractPlayerMeta{display:block;color:var(--muted);font-size:7px;line-height:1.35;margin-top:3px}
+.contractBadge{display:inline-block;margin-top:4px;padding:2px 5px;border:1px solid #6d5327;border-radius:999px;color:var(--accent2);font-size:6.5px;font-weight:900}
+.contractTypeBadge{display:inline-block;margin-top:4px;padding:2px 5px;border:1px solid #35414d;border-radius:999px;color:var(--muted);font-size:6.5px;font-weight:850}
+.contractActions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.contractActions .pick{margin:0;padding:6px 8px}
+.tradeWorkspace{display:grid;gap:12px}.tradePartnerCard{padding:13px 14px}
+.tradeCompare{display:grid;grid-template-columns:1fr 38px 1fr;gap:8px;align-items:stretch}
+.tradeSummarySide{background:#111821;border:1px solid #34414d;border-radius:14px;padding:12px;min-width:0}.tradeSummarySide h4{font-size:12px;margin:0 0 8px}.tradeSummarySide small{color:var(--muted);font-size:7px}
+.tradeVs{display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:950;color:var(--muted)}
+.tradeTotals{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.tradeTotal{background:#0d131a;border:1px solid #2b3641;border-radius:10px;padding:8px;text-align:center}.tradeTotal b{display:block;font-size:12px}.tradeTotal span{display:block;color:var(--muted);font-size:6.5px;text-transform:uppercase;margin-top:3px}
+.tradeDelta{margin-top:8px;padding:7px 9px;border-radius:9px;background:#0d131a;border:1px solid #2b3641;font-size:7.5px;color:var(--muted)}.tradeDelta b{color:var(--accent2)}
+.tradeAssetColumns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tradeAssetPanel{background:var(--panel);border:1px solid #34414d;border-radius:16px;overflow:hidden;min-width:0}
+.tradeAssetHead{padding:11px 13px;border-bottom:1px solid var(--line)}.tradeAssetHead b{display:block;font-size:11px}.tradeAssetHead small{display:block;color:var(--muted);font-size:7px;margin-top:3px}
+.tradeGroupTitle{padding:8px 12px;background:#0f151c;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:7px;color:var(--accent2);font-weight:950;text-transform:uppercase;letter-spacing:.45px}
+.tradeAssetRow{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}.tradeAssetRow:last-child{border-bottom:0}.tradeAssetRow:hover{background:#151d26}
+.tradeAssetRow input{width:16px;height:16px}.tradeAssetMain{min-width:0}.tradeAssetMain b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tradeAssetMain small{display:block;color:var(--muted);font-size:7px;line-height:1.35;margin-top:2px}
+.tradeAssetValue{text-align:right}.tradeAssetValue b{display:block;color:#f3ce82;font-size:10px}.tradeAssetValue small{display:block;color:var(--muted);font-size:6.5px;margin-top:2px}
+.tradePickRow{background:#10161d}.tradeEvalPanel{border:1px solid #34414d;background:#111821;border-radius:14px;padding:12px}.tradeEvalPanel.accept{border-color:#365b45}.tradeEvalPanel.reject{border-color:#603840}
+.tradeEvalTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.tradeEvalTop b{font-size:11px}.tradeEvalTop span{font-size:7px;color:var(--muted)}
+.tradeEvalMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin-top:9px}.tradeEvalMetric{padding:8px;background:#0d131a;border:1px solid #2b3641;border-radius:9px;text-align:center}.tradeEvalMetric b{display:block;font-size:11px}.tradeEvalMetric small{display:block;font-size:6.5px;color:var(--muted);margin-top:3px}
+.tradeActions{display:grid;grid-template-columns:1fr 1.6fr;gap:8px}.tradeActions button{margin:0}
+@media(max-width:700px){
+  .contractTable.compact table{table-layout:auto}.contractTable.compact th:nth-child(n){width:auto}.contractTable.compact th:nth-child(5),.contractTable.compact td:nth-child(5){display:none}
+  .contractActions{justify-content:flex-start}
+  .tradeAssetColumns{grid-template-columns:1fr}.tradeCompare{grid-template-columns:1fr}.tradeVs{padding:2px}.tradeEvalMetrics{grid-template-columns:1fr 1fr}.tradeActions{grid-template-columns:1fr}
+}
+
+.capOffNote{margin-top:9px;padding:9px 11px;border:1px solid #3c4651;border-radius:10px;color:var(--muted);font-size:7.5px;line-height:1.4}.capOffNote b{color:var(--accent2)}
+@media(max-width:700px){.salaryBandGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+@media(max-width:390px){.draftRec{grid-template-columns:24px minmax(0,1fr)}.draftRecTag{grid-column:2;justify-self:start}.draftScoutHead{align-items:flex-start}}
 @media(max-width:700px){.draftMetrics{grid-template-columns:repeat(2,1fr)}.draftMetric:first-child{grid-column:1/-1}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.15 Season Complete</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.1.22 UI Regression Recovery</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -317,7 +417,8 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 <section id="resultWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="resultWindowTitle">Game Result</b></div></div></div><div id="resultWindowHost"></div></div></section>
 <section id="postseasonUpdateWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="postseasonUpdateTitle">Postseason Update</b></div></div></div><div id="postseasonUpdateHost"></div></div></section>
 <section id="draftWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Mini&Me Draft</div><b id="draftWindowStatus">Draft Night</b></div><button id="draftWindowClose" class="draftClose">Return Home</button></div></div><div id="draftWindowHost"></div></div></section>
-<section id="allStarWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">All-Star Weekend</div><b id="allStarWindowStatus">NBA All-Star</b></div><button id="allStarWindowClose" class="draftClose">Return Home</button></div></div><div id="allStarWindowHost"></div></div></section>
+<section id="allStarWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">All-Star Weekend</div><b id="allStarWindowStatus">NBA All-Star</b></div></div></div><div id="allStarWindowHost"></div></div></section>
+<section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA International Window</div><b id="fibaWindowStatus">World Cup Qualification</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
 // Mini&Me Basketball Club — CORE ENGINE
@@ -534,11 +635,23 @@ function nbaStyleOvr() {
 }
 
 function salaryForOvr(ovr, age=26) {
-  let base = ovr >= 92 ? rand(48,58) : ovr >= 88 ? rand(38,50) : ovr >= 84 ? rand(28,40) :
-    ovr >= 80 ? rand(19,30) : ovr >= 76 ? rand(11,20) : ovr >= 72 ? rand(6,12) :
-    ovr >= 68 ? rand(2,7) : rand(1,4);
-  if (age >= 34) base *= 0.82;
-  return Math.round(base * 10) / 10;
+  // E2 salary curve: separates true stars from normal starters/rotation players.
+  // Salary-cap OFF removes transaction restrictions only; it does not inflate market value.
+  let lo=1.2,hi=3.0;
+  if(ovr>=94){lo=50;hi=58}
+  else if(ovr>=91){lo=43;hi=52}
+  else if(ovr>=88){lo=34;hi=43}
+  else if(ovr>=85){lo=25;hi=33}
+  else if(ovr>=82){lo=17;hi=24}
+  else if(ovr>=79){lo=11;hi=17}
+  else if(ovr>=76){lo=7;hi=11}
+  else if(ovr>=73){lo=4.2;hi=7.2}
+  else if(ovr>=70){lo=2.5;hi=4.5}
+  let base=lo+Math.random()*(hi-lo);
+  if(age>=35)base*=0.70;
+  else if(age>=33)base*=0.82;
+  else if(age>=31)base*=0.92;
+  return Math.round(Math.max(1.2,base)*10)/10;
 }
 
 function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr = null, isProspect = false, nationality = null, origin = null } = {}) {
@@ -803,9 +916,39 @@ function recentTeamStrength(club) {
 }
 
 function marketSalaryForPlayer(player) {
-  let annual=player.ovr>=92?54:player.ovr>=88?44:player.ovr>=84?34:player.ovr>=80?24:player.ovr>=76?15:player.ovr>=72?9:player.ovr>=68?4.5:2.2;
-  if(player.age>=34) annual*=0.78; else if(player.age<=24 && player.potential>player.ovr+8) annual*=1.08;
+  // E2 market value uses a tiered NBA-style salary curve.
+  // OVR remains the primary anchor until the deeper player/stat economy pass.
+  const o=+player.ovr||0;
+  let annual=o>=94?55:o>=91?48:o>=88?39:o>=85?29:o>=82?21:o>=79?14:o>=76?9:o>=73?5.5:o>=70?3.3:1.8;
+  const age=+player.age||26;
+  if(age>=35)annual*=0.68;
+  else if(age>=33)annual*=0.80;
+  else if(age>=31)annual*=0.90;
+  else if(age<=24 && (+player.potential||o)>=o+8)annual*=1.06;
+  // High-end players can still command premium money; ordinary starters cannot drift there.
   return Math.round(Math.max(1.2,annual)*10)/10;
+}
+function salaryBandForPlayer(player,annualM=null){
+  const salary=annualM==null?marketSalaryForPlayer(player):+annualM;
+  if((+player.ovr||0)>=91 || salary>=43)return{key:"franchise",label:"Franchise / Max",range:"$43M+"};
+  if((+player.ovr||0)>=85 || salary>=25)return{key:"star",label:"Star",range:"$25–42.9M"};
+  if((+player.ovr||0)>=82 || salary>=17)return{key:"starterPlus",label:"High Starter",range:"$17–24.9M"};
+  if((+player.ovr||0)>=79 || salary>=11)return{key:"starter",label:"Starter",range:"$11–16.9M"};
+  if((+player.ovr||0)>=76 || salary>=7)return{key:"rotation",label:"Rotation",range:"$7–10.9M"};
+  if((+player.ovr||0)>=73 || salary>=4.2)return{key:"bench",label:"Bench",range:"$4.2–6.9M"};
+  return{key:"minimum",label:"Depth / Minimum",range:"$1.2–4.1M"};
+}
+function contractValueStatus(player){
+  const market=marketSalaryForPlayer(player),actual=+player.salaryM||0;
+  if(actual<=0)return{label:"—",market};
+  const ratio=actual/Math.max(1.2,market);
+  return{label:ratio>=1.30?"Above Market":ratio<=0.75?"Value Contract":"Market Range",market};
+}
+function positionGroupForPlayer(player){
+  const roles=[player.position,player.secondaryPosition].filter(Boolean);
+  if(roles.some(x=>x==="PG"||x==="SG"))return"Guards";
+  if(roles.some(x=>x==="SF"||x==="PF"))return"Forwards";
+  return"Centers";
 }
 function freeAgentDemand(player) {
   const annual=marketSalaryForPlayer(player);
@@ -1706,7 +1849,8 @@ function appointClubGM(G, clubId) {
 }
 function recalcClubCap(club) { club.capUsed=Math.round(club.roster.reduce((a,p)=>a+(p.salaryM||0),0)*10)/10; return club.capUsed; }
 function contractView(player) {
-  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,yearsLeft:player.contractYearsLeft||0,salaryM:player.salaryM||0,type:player.contractType||"Standard",extensionEligible:(player.contractYearsLeft||0)<=1};
+  const band=salaryBandForPlayer(player),value=contractValueStatus(player);
+  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,secondaryPosition:player.secondaryPosition||null,positionLabel:positionLabel(player),positionGroup:positionGroupForPlayer(player),rotationRole:player.rotationRole||"Depth",yearsLeft:player.contractYearsLeft||0,salaryM:player.salaryM||0,marketSalaryM:value.market,valueStatus:value.label,salaryBand:band.label,salaryBandRange:band.range,type:player.contractType||"Standard",extensionEligible:(player.contractYearsLeft||0)<=1};
 }
 function offseasonRosterState(G, clubId) {
   const club=clubById(G,clubId); if(!club) return null;
@@ -2897,69 +3041,40 @@ function advanceNBACupFinalEvent(G){
   logEvent(G,`NBA Cup Champion: ${winner?.name||'n/a'}.`);pushNews(G,`${winner?.name||'A club'} won the NBA Cup${mvpLine?'; '+(allPlayers(G).find(p=>p.id===mvpLine.playerId)?.name||'the winner')+' was Cup MVP':''}.`,'NBA Cup',2);return{ok:true,type:'NBA_CUP_FINAL',games:[game],complete:true};
 }
 
-// 2026 NBA All-Star: USA Stars, USA Stripes and World in a four-game mini-tournament.
+// All-Star Weekend: a clear four-event showcase, separate from the club schedule.
 function allStarCandidateScore(p){return summerPerformanceScore(p.seasonStats)+(p.ovr||0)*0.12;}
 function initializeAllStarLive(G){
-  if(G.allStarLive?.season===G.season&&!G.allStarLive.complete)return G.allStarLive;
+  if(G.allStarLive?.season===G.season&&!G.allStarLive.complete&&G.allStarLive.format==='WEEKEND_V2')return G.allStarLive;
   const eligible=G.clubs.flatMap(c=>c.roster.map(p=>({p,club:c}))).filter(x=>x.p.seasonStats?.gp>=20);
-  const selected=[];
-  for(const conf of CONFERENCES){selected.push(...eligible.filter(x=>x.club.conference===conf).sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p));}
-  let us=selected.filter(p=>p.nationality==='USA'), intl=selected.filter(p=>p.nationality!=='USA');
-  const allEligible=eligible.map(x=>x.p);
-  if(us.length<16){for(const p of allEligible.filter(p=>p.nationality==='USA'&&!us.includes(p)).sort((a,b)=>allStarCandidateScore(b)-allStarCandidateScore(a))){us.push(p);selected.push(p);if(us.length>=16)break;}}
-  if(intl.length<8){for(const p of allEligible.filter(p=>p.nationality!=='USA'&&!intl.includes(p)).sort((a,b)=>allStarCandidateScore(b)-allStarCandidateScore(a))){intl.push(p);selected.push(p);if(intl.length>=8)break;}}
-  us=[...us].sort((a,b)=>a.age-b.age||allStarCandidateScore(b)-allStarCandidateScore(a)).slice(0,16);intl=[...intl].sort((a,b)=>allStarCandidateScore(b)-allStarCandidateScore(a)).slice(0,Math.max(8,Math.min(10,intl.length)));
-  const teams={STARS:us.slice(0,8),STRIPES:us.slice(8,16),WORLD:intl.slice(0,8)};
-  const unique=[...new Map([...teams.STARS,...teams.STRIPES,...teams.WORLD].map(p=>[p.id,p])).values()];for(const p of unique)addAward(G,p,'NBA All-Star');
-  G.allStarLive={season:G.season,stage:1,teams:Object.fromEntries(Object.entries(teams).map(([k,v])=>[k,v.map(p=>p.id)])),games:[],records:{STARS:{w:0,l:0,pf:0,pa:0},STRIPES:{w:0,l:0,pf:0,pa:0},WORLD:{w:0,l:0,pf:0,pa:0}},complete:false,champion:null,mvpPlayerId:null,lastGameId:null};
-  G.allStar={season:G.season,playerIds:unique.map(p=>p.id),teams:G.allStarLive.teams,games:[],live:true};
-  return G.allStarLive;
+  const east=eligible.filter(x=>x.club.conference==='East').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
+  const west=eligible.filter(x=>x.club.conference==='West').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
+  const selected=[...east,...west];
+  const young=[...eligible].sort((a,b)=>(a.p.age-b.p.age)||allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,16).map(x=>x.p);
+  const three=[...eligible].sort((a,b)=>((['PG','SG'].includes(b.p.position)?6:0)+allStarCandidateScore(b.p))-((['PG','SG'].includes(a.p.position)?6:0)+allStarCandidateScore(a.p))).slice(0,8).map(x=>x.p);
+  const dunk=[...eligible].sort((a,b)=>(((b.p.age<=25?7:0)+(['SG','SF','PF'].includes(b.p.position)?5:0)+(b.p.ovr||0))-((a.p.age<=25?7:0)+(['SG','SF','PF'].includes(a.p.position)?5:0)+(a.p.ovr||0)))).slice(0,8).map(x=>x.p);
+  const unique=[...new Map(selected.map(p=>[p.id,p])).values()];for(const p of unique)addAward(G,p,'NBA All-Star');
+  G.allStarLive={season:G.season,format:'WEEKEND_V2',stage:1,teams:{EAST:east.map(p=>p.id),WEST:west.map(p=>p.id),RISING_A:young.slice(0,8).map(p=>p.id),RISING_B:young.slice(8,16).map(p=>p.id)},threePointEntrants:three.map(p=>p.id),dunkEntrants:dunk.map(p=>p.id),games:[],results:{},complete:false,mvpPlayerId:null,lastGameId:null};
+  G.allStar={season:G.season,playerIds:unique.map(p=>p.id),teams:G.allStarLive.teams,games:[],live:true};return G.allStarLive;
 }
 function simulateAllStarGame(G,aKey,bKey,label){
-  const live=G.allStarLive,lookup=new Map(allPlayers(G).map(p=>[p.id,p])),
-    ra=live.teams[aKey].map(id=>lookup.get(id)).filter(Boolean),
-    rb=live.teams[bKey].map(id=>lookup.get(id)).filter(Boolean);
-  const simTeam=(roster)=>{
-    const raw=roster.map((p,i)=>Math.max(4,9-i*.55+rand(-1,1))),
-      scale=60/Math.max(1,raw.reduce((a,b)=>a+b,0)),
-      mins=raw.map(m=>Math.max(3,Math.round(m*scale)));
-    if(mins.length)mins[0]+=60-mins.reduce((a,b)=>a+b,0);
-    const lines=roster.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));
-    const rating=roster.reduce((s,p)=>s+p.ovr,0)/Math.max(1,roster.length);
-    const target=Math.max(40,Math.min(65,Math.round(50+(rating-80)*.4+rand(-5,5))));
-    const score=adjustSummerTeamToTarget(lines,target);
-    return{lines,score};
-  };
-  let a=simTeam(ra),b=simTeam(rb);
-  if(a.score===b.score){
-    const hero=weightedPick(a.lines,x=>Math.max(1,(x.line.min||1)*(x.player.ovr||60)));
-    hero.line.fta=(hero.line.fta||0)+1;hero.line.ftm=(hero.line.ftm||0)+1;
-    hero.line.pts=summerLinePoints(hero.line);a.score++;
-  }
-  const margin=a.score-b.score,pmA=summerPlusMinus(a.lines,margin),pmB=summerPlusMinus(b.lines,-margin);
-  const box=(sim,pms)=>sim.lines.map(({player,line},i)=>({
-    playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,
-    ...line,pts:summerLinePoints(line),plusMinus:pms[i]||0
-  }));
-  const ga=box(a,pmA),gb=box(b,pmB),winner=a.score>b.score?aKey:bKey;
-  const game={id:nextId('asg'),allStar:true,phaseTag:"all_star",stage:label,
-    homeClubId:`AS_${aKey}`,awayClubId:`AS_${bKey}`,homeScore:a.score,awayScore:b.score,winnerClubId:`AS_${winner}`,
-    overtime:0,quarters:{home:splitScoreIntoFourQuarters(a.score),away:splitScoreIntoFourQuarters(b.score)},
-    overtimePeriods:{home:[],away:[]},boxScore:{home:ga,away:gb}};
-  live.games.push(game);live.lastGameId=game.id;
-  for(const [k,sf,sa] of [[aKey,a.score,b.score],[bKey,b.score,a.score]]){
-    const r=live.records[k];r.pf+=sf;r.pa+=sa;if(k===winner)r.w++;else r.l++;
-  }
-  return game;
+  const live=G.allStarLive,lookup=new Map(allPlayers(G).map(p=>[p.id,p])),ra=(live.teams[aKey]||[]).map(id=>lookup.get(id)).filter(Boolean),rb=(live.teams[bKey]||[]).map(id=>lookup.get(id)).filter(Boolean);
+  const simTeam=(roster)=>{const raw=roster.map((p,i)=>Math.max(4,9-i*.55+rand(-1,1))),scale=60/Math.max(1,raw.reduce((a,b)=>a+b,0)),mins=raw.map(m=>Math.max(3,Math.round(m*scale)));if(mins.length)mins[0]+=60-mins.reduce((a,b)=>a+b,0);const lines=roster.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));const rating=roster.reduce((s,p)=>s+p.ovr,0)/Math.max(1,roster.length),target=Math.max(90,Math.min(145,Math.round(116+(rating-80)*.8+rand(-10,10))));const score=adjustSummerTeamToTarget(lines,target);return{lines,score}};
+  let a=simTeam(ra),b=simTeam(rb);if(a.score===b.score){const hero=weightedPick(a.lines,x=>Math.max(1,(x.line.min||1)*(x.player.ovr||60)));hero.line.fta=(hero.line.fta||0)+1;hero.line.ftm=(hero.line.ftm||0)+1;hero.line.pts=summerLinePoints(hero.line);a.score++;}
+  const margin=a.score-b.score,pmA=summerPlusMinus(a.lines,margin),pmB=summerPlusMinus(b.lines,-margin),box=(sim,pms)=>sim.lines.map(({player,line},i)=>({playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,...line,pts:summerLinePoints(line),plusMinus:pms[i]||0})),ga=box(a,pmA),gb=box(b,pmB),winner=a.score>b.score?aKey:bKey;
+  const game={id:nextId('asg'),allStar:true,phaseTag:'all_star',stage:label,homeClubId:`AS_${aKey}`,awayClubId:`AS_${bKey}`,homeScore:a.score,awayScore:b.score,winnerClubId:`AS_${winner}`,overtime:0,quarters:{home:splitScoreIntoFourQuarters(a.score),away:splitScoreIntoFourQuarters(b.score)},overtimePeriods:{home:[],away:[]},boxScore:{home:ga,away:gb}};live.games.push(game);live.lastGameId=game.id;return game;
 }
-function allStarRanking(live){return Object.entries(live.records).map(([team,r])=>({team,...r,diff:r.pf-r.pa})).sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);}
+function simulateAllStarContest(G,kind){
+  const live=G.allStarLive, ids=kind==='THREE_POINT'?live.threePointEntrants:live.dunkEntrants, lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
+  const scores=ids.map(id=>{const p=lookup.get(id);let base=(p?.ovr||70)+(kind==='THREE_POINT'&&['PG','SG'].includes(p?.position)?5:0)+(kind==='DUNK'&&p?.age<=25?5:0);return{playerId:id,name:p?.name||'Player',score:kind==='THREE_POINT'?Math.max(12,Math.min(30,Math.round(20+(base-80)*.18+rand(-5,5)))):Math.max(70,Math.min(100,Math.round(86+(base-80)*.28+rand(-9,9))))}}).sort((a,b)=>b.score-a.score);
+  const result={kind,scores,winnerPlayerId:scores[0]?.playerId||null,winnerName:scores[0]?.name||'—',winningScore:scores[0]?.score||0};return result;
+}
 function advanceAllStarEvent(G){
-  const live=initializeAllStarLive(G);let game;
-  if(live.stage===1){game=simulateAllStarGame(G,'STARS','WORLD','ROUND_ROBIN_1');live.game1Winner=game.winnerClubId.replace('AS_','');live.game1Loser=live.game1Winner==='STARS'?'WORLD':'STARS';live.stage=2;}
-  else if(live.stage===2){game=simulateAllStarGame(G,'STRIPES',live.game1Winner,'ROUND_ROBIN_2');live.stage=3;}
-  else if(live.stage===3){game=simulateAllStarGame(G,'STRIPES',live.game1Loser,'ROUND_ROBIN_3');const rank=allStarRanking(live);live.finalists=[rank[0].team,rank[1].team];live.stage=4;}
-  else if(live.stage===4){game=simulateAllStarGame(G,live.finalists[0],live.finalists[1],'ALL_STAR_CHAMPIONSHIP');live.champion=game.winnerClubId.replace('AS_','');const lines=game.winnerClubId===game.homeClubId?game.boxScore.home:game.boxScore.away;const m=[...lines].sort((a,b)=>(b.pts+b.reb*.6+b.ast*.8)-(a.pts+a.reb*.6+a.ast*.8))[0];live.mvpPlayerId=m?.playerId||null;if(m)addAward(G,allPlayers(G).find(p=>p.id===m.playerId),'All-Star MVP');G.awards[`S${G.season}_AllStarMVP`]=m?.playerId||null;live.complete=true;G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,records:live.records,champion:live.champion,mvpPlayerId:live.mvpPlayerId,live:false,complete:true};G.allStarDone=true;if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;logEvent(G,`NBA All-Star event complete. ${live.champion} won the mini-tournament.`);pushNews(G,`${live.champion} won NBA All-Star; ${m?allPlayers(G).find(p=>p.id===m.playerId)?.name||'the championship standout':'the championship standout'} earned All-Star MVP.`,'All-Star',1);}
-  if(!live.complete)G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,records:live.records,live:true};return{ok:true,type:'ALL_STAR',games:[game],complete:live.complete};
+  const live=initializeAllStarLive(G);let game=null;
+  if(live.stage===1){game=simulateAllStarGame(G,'RISING_A','RISING_B','RISING_STARS');live.results.rising={gameId:game.id,winner:game.winnerClubId.replace('AS_','')};live.stage=2;}
+  else if(live.stage===2){live.results.threePoint=simulateAllStarContest(G,'THREE_POINT');addAward(G,allPlayers(G).find(p=>p.id===live.results.threePoint.winnerPlayerId),'Three-Point Contest Champion');live.stage=3;}
+  else if(live.stage===3){live.results.dunk=simulateAllStarContest(G,'DUNK');addAward(G,allPlayers(G).find(p=>p.id===live.results.dunk.winnerPlayerId),'Dunk Contest Champion');live.stage=4;}
+  else if(live.stage===4){game=simulateAllStarGame(G,'EAST','WEST','ALL_STAR_GAME');live.results.allStarGame={gameId:game.id,winner:game.winnerClubId.replace('AS_','')};const lines=game.winnerClubId===game.homeClubId?game.boxScore.home:game.boxScore.away,m=[...lines].sort((a,b)=>(b.pts+b.reb*.6+b.ast*.8)-(a.pts+a.reb*.6+a.ast*.8))[0];live.mvpPlayerId=m?.playerId||null;if(m)addAward(G,allPlayers(G).find(p=>p.id===m.playerId),'All-Star MVP');G.awards[`S${G.season}_AllStarMVP`]=m?.playerId||null;live.complete=true;G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,mvpPlayerId:live.mvpPlayerId,live:false,complete:true};G.allStarDone=true;if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;logEvent(G,'NBA All-Star Weekend complete.');pushNews(G,`NBA All-Star Weekend complete. ${allPlayers(G).find(p=>p.id===live.mvpPlayerId)?.name||'The game standout'} earned All-Star MVP.`,'All-Star',1);}
+  if(!live.complete)G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,live:true};return{ok:true,type:'ALL_STAR',games:game?[game]:[],complete:live.complete};
 }
 function initializeRegularSeasonLive(G) {
   if(G.regularSeasonLive?.season===G.season && !G.regularSeasonLive.complete) return G.regularSeasonLive;
@@ -3421,9 +3536,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.1.15 Season Complete",ENGINE_VERSION="E1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.1.35 Season QA Closeout",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -3486,8 +3601,32 @@ function syncCounter(){if(!G)return;let m=1;const walk=v=>{if(!v)return;if(typeo
 async function loadSlot(slot){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
-    G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();show("game");ui.page="home";render();toast(`Loaded Slot ${slot}`);
-  }catch(e){console.error(e);alert("Career save could not be loaded.")}
+    G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
+
+    if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
+    if(G.phase==="PLAY_IN"&&!G.playInLive&&!G.playIn){
+      try{initializePlayInLive(G)}catch(err){console.warn("Play-In recovery",err)}
+    }
+
+    show("game");ui.page="home";
+    try{
+      render();
+    }catch(renderErr){
+      console.error("Career loaded but initial Home render failed",renderErr);
+      ui.page="more";
+      render();
+      toast("Career recovered. Home view was reset.");
+    }
+    save();
+    toast(`Loaded Slot ${slot}`);
+  }catch(e){
+    console.error("Career load failed",e);
+    alert("Career save could not be loaded.");
+  }
+}
+function savePhaseDisplay(phase){
+  const map={CHAMPION:"Season Complete",OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"FIBA World Cup"};
+  return map[phase]||String(phase||"Career").replaceAll("_"," ").toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
 }
 async function renderSaveManager(mode){
   saveMode=mode;await migrateLegacySave();
@@ -3498,7 +3637,7 @@ async function renderSaveManager(mode){
     const slot=idx+1;
     if(!rec)return `<div class="saveSlot empty"><div class="saveSlotNo">Save Slot ${slot}</div><h3>Empty Slot</h3><p>${mode==="new"?"Start a new GM career here.":"No career has been created in this slot."}</p>${mode==="new"?`<div class="saveActions"><button class="saveCreate" data-newslot="${slot}">Create Career</button></div>`:""}</div>`;
     const m=rec.meta||{};
-    return `<div class="saveSlot"><div class="saveSlotTop"><div><div class="saveSlotNo">Save Slot ${slot}</div><h3>${m.gmName||"GM"} · ${m.clubName||"Career"}</h3><p>Season ${m.season||1} · ${String(m.phase||"Career").replaceAll("_"," ")}</p></div></div><div class="saveActions three">${mode==="load"?`<button class="saveLoad" data-loadslot="${slot}">Load</button>`:`<button class="saveReplace" data-newslot="${slot}" data-replace="1">Replace</button>`}<button class="saveDelete" data-deleteslot="${slot}">Delete</button></div></div>`;
+    return `<div class="saveSlot"><div class="saveSlotTop"><div><div class="saveSlotNo">Save Slot ${slot}</div><h3>${m.gmName||"GM"} · ${m.clubName||"Career"}</h3><p>Season ${m.season||1} · ${savePhaseDisplay(m.phase)}</p></div></div><div class="saveActions three">${mode==="load"?`<button class="saveLoad" data-loadslot="${slot}">Load</button>`:`<button class="saveReplace" data-newslot="${slot}" data-replace="1">Replace</button>`}<button class="saveDelete" data-deleteslot="${slot}">Delete</button></div></div>`;
   }).join("");
   $$("[data-loadslot]").forEach(b=>b.onclick=()=>loadSlot(+b.dataset.loadslot));
   $$("[data-newslot]").forEach(b=>b.onclick=()=>beginNewCareerInSlot(+b.dataset.newslot,b.dataset.replace==="1"));
@@ -3561,10 +3700,12 @@ function gameById(id){
   for(const pool of pools){const g=pool.find(x=>x.id===id);if(g)return g;}
   return null;
 }
-function openResultWindow(game){
+function openResultWindow(game,returnMode=null){
   if(!game)return false;
   repairLegacyGameBox(game);
-  ui.resultGameId=game.id;show("resultWindow");renderResultWindow();return true;
+  ui.resultGameId=game.id;
+  ui.resultReturn=returnMode;
+  show("resultWindow");renderResultWindow();return true;
 }
 function competitionGameLabel(g){
   const tag=String(g?.phaseTag||"").toLowerCase();
@@ -3585,13 +3726,29 @@ function competitionGameLabel(g){
   if(tag.includes("playoff")||tag.includes("first_round")||tag.includes("semifinal")||tag.includes("conference_finals")||tag==="finals")return "NBA Playoffs";
   return String(g?.phaseTag||phaseName()).replaceAll("_"," ");
 }
+function playoffSeriesForGame(gameId){const p=G.playoffsLive||G.playoffs;return(p?.series||[]).find(s=>(s.games||[]).includes(gameId))||null}
+function postseasonResultContextHtml(g){
+  const s=playoffSeriesForGame(g.id);if(!s)return"";const idx=Math.max(0,(s.games||[]).indexOf(g.id)),a=c(s.teamAId),b=c(s.teamBId);
+  const stage=s.stage==="FINALS"?"NBA Finals":`${s.conference}ern Conference · ${postseasonRoundLabel(String(s.stage||"").split("_").pop())}`;
+  const status=s.winsA===s.winsB?`Series tied ${s.winsA}–${s.winsB}`:s.winsA>s.winsB?`${a?.name} lead ${s.winsA}–${s.winsB}`:`${b?.name} lead ${s.winsB}–${s.winsA}`;
+  const finish=s.complete?(s.stage==="FINALS"?` · ${c(s.winnerClubId)?.name||"Winner"} are NBA Champions`:` · ${c(s.winnerClubId)?.name||"Winner"} advances`):"";
+  return `<div class="postResultContext"><b>${stage} · Game ${idx+1} of 7</b><small>${status}${finish}</small></div>`;
+}
 function renderResultWindow(){
   const g=gameById(ui.resultGameId);
   if(!g){show("game");ui.page="home";render();return}
-  $("#resultWindowTitle").textContent=competitionGameLabel(g);
-  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">Next Game</button></div></div>`;
+  const ps=playoffSeriesForGame(g.id);
+  $("#resultWindowTitle").textContent=ps?`${ps.stage==="FINALS"?"NBA Finals":postseasonRoundLabel(String(ps.stage||"").split("_").pop())} · Game ${(ps.games||[]).indexOf(g.id)+1}`:competitionGameLabel(g);
+  const historicalSeries=ui.resultReturn==="series"&&!!ps;
+  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${historicalSeries?"Back to Series":"Next Game"}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
-  $("#resultWindowNext").onclick=()=>{ui.resultGameId=null;ui.page="home";show("game");render()};
+  $("#resultWindowNext").onclick=()=>{
+    ui.resultGameId=null;
+    if(historicalSeries){
+      ui.resultReturn=null;ui.page="league";ui.leagueTab="post";show("game");render();return;
+    }
+    ui.resultReturn=null;ui.page="home";show("game");render()
+  };
 }
 function recentGame(){
   let x=me();for(let a of [G.playoffs?.games,G.playIn?.games,G.regularSeason?.games,G.preseason?.games,G.summerLeague?.games].filter(Boolean)){
@@ -3634,17 +3791,105 @@ function actionSpec(){
   return null;
 }
 function action(){ $("#action").innerHTML=""; }
+
+function advanceUserPostseasonGame(){
+  if(G.phase!=="PLAYOFFS")return null;
+  if(!G.playoffsLive)initializePlayoffsLive(G);
+  const before=userPostseasonState();
+  if(!before?.series||before.series.complete)return null;
+
+  const r=advanceCareerEvent(G,1);
+  if(!r?.ok)return r;
+
+  let userGame=null;
+  for(const ev of(r.results||[])){
+    if(ev?.userGame)userGame=ev.userGame;
+    if(Array.isArray(ev?.results)){
+      for(const sub of ev.results)if(sub?.userGame)userGame=sub.userGame;
+    }
+  }
+  return{ok:true,userGame,results:r.results||[],result:r};
+}
 function advanceFromUi(n){
   if(G.phase==="DRAFT_NIGHT"){openDraftWindow();return}
+  if(G.internationalWindowLive&&!G.internationalWindowLive.complete){openFibaWindow();return}
   if(G.allStarLive&&!G.allStarLive.complete){openAllStarWindow();return}
   if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);save();render();return}
+
+  const requested=Math.max(1,Math.floor(+n||1));
   const phaseBefore=G.phase;
-  let r=advanceCareerEvent(G,n);if(!r.ok){toast(r.reason);return}
-  let newUserGame=null;
-  for(const ev of (r.results||[])){if(ev?.userGame)newUserGame=ev.userGame;if(Array.isArray(ev?.results))for(const sub of ev.results){if(sub?.userGame)newUserGame=sub.userGame}}
-  if(newUserGame)repairLegacyGameBox(newUserGame);
+  let newUserGame=null,lastResult=null,steps=0,stoppedAtBoundary=false;
+
+  // Bulk simulation is intentionally decomposed into single career events.
+  // This prevents Sim 5 from crossing Regular Season -> Play-In/Playoffs,
+  // or skipping over an All-Star/FIBA interruption inside one engine call.
+  for(let i=0;i<requested;i++){
+    const stepPhase=G.phase;
+
+    if(G.internationalWindowLive&&!G.internationalWindowLive.complete){stoppedAtBoundary=true;break}
+    if(G.allStarLive&&!G.allStarLive.complete){stoppedAtBoundary=true;break}
+
+    const r=(requested===1&&G.phase==="PLAYOFFS")
+      ?advanceUserPostseasonGame()
+      :advanceCareerEvent(G,1);
+    lastResult=r;
+    if(!r?.ok){
+      if(steps===0){toast(r?.reason||"Unable to advance career");return}
+      break;
+    }
+    steps++;
+
+    if(r?.userGame)newUserGame=r.userGame;
+    for(const ev of(r.results||[])){
+      if(ev?.userGame)newUserGame=ev.userGame;
+      if(Array.isArray(ev?.results)){
+        for(const sub of ev.results)if(sub?.userGame)newUserGame=sub.userGame;
+      }
+    }
+
+    if(newUserGame)repairLegacyGameBox(newUserGame);
+
+    // Stop immediately once the career moves into a different phase.
+    if(G.phase!==stepPhase){
+      stoppedAtBoundary=true;
+      break;
+    }
+
+    // Also stop when a scheduled interruption becomes active after this step.
+    if((G.internationalWindowLive&&!G.internationalWindowLive.complete)||
+       (G.allStarLive&&!G.allStarLive.complete)){
+      stoppedAtBoundary=true;
+      break;
+    }
+  }
+
+  if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
   save();
-  if(newUserGame&&["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS"].includes(phaseBefore))openResultWindow(newUserGame);else render();
+
+  if(stoppedAtBoundary||G.phase!==phaseBefore){
+    ui.resultGameId=null;
+    ui.resultReturn=null;
+    ui.page="home";
+    show("game");
+    render();
+
+    if(G.phase!==phaseBefore){
+      toast(`Simulation stopped at ${phaseName()} transition.`);
+    }else if(G.allStarLive&&!G.allStarLive.complete){
+      toast("Simulation stopped for NBA All-Star Weekend.");
+    }else if(G.internationalWindowLive&&!G.internationalWindowLive.complete){
+      toast("Simulation stopped for the FIBA window.");
+    }
+    return;
+  }
+
+  // Single-game behaviour remains unchanged. For Sim 5 we show only the
+  // final completed user game if the batch stayed inside the same phase.
+  if(newUserGame&&["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS"].includes(phaseBefore)){
+    openResultWindow(newUserGame);
+  }else{
+    render();
+  }
 }
 function news(filter=ui.newsFilter){
   let feed=(G.newsFeed||[]);
@@ -3815,21 +4060,137 @@ function phaseRecord(club){
   }
   return{w:club.standings?.w||0,l:club.standings?.l||0};
 }
+
+function conferenceStandingRank(club){
+  if(!club)return"—";
+  const conf=club.conference||"";
+  const rows=G.clubs.filter(x=>x.conference===conf).sort((a,b)=>{
+    const aw=+a.standings?.w||0,al=+a.standings?.l||0,bw=+b.standings?.w||0,bl=+b.standings?.l||0;
+    const ag=aw+al,bg=bw+bl,ap=ag?aw/ag:0,bp=bg?bw/bg:0;
+    const ad=(+a.standings?.pf||0)-(+a.standings?.pa||0),bd=(+b.standings?.pf||0)-(+b.standings?.pa||0);
+    return bp-ap||bw-aw||bd-ad||squadOvr(b)-squadOvr(a);
+  });
+  const rank=rows.findIndex(x=>x.id===club.id)+1;
+  return rank>0?`#${rank} ${conf}`:`— ${conf}`;
+}
+function futureLeagueFixtures(limit=3){
+  const live=G.regularSeasonLive,clubId=G.userClubGM?.clubId;if(!live||!clubId||live.complete)return[];
+  const out=[];
+  for(let i=live.roundIndex;i<live.rounds.length&&out.length<limit;i++){
+    const r=live.rounds[i],pair=r?.pairings?.find(p=>p.includes(clubId));if(!pair)continue;
+    const homeId=pair[0],awayId=pair[1],oppId=homeId===clubId?awayId:homeId;
+    out.push({label:`Game ${r.round}`,opponent:c(oppId)?.name||oppId,venue:homeId===clubId?"vs":"@",round:r.round,cupGroupId:pair[2]||null});
+  }
+  return out;
+}
+function nextCupFixture(){
+  const cup=G.inSeasonCup,clubId=G.userClubGM?.clubId;if(!cup||cup.complete||!clubId)return null;
+  if(cup.finalPending&&cup.final&&(cup.final.aId===clubId||cup.final.bId===clubId)){
+    const opp=cup.final.aId===clubId?cup.final.bId:cup.final.aId;
+    return{label:"Championship",opponent:c(opp)?.name||opp,venue:"vs"};
+  }
+  const knockout=[...(cup.quarterfinals||[]),...(cup.semifinals||[])].find(t=>!t.complete&&(t.aId===clubId||t.bId===clubId));
+  if(knockout){
+    const opp=knockout.aId===clubId?knockout.bId:knockout.aId;
+    return{label:cup.stage==="QUARTERFINALS"?"Quarterfinal":cup.stage==="SEMIFINALS"?"Semifinal":"NBA Cup",opponent:c(opp)?.name||opp,venue:"vs"};
+  }
+  const future=futureLeagueFixtures(12).find(x=>x.cupGroupId);
+  if(future)return{label:"Group Play",opponent:future.opponent,venue:future.venue};
+  return null;
+}
+function nextInternationalFixture(){
+  const live=G.internationalWindowLive,code=G.userNationalGM?.nationCode;if(!live||live.complete||!code)return null;
+  for(let i=live.matchdayIndex||0;i<(live.matchdays||[]).length;i++){
+    const fixture=(live.matchdays[i]||[]).find(x=>x.a===code||x.b===code);
+    if(!fixture)continue;
+    const opp=fixture.a===code?fixture.b:fixture.a;
+    return{label:`Window ${live.windowNo} · MD ${i+1}`,opponent:fibaNationName(opp),venue:fixture.a===code?"vs":"@"};
+  }
+  return null;
+}
+function upcomingFixturesHtml(){
+  if(G.phase!=="REGULAR_SEASON")return"";
+  const league=futureLeagueFixtures(3),cup=nextCupFixture(),intl=nextInternationalFixture();
+  const rows=(items)=>items.length?items.map(x=>`<div class="fixtureRow"><span>${x.label}</span><b>${x.venue} ${x.opponent}</b><strong>${x.venue==="@"?"Away":"Home"}</strong></div>`).join(""):`<div class="fixtureNone">None scheduled</div>`;
+  return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Your club and national schedule</small></div><div class="fixtureSection"><div class="fixtureLabel"><b>League</b><small>Next 3</small></div><div class="fixtureRows">${rows(league)}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>NBA Cup</b><small>Next fixture</small></div><div class="fixtureRows">${rows(cup?[cup]:[])}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>International</b><small>Next fixture</small></div><div class="fixtureRows">${rows(intl?[intl]:[])}</div></div></div>`;
+}
 function gameHub(f){
   let x=me(),h=c(f.homeClubId),a=c(f.awayClubId),spec=actionSpec();
-  const xr=phaseRecord(x),hr=phaseRecord(h),ar=phaseRecord(a);
-  return `<div class="card broadcast"><div class="broadcastTop"><div class="broadcastBrand">COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${phaseName()} · ${typeof f.round==="number"?`Game ${f.round}`:f.round||""}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${ar.w}–${ar.l}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${hr.w}–${hr.l}</small></div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  const xr=phaseRecord(x);
+  const awayContext=G.phase==="REGULAR_SEASON"?conferenceStandingRank(a):`${phaseRecord(a).w}–${phaseRecord(a).l}`;
+  const homeContext=G.phase==="REGULAR_SEASON"?conferenceStandingRank(h):`${phaseRecord(h).w}–${phaseRecord(h).l}`;
+  const card=`<div class="card broadcast"><div class="broadcastTop"><div class="broadcastBrand">COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${phaseName()} · ${typeof f.round==="number"?`Game ${f.round}`:f.round||""}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${awayContext}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${homeContext}</small></div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  return card+upcomingFixturesHtml();
+}
+function draftRosterNeeds(){
+  const club=me();if(!club)return[];
+  const weights={PG:0,SG:0,SF:0,PF:0,C:0},counts={PG:0,SG:0,SF:0,PF:0,C:0};
+  for(const p of (club.roster||[])){
+    const contribution=Math.max(0,Math.min(1,(+p.ovr-60)/28));
+    weights[p.position]=(weights[p.position]||0)+contribution;
+    counts[p.position]=(counts[p.position]||0)+1;
+    if(p.secondaryPosition){
+      weights[p.secondaryPosition]=(weights[p.secondaryPosition]||0)+contribution*.45;
+      counts[p.secondaryPosition]=(counts[p.secondaryPosition]||0)+.45;
+    }
+  }
+  return POSITIONS.map(pos=>{
+    const target=pos==="PG"||pos==="C"?2.4:2.7;
+    const depthGap=Math.max(0,target-counts[pos]);
+    const qualityGap=Math.max(0,1.55-weights[pos]);
+    const ageing=(club.roster||[]).filter(p=>(p.position===pos||p.secondaryPosition===pos)&&(+p.age||0)>=32).length*.18;
+    return{pos,score:depthGap*2+qualityGap+ageing};
+  }).sort((a,b)=>b.score-a.score);
+}
+function draftProspectUi(p){
+  const raw=(G.draftPool||[]).find(x=>x.id===p.id);
+  return raw?{...p,secondaryPosition:raw.secondaryPosition||null}:{...p,secondaryPosition:null};
+}
+function draftProspectViability(p,nextPick,rank){
+  const distance=Math.abs((rank||1)-(+nextPick||1));
+  if(distance<=4)return"Likely Available";
+  if((rank||1)<(+nextPick||1)-4)return"May Be Gone";
+  if(distance<=10)return"Viable Range";
+  return"Later Value";
+}
+function draftScoutRecommendations(prospects,nextPick){
+  const needs=draftRosterNeeds(),needScore=Object.fromEntries(needs.map(x=>[x.pos,x.score]));
+  const ranked=prospects.map((p,i)=>({...draftProspectUi(p),boardRank:i+1}));
+  const pool=ranked.filter(p=>p.boardRank<=Math.max(18,(+nextPick||8)+10));
+  const scored=pool.map(p=>{
+    const primary=needScore[p.position]||0,secondary=p.secondaryPosition?needScore[p.secondaryPosition]||0:0;
+    const fit=primary+secondary*.45,talent=(+p.ovr||0)*1.15+(+p.potential||0)*.35;
+    const viability=Math.max(-12,8-Math.abs(p.boardRank-(+nextPick||p.boardRank))*.8);
+    return{...p,fit,score:talent+fit*5+viability};
+  }).sort((a,b)=>b.score-a.score).slice(0,3);
+  return{needs:needs.slice(0,3),recommendations:scored};
+}
+function draftRecommendationTag(p,needs){
+  const topNeed=needs[0]?.pos;
+  if(p.position===topNeed||p.secondaryPosition===topNeed)return"Best Fit";
+  if((+p.potential||0)-(+p.ovr||0)>=8)return"High Upside";
+  return"Best Available";
+}
+function draftScoutBriefHtml(prospects,nextPick){
+  const {needs,recommendations}=draftScoutRecommendations(prospects,nextPick);
+  const chips=needs.map(n=>`<span class="draftNeedChip"><strong>${n.pos}</strong> ${n.score>=3.5?"Priority":n.score>=2?"Need":"Depth"}</span>`).join("");
+  const rows=recommendations.map((p,i)=>{
+    const tag=draftRecommendationTag(p,needs),viable=draftProspectViability(p,nextPick,p.boardRank);
+    return `<div class="draftRec"><div class="draftRecRank">${i+1}</div><div class="draftRecMain"><b>${p.name} · ${positionLabel(p)}</b><small>Board #${p.boardRank} · OVR ${p.ovr} · POT ${p.potential} · ${viable}</small><small>${p.archetype||"Prospect"} · Age ${p.age||"—"}${p.origin?` · ${p.origin}`:""}</small></div><span class="draftRecTag">${tag}</span></div>`;
+  }).join("");
+  return `<div class="draftScoutBrief"><div class="draftScoutHead"><b>Scouting Department · Draft Brief</b><small>Baseline scouting</small></div><div class="draftScoutBody"><div class="draftNeedLine">${chips}</div><div class="draftRecList">${rows||`<div class="empty">No viable recommendations available.</div>`}</div><div class="draftScoutNote">Recommendations balance roster need, current talent, upside and likely availability near your next pick. The future Scouting Department facility will control confidence and accuracy rather than changing the player's true ability.</div></div></div>`;
 }
 function draftHomeContext(){
   if(G.phase!=="DRAFT_NIGHT")return"";
   if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
   if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual") advanceDraftUntilUserDecision(G);
-  let s=draftBoardSnapshot(G,60), prospects=s.prospects||[], picks=s.ownedPicks||[];
+  let s=draftBoardSnapshot(G,60),prospects=s.prospects||[],picks=s.ownedPicks||[];
   let avg=prospects.length?(prospects.reduce((a,p)=>a+(+p.ovr||0),0)/prospects.length).toFixed(1):"—";
   let top=prospects.length?Math.max(...prospects.map(p=>+p.ovr||0)):"—";
   let pickText=picks.length?picks.map(p=>`#${p.overallPickNum} R${p.round}`).join(" · "):"No remaining picks";
   let next=s.pending?`#${s.pending.overallPickNum}`:(picks[0]?`#${picks[0].overallPickNum}`:"—");
-  return `<div class="card homeStatus"><div class="homeStatusBody"><h3>Your Draft Position</h3><p>Review your assets and the remaining class before making your next selection.</p></div><div class="draftMetrics"><div class="draftMetric"><b>${pickText}</b><small>Your Picks</small></div><div class="draftMetric"><b>${prospects.length}</b><small>Prospects Left</small></div><div class="draftMetric"><b>${avg}</b><small>Class OVR Avg</small></div><div class="draftMetric"><b>${top}</b><small>Top OVR</small></div><div class="draftMetric"><b>${next}</b><small>Next Pick</small></div></div>${homeActionHtml()}</div>`;
+  const nextNum=s.pending?.overallPickNum||picks[0]?.overallPickNum||1;
+  return `<div class="card homeStatus"><div class="homeStatusBody"><h3>Your Draft Position</h3><p>Review your assets, roster needs and scouting recommendations before making your next selection.</p></div><div class="draftMetrics"><div class="draftMetric"><b>${pickText}</b><small>Your Picks</small></div><div class="draftMetric"><b>${prospects.length}</b><small>Prospects Left</small></div><div class="draftMetric"><b>${avg}</b><small>Class OVR Avg</small></div><div class="draftMetric"><b>${top}</b><small>Top OVR</small></div><div class="draftMetric"><b>${next}</b><small>Next Pick</small></div></div>${draftScoutBriefHtml(prospects,nextNum)}${homeActionHtml()}</div>`;
 }
 function summerLeagueCompletionHtml(){
   const x=me(),sl=G.summerLeague||summerLeagueSnapshot(G),standings=sl?.standings||[];
@@ -3867,173 +4228,183 @@ function preseasonReadinessHtml(){
   const canBegin=standard>=12&&standard<=15;
   return `<div class="card transitionHero"><div class="transitionTop"><b>Preseason Readiness</b><small>Season ${G.season}</small></div><div class="transitionBody"><h3>Prepare your roster for preseason</h3><p>Review standard contracts, roster depth and two-way opportunities before the preseason schedule opens. A full 15-player standard roster is recommended, with up to three additional two-way players.</p><div class="transitionMetrics"><div class="transitionMetric"><b class="${standardClass}">${standard}/15</b><small>Standard Roster</small></div><div class="transitionMetric"><b class="${twoWayClass}">${twoWay}/3</b><small>Two-Way</small></div><div class="transitionMetric"><b>${totalOpen}</b><small>Open Spots</small></div></div><div class="miniBracket"><div class="miniBracketRow"><div><b>GM Recommendation</b><small>${standard===15?"Standard roster is set.":`${openStandard} standard roster spot${openStandard===1?"":"s"} remain.`}</small></div><b>${twoWay<3?`Consider ${openTwoWay} two-way signing${openTwoWay===1?"":"s"}`:"Two-way roster full"}</b></div></div></div><div class="transitionActions"><button id="manageRosterReadiness" class="transitionSecondary">Manage Roster</button><button id="beginPreseasonReadiness" class="transitionPrimary" ${canBegin?"":"disabled"}>Begin Preseason</button></div></div>`;
 }
-function allStarTeamName(key){
-  return ({STARS:"Stars",STRIPES:"Stripes",WORLD:"World"})[key]||String(key||"All-Star");
+function allStarWinnerCode(){
+  return G.allStar?.results?.allStarGame?.winner
+    || G.allStarLive?.results?.allStarGame?.winner
+    || G.allStar?.champion
+    || null;
 }
-function allStarStageName(stage){
-  return ({1:"Opening Game",2:"Second Game",3:"Final Round-Robin Game",4:"All-Star Championship"})[stage]||"NBA All-Star";
+function allStarTeamName(key){return({EAST:'Eastern Conference',WEST:'Western Conference',RISING_A:'Rising Stars A',RISING_B:'Rising Stars B'})[key]||key||'—'}
+function allStarStageName(stage){return({1:'Rising Stars Game',2:'3-Point Contest',3:'Dunk Contest',4:'NBA All-Star Game'})[stage]||'All-Star Weekend'}
+function allStarPlayerName(id){return allPlayers(G).find(p=>p.id===id)?.name||'—'}
+function allStarGameSummary(game){if(!game)return'';const h=game.homeClubId.replace('AS_',''),a=game.awayClubId.replace('AS_',''),winner=game.winnerClubId.replace('AS_',''),lines=[...(game.boxScore?.home||[]),...(game.boxScore?.away||[])],leader=[...lines].sort((x,y)=>y.pts-x.pts)[0];return `<div class="allStarResult"><div class="allStarResultRow"><b>${allStarTeamName(h)}</b><span>${game.homeScore}</span></div><div class="allStarResultRow"><b>${allStarTeamName(a)}</b><span>${game.awayScore}</span></div><div class="allStarResultRow"><b>Winner</b><span>${allStarTeamName(winner)}</span></div>${leader?`<div class="allStarResultRow"><b>Game Leader</b><span>${leader.name} · ${leader.pts} PTS</span></div>`:''}</div>`}
+function allStarProgressHtml(live){const events=[['Rising Stars',1],['3-Point',2],['Dunk',3],['All-Star Game',4]];return `<div class="tabs">${events.map(([n,i])=>`<button class="${live.stage===i&&!live.complete?'active':''}">${i<live.stage||live.complete?'✓ ':''}${n}</button>`).join('')}</div>`}
+function allStarCompletedRows(live){let out='';if(live.results?.rising){const g=gameById(live.results.rising.gameId);out+=`<div class="seasonAwardRow"><small>Rising Stars</small><b>${allStarTeamName(live.results.rising.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}if(live.results?.threePoint)out+=`<div class="seasonAwardRow"><small>3-Point Champion</small><b>${live.results.threePoint.winnerName} · ${live.results.threePoint.winningScore} pts</b></div>`;if(live.results?.dunk)out+=`<div class="seasonAwardRow"><small>Dunk Champion</small><b>${live.results.dunk.winnerName} · ${live.results.dunk.winningScore}</b></div>`;if(live.results?.allStarGame){const g=gameById(live.results.allStarGame.gameId);out+=`<div class="seasonAwardRow"><small>All-Star Game</small><b>${allStarTeamName(live.results.allStarGame.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}return out?`<div class="sectionTitle">Weekend Results</div><div class="seasonAwardsList">${out}</div>`:''}
+function allStarHomeHtml(){const live=G.allStarLive||initializeAllStarLive(G);return `<div class="allStarHero"><div class="allStarHeroTop"><b>NBA All-Star Weekend</b><small>Event ${Math.min(live.stage,4)} of 4</small></div><div class="allStarBody"><h3>${allStarStageName(live.stage)}</h3><p>The regular season is paused for All-Star Weekend. Follow each showcase event, its winner and the final All-Star Game.</p>${allStarProgressHtml(live)}${allStarCompletedRows(live)}<div class="allStarAction"><button id="openAllStarHome" class="primaryProgress">Open All-Star Weekend</button></div></div></div>`}
+function openAllStarWindow(){if(!G.allStarLive)initializeAllStarLive(G);show('allStarWindow');renderAllStarWindow()}
+function renderAllStarWindow(){const live=G.allStarLive||initializeAllStarLive(G);$('#allStarWindowStatus').textContent=live.complete?'Weekend Complete':allStarStageName(live.stage);$('#allStarWindowClose').textContent=live.complete?'Return to Regular Season':'Return Home';let detail='';if(!live.complete&&live.stage===1)detail=`<div class="allStarMatch"><div class="allStarTeams"><b>Rising Stars A</b><span>vs</span><b>Rising Stars B</b></div></div>`;if(!live.complete&&live.stage===2)detail=`<div class="card"><div class="eyebrow">8 SHOOTERS</div><h3>3-Point Contest</h3><div class="smallcopy">The league's selected perimeter shooters compete for the shooting title.</div></div>`;if(!live.complete&&live.stage===3)detail=`<div class="card"><div class="eyebrow">8 CONTESTANTS</div><h3>Dunk Contest</h3><div class="smallcopy">Young athletic finishers compete for the dunk crown.</div></div>`;if(!live.complete&&live.stage===4)detail=`<div class="allStarMatch"><div class="allStarTeams"><b>Eastern Conference</b><span>vs</span><b>Western Conference</b></div></div>`;$('#allStarWindowHost').innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>All-Star Weekend</b><small>${live.complete?'Complete':`Event ${live.stage} of 4`}</small></div><div class="allStarBody"><h3>${live.complete?'All-Star Weekend Complete':allStarStageName(live.stage)}</h3><p>${live.complete?'Review the complete weekend honours before returning to the regular season.':'Complete the showcase events in order. Results remain visible throughout the weekend.'}</p>${allStarProgressHtml(live)}${detail}</div></div>${allStarCompletedRows(live)}${live.complete?`<div class="card"><div class="eyebrow">ALL-STAR MVP</div><h3>${allStarPlayerName(live.mvpPlayerId)}</h3></div><div class="allStarAction"><button id="resumeRegularSeason" class="primaryProgress">Return to Regular Season</button></div>`:`<div class="allStarAction"><button id="playNextAllStar" class="primaryProgress">Play ${allStarStageName(live.stage)}</button></div>`}`;$('#playNextAllStar')?.addEventListener('click',async()=>{advanceAllStarEvent(G);await save();renderAllStarWindow()});$('#resumeRegularSeason')?.addEventListener('click',async()=>{G.allStarLive=null;await save();show('game');ui.page='home';render()})}
+function fibaNationName(code){return nat(code)?.name||code||'—'}
+function fibaHomeHtml(){const live=G.internationalWindowLive;if(!live||live.complete)return'';const md=(live.matchdayIndex||0)+1,total=live.matchdays?.length||1,code=G.userNationalGM?.nationCode,fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));return `<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA Window ${live.windowNo}</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>World Cup Qualification</h3><p>Club play is paused while the international window is active.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your National Team</div><div class="allStarTeams"><b>${fibaNationName(fixture.a)}</b><span>vs</span><b>${fibaNationName(fixture.b)}</b></div></div>`:`<div class="card"><h3>International Matchday ${md}</h3><div class="smallcopy">Your nation has no fixture on this matchday. You can advance the window and follow the other qualification results.</div></div>`}<div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`}
+function openFibaWindow(){show('fibaWindow');renderFibaWindow()}
+
+function fibaNationByCode(code){return(G.nationalTeams||[]).find(n=>n.code===code)||null}
+function fibaNationMark(code){return`<span class="fibaNationMark">${String(code||"").slice(0,3)}</span>`}
+function fibaUserGame(live){
+  if(!live?.lastUserGameId)return null;
+  return (live.games||[]).find(g=>g.id===live.lastUserGameId)||null;
 }
-function allStarNextMatch(live){
-  if(!live||live.complete)return null;
-  if(live.stage===1)return{a:"STARS",b:"WORLD",label:"Opening Game"};
-  if(live.stage===2)return{a:"STRIPES",b:live.game1Winner,label:"Second Game"};
-  if(live.stage===3)return{a:"STRIPES",b:live.game1Loser,label:"Final Round-Robin Game"};
-  if(live.stage===4)return{a:live.finalists?.[0],b:live.finalists?.[1],label:"All-Star Championship"};
-  return null;
+function fibaQuarterArray(game,side){
+  const raw=game?.quarters?.[side];
+  if(Array.isArray(raw)&&raw.length)return raw.map(x=>+x||0);
+  const total=side==="home"?game?.scoreA:game?.scoreB;
+  return deterministicQuarterFallback(total||0,`${game?.id||"fiba"}-${side}`);
 }
-function allStarPlayerName(id){return allPlayers(G).find(p=>p.id===id)?.name||"—"}
-function allStarGameSummary(game){
+function fibaLineScoreHtml(game){
   if(!game)return"";
-  const h=String(game.homeClubId||"").replace("AS_",""),a=String(game.awayClubId||"").replace("AS_",""),
-    winner=String(game.winnerClubId||"").replace("AS_","");
-  const winnerBox=game.winnerClubId===game.homeClubId?game.boxScore?.home:game.boxScore?.away;
-  const leader=winnerBox?.length?[...winnerBox].sort((x,y)=>(y.pts||0)-(x.pts||0))[0]:null;
-  return `<div class="allStarResult"><div class="allStarMatchLabel">${String(game.stage||"All-Star").replaceAll("_"," ")}</div>
-    <div class="allStarResultRow"><b>${allStarTeamName(h)}</b><span>${game.homeScore}</span></div>
-    <div class="allStarResultRow"><b>${allStarTeamName(a)}</b><span>${game.awayScore}</span></div>
-    <div class="allStarResultRow"><b>Winner</b><span>${allStarTeamName(winner)}</span></div>
-    ${leader?`<div class="allStarResultRow"><b>Game Leader</b><span>${leader.name} · ${leader.pts} PTS</span></div>`:""}</div>`;
+  const aName=fibaNationName(game.teamA),bName=fibaNationName(game.teamB);
+  const aq=fibaQuarterArray(game,"home"),bq=fibaQuarterArray(game,"away");
+  const cols=Math.max(aq.length,bq.length,4);
+  const heads=Array.from({length:cols},(_,i)=>i<4?`Q${i+1}`:`OT${i-3}`);
+  const row=(code,name,qs,total)=>`<tr><td class="nationCol"><div class="fibaNationCell">${fibaNationMark(code)}<b>${name}</b></div></td>${heads.map((_,i)=>`<td>${qs[i]??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
+  return `<div class="fibaLineScoreWrap"><table class="fibaLineScore"><thead><tr><th class="nationCol">NATION</th>${heads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(game.teamA,aName,aq,game.scoreA)}${row(game.teamB,bName,bq,game.scoreB)}</tbody></table></div>`;
 }
-function allStarHomeHtml(){
-  const live=G.allStarLive||initializeAllStarLive(G),next=allStarNextMatch(live),
-    nextRound=G.regularSeasonLive?.rounds?.[G.regularSeasonLive?.roundIndex]?.round;
-  return `<div class="allStarHero"><div class="allStarHeroTop"><b>NBA All-Star Break</b><small>Season ${G.season}</small></div>
-    <div class="allStarBody"><h3>Regular season paused</h3>
-    <p>Complete the All-Star event before ${nextRound?`Game ${nextRound}`:"the regular season"} resumes. Your club fixture will not advance while All-Star is active.</p>
-    ${next?`<div class="allStarMatch"><div class="allStarMatchLabel">${next.label}</div><div class="allStarTeams"><b>${allStarTeamName(next.a)}</b><span>vs</span><b>${allStarTeamName(next.b)}</b></div></div>`:""}</div>
-    <div class="transitionActions one"><button id="openAllStarEvent" class="transitionPrimary">Open All-Star Event</button></div></div>`;
+function fibaBoxScoreHtml(game){
+  if(!game?.boxScore)return"";
+  const side=ui.fibaBoxSide==="teamB"?"teamB":"teamA";
+  const lines=game.boxScore[side]||[];
+  const code=side==="teamA"?game.teamA:game.teamB;
+  const other=side==="teamA"?game.teamB:game.teamA;
+  const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
+  const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
+  return `<div class="boxScoreSection"><div class="fibaBoxTabs"><button data-fibaside="teamA" class="${side==="teamA"?"active":""}">${fibaNationName(game.teamA)}</button><button data-fibaside="teamB" class="${side==="teamB"?"active":""}">${fibaNationName(game.teamB)}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for shooting and advanced box-score statistics</div></div>`;
 }
-function openAllStarWindow(){
-  if(!G.allStarLive)initializeAllStarLive(G);
-  show("allStarWindow");renderAllStarWindow();
+function fibaGroupResultsHtml(live,userGame){
+  if(!userGame)return"";
+  const sameGroup=(live.games||[]).filter(g=>g.groupId===userGame.groupId&&g.id!==userGame.id);
+  if(!sameGroup.length)return"";
+  const recent=sameGroup.slice(-3);
+  return `<div class="fibaOtherResults"><h4>Other Results · Your Group</h4><div class="card" style="padding:0;overflow:hidden">${recent.map(g=>`<div class="fibaOtherRow"><span>${fibaNationName(g.teamA)} vs ${fibaNationName(g.teamB)}</span><b>${g.scoreA}–${g.scoreB}</b></div>`).join("")}</div></div>`;
 }
-function renderAllStarWindow(){
-  const live=G.allStarLive||initializeAllStarLive(G),next=allStarNextMatch(live),last=live.lastGameId?gameById(live.lastGameId):null;
-  $("#allStarWindowStatus").textContent=live.complete?"All-Star Complete":allStarStageName(live.stage);
-  $("#allStarWindowClose").textContent=live.complete?"Return to Regular Season":"Return Home";
-  if(live.complete){
-    const rank=allStarRanking(live),champ=allStarTeamName(live.champion),mvp=allStarPlayerName(live.mvpPlayerId);
-    $("#allStarWindowHost").innerHTML=`${eventSummaryCard({label:"NBA All-Star · Final Summary",title:`${champ} win NBA All-Star`,subtitle:"The All-Star event is complete. The regular-season schedule resumes from the same game number.",metrics:[{label:"Champion",value:champ},{label:"All-Star MVP",value:mvp},{label:"Games",value:live.games.length}]})}
-      <div class="sectionTitle">Final Standings</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th><th>GP</th></tr></thead><tbody>
-      ${rank.map((r,i)=>`<tr><td>${i+1}</td><td class="pname"><b>${allStarTeamName(r.team)}</b></td><td>${r.w}</td><td>${r.l}</td><td>${r.diff>0?"+":""}${r.diff}</td><td>${r.w+r.l}</td></tr>`).join("")}
-      </tbody></table></div>${last?`<div class="sectionTitle">Championship Result</div>${allStarGameSummary(last)}`:""}
-      <div class="allStarAction"><button id="resumeRegularSeason" class="primaryProgress">Return to Regular Season</button></div>`;
-  }else{
-    $("#allStarWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>All-Star Event</b><small>${allStarStageName(live.stage)}</small></div>
-      <div class="allStarBody"><h3>${next?.label||"NBA All-Star"}</h3><p>All-Star games are separate from your club schedule. Complete each stage to resume league play.</p>
-      ${next?`<div class="allStarMatch"><div class="allStarTeams"><b>${allStarTeamName(next.a)}</b><span>vs</span><b>${allStarTeamName(next.b)}</b></div></div>`:""}${last?allStarGameSummary(last):""}</div></div>
-      <div class="allStarAction"><button id="playNextAllStar" class="primaryProgress">Play ${next?.label||"All-Star Event"}</button></div>`;
+function returnFromFibaWindow(){
+  if(G.internationalWindowLive){
+    G.internationalWindowLive.awaitingUserContinue=false;
+    if(G.internationalWindowLive.complete)G.internationalWindowLive=null;
   }
-  if($("#playNextAllStar"))$("#playNextAllStar").onclick=async()=>{
-    const r=advanceAllStarEvent(G);if(!r.ok){toast(r.reason);return}
-    await save();renderAllStarWindow();
-  };
-  if($("#resumeRegularSeason"))$("#resumeRegularSeason").onclick=()=>{show("game");ui.page="home";render();save()};
+  ui.fibaBoxSide="teamA";
+  ui.page="home";
+  save();
+  show("game");
+  render();
 }
-function postseasonRoundLabel(round){return({R1:"Round 1",SF:"Conference Semifinals",CF:"Conference Finals",FINALS:"NBA Finals"})[round]||String(round||"Postseason").replaceAll("_"," ")}
-function userPostseasonState(){
-  const x=me();if(!x)return{alive:false};const id=x.id,pi=G.playInLive||G.playIn;
-  if(pi?.initial?.length){
-    const initial=(pi.initial||[]).find(e=>e.teamAId===id||e.teamBId===id),final=(pi.finals||[]).find(e=>e.teamAId===id||e.teamBId===id);
-    if(initial&&!initial.complete)return{alive:true,stage:"Play-In",seed:pi.seedMap?.[id],entry:initial};
-    if(initial?.complete){
-      const ig=initial.gameId?gameById(initial.gameId):null;
-      if(initial.type==="9v10"&&ig?.winnerClubId!==id&&!final)return{alive:false,eliminatedStage:"Play-In 9 vs 10",seed:pi.seedMap?.[id],entry:initial};
-      if(final&&!final.complete)return{alive:true,stage:"Play-In",seed:pi.seedMap?.[id],entry:final};
-      if(final?.complete){
-        const fg=gameById(final.gameId);if(fg?.winnerClubId!==id)return{alive:false,eliminatedStage:"Play-In 8th Seed Game",seed:pi.seedMap?.[id],entry:final};
+function renderFibaWindow(){
+  const live=G.internationalWindowLive;
+  if(!live){show("game");render();return}
+
+  const total=live.matchdays?.length||1;
+  const code=G.userNationalGM?.nationCode;
+  const nextMd=Math.min((live.matchdayIndex||0)+1,total);
+  const fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));
+  const userGame=fibaUserGame(live);
+  const showingResult=!!(live.awaitingUserContinue&&userGame);
+
+  $("#fibaWindowStatus").textContent=showingResult
+    ?`Window ${live.windowNo} · Matchday ${live.lastPlayedMatchday||live.matchdayIndex} Result`
+    :live.complete?`Window ${live.windowNo} Complete`:`Window ${live.windowNo} · Matchday ${nextMd}`;
+
+  if(showingResult){
+    const won=userGame.winner===code;
+    const opponent=userGame.teamA===code?userGame.teamB:userGame.teamA;
+    const title=live.complete?"International Window Complete":`Matchday ${live.lastPlayedMatchday||live.matchdayIndex} Complete`;
+    const actionLabel=live.complete?"Return to Club Basketball":`Continue to Matchday ${nextMd}`;
+
+    $("#fibaWindowHost").innerHTML=
+      `<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA World Cup Qualification</b><small>Window ${live.windowNo}</small></div><div class="allStarBody"><h3>${title}</h3><p>${fibaNationName(code)} ${won?"defeated":"lost to"} ${fibaNationName(opponent)}. Review the full international box score before continuing.</p></div></div>`+
+      `<div class="fibaResultContext"><div class="fibaResultHead"><b>FINAL</b><small>FIBA QUALIFICATION</small></div>${fibaLineScoreHtml(userGame)}${fibaBoxScoreHtml(userGame)}</div>`+
+      fibaGroupResultsHtml(live,userGame)+
+      `<div class="fibaResultAction"><button id="playFibaMd" class="primaryProgress">${actionLabel}</button></div>`;
+
+    $$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;renderFibaWindow()});
+    $("#playFibaMd").onclick=async()=>{
+      if(live.complete){
+        returnFromFibaWindow();
+        return;
+      }
+      live.awaitingUserContinue=false;
+      ui.fibaBoxSide="teamA";
+      await save();
+      renderFibaWindow();
+    };
+    return;
+  }
+
+  if(live.complete){
+    $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA World Cup Qualification</b><small>Window ${live.windowNo}</small></div><div class="allStarBody"><h3>International Window Complete</h3><p>Your national team programme has completed this FIBA window. Club basketball can now resume.</p></div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Return to Club Basketball</button></div>`;
+    $("#playFibaMd").onclick=()=>returnFromFibaWindow();
+    return;
+  }
+
+  $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA World Cup Qualification</b><small>Window ${live.windowNo}</small></div><div class="allStarBody"><h3>Matchday ${nextMd} of ${total}</h3><p>Your club schedule is paused. Complete your national team fixture before returning to league action.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>${fibaNationName(fixture.a)}</b><span>vs</span><b>${fibaNationName(fixture.b)}</b></div></div>`:`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>None scheduled</b></div></div>`}</div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Play Matchday ${nextMd}</button></div>`;
+
+  $("#playFibaMd").onclick=async()=>{
+    const r=advanceQualificationWindowEvent(G);
+    if(!r?.ok){toast(r?.reason||"Unable to play FIBA matchday");return}
+    const liveNow=G.internationalWindowLive;
+    liveNow.awaitingUserContinue=!!r.userGame;
+    liveNow.lastPlayedMatchday=r.matchday;
+    if(r.userGame)liveNow.lastUserGameId=r.userGame.id;
+    ui.fibaBoxSide="teamA";
+    await save();
+    renderFibaWindow();
+  };
+}
+
+function ensureSeasonSummary(){
+  G.seasonSummaries=G.seasonSummaries||[];
+  let existing=G.seasonSummaries.find(x=>x.season===G.season);
+  if(existing){
+    // Presentation migration for summaries created before the All-Star winner mapping fix.
+    const winner=allStarWinnerCode();
+    if(winner){
+      const corrected={
+        label:"NBA All-Star",
+        value:allStarTeamName(winner),
+        detail:G.allStar?.mvpPlayerId?`MVP: ${summaryPlayerName(G.allStar.mvpPlayerId)}`:""
+      };
+      const idx=(existing.competitions||[]).findIndex(x=>x.label==="NBA All-Star");
+      if(idx>=0){
+        if(!existing.competitions[idx].value||existing.competitions[idx].value==="—")existing.competitions[idx]=corrected;
+      }else if(G.allStar?.complete){
+        existing.competitions=existing.competitions||[];
+        existing.competitions.push(corrected);
       }
     }
+    return existing;
   }
-  const po=G.playoffsLive||G.playoffs,series=(po?.series||[]).filter(s=>s.teamAId===id||s.teamBId===id);
-  if(series.length){
-    const active=series.find(s=>!s.complete);if(active)return{alive:true,stage:postseasonRoundLabel(active.stage==="FINALS"?"FINALS":active.stage.split("_").pop()),seed:po.seedMap?.[id]||active.seedA||active.seedB,series:active};
-    const order={R1:1,SF:2,CF:3,FINALS:4};
-    const latest=[...series].sort((a,b)=>(order[b.stage==="FINALS"?"FINALS":b.stage.split("_").pop()]||0)-(order[a.stage==="FINALS"?"FINALS":a.stage.split("_").pop()]||0))[0];
-    if(latest?.complete&&latest.winnerClubId!==id)return{alive:false,eliminatedStage:postseasonRoundLabel(latest.stage==="FINALS"?"FINALS":latest.stage.split("_").pop()),seed:po.seedMap?.[id]||latest.seedA||latest.seedB,series:latest};
-  }
-  if((G.phase==="PLAY_IN"||G.phase==="PLAYOFFS")&&pi?.seedMap?.[id]&&!series.length){
-    const qualified=pi.complete&&[pi.East?.seed7,pi.East?.seed8,pi.West?.seed7,pi.West?.seed8].includes(id);
-    if(!qualified&&pi.complete)return{alive:false,eliminatedStage:"Play-In",seed:pi.seedMap[id]};
-  }
-  return{alive:true,stage:null};
+  const summary=buildSeasonSummary();
+  G.seasonSummaries.push(summary);
+  G.seasonSummaries=G.seasonSummaries.slice(-30);
+  return summary;
 }
-function repairPlayoffSaveState(){
-  const live=G.playoffsLive;
-  if(!live||G.phase!=="PLAYOFFS")return false;
-  let changed=false;
 
-  if(!live.seedMap){live.seedMap={};changed=true}
-  if(!live.conferenceWinners){live.conferenceWinners={East:null,West:null};changed=true}
-  if(!Array.isArray(live.games)){live.games=[];changed=true}
-  if(!Array.isArray(live.series)){live.series=[];changed=true}
-  if(!live.round){live.round="R1";changed=true}
+function seasonSummaryHtml(){
+  const s=ensureSeasonSummary(),u=s.user;
+  const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
+  const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label}</small><b>${x.name}</b></div>`).join("");
+  return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>Mini&Me Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are NBA Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
+    <div class="seasonSummarySection">Champions & Events</div><div class="seasonHonourGrid">${competitionHtml}</div>
+    <div class="seasonSummarySection">Season Awards</div><div class="seasonAwardsList">${awardHtml||`<div class="seasonHistoryRow"><small>No season awards recorded.</small></div>`}</div>
+    <div class="seasonSummarySection">Your Season</div><div class="seasonAwardsList"><div class="seasonAwardRow"><small>Club</small><b>${u.clubName}</b></div><div class="seasonAwardRow"><small>Regular Season</small><b>${u.record} · ${u.conferenceFinish} · ${u.divisionFinish}</b></div><div class="seasonAwardRow"><small>Postseason</small><b>${u.postseasonFinish}</b></div><div class="seasonAwardRow"><small>NBA Cup</small><b>${u.cupFinish}</b></div></div>
+    <div class="seasonStartAction"><button id="startNewSeason" class="primaryProgress">Start New Season</button></div></div>`;
+}
 
-  // Recover original seeds from Round 1 series where possible.
-  for(const s of live.series.filter(s=>String(s.stage||"").endsWith("_R1"))){
-    if(s.teamAId&&!live.seedMap[s.teamAId]&&s.seedA){live.seedMap[s.teamAId]=s.seedA;changed=true}
-    if(s.teamBId&&!live.seedMap[s.teamBId]&&s.seedB){live.seedMap[s.teamBId]=s.seedB;changed=true}
-  }
-
-  // Older saves may have no seed fields at all. Seed identity is helpful
-  // presentation data, but never allow its absence to block the bracket.
-  for(const s of live.series){
-    if(s.teamAId && live.seedMap[s.teamAId]==null)live.seedMap[s.teamAId]=null;
-    if(s.teamBId && live.seedMap[s.teamBId]==null)live.seedMap[s.teamBId]=null;
-  }
-
-  // If a recorded round is already fully complete, roll it forward now.
-  // Repeat because an old save may have been stranded more than one stage behind.
-  let guard=0;
-  while(G.phase==="PLAYOFFS"&&guard++<5){
-    const round=live.round||"R1";
-    const active=live.series.filter(s=>round==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${round}`));
-    if(!active.length||!active.every(s=>s.complete))break;
-    const beforeRound=live.round;
-    try{
-      const progressed=buildNextPlayoffRound(G);
-      if(!progressed)break;
-      changed=true;
-      if(G.phase!=="PLAYOFFS"||live.round===beforeRound)break;
-    }catch(err){
-      console.error("Postseason save repair failed",err);
-      break;
-    }
-  }
-
-  if(changed&&G.phase==="PLAYOFFS"){
-    G.playoffs={
-      round:live.round,
-      seedMap:{...(live.seedMap||{})},
-      conferenceWinners:{...(live.conferenceWinners||{East:null,West:null})},
-      series:live.series.map(s=>({...s})),
-      games:live.games,
-      live:true,
-      complete:false
-    };
-  }
-  return changed;
-}
-function playoffSeriesSnapshot(){
-  const p=G.playoffsLive||G.playoffs,map={};for(const s of (p?.series||[]))map[s.id]={id:s.id,stage:s.stage,conference:s.conference,teamAId:s.teamAId,teamBId:s.teamBId,winsA:s.winsA,winsB:s.winsB,complete:s.complete,winnerClubId:s.winnerClubId};return map;
-}
-function postseasonActiveSeriesCount(){
-  const p=G.playoffsLive||G.playoffs;if(!p?.series?.length)return 0;const r=p.round||"R1";return p.series.filter(s=>!s.complete&&(r==="FINALS"?s.stage==="FINALS":s.stage.endsWith(`_${r}`))).length;
-}
-function latestLeaguePostseasonGame(){
-  const pools=[G.playoffsLive?.games,G.playoffs?.games,G.playInLive?.games,G.playIn?.games].filter(Boolean);let g=null;for(const p of pools)if(p.length)g=p[p.length-1];return g;
-}
-function postseasonRoundFromGame(g){
-  const tag=String(g?.phaseTag||"");if(tag.includes("PLAYIN"))return "Play-In";if(tag==="FINALS")return "NBA Finals";if(tag.endsWith("_R1"))return "Round 1";if(tag.endsWith("_SF"))return "Conference Semifinals";if(tag.endsWith("_CF"))return "Conference Finals";return "Postseason";
-}
-function renderPostseasonUpdate(){
-  const d=ui.postUpdate;if(!d){show("game");ui.page="home";render();return}
-  $("#postseasonUpdateTitle").textContent=d.roundChanged?`${d.roundBefore} Complete`:`${d.roundBefore} Update`;
-  const games=(d.games||[]).map(g=>{const h=c(g.homeClubId),a=c(g.awayClubId);return `<div class="postUpdateGame"><div class="postUpdateMeta"><small>${postseasonRoundFromGame(g)}</small><span>FINAL</span></div><div class="postUpdateTeams"><b>${h?.name||g.homeClubId}</b><span>${g.homeScore}</span></div><div class="postUpdateTeams"><b>${a?.name||g.awayClubId}</b><span>${g.awayScore}</span></div></div>`}).join("");
-  const completed=(d.completedSeries||[]).map(s=>`<div class="postUpdateSeries"><b>Series Complete · ${c(s.winnerClubId)?.name||"Winner"} advances</b><small>${c(s.teamAId)?.name} ${s.winsA}–${s.winsB} ${c(s.teamBId)?.name}</small></div>`).join("");
-  const transition=d.roundChanged?`<div class="postUpdateSeries"><b>${d.roundBefore} complete</b><small>${d.phaseAfter==="CHAMPION"?"The NBA Champion has been crowned.":`The postseason has advanced to ${d.roundAfter}.`}</small></div>`:"";
-  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap"><div class="postUpdateHero"><h3>${d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} results`}</h3><p>${d.games.length} postseason game${d.games.length===1?"":"s"} completed while simulating the current postseason round.${d.completedSeries.length?` ${d.completedSeries.length} series concluded.`:""}</p></div>${games}${completed}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${d.phaseAfter==="CHAMPION"?"View Season Complete":"Return to Home"}</button></div></div>`;
-  $("#postUpdateContinue").onclick=()=>{ui.postUpdate=null;show("game");ui.page="home";render()};
+function startNewSeason(){
+  if(G.phase!=="CHAMPION"){toast("Season is not complete");return}
+  ensureSeasonSummary();
+  recordGMCareerSeason(G);
+  snapshotLeagueSeason(G);
+  advance(G);
+  ui.page="home";ui.leagueTab="standings";ui.postseasonStage="playin";ui.resultGameId=null;ui.postUpdate=null;
+  save();render();
 }
 function advancePostseasonObserver(){
   if(G.phase==="PLAYOFFS"){repairPlayoffSaveState();save()}
@@ -4065,6 +4436,7 @@ function advancePostseasonObserver(){
       }
     }
 
+    if(phaseBefore==="PLAYOFFS")repairPlayoffSaveState();
     const r=phaseBefore==="PLAYOFFS"?advancePlayoffEvent(G):advanceCareerEvent(G,1);
     if(!r.ok){lastReason=r.reason||"Unable to advance postseason";break}
     if(phaseBefore==="PLAYOFFS"){
@@ -4082,7 +4454,20 @@ function advancePostseasonObserver(){
     }
   }
 
-  if(!games.length&&lastReason){toast(lastReason);return}
+  if(!games.length){
+    if(lastReason){toast(lastReason);return}
+    const repaired=repairPlayoffSaveState();
+    save();
+    if(G.phase==="CHAMPION"){ui.postUpdate=null;show("game");ui.page="home";render();return}
+    const activeNow=postseasonActiveSeriesCount();
+    if(activeNow===0){
+      const forced=forceRecoverStrandedPostseason();save();
+      if(forced){toast("Postseason recovered. NBA Finals are ready.");ui.postUpdate=null;show("game");ui.page="home";render();return}
+      toast(repaired?"Postseason data recovered, but no playable series could be reconstructed.":"No playable postseason series found.");
+      ui.postUpdate=null;show("game");ui.page="home";render();return;
+    }
+    ui.postUpdate=null;show("game");ui.page="home";render();return;
+  }
   const after=playoffSeriesSnapshot(),completedSeries=[];
   for(const [id,s] of Object.entries(after)){const b=before[id];if(s.complete&&(!b||!b.complete))completedSeries.push(s)}
   const phaseAfter=G.phase;
@@ -4090,7 +4475,104 @@ function advancePostseasonObserver(){
   ui.postUpdate={phaseBefore,phaseAfter,roundBefore,roundAfter,roundChanged:roundBefore!==roundAfter,games,completedSeries,observerMode:"round"};
   save();show("postseasonUpdateWindow");renderPostseasonUpdate();
 }
+function allStarNextMatch(live){
+  if(!live||live.complete)return null;
+  if(live.stage===1)return{a:"STARS",b:"WORLD",label:"Opening Game"};
+  if(live.stage===2)return{a:"STRIPES",b:live.game1Winner,label:"Second Game"};
+  if(live.stage===3)return{a:"STRIPES",b:live.game1Loser,label:"Final Round-Robin Game"};
+  if(live.stage===4)return{a:live.finalists?.[0],b:live.finalists?.[1],label:"All-Star Championship"};
+  return null;
+}
+function allStarRanking(live){return Object.entries(live.records).map(([team,r])=>({team,...r,diff:r.pf-r.pa})).sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);}
+function buildSeasonSummary(){
+  const season=G.season,reg=seasonRegularFinish();
+  const po=G.playoffsLive||G.playoffs;
+  const finals=(po?.series||[]).find(s=>s.stage==="FINALS");
+  const runnerUpId=finals?.winnerClubId?(finals.teamAId===finals.winnerClubId?finals.teamBId:finals.teamAId):null;
+  const eastChamp=po?.conferenceWinners?.East||null,westChamp=po?.conferenceWinners?.West||null;
+  const wc=[...(G.worldCupHistory||[])].reverse().find(x=>x.season===season&&x.status==="COMPLETE")||null;
+
+  const competitions=[
+    {label:"NBA Champion",value:G.champion?.name||"—",detail:runnerUpId?`Runner-up: ${summaryClubName(runnerUpId)}`:""},
+    G.inSeasonCup?.complete?{label:"NBA Cup",value:summaryClubName(G.inSeasonCup.winnerClubId),detail:G.inSeasonCup.mvpPlayerId?`MVP: ${summaryPlayerName(G.inSeasonCup.mvpPlayerId)}`:""}:null,
+    eastChamp?{label:"East Champion",value:summaryClubName(eastChamp),detail:"Conference Champion"}:null,
+    westChamp?{label:"West Champion",value:summaryClubName(westChamp),detail:"Conference Champion"}:null,
+    G.summerLeague?.championship?.complete?{label:"Summer League",value:summaryClubName(G.summerLeague.championship.championClubId),detail:G.awards?.[`S${season}_SummerLeagueMVP`]?`MVP: ${summaryPlayerName(G.awards[`S${season}_SummerLeagueMVP`])}`:""}:null,
+    G.allStar?.complete?{label:"NBA All-Star",value:allStarTeamName(allStarWinnerCode()),detail:G.allStar.mvpPlayerId?`MVP: ${summaryPlayerName(G.allStar.mvpPlayerId)}`:""}:null,
+    wc?{label:"FIBA World Cup",value:summaryNationName(wc.championCode),detail:`Runner-up: ${summaryNationName(wc.runnerUpCode)}`}:null
+  ].filter(Boolean);
+
+  const awards=[
+    ["MVP",G.awards?.[`S${season}_MVP`]],
+    ["Rookie of the Year",G.awards?.[`S${season}_ROY`]],
+    ["Defensive Player",G.awards?.[`S${season}_DPOY`]],
+    ["Sixth Man",G.awards?.[`S${season}_SixthMan`]],
+    ["Most Improved",G.awards?.[`S${season}_MIP`]],
+    ["Finals MVP",G.awards?.[`S${season}_FinalsMVP`]],
+    ["Scoring Champion",G.awards?.[`S${season}_ScoringChampion`]],
+    ["Rebounding Leader",G.awards?.[`S${season}_ReboundingLeader`]],
+    ["Assist Leader",G.awards?.[`S${season}_AssistLeader`]],
+    ["NBA Cup MVP",G.awards?.[`S${season}_NBACupMVP`]],
+    ["Summer League MVP",G.awards?.[`S${season}_SummerLeagueMVP`]],
+    ["All-Star MVP",G.awards?.[`S${season}_AllStarMVP`]],
+    wc?["World Cup MVP",wc.mvpPlayerId]:null
+  ].filter(x=>x&&x[1]).map(([label,id])=>({label,playerId:id,name:summaryPlayerName(id)}));
+
+  const user={
+    clubId:me()?.id||null,clubName:me()?.name||"—",record:reg.record,
+    conferenceFinish:reg.conference,divisionFinish:reg.division,postseasonFinish:seasonUserFinish(),
+    cupFinish:seasonUserCupFinish()
+  };
+  return{season,createdAt:Date.now(),championClubId:G.champion?.id||null,championName:G.champion?.name||"—",runnerUpClubId:runnerUpId,
+    eastChampionClubId:eastChamp,westChampionClubId:westChamp,competitions,awards,user,
+    worldCup:wc?{cycle:wc.cycle,championCode:wc.championCode,runnerUpCode:wc.runnerUpCode,mvpPlayerId:wc.mvpPlayerId}:null};
+}
+function latestLeaguePostseasonGame(){
+  const pools=[G.playoffsLive?.games,G.playoffs?.games,G.playInLive?.games,G.playIn?.games].filter(Boolean);let g=null;for(const p of pools)if(p.length)g=p[p.length-1];return g;
+}
+function playoffSeriesContext(series){
+  if(!series)return null;const userId=me()?.id,userIsA=series.teamAId===userId;
+  const userWins=userIsA?series.winsA:series.winsB,oppWins=userIsA?series.winsB:series.winsA,oppId=userIsA?series.teamBId:series.teamAId;
+  const userSeed=userIsA?series.seedA:series.seedB,oppSeed=userIsA?series.seedB:series.seedA,stageKey=series.stage==="FINALS"?"FINALS":String(series.stage||"").split("_").pop();
+  const complete=!!series.complete||userWins>=4||oppWins>=4;
+  return{userWins,oppWins,oppId,userSeed,oppSeed,stage:postseasonRoundLabel(stageKey),conf:series.stage==="FINALS"?"NBA":series.conference,complete,nextGame:complete?null:Math.min(7,(series.gameNo||0)+1)};
+}
+function playoffSeriesSnapshot(){
+  const p=G.playoffsLive||G.playoffs,map={},seedMap=p?.seedMap||{};
+  for(const s of (p?.series||[]))map[s.id]={id:s.id,stage:s.stage,conference:s.conference,teamAId:s.teamAId,teamBId:s.teamBId,seedA:s.seedA||seedMap[s.teamAId]||null,seedB:s.seedB||seedMap[s.teamBId]||null,winsA:s.winsA,winsB:s.winsB,complete:s.complete,winnerClubId:s.winnerClubId};
+  return map;
+}
+function postseasonActiveSeriesCount(){
+  const p=G.playoffsLive||G.playoffs;if(!p?.series?.length)return 0;const r=p.round||"R1";return p.series.filter(s=>!s.complete&&(r==="FINALS"?s.stage==="FINALS":s.stage.endsWith(`_${r}`))).length;
+}
+function forceRecoverStrandedPostseason(){
+  const live=G?.playoffsLive;
+  if(!live||G?.phase!=="PLAYOFFS"||postseasonActiveSeriesCount()>0)return false;
+  const userId=G.userClubGM?.clubId||null;
+  const userEliminated=!!(userId&&(live.series||[]).some(s=>s.complete&&s.winnerClubId&&(s.teamAId===userId||s.teamBId===userId)&&s.winnerClubId!==userId));
+  const completedWinner=stage=>[...(live.series||[])].reverse().find(s=>s.stage===stage&&s.complete&&s.winnerClubId)?.winnerClubId||null;
+  const standings=Array.isArray(G.regularSeason?.standings)?G.regularSeason.standings:[];
+  const bestFromConf=conf=>(G.clubs||[]).filter(cl=>cl.conference===conf&&(!userEliminated||cl.id!==userId)).map(cl=>{
+    const r=standings.find(x=>x.clubId===cl.id);
+    return{cl,w:r?.w??cl.standings?.w??0,l:r?.l??cl.standings?.l??82,d:r?.diff??0};
+  }).sort((a,b)=>b.w-a.w||a.l-b.l||b.d-a.d)[0]?.cl||null;
+  let east=live.conferenceWinners?.East||completedWinner("East_CF")||bestFromConf("East")?.id||null;
+  let west=live.conferenceWinners?.West||completedWinner("West_CF")||bestFromConf("West")?.id||null;
+  if(!east||!west||east===west)return false;
+  live.conferenceWinners={East:east,West:west};live.round="FINALS";live.complete=false;live.championClubId=null;
+  live.series=(live.series||[]).filter(s=>s.stage!=="FINALS");
+  const finals=makePlayoffSeries("FINALS","Finals",east,west,live.seedMap?.[east]??null,live.seedMap?.[west]??null);
+  finals.recoveryGenerated=true;live.series.push(finals);
+  G.playoffs={round:"FINALS",seedMap:{...(live.seedMap||{})},conferenceWinners:{...live.conferenceWinners},series:live.series.map(s=>({...s,games:[...(s.games||[])]})),games:live.games||[],live:true,complete:false,recoveryGenerated:true};
+  logEvent(G,`Postseason failsafe created NBA Finals: ${c(east)?.name||east} vs ${c(west)?.name||west}.`);
+  return true;
+}
 function postseasonObserverHome(){
+  if(G?.phase==="PLAYOFFS"&&postseasonActiveSeriesCount()===0){
+    repairPlayoffSaveState();
+    if(postseasonActiveSeriesCount()===0)forceRecoverStrandedPostseason();
+    save();
+  }
   const st=userPostseasonState();
   const leagueStage=G.phase==="PLAY_IN"?"Play-In":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1");
   const active=postseasonActiveSeriesCount();
@@ -4100,18 +4582,274 @@ function postseasonObserverHome(){
   }).length*2:0;
   return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Observer Mode</b><small>Season ${G.season}</small></div><div class="postObserverBody"><h3>Your season has ended</h3><p>${me().name} were eliminated in ${st.eliminatedStage||"the postseason"}. You can continue the remaining NBA postseason from here, with the complete bracket available under League → Postseason.</p><div class="postObserverMetrics"><div class="postObserverMetric"><b>${st.eliminatedStage||"Eliminated"}</b><small>Your Finish</small></div><div class="postObserverMetric"><b>${leagueStage}</b><small>Current Stage</small></div><div class="postObserverMetric"><b>${active}</b><small>Active Series</small></div></div></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Sim Current Round</button></div></div>`;
 }
-function summaryPlayerById(id){
-  if(!id)return null;
-  const pool=[
-    ...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),
-    ...(G.freeAgents||[])
-  ];
-  return pool.find(p=>p.id===id)||null;
+function postseasonRoundFromGame(g){
+  const tag=String(g?.phaseTag||"");if(tag.includes("PLAYIN"))return "Play-In";if(tag==="FINALS")return "NBA Finals";if(tag.endsWith("_R1"))return "Round 1";if(tag.endsWith("_SF"))return "Conference Semifinals";if(tag.endsWith("_CF"))return "Conference Finals";return "Postseason";
 }
-function summaryPlayerName(id){return summaryPlayerById(id)?.name||"—"}
-function summaryNationName(code){return G.nationalTeams?.find(n=>n.code===code)?.name||code||"—"}
-function summaryClubName(id){return c(id)?.name||"—"}
+function postseasonRoundLabel(round){return({R1:"Round 1",SF:"Conference Semifinals",CF:"Conference Finals",FINALS:"NBA Finals"})[round]||String(round||"Postseason").replaceAll("_"," ")}
+function postseasonUserHome(){
+  const st=userPostseasonState(),x=me();
+  if(G.phase==="PLAY_IN"){
+    if(st.qualified)return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>Play-In Tournament</span></div><div class="postseasonHomeBody"><h3>#${st.seed} seed secured</h3><p>${x.name} have qualified for the NBA Playoffs. Complete the remaining league Play-In games before Round 1 is finalised.</p><div class="postSeriesStatus"><div class="postSeriesStat"><b>#${st.seed}</b><small>Your Seed</small></div><div class="postSeriesStat"><b>Qualified</b><small>Your Status</small></div><div class="postSeriesStat"><b>Round 1</b><small>Next Stage</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Complete Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    const e=resolveUserPlayInEntry()||st.entry,a=c(e?.teamAId),b=c(e?.teamBId),userIsA=e?.teamAId===x.id,opp=userIsA?b:a;
+    const userSeed=Number.isFinite(+(userIsA?e?.seedA:e?.seedB))?+(userIsA?e?.seedA:e?.seedB):(st.seed||"—");
+    const oppSeed=Number.isFinite(+(userIsA?e?.seedB:e?.seedA))?+(userIsA?e?.seedB:e?.seedA):"—";
+    const label=e?.type==="7v8"?"7 vs 8 Seed Game":e?.type==="9v10"?"9 vs 10 Elimination Game":"8th Seed Game";
+    const outcome=e?.type==="7v8"?"Winner secures the #7 seed. Loser gets one more chance for #8.":e?.type==="9v10"?"Winner advances. Loser is eliminated.":"Winner secures the #8 seed. Loser is eliminated.";
+    if(!e||!opp){
+      return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} · Play-In matchup preparing</h3><p>The league is finalising the next Play-In opponent. Open Postseason for the complete bracket.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    }
+    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp.name}</h3><p>${outcome}</p><div class="postMatchup"><div class="postMatchupTeam"><b>#${userSeed} ${x.name}</b><small>${x.conference} Conference · Your Team</small></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${oppSeed} ${opp.name}</b><small>${opp.conference} Conference</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Play Play-In Game</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+  }
+  if(G.phase==="PLAYOFFS"&&st.series){
+    const s=st.series,ctx=playoffSeriesContext(s),opp=c(ctx.oppId);
 
+    if(ctx.complete&&s.winnerClubId===x.id){
+      const currentRound=G.playoffsLive?.round||G.playoffs?.round||"R1";
+      const activeOthers=(G.playoffsLive?.series||[]).filter(ps=>{
+        const inRound=currentRound==="FINALS"?ps.stage==="FINALS":String(ps.stage||"").endsWith(`_${currentRound}`);
+        return inRound&&!ps.complete;
+      }).length;
+      const isFinals=s.stage==="FINALS";
+      const nextCopy=isFinals
+        ?"The NBA Finals series is complete. Continue to the season summary."
+        :activeOthers
+          ?`You have advanced. ${activeOthers} other ${activeOthers===1?"series remains":"series remain"} in ${ctx.stage}.`
+          :"You have advanced. The league is preparing the next playoff round.";
+      const actionLabel=isFinals?"Complete Postseason":activeOthers?"Complete Current Round":"Advance Playoffs";
+      return `<div class="postseasonHome seriesWonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Series Complete</span></div><div class="postseasonHomeBody"><h3>${x.name} win the series ${ctx.userWins}–${ctx.oppWins}</h3><p>${nextCopy}</p><div class="postMatchup"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b><small>Series Winner · ${ctx.userWins} wins</small></div><div class="postMatchupVs">ADV</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b><small>Eliminated · ${ctx.oppWins} wins</small></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Final Series</small></div><div class="postSeriesStat"><b>Won</b><small>Your Status</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="continuePostseason" class="primaryProgress">${actionLabel}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    }
+
+    const status=ctx.userWins===ctx.oppWins?`Series tied ${ctx.userWins}–${ctx.oppWins}`:ctx.userWins>ctx.oppWins?`${x.name} lead ${ctx.userWins}–${ctx.oppWins}`:`${opp?.name||"Opponent"} lead ${ctx.oppWins}–${ctx.userWins}`;
+    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b><small>${ctx.userWins} series wins</small></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b><small>${ctx.oppWins} series wins</small></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Sim Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+  }
+  return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>${st.stage||"Postseason"}</span></div><div class="postseasonHomeBody"><h3>${x.name} remain alive</h3><p>The next postseason matchup is being prepared.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Postseason</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+}
+function renderPostseasonUpdate(){
+  const d=ui.postUpdate;if(!d){show("game");ui.page="home";render();return}
+  $("#postseasonUpdateTitle").textContent=d.roundChanged?`${d.roundBefore} Complete`:`${d.roundBefore} Update`;
+  const grouped={East:[],West:[],Finals:[]};
+  for(const s of(d.completedSeries||[])){const key=s.conference==="Finals"?"Finals":s.conference;(grouped[key]||(grouped[key]=[])).push(s)}
+  const seriesHtml=["East","West","Finals"].map(conf=>{
+    const rows=grouped[conf]||[];if(!rows.length)return"";
+    return `<div class="sectionTitle">${conf==="Finals"?"NBA Finals":`${conf}ern Conference`}</div><div class="postUpdateSeriesGrid">${rows.map(s=>{
+      const aSeed=s.seedA?`(${s.seedA}) `:"",bSeed=s.seedB?`(${s.seedB}) `:"";
+      const headline=conf==="Finals"?`${c(s.winnerClubId)?.name||"Winner"} are NBA Champions`:`${c(s.winnerClubId)?.name||"Winner"} advances`;
+      return `<div class="postUpdateSeries compact" data-update-series="${s.id}" data-update-stage="${postseasonStageKey(s.stage)}" data-update-conf="${s.conference||""}"><b>${headline}</b><small>${aSeed}${c(s.teamAId)?.name} ${s.winsA}–${s.winsB} ${bSeed}${c(s.teamBId)?.name}</small><span class="reviewCue">View series & game box scores ›</span></div>`;
+    }).join("")}</div>`;
+  }).join("");
+  const transition=d.roundChanged?`<div class="postUpdateSeries"><b>${d.roundBefore} complete</b><small>${d.phaseAfter==="CHAMPION"?"The NBA Champion has been crowned.":`The bracket has advanced to ${d.roundAfter}.`}</small></div>`:"";
+  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap"><div class="postUpdateHero"><h3>${d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`}</h3><p>${d.completedSeries.length?`${d.completedSeries.length} series concluded.`:`The postseason advanced.`} Select a series below for its game history and full box scores.</p></div>${seriesHtml}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${d.phaseAfter==="CHAMPION"?"View Season Complete":"Return to Home"}</button></div></div>`;
+  $$("[data-update-series]").forEach(el=>el.onclick=()=>{
+    const id=el.dataset.updateSeries,stage=el.dataset.updateStage,conf=el.dataset.updateConf;
+    ui.postUpdate=null;ui.page="league";ui.leagueTab="post";ui.postseasonStage=stage;ui.postSeriesId=id;
+    if(conf==="East"||conf==="West")ui.postConference=conf;
+    show("game");render();
+  });
+  $("#postUpdateContinue").onclick=()=>{ui.postUpdate=null;show("game");ui.page="home";render()};
+}
+function repairPlayoffSaveState(){
+  const live=G.playoffsLive;
+  if(!live||G.phase!=="PLAYOFFS")return false;
+  let changed=false;
+
+  if(!live.seedMap){live.seedMap={};changed=true}
+  if(!live.conferenceWinners){live.conferenceWinners={East:null,West:null};changed=true}
+  if(!Array.isArray(live.games)){live.games=[];changed=true}
+  if(!Array.isArray(live.series)){live.series=[];changed=true}
+  if(!live.round){live.round="R1";changed=true}
+
+  // Recover richer persisted postseason data when the live bracket is sparse.
+  const snap=G.playoffs;
+  if(snap&&snap!==live){
+    if(Array.isArray(snap.games)){
+      const seen=new Set(live.games.filter(Boolean).map(g=>g.id));
+      for(const g of snap.games)if(g?.id&&!seen.has(g.id)){live.games.push(g);seen.add(g.id);changed=true}
+    }
+    if(Array.isArray(snap.series)){
+      const sig=s=>`${s.stage}|${[s.teamAId,s.teamBId].sort().join("|")}`;
+      const byId=new Map(live.series.filter(Boolean).map(s=>[s.id,s]));
+      const bySig=new Map(live.series.filter(Boolean).map(s=>[sig(s),s]));
+      for(const ss of snap.series){
+        if(!ss)continue;
+        let target=(ss.id&&byId.get(ss.id))||bySig.get(sig(ss));
+        if(!target){
+          target={...ss,games:[...(ss.games||[])]};
+          live.series.push(target);
+          if(target.id)byId.set(target.id,target);
+          bySig.set(sig(target),target);
+          changed=true;
+        }else{
+          for(const key of ["stage","conference","teamAId","teamBId","seedA","seedB","winsA","winsB","gameNo","complete","winnerClubId"]){
+            const inc=ss[key],cur=target[key];
+            if((cur==null||cur===false||cur===0)&&inc!=null&&inc!==false&&inc!==0){target[key]=inc;changed=true}
+          }
+          const existing=new Set(target.games||[]);
+          for(const gid of(ss.games||[]))if(!existing.has(gid)){(target.games||(target.games=[])).push(gid);existing.add(gid);changed=true}
+        }
+      }
+    }
+    if(snap.seedMap)for(const [id,seed] of Object.entries(snap.seedMap))if(live.seedMap[id]==null&&seed!=null){live.seedMap[id]=seed;changed=true}
+    if(snap.conferenceWinners)for(const conf of CONFERENCES)if(!live.conferenceWinners[conf]&&snap.conferenceWinners[conf]){live.conferenceWinners[conf]=snap.conferenceWinners[conf];changed=true}
+  }
+
+  // Normalise legacy completion flags from recorded series win totals.
+  for(const s of live.series){
+    s.games=Array.isArray(s.games)?s.games:[];
+    s.winsA=+s.winsA||0;s.winsB=+s.winsB||0;
+    s.gameNo=Math.max(+s.gameNo||0,s.games.length);
+    if((s.winsA>=4||s.winsB>=4)&&!s.complete){s.complete=true;changed=true}
+    if(s.complete&&!s.winnerClubId){
+      if(s.winsA>=4){s.winnerClubId=s.teamAId;changed=true}
+      else if(s.winsB>=4){s.winnerClubId=s.teamBId;changed=true}
+    }
+  }
+
+  // Reconstruct vanished series from retained playoff game objects.
+  const gamePool=[],seenGames=new Set();
+  for(const pool of [live.games,snap?.games]){
+    for(const g of(pool||[]))if(g?.id&&!seenGames.has(g.id)){seenGames.add(g.id);gamePool.push(g)}
+  }
+  const playoffGames=gamePool.filter(g=>{
+    const tag=String(g?.phaseTag||"");
+    return tag==="FINALS"||/^(East|West)_(R1|SF|CF)$/.test(tag);
+  });
+  const seriesSig=(stage,a,b)=>`${stage}|${[a,b].sort().join("|")}`;
+  const existingSig=new Map(live.series.map(s=>[seriesSig(s.stage,s.teamAId,s.teamBId),s]));
+  const grouped=new Map();
+  for(const g of playoffGames){
+    const stage=String(g.phaseTag),a=g.homeClubId,b=g.awayClubId;
+    if(!a||!b)continue;
+    const key=seriesSig(stage,a,b);
+    if(!grouped.has(key))grouped.set(key,{stage,teamAId:a,teamBId:b,games:[]});
+    grouped.get(key).games.push(g);
+  }
+  for(const grp of grouped.values()){
+    let s=existingSig.get(seriesSig(grp.stage,grp.teamAId,grp.teamBId));
+    if(!s){
+      const conf=grp.stage==="FINALS"?"Finals":grp.stage.split("_")[0];
+      s=makePlayoffSeries(grp.stage,conf,grp.teamAId,grp.teamBId,live.seedMap[grp.teamAId]??null,live.seedMap[grp.teamBId]??null);
+      live.series.push(s);existingSig.set(seriesSig(grp.stage,grp.teamAId,grp.teamBId),s);changed=true;
+    }
+    const ordered=[...grp.games].sort((a,b)=>(+a.round||0)-(+b.round||0));
+    const ids=ordered.map(g=>g.id);
+    if(ids.length>(s.games||[]).length){s.games=ids;changed=true}
+    let wa=0,wb=0;
+    for(const g of ordered){
+      if(g.winnerClubId===s.teamAId)wa++;
+      else if(g.winnerClubId===s.teamBId)wb++;
+    }
+    if(wa>s.winsA){s.winsA=wa;changed=true}
+    if(wb>s.winsB){s.winsB=wb;changed=true}
+    s.gameNo=Math.max(s.gameNo||0,ordered.length);
+    if((s.winsA>=4||s.winsB>=4)&&!s.complete){s.complete=true;changed=true}
+    if(s.complete&&!s.winnerClubId){s.winnerClubId=s.winsA>=4?s.teamAId:s.teamBId;changed=true}
+  }
+
+  // Recover seed metadata where it exists.
+  for(const s of live.series.filter(s=>String(s.stage||"").endsWith("_R1"))){
+    if(s.teamAId&&live.seedMap[s.teamAId]==null&&s.seedA!=null){live.seedMap[s.teamAId]=s.seedA;changed=true}
+    if(s.teamBId&&live.seedMap[s.teamBId]==null&&s.seedB!=null){live.seedMap[s.teamBId]=s.seedB;changed=true}
+  }
+
+  const hasStage=stage=>live.series.some(s=>s.stage===stage);
+  const completedStage=stage=>live.series.filter(s=>s.stage===stage&&s.complete&&s.winnerClubId);
+  const r1Complete=CONFERENCES.every(conf=>completedStage(`${conf}_R1`).length===4);
+  const sfComplete=CONFERENCES.every(conf=>completedStage(`${conf}_SF`).length===2);
+  const cfComplete=CONFERENCES.every(conf=>completedStage(`${conf}_CF`).length===1);
+
+  // Roll impossible future round markers back to the furthest valid bracket.
+  if(live.round==="FINALS"&&!hasStage("FINALS")&&!cfComplete){
+    live.round=sfComplete?"CF":r1Complete?"SF":"R1";changed=true;
+  }
+  if(live.round==="CF"&&!hasStage("East_CF")&&!hasStage("West_CF")&&!sfComplete){
+    live.round=r1Complete?"SF":"R1";changed=true;
+  }
+  if(live.round==="SF"&&!hasStage("East_SF")&&!hasStage("West_SF")&&!r1Complete){
+    live.round="R1";changed=true;
+  }
+
+  if(live.round==="SF"&&!hasStage("East_SF")&&!hasStage("West_SF")){
+    for(const conf of CONFERENCES){
+      const r1=completedStage(`${conf}_R1`);
+      if(r1.length===4){
+        live.series.push(makePlayoffSeries(`${conf}_SF`,conf,r1[0].winnerClubId,r1[1].winnerClubId,live.seedMap[r1[0].winnerClubId]??null,live.seedMap[r1[1].winnerClubId]??null));
+        live.series.push(makePlayoffSeries(`${conf}_SF`,conf,r1[2].winnerClubId,r1[3].winnerClubId,live.seedMap[r1[2].winnerClubId]??null,live.seedMap[r1[3].winnerClubId]??null));
+        changed=true;
+      }
+    }
+  }
+
+  if(live.round==="CF"&&!hasStage("East_CF")&&!hasStage("West_CF")){
+    for(const conf of CONFERENCES){
+      const sf=completedStage(`${conf}_SF`);
+      if(sf.length===2){
+        live.series.push(makePlayoffSeries(`${conf}_CF`,conf,sf[0].winnerClubId,sf[1].winnerClubId,live.seedMap[sf[0].winnerClubId]??null,live.seedMap[sf[1].winnerClubId]??null));
+        changed=true;
+      }
+    }
+  }
+
+  if(live.round==="FINALS"&&!hasStage("FINALS")){
+    for(const conf of CONFERENCES){
+      const cf=completedStage(`${conf}_CF`);
+      if(cf.length===1&&!live.conferenceWinners[conf]){live.conferenceWinners[conf]=cf[0].winnerClubId;changed=true}
+    }
+    if(live.conferenceWinners.East&&live.conferenceWinners.West){
+      live.series.push(makePlayoffSeries("FINALS","Finals",live.conferenceWinners.East,live.conferenceWinners.West,live.seedMap[live.conferenceWinners.East]??null,live.seedMap[live.conferenceWinners.West]??null));
+      changed=true;
+    }
+  }
+
+  // Advance any fully completed saved round until a playable stage exists.
+  let guard=0;
+  while(G.phase==="PLAYOFFS"&&guard++<6){
+    const round=live.round||"R1";
+    const current=live.series.filter(s=>round==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${round}`));
+    if(!current.length||!current.every(s=>s.complete&&s.winnerClubId))break;
+    const beforeRound=live.round;
+    try{
+      const progressed=buildNextPlayoffRound(G);
+      if(!progressed)break;
+      changed=true;
+      if(G.phase!=="PLAYOFFS"||live.round===beforeRound)break;
+    }catch(err){console.error("Postseason save repair failed",err);break}
+  }
+
+  if(changed&&G.phase==="PLAYOFFS"){
+    G.playoffs={
+      round:live.round,
+      seedMap:{...(live.seedMap||{})},
+      conferenceWinners:{...(live.conferenceWinners||{East:null,West:null})},
+      series:live.series.map(s=>({...s,games:[...(s.games||[])]})),
+      games:live.games,
+      live:true,
+      complete:false
+    };
+  }
+  return changed;
+}
+function seasonRegularFinish(){
+  const id=me()?.id,rows=G.regularSeason?.standings||[];
+  const row=rows.find(r=>r.clubId===id);
+  if(!row)return{record:`${me()?.standings?.w||0}–${me()?.standings?.l||0}`,conference:"—",division:"—"};
+  const confRows=rows.filter(r=>c(r.clubId)?.conference===me().conference).sort((a,b)=>b.w-a.w||b.diff-a.diff);
+  const divRows=rows.filter(r=>c(r.clubId)?.division===me().division).sort((a,b)=>b.w-a.w||b.diff-a.diff);
+  return{record:`${row.w}–${row.l}`,conference:`#${confRows.findIndex(r=>r.clubId===id)+1} ${me().conference}`,division:`#${divRows.findIndex(r=>r.clubId===id)+1} ${me().division}`};
+}
+function seasonUserCupFinish(){
+  const cup=G.inSeasonCup,id=me()?.id;if(!cup||!id)return"—";
+  if(cup.winnerClubId===id)return"NBA Cup Champion";
+  if(cup.final?.complete&&(cup.final.aId===id||cup.final.bId===id))return"NBA Cup Runner-Up";
+  const sf=(cup.semifinals||[]).find(x=>x.aId===id||x.bId===id);if(sf?.complete)return"Semifinal";
+  const qf=(cup.quarterfinals||[]).find(x=>x.aId===id||x.bId===id);if(qf?.complete)return"Quarterfinal";
+  const group=(cup.groups||[]).find(g=>(g.teamIds||[]).includes(id));
+  if(group){
+    const table=cupGroupTable(G,group.id),idx=table.findIndex(x=>x.clubId===id);
+    const groupName=String(group.id||"Group").replaceAll("_"," ");
+    return idx>=0?`Group Stage · #${idx+1} ${groupName}`:"Group Stage";
+  }
+  return cup.complete?"Group Stage":"—";
+}
 function seasonUserFinish(){
   const id=me()?.id;if(!id)return"—";
   if(G.champion?.id===id)return"NBA Champion";
@@ -4137,95 +4875,120 @@ function seasonUserFinish(){
   if(entries.length)return"Play-In";
   return"Missed Postseason";
 }
-
-function seasonRegularFinish(){
-  const id=me()?.id,rows=G.regularSeason?.standings||[];
-  const row=rows.find(r=>r.clubId===id);
-  if(!row)return{record:`${me()?.standings?.w||0}–${me()?.standings?.l||0}`,conference:"—",division:"—"};
-  const confRows=rows.filter(r=>c(r.clubId)?.conference===me().conference).sort((a,b)=>b.w-a.w||b.diff-a.diff);
-  const divRows=rows.filter(r=>c(r.clubId)?.division===me().division).sort((a,b)=>b.w-a.w||b.diff-a.diff);
-  return{record:`${row.w}–${row.l}`,conference:`#${confRows.findIndex(r=>r.clubId===id)+1} ${me().conference}`,division:`#${divRows.findIndex(r=>r.clubId===id)+1} ${me().division}`};
+function summaryClubName(id){return c(id)?.name||"—"}
+function summaryNationName(code){return G.nationalTeams?.find(n=>n.code===code)?.name||code||"—"}
+function summaryPlayerById(id){
+  if(!id)return null;
+  const pool=[
+    ...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),
+    ...(G.freeAgents||[])
+  ];
+  return pool.find(p=>p.id===id)||null;
 }
+function summaryPlayerName(id){return summaryPlayerById(id)?.name||"—"}
 
-function buildSeasonSummary(){
-  const season=G.season,reg=seasonRegularFinish();
-  const po=G.playoffsLive||G.playoffs;
-  const finals=(po?.series||[]).find(s=>s.stage==="FINALS");
-  const runnerUpId=finals?.winnerClubId?(finals.teamAId===finals.winnerClubId?finals.teamBId:finals.teamAId):null;
-  const eastChamp=po?.conferenceWinners?.East||null,westChamp=po?.conferenceWinners?.West||null;
-  const wc=[...(G.worldCupHistory||[])].reverse().find(x=>x.season===season&&x.status==="COMPLETE")||null;
+function resolveUserPlayInEntry(){
+  const x=me(),id=x?.id,live=G.playInLive||G.playIn;
+  if(!id||!live)return null;
 
-  const competitions=[
-    {label:"NBA Champion",value:G.champion?.name||"—",detail:runnerUpId?`Runner-up: ${summaryClubName(runnerUpId)}`:""},
-    eastChamp?{label:"East Champion",value:summaryClubName(eastChamp),detail:"Conference Champion"}:null,
-    westChamp?{label:"West Champion",value:summaryClubName(westChamp),detail:"Conference Champion"}:null,
-    G.inSeasonCup?.complete?{label:"NBA Cup",value:summaryClubName(G.inSeasonCup.winnerClubId),detail:G.inSeasonCup.mvpPlayerId?`MVP: ${summaryPlayerName(G.inSeasonCup.mvpPlayerId)}`:""}:null,
-    G.summerLeague?.championship?.complete?{label:"Summer League",value:summaryClubName(G.summerLeague.championship.championClubId),detail:G.awards?.[`S${season}_SummerLeagueMVP`]?`MVP: ${summaryPlayerName(G.awards[`S${season}_SummerLeagueMVP`])}`:""}:null,
-    G.allStar?.complete?{label:"NBA All-Star",value:allStarTeamName(G.allStar.champion),detail:G.allStar.mvpPlayerId?`MVP: ${summaryPlayerName(G.allStar.mvpPlayerId)}`:""}:null,
-    wc?{label:"FIBA World Cup",value:summaryNationName(wc.championCode),detail:`Runner-up: ${summaryNationName(wc.runnerUpCode)}`}:null
-  ].filter(Boolean);
-
-  const awards=[
-    ["MVP",G.awards?.[`S${season}_MVP`]],
-    ["Rookie of the Year",G.awards?.[`S${season}_ROY`]],
-    ["Defensive Player",G.awards?.[`S${season}_DPOY`]],
-    ["Sixth Man",G.awards?.[`S${season}_SixthMan`]],
-    ["Most Improved",G.awards?.[`S${season}_MIP`]],
-    ["Finals MVP",G.awards?.[`S${season}_FinalsMVP`]],
-    ["Scoring Champion",G.awards?.[`S${season}_ScoringChampion`]],
-    ["Rebounding Leader",G.awards?.[`S${season}_ReboundingLeader`]],
-    ["Assist Leader",G.awards?.[`S${season}_AssistLeader`]],
-    ["NBA Cup MVP",G.awards?.[`S${season}_NBACupMVP`]],
-    ["Summer League MVP",G.awards?.[`S${season}_SummerLeagueMVP`]],
-    ["All-Star MVP",G.awards?.[`S${season}_AllStarMVP`]],
-    wc?["World Cup MVP",wc.mvpPlayerId]:null
-  ].filter(x=>x&&x[1]).map(([label,id])=>({label,playerId:id,name:summaryPlayerName(id)}));
-
-  const user={
-    clubId:me()?.id||null,clubName:me()?.name||"—",record:reg.record,
-    conferenceFinish:reg.conference,divisionFinish:reg.division,postseasonFinish:seasonUserFinish(),
-    cupFinish:G.inSeasonCup?.winnerClubId===me()?.id?"NBA Cup Champion":G.inSeasonCup?.complete?"Completed NBA Cup":"—"
+  const validClubId=v=>!!v&&!!c(v);
+  const seedFor=(entry,clubId)=>{
+    if(!entry||!clubId)return null;
+    if(entry.teamAId===clubId&&Number.isFinite(+entry.seedA))return +entry.seedA;
+    if(entry.teamBId===clubId&&Number.isFinite(+entry.seedB))return +entry.seedB;
+    const mapped=live.seedMap?.[clubId];
+    return Number.isFinite(+mapped)?+mapped:null;
   };
-  return{season,createdAt:Date.now(),championClubId:G.champion?.id||null,championName:G.champion?.name||"—",runnerUpClubId:runnerUpId,
-    eastChampionClubId:eastChamp,westChampionClubId:westChamp,competitions,awards,user,
-    worldCup:wc?{cycle:wc.cycle,championCode:wc.championCode,runnerUpCode:wc.runnerUpCode,mvpPlayerId:wc.mvpPlayerId}:null};
-}
+  const normalise=entry=>{
+    if(!entry)return null;
+    let teamAId=entry.teamAId,teamBId=entry.teamBId;
+    const conf=entry.conference||x.conference;
+    const type=entry.type||"final";
 
-function ensureSeasonSummary(){
-  G.seasonSummaries=G.seasonSummaries||[];
-  let existing=G.seasonSummaries.find(x=>x.season===G.season);
-  if(existing)return existing;
-  const summary=buildSeasonSummary();
-  G.seasonSummaries.push(summary);
-  G.seasonSummaries=G.seasonSummaries.slice(-30);
-  return summary;
-}
+    // Legacy/sparse final entries can be rebuilt from the recorded Play-In results.
+    if((!validClubId(teamAId)||!validClubId(teamBId))&&type==="final"){
+      const r=live.results?.[conf];
+      if(r){
+        teamAId=validClubId(r.loser78)?r.loser78:teamAId;
+        teamBId=validClubId(r.winner910)?r.winner910:teamBId;
+      }
+    }
+    if(!validClubId(teamAId)||!validClubId(teamBId))return null;
 
-function seasonSummaryHtml(){
-  const s=ensureSeasonSummary(),u=s.user;
-  const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
-  const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label}</small><b>${x.name}</b></div>`).join("");
-  return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>Mini&Me Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are NBA Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
-    <div class="seasonSummarySection">Champions & Events</div><div class="seasonHonourGrid">${competitionHtml}</div>
-    <div class="seasonSummarySection">Season Awards</div><div class="seasonAwardsList">${awardHtml||`<div class="seasonHistoryRow"><small>No season awards recorded.</small></div>`}</div>
-    <div class="seasonSummarySection">Your Season</div><div class="seasonAwardsList"><div class="seasonAwardRow"><small>Club</small><b>${u.clubName}</b></div><div class="seasonAwardRow"><small>Regular Season</small><b>${u.record} · ${u.conferenceFinish} · ${u.divisionFinish}</b></div><div class="seasonAwardRow"><small>Postseason</small><b>${u.postseasonFinish}</b></div><div class="seasonAwardRow"><small>NBA Cup</small><b>${u.cupFinish}</b></div></div>
-    <div class="seasonStartAction"><button id="startNewSeason" class="primaryProgress">Start New Season</button></div></div>`;
-}
+    let seedA=seedFor({...entry,teamAId,teamBId},teamAId);
+    let seedB=seedFor({...entry,teamAId,teamBId},teamBId);
 
-function startNewSeason(){
-  if(G.phase!=="CHAMPION"){toast("Season is not complete");return}
-  ensureSeasonSummary();
-  recordGMCareerSeason(G);
-  snapshotLeagueSeason(G);
-  advance(G);
-  ui.page="home";ui.leagueTab="standings";ui.postseasonStage="playin";ui.resultGameId=null;ui.postUpdate=null;
-  save();render();
+    // The final Play-In game is always for the #8 seed. Keep the original
+    // regular-season seeds where known, otherwise use the expected 8/9 labels.
+    if(!Number.isFinite(seedA))seedA=type==="7v8"?7:type==="9v10"?9:8;
+    if(!Number.isFinite(seedB))seedB=type==="7v8"?8:type==="9v10"?10:9;
+
+    return {...entry,conference:conf,type,teamAId,teamBId,seedA,seedB};
+  };
+
+  const finals=(live.finals||[]).map(normalise).filter(Boolean);
+  const initial=(live.initial||[]).map(normalise).filter(Boolean);
+
+  const activeFinal=finals.find(e=>!e.complete&&(e.teamAId===id||e.teamBId===id));
+  if(activeFinal)return activeFinal;
+
+  const activeInitial=initial.find(e=>!e.complete&&(e.teamAId===id||e.teamBId===id));
+  if(activeInitial)return activeInitial;
+
+  const completedFinal=finals.find(e=>e.complete&&(e.teamAId===id||e.teamBId===id));
+  if(completedFinal)return completedFinal;
+
+  const completedInitial=initial.find(e=>e.complete&&(e.teamAId===id||e.teamBId===id));
+  return completedInitial||null;
+}
+function userPostseasonState(){
+  const x=me();if(!x)return{alive:false};const id=x.id;
+  const po=G.playoffsLive||G.playoffs;
+  const series=(po?.series||[]).filter(s=>s.teamAId===id||s.teamBId===id);
+  if(series.length){
+    const active=series.find(s=>!s.complete);
+    if(active)return{alive:true,stage:postseasonRoundLabel(active.stage==="FINALS"?"FINALS":String(active.stage||"").split("_").pop()),seed:po.seedMap?.[id]||(active.teamAId===id?active.seedA:active.seedB),series:active};
+    const order={R1:1,SF:2,CF:3,FINALS:4};
+    const latest=[...series].sort((a,b)=>{const ak=a.stage==="FINALS"?"FINALS":String(a.stage||"").split("_").pop(),bk=b.stage==="FINALS"?"FINALS":String(b.stage||"").split("_").pop();return(order[bk]||0)-(order[ak]||0)})[0];
+    if(latest?.complete&&latest.winnerClubId!==id)return{alive:false,eliminatedStage:postseasonRoundLabel(latest.stage==="FINALS"?"FINALS":String(latest.stage||"").split("_").pop()),seed:po.seedMap?.[id]||(latest.teamAId===id?latest.seedA:latest.seedB),series:latest};
+    if(latest?.complete&&latest.winnerClubId===id)return{alive:true,stage:"Advancing",seed:po.seedMap?.[id]||(latest.teamAId===id?latest.seedA:latest.seedB),series:latest};
+  }
+  const pi=G.playInLive||G.playIn;
+  if(pi?.initial?.length){
+    const resolved=resolveUserPlayInEntry();
+    const final=(pi.finals||[]).find(e=>e?.teamAId===id||e?.teamBId===id);
+    const userInitial=(pi.initial||[]).find(e=>e?.teamAId===id||e?.teamBId===id);
+    const initialEntry=userInitial||((resolved&&resolved.type!=="final")?resolved:null);
+    const finalEntry=final||((resolved&&resolved.type==="final")?resolved:null);
+
+    if(initialEntry&&!initialEntry.complete)return{alive:true,stage:"Play-In",seed:pi.seedMap?.[id]||(initialEntry.teamAId===id?initialEntry.seedA:initialEntry.seedB),entry:initialEntry};
+    if(initialEntry?.complete){
+      const ig=initialEntry.gameId?gameById(initialEntry.gameId):null,wonInitial=ig?.winnerClubId===id;
+      if(initialEntry.type==="7v8"&&wonInitial)return{alive:true,stage:"Qualified",seed:7,entry:initialEntry,qualified:true,awaitingPlayoffs:true};
+      if(initialEntry.type==="9v10"&&!wonInitial&&!finalEntry)return{alive:false,eliminatedStage:"Play-In 9 vs 10",seed:pi.seedMap?.[id]||(initialEntry.teamAId===id?initialEntry.seedA:initialEntry.seedB),entry:initialEntry};
+      if(finalEntry&&!finalEntry.complete)return{alive:true,stage:"Play-In",seed:8,entry:finalEntry};
+      if(finalEntry?.complete){const fg=gameById(finalEntry.gameId);if(fg?.winnerClubId===id)return{alive:true,stage:"Qualified",seed:8,entry:finalEntry,qualified:true,awaitingPlayoffs:true};return{alive:false,eliminatedStage:"Play-In 8th Seed Game",seed:8,entry:finalEntry}}
+    }else if(resolved&&!resolved.complete){
+      return{alive:true,stage:"Play-In",seed:resolved.teamAId===id?resolved.seedA:resolved.seedB,entry:resolved};
+    }
+  }
+  if(G.phase==="PLAYOFFS"&&pi?.complete){
+    const qualified=[pi.East?.seed7,pi.East?.seed8,pi.West?.seed7,pi.West?.seed8].includes(id);
+    if(qualified)return{alive:true,stage:"Qualified",seed:pi.seedMap?.[id],qualified:true};
+    return{alive:false,eliminatedStage:"Play-In",seed:pi.seedMap?.[id]};
+  }
+  return{alive:true,stage:null};
 }
 function home(){
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
+  if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
+  if(G.phase==="PLAYOFFS"&&!G.playoffsLive){
+    initializePlayoffsLive(G);
+    save();
+  }
   if(G.phase==="PLAYOFFS"&&repairPlayoffSaveState())save();
-  if((G.phase==="PLAY_IN"||G.phase==="PLAYOFFS")&&!userPostseasonState().alive)return postseasonObserverHome();
+  if(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"){const pst=userPostseasonState();if(!pst.alive)return postseasonObserverHome();return postseasonUserHome();}
   let f=nextFixture();
   if(G.phase==="SUMMER_LEAGUE_COMPLETE")return summerLeagueCompletionHtml();
   if(G.phase==="PRESEASON_READINESS")return preseasonReadinessHtml();
@@ -4241,6 +5004,7 @@ function home(){
 function eventSummaryCard({label,title,subtitle,metrics=[]}){
   return `<div class="eventHero"><div class="eventHeroTop"><b>${label}</b><small>Season ${G.season}</small></div><div class="eventHeroBody"><h3>${title}</h3><p>${subtitle||""}</p>${metrics.length?`<div class="eventMetrics">${metrics.map(m=>`<div class="eventMetric"><b>${m.value}</b><small>${m.label}</small></div>`).join("")}</div>`:""}</div></div>`;
 }
+function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
 function gmBrief(){
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
   return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="sectionTitle">Career</div><div class="card"><div class="more"><div><b>Career Record</b><small>Regular season</small></div><b>${gm.careerW}–${gm.careerL}</b></div><div class="more"><div><b>NBA Championships</b><small>Career honours</small></div><b>${gm.championships}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>Career honours</small></div><b>${gm.cupTitles}</b></div></div>`;
@@ -4248,33 +5012,6 @@ function gmBrief(){
 function newsPage(){
   return `${header("News","Club and league news from around the basketball world")}<div class="newsFilter"><button data-newsfilter="all" class="${ui.newsFilter==="all"?"active":""}">All</button><button data-newsfilter="club" class="${ui.newsFilter==="club"?"active":""}">Club</button><button data-newsfilter="league" class="${ui.newsFilter==="league"?"active":""}">League</button></div><div class="card">${news()}</div>`;
 }
-function openDraftWindow(){
-  if(G.phase!=="DRAFT_NIGHT" && !G.draftState){toast("Draft Night is not active");return}
-  show("draftWindow");renderDraftWindow();
-}
-function renderDraftWindow(){
-  const complete=!!G.draftState?.complete || G.phase!=="DRAFT_NIGHT";
-  $("#draftWindowStatus").textContent=complete?`Draft Complete · Season ${G.season}`:`Draft Night · Season ${G.season}`;
-  $("#draftWindowClose").textContent=complete?"Return Home":"Return Home";
-  $("#draftWindowHost").innerHTML=draft()+ (complete?`<div class="draftCompleteAction"><button id="continueAfterDraft">${G.phase==="SUMMER_LEAGUE"?"Continue to Summer League":"Continue Career"}</button></div>`:"");
-  bindDraftWindow();
-}
-function bindDraftWindow(){
-  $$("[data-pick]").forEach(b=>b.onclick=async()=>{
-    const r=makeUserDraftSelection(G,b.dataset.pick);
-    if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);await save();renderDraftWindow()}else toast(r.reason);
-  });
-  if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{ui.page="home";show("game");render();save()};
-}
-function twoWayCandidates(){let club=me();return [...(G.freeAgents||[]),...((club.gLeagueRoster)||[])].filter(twoWayEligible).sort((a,b)=>b.ovr-a.ovr).slice(0,25)}
-function squad(){let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
-let nbaRows=d.nba.map(p=>{let injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";return `<tr><td class="pname"><div class="rosterIdentity"><b>${p.name}</b><small>${p.role||"Depth"}</small>${injTag}</div></td><td>${p.pos}</td><td>${p.ovr}</td><td>${p.age}</td><td>${p.mins||0}</td></tr>`}).join("");
-let twoWayRows=d.twoWay.map(p=>{let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";return `<div class="more"><div><b>${p.name}</b><small>${p.pos} · Age ${p.age}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`}).join("");
-let candRows=cands.map(p=>`<div class="more"><div><b>${p.name}</b><small>${p.position} · Age ${p.age} · ${p.origin||"Free Agent"}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-sign="${p.id}">Sign</button></div></div>`).join("");
-let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
-let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Sign to Two-Way</div>${candRows}`:"";
-return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div><div class="sectionTitle">NBA Roster</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>MIN</th></tr></thead><tbody>${nbaRows}</tbody></table></div><div class="sectionTitle">Two-Way (${d.twoWay.length}/${twLimit})</div><div class="card">${twoWayBlock}${candBlock}</div>`}
-function contracts(){let s=offseasonRosterState(G,me().id),cap=s.cap;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>${G.settings.salaryCap?"$"+cap.salaryCapM.toFixed(0)+"M":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Cap Sheet</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>TERM</th><th>SALARY</th><th></th></tr></thead><tbody>${s.roster.map(p=>`<tr><td class="pname"><b>${p.name}</b><small>${p.type}${p.extensionEligible?" · Extension eligible":""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.yearsLeft} yr</td><td>$${(+p.salaryM).toFixed(1)}M</td><td><div class="pickrow">${p.extensionEligible?`<button class="pick" data-extend="${p.playerId}">Extend</button>`:""}<button class="pick" data-waive="${p.playerId}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></td></tr>`).join("")}</tbody></table></div>`}
 function draft(){
   if(G.phase==="DRAFT_NIGHT"){
     if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
@@ -4336,7 +5073,116 @@ function trades(){let myId=me().id;if(!ui.tradePartner||ui.tradePartner===myId)u
 let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>S${a.year} Round ${a.round}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
 let ev=ui.tradeEval;let evalHtml=ev?(ev.valid?`<div class="card evalcard ${ev.accepted?"":"rej"}"><div class="eyebrow">${ev.accepted?"AI ACCEPTS":"AI REJECTS"}</div><div class="smallcopy">${ev.reason}</div><div class="metrics" style="margin-top:9px"><div class="metric"><b>${ev.aSendsValue}</b><small>You Send</small></div><div class="metric"><b>${ev.bSendsValue}</b><small>They Send</small></div><div class="metric"><b>${ev.ratio}</b><small>Value Ratio</small></div></div></div>`:`<div class="card evalcard rej"><div class="eyebrow">INVALID</div><div class="smallcopy">${ev.reason}</div></div>`):"";
 return `<div class="card"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div><div class="sectionTitle">${c(myId).name} Sends</div><div class="card">${assetRows(snap.club.players,"out","players")}${assetRows(snap.club.picks,"out","picks")}</div><div class="sectionTitle">${snap.partner.clubName} Sends</div><div class="card">${assetRows(snap.partner.players,"in","players")}${assetRows(snap.partner.picks,"in","picks")}</div>${evalHtml}<div class="quick" style="margin-top:10px"><button id="evalTradeBtn" class="btn secondary" style="margin:0">Evaluate</button><button id="execTradeBtn" class="btn primary" style="margin:0">Execute</button></div>`}
-function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
+function openDraftWindow(){
+  if(G.phase!=="DRAFT_NIGHT" && !G.draftState){toast("Draft Night is not active");return}
+  show("draftWindow");renderDraftWindow();
+}
+function renderDraftWindow(){
+  const complete=!!G.draftState?.complete || G.phase!=="DRAFT_NIGHT";
+  $("#draftWindowStatus").textContent=complete?`Draft Complete · Season ${G.season}`:`Draft Night · Season ${G.season}`;
+  $("#draftWindowClose").textContent=complete?"Return Home":"Return Home";
+  $("#draftWindowHost").innerHTML=draft()+ (complete?`<div class="draftCompleteAction"><button id="continueAfterDraft">${G.phase==="SUMMER_LEAGUE"?"Continue to Summer League":"Continue Career"}</button></div>`:"");
+  bindDraftWindow();
+}
+function bindDraftWindow(){
+  $$("[data-pick]").forEach(b=>b.onclick=async()=>{
+    const r=makeUserDraftSelection(G,b.dataset.pick);
+    if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);await save();renderDraftWindow()}else toast(r.reason);
+  });
+  if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{ui.page="home";show("game");render();save()};
+}
+function twoWayCandidates(){let club=me();return [...(G.freeAgents||[]),...((club.gLeagueRoster)||[])].filter(twoWayEligible).sort((a,b)=>b.ovr-a.ovr).slice(0,25)}
+function squad(){let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
+let nbaRows=d.nba.map(p=>{let injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";return `<tr><td class="pname"><div class="rosterIdentity"><b>${p.name}</b><small>${p.role||"Depth"}</small>${injTag}</div></td><td>${p.pos}</td><td>${p.ovr}</td><td>${p.age}</td><td>${p.mins||0}</td></tr>`}).join("");
+let twoWayRows=d.twoWay.map(p=>{let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";return `<div class="more"><div><b>${p.name}</b><small>${p.pos} · Age ${p.age}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`}).join("");
+let candRows=cands.map(p=>`<div class="more"><div><b>${p.name}</b><small>${p.position} · Age ${p.age} · ${p.origin||"Free Agent"}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-sign="${p.id}">Sign</button></div></div>`).join("");
+let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
+let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Sign to Two-Way</div>${candRows}`:"";
+return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div><div class="sectionTitle">NBA Roster</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>MIN</th></tr></thead><tbody>${nbaRows}</tbody></table></div><div class="sectionTitle">Two-Way (${d.twoWay.length}/${twLimit})</div><div class="card">${twoWayBlock}${candBlock}</div>`}
+function contracts(){
+  const s=offseasonRosterState(G,me().id),cap=s.cap,groups=["Guards","Forwards","Centers"];
+  const bands=[
+    {label:"Franchise / Max",range:"$43M+",count:s.roster.filter(p=>p.salaryBand==="Franchise / Max").length},
+    {label:"Star",range:"$25–42.9M",count:s.roster.filter(p=>p.salaryBand==="Star").length},
+    {label:"Starter",range:"$11–24.9M",count:s.roster.filter(p=>p.salaryBand==="High Starter"||p.salaryBand==="Starter").length},
+    {label:"Rotation / Depth",range:"$1.2–10.9M",count:s.roster.filter(p=>["Rotation","Bench","Depth / Minimum"].includes(p.salaryBand)).length}
+  ];
+  const capNote=G.settings.salaryCap?`Cap mechanisms remain active. Contract market values are separate from whether a transaction fits under the CBA.`:`<b>Salary Cap OFF:</b> transaction restrictions are disabled, but player market values and extension demands still use the same salary economy.`;
+  const tableFor=(group)=>{
+    const rows=s.roster.filter(p=>p.positionGroup===group);
+    return `<div class="contractGroupTitle"><b>${group}</b><span>${rows.length} player${rows.length===1?"":"s"}</span></div><div class="table contractTable compact"><table><thead><tr><th>PLAYER</th><th>ROLE / BAND</th><th>TERM</th><th>SALARY</th><th>MARKET</th><th></th></tr></thead><tbody>${rows.map(p=>{
+      const statusClass=p.valueStatus==="Above Market"?"above":p.valueStatus==="Value Contract"?"value":"market";
+      const contractTag=p.type!=="Standard"?`<span class="contractTypeBadge">${p.type}</span>`:"";
+      const extensionTag=p.extensionEligible?`<span class="contractBadge">Extension Eligible</span>`:"";
+      return `<tr><td class="pname"><b>${p.name}</b><span class="contractPlayerMeta">${p.positionLabel} · Age ${p.age} · OVR ${p.ovr}</span>${contractTag}${extensionTag}</td><td><span class="band">${p.rotationRole}</span><small class="market">${p.salaryBand}</small></td><td>${p.yearsLeft} yr</td><td><b>$${(+p.salaryM).toFixed(1)}M</b><small class="market">${p.salaryBandRange}</small></td><td><b>$${(+p.marketSalaryM).toFixed(1)}M</b><small class="contractValue ${statusClass}">${p.valueStatus}</small></td><td><div class="contractActions">${p.extensionEligible?`<button class="pick" data-extend="${p.playerId}">Extend</button>`:""}<button class="pick" data-waive="${p.playerId}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></td></tr>`
+    }).join("")}</tbody></table></div>`;
+  };
+  return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>${G.settings.salaryCap?"$"+cap.salaryCapM.toFixed(0)+"M":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${G.settings.salaryCap?cap.status:"Market Only"}</b><small>Cap Status</small></div></div>
+  <div class="contractEconomy"><div class="contractEconomyHead"><b>Roster Salary Structure</b><small>Salary tiers separate franchise talent from normal starters and rotation players. Market salary is what a comparable player should command under the current economy.</small></div><div class="salaryBandGrid">${bands.map(x=>`<div class="salaryBandCard"><b>${x.label}</b><span>${x.range}</span><small>${x.count} on roster</small></div>`).join("")}</div></div>
+  <div class="capOffNote">${capNote}</div>
+  <div class="sectionTitle">Cap Sheet</div>${groups.map(tableFor).join("")}`;
+}
+function freeagency(){let club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,40),cap=mkt.cap,players=mkt.players;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Free Agent Market</div>${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>DEMAND</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${p.name}</b><small>Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} ppg`:""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.demandYears}yr $${p.demandAnnualM.toFixed(1)}M</td><td><button class="pick" data-signfa="${p.id}" data-years="${p.demandYears}" data-salary="${p.demandAnnualM}">Sign</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents available to sign right now.</div>`}`}
+function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
+function trades(){
+  const myId=me().id;
+  if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;
+  ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};
+  const snap=tradeCenterSnapshot(G,myId,ui.tradePartner);
+  if(!snap||!snap.partner)return `<div class="card empty">No trade partner available.</div>`;
+
+  const selectedTotals=(sideSnap,selection)=>{
+    const players=sideSnap.players.filter(p=>selection.players.includes(p.id));
+    const picks=sideSnap.picks.filter(p=>selection.picks.includes(p.id));
+    return{
+      players,picks,
+      value:Math.round((players.reduce((a,p)=>a+(+p.value||0),0)+picks.reduce((a,p)=>a+(+p.value||0),0))*10)/10,
+      salary:Math.round(players.reduce((a,p)=>a+(+p.salaryM||0),0)*10)/10,
+      count:players.length+picks.length
+    };
+  };
+  const mine=selectedTotals(snap.club,ui.tradeOut),theirs=selectedTotals(snap.partner,ui.tradeIn);
+  const valueDelta=Math.round((mine.value-theirs.value)*10)/10;
+  const salaryDelta=Math.round((mine.salary-theirs.salary)*10)/10;
+
+  const livePlayer=(clubId,id)=>c(clubId)?.roster?.find(p=>p.id===id);
+  const groupedAssets=(sideSnap,side,selection)=>{
+    const groupNames=["Guards","Forwards","Centers"];
+    const playersByGroup=groupNames.map(group=>{
+      const players=sideSnap.players.filter(a=>{
+        const p=livePlayer(sideSnap.clubId,a.id);
+        return p?positionGroupForPlayer(p)===group:(group==="Guards"?["PG","SG"].includes(a.position):group==="Forwards"?["SF","PF"].includes(a.position):a.position==="C");
+      });
+      if(!players.length)return"";
+      return `<div class="tradeGroupTitle">${group}</div>${players.map(a=>{
+        const p=livePlayer(sideSnap.clubId,a.id),checked=selection.players.includes(a.id),pos=p?positionLabel(p):a.position,role=p?.rotationRole||"Roster";
+        return `<label class="tradeAssetRow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="players" data-id="${a.id}" ${checked?"checked":""}><span class="tradeAssetMain"><b>${a.name}</b><small>${pos} · Age ${a.age} · OVR ${a.ovr} · ${role}</small><small>${a.yearsLeft} yr · $${(+a.salaryM).toFixed(1)}M</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
+      }).join("")}`;
+    }).join("");
+    const picks=sideSnap.picks.length?`<div class="tradeGroupTitle">Draft Picks</div>${sideSnap.picks.map(a=>{
+      const checked=selection.picks.includes(a.id);
+      return `<label class="tradeAssetRow tradePickRow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="picks" data-id="${a.id}" ${checked?"checked":""}><span class="tradeAssetMain"><b>Season ${a.year} · Round ${a.round}</b><small>Originally ${a.originalClubName}</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
+    }).join("")}`:"";
+    return playersByGroup+picks||`<div class="empty" style="padding:14px">No assets available.</div>`;
+  };
+
+  const summarySide=(name,t,sideLabel)=>`<div class="tradeSummarySide"><h4>${name}</h4><small>${sideLabel} · ${t.count} selected asset${t.count===1?"":"s"}</small><div class="tradeTotals"><div class="tradeTotal"><b>${t.value.toFixed(1)}</b><span>Trade Value</span></div><div class="tradeTotal"><b>$${t.salary.toFixed(1)}M</b><span>Salary</span></div></div></div>`;
+
+  const ev=ui.tradeEval;
+  const evalHtml=ev?(ev.valid?`<div class="tradeEvalPanel ${ev.accepted?"accept":"reject"}"><div class="tradeEvalTop"><b>${ev.accepted?"Trade Accepted":"Trade Rejected"}</b><span>${ev.reason}</span></div><div class="tradeEvalMetrics"><div class="tradeEvalMetric"><b>${ev.aSendsValue}</b><small>${me().name} Value</small></div><div class="tradeEvalMetric"><b>${ev.bSendsValue}</b><small>${snap.partner.clubName} Value</small></div><div class="tradeEvalMetric"><b>${valueDelta>0?"+":""}${valueDelta.toFixed(1)}</b><small>Value Difference</small></div><div class="tradeEvalMetric"><b>${G.settings.salaryCap?(ev.salaryMatch?.ok?"Valid":"Invalid"):"Not Required"}</b><small>Salary Match</small></div></div></div>`:`<div class="tradeEvalPanel reject"><div class="tradeEvalTop"><b>Trade Invalid</b><span>${ev.reason}</span></div></div>`):`<div class="tradeEvalPanel"><div class="tradeEvalTop"><b>Trade Evaluation</b><span>Select assets from both teams, then evaluate the proposal.</span></div></div>`;
+
+  return `<div class="tradeWorkspace">
+    <div class="card tradePartnerCard"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div>
+    <div class="tradeCompare">${summarySide(me().name,mine,"YOU SEND")}<div class="tradeVs">↔</div>${summarySide(snap.partner.clubName,theirs,"THEY SEND")}</div>
+    <div class="tradeDelta"><b>Value:</b> ${mine.value.toFixed(1)} vs ${theirs.value.toFixed(1)} (${valueDelta===0?"even":`${Math.abs(valueDelta).toFixed(1)} ${valueDelta>0?"more sent by you":"more received by you"}`}) · <b>Salary:</b> $${mine.salary.toFixed(1)}M vs $${theirs.salary.toFixed(1)}M${G.settings.salaryCap?` · matching rules apply`:` · cap matching disabled`}</div>
+    <div class="tradeAssetColumns">
+      <div class="tradeAssetPanel"><div class="tradeAssetHead"><b>${me().name} Sends</b><small>Select players and draft picks to include in your offer.</small></div>${groupedAssets(snap.club,"out",ui.tradeOut)}</div>
+      <div class="tradeAssetPanel"><div class="tradeAssetHead"><b>${snap.partner.clubName} Sends</b><small>Select the assets you want in return.</small></div>${groupedAssets(snap.partner,"in",ui.tradeIn)}</div>
+    </div>
+    ${evalHtml}
+    <div class="tradeActions"><button id="evalTradeBtn" class="btn secondary">Evaluate Trade</button><button id="execTradeBtn" class="btn primary">Execute Trade</button></div>
+  </div>`;
+}
 function standingsRows(){
   return G.regularSeason?.standings?.length?G.regularSeason.standings:G.clubs.map(x=>({
     clubId:x.id,conference:x.conference,division:x.division,w:x.standings.w,l:x.standings.l,
@@ -4439,17 +5285,25 @@ function playInHistory(){
 }
 function seriesCard(s){
   const a=c(s.teamAId),b=c(s.teamBId),user=s.teamAId===me().id||s.teamBId===me().id,w=s.winnerClubId?c(s.winnerClubId):null,complete=s.complete;
-  return `<div class="seriesCard ${user?"userSeries":""}"><div class="seriesMeta"><small>${s.conference==="Finals"?"NBA Finals":`${s.conference} · ${postseasonStageTitle(postseasonStageKey(s.stage))}`}</small><span>${complete?"FINAL":`Game ${(s.gameNo||0)+1}`}</span></div><div class="seriesTeams"><div class="seriesTeam"><b>(${s.seedA||"—"}) ${a?.name||""}</b><small>${complete&&w?.id===s.teamAId?"Series winner":`${s.winsA} wins`}</small></div><div class="seriesScore">${s.winsA}</div></div><div class="seriesTeams"><div class="seriesTeam"><b>(${s.seedB||"—"}) ${b?.name||""}</b><small>${complete&&w?.id===s.teamBId?"Series winner":`${s.winsB} wins`}</small></div><div class="seriesScore">${s.winsB}</div></div><div class="seriesOutcome">${complete?`<b>${w?.name||"Winner"}</b> wins series ${Math.max(s.winsA,s.winsB)}–${Math.min(s.winsA,s.winsB)}`:`Series ${s.winsA===s.winsB?"tied":s.winsA>s.winsB?`${a?.name} leads`:`${b?.name} leads`} ${Math.max(s.winsA,s.winsB)}–${Math.min(s.winsA,s.winsB)}`}</div></div>`;
+  return `<div class="seriesCard ${user?"userSeries":""}" data-seriesid="${s.id}"><div class="seriesMeta"><small><span class="seriesMatchupLabel">${s.seedA||"—"} vs ${s.seedB||"—"}</span> · ${s.conference==="Finals"?"NBA Finals":postseasonStageTitle(postseasonStageKey(s.stage))}</small><span>${complete?"FINAL":`Game ${(s.gameNo||0)+1} of 7`}</span></div><div class="seriesTeams"><div class="seriesTeam"><b>(${s.seedA||"—"}) ${a?.name||""}</b><small>${complete&&w?.id===s.teamAId?"Series winner":`${s.winsA} wins`}</small></div><div class="seriesScore">${s.winsA}</div></div><div class="seriesTeams"><div class="seriesTeam"><b>(${s.seedB||"—"}) ${b?.name||""}</b><small>${complete&&w?.id===s.teamBId?"Series winner":`${s.winsB} wins`}</small></div><div class="seriesScore">${s.winsB}</div></div><div class="seriesOutcome">${complete?`<b>${w?.name||"Winner"}</b> wins series ${Math.max(s.winsA,s.winsB)}–${Math.min(s.winsA,s.winsB)}`:s.winsA===s.winsB?`Series tied ${s.winsA}–${s.winsB}`:s.winsA>s.winsB?`${a?.name} leads ${s.winsA}–${s.winsB}`:`${b?.name} leads ${s.winsB}–${s.winsA}`}</div></div>`;
+}
+function seriesDrilldown(series){
+  const a=c(series.teamAId),b=c(series.teamBId),games=(series.games||[]).map((id,i)=>{const g=gameById(id);if(!g)return"";const winner=c(g.winnerClubId);return `<button class="seriesGameRow" data-postgame="${g.id}"><span>GAME ${i+1}</span><b>${c(g.awayClubId)?.name||g.awayClubId} ${g.awayScore} · ${c(g.homeClubId)?.name||g.homeClubId} ${g.homeScore}<small>${winner?.name||"Winner"} won</small></b><strong>BOX SCORE ›</strong></button>`}).join("");
+  return `<div class="seriesDrill"><div class="seriesDrillTop"><div><b>(${series.seedA||"—"}) ${a?.name} vs (${series.seedB||"—"}) ${b?.name}</b><div class="smallcopy">${series.stage==="FINALS"?"NBA Finals":`${series.conference}ern Conference · ${postseasonStageTitle(postseasonStageKey(series.stage))}`} · Series ${series.winsA}–${series.winsB}</div><div class="smallcopy" style="margin-top:4px;color:var(--accent2)">Select any completed game to view its full box score.</div></div><button class="seriesBack" id="seriesBack">Back</button></div><div class="seriesGameList">${games||`<div class="empty">No games completed yet.</div>`}</div></div>`;
 }
 function playoffStageHistory(key){
   const p=G.playoffsLive||G.playoffs;if(!p?.series?.length)return `<div class="card empty">Playoff series will appear here after the Play-In Tournament.</div>`;
   const series=p.series.filter(s=>postseasonStageKey(s.stage)===key);if(!series.length)return `<div class="card empty">${postseasonStageTitle(key)} has not begun yet.</div>`;
+  if(ui.postSeriesId){const selected=series.find(s=>s.id===ui.postSeriesId);if(selected)return seriesDrilldown(selected);ui.postSeriesId=null}
   if(key==="finals")return `<div class="seriesGrid">${series.map(seriesCard).join("")}</div>`;
-  return CONFERENCES.map(conf=>{const rows=series.filter(s=>s.conference===conf);return rows.length?`<div class="sectionTitle">${conf}ern Conference</div><div class="seriesGrid">${rows.map(seriesCard).join("")}</div>`:""}).join("");
+  const conf=ui.postConference||"East",rows=series.filter(s=>s.conference===conf);
+  return `<div class="postConfTabs"><button data-postconf="East" class="${conf==="East"?"active":""}">Eastern Conference</button><button data-postconf="West" class="${conf==="West"?"active":""}">Western Conference</button></div><div class="seriesGrid">${rows.map(seriesCard).join("")}</div>`;
 }
 function postseasonPage(){
   const tabs=[["playin","Play-In"],["r1","Round 1"],["sf","Conf. Semis"],["cf","Conf. Finals"],["finals","NBA Finals"]],st=userPostseasonState();
-  const summary=(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"||G.phase==="CHAMPION")?eventSummaryCard({label:"NBA Postseason",title:G.phase==="CHAMPION"?`${G.champion?.name||"Champion"} are NBA Champions`:st.alive?`${me().name} remain alive`:`${me().name} eliminated`,subtitle:st.alive?`Current league stage: ${G.phase==="PLAY_IN"?"Play-In":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1")}.`:`Your postseason ended in ${st.eliminatedStage||"the postseason"}. Results remain available by round.`,metrics:[{label:"Your Seed",value:st.seed?`#${st.seed}`:"—"},{label:"Your Status",value:st.alive?"Active":"Eliminated"},{label:"Current Stage",value:G.phase==="PLAY_IN"?"Play-In":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1")}]}):"";
+  const currentStage=G.phase==="PLAY_IN"?"Play-In":G.phase==="PLAYOFFS"?postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1"):G.phase==="CHAMPION"?"Season Complete":"Postseason";
+  const statusText=st.alive?(st.qualified?`#${st.seed} seed secured`:"Active"):"Eliminated";
+  const summary=(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"||G.phase==="CHAMPION")?eventSummaryCard({label:"NBA Postseason",title:G.phase==="CHAMPION"?`${G.champion?.name||"Champion"} are NBA Champions`:st.alive?`${me().name} · ${statusText}`:`${me().name} eliminated`,subtitle:st.alive?(st.qualified?`Your Play-In is complete. The league is finalising the remaining postseason field.`:`Follow your series game by game or review the full bracket below.`):`Your postseason ended in ${st.eliminatedStage||"the postseason"}. The remaining bracket can still be followed by round.`,metrics:[{label:"Your Seed",value:st.seed?`#${st.seed}`:"—"},{label:"Your Status",value:statusText},{label:"Current Stage",value:currentStage}]}):"";
   const nav=`<div class="postStageTabs">${tabs.map(([k,l])=>`<button data-poststage="${k}" class="${ui.postseasonStage===k?"active":""}">${l}</button>`).join("")}</div>`;
   return summary+nav+(ui.postseasonStage==="playin"?playInHistory():playoffStageHistory(ui.postseasonStage));
 }
@@ -4462,10 +5316,12 @@ function international(){let code=G.userNationalGM?.nationCode;if(!code)return h
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
-  return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>v0.1.1.15 Season Complete</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
+  return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
 function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
+  $('#openAllStarHome')?.addEventListener('click',openAllStarWindow);
+  $('#openFibaHome')?.addEventListener('click',openFibaWindow);
 if($("#openAllStarEvent"))$("#openAllStarEvent").onclick=openAllStarWindow;
 if($("#continueToPreseasonReadiness"))$("#continueToPreseasonReadiness").onclick=()=>{const r=continueFromSummerLeague(G);if(!r.ok)toast(r.reason);else{save();render()}};
 if($("#manageRosterReadiness"))$("#manageRosterReadiness").onclick=()=>{ui.page="team";ui.teamTab="squad";render()};
@@ -4479,7 +5335,12 @@ if($("#beginPreseasonReadiness"))$("#beginPreseasonReadiness").onclick=()=>{
 };
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
-$$("[data-poststage]").forEach(b=>b.onclick=()=>{ui.postseasonStage=b.dataset.poststage;render()});
+if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;const st=userPostseasonState();if(G.phase==="PLAY_IN")ui.postseasonStage="playin";else if(st.series)ui.postseasonStage=postseasonStageKey(st.series.stage);render()};
+$$("[data-poststage]").forEach(b=>b.onclick=()=>{ui.postseasonStage=b.dataset.poststage;ui.postSeriesId=null;render()});
+$$("[data-postconf]").forEach(b=>b.onclick=()=>{ui.postConference=b.dataset.postconf;ui.postSeriesId=null;render()});
+$$("[data-seriesid]").forEach(b=>b.onclick=()=>{ui.postSeriesId=b.dataset.seriesid;render()});
+if($("#seriesBack"))$("#seriesBack").onclick=()=>{ui.postSeriesId=null;render()};
+$$("[data-postgame]").forEach(b=>b.onclick=()=>{const g=gameById(b.dataset.postgame);if(g)openResultWindow(g,"series")});
 if($("#openDraftFromTeam"))$("#openDraftFromTeam").onclick=openDraftWindow;
 if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
@@ -4501,6 +5362,6 @@ $$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.na
 if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode;ui.natSelected=nationalCandidates(G,code).filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id);render()};
 if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
 }
-$("#allStarWindowClose").onclick=()=>{show("game");ui.page="home";render()};
-$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;render()});drawTeams();
+$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;render()});
+drawTeams();
 </script></body></html>
