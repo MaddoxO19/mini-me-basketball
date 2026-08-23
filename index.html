@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.1.35 Season QA Closeout</title>
+<title>Mini&Me Basketball — v0.1.2.0 Player Club Schedule Foundation</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -401,6 +401,38 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 
 @media(max-width:390px){.draftRec{grid-template-columns:24px minmax(0,1fr)}.draftRecTag{grid-column:2;justify-self:start}.draftScoutHead{align-items:flex-start}}
 @media(max-width:700px){.draftMetrics{grid-template-columns:repeat(2,1fr)}.draftMetric:first-child{grid-column:1/-1}}
+
+/* v0.1.2.0 Player / Club / Schedule foundation */
+.profileLink,.clubLink{appearance:none;background:none;border:0;padding:0;margin:0;color:inherit;font:inherit;font-weight:inherit;text-align:left;cursor:pointer}
+.profileLink:hover,.clubLink:hover{color:var(--accent2)}
+.profileLink:after,.clubLink:after{content:" ›";color:var(--accent2);font-weight:900}
+.profileTop{display:flex;gap:14px;align-items:center;margin-bottom:12px}
+.profileMark{width:68px;height:68px;border-radius:19px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:1000;color:#111;flex:none}
+.profileIdentity{min-width:0}.profileIdentity h2{margin:0;font-size:27px;line-height:1.06}.profileIdentity p{margin:5px 0 0;color:var(--muted);font-size:13px}
+.profileActions{display:flex;gap:8px;margin:12px 0}.profileActions button{margin:0}
+.profileMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
+.profileMetric{border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:12px;text-align:center}
+.profileMetric b{display:block;font-size:20px}.profileMetric small{display:block;margin-top:4px;color:var(--muted);text-transform:uppercase;font-size:9px;letter-spacing:.08em}
+.profileGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profileCard{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:14px}
+.profileCard h4{margin:0 0 10px;color:var(--accent2);text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+.profileRow{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.profileRow:last-child{border-bottom:0}.profileRow small{color:var(--muted)}.profileRow b{text-align:right}
+.statStrip{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.statBox{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}.statBox b{display:block;font-size:17px}.statBox small{font-size:8px;color:var(--muted);text-transform:uppercase}
+.scheduleToolbar{display:flex;gap:7px;overflow:auto;margin-bottom:10px}.scheduleToolbar button{white-space:nowrap;border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:8px 11px;border-radius:11px;font-weight:800}.scheduleToolbar button.active{background:var(--accent);color:#101010;border-color:var(--accent)}
+.scheduleList{display:flex;flex-direction:column;gap:8px}.scheduleGame{display:grid;grid-template-columns:82px minmax(0,1fr) 85px;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:11px 12px}
+.scheduleGame.completed{cursor:pointer}.scheduleGame.completed:hover{border-color:var(--accent)}
+.scheduleComp b{display:block;color:var(--accent2);font-size:10px;text-transform:uppercase}.scheduleComp small{color:var(--muted);font-size:9px}.scheduleMatch b{display:block;font-size:13px}.scheduleMatch small{display:block;color:var(--muted);margin-top:3px}.scheduleResult{text-align:right}.scheduleResult b{display:block;font-size:15px}.scheduleResult small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+.ovrBand{display:inline-block;margin-left:6px;color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.editPanel{border:1px solid var(--accent);border-radius:16px;padding:14px;background:var(--panel);margin-top:12px}.editGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.editGrid label{display:block;font-size:9px;color:var(--muted);text-transform:uppercase;font-weight:900}.editGrid input,.editGrid select{width:100%;margin-top:5px}
+@media(max-width:620px){
+ .profileMetrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .profileGrid{grid-template-columns:1fr}
+ .scheduleGame{grid-template-columns:68px minmax(0,1fr) 68px;padding:10px}
+ .profileTop{align-items:flex-start}.profileMark{width:58px;height:58px;border-radius:16px}.profileIdentity h2{font-size:23px}
+ .statStrip{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .editGrid{grid-template-columns:1fr}
+}
 </style></head>
 <body>
 <div class="app">
@@ -3536,9 +3568,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.1.35 Season QA Closeout",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.2.0 Player Club Schedule Foundation",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -3667,6 +3699,141 @@ async function startCareer(){
   }catch(e){console.error("Start Career failed",e);alert("The career could not start: "+(e?.message||e))}
 }
 function header(title,sub=""){return `<div class="head"><div><div class="eyebrow">MINI&ME BASKETBALL</div><h2>${title}</h2><p>${sub}</p></div><div class="gmBadge">GM ${G.gmName||"GM"}</div></div>`}
+
+function playerClub(playerId){
+  return G.clubs.find(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])].some(p=>p.id===playerId))||null;
+}
+function playerByAnyId(id){
+  if(!id)return null;
+  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[])].find(p=>p.id===id)||null;
+}
+function playerNameLink(p){
+  if(!p)return"—";
+  return `<button class="profileLink" data-playerprofile="${p.id}">${p.name}</button>`;
+}
+function clubNameLink(club){
+  if(!club)return"—";
+  return `<button class="clubLink" data-clubprofile="${club.id}">${club.name}</button>`;
+}
+function ovrBand(ovr){
+  const n=+ovr||0;
+  if(n>=94)return"Superstar";
+  if(n>=90)return"All-NBA";
+  if(n>=86)return"All-Star";
+  if(n>=82)return"High Starter";
+  if(n>=78)return"Starter";
+  if(n>=74)return"Rotation";
+  if(n>=68)return"Depth";
+  return"Development";
+}
+function ensurePlayerJerseys(club){
+  if(!club)return;
+  const used=new Set();
+  const all=[...(club.roster||[]),...(club.twoWayRoster||[]),...(club.gLeagueRoster||[])];
+  for(const p of all){
+    let n=Number.isFinite(+p.jerseyNumber)?+p.jerseyNumber:null;
+    if(n===null||n<0||n>99||used.has(n)){
+      const seed=(String(p.id||"").split("").reduce((s,ch)=>s+ch.charCodeAt(0),0)%99);
+      n=seed;while(used.has(n))n=(n+1)%100;
+      p.jerseyNumber=n;
+    }
+    used.add(n);
+  }
+}
+function fmtHeight(cm){
+  if(!cm)return"—";
+  const totalIn=Math.round(+cm/2.54),ft=Math.floor(totalIn/12),inch=totalIn%12;
+  return `${ft}'${inch}" · ${cm} cm`;
+}
+function perGame(stats,key){
+  const gp=stats?.gp||0;return gp?((stats?.[key]||0)/gp).toFixed(1):"0.0";
+}
+function playerProfile(){
+  const p=playerByAnyId(ui.playerProfileId);
+  if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
+  const club=playerClub(p.id);if(club)ensurePlayerJerseys(club);
+  const s=p.seasonStats||{},cs=p.careerStats||{};
+  const pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
+  const injury=p.injured?(p.injury?.label||"Injured"):"Available";
+  const awards=(p.awardHistory||[]).slice().reverse().slice(0,12);
+  const history=(p.seasonHistory||[]).slice().reverse().slice(0,8);
+  const editable=club?.id===me()?.id;
+  const nation=G.nationalTeams?.find(n=>(n.rosterPlayerIds||[]).includes(p.id)||(n.selectedSquadPlayerIds||[]).includes(p.id));
+  return `${header("Player Profile",`${club?.name||"Free Agent"} · ${pos}`)}
+    <div class="profileTop"><div class="profileMark" style="background:${club?.color||"#d9ae55"}">${p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P")}</div><div class="profileIdentity"><div class="eyebrow">${p.nationality||"International"} · ${ovrBand(p.ovr)}</div><h2>${p.name}</h2><p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)} · ${p.archetype||"Basketball Player"}</p></div></div>
+    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${club?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
+    <div class="profileMetrics"><div class="profileMetric"><b>${p.ovr}</b><small>OVR · ${ovrBand(p.ovr)}</small></div><div class="profileMetric"><b>${p.rotationRole||"Depth"}</b><small>Role</small></div><div class="profileMetric"><b>${p.contractYearsLeft||0} yr</b><small>Contract</small></div><div class="profileMetric"><b>$${(+p.salaryM||0).toFixed(1)}M</b><small>Salary</small></div></div>
+    <div class="sectionTitle">Current Season</div><div class="profileCard"><div class="statStrip"><div class="statBox"><b>${s.gp||0}</b><small>GP</small></div><div class="statBox"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="statBox"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="statBox"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="statBox"><b>${perGame(s,"plusMinus")}</b><small>+/-</small></div></div></div>
+    <div class="profileGrid" style="margin-top:10px">
+      <div class="profileCard"><h4>Identity & Status</h4><div class="profileRow"><small>Club</small><b>${club?clubNameLink(club):"Free Agent"}</b></div><div class="profileRow"><small>National Team</small><b>${nation?.name||p.nationality||"—"}</b></div><div class="profileRow"><small>Jersey</small><b>#${p.jerseyNumber??"—"}</b></div><div class="profileRow"><small>Availability</small><b>${injury}</b></div><div class="profileRow"><small>Origin</small><b>${p.origin||"NBA"}</b></div></div>
+      <div class="profileCard"><h4>Contract & Career</h4><div class="profileRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div><div class="profileRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div><div class="profileRow"><small>Career Games</small><b>${cs.gp||0}</b></div><div class="profileRow"><small>Draft</small><b>${p.draftYear?`Season ${p.draftYear}`:"Undrafted / Existing"}</b></div><div class="profileRow"><small>Potential</small><b>${p.potential??"—"}</b></div></div>
+    </div>
+    <div class="sectionTitle">Honours</div><div class="profileCard">${awards.length?awards.map(a=>`<div class="profileRow"><small>Season ${a.season}</small><b>${a.award}</b></div>`).join(""):`<div class="empty">No recorded honours yet.</div>`}</div>
+    <div class="sectionTitle">Career History</div><div class="profileCard">${history.length?history.map(h=>`<div class="profileRow"><small>Season ${h.season||"—"}</small><b>${h.clubName||club?.name||"Club"} · ${h.stats?.gp||0} GP</b></div>`).join(""):`<div class="empty">Career history will build as seasons are completed.</div>`}</div>
+    <div id="playerEditHost"></div>`;
+}
+function clubProfile(){
+  const club=c(ui.clubProfileId);
+  if(!club)return header("Club Profile","Club could not be located")+`<div class="card empty">This club is unavailable.</div>`;
+  const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0},rank=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff).findIndex(x=>x.clubId===club.id)+1;
+  const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr),leaders=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>perGame(b.seasonStats,"pts")-perGame(a.seasonStats,"pts")).slice(0,3);
+  const payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0);
+  ensurePlayerJerseys(club);
+  return `${header("Club Profile",`${club.conference}ern Conference · ${club.division}`)}
+    <div class="profileTop"><div class="profileMark" style="background:${club.color||"#d9ae55"}">${club.mark||club.name.slice(0,3).toUpperCase()}</div><div class="profileIdentity"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.conference} · ${club.division} · ${club.city||club.name}</p></div></div>
+    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${club.id===me()?.id?`<button id="clubScheduleBtn" class="btn primary">View Schedule</button>`:""}</div>
+    <div class="profileMetrics"><div class="profileMetric"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
+    <div class="sectionTitle">Roster</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>ROLE</th></tr></thead><tbody>${roster.map(p=>`<tr><td class="pname"><b>${playerNameLink(p)}</b><small>#${p.jerseyNumber??"—"} · ${p.nationality||"—"}</small></td><td>${positionLabel(p)}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${p.rotationRole||"Depth"}</td></tr>`).join("")}</tbody></table></div>
+    <div class="profileGrid" style="margin-top:12px"><div class="profileCard"><h4>Team Leaders</h4>${leaders.length?leaders.map(p=>`<div class="profileRow"><small>${playerNameLink(p)}</small><b>${perGame(p.seasonStats,"pts")} PPG</b></div>`).join(""):`<div class="empty">No regular-season data yet.</div>`}</div><div class="profileCard"><h4>Club Snapshot</h4><div class="profileRow"><small>Chemistry</small><b>${club.chemistry||"—"}</b></div><div class="profileRow"><small>Roster</small><b>${roster.length}/15</b></div><div class="profileRow"><small>Two-Way</small><b>${(club.twoWayRoster||[]).length}/${club.twoWayLimit||3}</b></div><div class="profileRow"><small>Draft Assets</small><b>${clubDraftAssets(G,club.id).length}</b></div></div></div>`;
+}
+function scheduleCompetition(g){
+  const tag=String(g?.phaseTag||"").toLowerCase();
+  if(tag.startsWith("nba_cup"))return"NBA Cup";
+  if(tag==="preseason")return"Preseason";
+  if(tag==="summer_league")return"Summer League";
+  if(tag.includes("playin"))return"Play-In";
+  if(tag.includes("playoff")||tag==="finals"||tag.includes("_r1")||tag.includes("_sf")||tag.includes("_cf"))return"Playoffs";
+  return"League";
+}
+function clubScheduleEntries(){
+  const club=me(),id=club?.id;if(!id)return[];
+  const entries=[];
+  const pushGames=(games,base)=>{
+    for(const g of(games||[])){
+      if(g.homeClubId!==id&&g.awayClubId!==id)continue;
+      const oppId=g.homeClubId===id?g.awayClubId:g.homeClubId,home=g.homeClubId===id,comp=scheduleCompetition(g);
+      entries.push({kind:"completed",game:g,comp,oppId,home,sort:base+(+g.round||0),label:g.round?`Game ${g.round}`:competitionGameLabel(g)});
+    }
+  };
+  pushGames(G.summerLeague?.games||G.summerLeagueLive?.games,0);
+  pushGames(G.preseason?.games||G.preseasonLive?.games,100);
+  pushGames(G.regularSeason?.games||G.regularSeasonLive?.games,1000);
+  pushGames(G.playIn?.games||G.playInLive?.games,2000);
+  pushGames(G.playoffs?.games||G.playoffsLive?.games,3000);
+
+  if(G.phase==="REGULAR_SEASON"&&G.regularSeasonLive&&!G.regularSeasonLive.complete){
+    for(let i=G.regularSeasonLive.roundIndex;i<G.regularSeasonLive.rounds.length;i++){
+      const rd=G.regularSeasonLive.rounds[i],pair=rd.pairings.find(p=>p[0]===id||p[1]===id);
+      if(!pair)continue;
+      const oppId=pair[0]===id?pair[1]:pair[0],home=pair[0]===id,comp=pair[2]?"NBA Cup":"League";
+      entries.push({kind:"upcoming",comp,oppId,home,sort:1000+rd.round,label:`Game ${rd.round}`,round:rd.round});
+    }
+  }
+  return entries.sort((a,b)=>a.sort-b.sort);
+}
+function clubSchedule(){
+  const all=clubScheduleEntries(),filter=ui.scheduleFilter||"all";
+  const filtered=filter==="all"?all:all.filter(x=>x.comp===filter);
+  const filters=["all","League","NBA Cup","Play-In","Playoffs","Preseason","Summer League"];
+  return `${header("Schedule",`${me().name} · Complete club fixture history`)}
+    <div class="scheduleToolbar">${filters.map(f=>`<button data-schedulefilter="${f}" class="${filter===f?"active":""}">${f==="all"?"All Games":f}</button>`).join("")}</div>
+    <div class="scheduleList">${filtered.length?filtered.map(e=>{
+      const opp=c(e.oppId),g=e.game,score=e.kind==="completed"?(e.home?`${g.homeScore}–${g.awayScore}`:`${g.awayScore}–${g.homeScore}`):"—";
+      const outcome=e.kind==="completed"?(g.winnerClubId===me().id?"W":"L"):"Upcoming";
+      return `<div class="scheduleGame ${e.kind}" ${e.kind==="completed"?`data-schedulegame="${g.id}"`:""}><div class="scheduleComp"><b>${e.comp}</b><small>${e.label}</small></div><div class="scheduleMatch"><b>${e.home?"vs":"@"} ${opp?clubNameLink(opp):"Opponent"}</b><small>${e.home?"Home":"Away"} · ${e.kind==="completed"?"Final":"Scheduled"}</small></div><div class="scheduleResult"><b>${score}</b><small>${outcome}</small></div></div>`;
+    }).join(""):`<div class="card empty">No ${filter==="all"?"club":filter} fixtures are recorded yet.</div>`}</div>`;
+}
+
 function status(){
   let x=me();
   $("#statusClub").textContent=x?`${x.name} · Season ${G.season}`:`Season ${G.season}`;
@@ -3740,12 +3907,16 @@ function renderResultWindow(){
   const ps=playoffSeriesForGame(g.id);
   $("#resultWindowTitle").textContent=ps?`${ps.stage==="FINALS"?"NBA Finals":postseasonRoundLabel(String(ps.stage||"").split("_").pop())} · Game ${(ps.games||[]).indexOf(g.id)+1}`:competitionGameLabel(g);
   const historicalSeries=ui.resultReturn==="series"&&!!ps;
-  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${historicalSeries?"Back to Series":"Next Game"}</button></div></div>`;
+  const resultButtonLabel=historicalSeries?"Back to Series":ui.resultReturn==="schedule"?"Back to Schedule":"Next Game";
+  $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
   $("#resultWindowNext").onclick=()=>{
     ui.resultGameId=null;
     if(historicalSeries){
       ui.resultReturn=null;ui.page="league";ui.leagueTab="post";show("game");render();return;
+    }
+    if(ui.resultReturn==="schedule"){
+      ui.resultReturn=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;
     }
     ui.resultReturn=null;ui.page="home";show("game");render()
   };
@@ -5004,7 +5175,7 @@ function home(){
 function eventSummaryCard({label,title,subtitle,metrics=[]}){
   return `<div class="eventHero"><div class="eventHeroTop"><b>${label}</b><small>Season ${G.season}</small></div><div class="eventHeroBody"><h3>${title}</h3><p>${subtitle||""}</p>${metrics.length?`<div class="eventMetrics">${metrics.map(m=>`<div class="eventMetric"><b>${m.value}</b><small>${m.label}</small></div>`).join("")}</div>`:""}</div></div>`;
 }
-function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
+function team(){let tabs=[["squad","Squad"],["schedule","Schedule"],["contracts","Contracts & Cap"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
 function gmBrief(){
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
   return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="sectionTitle">Career</div><div class="card"><div class="more"><div><b>Career Record</b><small>Regular season</small></div><b>${gm.careerW}–${gm.careerL}</b></div><div class="more"><div><b>NBA Championships</b><small>Career honours</small></div><b>${gm.championships}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>Career honours</small></div><b>${gm.cupTitles}</b></div></div>`;
@@ -5067,7 +5238,7 @@ function draft(){
 
   return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+assets+board;
 }
-function freeagency(){let club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,40),cap=mkt.cap,players=mkt.players;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Free Agent Market</div>${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>DEMAND</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${p.name}</b><small>Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} ppg`:""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.demandYears}yr $${p.demandAnnualM.toFixed(1)}M</td><td><button class="pick" data-signfa="${p.id}" data-years="${p.demandYears}" data-salary="${p.demandAnnualM}">Sign</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents available to sign right now.</div>`}`}
+function freeagency(){let club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,40),cap=mkt.cap,players=mkt.players;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Free Agent Market</div>${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>DEMAND</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} ppg`:""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.demandYears}yr $${p.demandAnnualM.toFixed(1)}M</td><td><button class="pick" data-signfa="${p.id}" data-years="${p.demandYears}" data-salary="${p.demandAnnualM}">Sign</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents available to sign right now.</div>`}`}
 function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
 function trades(){let myId=me().id;if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};let snap=tradeCenterSnapshot(G,myId,ui.tradePartner);if(!snap||!snap.partner)return `<div class="card empty">No trade partner available.</div>`;
 let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>S${a.year} Round ${a.round}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
@@ -5093,7 +5264,7 @@ function bindDraftWindow(){
 }
 function twoWayCandidates(){let club=me();return [...(G.freeAgents||[]),...((club.gLeagueRoster)||[])].filter(twoWayEligible).sort((a,b)=>b.ovr-a.ovr).slice(0,25)}
 function squad(){let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
-let nbaRows=d.nba.map(p=>{let injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";return `<tr><td class="pname"><div class="rosterIdentity"><b>${p.name}</b><small>${p.role||"Depth"}</small>${injTag}</div></td><td>${p.pos}</td><td>${p.ovr}</td><td>${p.age}</td><td>${p.mins||0}</td></tr>`}).join("");
+let nbaRows=d.nba.map(p=>{let injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";return `<tr><td class="pname"><div class="rosterIdentity"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${p.role||"Depth"}</small>${injTag}</div></td><td>${p.pos}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${p.mins||0}</td></tr>`}).join("");
 let twoWayRows=d.twoWay.map(p=>{let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";return `<div class="more"><div><b>${p.name}</b><small>${p.pos} · Age ${p.age}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`}).join("");
 let candRows=cands.map(p=>`<div class="more"><div><b>${p.name}</b><small>${p.position} · Age ${p.age} · ${p.origin||"Free Agent"}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-sign="${p.id}">Sign</button></div></div>`).join("");
 let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
@@ -5114,7 +5285,7 @@ function contracts(){
       const statusClass=p.valueStatus==="Above Market"?"above":p.valueStatus==="Value Contract"?"value":"market";
       const contractTag=p.type!=="Standard"?`<span class="contractTypeBadge">${p.type}</span>`:"";
       const extensionTag=p.extensionEligible?`<span class="contractBadge">Extension Eligible</span>`:"";
-      return `<tr><td class="pname"><b>${p.name}</b><span class="contractPlayerMeta">${p.positionLabel} · Age ${p.age} · OVR ${p.ovr}</span>${contractTag}${extensionTag}</td><td><span class="band">${p.rotationRole}</span><small class="market">${p.salaryBand}</small></td><td>${p.yearsLeft} yr</td><td><b>$${(+p.salaryM).toFixed(1)}M</b><small class="market">${p.salaryBandRange}</small></td><td><b>$${(+p.marketSalaryM).toFixed(1)}M</b><small class="contractValue ${statusClass}">${p.valueStatus}</small></td><td><div class="contractActions">${p.extensionEligible?`<button class="pick" data-extend="${p.playerId}">Extend</button>`:""}<button class="pick" data-waive="${p.playerId}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></td></tr>`
+      return `<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.playerId))}</b><span class="contractPlayerMeta">${p.positionLabel} · Age ${p.age} · OVR ${p.ovr}</span>${contractTag}${extensionTag}</td><td><span class="band">${p.rotationRole}</span><small class="market">${p.salaryBand}</small></td><td>${p.yearsLeft} yr</td><td><b>$${(+p.salaryM).toFixed(1)}M</b><small class="market">${p.salaryBandRange}</small></td><td><b>$${(+p.marketSalaryM).toFixed(1)}M</b><small class="contractValue ${statusClass}">${p.valueStatus}</small></td><td><div class="contractActions">${p.extensionEligible?`<button class="pick" data-extend="${p.playerId}">Extend</button>`:""}<button class="pick" data-waive="${p.playerId}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></td></tr>`
     }).join("")}</tbody></table></div>`;
   };
   return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>${G.settings.salaryCap?"$"+cap.salaryCapM.toFixed(0)+"M":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${G.settings.salaryCap?cap.status:"Market Only"}</b><small>Cap Status</small></div></div>
@@ -5194,7 +5365,7 @@ function standingTable(rows,label){
   const leader=sorted[0],leaderPct=(leader?.w||0)/Math.max(1,(leader?.w||0)+(leader?.l||0));
   return `<div class="sectionTitle">${label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead><tbody>${sorted.map((x,i)=>{
     const gp=x.w+x.l,pct=gp?x.w/gp:0,gb=i===0?"—":Math.max(0,((leader.w-x.w)+(x.l-leader.l))/2).toFixed(1);
-    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId)?.name||x.clubId}</b><small>${x.division}</small></td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
+    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${clubNameLink(c(x.clubId))}</b><small>${x.division}</small></td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
   }).join("")}</tbody></table></div>`;
 }
 function standings(){
@@ -5214,7 +5385,7 @@ function leagueLeaders(){
     ["points","Points","PPG"],["rebounds","Rebounds","RPG"],["assists","Assists","APG"],["steals","Steals","SPG"],["blocks","Blocks","BPG"],
     ["fgPct","Field Goal %","FG%"],["threePct","Three Point %","3PT%"],["ftPct","Free Throw %","FT%"]
   ];
-  return `<div class="leaderGrid">${cats.map(([key,title,suffix])=>`<div class="leaderCard"><h4>${title}</h4>${(l[key]||[]).slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position} · ${c(p.clubId)?.name||""}</small></div><b class="leaderValue">${p.value}${key.includes("Pct")?"%":""}</b></div>`).join("")}</div>`).join("")}</div>`;
+  return `<div class="leaderGrid">${cats.map(([key,title,suffix])=>`<div class="leaderCard"><h4>${title}</h4>${(l[key]||[]).slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(playerByAnyId(p.playerId)||p)}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position} · ${clubNameLink(c(p.clubId))}</small></div><b class="leaderValue">${p.value}${key.includes("Pct")?"%":""}</b></div>`).join("")}</div>`).join("")}</div>`;
 }
 function awardRace(){
   const round=G.regularSeasonLive?.roundIndex||G.regularSeason?.currentRound||0;
@@ -5231,7 +5402,7 @@ function awardRace(){
     if(type==="def")return `${rpg} RPG · ${spg} SPG · ${bpg} BPG`;
     return `${ppg} PPG · ${rpg} RPG · ${apg} APG · ${pct(s.fgm,s.fga)} FG`;
   };
-  const race=(title,list,type="off")=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${x.p.name}</b><small>${x.p.position}${x.p.secondaryPosition?`/${x.p.secondaryPosition}`:""} · ${x.club.name}</small><small>${statLine(x,type)}</small></div></div>`).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
+  const race=(title,list,type="off")=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${x.p.position}${x.p.secondaryPosition?`/${x.p.secondaryPosition}`:""} · ${clubNameLink(x.club)}</small><small>${statLine(x,type)}</small></div></div>`).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
 
   return `<div class="card awardsRaceIntro"><div class="eyebrow">Season ${G.season}</div><h3>Awards Race</h3><div class="smallcopy">Projected award leaders based on recorded season performance. Final awards are confirmed at season end.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player",dpoy,"def")}</div>`;
 }
@@ -5318,8 +5489,19 @@ function more(){
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
   return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
-function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
+function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
+  $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
+  $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
+  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
+  if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
+  $$("[data-schedulefilter]").forEach(b=>b.onclick=()=>{ui.scheduleFilter=b.dataset.schedulefilter;render()});
+  $$("[data-schedulegame]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-clubprofile]"))return;const g=gameById(b.dataset.schedulegame);if(g)openResultWindow(g,"schedule")});
+  if($("#editPlayerBtn"))$("#editPlayerBtn").onclick=()=>{
+    const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||club?.id!==me()?.id)return;
+    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player Identity</h3><div class="smallcopy">Cosmetic/profile fields only. OVR, potential, contract and statistical attributes are protected.</div><div class="editGrid" style="margin-top:10px"><label>Name<input id="epName" value="${p.name}"></label><label>Jersey<input id="epJersey" type="number" min="0" max="99" value="${p.jerseyNumber??0}"></label><label>Country<input id="epNation" value="${p.nationality||""}"></label><label>Primary Position<select id="epPos">${POSITIONS.map(x=>`<option ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label><label>Secondary Position<select id="epPos2"><option value="">None</option>${POSITIONS.map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}</select></label><label>Height (cm)<input id="epHeight" type="number" min="160" max="235" value="${p.heightCm||200}"></label><label>Archetype<input id="epArch" value="${p.archetype||""}"></label></div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
+    $("#savePlayerEdit").onclick=()=>{p.name=($("#epName").value||p.name).trim();p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));p.nationality=($("#epNation").value||p.nationality||"").trim();p.position=$("#epPos").value;p.secondaryPosition=$("#epPos2").value||null;p.heightCm=Math.max(160,Math.min(235,+$("#epHeight").value||p.heightCm||200));p.archetype=($("#epArch").value||p.archetype||"").trim();save();toast("Player profile updated");render()};
+  };
   $('#openAllStarHome')?.addEventListener('click',openAllStarWindow);
   $('#openFibaHome')?.addEventListener('click',openFibaWindow);
 if($("#openAllStarEvent"))$("#openAllStarEvent").onclick=openAllStarWindow;
