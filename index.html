@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.3.0 Identity & Profile Foundation</title>
+<title>Mini&Me Basketball — v0.1.3.3 Roster Role Organisation</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -447,7 +447,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .askingLabel{color:var(--accent2);font-weight:900}
 @media(max-width:620px){.faAsk{grid-template-columns:1fr 1fr}.faOfferGrid{grid-template-columns:1fr}.faOfferActions{flex-direction:column}}
 
-/* v0.1.3.0 Identity & Profile Foundation */
+/* v0.1.3.3 Roster Role Organisation */
 .faFilters{display:flex;flex-direction:column;gap:8px;margin:12px 0}
 .faFilterRow{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px}
 .faFilterRow button{white-space:nowrap;border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:8px 11px;border-radius:11px;font-weight:850}
@@ -456,7 +456,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .faMarketSummary small{color:var(--muted)}
 .faBandTag{display:inline-block;margin-left:6px;font-size:8px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.06em}
 
-/* v0.1.3.0 Identity & Profile Foundation */
+/* v0.1.3.3 Roster Role Organisation */
 .profileHero{border:1px solid #34404e;background:linear-gradient(135deg,#18212c,#10161d);border-radius:20px;overflow:hidden;margin-bottom:12px}
 .profileHeroMain{display:flex;gap:14px;align-items:center;padding:18px}
 .profileHeroBadge{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;font-size:25px;font-weight:950;color:#0d1014;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
@@ -483,6 +483,26 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .rosterGroupTitle{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 7px}.rosterGroupTitle b{font-size:12px}.rosterGroupTitle small{color:var(--muted);font-size:8px}
 .clubHistoryBadges{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.clubHistoryBadge{font-size:7px;font-weight:900;color:var(--accent2);border:1px solid #65512d;border-radius:999px;padding:3px 6px}
 @media(max-width:620px){.profileMetricGrid{grid-template-columns:repeat(2,1fr)}.profileSectionGrid{grid-template-columns:1fr}.teamKeyGrid{grid-template-columns:1fr}.profileStatsGrid{grid-template-columns:repeat(4,1fr)}}
+
+/* v0.1.3.3 Roster Role Organisation */
+.twIntro{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px 13px;margin:10px 0}
+.twIntro b{display:block;margin-bottom:4px}.twIntro small{color:var(--muted);line-height:1.45}
+.twFilters{display:flex;flex-direction:column;gap:7px;margin:10px 0}.twFilterRow{display:flex;gap:6px;overflow-x:auto}
+.twFilterRow button{white-space:nowrap;border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:7px 10px;border-radius:10px;font-size:8px;font-weight:900}
+.twFilterRow button.active{background:var(--accent);color:#111;border-color:var(--accent)}
+.twCandidate{display:grid;grid-template-columns:minmax(0,1.45fr) 50px 52px 52px 88px;gap:9px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.twCandidate:first-child{border-top:0}.twCandidate .meta small{display:block;color:var(--muted);font-size:8px;margin-top:3px}
+.twCandidate .num{text-align:center}.twCandidate .num b{display:block}.twCandidate .num small{display:block;color:var(--muted);font-size:7px;margin-top:2px}
+.twPath{color:var(--accent2)!important;font-weight:850}.twPotential{color:#9cc9a6}.twCurrent{color:#e8ecf0}
+@media(max-width:620px){.twCandidate{grid-template-columns:minmax(0,1fr) 44px 44px 74px}.twCandidate .ageCol{display:none}}
+
+/* v0.1.3.3 Roster Role Organisation */
+.rosterRoleSection{margin-top:14px}
+.rosterRoleHeader{display:flex;justify-content:space-between;align-items:flex-end;margin:0 2px 7px}
+.rosterRoleHeader b{font-size:13px}.rosterRoleHeader small{color:var(--muted);font-size:8px}
+.rosterRoleNote{font-size:8px;color:var(--muted);margin-top:2px}
+.rosterExperience{color:var(--accent2)!important;font-weight:850}
+.rosterRoleBadge{display:inline-block;margin-left:6px;font-size:7px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 </style></head>
 <body>
 <div class="app">
@@ -736,9 +756,87 @@ function salaryForOvr(ovr, age=26) {
   return Math.round(Math.max(1.2,base)*10)/10;
 }
 
+
+const TALENT_MODEL_VERSION = "TL1";
+function potentialHeadroomForAge(age, prospect=false){
+  age=+age||24;
+  if(age<=19)return prospect?rand(6,14):rand(4,10);
+  if(age===20)return prospect?rand(5,12):rand(3,8);
+  if(age===21)return prospect?rand(4,10):rand(2,7);
+  if(age<=23)return prospect?rand(3,8):rand(2,6);
+  if(age<=25)return rand(1,5);
+  if(age<=28)return rand(0,3);
+  if(age<=31)return rand(0,2);
+  return 0;
+}
+function initialPotentialFor(age, suppliedOvr=null, prospect=false){
+  const base=suppliedOvr==null?nbaStyleOvr():+suppliedOvr;
+  return Math.min(99,Math.max(base,base+potentialHeadroomForAge(age,prospect)));
+}
+function normalizePlayerPotential(p){
+  if(!p)return p;
+  const o=+p.ovr||55,age=+p.age||24;
+  if(p.potential==null || +p.potential<o){
+    const head=potentialHeadroomForAge(age,!!p.draftYear || p.origin==='NCAA' || p.origin==='Overseas');
+    p.potential=Math.min(99,Math.max(o,o+head));
+  } else p.potential=Math.min(99,Math.max(o,+p.potential));
+  return p;
+}
+function allTalentPlayers(G){
+  const out=[],seen=new Set();
+  const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
+  for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
+  (G.freeAgents||[]).forEach(add);(G.draftPool||[]).forEach(add);
+  return out;
+}
+function talentSnapshot(G){
+  const ps=(G.clubs||[]).flatMap(c=>c.roster||[]);
+  const avg=ps.length?ps.reduce((a,p)=>a+(+p.ovr||0),0)/ps.length:0;
+  return {avg:+avg.toFixed(2),elite90:ps.filter(p=>p.ovr>=90).length,stars85:ps.filter(p=>p.ovr>=85).length,starters80:ps.filter(p=>p.ovr>=80).length,count:ps.length};
+}
+function ensureTalentLifecycleState(G){
+  let repaired=0;for(const p of allTalentPlayers(G)){const before=p.potential;normalizePlayerPotential(p);if(before!==p.potential)repaired++}
+  G.talentHealth=G.talentHealth||{};
+  if(!G.talentHealth.baseline)G.talentHealth.baseline=talentSnapshot(G);
+  G.talentHealth.current=talentSnapshot(G);
+  G.talentHealth.modelVersion=TALENT_MODEL_VERSION;
+  if(!G.talentHealth.era)G.talentHealth.era={type:'NORMAL',untilSeason:0};
+  return repaired;
+}
+function talentEraModifier(G){
+  ensureTalentLifecycleState(G);
+  const b=G.talentHealth.baseline,c=G.talentHealth.current,era=G.talentHealth.era||{type:'NORMAL'};
+  if((era.untilSeason||0)>=G.season)return era.type==='GOLDEN'?1:era.type==='SOFT'?-1:0;
+  if(c.avg<b.avg-1.4 || c.elite90<Math.max(1,Math.floor(b.elite90*0.65))){G.talentHealth.era={type:'RECOVERY',untilSeason:G.season+2};return 1}
+  if(c.avg>b.avg+1.4 || c.elite90>Math.ceil(b.elite90*1.45)){G.talentHealth.era={type:'CORRECTION',untilSeason:G.season+2};return -1}
+  const r=Math.random();
+  if(r<0.05){G.talentHealth.era={type:'GOLDEN',untilSeason:G.season+2};return 1}
+  if(r<0.08){G.talentHealth.era={type:'SOFT',untilSeason:G.season+1};return -1}
+  G.talentHealth.era={type:'NORMAL',untilSeason:G.season+1};return 0;
+}
+function progressPlayerTalent(p,eraMod=0,developmentCap=99){
+  normalizePlayerPotential(p);
+  const age=+p.age||24,ovr=+p.ovr||55,pot=Math.max(ovr,+p.potential||ovr);
+  let delta=0;
+  if(age<=20)delta=rand(0,3)+(pot-ovr>=8?1:0);
+  else if(age<=23)delta=rand(-1,3)+(pot-ovr>=6?1:0);
+  else if(age<=26)delta=rand(-1,2);
+  else if(age<=29)delta=rand(-1,1);
+  else if(age<=31)delta=rand(-2,1);
+  else if(age<=33)delta=rand(-2,0);
+  else if(age<=35)delta=rand(-3,0);
+  else delta=rand(-4,-1);
+  if(age<=27)delta+=eraMod;
+  if(delta>0)delta=Math.min(delta,Math.max(0,pot-ovr));
+  p.ovr=Math.max(50,Math.min(developmentCap,ovr+delta));
+  if(p.ovr>p.potential)p.potential=p.ovr;
+  if(age>=30 && p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
+  return delta;
+}
 function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr = null, isProspect = false, nationality = null, origin = null } = {}) {
   const pos = position || pick(POSITIONS);
   const [hMin, hMax] = HEIGHT_RANGE_CM_BY_POSITION[pos];
+  const resolvedOvr = ovr !== null ? ovr : nbaStyleOvr();
   const player = {
     id: nextId("plyr"),
     name: `Player ${_idCounter}`,
@@ -749,10 +847,8 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     archetype: pick(ARCHETYPES_BY_POSITION[pos]),
     origin: origin || (isProspect ? pick(PROSPECT_ORIGINS) : "NBA"),
     age,
-    ovr: ovr !== null ? ovr : nbaStyleOvr(),
-    potential: isProspect
-      ? Math.min(99, Math.max(ovr, ovr + (age<=19 ? rand(4,13) : age===20 ? rand(3,11) : age===21 ? rand(2,9) : rand(1,7))))
-      : rand(55, 99),
+    ovr: resolvedOvr,
+    potential: initialPotentialFor(age, resolvedOvr, isProspect),
     longevity: rand(35, 90),
     contractYearsLeft: rand(1, 4),
     salaryM: 0,
@@ -1977,7 +2073,8 @@ function ensureRosterCompliance(G, club, isUser=false) {
 
 
 function twoWayEligible(player) {
-  return !!player && player.age <= 25 && player.ovr <= 76 && player.contractType !== "Rookie Scale";
+  return !!player && player.age<=25 && player.ovr>=60 && player.ovr<=76 &&
+    player.contractType!=="Rookie Scale" && player.contractType!=="Standard";
 }
 
 function assignTwoWayContract(G, clubId, playerId) {
@@ -1990,6 +2087,8 @@ function assignTwoWayContract(G, clubId, playerId) {
   if(!player || !twoWayEligible(player)) return {ok:false,reason:'Player is not two-way eligible'};
   if(source==='freeAgents') G.freeAgents.splice(idx,1); else club.gLeagueRoster.splice(idx,1);
   player.contractType='Two-Way'; player.contractStatus='Under Contract'; player.contractYearsLeft=1; player.salaryM=0.6; player.extensionEligible=false;
+  player.twoWayHistory=player.twoWayHistory||[];
+  player.twoWayHistory.push({season:G.season,clubId,from:twoWayPath(player),ovr:player.ovr,potential:player.potential});
   club.twoWayRoster=club.twoWayRoster||[]; club.twoWayRoster.push(player);
   G.transactions.push({type:'two_way_sign',season:G.season,clubId,playerId});
   return {ok:true,player};
@@ -2011,7 +2110,13 @@ function waiveTwoWay(G, clubId, playerId) {
 function ensurePersistentGLeague(club) {
   club.gLeagueRoster=club.gLeagueRoster||[];
   // Keep affiliate players from year to year, aging/developing them elsewhere; fill only missing slots.
-  while(club.gLeagueRoster.length<10){const p=makePlayer({age:rand(20,25),ovr:rand(55,68),origin:'G League'});p.contractYearsLeft=0;p.contractStatus='Affiliate';p.contractType='G League';p.salaryM=0;club.gLeagueRoster.push(p);}
+  while(club.gLeagueRoster.length<10){
+    const p=makePlayer({age:rand(19,24),ovr:rand(61,71),origin:'G League'});
+    p.potential=Math.max(p.ovr,Math.min(86,p.ovr+rand(1,8)));
+    p.contractYearsLeft=0;p.contractStatus='Affiliate';p.contractType='G League';p.salaryM=0;
+    p.entryPath='G League';p.developmentEntrySeason=p.developmentEntrySeason||1;
+    club.gLeagueRoster.push(p);
+  }
   if(club.gLeagueRoster.length>12) club.gLeagueRoster.sort((a,b)=>b.ovr-a.ovr).splice(12);
   return club.gLeagueRoster;
 }
@@ -2091,17 +2196,16 @@ function runOffseason(G) {
       if (completedSeason && (p.contractYearsLeft||0)<=0) {
         p.contractStatus="Free Agent"; p.contractType="Unsigned"; G.freeAgents.push(p); summary.expired++; G.transactions.push({type:"contract_expired",season:G.season,clubId:club.id,playerId:p.id}); continue;
       }
-      let drift=p.age<24?rand(-1,3):p.age<28?rand(-1,2):p.age<32?rand(-2,1):p.age<35?rand(-3,0):rand(-4,-1);
-      p.ovr=Math.max(55,Math.min(99,p.ovr+drift)); p.contractStatus="Under Contract"; survivors.push(p);
+      progressPlayerTalent(p,talentEraModifier(G),99); p.contractStatus="Under Contract"; survivors.push(p);
     }
     survivors.sort((a,b)=>b.ovr-a.ovr);
     while (survivors.length>(club.offseasonRosterLimit||20)) { const waived=survivors.pop(); waived.contractYearsLeft=0; waived.contractStatus="Free Agent"; waived.contractType="Unsigned"; G.freeAgents.push(waived); summary.waived++; G.transactions.push({type:"waive",season:G.season,clubId:club.id,playerId:waived.id}); }
     club.roster=survivors; recalcClubCap(club); club.standings={w:0,l:0,pf:0,pa:0};
     ensurePersistentGLeague(club);
-    for(const p of club.gLeagueRoster){p.age++;p.ovr=Math.max(50,Math.min(78,p.ovr+rand(-1,2)));p.injured=false;p.injury=null;}
+    for(const p of club.gLeagueRoster){p.age++;progressPlayerTalent(p,talentEraModifier(G),78);p.injured=false;p.injury=null;}
     club.twoWayRoster=club.twoWayRoster||[];
     const keptTwo=[];
-    for(const p of club.twoWayRoster){p.age++;p.injured=false;p.injury=null;p.ovr=Math.max(55,Math.min(82,p.ovr+rand(-1,2)));p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
+    for(const p of club.twoWayRoster){p.age++;p.injured=false;p.injury=null;progressPlayerTalent(p,talentEraModifier(G),82);p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
     club.twoWayRoster=keptTwo;
   }
 
@@ -2109,9 +2213,10 @@ function runOffseason(G) {
   for (const p of G.freeAgents) {
     p.age++; p.fatigue=0; p.recentForm=[];
     if (Math.random()<retirementChance(p)) { logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
-    const drift=p.age<27?rand(-1,1):p.age<32?rand(-2,0):rand(-3,-1); p.ovr=Math.max(50,Math.min(99,p.ovr+drift)); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
+    progressPlayerTalent(p,talentEraModifier(G),99); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
   }
   G.freeAgents=faSurvivors;
+  ensureTwoWayDevelopmentPool(G,42);
   G.rosterCompliancePending=null; G.offseasonSummary=summary;
   logEvent(G, `Offseason contracts processed: ${summary.expired} expired, ${summary.extended} AI extensions, ${summary.retired+summary.freeAgentRetired} retirements. Clubs may carry up to 20 until preseason roster compliance.`);
   G.phase="DRAFT_NIGHT";
@@ -2233,19 +2338,21 @@ function runDraftDayTrades(G, round1OriginalOrder) {
   return trades;
 }
 
-function normalizeProspectPotential(player) {
-  if(!player) return player;
-  const age=player.age||21;
-  if(player.potential==null || player.potential<player.ovr) {
-    const headroom=age<=19?rand(4,12):age===20?rand(3,10):age===21?rand(2,8):rand(1,6);
-    player.potential=Math.min(99,player.ovr+headroom);
-  }
-  return player;
-}
+function normalizeProspectPotential(player) { normalizePlayerPotential(player); return player; }
 function initializeDraftState(G) {
   ensureDraftPickHorizon(G);
-  const prospects=[];
-  for(let i=0;i<60;i++) prospects.push(normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:G.season,ovr:(Math.random()<0.08?rand(81,86):Math.random()<0.45?rand(74,80):rand(67,76)),isProspect:true})));
+  const prospects=[],eraMod=talentEraModifier(G);
+  // 90-player class: 60 draft selections plus a genuine undrafted pool.
+  for(let i=0;i<90;i++){
+    const roll=Math.random();
+    let base=roll<0.08?rand(81,86):roll<0.45?rand(74,80):rand(67,76);
+    base=Math.max(64,Math.min(88,base+eraMod));
+    const p=normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:G.season,ovr:base,isProspect:true}));
+    p.entryPath="Draft Prospect"; p.developmentEntrySeason=G.season;
+    if(eraMod>0&&Math.random()<0.22)p.potential=Math.min(99,p.potential+rand(1,2));
+    if(eraMod<0&&Math.random()<0.25)p.potential=Math.max(p.ovr,p.potential-rand(1,2));
+    prospects.push(p);
+  }
   const round1OriginalOrder=runDraftLottery(G); runDraftDayTrades(G,round1OriginalOrder);
   const round2OriginalOrder=G.pendingFullStandingsOrder || [...G.clubs].sort(()=>Math.random()-0.5).map(c=>c.id);
   G.pendingLotteryPool=null; G.pendingNonLotteryOrder=null; G.pendingFullStandingsOrder=null;
@@ -2263,11 +2370,69 @@ function executeDraftSelection(G, entry, player) {
   if(!club||!player) return false;
   G.draftPool.splice(G.draftPool.findIndex(p=>p.id===player.id),1);
   player.contractYearsLeft=entry.round===1?4:2; player.contractType='Rookie Scale'; player.contractStatus='Under Contract';
+  player.entryPath="Drafted"; player.draftRound=entry.round; player.draftPick=entry.overallPickNum; player.draftedByClubId=club.id;
   player.salaryM=Math.round((entry.round===1?(1.6+Math.max(0,31-entry.overallPickNum)*0.22):1.2)*10)/10; player.extensionEligible=false;
   club.roster.push(player); recalcClubCap(club);
   if(pickAsset){pickAsset.consumed=true;pickAsset.pickNumber=entry.overallPickNum;pickAsset.selectedPlayerId=player.id;}
   G.transactions.push({type:'draft',season:G.season,clubId:club.id,originalClubId:entry.originalClubId,playerId:player.id,round:entry.round,pickNum:entry.overallPickNum,pickId:pickAsset?.id||null,salaryM:player.salaryM});
   return true;
+}
+
+function finalizeUndraftedClass(G){
+  if(!Array.isArray(G.draftPool)||!G.draftPool.length)return 0;
+  let moved=0;
+  for(const p of [...G.draftPool]){
+    p.contractYearsLeft=0;p.contractStatus="Free Agent";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
+    p.entryPath="Undrafted";p.origin=`Undrafted · Class S${G.season}`;p.undraftedSeason=G.season;
+    if(!G.freeAgents.some(x=>x.id===p.id))G.freeAgents.push(p);
+    moved++;
+  }
+  G.draftPool=[];
+  if(moved)logEvent(G,`${moved} undrafted prospects entered the developmental/free-agent pool.`);
+  return moved;
+}
+function developmentalPoolOvr(){
+  const roll=Math.random();
+  if(roll<0.08)return rand(74,76);
+  if(roll<0.34)return rand(71,73);
+  if(roll<0.74)return rand(68,70);
+  return rand(64,67);
+}
+function developmentalOrigin(){
+  const r=Math.random();
+  if(r<0.48)return"Undrafted";
+  if(r<0.73)return"G League";
+  if(r<0.88)return"Young Free Agent";
+  return"International Prospect";
+}
+function twoWayPath(player){
+  if(player.entryPath==="Undrafted"||String(player.origin||"").startsWith("Undrafted"))return"Undrafted";
+  if(player.contractType==="G League"||player.origin==="G League")return"G League";
+  if(player.entryPath==="Young Free Agent")return"Young FA";
+  if(player.entryPath==="International Prospect")return"International";
+  if(player.draftYear&&player.age<=23)return"Recent Draft";
+  return player.origin||"Young FA";
+}
+function ensureTwoWayDevelopmentPool(G,minSize=42){
+  const eligible=allPlayers(G).filter(p=>twoWayEligible(p)&&["Undrafted","G League","Young FA","International","Recent Draft"].includes(twoWayPath(p)));
+  if(eligible.length>=minSize)return eligible.length;
+  const add=Math.min(36,minSize-eligible.length);
+  for(let i=0;i<add;i++){
+    const path=developmentalOrigin(),age=path==="Young Free Agent"?rand(22,25):rand(19,23),ovr=developmentalPoolOvr();
+    const p=makePlayer({age,ovr,isProspect:false,origin:path==="Undrafted"?"Undrafted · Previous Class":path});
+    p.potential=Math.max(p.ovr,Math.min(90,p.ovr+(age<=20?rand(4,11):age<=22?rand(2,8):rand(0,5))));
+    p.contractYearsLeft=0;p.contractStatus="Free Agent";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
+    p.entryPath=path;p.developmentEntrySeason=G.season;
+    G.freeAgents.push(p);
+  }
+  G.twoWayPoolSeason=G.season;
+  return allPlayers(G).filter(p=>twoWayEligible(p)).length;
+}
+function twoWayDevelopmentScore(player){
+  const upside=Math.max(0,(player.potential||player.ovr)-player.ovr);
+  const ageBonus=Math.max(0,24-player.age)*1.2;
+  const pathBonus=twoWayPath(player)==="Undrafted"?4:twoWayPath(player)==="G League"?2:0;
+  return player.ovr*1.6+upside*1.15+ageBonus+pathBonus+Math.random()*2.5;
 }
 
 function advanceDraftUntilUserDecision(G) {
@@ -2282,7 +2447,10 @@ function advanceDraftUntilUserDecision(G) {
     let best=G.draftPool[0],bestScore=-Infinity; for(const pr of G.draftPool){const sc=needAwareScore(club,pr);if(sc>bestScore){bestScore=sc;best=pr;}}
     executeDraftSelection(G,entry,best); ds.index++;
   }
-  ds.complete=true; ds.pendingUserPick=null; logEvent(G,`Draft complete: ${ds.queue.length} picks made across two rounds.`); G.phase='SUMMER_LEAGUE'; return true;
+  ds.complete=true; ds.pendingUserPick=null;
+  const undrafted=finalizeUndraftedClass(G);ensureTwoWayDevelopmentPool(G,42);
+  logEvent(G,`Draft complete: ${ds.queue.length} picks made across two rounds; ${undrafted} prospects went undrafted.`);
+  G.phase='SUMMER_LEAGUE'; return true;
 }
 
 function makeUserDraftSelection(G, playerId) {
@@ -3618,9 +3786,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.3.0 Identity & Profile Foundation",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.3.3 Roster Role Organisation",ENGINE_VERSION="E2.2-TW1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -3933,7 +4101,7 @@ function playerProfile(){
     </div>
     <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${isFreeAgent?`<button id="profileNegotiateFA" class="btn primary">Negotiate Contract</button>`:""}${club?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
     <div class="profileMetricGrid">
-      <div class="profileMetric2"><b>${p.ovr}</b><small>Overall</small></div><div class="profileMetric2"><b>${p.potential??"—"}</b><small>Potential</small></div><div class="profileMetric2"><b>${p.age}</b><small>Age</small></div><div class="profileMetric2"><b>${p.contractYearsLeft||0} yr</b><small>Contract</small></div>
+      <div class="profileMetric2"><b>${p.ovr}</b><small>Overall</small></div><div class="profileMetric2"><b>${p.potential??"—"}</b><small>Potential Ceiling</small></div><div class="profileMetric2"><b>${p.age}</b><small>Age</small></div><div class="profileMetric2"><b>${p.contractYearsLeft||0} yr</b><small>Contract</small></div>
     </div>
 
     <div class="sectionTitle">Current Season</div>
@@ -5610,14 +5778,69 @@ function bindDraftWindow(){
   });
   if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{ui.page="home";show("game");render();save()};
 }
-function twoWayCandidates(){let club=me();return [...(G.freeAgents||[]),...((club.gLeagueRoster)||[])].filter(twoWayEligible).sort((a,b)=>b.ovr-a.ovr).slice(0,25)}
-function squad(){let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
-let nbaRows=d.nba.map(p=>{let injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";return `<tr><td class="pname"><div class="rosterIdentity"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${p.role||"Depth"}</small>${injTag}</div></td><td>${p.pos}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${p.mins||0}</td></tr>`}).join("");
-let twoWayRows=d.twoWay.map(p=>{let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";return `<div class="more"><div><b>${p.name}</b><small>${p.pos} · Age ${p.age}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`}).join("");
-let candRows=cands.map(p=>`<div class="more"><div><b>${p.name}</b><small>${p.position} · Age ${p.age} · ${p.origin||"Free Agent"}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-sign="${p.id}">Sign</button></div></div>`).join("");
-let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
-let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Sign to Two-Way</div>${candRows}`:"";
-return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div><div class="sectionTitle">NBA Roster</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>MIN</th></tr></thead><tbody>${nbaRows}</tbody></table></div><div class="sectionTitle">Two-Way (${d.twoWay.length}/${twLimit})</div><div class="card">${twoWayBlock}${candBlock}</div>`}
+function playerExperienceYears(p){
+  if(!p)return 0;
+  if(Number.isFinite(+p.experienceYears))return Math.max(0,+p.experienceYears);
+  if(Number.isFinite(+p.draftYear))return Math.max(0,(G.season||1)-(+p.draftYear));
+  if(Array.isArray(p.seasonHistory)&&p.seasonHistory.length)return p.seasonHistory.length;
+  return 0;
+}
+function playerExperienceLabel(p){
+  const yrs=playerExperienceYears(p);
+  if(yrs<=0)return"ROOKIE";
+  return`${yrs} YR${yrs===1?"":"S"}`;
+}
+function squadRoleGroup(p){
+  const role=String(p.rotationRole||p.role||"Depth").toLowerCase();
+  if(role.includes("primary starter")||role==="starter"||role.includes("high starter"))return"Starters";
+  if(role.includes("sixth")||role.includes("rotation"))return"Rotation";
+  return"Depth";
+}
+function roleGroupDescription(name){
+  if(name==="Starters")return"Primary five and starting-calibre players";
+  if(name==="Rotation")return"Bench unit and regular contributors";
+  return"Development, specialist and end-of-roster depth";
+}
+
+function twoWayCandidates(){
+  const club=me();ensurePersistentGLeague(club);ensureTwoWayDevelopmentPool(G,42);
+  const pool=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])],seen=new Set();
+  const all=pool.filter(p=>{if(!twoWayEligible(p)||seen.has(p.id))return false;seen.add(p.id);return true});
+  const pathFilter=ui.twoWayPathFilter||"all",posFilter=ui.twoWayPosFilter||"all";
+  const posGroup=p=>(p.position==="PG"||p.position==="SG")?"guards":p.position==="C"?"centers":"forwards";
+  return all.filter(p=>(pathFilter==="all"||twoWayPath(p)===pathFilter)&&(posFilter==="all"||posGroup(p)===posFilter))
+    .sort((a,b)=>twoWayDevelopmentScore(b)-twoWayDevelopmentScore(a)).slice(0,36);
+}
+function squad(){
+  let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
+  const allDev=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])].filter(twoWayEligible);
+  const pathOptions=[["all","All"],["Undrafted","Undrafted"],["G League","G League"],["Young FA","Young FA"],["International","International"]];
+  const posOptions=[["all","All Positions"],["guards","Guards"],["forwards","Forwards"],["centers","Centers"]];
+
+  const nbaPlayers=d.nba.map(x=>playerByAnyId(x.id)||x);
+  const groups=["Starters","Rotation","Depth"].map(name=>[name,nbaPlayers.filter(p=>squadRoleGroup(p)===name)]);
+  const renderRosterTable=list=>`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>MIN</th></tr></thead><tbody>${list.map(p=>{
+    const depth=d.nba.find(x=>x.id===p.id)||p;
+    const injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";
+    return `<tr><td class="pname"><div class="rosterIdentity"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${playerExperienceLabel(p)}</small>${injTag}</div></td><td>${positionLabel(p)}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${depth.mins||0}</td></tr>`;
+  }).join("")}</tbody></table></div>`;
+
+  let twoWayRows=d.twoWay.map(p=>{
+    const live=playerByAnyId(p.id)||p;
+    let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";
+    return `<div class="more"><div><b>${playerNameLink(live)}</b><small>${nationDisplay(live.nationality)} · ${p.pos} · Age ${p.age} · ${playerExperienceLabel(live)} · POT ${live.potential||p.ovr}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`;
+  }).join("");
+
+  let candRows=cands.map(p=>`<div class="twCandidate"><div class="meta"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age}</small><small class="twPath">${twoWayPath(p)} · ${playerExperienceLabel(p)}</small></div><div class="num"><b class="twCurrent">${p.ovr}</b><small>OVR</small></div><div class="num"><b class="twPotential">${p.potential||p.ovr}</b><small>POT</small></div><div class="num ageCol"><b>${p.age}</b><small>AGE</small></div><button class="pick" data-twoway-sign="${p.id}">Sign Two-Way</button></div>`).join("");
+
+  let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
+  let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Development Market</div><div class="twIntro"><b>Two-Way Development Pool</b><small>Built primarily from undrafted prospects, G League players and young unsigned players. Current OVR and development ceiling are shown separately.</small></div><div class="twFilters"><div class="twFilterRow">${pathOptions.map(([k,l])=>`<button data-twpath="${k}" class="${(ui.twoWayPathFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div><div class="twFilterRow">${posOptions.map(([k,l])=>`<button data-twpos="${k}" class="${(ui.twoWayPosFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div></div><div class="smallcopy" style="margin:5px 0 8px">${cands.length} shown · ${allDev.length} eligible developmental players</div><div class="card">${candRows}</div>`:"<div class='card empty'>No players match the current two-way filters.</div>";
+
+  return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div>
+  <div class="faIntro"><b>Roster Structure</b><small>Squad is grouped by playing role so you can quickly see where the roster lacks starting quality, rotation support or depth. Contracts & Cap remains grouped by Guards, Forwards and Centers for positional and salary planning.</small></div>
+  ${groups.map(([name,list])=>`<div class="rosterRoleSection"><div class="rosterRoleHeader"><div><b>${name}</b><div class="rosterRoleNote">${roleGroupDescription(name)}</div></div><small>${list.length} players</small></div>${list.length?renderRosterTable(list):`<div class="card empty">No players currently classified as ${name.toLowerCase()}.</div>`}</div>`).join("")}
+  <div class="sectionTitle">Two-Way (${d.twoWay.length}/${twLimit})</div><div class="card">${twoWayBlock}</div>${(club.twoWayRoster||[]).length<twLimit?candBlock:""}`;
+}
 function contracts(){
   const s=offseasonRosterState(G,me().id),cap=s.cap,groups=["Guards","Forwards","Centers"];
   const bands=[
@@ -5837,7 +6060,7 @@ function more(){
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
   return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
-function render(){ensureCountryBasedPlayerNames();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
+function render(){ensureTalentLifecycleState(G);ensureTwoWayDevelopmentPool(G,42);ensureCountryBasedPlayerNames();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
@@ -5932,6 +6155,8 @@ $$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[d
 $$("[data-extend]").forEach(b=>b.onclick=()=>{let ok=extendPlayerContract(G,me().id,b.dataset.extend,2);toast(ok?"Extension agreed":"Player declined the extension offer");save();render()});
 $$("[data-waive]").forEach(b=>b.onclick=()=>{releasePlayer(G,me().id,b.dataset.waive);toast("Player waived");save();render()});
 $$("[data-twoway-sign]").forEach(b=>b.onclick=()=>{let r=assignTwoWayContract(G,me().id,b.dataset.twowaySign);toast(r.ok?"Signed to a two-way contract":r.reason);save();render()});
+$$("[data-twpath]").forEach(b=>b.onclick=()=>{ui.twoWayPathFilter=b.dataset.twpath;render()});
+$$("[data-twpos]").forEach(b=>b.onclick=()=>{ui.twoWayPosFilter=b.dataset.twpos;render()});
 $$("[data-twoway-convert]").forEach(b=>b.onclick=()=>{let r=convertTwoWayToStandard(G,me().id,b.dataset.twowayConvert);toast(r.ok?"Converted to a standard NBA contract":r.reason);save();render()});
 $$("[data-twoway-waive]").forEach(b=>b.onclick=()=>{waiveTwoWay(G,me().id,b.dataset.twowayWaive);toast("Two-way player waived");save();render()});
 $$("[data-negotiatefa]").forEach(b=>b.onclick=()=>{ui.faTargetId=b.dataset.negotiatefa;ui.faFeedback=null;render()});
