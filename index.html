@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.5.0 International Management Foundation</title>
+<title>Mini&Me Basketball — v0.1.5.1 Scouting & Roster Intelligence</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -511,7 +511,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .boxQuality.allstar{background:#172b31;border-color:#315c68;color:#a5e2ee}
 .boxQuality.starter{color:#cbd3dd}.boxQuality.rotation,.boxQuality.depth{color:#83909e;background:#111820}
 
-/* v0.1.5.0 International Management Foundation */
+/* v0.1.5.1 Scouting & Roster Intelligence */
 .intlHero{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:16px;padding:15px;margin-bottom:12px}
 .intlHeroTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
 .intlFlag{font-size:30px;line-height:1}.intlHero h2{margin:3px 0 2px;font-size:22px}.intlHero p{margin:0;color:var(--muted);font-size:9px}
@@ -527,10 +527,18 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .intlGroupCard{margin-bottom:10px}.intlGroupHead{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;border-bottom:1px solid var(--line)}.intlGroupHead b{font-size:11px}.intlGroupHead small{font-size:7px;color:var(--muted)}
 .intlFixture{display:grid;grid-template-columns:58px minmax(0,1fr) 65px;gap:9px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}.intlFixture:first-child{border-top:0}.intlFixture small{display:block;color:var(--muted);font-size:7px}.intlFixture .score{text-align:right;font-weight:900}
 @media(max-width:560px){.intlSquadRow{grid-template-columns:minmax(0,1fr) 44px 44px}.intlSquadRow .ageCol{display:none}.intlFixture{grid-template-columns:50px minmax(0,1fr) 55px}}
+
+/* v0.1.5.1 Scouting & Roster Intelligence */
+.scoutPanel{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:16px;padding:13px;margin:12px 0}
+.scoutHead{display:flex;justify-content:space-between;align-items:flex-start}.scoutHead b{display:block;font-size:13px}.scoutHead small{display:block;color:var(--muted);font-size:8px;margin-top:2px}.scoutHead strong{font-size:7px;color:var(--accent);border:1px solid var(--line);padding:5px 7px;border-radius:8px}
+.scoutNeeds{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:11px 0}.scoutNeed{border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;justify-content:space-between;align-items:center}.scoutNeed.priority{border-color:var(--accent)}.scoutNeed b{display:block;font-size:10px}.scoutNeed small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.scoutNeed strong{font-size:7px;color:var(--accent2)}
+.scoutSummary{font-size:8px;color:var(--muted);padding:8px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.scoutColumns{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:10px}.scoutColumns h4{font-size:9px;margin:0 0 5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}.scoutTarget{border-top:1px solid var(--line);padding:8px 0;display:flex;justify-content:space-between;gap:7px}.scoutTarget:first-of-type{border-top:0}.scoutTarget b{font-size:9px}.scoutTarget small{display:block;font-size:7px;color:var(--muted);margin-top:2px}.scoutTarget>span{font-size:7px;color:var(--accent2);font-weight:900}.scoutFoot{font-size:7px;color:var(--muted);margin-top:9px}
+@media(max-width:650px){.scoutColumns{grid-template-columns:1fr}.scoutNeeds{grid-template-columns:1fr 1fr 1fr}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.5.0 International Management Foundation</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand"><div class="ball"></div><h1>Mini&Me Basketball</h1><div class="muted" style="margin-bottom:35px">Build Your Team. Build Your Legacy.</div><button id="newBtn" class="btn primary">New Career</button><button id="loadBtn" class="btn secondary">Load Career</button><div class="build">v0.1.5.1 Scouting & Roster Intelligence</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3968,7 +3976,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.5.0 International Management Foundation",ENGINE_VERSION="E2.5-INT1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.5.1 Scouting & Roster Intelligence",ENGINE_VERSION="E2.5-INT1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -4931,6 +4939,59 @@ function gameHub(f){
   const card=`<div class="card broadcast"><div class="broadcastTop"><div class="broadcastBrand">COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${phaseName()} · ${typeof f.round==="number"?`Game ${f.round}`:f.round||""}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${awayContext}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${homeContext}</small></div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
   return card+upcomingFixturesHtml();
 }
+function scoutingRosterAssessment(){
+  const club=me();if(!club)return{needs:[],groups:{}};
+  const groupOf=p=>["PG","SG"].includes(p.position)?"Guard":p.position==="C"?"Center":"Forward";
+  const groups={Guard:[],Forward:[],Center:[]};
+  for(const p of club.roster||[])groups[groupOf(p)].push(p);
+  const target={Guard:5,Forward:6,Center:2};
+  const needs=Object.entries(groups).map(([group,players])=>{
+    const sorted=[...players].sort((a,b)=>b.ovr-a.ovr);
+    const top=sorted[0]?.ovr||0,rotation=sorted.slice(0,Math.min(3,sorted.length));
+    const avg=rotation.length?rotation.reduce((s,p)=>s+p.ovr,0)/rotation.length:0;
+    const depthGap=Math.max(0,target[group]-players.length);
+    const starterGap=Math.max(0,82-top)/4;
+    const rotationGap=Math.max(0,77-avg)/3;
+    const ageing=players.filter(p=>p.age>=32).length*.45;
+    const score=depthGap*1.7+starterGap+rotationGap+ageing;
+    let issue=depthGap>=2?"Depth shortage":top<80?"Starting quality":avg<75?"Rotation quality":ageing>=.9?"Age profile":"Stable";
+    return{group,score:+score.toFixed(2),count:players.length,top,avg:+avg.toFixed(1),issue};
+  }).sort((a,b)=>b.score-a.score);
+  return{needs,groups};
+}
+function scoutingFitGroup(p){
+  return ["PG","SG"].includes(p.position)?"Guard":p.position==="C"?"Center":"Forward";
+}
+function scoutingTargetScore(p,need,mode){
+  const fit=scoutingFitGroup(p)===need.group?18:0;
+  const upside=Math.max(0,(p.potential||p.ovr)-p.ovr);
+  const age=Math.max(0,27-(p.age||27));
+  const talent=(p.ovr||0)*1.25+upside*.7+age*.25;
+  const modeAdj=mode==="development"?upside*1.2+age*.45:mode==="trade"?(p.ovr||0)*.2:0;
+  return talent+fit+need.score*3+modeAdj;
+}
+function scoutingRecommendations(){
+  const assess=scoutingRosterAssessment(),priority=assess.needs[0]||{group:"Guard",score:0};
+  const myIds=new Set((me()?.roster||[]).map(p=>p.id));
+  const free=(G.freeAgents||[]).filter(p=>!myIds.has(p.id)&&p.contractType!=="International").map(p=>({...p,_source:"Free Agency"}));
+  const trade=G.clubs.filter(cl=>cl.id!==me().id).flatMap(cl=>(cl.roster||[]).map(p=>({...p,_source:"Trade",_club:cl.name})));
+  const dev=[...(G.freeAgents||[]),...(me()?.gLeagueRoster||[])].filter(p=>twoWayEligible(p)).map(p=>({...p,_source:"Development"}));
+  const choose=(pool,mode,n=3)=>pool.filter(p=>scoutingFitGroup(p)===priority.group).sort((a,b)=>scoutingTargetScore(b,priority,mode)-scoutingTargetScore(a,priority,mode)).slice(0,n);
+  return{assessment:assess,priority,free:choose(free,"free"),trade:choose(trade,"trade"),development:choose(dev,"development")};
+}
+function scoutingReportHtml(){
+  const r=scoutingRecommendations(),needs=r.assessment.needs;
+  const needCards=needs.map((n,i)=>`<div class="scoutNeed ${i===0?"priority":""}"><div><b>${n.group}</b><small>${n.issue} · ${n.count} players</small></div><strong>${n.score>=4?"HIGH":n.score>=2?"MED":"LOW"}</strong></div>`).join("");
+  const target=(p,type)=>`<div class="scoutTarget"><div><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${positionLabel(p)} · Age ${p.age} · OVR ${p.ovr} · POT ${p.potential||p.ovr}</small><small>${type==="Trade"?p._club:type}</small></div><span>${scoutingFitGroup(p)}</span></div>`;
+  return `<div class="scoutPanel"><div class="scoutHead"><div><b>Scouting Department</b><small>Roster Needs & Target Intelligence</small></div><strong>BASELINE</strong></div>
+    <div class="scoutNeeds">${needCards}</div>
+    <div class="scoutSummary">Priority: <b>${r.priority.group}</b> · ${r.priority.issue}. Recommendations balance current quality, upside, age and positional need.</div>
+    <div class="scoutColumns"><div><h4>Free Agency</h4>${r.free.length?r.free.map(p=>target(p,"Free Agent")).join(""):`<div class="empty">No viable targets.</div>`}</div>
+    <div><h4>Trade Market</h4>${r.trade.length?r.trade.map(p=>target(p,"Trade")).join(""):`<div class="empty">No viable targets.</div>`}</div>
+    <div><h4>Development</h4>${r.development.length?r.development.map(p=>target(p,"Development")).join(""):`<div class="empty">No viable targets.</div>`}</div></div>
+    <div class="scoutFoot">Future Scouting Department upgrades will change confidence and information accuracy. This foundation does not alter a player's true ratings.</div></div>`;
+}
+
 function draftRosterNeeds(){
   const club=me();if(!club)return[];
   const weights={PG:0,SG:0,SF:0,PF:0,C:0},counts={PG:0,SG:0,SF:0,PF:0,C:0};
@@ -6092,6 +6153,7 @@ function squad(){
   let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Development Market</div><div class="twIntro"><b>Two-Way Development Pool</b><small>Built primarily from undrafted prospects, G League players and young unsigned players. Current OVR and development ceiling are shown separately.</small></div><div class="twFilters"><div class="twFilterRow">${pathOptions.map(([k,l])=>`<button data-twpath="${k}" class="${(ui.twoWayPathFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div><div class="twFilterRow">${posOptions.map(([k,l])=>`<button data-twpos="${k}" class="${(ui.twoWayPosFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div></div><div class="smallcopy" style="margin:5px 0 8px">${cands.length} shown · ${allDev.length} eligible developmental players</div><div class="card">${candRows}</div>`:"<div class='card empty'>No players match the current two-way filters.</div>";
 
   return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div>
+  ${scoutingReportHtml()}
   <div class="faIntro"><b>Roster Structure</b><small>Squad is grouped by playing role so you can quickly see where the roster lacks starting quality, rotation support or depth. Contracts & Cap remains grouped by Guards, Forwards and Centers for positional and salary planning.</small></div>
   ${groups.map(([name,list])=>`<div class="rosterRoleSection"><div class="rosterRoleHeader"><div><b>${name}</b><div class="rosterRoleNote">${roleGroupDescription(name)}</div></div><small>${list.length} players</small></div>${list.length?renderRosterTable(list):`<div class="card empty">No players currently classified as ${name.toLowerCase()}.</div>`}</div>`).join("")}
   <div class="sectionTitle">Two-Way (${d.twoWay.length}/${twLimit})</div><div class="card">${twoWayBlock}</div>${(club.twoWayRoster||[]).length<twLimit?candBlock:""}`;
@@ -6430,17 +6492,18 @@ function bind(){
     const archOptions=validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join("");
     const secOptions=`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`;
 
-    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player</h3><div class="smallcopy">OVR and identity attributes can be corrected here. Salary and contract terms do not automatically change. Changing age resets the player's recorded career, club, awards, injury and international history.</div><div class="editGrid" style="margin-top:10px">
+    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player</h3><div class="smallcopy">Current OVR, Potential OVR and identity attributes can be corrected here. Salary and contract terms do not automatically change. Changing age resets the player's recorded career, club, awards, injury and international history.</div><div class="editGrid" style="margin-top:10px">
       <label>Name<input id="epName" value="${p.name}"></label>
       <label>Jersey<input id="epJersey" type="number" min="0" max="99" value="${p.jerseyNumber??0}"></label>
       <label>Age<input id="epAge" type="number" min="18" max="45" value="${p.age}"></label>
-      <label>OVR<input id="epOvr" type="number" min="40" max="99" value="${p.ovr}"></label>
+      <label>Current OVR<input id="epOvr" type="number" min="40" max="99" value="${p.ovr}"></label>
+      <label>Potential OVR<input id="epPot" type="number" min="40" max="99" value="${p.potential||p.ovr}"></label>
       <label>Country<select id="epNation">${nationOptions}</select></label>
       <label>Primary Position<select id="epPos">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label>
       <label>Secondary Position<select id="epPos2">${secOptions}</select></label>
       <label>Height (cm)<input id="epHeight" type="number" min="160" max="231" value="${p.heightCm||200}"></label>
       <label>Archetype<select id="epArch">${archOptions}</select></label>
-    </div><div class="smallcopy" style="margin-top:8px">Allowed ranges: age 18–45, OVR 40–99, height 160–231 cm. Country, secondary position and archetype use controlled game data.</div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
+    </div><div class="smallcopy" style="margin-top:8px">Allowed ranges: age 18–45, Current OVR 40–99, Potential OVR 40–99, height 160–231 cm. Potential cannot be lower than Current OVR. Country, secondary position and archetype use controlled game data.</div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
 
     $("#epPos").onchange=()=>{
       const pos=$("#epPos").value,oldSec=$("#epPos2").value,oldArch=$("#epArch").value;
@@ -6456,6 +6519,8 @@ function bind(){
       const oldAge=+p.age,oldNation=p.nationality,oldName=p.name;
       const nextAge=Math.max(18,Math.min(45,+$("#epAge").value||oldAge));
       const nextOvr=Math.max(40,Math.min(99,+$("#epOvr").value||p.ovr));
+      const enteredPot=Math.max(40,Math.min(99,+$("#epPot").value||p.potential||nextOvr));
+      const nextPot=Math.max(nextOvr,enteredPot);
       const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
 
       const enteredName=($("#epName").value||p.name).trim();
@@ -6464,7 +6529,7 @@ function bind(){
       p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));
       p.age=nextAge;
       p.ovr=nextOvr;
-      p.potential=Math.max(nextOvr,+p.potential||nextOvr);
+      p.potential=nextPot;
       p.nationality=$("#epNation").value;
       if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){p.name=generatedCountryName(p);p.generatedNameCountry=p.nationality}
       p.position=$("#epPos").value;
