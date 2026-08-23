@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.2.0 Player Club Schedule Foundation</title>
+<title>Mini&Me Basketball — v0.1.3.0 Identity & Profile Foundation</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -433,6 +433,56 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
  .statStrip{grid-template-columns:repeat(3,minmax(0,1fr))}
  .editGrid{grid-template-columns:1fr}
 }
+
+/* v0.1.2.2 Free Agency negotiation */
+.faIntro{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:13px 14px;margin:10px 0 14px}
+.faIntro b{display:block;margin-bottom:4px}.faIntro small{color:var(--muted);line-height:1.45}
+.faNegotiate{border:1px solid var(--accent);background:var(--panel);border-radius:18px;padding:15px;margin:12px 0}
+.faHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.faHead h3{margin:2px 0 3px;font-size:20px}.faHead small{color:var(--muted)}
+.faAsk{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.faAsk>div{border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:10px;text-align:center}.faAsk b{display:block;font-size:17px}.faAsk small{color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.08em}
+.faOfferGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.faOfferGrid label{font-size:9px;color:var(--muted);font-weight:900;text-transform:uppercase}.faOfferGrid input,.faOfferGrid select{width:100%;margin-top:5px}
+.faOfferActions{display:flex;gap:8px;margin-top:12px}.faOfferActions button{margin:0}
+.faFeedback{margin-top:10px;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--panel2)}.faFeedback.accept{border-color:#38684b}.faFeedback.reject{border-color:#6b3b42}.faFeedback b{display:block;margin-bottom:3px}.faFeedback small{color:var(--muted)}
+.askingLabel{color:var(--accent2);font-weight:900}
+@media(max-width:620px){.faAsk{grid-template-columns:1fr 1fr}.faOfferGrid{grid-template-columns:1fr}.faOfferActions{flex-direction:column}}
+
+/* v0.1.3.0 Identity & Profile Foundation */
+.faFilters{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.faFilterRow{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px}
+.faFilterRow button{white-space:nowrap;border:1px solid var(--line);background:var(--panel2);color:var(--muted);padding:8px 11px;border-radius:11px;font-weight:850}
+.faFilterRow button.active{background:var(--accent);border-color:var(--accent);color:#111}
+.faMarketSummary{display:flex;justify-content:space-between;gap:10px;align-items:center;margin:7px 0 10px}
+.faMarketSummary small{color:var(--muted)}
+.faBandTag{display:inline-block;margin-left:6px;font-size:8px;color:var(--muted);font-weight:900;text-transform:uppercase;letter-spacing:.06em}
+
+/* v0.1.3.0 Identity & Profile Foundation */
+.profileHero{border:1px solid #34404e;background:linear-gradient(135deg,#18212c,#10161d);border-radius:20px;overflow:hidden;margin-bottom:12px}
+.profileHeroMain{display:flex;gap:14px;align-items:center;padding:18px}
+.profileHeroBadge{width:72px;height:72px;border-radius:18px;display:grid;place-items:center;font-size:25px;font-weight:950;color:#0d1014;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14)}
+.profileHeroText{min-width:0}.profileHeroText .eyebrow{margin-bottom:5px}.profileHeroText h2{font-size:26px;line-height:1.05;margin:0 0 6px;overflow-wrap:anywhere}.profileHeroText p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.identityLine{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:8px;color:#d9dee5;font-size:9px;font-weight:800}
+.identityChip{border:1px solid #34404e;background:#111820;padding:5px 8px;border-radius:999px}
+.profileMetricGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 14px}
+.profileMetric2{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:10px;text-align:center;min-width:0}
+.profileMetric2 b{display:block;font-size:17px;line-height:1.05;overflow-wrap:anywhere}.profileMetric2 small{display:block;color:var(--muted);font-size:7px;text-transform:uppercase;margin-top:4px;letter-spacing:.05em}
+.profileSectionGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profilePanel{border:1px solid var(--line);background:var(--panel);border-radius:15px;overflow:hidden}
+.profilePanel h4{margin:0;padding:11px 12px;border-bottom:1px solid var(--line);font-size:11px}
+.profilePanelBody{padding:0 12px}
+.profileDataRow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:9px 0;border-top:1px solid #252f3a}
+.profileDataRow:first-child{border-top:0}.profileDataRow small{color:var(--muted);font-size:8px}.profileDataRow b{font-size:9px;text-align:right;overflow-wrap:anywhere}
+.profileStatsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;padding:12px}
+.profileStat{border:1px solid #2b3642;background:#111820;border-radius:11px;padding:9px 6px;text-align:center}
+.profileStat b{display:block;font-size:15px}.profileStat small{display:block;color:var(--muted);font-size:7px;margin-top:3px}
+.historyCard{border:1px solid var(--line);background:var(--panel);border-radius:15px;overflow:hidden}
+.historyItem{display:grid;grid-template-columns:62px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 12px;border-top:1px solid var(--line)}
+.historyItem:first-child{border-top:0}.historyItem .season{color:var(--accent2);font-size:8px;font-weight:900}.historyItem b{font-size:9px}.historyItem small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.historyItem .right{font-size:8px;text-align:right;color:#dfe4ea}
+.teamKeyGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.teamKeyCard{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:11px;min-width:0}.teamKeyCard small{display:block;color:var(--accent2);font-size:7px;font-weight:900;text-transform:uppercase}.teamKeyCard b{display:block;font-size:11px;margin-top:5px;overflow-wrap:anywhere}.teamKeyCard span{display:block;color:var(--muted);font-size:8px;margin-top:3px}
+.rosterGroupTitle{display:flex;justify-content:space-between;align-items:center;margin:14px 2px 7px}.rosterGroupTitle b{font-size:12px}.rosterGroupTitle small{color:var(--muted);font-size:8px}
+.clubHistoryBadges{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}.clubHistoryBadge{font-size:7px;font-weight:900;color:var(--accent2);border:1px solid #65512d;border-radius:999px;padding:3px 6px}
+@media(max-width:620px){.profileMetricGrid{grid-template-columns:repeat(2,1fr)}.profileSectionGrid{grid-template-columns:1fr}.teamKeyGrid{grid-template-columns:1fr}.profileStatsGrid{grid-template-columns:repeat(4,1fr)}}
 </style></head>
 <body>
 <div class="app">
@@ -3568,9 +3618,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.2.0 Player Club Schedule Foundation",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.3.0 Identity & Profile Foundation",ENGINE_VERSION="E2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all"};let setup={step:1,name:"Fitz",team:"BOS",conf:"East",cap:true,inj:true};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -3700,6 +3750,111 @@ async function startCareer(){
 }
 function header(title,sub=""){return `<div class="head"><div><div class="eyebrow">MINI&ME BASKETBALL</div><h2>${title}</h2><p>${sub}</p></div><div class="gmBadge">GM ${G.gmName||"GM"}</div></div>`}
 
+const NATIONAL_FLAG_ISO={
+  DEN:"DK",GEO:"GE",UKR:"UA",ESP:"ES",GRE:"GR",MNE:"ME",POR:"PT",ROU:"RO",SRB:"RS",TUR:"TR",BIH:"BA",SUI:"CH",GBR:"GB",ITA:"IT",ISL:"IS",LTU:"LT",CRO:"HR",GER:"DE",ISR:"IL",CYP:"CY",LAT:"LV",POL:"PL",AUT:"AT",NED:"NL",HUN:"HU",FRA:"FR",BEL:"BE",FIN:"FI",SLO:"SI",CZE:"CZ",SWE:"SE",EST:"EE",
+  USA:"US",DOM:"DO",MEX:"MX",NCA:"NI",PUR:"PR",CAN:"CA",BAH:"BS",JAM:"JM",BRA:"BR",VEN:"VE",COL:"CO",CHI:"CL",ARG:"AR",URU:"UY",PAN:"PA",CUB:"CU",
+  AUS:"AU",GUM:"GU",NZL:"NZ",PHI:"PH",TPE:"TW",CHN:"CN",JPN:"JP",KOR:"KR",IRI:"IR",IRQ:"IQ",JOR:"JO",SYR:"SY",IND:"IN",QAT:"QA",LBN:"LB",KSA:"SA",
+  CMR:"CM",CPV:"CV",LBY:"LY",SSD:"SS",CIV:"CI",COD:"CD",SEN:"SN",RWA:"RW",NGA:"NG",MLI:"ML",UGA:"UG",ANG:"AO",GUI:"GN",TUN:"TN",EGY:"EG",MAD:"MG"
+};
+function flagEmoji(code){
+  const iso=NATIONAL_FLAG_ISO[code]||code;
+  if(!iso||iso.length!==2)return"🏳";
+  return [...iso.toUpperCase()].map(ch=>String.fromCodePoint(127397+ch.charCodeAt(0))).join("");
+}
+function nationName(code){return NATIONAL_TEAMS.find(n=>n.code===code)?.name||code||"International"}
+function nationDisplay(code){return `${flagEmoji(code)} ${nationName(code)}`}
+function validArchetypesForPosition(pos){return ARCHETYPES_BY_POSITION[pos]||[]}
+function resetPlayerHistoryAfterAgeEdit(p){
+  p.careerStats=emptyRegularStats();
+  p.seasonHistory=[];
+  p.awardHistory=[];
+  p.injuryHistory=[];
+  p.internationalHistory=[];
+  p.ageHistoryResetSeason=G.season;
+}
+const COUNTRY_NAME_STYLES={
+  USA:"usa",CAN:"anglo",AUS:"aus",NZL:"aus",GBR:"anglo",
+  ESP:"spanish",MEX:"spanish",DOM:"spanish",PUR:"spanish",CUB:"spanish",ARG:"spanish",URU:"spanish",CHI:"spanish",COL:"spanish",VEN:"spanish",PAN:"spanish",NCA:"spanish",
+  BRA:"brazil",POR:"portuguese",
+  FRA:"french",BEL:"french",SUI:"central",
+  GER:"german",AUT:"german",NED:"dutch",
+  ITA:"italian",
+  GRE:"greek",CYP:"greek",
+  SRB:"balkan",CRO:"balkan",BIH:"balkan",MNE:"balkan",SLO:"balkan",
+  LTU:"baltic",LAT:"baltic",EST:"baltic",
+  POL:"easteuro",CZE:"easteuro",ROU:"easteuro",HUN:"easteuro",UKR:"easteuro",GEO:"easteuro",
+  DEN:"nordic",SWE:"nordic",FIN:"nordic",ISL:"nordic",
+  TUR:"turkish",
+  ISR:"levant",LBN:"levant",JOR:"levant",SYR:"levant",IRQ:"arabic",QAT:"arabic",KSA:"arabic",
+  CHN:"china",TPE:"china",JPN:"japan",KOR:"korea",
+  PHI:"philippines",IND:"india",
+  NGA:"westafrica",SEN:"westafrica",MLI:"westafrica",GUI:"westafrica",GAM:"westafrica",CIV:"westafrica",
+  CMR:"francafrica",COD:"francafrica",RWA:"francafrica",ANG:"africa",UGA:"africa",SSD:"africa",CPV:"portuguese",TUN:"arabic",EGY:"arabic",LBY:"arabic",MAD:"africa",
+  BAH:"caribbean",JAM:"caribbean",GUM:"pacific"
+};
+const NAME_POOLS={
+ usa:{
+  first:["James","Michael","Anthony","Marcus","Jordan","Darius","Cameron","Tyler","Jaylen","Devin","Malik","Isaiah","Jalen","Brandon","Caleb","Derrick","Andre","Trevor","Miles","Elijah","Noah","Mason","Xavier","Damian","Kendrick","Avery","Cole","Bryce","Trey","Tyrese","Jared","Donovan","Quentin","Julian","Zion","Keon","Desmond","Terrence","Jamal","Micah"],
+  last:["Johnson","Williams","Brown","Jones","Davis","Miller","Wilson","Moore","Taylor","Anderson","Thomas","Jackson","White","Harris","Martin","Thompson","Garcia","Robinson","Clark","Lewis","Walker","Young","Allen","King","Wright","Scott","Green","Baker","Adams","Nelson","Carter","Mitchell","Perez","Roberts","Turner","Phillips","Campbell","Parker","Evans","Edwards","Collins","Stewart","Morris","Reed","Cook","Morgan"]
+ },
+ anglo:{first:["Jack","Oliver","Harry","George","Charlie","Thomas","William","Liam","Noah","Ethan","Lucas","Henry","Samuel","Daniel","Matthew","Callum","Ben","Joshua","Ryan","Adam","Luke","Nathan","Connor","Dylan"],last:["Smith","Jones","Taylor","Brown","Wilson","Davies","Evans","Thomas","Roberts","Johnson","Lewis","Walker","Robinson","Wood","Thompson","White","Watson","Jackson","Wright","Green","Harris","Cooper","King","Bennett","Mitchell","Carter","Turner","Parker"]},
+ aus:{first:["Liam","Jack","Noah","Oliver","Thomas","William","Cooper","Charlie","Henry","Lucas","Ethan","Lachlan","Max","Harrison","Oscar","Samuel","James","Flynn","Blake","Mitchell","Jordan","Bailey","Cameron","Riley"],last:["Smith","Jones","Williams","Brown","Wilson","Taylor","Martin","Anderson","Thompson","White","Walker","Harris","Roberts","Hall","Young","King","Wright","Scott","Green","Baker","Miller","Campbell","Evans","Parker","Clarke","Ryan","Kelly"]},
+ spanish:{first:["Alejandro","Mateo","Santiago","Diego","Nicolas","Gabriel","Daniel","Adrian","Lucas","Carlos","Javier","Miguel","Rafael","Andres","Emilio","Marco","Tomas","Julian","Sebastian","Bruno","Luis","Victor","Fernando","Pablo"],last:["Garcia","Rodriguez","Martinez","Lopez","Hernandez","Gonzalez","Perez","Sanchez","Ramirez","Torres","Flores","Rivera","Gomez","Diaz","Reyes","Morales","Ortiz","Gutierrez","Chavez","Ruiz","Mendoza","Castillo","Vargas","Romero","Silva","Navarro","Rojas","Cruz"]},
+ brazil:{first:["Joao","Gabriel","Lucas","Matheus","Pedro","Rafael","Guilherme","Bruno","Felipe","Thiago","Vinicius","Caio","Andre","Renato","Diego","Arthur","Henrique","Marcelo","Leo","Davi"],last:["Silva","Santos","Oliveira","Souza","Pereira","Costa","Rodrigues","Almeida","Nascimento","Lima","Araujo","Fernandes","Carvalho","Gomes","Martins","Rocha","Barbosa","Ribeiro","Mendes","Cardoso","Teixeira","Moreira"]},
+ portuguese:{first:["Joao","Miguel","Tiago","Diogo","Andre","Pedro","Rui","Goncalo","Bruno","Ricardo","Nuno","Tomas","Francisco","Daniel","Luis","Fabio"],last:["Silva","Santos","Ferreira","Pereira","Oliveira","Costa","Rodrigues","Martins","Jesus","Sousa","Fernandes","Goncalves","Gomes","Lopes","Marques","Alves","Almeida","Ribeiro"]},
+ french:{first:["Lucas","Hugo","Theo","Louis","Jules","Nathan","Enzo","Antoine","Maxime","Mathis","Alexandre","Baptiste","Remy","Yann","Julien","Nicolas","Victor","Arthur","Romain","Gabriel"],last:["Martin","Bernard","Thomas","Robert","Richard","Petit","Durand","Leroy","Moreau","Simon","Laurent","Lefebvre","Michel","Garcia","David","Bertrand","Roux","Vincent","Fournier","Morel","Girard","Andre"]},
+ german:{first:["Lukas","Leon","Jonas","Felix","Maximilian","Paul","Niklas","Julian","Moritz","Tim","David","Florian","Tobias","Daniel","Sebastian","Johannes","Finn","Luca"],last:["Muller","Schmidt","Schneider","Fischer","Weber","Meyer","Wagner","Becker","Schulz","Hoffmann","Schafer","Koch","Bauer","Richter","Klein","Wolf","Schroder","Neumann","Schwarz","Zimmermann"]},
+ dutch:{first:["Daan","Sem","Lucas","Finn","Milan","Levi","Bram","Jesse","Luuk","Thijs","Joris","Niels","Koen","Sven","Ruben","Wout"],last:["De Jong","Jansen","De Vries","Van den Berg","Van Dijk","Bakker","Janssen","Visser","Smit","Meijer","De Boer","Mulder","De Groot","Bos","Vos","Peters"]},
+ italian:{first:["Luca","Marco","Matteo","Alessandro","Andrea","Davide","Federico","Simone","Lorenzo","Francesco","Giovanni","Riccardo","Stefano","Nicolo","Gabriele","Antonio"],last:["Rossi","Russo","Ferrari","Esposito","Bianchi","Romano","Colombo","Ricci","Marino","Greco","Bruno","Gallo","Conti","De Luca","Mancini","Costa","Giordano","Rizzo"]},
+ greek:{first:["Giorgos","Nikos","Dimitris","Kostas","Andreas","Christos","Alexandros","Vasilis","Panagiotis","Stavros","Manolis","Thanasis","Petros","Michalis"],last:["Papadopoulos","Nikolaidis","Georgiou","Dimitriou","Konstantinou","Ioannidis","Pappas","Vasileiou","Karagiannis","Andreou","Christodoulou","Alexiou","Kostas","Samaras","Pavlidis"]},
+ balkan:{first:["Nikola","Luka","Marko","Stefan","Milos","Bogdan","Aleksa","Nemanja","Filip","Ivan","Matej","Ante","Dario","Mario","Bojan","Vuk","Jovan","Danilo"],last:["Jovanovic","Petrovic","Nikolic","Markovic","Ilic","Stojanovic","Pavlovic","Matic","Kovacevic","Popovic","Horvat","Kovacic","Babic","Maric","Vukovic","Tomic","Bozic","Simic","Milic"]},
+ baltic:{first:["Mantas","Lukas","Domantas","Jonas","Rokas","Tomas","Arnas","Dovydas","Martynas","Kristaps","Janis","Arturs","Rihards","Karlis","Markus","Kaspars"],last:["Kazlauskas","Petrauskas","Jankauskas","Stankevicius","Vasiliauskas","Zukauskas","Paulauskas","Butkus","Kalnins","Berzins","Ozols","Jansons","Liepa","Krumins","Tamm","Saar"]},
+ easteuro:{first:["Mateusz","Jakub","Piotr","Tomasz","Michal","Petr","Jan","Ondrej","Martin","Adam","Andrei","Mihai","Vlad","Oleksandr","Mykola","Danylo","Gabor","Bence"],last:["Kowalski","Nowak","Wisniewski","Wojcik","Kowalczyk","Novak","Svoboda","Dvorak","Prochazka","Popescu","Ionescu","Dumitru","Shevchenko","Kovalenko","Bondarenko","Nagy","Kovacs","Horvath"]},
+ nordic:{first:["Lars","Anders","Erik","Johan","Magnus","Emil","Oscar","Viktor","Anton","Axel","Mikkel","Nikolaj","Elias","Henrik","Soren","Mads"],last:["Andersen","Johansen","Hansen","Larsen","Nielsen","Jensen","Pedersen","Eriksen","Svensson","Johansson","Andersson","Karlsson","Nilsson","Lindberg","Berg","Olsen","Kristensen"]},
+ turkish:{first:["Emir","Mert","Kerem","Can","Burak","Arda","Efe","Kaan","Berk","Ozan","Onur","Tolga","Serkan","Baris","Yigit"],last:["Yilmaz","Kaya","Demir","Sahin","Celik","Yildiz","Yildirim","Ozturk","Aydin","Ozdemir","Arslan","Dogan","Kilic","Aslan","Koc"]},
+ levant:{first:["Daniel","Noam","Ariel","Eitan","Yoni","Adam","Omer","Nadav","Eli","Yousef","Karim","Rami","Sami","Tarek"],last:["Cohen","Levi","Mizrahi","Peretz","Biton","Avraham","Haddad","Khoury","Nassar","Mansour","Saleh","Farah","Aziz","Habib"]},
+ arabic:{first:["Omar","Ahmed","Mohammed","Ali","Hassan","Youssef","Khalid","Tariq","Fahad","Saad","Mahmoud","Mustafa","Ibrahim","Hamza","Zaid"],last:["Hassan","Ali","Ahmed","Mahmoud","Khalil","Saleh","Abdullah","Rahman","Hamdan","Nasser","Farouk","Karim","Said","Yasin","Hariri"]},
+ china:{first:["Wei","Jun","Hao","Ming","Lei","Jian","Bo","Tao","Chen","Yi","Xiang","Peng","Rui","Kai","Zhe"],last:["Wang","Li","Zhang","Liu","Chen","Yang","Huang","Zhao","Wu","Zhou","Xu","Sun","Ma","Zhu","Hu"]},
+ japan:{first:["Haruto","Yuto","Sota","Ren","Kaito","Daiki","Ryota","Takumi","Yuki","Riku","Shota","Kenta","Naoki","Kohei","Tatsuya"],last:["Sato","Suzuki","Takahashi","Tanaka","Watanabe","Ito","Yamamoto","Nakamura","Kobayashi","Kato","Yoshida","Yamada","Sasaki","Yamaguchi","Matsumoto"]},
+ korea:{first:["Min-jun","Seo-jun","Ji-hoon","Hyun-woo","Dong-hyun","Jun-ho","Sung-min","Jae-hyun","Tae-hyun","Woo-jin","Young-ho","Jin-woo"],last:["Kim","Lee","Park","Choi","Jung","Kang","Cho","Yoon","Jang","Lim","Han","Shin"]},
+ philippines:{first:["Miguel","Paolo","Joshua","Gabriel","Marco","Andre","Carlo","Enzo","Luis","Nathan","Jerome","Rafael","Joaquin","Kyle"],last:["Santos","Reyes","Cruz","Garcia","Mendoza","Bautista","Flores","Aquino","Ramos","Castillo","Navarro","Torres","Villanueva","Rivera"]},
+ india:{first:["Arjun","Rohan","Vikram","Aditya","Rahul","Karan","Aman","Dev","Nikhil","Siddharth","Akash","Ravi","Kabir","Ishaan"],last:["Sharma","Patel","Singh","Kumar","Gupta","Mehta","Reddy","Kapoor","Verma","Joshi","Nair","Rao","Malhotra","Chopra"]},
+ westafrica:{first:["Kofi","Kwame","Ibrahim","Moussa","Amadou","Ousmane","Abdoulaye","Cheikh","Mamadou","Idrissa","Samuel","Daniel","Michael","Emmanuel","Victor"],last:["Diop","Ndiaye","Traore","Diallo","Camara","Toure","Kone","Keita","Mensah","Boateng","Okafor","Adebayo","Olawale","Bello","Sow","Ba"]},
+ francafrica:{first:["Jean","Cedric","Patrick","Christian","Emmanuel","Boris","Yannick","Thierry","Joel","Alain","Kevin","Junior","Franck","Stephane"],last:["Mbala","N'Diaye","Mbuyi","Kabongo","Mwamba","Biyombo","Nsimba","Moukoko","Tchoua","Kamga","Ngoma","Ilunga","Mabiala","Bakambu"]},
+ africa:{first:["Samuel","Daniel","David","Emmanuel","Joseph","Isaac","Moses","Peter","John","Michael","Brian","Kevin","Andrew","Patrick"],last:["Okello","Ochieng","Mugisha","Kato","Musa","Nsubuga","Mutesa","Abebe","Tesfaye","Bekele","Moyo","Dlamini","Ndlovu","Banda"]},
+ caribbean:{first:["Andre","Dwayne","Jermaine","Malik","Tariq","Shawn","Kemar","Jamal","Devon","Ricardo","Nicholas","Jordan"],last:["Brown","Campbell","Williams","Johnson","Clarke","Thomas","Morgan","Lewis","Grant","Robinson","Smith","Richards"]},
+ pacific:{first:["Joseph","Michael","Daniel","Joshua","Aaron","Nathan","Isaiah","Noah","David","Samuel"],last:["Cruz","Santos","Taitano","Camacho","Flores","Guerrero","Pangelinan","Perez","Chargualaf","Quitugua"]},
+ central:{first:["Luca","Noah","Leon","Julian","David","Simon","Nico","Marco","Jan","Fabian","Raphael","Jonas"],last:["Muller","Meier","Schmid","Keller","Weber","Frei","Huber","Moser","Steiner","Baumann","Gerber","Brunner"]}
+};
+function hashStringStable(s){let h=2166136261;for(const ch of String(s)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function nameStyleForCountry(code){return COUNTRY_NAME_STYLES[code]||"anglo"}
+function generatedCountryName(player,salt=0){
+  const pool=NAME_POOLS[nameStyleForCountry(player.nationality)]||NAME_POOLS.anglo;
+  const h1=hashStringStable(`${player.id}|${player.nationality}|${salt}|first`);
+  const h2=hashStringStable(`${player.id}|${player.nationality}|${salt}|last`);
+  return `${pool.first[h1%pool.first.length]} ${pool.last[h2%pool.last.length]}`;
+}
+function allPlayerObjectsForNaming(){
+  const out=[],seen=new Set();
+  const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
+  for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
+  (G.freeAgents||[]).forEach(add);(G.draftPool||[]).forEach(add);(G.draftState?.prospects||[]).forEach(add);
+  return out;
+}
+function ensureCountryBasedPlayerNames(){
+  let changed=false;const used=new Set();
+  const players=allPlayerObjectsForNaming();
+  for(const p of players)if(p.name&&!/^Player \d+$/i.test(p.name))used.add(p.name);
+  for(const p of players){
+    if(!p.name||/^Player \d+$/i.test(p.name)){
+      let salt=0,name=generatedCountryName(p,salt);
+      while(used.has(name)&&salt<20){salt++;name=generatedCountryName(p,salt)}
+      p.name=name;p.nameOrigin="country_generated";p.generatedNameCountry=p.nationality;used.add(name);changed=true;
+    }
+  }
+  if(changed){G.playerNameModelVersion=1;save()}
+  return changed;
+}
 function playerClub(playerId){
   return G.clubs.find(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])].some(p=>p.id===playerId))||null;
 }
@@ -3748,6 +3903,14 @@ function fmtHeight(cm){
 function perGame(stats,key){
   const gp=stats?.gp||0;return gp?((stats?.[key]||0)/gp).toFixed(1):"0.0";
 }
+function statPct(stats,made,att){
+  const a=stats?.[att]||0;return a?`${(((stats?.[made]||0)/a)*100).toFixed(1)}%`:"—";
+}
+function clubRosterGroup(p){
+  if(p.position==="PG"||p.position==="SG")return"Guards";
+  if(p.position==="C")return"Centers";
+  return"Forwards";
+}
 function playerProfile(){
   const p=playerByAnyId(ui.playerProfileId);
   if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
@@ -3755,36 +3918,113 @@ function playerProfile(){
   const s=p.seasonStats||{},cs=p.careerStats||{};
   const pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
   const injury=p.injured?(p.injury?.label||"Injured"):"Available";
-  const awards=(p.awardHistory||[]).slice().reverse().slice(0,12);
-  const history=(p.seasonHistory||[]).slice().reverse().slice(0,8);
+  const awards=(p.awardHistory||[]).slice().reverse().slice(0,14);
+  const history=(p.seasonHistory||[]).slice().reverse().slice(0,10);
   const editable=club?.id===me()?.id;
-  const nation=G.nationalTeams?.find(n=>(n.rosterPlayerIds||[]).includes(p.id)||(n.selectedSquadPlayerIds||[]).includes(p.id));
+  const isFreeAgent=!club && (G.freeAgents||[]).some(x=>x.id===p.id);
+  const nation=G.nationalTeams?.find(n=>n.code===p.nationality);
+  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0);
   return `${header("Player Profile",`${club?.name||"Free Agent"} · ${pos}`)}
-    <div class="profileTop"><div class="profileMark" style="background:${club?.color||"#d9ae55"}">${p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P")}</div><div class="profileIdentity"><div class="eyebrow">${p.nationality||"International"} · ${ovrBand(p.ovr)}</div><h2>${p.name}</h2><p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)} · ${p.archetype||"Basketball Player"}</p></div></div>
-    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${club?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
-    <div class="profileMetrics"><div class="profileMetric"><b>${p.ovr}</b><small>OVR · ${ovrBand(p.ovr)}</small></div><div class="profileMetric"><b>${p.rotationRole||"Depth"}</b><small>Role</small></div><div class="profileMetric"><b>${p.contractYearsLeft||0} yr</b><small>Contract</small></div><div class="profileMetric"><b>$${(+p.salaryM||0).toFixed(1)}M</b><small>Salary</small></div></div>
-    <div class="sectionTitle">Current Season</div><div class="profileCard"><div class="statStrip"><div class="statBox"><b>${s.gp||0}</b><small>GP</small></div><div class="statBox"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="statBox"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="statBox"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="statBox"><b>${perGame(s,"plusMinus")}</b><small>+/-</small></div></div></div>
-    <div class="profileGrid" style="margin-top:10px">
-      <div class="profileCard"><h4>Identity & Status</h4><div class="profileRow"><small>Club</small><b>${club?clubNameLink(club):"Free Agent"}</b></div><div class="profileRow"><small>National Team</small><b>${nation?.name||p.nationality||"—"}</b></div><div class="profileRow"><small>Jersey</small><b>#${p.jerseyNumber??"—"}</b></div><div class="profileRow"><small>Availability</small><b>${injury}</b></div><div class="profileRow"><small>Origin</small><b>${p.origin||"NBA"}</b></div></div>
-      <div class="profileCard"><h4>Contract & Career</h4><div class="profileRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div><div class="profileRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div><div class="profileRow"><small>Career Games</small><b>${cs.gp||0}</b></div><div class="profileRow"><small>Draft</small><b>${p.draftYear?`Season ${p.draftYear}`:"Undrafted / Existing"}</b></div><div class="profileRow"><small>Potential</small><b>${p.potential??"—"}</b></div></div>
+    <div class="profileHero">
+      <div class="profileHeroMain">
+        <div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P")}</div>
+        <div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div><h2>${p.name}</h2><p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)} · ${p.archetype||"Basketball Player"}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>
+      </div>
     </div>
-    <div class="sectionTitle">Honours</div><div class="profileCard">${awards.length?awards.map(a=>`<div class="profileRow"><small>Season ${a.season}</small><b>${a.award}</b></div>`).join(""):`<div class="empty">No recorded honours yet.</div>`}</div>
-    <div class="sectionTitle">Career History</div><div class="profileCard">${history.length?history.map(h=>`<div class="profileRow"><small>Season ${h.season||"—"}</small><b>${h.clubName||club?.name||"Club"} · ${h.stats?.gp||0} GP</b></div>`).join(""):`<div class="empty">Career history will build as seasons are completed.</div>`}</div>
+    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${isFreeAgent?`<button id="profileNegotiateFA" class="btn primary">Negotiate Contract</button>`:""}${club?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
+    <div class="profileMetricGrid">
+      <div class="profileMetric2"><b>${p.ovr}</b><small>Overall</small></div><div class="profileMetric2"><b>${p.potential??"—"}</b><small>Potential</small></div><div class="profileMetric2"><b>${p.age}</b><small>Age</small></div><div class="profileMetric2"><b>${p.contractYearsLeft||0} yr</b><small>Contract</small></div>
+    </div>
+
+    <div class="sectionTitle">Current Season</div>
+    <div class="profilePanel"><div class="profileStatsGrid">
+      <div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div>
+      <div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div>
+    </div></div>
+
+    <div class="profileSectionGrid" style="margin-top:10px">
+      <div class="profilePanel"><h4>Player Identity</h4><div class="profilePanelBody">
+        <div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):"Free Agent"}</b></div>
+        <div class="profileDataRow"><small>Country</small><b>${nationDisplay(p.nationality)}</b></div>
+        <div class="profileDataRow"><small>Position</small><b>${pos}</b></div>
+        <div class="profileDataRow"><small>Height</small><b>${fmtHeight(p.heightCm)}</b></div>
+        <div class="profileDataRow"><small>Archetype</small><b>${p.archetype||"—"}</b></div>
+        <div class="profileDataRow"><small>Origin</small><b>${p.origin||"NBA"}</b></div>
+      </div></div>
+      <div class="profilePanel"><h4>Contract & Value</h4><div class="profilePanelBody">
+        <div class="profileDataRow"><small>Salary</small><b>$${(+p.salaryM||0).toFixed(1)}M</b></div>
+        <div class="profileDataRow"><small>Market Range</small><b>$${(+market||0).toFixed(1)}M</b></div>
+        <div class="profileDataRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div>
+        <div class="profileDataRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div>
+        <div class="profileDataRow"><small>Role</small><b>${p.rotationRole||"Depth"}</b></div>
+        <div class="profileDataRow"><small>Availability</small><b>${injury}</b></div>
+      </div></div>
+    </div>
+
+    <div class="sectionTitle">Career Overview</div>
+    <div class="profilePanel"><div class="profileStatsGrid">
+      <div class="profileStat"><b>${cs.gp||0}</b><small>Career GP</small></div><div class="profileStat"><b>${perGame(cs,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(cs,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(cs,"ast")}</b><small>APG</small></div>
+      <div class="profileStat"><b>${statPct(cs,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(cs,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(cs,"ftm","fta")}</b><small>FT%</small></div><div class="profileStat"><b>${p.draftYear?`S${p.draftYear}`:"—"}</b><small>Draft</small></div>
+    </div></div>
+
+    <div class="sectionTitle">Honours</div>
+    <div class="historyCard">${awards.length?awards.map(a=>`<div class="historyItem"><div class="season">S${a.season}</div><div><b>${a.award}</b><small>${club?.name||"Career Honour"}</small></div><div class="right">Award</div></div>`).join(""):`<div class="empty">No recorded honours yet.</div>`}</div>
+
+    <div class="sectionTitle">Club History</div>
+    <div class="historyCard">${history.length?history.map(h=>{const st=h.stats||{};return `<div class="historyItem"><div class="season">S${h.season||"—"}</div><div><b>${h.clubName||club?.name||"Club"}</b><small>${st.gp||0} GP · ${perGame(st,"pts")} PPG · ${perGame(st,"reb")} RPG · ${perGame(st,"ast")} APG</small></div><div class="right">${h.role||""}</div></div>`}).join(""):`<div class="empty">Club history will build as seasons are completed.</div>`}</div>
     <div id="playerEditHost"></div>`;
 }
 function clubProfile(){
   const club=c(ui.clubProfileId);
   if(!club)return header("Club Profile","Club could not be located")+`<div class="card empty">This club is unavailable.</div>`;
-  const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0},rank=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff).findIndex(x=>x.clubId===club.id)+1;
-  const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr),leaders=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>perGame(b.seasonStats,"pts")-perGame(a.seasonStats,"pts")).slice(0,3);
-  const payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0);
+  const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0,diff:0};
+  const confRows=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff);
+  const rank=confRows.findIndex(x=>x.clubId===club.id)+1;
+  const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr);
   ensurePlayerJerseys(club);
-  return `${header("Club Profile",`${club.conference}ern Conference · ${club.division}`)}
-    <div class="profileTop"><div class="profileMark" style="background:${club.color||"#d9ae55"}">${club.mark||club.name.slice(0,3).toUpperCase()}</div><div class="profileIdentity"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.conference} · ${club.division} · ${club.city||club.name}</p></div></div>
+  const payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0);
+  const keyPlayers=roster.slice(0,3);
+  const statLeaders=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"pts")-+perGame(a.seasonStats,"pts")).slice(0,3);
+  const groups=["Guards","Forwards","Centers"].map(name=>[name,roster.filter(p=>clubRosterGroup(p)===name)]);
+  const history=(G.leagueHistory||[]).slice().reverse().filter(h=>h.season<G.season).slice(0,6);
+
+  return `${header("Team Profile",`${club.conference}ern Conference · ${club.division}`)}
+    <div class="profileHero">
+      <div class="profileHeroMain"><div class="profileHeroBadge" style="background:${club.color||"#d9ae55"}">${club.mark||club.name.slice(0,3).toUpperCase()}</div><div class="profileHeroText"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.conference}ern Conference · ${club.division} Division</p><div class="identityLine"><span class="identityChip">#${rank>0?rank:"—"} ${club.conference}</span><span class="identityChip">${r.w||0}–${r.l||0}</span><span class="identityChip">${roster.length} Players</span></div></div></div>
+    </div>
     <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${club.id===me()?.id?`<button id="clubScheduleBtn" class="btn primary">View Schedule</button>`:""}</div>
-    <div class="profileMetrics"><div class="profileMetric"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
-    <div class="sectionTitle">Roster</div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>ROLE</th></tr></thead><tbody>${roster.map(p=>`<tr><td class="pname"><b>${playerNameLink(p)}</b><small>#${p.jerseyNumber??"—"} · ${p.nationality||"—"}</small></td><td>${positionLabel(p)}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${p.rotationRole||"Depth"}</td></tr>`).join("")}</tbody></table></div>
-    <div class="profileGrid" style="margin-top:12px"><div class="profileCard"><h4>Team Leaders</h4>${leaders.length?leaders.map(p=>`<div class="profileRow"><small>${playerNameLink(p)}</small><b>${perGame(p.seasonStats,"pts")} PPG</b></div>`).join(""):`<div class="empty">No regular-season data yet.</div>`}</div><div class="profileCard"><h4>Club Snapshot</h4><div class="profileRow"><small>Chemistry</small><b>${club.chemistry||"—"}</b></div><div class="profileRow"><small>Roster</small><b>${roster.length}/15</b></div><div class="profileRow"><small>Two-Way</small><b>${(club.twoWayRoster||[]).length}/${club.twoWayLimit||3}</b></div><div class="profileRow"><small>Draft Assets</small><b>${clubDraftAssets(G,club.id).length}</b></div></div></div>`;
+    <div class="profileMetricGrid"><div class="profileMetric2"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric2"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric2"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric2"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
+
+    <div class="profileSectionGrid">
+      <div class="profilePanel"><h4>Team Identity</h4><div class="profilePanelBody">
+        <div class="profileDataRow"><small>Basketball Style</small><b>${club.style||"Balanced"}</b></div>
+        <div class="profileDataRow"><small>Division</small><b>${club.division}</b></div>
+        <div class="profileDataRow"><small>Chemistry</small><b>${club.chemistry||"—"}</b></div>
+        <div class="profileDataRow"><small>Roster</small><b>${roster.length}/${G.phase==="REGULAR_SEASON"?club.regularRosterLimit||15:club.offseasonRosterLimit||20}</b></div>
+        <div class="profileDataRow"><small>Two-Way Players</small><b>${(club.twoWayRoster||[]).length}/${club.twoWayLimit||3}</b></div>
+        <div class="profileDataRow"><small>Draft Assets</small><b>${clubDraftAssets(G,club.id).length}</b></div>
+      </div></div>
+      <div class="profilePanel"><h4>Season Snapshot</h4><div class="profilePanelBody">
+        <div class="profileDataRow"><small>Conference Rank</small><b>#${rank>0?rank:"—"} ${club.conference}</b></div>
+        <div class="profileDataRow"><small>Point Differential</small><b>${r.diff>0?"+":""}${Math.round(r.diff||0)}</b></div>
+        <div class="profileDataRow"><small>Team OVR</small><b>${squadOvr(club)}</b></div>
+        <div class="profileDataRow"><small>Highest OVR</small><b>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"—"}</b></div>
+        <div class="profileDataRow"><small>Average Age</small><b>${roster.length?(roster.reduce((a,p)=>a+p.age,0)/roster.length).toFixed(1):"—"}</b></div>
+        <div class="profileDataRow"><small>Payroll</small><b>$${payroll.toFixed(1)}M</b></div>
+      </div></div>
+    </div>
+
+    <div class="sectionTitle">Key Players</div>
+    <div class="teamKeyGrid">${keyPlayers.map((p,i)=>`<div class="teamKeyCard"><small>${i===0?"Franchise Leader":i===1?"Key Player":"Core Player"}</small><b>${playerNameLink(p)}</b><span>${positionLabel(p)} · OVR ${p.ovr} · Age ${p.age}</span><span>${nationDisplay(p.nationality)}</span></div>`).join("")}</div>
+
+    <div class="sectionTitle">Season Leaders</div>
+    <div class="teamKeyGrid">${statLeaders.length?statLeaders.map(p=>`<div class="teamKeyCard"><small>${positionLabel(p)}</small><b>${playerNameLink(p)}</b><span>${perGame(p.seasonStats,"pts")} PPG · ${perGame(p.seasonStats,"reb")} RPG · ${perGame(p.seasonStats,"ast")} APG</span></div>`).join(""):`<div class="profilePanel" style="grid-column:1/-1"><div class="empty">No regular-season statistics recorded yet.</div></div>`}</div>
+
+    <div class="sectionTitle">Roster</div>
+    ${groups.map(([name,list])=>`<div class="rosterGroupTitle"><b>${name}</b><small>${list.length} players</small></div><div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>ROLE</th></tr></thead><tbody>${list.map(p=>`<tr><td class="pname"><b>${playerNameLink(p)}</b><small>#${p.jerseyNumber??"—"} · ${nationDisplay(p.nationality)}</small></td><td>${positionLabel(p)}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${p.rotationRole||"Depth"}</td></tr>`).join("")}</tbody></table></div>`).join("")}
+
+    <div class="sectionTitle">Recent Club History</div>
+    <div class="historyCard">${history.length?history.map(h=>{const badges=[];if(h.championClubId===club.id)badges.push("NBA Champion");if(h.cupChampionClubId===club.id)badges.push("NBA Cup");if(h.bestRecordClubId===club.id)badges.push("Best Record");return `<div class="historyItem"><div class="season">S${h.season}</div><div><b>${badges.length?badges.join(" · "):"Season completed"}</b><small>${h.bestRecordClubId===club.id&&h.bestRecord?`League best ${h.bestRecord}`:"League record archived"}</small>${badges.length?`<div class="clubHistoryBadges">${badges.map(x=>`<span class="clubHistoryBadge">${x}</span>`).join("")}</div>`:""}</div><div class="right">${h.championClubId===club.id?"Champion":""}</div></div>`}).join(""):`<div class="empty">Club history will populate as seasons are completed.</div>`}</div>`;
 }
 function scheduleCompetition(g){
   const tag=String(g?.phaseTag||"").toLowerCase();
@@ -3797,7 +4037,7 @@ function scheduleCompetition(g){
 }
 function clubScheduleEntries(){
   const club=me(),id=club?.id;if(!id)return[];
-  const entries=[];
+  const entries=[],season=G.season;
   const pushGames=(games,base)=>{
     for(const g of(games||[])){
       if(g.homeClubId!==id&&g.awayClubId!==id)continue;
@@ -3805,13 +4045,16 @@ function clubScheduleEntries(){
       entries.push({kind:"completed",game:g,comp,oppId,home,sort:base+(+g.round||0),label:g.round?`Game ${g.round}`:competitionGameLabel(g)});
     }
   };
-  pushGames(G.summerLeague?.games||G.summerLeagueLive?.games,0);
-  pushGames(G.preseason?.games||G.preseasonLive?.games,100);
-  pushGames(G.regularSeason?.games||G.regularSeasonLive?.games,1000);
-  pushGames(G.playIn?.games||G.playInLive?.games,2000);
-  pushGames(G.playoffs?.games||G.playoffsLive?.games,3000);
 
-  if(G.phase==="REGULAR_SEASON"&&G.regularSeasonLive&&!G.regularSeasonLive.complete){
+  // Active Schedule is intentionally CURRENT SEASON only.
+  // We trust existing live-state season markers, never untagged snapshots from a prior career year.
+  if(G.summerLeagueLive?.season===season)pushGames(G.summerLeagueLive.games,0);
+  if(G.preseasonLive?.season===season)pushGames(G.preseasonLive.games,100);
+  if(G.regularSeasonLive?.season===season)pushGames(G.regularSeasonLive.games,1000);
+  if(G.playInLive?.season===season)pushGames(G.playInLive.games,2000);
+  if(G.playoffsLive?.season===season)pushGames(G.playoffsLive.games,3000);
+
+  if(G.phase==="REGULAR_SEASON"&&G.regularSeasonLive?.season===season&&!G.regularSeasonLive.complete){
     for(let i=G.regularSeasonLive.roundIndex;i<G.regularSeasonLive.rounds.length;i++){
       const rd=G.regularSeasonLive.rounds[i],pair=rd.pairings.find(p=>p[0]===id||p[1]===id);
       if(!pair)continue;
@@ -5183,9 +5426,55 @@ function gmBrief(){
 function newsPage(){
   return `${header("News","Club and league news from around the basketball world")}<div class="newsFilter"><button data-newsfilter="all" class="${ui.newsFilter==="all"?"active":""}">All</button><button data-newsfilter="club" class="${ui.newsFilter==="club"?"active":""}">Club</button><button data-newsfilter="league" class="${ui.newsFilter==="league"?"active":""}">League</button></div><div class="card">${news()}</div>`;
 }
+function reconcileDraftPendingOwnership(){
+  const ds=G.draftState;
+  if(G.phase!=="DRAFT_NIGHT"||!ds||ds.complete)return false;
+
+  const current=ds.queue?.[ds.index];
+  if(!current){
+    ds.pendingUserPick=null;
+    return false;
+  }
+
+  const asset=current.pickId?(G.draftPicks||[]).find(x=>x.id===current.pickId):null;
+  const actualOwner=asset?.ownerClubId||current.originalClubId;
+  const userId=me()?.id;
+
+  // pendingUserPick is only valid while the CURRENT live asset still belongs to the user.
+  const pending=ds.pendingUserPick;
+  const stalePending=!!pending&&(
+    pending.overallPickNum!==current.overallPickNum ||
+    pending.pickId!==current.pickId ||
+    actualOwner!==userId
+  );
+
+  if(stalePending){
+    ds.pendingUserPick=null;
+    advanceDraftUntilUserDecision(G);
+    save();
+    return true;
+  }
+
+  // If current ownership has become the user's but no pending state exists, rebuild it.
+  if(actualOwner===userId&&!ds.pendingUserPick&&(G.userDraftMode||"manual")==="manual"){
+    advanceDraftUntilUserDecision(G);
+    save();
+    return true;
+  }
+
+  // If the current pick belongs to another club, it should never wait for the GM.
+  if(actualOwner!==userId&&ds.pendingUserPick){
+    ds.pendingUserPick=null;
+    advanceDraftUntilUserDecision(G);
+    save();
+    return true;
+  }
+  return false;
+}
 function draft(){
   if(G.phase==="DRAFT_NIGHT"){
     if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
+    reconcileDraftPendingOwnership();
     if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual"){
       advanceDraftUntilUserDecision(G);
     }
@@ -5222,7 +5511,7 @@ function draft(){
   let liveCard;
   if(ds?.complete){
     liveCard=`<div class="card draftLive"><div class="eyebrow">Draft Complete</div><h3>60 selections completed</h3><p>The two-round draft is complete. Your new rookies have been added to the roster.</p></div>`;
-  }else if(p){
+  }else if(p&&currentOwner===clubId){
     liveCard=`<div class="card draftLive"><div class="draftLiveTop"><div><div class="eyebrow">Draft Night</div><h3>Pick #${p.overallPickNum} · ${me().name}</h3></div><div class="draftClock">YOU'RE ON THE CLOCK</div></div><p>Select any remaining prospect below. After your pick, the other clubs will draft automatically until your next owned selection.</p><div class="draftMetrics"><div class="draftMetric"><b>${s.picksMade}/${s.totalPicks}</b><small>Picks Made</small></div><div class="draftMetric"><b>${s.prospects.length}</b><small>Available</small></div><div class="draftMetric"><b>${s.ownedPicks.length}</b><small>Your Picks Left</small></div></div></div>`;
   }else{
     liveCard=`<div class="card draftLive"><div class="eyebrow">Draft Night</div><h3>${currentClub?`${currentClub.name} is on the clock`:"Draft Board"}</h3><p>${ds?`${s.picksMade}/${s.totalPicks} selections completed.`:"Draft order will populate when Draft Night begins."}</p></div>`;
@@ -5234,11 +5523,70 @@ function draft(){
 
   let assets=`<div class="sectionTitle">Your Draft Assets</div><div class="card"><div class="smallcopy">${s.ownedPicks?.length?s.ownedPicks.map(x=>`#${x.overallPickNum} R${x.round}${x.originalClubName&&x.originalClubName!==me().name?` (via ${x.originalClubName})`:""}`).join(" · "):"No remaining current-draft picks."}</div></div>`;
 
-  let board=s.prospects.length?`<div class="sectionTitle">Available Prospects · ${s.prospects.length}</div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR</th><th>POT</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small></td><td>${x.position}</td><td>${x.ovr}</td><td>${x.potential}</td><td>${p?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  let board=s.prospects.length?`<div class="sectionTitle">Available Prospects · ${s.prospects.length}</div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR</th><th>POT</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small></td><td>${x.position}</td><td>${x.ovr}</td><td>${x.potential}</td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
 
   return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+assets+board;
 }
-function freeagency(){let club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,40),cap=mkt.cap,players=mkt.players;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Free Agent Market</div>${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>DEMAND</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} ppg`:""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.demandYears}yr $${p.demandAnnualM.toFixed(1)}M</td><td><button class="pick" data-signfa="${p.id}" data-years="${p.demandYears}" data-salary="${p.demandAnnualM}">Sign</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents available to sign right now.</div>`}`}
+function freeagency(){
+  const club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,220),cap=mkt.cap,allPlayersMarket=mkt.players;
+  const rosterCount=club.roster.length;
+  const rosterGoal=G.phase==="REGULAR_SEASON"?15:(club.offseasonRosterLimit||20);
+
+  const roleClass=p=>{
+    if(p.ovr>=82)return"starter";
+    if(p.ovr>=76)return"rotation";
+    if(p.ovr>=70)return"depth";
+    return"minimum";
+  };
+  const posClass=p=>{
+    const pos=p.position;
+    if(pos==="PG"||pos==="SG")return"guards";
+    if(pos==="C")return"centers";
+    return"wings";
+  };
+
+  const bandFilter=ui.faBandFilter||"all",posFilter=ui.faPosFilter||"all";
+  const players=allPlayersMarket.filter(p=>
+    (bandFilter==="all"||roleClass(p)===bandFilter) &&
+    (posFilter==="all"||posClass(p)===posFilter)
+  );
+
+  const target=ui.faTargetId?allPlayersMarket.find(p=>p.id===ui.faTargetId):null;
+  let negotiate="";
+  if(target){
+    const live=playerByAnyId(target.id);
+    const fb=ui.faFeedback?.playerId===target.id?ui.faFeedback:null;
+    negotiate=`<div class="faNegotiate">
+      <div class="faHead"><div><div class="eyebrow">Free Agent Negotiation</div><h3>${playerNameLink(live||target)}</h3><small>${nationDisplay(live?.nationality)} · ${target.position} · Age ${target.age} · OVR ${target.ovr}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
+      <div class="faAsk">
+        <div><b>${target.demandYears} yr</b><small>Asking Term</small></div>
+        <div><b>$${target.demandAnnualM.toFixed(1)}M</b><small>Asking Salary / Yr</small></div>
+        <div><b>${ovrBand(target.ovr)}</b><small>Player Band</small></div>
+      </div>
+      <div class="smallcopy">The asking price is the player's preferred contract, not a fixed deal. You can offer a different term or salary. Other clubs may also be competing for the player.</div>
+      <div class="faOfferGrid" style="margin-top:12px">
+        <label>Offer Term<select id="faOfferYears">${[1,2,3,4].map(y=>`<option value="${y}" ${y===target.demandYears?"selected":""}>${y} year${y===1?"":"s"}</option>`).join("")}</select></label>
+        <label>Offer Salary per Year<input id="faOfferSalary" type="number" min="1.2" max="60" step="0.1" value="${target.demandAnnualM.toFixed(1)}"></label>
+      </div>
+      <div class="faOfferActions"><button id="submitFaOffer" class="btn primary">Make Offer</button><button id="resetFaAsk" class="btn secondary">Use Asking Price</button></div>
+      ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${fb.message}</small>${fb.competing?`<small style="display:block;margin-top:4px">Strongest competing offer: ${fb.competing.years} yr · $${(+fb.competing.annualM).toFixed(1)}M from ${c(fb.competing.clubId)?.name||"another club"}.</small>`:""}</div>`:""}
+    </div>`;
+  }
+
+  const bandTabs=[["all","All"],["starter","Starter+"],["rotation","Rotation"],["depth","Depth"],["minimum","Minimum"]];
+  const posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]];
+  const countBand=k=>allPlayersMarket.filter(p=>k==="all"||roleClass(p)===k).length;
+
+  return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${rosterCount}/${rosterGoal}</b><small>Roster</small></div></div>
+  <div class="faIntro"><b>Free Agent Market</b><small>The full market is now available, from starter-level players through rotation, depth and minimum-contract options. Use the filters to target the roster role and position group you need.</small></div>
+  ${negotiate}
+  <div class="faFilters">
+    <div class="faFilterRow">${bandTabs.map(([k,label])=>`<button data-faband="${k}" class="${bandFilter===k?"active":""}">${label} · ${countBand(k)}</button>`).join("")}</div>
+    <div class="faFilterRow">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}">${label}</button>`).join("")}</div>
+  </div>
+  <div class="faMarketSummary"><div class="sectionTitle" style="margin:0">Available Free Agents</div><small>${players.length} shown · ${allPlayersMarket.length} in market</small></div>
+  ${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>ASKING PRICE</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(playerByAnyId(p.id)?.nationality)} · Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} PPG`:""}</small></td><td>${p.position}</td><td>${p.ovr}<span class="faBandTag">${ovrBand(p.ovr)}</span></td><td><b>${p.demandYears} yr · $${p.demandAnnualM.toFixed(1)}M</b><small class="market">Preferred contract</small></td><td><button class="pick" data-negotiatefa="${p.id}">Negotiate</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents match these filters.</div>`}`;
+}
 function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
 function trades(){let myId=me().id;if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};let snap=tradeCenterSnapshot(G,myId,ui.tradePartner);if(!snap||!snap.partner)return `<div class="card empty">No trade partner available.</div>`;
 let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>S${a.year} Round ${a.round}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
@@ -5293,7 +5641,7 @@ function contracts(){
   <div class="capOffNote">${capNote}</div>
   <div class="sectionTitle">Cap Sheet</div>${groups.map(tableFor).join("")}`;
 }
-function freeagency(){let club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,40),cap=mkt.cap,players=mkt.players;return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${cap.status}</b><small>Cap Status</small></div></div><div class="sectionTitle">Free Agent Market</div>${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>DEMAND</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${p.name}</b><small>Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} ppg`:""}</small></td><td>${p.position}</td><td>${p.ovr}</td><td>${p.demandYears}yr $${p.demandAnnualM.toFixed(1)}M</td><td><button class="pick" data-signfa="${p.id}" data-years="${p.demandYears}" data-salary="${p.demandAnnualM}">Sign</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents available to sign right now.</div>`}`}
+/* legacy duplicate freeagency renderer removed in v0.1.2.3 */
 function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
 function trades(){
   const myId=me().id;
@@ -5489,18 +5837,69 @@ function more(){
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
   return header("More","Career, records, settings and save controls")+`<div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
-function render(){status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
+function render(){ensureCountryBasedPlayerNames();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
   if($("#profileBack"))$("#profileBack").onclick=()=>{ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
+  if($("#profileNegotiateFA"))$("#profileNegotiateFA").onclick=()=>{ui.faTargetId=ui.playerProfileId;ui.faFeedback=null;ui.page="team";ui.teamTab="freeagency";render()};
   if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
   $$("[data-schedulefilter]").forEach(b=>b.onclick=()=>{ui.scheduleFilter=b.dataset.schedulefilter;render()});
   $$("[data-schedulegame]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-clubprofile]"))return;const g=gameById(b.dataset.schedulegame);if(g)openResultWindow(g,"schedule")});
   if($("#editPlayerBtn"))$("#editPlayerBtn").onclick=()=>{
     const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||club?.id!==me()?.id)return;
-    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player Identity</h3><div class="smallcopy">Cosmetic/profile fields only. OVR, potential, contract and statistical attributes are protected.</div><div class="editGrid" style="margin-top:10px"><label>Name<input id="epName" value="${p.name}"></label><label>Jersey<input id="epJersey" type="number" min="0" max="99" value="${p.jerseyNumber??0}"></label><label>Country<input id="epNation" value="${p.nationality||""}"></label><label>Primary Position<select id="epPos">${POSITIONS.map(x=>`<option ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label><label>Secondary Position<select id="epPos2"><option value="">None</option>${POSITIONS.map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}</select></label><label>Height (cm)<input id="epHeight" type="number" min="160" max="235" value="${p.heightCm||200}"></label><label>Archetype<input id="epArch" value="${p.archetype||""}"></label></div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
-    $("#savePlayerEdit").onclick=()=>{p.name=($("#epName").value||p.name).trim();p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));p.nationality=($("#epNation").value||p.nationality||"").trim();p.position=$("#epPos").value;p.secondaryPosition=$("#epPos2").value||null;p.heightCm=Math.max(160,Math.min(235,+$("#epHeight").value||p.heightCm||200));p.archetype=($("#epArch").value||p.archetype||"").trim();save();toast("Player profile updated");render()};
+    const nationOptions=NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join("");
+    const archOptions=validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join("");
+    const secOptions=`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`;
+
+    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player</h3><div class="smallcopy">OVR and identity attributes can be corrected here. Salary and contract terms do not automatically change. Changing age resets the player's recorded career, club, awards, injury and international history.</div><div class="editGrid" style="margin-top:10px">
+      <label>Name<input id="epName" value="${p.name}"></label>
+      <label>Jersey<input id="epJersey" type="number" min="0" max="99" value="${p.jerseyNumber??0}"></label>
+      <label>Age<input id="epAge" type="number" min="18" max="45" value="${p.age}"></label>
+      <label>OVR<input id="epOvr" type="number" min="40" max="99" value="${p.ovr}"></label>
+      <label>Country<select id="epNation">${nationOptions}</select></label>
+      <label>Primary Position<select id="epPos">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label>
+      <label>Secondary Position<select id="epPos2">${secOptions}</select></label>
+      <label>Height (cm)<input id="epHeight" type="number" min="160" max="231" value="${p.heightCm||200}"></label>
+      <label>Archetype<select id="epArch">${archOptions}</select></label>
+    </div><div class="smallcopy" style="margin-top:8px">Allowed ranges: age 18–45, OVR 40–99, height 160–231 cm. Country, secondary position and archetype use controlled game data.</div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
+
+    $("#epPos").onchange=()=>{
+      const pos=$("#epPos").value,oldSec=$("#epPos2").value,oldArch=$("#epArch").value;
+      const seconds=SECONDARY_POSITION_OPTIONS[pos]||[];
+      $("#epPos2").innerHTML=`<option value="">None</option>${seconds.map(x=>`<option value="${x}">${x}</option>`).join("")}`;
+      $("#epPos2").value=seconds.includes(oldSec)?oldSec:"";
+      const arches=validArchetypesForPosition(pos);
+      $("#epArch").innerHTML=arches.map(a=>`<option value="${a}">${a}</option>`).join("");
+      $("#epArch").value=arches.includes(oldArch)?oldArch:(arches[0]||"");
+    };
+
+    $("#savePlayerEdit").onclick=()=>{
+      const oldAge=+p.age,oldNation=p.nationality,oldName=p.name;
+      const nextAge=Math.max(18,Math.min(45,+$("#epAge").value||oldAge));
+      const nextOvr=Math.max(40,Math.min(99,+$("#epOvr").value||p.ovr));
+      const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
+
+      const enteredName=($("#epName").value||p.name).trim();
+      p.name=enteredName;
+      if(enteredName!==oldName)p.nameOrigin="manual";
+      p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));
+      p.age=nextAge;
+      p.ovr=nextOvr;
+      p.potential=Math.max(nextOvr,+p.potential||nextOvr);
+      p.nationality=$("#epNation").value;
+      if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){p.name=generatedCountryName(p);p.generatedNameCountry=p.nationality}
+      p.position=$("#epPos").value;
+      p.secondaryPosition=$("#epPos2").value||null;
+      p.heightCm=nextHeight;
+      const arches=validArchetypesForPosition(p.position);
+      p.archetype=arches.includes($("#epArch").value)?$("#epArch").value:(arches[0]||p.archetype);
+
+      if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
+      save();
+      toast(nextAge!==oldAge?"Player updated · history reset":"Player profile updated");
+      render();
+    };
   };
   $('#openAllStarHome')?.addEventListener('click',openAllStarWindow);
   $('#openFibaHome')?.addEventListener('click',openFibaWindow);
@@ -5535,7 +5934,23 @@ $$("[data-waive]").forEach(b=>b.onclick=()=>{releasePlayer(G,me().id,b.dataset.w
 $$("[data-twoway-sign]").forEach(b=>b.onclick=()=>{let r=assignTwoWayContract(G,me().id,b.dataset.twowaySign);toast(r.ok?"Signed to a two-way contract":r.reason);save();render()});
 $$("[data-twoway-convert]").forEach(b=>b.onclick=()=>{let r=convertTwoWayToStandard(G,me().id,b.dataset.twowayConvert);toast(r.ok?"Converted to a standard NBA contract":r.reason);save();render()});
 $$("[data-twoway-waive]").forEach(b=>b.onclick=()=>{waiveTwoWay(G,me().id,b.dataset.twowayWaive);toast("Two-way player waived");save();render()});
-$$("[data-signfa]").forEach(b=>b.onclick=()=>{let r=makeFreeAgentOffer(G,me().id,b.dataset.signfa,+b.dataset.years,+b.dataset.salary);toast(r.accepted?"Free agent signed":r.reason);save();render()});
+$$("[data-negotiatefa]").forEach(b=>b.onclick=()=>{ui.faTargetId=b.dataset.negotiatefa;ui.faFeedback=null;render()});
+if($("#closeFaNegotiation"))$("#closeFaNegotiation").onclick=()=>{ui.faTargetId=null;ui.faFeedback=null;render()};
+$$("[data-faband]").forEach(b=>b.onclick=()=>{ui.faBandFilter=b.dataset.faband;ui.faTargetId=null;ui.faFeedback=null;render()});
+$$("[data-fapos]").forEach(b=>b.onclick=()=>{ui.faPosFilter=b.dataset.fapos;ui.faTargetId=null;ui.faFeedback=null;render()});
+if($("#resetFaAsk"))$("#resetFaAsk").onclick=()=>{
+  const p=freeAgencyMarketSnapshot(G,me().id,220)?.players.find(x=>x.id===ui.faTargetId);
+  if(!p)return;
+  $("#faOfferYears").value=String(p.demandYears);$("#faOfferSalary").value=p.demandAnnualM.toFixed(1);
+};
+if($("#submitFaOffer"))$("#submitFaOffer").onclick=()=>{
+  const id=ui.faTargetId,years=+$("#faOfferYears").value,salary=+$("#faOfferSalary").value;
+  const r=makeFreeAgentOffer(G,me().id,id,years,salary);
+  ui.faFeedback={playerId:id,accepted:!!r.accepted,message:r.accepted?`${r.player?.name||"Player"} agreed to ${years} year${years===1?"":"s"} at $${salary.toFixed(1)}M per year.`:(r.reason||"Offer rejected"),competing:r.offer?.competingBest||null};
+  toast(r.accepted?"Free agent signed":r.reason);
+  if(r.accepted)ui.faTargetId=null;
+  save();render();
+};
 if($("#tradePartnerSel"))$("#tradePartnerSel").onchange=e=>{ui.tradePartner=e.target.value;ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;render()};
 $$("[data-tradeasset]").forEach(b=>b.onchange=()=>{let bucket=(b.dataset.side==="out"?ui.tradeOut:ui.tradeIn)[b.dataset.type],id=b.dataset.id,i=bucket.indexOf(id);if(b.checked&&i<0)bucket.push(id);if(!b.checked&&i>=0)bucket.splice(i,1);ui.tradeEval=null;render()});
 if($("#evalTradeBtn"))$("#evalTradeBtn").onclick=()=>{ui.tradeEval=evaluateTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks});render()};
