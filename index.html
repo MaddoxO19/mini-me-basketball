@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.11.3 Unified Player Quality Tiers</title>
+<title>Mini&Me Basketball — v0.1.11.4 Inline Player Profile Editing</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -950,10 +950,31 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .boxTierStar.allstar{color:#58a6ff}
 .boxTierStar.highstarter{color:#55c47a}
 
+
+/* v0.1.11.4 — inline player profile editing */
+.profileEditing{border-color:#7b5b2a!important;box-shadow:inset 0 0 0 1px rgba(241,168,77,.12)}
+.profileNameInput{width:min(100%,420px);border:0;border-bottom:1px solid #6d522d;background:transparent;color:var(--text);font:inherit;font-size:25px;font-weight:950;line-height:1.1;padding:2px 0 5px;outline:none;border-radius:0}
+.profileNameInput:focus{border-color:var(--accent)}
+.heroBadgeInput{width:100%;height:100%;border:0;background:transparent;color:#111;text-align:center;font-size:22px;font-weight:950;outline:none;padding:0}
+.metricEditInput{width:72px;max-width:100%;border:0;border-bottom:1px solid #6d522d;background:transparent;color:var(--text);text-align:center;font-size:17px;font-weight:950;outline:none;padding:1px 0 3px;border-radius:0}
+.metricEditInput:focus{border-color:var(--accent)}
+.inlineEditNotice{display:flex;gap:10px;align-items:center;margin:0 0 10px;padding:9px 11px;border:1px solid #5e4728;background:rgba(241,168,77,.045);border-radius:10px}
+.inlineEditNotice b{font-size:8px;color:var(--accent2);white-space:nowrap}.inlineEditNotice span{font-size:7px;color:var(--muted);line-height:1.35}
+.inlineProfileControl{min-width:132px;max-width:220px;border:1px solid #46515f;background:#0f151c;color:var(--text);border-radius:8px;padding:6px 9px;font:inherit;font-size:8.5px;font-weight:800;text-align:right;outline:none}
+.inlineProfileControl:focus{border-color:var(--accent)}
+.profileDataRow .inlineProfileControl{margin-left:auto}
+.inlineNumberUnit{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-left:auto}.inlineNumberUnit .inlineProfileControl{min-width:82px;width:82px}.inlineNumberUnit span{font-size:7px;color:var(--muted)}
+@media(max-width:600px){
+  .profileNameInput{font-size:22px}
+  .inlineEditNotice{align-items:flex-start;flex-direction:column;gap:3px}
+  .profileDataRow{gap:10px}
+  .inlineProfileControl{min-width:120px;max-width:55vw}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.4</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4762,7 +4783,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.11.3 Unified Player Quality Tiers",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.11.4 Inline Player Profile Editing",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5255,14 +5276,19 @@ function playerProfile(){
   const s=p.seasonStats||{},cs=p.careerStats||{},pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
   const injury=p.injured?(p.injury?.label||"Injured"):"Available",awards=(p.awardHistory||[]).slice().reverse(),history=(p.seasonHistory||[]).slice().reverse();
   const editable=club?.id===me()?.id,isFreeAgent=!club&&(G.freeAgents||[]).some(x=>x.id===p.id),nation=G.nationalTeams?.find(n=>n.code===p.nationality);
+  const editing=editable&&ui.playerEditMode===p.id;
+  const nationOptions=editing?NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join(""):"";
+  const secOptions=editing?`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`:"";
+  const archOptions=editing?validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join(""):"";
   const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p);
   const draftSeason=p.draftYear?`Season ${p.draftYear}`:"—";
   const draftDetail=p.draftPick?`${playerDraftLabel(p)} · ${playerDraftClubName(p)}`:playerDraftLabel(p);
   const timeline=history.length?history.map(h=>{const st=h.stats||{};return `<div class="timelineRow"><div class="season">S${h.season||"—"}</div><div><b>${h.clubName||clubById(G,h.clubId)?.name||"Club"}</b><small>${st.gp||0} GP · ${perGame(st,"pts")} PPG · ${perGame(st,"reb")} RPG · ${perGame(st,"ast")} APG · OVR ${h.ovr??"—"}</small></div><div class="right">${h.role||""}</div></div>`}).join(""):`<div class="empty">Career timeline will build as seasons are completed.</div>`;
   return `${header("Player Profile",`${club?.name||"Free Agent"} · ${pos}`)}
-    <div class="profileHero"><div class="profileHeroMain"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P")}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div><h2>${p.name}</h2><p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)} · ${p.archetype||"Basketball Player"}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div></div></div>
-    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${isFreeAgent?`<button id="profileNegotiateFA" class="btn primary">Negotiate Contract</button>`:""}${club?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
-    <div class="profileMetricGrid"><div class="profileMetric2"><b>${p.ovr}</b><small>Overall</small></div><div class="profileMetric2"><b>${p.potential??"—"}</b><small>Potential</small></div><div class="profileMetric2"><b>${p.age}</b><small>Age</small></div><div class="profileMetric2"><b>${playerExperienceLabel(p)}</b><small>Experience</small></div></div>
+    <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)} · ${p.archetype||"Basketball Player"}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div></div></div>
+    <div class="profileActions"><button id="profileBack" class="btn secondary">Back</button>${editable&&!editing?`<button id="editPlayerBtn" class="btn primary">Edit Player</button>`:""}${editing?`<button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button>`:""}${isFreeAgent?`<button id="profileNegotiateFA" class="btn primary">Negotiate Contract</button>`:""}${club&&!editing?`<button data-clubprofile="${club.id}" class="btn ghost">View Club</button>`:""}</div>
+    ${editing?`<div class="inlineEditNotice"><b>Editing Player Profile</b><span>Salary and contract terms remain unchanged. Changing age will reset recorded career history after confirmation.</span></div>`:""}
+    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${p.potential??"—"}</b>`}<small>Potential</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2"><b>${playerExperienceLabel(p)}</b><small>Experience</small></div></div>
 
     <div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid">
       <div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div>
@@ -5274,7 +5300,13 @@ function playerProfile(){
 
     <div class="profileSectionGrid" style="margin-top:10px">
       <div class="profilePanel"><h4>Player Identity</h4><div class="profilePanelBody">
-        <div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):playerAffiliation(p)}</b></div><div class="profileDataRow"><small>Country</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Position</small><b>${pos}</b></div><div class="profileDataRow"><small>Height</small><b>${fmtHeight(p.heightCm)}</b></div><div class="profileDataRow"><small>Archetype</small><b>${p.archetype||"—"}</b></div>${p.sourceBuild?`<div class="profileDataRow"><small>Player Build</small><b>${p.sourceBuild}</b></div>`:""}<div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div>
+        <div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):playerAffiliation(p)}</b></div>
+        <div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div>
+        <div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>
+        ${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}
+        <div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div>
+        <div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div>
+        ${p.sourceBuild?`<div class="profileDataRow"><small>Player Build</small><b>${p.sourceBuild}</b></div>`:""}<div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div>
       </div></div>
       <div class="profilePanel"><h4>Contract & Value</h4><div class="profilePanelBody">
         <div class="profileDataRow"><small>Salary</small><b>$${(+p.salaryM||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Market Range</small><b>$${(+market||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div><div class="profileDataRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div><div class="profileDataRow"><small>Role</small><b>${p.rotationRole||"Depth"}</b></div><div class="profileDataRow"><small>Availability</small><b>${injury}</b></div>
@@ -5298,8 +5330,7 @@ function playerProfile(){
     <div class="sectionTitle">Transaction History</div>
     <div class="profileTimeline">${playerTransactions(p.id).length?playerTransactions(p.id).map(t=>`<div class="timelineRow"><div class="season">S${t.season}</div><div><b>${t.type}</b><small>${t.from} → ${t.to} · ${t.detail}</small></div><div class="right">${t.type}</div></div>`).join(""):`<div class="empty">No recorded transactions.</div>`}</div>
 
-    <div class="sectionTitle">International Career</div><div class="profilePanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>
-    <div id="playerEditHost"></div>`;
+    <div class="sectionTitle">International Career</div><div class="profilePanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>`;
 }
 function clubProfile(){
   const club=c(ui.clubProfileId);
@@ -7856,7 +7887,7 @@ function bind(){
   if($("#scoutBackMore"))$("#scoutBackMore").onclick=()=>{ui.page="more";render()};
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
-  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
+  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
   if($("#profileNegotiateFA"))$("#profileNegotiateFA").onclick=()=>{ui.faTargetId=ui.playerProfileId;ui.faFeedback=null;ui.page="team";ui.teamTab="freeagency";render()};
   if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
 if($("#editTeamIdentityBtn"))$("#editTeamIdentityBtn").onclick=()=>{const e=$("#teamIdentityEditor");if(e){e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"start"})}};
@@ -7872,61 +7903,54 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
   $$("[data-schedulegame]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-clubprofile]"))return;const g=gameById(b.dataset.schedulegame);if(g)openResultWindow(g,"schedule")});
   if($("#editPlayerBtn"))$("#editPlayerBtn").onclick=()=>{
     const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||club?.id!==me()?.id)return;
-    const nationOptions=NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join("");
-    const archOptions=validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join("");
-    const secOptions=`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`;
-
-    $("#playerEditHost").innerHTML=`<div class="editPanel"><div class="eyebrow">Controlled Edit</div><h3>Edit Player</h3><div class="smallcopy">Current OVR, Potential OVR and identity attributes can be corrected here. Salary and contract terms do not automatically change. Changing age resets the player's recorded career, club, awards, injury and international history.</div><div class="editGrid" style="margin-top:10px">
-      <label>Name<input id="epName" value="${p.name}"></label>
-      <label>Jersey<input id="epJersey" type="number" min="0" max="99" value="${p.jerseyNumber??0}"></label>
-      <label>Age<input id="epAge" type="number" min="18" max="45" value="${p.age}"></label>
-      <label>Current OVR<input id="epOvr" type="number" min="40" max="99" value="${p.ovr}"></label>
-      <label>Potential OVR<input id="epPot" type="number" min="40" max="99" value="${p.potential||p.ovr}"></label>
-      <label>Country<select id="epNation">${nationOptions}</select></label>
-      <label>Primary Position<select id="epPos">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label>
-      <label>Secondary Position<select id="epPos2">${secOptions}</select></label>
-      <label>Height (cm)<input id="epHeight" type="number" min="160" max="231" value="${p.heightCm||200}"></label>
-      <label>Archetype<select id="epArch">${archOptions}</select></label>
-    </div><div class="smallcopy" style="margin-top:8px">Allowed ranges: age 18–45, Current OVR 40–99, Potential OVR 40–99, height 160–231 cm. Potential cannot be lower than Current OVR. Country, secondary position and archetype use controlled game data.</div><button id="savePlayerEdit" class="btn primary" style="margin-top:12px">Save Player</button></div>`;
-
-    $("#epPos").onchange=()=>{
-      const pos=$("#epPos").value,oldSec=$("#epPos2").value,oldArch=$("#epArch").value;
-      const seconds=SECONDARY_POSITION_OPTIONS[pos]||[];
+    ui.playerEditMode=p.id;render();
+  };
+  if($("#cancelPlayerEdit"))$("#cancelPlayerEdit").onclick=()=>{ui.playerEditMode=null;render()};
+  if($("#epPos"))$("#epPos").onchange=()=>{
+    const pos=$("#epPos").value,oldSec=$("#epPos2")?.value||"",oldArch=$("#epArch")?.value||"";
+    const seconds=SECONDARY_POSITION_OPTIONS[pos]||[];
+    if($("#epPos2")){
       $("#epPos2").innerHTML=`<option value="">None</option>${seconds.map(x=>`<option value="${x}">${x}</option>`).join("")}`;
       $("#epPos2").value=seconds.includes(oldSec)?oldSec:"";
-      const arches=validArchetypesForPosition(pos);
+    }
+    const arches=validArchetypesForPosition(pos);
+    if($("#epArch")){
       $("#epArch").innerHTML=arches.map(a=>`<option value="${a}">${a}</option>`).join("");
       $("#epArch").value=arches.includes(oldArch)?oldArch:(arches[0]||"");
-    };
+    }
+  };
+  if($("#savePlayerEdit"))$("#savePlayerEdit").onclick=()=>{
+    const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||club?.id!==me()?.id)return;
+    const oldAge=+p.age,oldNation=p.nationality,oldName=p.name;
+    const nextAge=Math.max(18,Math.min(45,+$("#epAge").value||oldAge));
+    const nextOvr=Math.max(40,Math.min(99,+$("#epOvr").value||p.ovr));
+    const enteredPot=Math.max(40,Math.min(99,+$("#epPot").value||p.potential||nextOvr));
+    const nextPot=Math.max(nextOvr,enteredPot);
+    const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
+    if(nextAge!==oldAge&&!confirm(`Changing ${p.name}'s age from ${oldAge} to ${nextAge} will reset recorded career, club, awards, injury and international history. Continue?`))return;
 
-    $("#savePlayerEdit").onclick=()=>{
-      const oldAge=+p.age,oldNation=p.nationality,oldName=p.name;
-      const nextAge=Math.max(18,Math.min(45,+$("#epAge").value||oldAge));
-      const nextOvr=Math.max(40,Math.min(99,+$("#epOvr").value||p.ovr));
-      const enteredPot=Math.max(40,Math.min(99,+$("#epPot").value||p.potential||nextOvr));
-      const nextPot=Math.max(nextOvr,enteredPot);
-      const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
+    const enteredName=($("#epName").value||p.name).trim();
+    p.name=enteredName;
+    if(enteredName!==oldName)p.nameOrigin="manual";
+    p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));
+    p.age=nextAge;
+    p.ovr=nextOvr;
+    p.potential=nextPot;
+    p.nationality=$("#epNation").value;
+    if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){
+      p.name=generatedCountryName(p);p.generatedNameCountry=p.nationality;
+    }
+    p.position=$("#epPos").value;
+    p.secondaryPosition=$("#epPos2").value||null;
+    p.heightCm=nextHeight;
+    const arches=validArchetypesForPosition(p.position);
+    p.archetype=arches.includes($("#epArch").value)?$("#epArch").value:(arches[0]||p.archetype);
+    if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
 
-      const enteredName=($("#epName").value||p.name).trim();
-      p.name=enteredName;
-      if(enteredName!==oldName)p.nameOrigin="manual";
-      p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));
-      p.age=nextAge;
-      p.ovr=nextOvr;
-      p.potential=nextPot;
-      p.nationality=$("#epNation").value;
-      if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){p.name=generatedCountryName(p);p.generatedNameCountry=p.nationality}
-      p.position=$("#epPos").value;
-      p.secondaryPosition=$("#epPos2").value||null;
-      p.heightCm=nextHeight;
-      const arches=validArchetypesForPosition(p.position);
-      p.archetype=arches.includes($("#epArch").value)?$("#epArch").value:(arches[0]||p.archetype);
-
-      if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
-      save();
-      toast(nextAge!==oldAge?"Player updated · history reset":"Player profile updated");
-      render();
-    };
+    ui.playerEditMode=null;
+    save();
+    toast(nextAge!==oldAge?"Player updated · history reset":"Player profile updated");
+    render();
   };
   $('#openAllStarHome')?.addEventListener('click',openAllStarWindow);
   $('#openFibaHome')?.addEventListener('click',openFibaWindow);
