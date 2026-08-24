@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.11.1 Box Score Star Legend</title>
+<title>Mini&Me Basketball — v0.1.11.2 Unified FIBA Box Score</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -916,10 +916,36 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .playerBox td.player b{display:flex;align-items:center;min-width:0}
 .playerBox td.player b .boxTierStar{flex:none}
 
+
+/* v0.1.11.2 — unified NBA/FIBA result presentation */
+.fibaResultContext{padding:0!important;border-radius:14px!important;overflow:hidden}
+.fibaResultHead{padding:10px 12px!important;border-bottom:1px solid var(--line);display:flex!important;align-items:center!important;justify-content:space-between!important}
+.fibaResultHead b{font-size:10px!important;letter-spacing:.7px}
+.fibaResultHead small{font-size:7px!important;letter-spacing:.45px}
+.fibaLineScoreWrap{overflow-x:auto!important;border:0!important;border-radius:0!important;margin:0!important}
+.fibaLineScore{width:100%!important;min-width:0!important;table-layout:fixed!important;border-collapse:collapse!important;font-variant-numeric:tabular-nums}
+.fibaLineScore th,.fibaLineScore td{padding:9px 6px!important;text-align:center!important;border-bottom:1px solid #222b36!important;font-size:8px!important;white-space:nowrap}
+.fibaLineScore th{background:#111820!important;color:var(--muted)!important;font-size:6.8px!important;letter-spacing:.4px!important}
+.fibaLineScore .nationCol{width:42%!important;text-align:left!important}
+.fibaLineScore .total{width:9%!important;font-weight:950!important;color:var(--accent2)!important}
+.fibaNationCell{display:flex!important;align-items:center!important;gap:8px!important;min-width:0}
+.fibaNationCell b{font-size:9px!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.fibaNationMark{display:grid!important;place-items:center!important;flex:0 0 34px!important;width:34px!important;height:34px!important;border-radius:9px!important;background:var(--accent)!important;color:#17100a!important;font-size:7px!important;font-weight:950!important}
+.fibaBoxTabs{display:grid!important;grid-template-columns:1fr 1fr!important;gap:6px!important;margin:10px 0 7px!important}
+.fibaBoxTabs button{border:1px solid var(--line)!important;background:var(--panel2)!important;color:var(--muted)!important;border-radius:9px!important;padding:7px!important;font-size:8px!important;font-weight:900!important}
+.fibaBoxTabs button.active{background:var(--accent)!important;color:#17100a!important;border-color:var(--accent)!important}
+.fibaResultContext .boxScoreSection{padding:10px 12px 12px!important}
+@media(max-width:600px){
+  .fibaLineScore .nationCol{width:46%!important}
+  .fibaLineScore th,.fibaLineScore td{padding:8px 4px!important}
+  .fibaNationMark{flex-basis:31px!important;width:31px!important;height:31px!important}
+  .fibaNationCell{gap:6px!important}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4728,7 +4754,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.11.1 Box Score Star Legend",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.11.2 Unified FIBA Box Score",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6186,7 +6212,7 @@ function fibaHomeHtml(){const live=G.internationalWindowLive;if(!live||live.comp
 function openFibaWindow(){show('fibaWindow');renderFibaWindow()}
 
 function fibaNationByCode(code){return(G.nationalTeams||[]).find(n=>n.code===code)||null}
-function fibaNationMark(code){return`<span class="fibaNationMark">${String(code||"").slice(0,3)}</span>`}
+function fibaNationMark(code){return`<span class="fibaNationMark teamMark">${String(code||"").slice(0,3)}</span>`}
 function fibaUserGame(live){
   if(!live?.lastUserGameId)return null;
   return (live.games||[]).find(g=>g.id===live.lastUserGameId)||null;
@@ -6204,7 +6230,7 @@ function fibaLineScoreHtml(game){
   const cols=Math.max(aq.length,bq.length,4);
   const heads=Array.from({length:cols},(_,i)=>i<4?`Q${i+1}`:`OT${i-3}`);
   const row=(code,name,qs,total)=>`<tr><td class="nationCol"><div class="fibaNationCell">${fibaNationMark(code)}<b>${name}</b></div></td>${heads.map((_,i)=>`<td>${qs[i]??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
-  return `<div class="fibaLineScoreWrap"><table class="fibaLineScore"><thead><tr><th class="nationCol">NATION</th>${heads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(game.teamA,aName,aq,game.scoreA)}${row(game.teamB,bName,bq,game.scoreB)}</tbody></table></div>`;
+  return `<div class="fibaLineScoreWrap unifiedLineScoreWrap"><table class="fibaLineScore unifiedLineScore"><thead><tr><th class="nationCol">TEAM</th>${heads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(game.teamA,aName,aq,game.scoreA)}${row(game.teamB,bName,bq,game.scoreB)}</tbody></table></div>`;
 }
 function fibaBoxScoreHtml(game){
   if(!game?.boxScore)return"";
@@ -6214,7 +6240,7 @@ function fibaBoxScoreHtml(game){
   const other=side==="teamA"?game.teamB:game.teamA;
   const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
   const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
-  return `<div class="boxScoreSection"><div class="fibaBoxTabs"><button data-fibaside="teamA" class="${side==="teamA"?"active":""}">${fibaNationName(game.teamA)}</button><button data-fibaside="teamB" class="${side==="teamB"?"active":""}">${fibaNationName(game.teamB)}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for shooting and advanced box-score statistics</div></div>`;
+  return `<div class="boxScoreSection"><div class="fibaBoxTabs"><button data-fibaside="teamA" class="${side==="teamA"?"active":""}">${fibaNationName(game.teamA)}</button><button data-fibaside="teamB" class="${side==="teamB"?"active":""}">${fibaNationName(game.teamB)}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${boxQualityStar(p)}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div>${boxQualityLegend()}<div class="boxHint">Swipe horizontally for shooting and advanced box-score statistics</div></div>`;
 }
 function fibaGroupResultsHtml(live,userGame){
   if(!userGame)return"";
