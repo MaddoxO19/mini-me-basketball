@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.12.0 International Experience</title>
+<title>Mini&Me Basketball — v0.1.13.0 Development Pathways</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -989,10 +989,18 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .intlWcHistory{border:1px solid var(--line);border-radius:12px;overflow:hidden}.intlWcHistory>div{display:grid;grid-template-columns:70px minmax(0,1fr) 58px;gap:8px;padding:9px 11px;border-top:1px solid var(--line);background:var(--panel);align-items:center}.intlWcHistory>div:first-child{border-top:0}.intlWcHistory span,.intlWcHistory small{font-size:6px;color:var(--muted)}.intlWcHistory b{font-size:8px}
 @media(max-width:600px){.intlDashboardGrid{grid-template-columns:1fr}.intlCommandMetrics{grid-template-columns:repeat(2,1fr)}.intlCommandIdentity h2{font-size:20px}.intlWcPodium{grid-template-columns:1fr}.intlWcFinalScore{align-items:flex-start;flex-direction:column}.intlProgramRecord{grid-template-columns:repeat(3,1fr)}}
 
+
+/* v0.1.13.0 — player development pathways */
+.developmentPanel{border:1px solid #5f4a2b;background:linear-gradient(135deg,rgba(241,168,77,.055),var(--panel));border-radius:14px;padding:12px}
+.developmentHeadline{display:flex;justify-content:space-between;align-items:center;gap:12px}.developmentHeadline small{display:block;font-size:6px;color:var(--accent2);font-weight:900;letter-spacing:.6px}.developmentHeadline b{display:block;font-size:13px;margin:2px 0}.developmentHeadline span{font-size:7px;color:var(--muted)}.developmentHeadline strong{font-size:18px;white-space:nowrap}.developmentHeadline strong i{font-style:normal;color:var(--muted);padding:0 5px}
+.developmentDrivers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0}.developmentDrivers>div{border:1px solid var(--line);background:rgba(12,18,24,.5);border-radius:9px;padding:8px;text-align:center;min-width:0}.developmentDrivers b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.developmentDrivers small{font-size:5.8px;color:var(--muted)}
+.developmentCopy{font-size:7.3px;color:var(--muted);line-height:1.45;border-top:1px solid var(--line);padding-top:9px}.developmentLast{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}.developmentLast span{font-size:6.5px;color:var(--muted)}.developmentLast b{font-size:8px;color:var(--accent2)}
+@media(max-width:600px){.developmentDrivers{grid-template-columns:repeat(2,1fr)}.developmentHeadline{align-items:flex-start}.developmentHeadline strong{font-size:16px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.12.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1333,24 +1341,89 @@ function talentEraModifier(G){
   return era.type==='GOLDEN'||era.type==='RECOVERY'?1:era.type==='SOFT'||era.type==='CORRECTION'?-1:0;
 }
 function recordTalentHealthSeason(G,label='season'){ensureTalentLifecycleState(G);const h=G.talentHealth,s={season:G.season,label,era:h.era?.type||'NORMAL',score:h.score,...h.current};const i=h.history.findIndex(x=>x.season===s.season&&x.label===label);if(i>=0)h.history[i]=s;else h.history.push(s);h.history=h.history.slice(-40);return s;}
-function progressPlayerTalent(p,eraMod=0,developmentCap=99){
+function lastCompletedSeasonRecord(p){
+  const h=p?.seasonHistory||[];
+  return h.length?h[h.length-1]:null;
+}
+function developmentEnvironment(p,ctx={}){
+  const rec=lastCompletedSeasonRecord(p),stats=rec?.stats||null;
+  const gp=stats?.gp||0,avgMin=gp?(stats.min||0)/gp:0;
+  const impact=gp?(
+    (stats.pts||0)/gp+
+    ((stats.reb||0)/gp)*0.7+
+    ((stats.ast||0)/gp)*0.9+
+    ((stats.stl||0)/gp)*1.6+
+    ((stats.blk||0)/gp)*1.5-
+    ((stats.tov||0)/gp)*0.8+
+    ((stats.plusMinus||0)/gp)*0.03
+  ):0;
+  let minutesBonus=avgMin>=30?8:avgMin>=22?5:avgMin>=14?2:gp>=20?-2:-4;
+  let roleBonus=0;
+  const role=rec?.role||p.rotationRole||"Depth";
+  if(role==="Primary Starter")roleBonus=4;
+  else if(role==="Starter")roleBonus=2;
+  else if(role==="Sixth Man")roleBonus=1;
+  else if(role==="Depth")roleBonus=-3;
+  const performanceBonus=impact>=28?6:impact>=22?4:impact>=16?2:impact<8&&gp>=20?-2:0;
+  const trainingLevel=Math.max(1,Math.min(5,+ctx.trainingLevel||1));
+  const trainingBonus=(trainingLevel-1)*2;
+  return{gp,avgMin,impact,minutesBonus,roleBonus,performanceBonus,trainingLevel,trainingBonus,role};
+}
+function developmentOutlook(p,ctx={}){
   normalizePlayerPotential(p);
-  const age=+p.age||24,ovr=+p.ovr||55,pot=Math.max(ovr,+p.potential||ovr);
-  let delta=0;
-  if(age<=20)delta=rand(0,3)+(pot-ovr>=8?1:0);
-  else if(age<=23)delta=rand(-1,3)+(pot-ovr>=6?1:0);
-  else if(age<=26)delta=rand(-1,2);
-  else if(age<=29)delta=rand(-1,1);
-  else if(age<=31)delta=rand(-2,1);
-  else if(age<=33)delta=rand(-2,0);
+  const age=+p.age||24,ovr=+p.ovr||55,pot=Math.max(ovr,+p.potential||ovr),gap=pot-ovr;
+  const env=developmentEnvironment(p,ctx);
+  let ageBonus=age<=19?25:age===20?20:age===21?15:age===22?11:age===23?7:age===24?3:age===25?0:age===26?-5:age===27?-9:-14;
+  const gapBonus=Math.min(15,gap*1.5);
+  const score=50+ageBonus+gapBonus+env.minutesBonus+env.roleBonus+env.performanceBonus+env.trainingBonus;
+  let label="Limited";
+  if(age<=23&&gap>=6&&score>=82)label="Exceptional";
+  else if(age<=25&&gap>=3&&score>=70)label="Strong";
+  else if(age<=26&&gap>0&&score>=58)label="Developing";
+  else if(gap<=0)label="At Ceiling";
+  else if(age>=28)label="Prime / Plateau";
+  return{score:Math.round(score),label,gap,ageBonus,gapBonus,...env};
+}
+function progressPlayerTalent(p,eraMod=0,developmentCap=99,ctx={}){
+  normalizePlayerPotential(p);
+  const age=+p.age||24,ovr=+p.ovr||55,pot=Math.max(ovr,+p.potential||ovr),gap=Math.max(0,pot-ovr);
+  const outlook=developmentOutlook(p,ctx);
+  let delta=0,roll=rand(-10,10),score=outlook.score+(eraMod*6)+roll;
+
+  if(age<=23){
+    if(gap>0){
+      if(score>=91)delta=3;
+      else if(score>=76)delta=2;
+      else if(score>=58)delta=1;
+      else delta=0;
+    }
+  }else if(age<=26){
+    if(gap>0){
+      if(score>=84)delta=2;
+      else if(score>=63)delta=1;
+      else if(score<42&&Math.random()<0.18)delta=-1;
+    }
+  }else if(age<=29){
+    if(gap>0&&score>=76&&Math.random()<0.55)delta=1;
+    else if(score<43&&Math.random()<0.35)delta=-1;
+  }else if(age<=31){
+    delta=rand(-1,0);
+    if(score>=72&&gap>0&&Math.random()<0.18)delta=1;
+  }else if(age<=33)delta=rand(-2,0);
   else if(age<=35)delta=rand(-3,0);
   else delta=rand(-4,-1);
-  if(age<=27)delta+=eraMod;
-  if(delta>0)delta=Math.min(delta,Math.max(0,pot-ovr));
+
+  if(delta>0)delta=Math.min(delta,gap);
   p.ovr=Math.max(50,Math.min(developmentCap,ovr+delta));
   if(p.ovr>p.potential)p.potential=p.ovr;
-  if(age>=30 && p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
-  return delta;
+  if(age>=30&&p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
+
+  p.lastDevelopment={
+    season:ctx.season??null,fromOvr:ovr,toOvr:p.ovr,delta:p.ovr-ovr,
+    score:Math.round(score),baseScore:outlook.score,roll,age,trainingLevel:outlook.trainingLevel,
+    avgMin:+outlook.avgMin.toFixed(1),role:outlook.role,potential:p.potential
+  };
+  return p.ovr-ovr;
 }
 function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr = null, isProspect = false, nationality = null, origin = null } = {}) {
   const pos = position || pick(POSITIONS);
@@ -2919,16 +2992,17 @@ function runOffseason(G) {
       if (completedSeason && (p.contractYearsLeft||0)<=0) {
         p.contractStatus="Free Agent"; p.contractType="Unsigned"; G.freeAgents.push(p); summary.expired++; G.transactions.push({type:"contract_expired",season:G.season,clubId:club.id,playerId:p.id}); continue;
       }
-      progressPlayerTalent(p,talentEraModifier(G),99); p.contractStatus="Under Contract"; survivors.push(p);
+      const trainingLevel=club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1;
+      progressPlayerTalent(p,talentEraModifier(G),99,{clubId:club.id,trainingLevel,season:G.season-1}); p.contractStatus="Under Contract"; survivors.push(p);
     }
     survivors.sort((a,b)=>b.ovr-a.ovr);
     while (survivors.length>(club.offseasonRosterLimit||20)) { const waived=survivors.pop(); waived.contractYearsLeft=0; waived.contractStatus="Free Agent"; waived.contractType="Unsigned"; G.freeAgents.push(waived); summary.waived++; G.transactions.push({type:"waive",season:G.season,clubId:club.id,playerId:waived.id}); }
     club.roster=survivors; recalcClubCap(club); club.standings={w:0,l:0,pf:0,pa:0};
     ensurePersistentGLeague(club);
-    for(const p of club.gLeagueRoster){p.age++;progressPlayerTalent(p,talentEraModifier(G),78);p.injured=false;p.injury=null;}
+    for(const p of club.gLeagueRoster){p.age++;progressPlayerTalent(p,talentEraModifier(G),78,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.injured=false;p.injury=null;}
     club.twoWayRoster=club.twoWayRoster||[];
     const keptTwo=[];
-    for(const p of club.twoWayRoster){p.age++;p.injured=false;p.injury=null;progressPlayerTalent(p,talentEraModifier(G),82);p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
+    for(const p of club.twoWayRoster){p.age++;p.injured=false;p.injury=null;progressPlayerTalent(p,talentEraModifier(G),82,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
     club.twoWayRoster=keptTwo;
   }
 
@@ -2936,7 +3010,7 @@ function runOffseason(G) {
   for (const p of G.freeAgents) {
     p.age++; p.fatigue=0; p.recentForm=[];
     if (Math.random()<retirementChance(p)) { logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
-    progressPlayerTalent(p,talentEraModifier(G),99); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
+    progressPlayerTalent(p,talentEraModifier(G),99,{trainingLevel:1,season:G.season-1}); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
   }
   G.freeAgents=faSurvivors;
   ensureTwoWayDevelopmentPool(G,42);
@@ -3086,25 +3160,17 @@ function awardFrontOfficeSeasonPoint(G,completedSeason){
 function frontOfficeUpgradeCost(level){return Math.max(1,level);}
 function frontOfficeDepartmentInfo(key,level){
   const data={
-    training:["Training","Young-player development","Adds a small development benefit to your own young roster at offseason."],
+    training:["Training","Young-player development","Improves the development environment for young players by increasing their chance of converting potential into current OVR."],
     medical:["Medical","Availability & recovery","Builds the club's long-term medical infrastructure. Injury-risk effects are reserved for the next engine pass."],
     coaching:["Coaching","Roster performance","Builds the club's coaching infrastructure. Match-engine effects are reserved for the next engine pass."]
   };
   return{name:data[key][0],short:data[key][1],description:data[key][2],level};
 }
 function applyUserTrainingDevelopment(G){
-  const fo=ensureFrontOfficeState(G),level=fo.departments.training||1;
-  if(level<=1)return 0;
-  const club=clubById(G,G.userClubGM?.clubId);if(!club)return 0;
-  let boosted=0;
-  const chance={2:.12,3:.20,4:.28,5:.36}[level]||0;
-  for(const p of club.roster||[]){
-    if(p.age<=25 && p.ovr<(p.potential||p.ovr) && Math.random()<chance){
-      p.ovr=Math.min(p.potential||99,p.ovr+1);boosted++;
-    }
-  }
-  if(boosted)logEvent(G,`Training Department Level ${level}: ${boosted} young player${boosted===1?"":"s"} received an additional offseason development gain.`);
-  return boosted;
+  // Training is integrated directly into progressPlayerTalent from v0.1.13.0.
+  // This legacy entry point remains for save compatibility and deliberately
+  // applies no separate random OVR boost.
+  return 0;
 }
 
 function ensureScoutingState(G){
@@ -4801,7 +4867,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.12.0 International Experience",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.13.0 Development Pathways",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5331,6 +5397,13 @@ function playerProfile(){
       </div></div>
     </div>
 
+    <div class="sectionTitle">Development Outlook</div>
+    ${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel">
+      <div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div>
+      <div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${d.avgMin||0}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>
+      <div class="developmentCopy">${p.age<=20&&d.gap>=6?`This is an elite development profile. Regular minutes, a major role and strong Training infrastructure give the player multiple seasons to convert exceptional potential into current OVR.`:p.age<=25&&d.gap>0?`The player still has meaningful development runway. Playing time, role and club Training can improve the chance of converting remaining potential.`:d.gap<=0?`The player has reached the listed potential ceiling. Further OVR growth is not expected unless the potential value itself is edited.`:`Development is now more limited as the player approaches or moves through his prime.`}</div>
+      ${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}
+    </div>`})()}
     <div class="sectionTitle">Career Overview</div><div class="profilePanel"><div class="profileStatsGrid">
       <div class="profileStat"><b>${cs.gp||0}</b><small>Career GP</small></div><div class="profileStat"><b>${perGame(cs,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(cs,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(cs,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${statPct(cs,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(cs,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(cs,"ftm","fta")}</b><small>FT%</small></div><div class="profileStat"><b>${hc.total}</b><small>Honours</small></div>
     </div></div>
