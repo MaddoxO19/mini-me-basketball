@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.11.0 Future Draft Class & Assets</title>
+<title>Mini&Me Basketball — v0.1.11.1 Box Score Star Legend</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -902,10 +902,24 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .futurePickRow div{min-width:0}.futurePickRow div b{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.futurePickRow div small{display:block;font-size:6.5px;color:var(--muted);margin-top:2px}
 .futurePickRow strong{text-align:right;font-size:7px;color:var(--muted)}
 
+
+/* v0.1.11.1 — clean box-score quality stars */
+.boxTierStar{display:inline-block;margin-right:5px;font-size:12px;line-height:1;vertical-align:-1px;font-style:normal;text-shadow:0 0 7px currentColor}
+.boxTierStar.goat{color:#ef5350}
+.boxTierStar.elite{color:#d9a441}
+.boxTierStar.allstar{color:#58a6ff}
+.boxTierStar.nbastar{color:#55c47a}
+.boxTierStar.starter{color:#a9b4c2}
+.boxTierLegend{display:flex;flex-wrap:wrap;gap:7px 12px;align-items:center;padding:9px 10px 2px;border-top:1px solid var(--line);margin-top:2px}
+.boxTierLegend span{display:inline-flex;align-items:center;color:var(--muted);font-size:6.5px;font-weight:800;white-space:nowrap}
+.boxTierLegend .boxTierStar{margin-right:3px;font-size:9px;text-shadow:none}
+.playerBox td.player b{display:flex;align-items:center;min-width:0}
+.playerBox td.player b .boxTierStar{flex:none}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4714,7 +4728,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.11.0 Future Draft Class & Assets",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.11.1 Box Score Star Legend",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5014,21 +5028,24 @@ function ovrBand(ovr){
 }
 function boxQualityTier(ovr){
   const n=+ovr||0;
-  if(n>=96)return{label:"GOAT",cls:"goat"};
-  if(n>=92)return{label:"Elite",cls:"elite"};
-  if(n>=87)return{label:"All-Star",cls:"allstar"};
-  if(n>=80)return{label:"Starter",cls:"starter"};
-  if(n>=74)return{label:"Rotation",cls:"rotation"};
-  return{label:"Depth",cls:"depth"};
+  if(n>=96)return{label:"GOAT",cls:"goat",min:96};
+  if(n>=92)return{label:"Elite",cls:"elite",min:92};
+  if(n>=87)return{label:"All-Star",cls:"allstar",min:87};
+  if(n>=82)return{label:"NBA Star",cls:"nbastar",min:82};
+  if(n>=78)return{label:"Starter",cls:"starter",min:78};
+  return{label:"",cls:"",min:0};
 }
 function boxPlayerQuality(line){
   const live=line?.playerId?playerByAnyId(line.playerId):null;
   const ovr=+line?.ovr||+live?.ovr||0;
   return{...boxQualityTier(ovr),ovr};
 }
-function boxQualityBadge(line){
+function boxQualityStar(line){
   const q=boxPlayerQuality(line);
-  return q.ovr?`<span class="boxQuality ${q.cls}" title="OVR ${q.ovr}">${q.label}</span>`:"";
+  return q.cls?`<span class="boxTierStar ${q.cls}" title="${q.label} · OVR ${q.ovr}">★</span>`:"";
+}
+function boxQualityLegend(){
+  return `<div class="boxTierLegend"><span><i class="boxTierStar goat">★</i> GOAT</span><span><i class="boxTierStar elite">★</i> Elite</span><span><i class="boxTierStar allstar">★</i> All-Star</span><span><i class="boxTierStar nbastar">★</i> NBA Star</span><span><i class="boxTierStar starter">★</i> Starter</span></div>`;
 }
 
 function ensurePlayerJerseys(club){
@@ -5732,7 +5749,7 @@ function boxScoreHtml(g){
   if(!lines.length)return"";
   const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
   const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
-  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${p.starter?"★ ":""}${p.name}${boxQualityBadge(p)}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div><div class="boxHint">Swipe horizontally for FG, 3PT, FT and advanced box-score statistics</div></div>`;
+  return `<div class="boxScoreSection"><div class="boxTabs"><button data-boxside="away" class="${side==="away"?"active":""}">${c(g.awayClubId)?.name||"Away"}</button><button data-boxside="home" class="${side==="home"?"active":""}">${c(g.homeClubId)?.name||"Home"}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${boxQualityStar(p)}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div>${boxQualityLegend()}<div class="boxHint">Swipe horizontally for FG, 3PT, FT and advanced box-score statistics</div></div>`;
 }
 function deterministicQuarterFallback(total,key="game"){
   total=Math.max(0,Math.round(total||0));
