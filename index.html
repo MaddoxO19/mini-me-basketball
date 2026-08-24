@@ -4890,28 +4890,78 @@ function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+i
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
 function c(id){return G?.clubs?.find(x=>x.id===id)}function me(){return c(G?.userClubGM?.clubId)}function nat(id){return G?.nationalTeams?.find(x=>x.code===id)}
 // ---- Club crests -------------------------------------------------------
-// Original, generated badges — not a copy of any real team's logo. One
-// shared shield template, parameterized per club by its own color and a
-// deterministic motif (from a hash of the club id, so a given club always
-// draws the same crest). Scales to any of the 30 clubs automatically, no
-// hand-authored image assets. National teams use flagEmoji() instead —
-// already implemented elsewhere in this file — since a real flag is the
-// correct and copyright-free choice for national identity.
-function hashStr(s){let h=0;for(let i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))|0;return Math.abs(h)}
+// Original, generated badges — not a copy of any real team's logo. Built
+// to the same standard as the football game's crest work: varied frame
+// shapes, emblems chosen with real thematic sense from each club's own
+// identity, gradient depth rather than flat fill, and a curved crest
+// banner — not one template stamped 30 times. National teams use
+// flagEmoji() instead, already implemented elsewhere in this file, since
+// a real flag is the correct and copyright-free choice there.
+//
+// Two independent hashes per club (id+"shape" / id+"emblem") pick a
+// frame and an emblem so the 30 combinations vary richly rather than
+// tracking together. Emblem choice is thematically biased off the
+// club's own `style` tag where a real match exists (Legacy/Historic →
+// laurel, Athletic/Fast/Tempo → bolt, Contender/Championship/Star →
+// star, Defence → tower/shield, International → compass ring) and
+// falls back to the hash otherwise — the same instinct as giving
+// Harbour City a ship instead of a generic mark, without needing every
+// one of the 30 hand-assigned.
+function hashStr(s){let h=0;for(let i=0;i<String(s).length;i++)h=(h*31+String(s).charCodeAt(i))|0;return Math.abs(h)}
 function shadeColor(hex,amt){let n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+amt)),g=Math.min(255,Math.max(0,(n>>8&255)+amt)),b=Math.min(255,Math.max(0,(n&255)+amt));return "#"+(1<<24|r<<16|g<<8|b).toString(16).slice(1)}
-const CREST_MOTIFS = [
-  ()=>`<path d="M50 20 L58 40 H42 Z" fill="#00000030"/>`,
-  ()=>`<path d="M35 42 L50 22 L65 42 L58 42 L50 30 L42 42 Z" fill="#00000030"/>`,
-  ()=>`<polygon points="50,20 54,34 68,34 57,43 61,58 50,49 39,58 43,43 32,34 46,34" fill="#00000030"/>`,
-  ()=>`<circle cx="50" cy="34" r="13" fill="none" stroke="#00000030" stroke-width="4"/>`,
-  ()=>`<path d="M50 20 L56 34 L50 30 L44 34 Z M38 24 Q50 16 62 24" fill="none" stroke="#00000030" stroke-width="3"/>`,
-  ()=>`<path d="M40 20 L52 20 L44 34 L54 34 L38 52 L44 36 L34 36 Z" fill="#00000030"/>`,
+
+const CREST_FRAMES = [
+  {name:"shield", outer:"M50 3 L93 17 V51 C93 76 74 93 50 97 C26 93 7 76 7 51 V17 Z", inner:"M50 11 L84 22 V51 C84 71 68 85 50 89 C32 85 16 71 16 51 V22 Z", arcTop:"M22 24 A32 32 0 0 1 78 24"},
+  {name:"roundel", outer:"M50 2 A48 48 0 1 1 49.99 2 Z", inner:"M50 10 A40 40 0 1 1 49.99 10 Z", ring:true, arcTop:"M16 30 A38 38 0 0 1 84 30"},
+  {name:"hexagon", outer:"M50 3 L91 26 V74 L50 97 L9 74 V26 Z", inner:"M50 12 L82 30 V70 L50 88 L18 70 V30 Z", arcTop:"M24 28 A30 30 0 0 1 76 28"},
+  {name:"diamond", outer:"M50 2 L88 34 L74 96 H26 L12 34 Z", inner:"M50 12 L78 36 L67 88 H33 L22 36 Z", arcTop:"M27 30 A26 26 0 0 1 73 30"},
+  {name:"oval", outer:"M50 3 C78 3 92 24 92 50 C92 80 74 97 50 97 C26 97 8 80 8 50 C8 24 22 3 50 3 Z", inner:"M50 12 C71 12 83 28 83 50 C83 74 69 88 50 88 C31 88 17 74 17 50 C17 28 29 12 50 12 Z", arcTop:"M18 28 A36 36 0 0 1 82 28"},
 ];
+
+const CREST_EMBLEMS = {
+  ball: ()=>`<circle cx="50" cy="48" r="15" fill="none" stroke="#00000038" stroke-width="2.5"/><path d="M35 48 H65 M50 33 V63 M39 37 Q50 48 39 59 M61 37 Q50 48 61 59" fill="none" stroke="#00000038" stroke-width="2"/>`,
+  star: ()=>`<polygon points="50,24 55.5,40 72,40 58.5,50 63.5,66 50,56 36.5,66 41.5,50 28,40 44.5,40" fill="#00000038"/>`,
+  skyline: ()=>`<path d="M22 62 V48 H30 V54 H38 V38 H46 V54 H54 V44 H62 V54 H70 V50 H78 V62 Z" fill="#00000038"/>`,
+  wing: ()=>`<path d="M50 62 L28 40 Q40 42 50 32 Q60 42 72 40 L50 62 Z" fill="#00000038"/>`,
+  laurel: ()=>`<path d="M30 58 Q22 44 30 28 M30 28 L26 32 M30 28 L34 33 M30 38 L25 40 M30 38 L35 42 M30 48 L25 49 M30 48 L35 52" fill="none" stroke="#00000038" stroke-width="2.2"/><path d="M70 58 Q78 44 70 28 M70 28 L74 32 M70 28 L66 33 M70 38 L75 40 M70 38 L65 42 M70 48 L75 49 M70 48 L65 52" fill="none" stroke="#00000038" stroke-width="2.2"/>`,
+  bolt: ()=>`<path d="M56 22 L34 52 H47 L42 74 L67 42 H53 Z" fill="#00000038"/>`,
+  compass: ()=>`<circle cx="50" cy="48" r="16" fill="none" stroke="#00000038" stroke-width="2"/><path d="M50 34 L54 46 L50 50 L46 46 Z M50 62 L46 50 L50 46 L54 50 Z" fill="#00000038"/>`,
+  tower: ()=>`<path d="M42 66 V36 L50 28 L58 36 V66 Z M36 66 H64" fill="none" stroke="#00000038" stroke-width="2.4"/><path d="M45 66 V50 H55 V66" fill="none" stroke="#00000038" stroke-width="2"/>`,
+};
+const EMBLEM_KEYS = Object.keys(CREST_EMBLEMS);
+function emblemForStyle(style){
+  const s=(style||"").toLowerCase();
+  if(s.includes("legacy")||s.includes("historic")) return "laurel";
+  if(s.includes("athletic")||s.includes("fast")||s.includes("tempo")) return "bolt";
+  if(s.includes("contender")||s.includes("championship")||s.includes("star")) return "star";
+  if(s.includes("defence")||s.includes("defense")) return "tower";
+  if(s.includes("international")||s.includes("market")) return "compass";
+  return null;
+}
+
+let __crestGradSeq=0;
 function crestSVG(team){
-  const base=team?.color||"#e6b953", dark=shadeColor(base,-46), edge=shadeColor(base,-70);
+  const base=team?.color||"#e6b953", dark=shadeColor(base,-42), deep=shadeColor(base,-66), edge=shadeColor(base,-78), sheen=shadeColor(base,34);
   const mark=team?.mark||(team?.name||"—").slice(0,3).toUpperCase();
-  const motif=CREST_MOTIFS[hashStr(team?.id||mark)%CREST_MOTIFS.length]();
-  return `<svg viewBox="0 0 100 100" width="100%" height="100%" role="img" aria-label="${mark} crest"><path d="M50 4 L92 18 V52 C92 76 74 92 50 96 C26 92 8 76 8 52 V18 Z" fill="${base}" stroke="${edge}" stroke-width="3"/><path d="M50 12 L84 24 V52 C84 71 69 84 50 88 C31 84 16 71 16 52 V24 Z" fill="${dark}"/>${motif}<text x="50" y="72" text-anchor="middle" font-size="26" font-weight="950" fill="#17100a" font-family="-apple-system,sans-serif">${mark}</text></svg>`;
+  const seed=team?.id||mark;
+  const frame=CREST_FRAMES[hashStr(seed+"|shape")%CREST_FRAMES.length];
+  const emblemKey=emblemForStyle(team?.style)||EMBLEM_KEYS[hashStr(seed+"|emblem")%EMBLEM_KEYS.length];
+  const gid="cg"+(__crestGradSeq++)+"_"+hashStr(seed);
+  const arcId="ca"+hashStr(seed);
+  const banner=(team?.name||"").split(" ")[0].toUpperCase().slice(0,12);
+  return `<svg viewBox="0 0 100 100" width="100%" height="100%" role="img" aria-label="${mark} crest">
+<defs>
+<linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="${sheen}"/><stop offset="55%" stop-color="${base}"/><stop offset="100%" stop-color="${dark}"/>
+</linearGradient>
+<path id="${arcId}" d="${frame.arcTop}" fill="none"/>
+</defs>
+<path d="${frame.outer}" fill="url(#${gid})" stroke="${edge}" stroke-width="2.6"/>
+<path d="${frame.inner}" fill="${deep}" stroke="${shadeColor(deep,14)}" stroke-width="1"/>
+${CREST_EMBLEMS[emblemKey]()}
+<text font-size="7.5" font-weight="800" fill="#ffffffb0" font-family="-apple-system,sans-serif" letter-spacing="1"><textPath href="#${arcId}" startOffset="50%" text-anchor="middle">${banner}</textPath></text>
+<text x="50" y="78" text-anchor="middle" font-size="24" font-weight="950" fill="#17100a" font-family="-apple-system,sans-serif">${mark}</text>
+</svg>`;
 }
 function teamMark(t,cl="bigmark"){return `<span class="${cl}" style="background:transparent;display:block">${crestSVG(t)}</span>`}
 function phaseName(){return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
