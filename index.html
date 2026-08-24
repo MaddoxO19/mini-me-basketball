@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.10.8 NBA Cup Elimination Fix</title>
+<title>Mini&Me Basketball — v0.1.11.0 Future Draft Class & Assets</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -889,10 +889,23 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .foScoutCard{display:flex;justify-content:space-between;gap:12px;align-items:center}.foScoutCard>strong{color:var(--accent);font-size:9px;white-space:nowrap}
 @media(max-width:620px){.foDeptGrid{grid-template-columns:1fr}.foHero,.foScoutCard{align-items:flex-start}.foDeptCard p{min-height:0}}
 
+
+/* v0.1.11.0 — persistent future draft class and multi-year draft assets */
+.draftClassContext{margin:-2px 0 10px;padding:10px 12px;border:1px solid #3a4654;background:#111820;border-radius:11px}
+.draftClassContext b{display:block;font-size:9px;color:var(--accent2);margin-bottom:3px}.draftClassContext small{display:block;color:var(--muted);font-size:7.5px;line-height:1.4}
+.futurePickYears{display:grid;gap:9px}
+.futurePickYear{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}
+.futurePickYearHead{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.futurePickYearHead b{font-size:10px}.futurePickYearHead small{font-size:7px;color:var(--muted)}
+.futurePickRow{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:8px;align-items:center;padding:9px 12px;border-top:1px solid var(--line)}
+.futurePickRow:first-child{border-top:0}.futurePickRound{display:grid;place-items:center;width:32px;height:28px;border:1px solid #66502c;border-radius:8px;color:var(--accent2);font-size:8px;font-weight:950}
+.futurePickRow div{min-width:0}.futurePickRow div b{display:block;font-size:8.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.futurePickRow div small{display:block;font-size:6.5px;color:var(--muted);margin-top:2px}
+.futurePickRow strong{text-align:right;font-size:7px;color:var(--muted)}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.10.8</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3063,9 +3076,16 @@ function enrichDraftProspect(p,G,index=0){
   }
   return p;
 }
+function upcomingDraftYear(G){
+  // Before/during Draft Night, the live class belongs to the current season's draft.
+  // Once that draft is complete, regular-season scouting previews the following draft.
+  const currentDraftFinished=!!(G.draftState?.season===G.season&&G.draftState?.complete);
+  return currentDraftFinished?G.season+1:G.season;
+}
 function ensureUpcomingDraftClass(G){
   ensureScoutingState(G);
-  if(G.upcomingDraftClass?.season===G.season&&Array.isArray(G.upcomingDraftClass.prospects)&&G.upcomingDraftClass.prospects.length===90){
+  const targetYear=upcomingDraftYear(G);
+  if(G.upcomingDraftClass?.season===targetYear&&Array.isArray(G.upcomingDraftClass.prospects)&&G.upcomingDraftClass.prospects.length===90){
     G.upcomingDraftClass.prospects.forEach((p,i)=>enrichDraftProspect(p,G,i));
     return G.upcomingDraftClass.prospects;
   }
@@ -3074,13 +3094,16 @@ function ensureUpcomingDraftClass(G){
     const roll=Math.random();
     let base=roll<0.08?rand(81,86):roll<0.45?rand(74,80):rand(67,76);
     base=Math.max(64,Math.min(88,base+eraMod));
-    const p=normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:G.season,ovr:base,isProspect:true}));
-    p.entryPath="Draft Prospect";p.developmentEntrySeason=G.season;
+    const p=normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:targetYear,ovr:base,isProspect:true}));
+    p.entryPath="Draft Prospect";p.developmentEntrySeason=G.season;p.targetDraftSeason=targetYear;
     if(eraMod>0&&Math.random()<0.22)p.potential=Math.min(99,p.potential+rand(1,2));
     if(eraMod<0&&Math.random()<0.25)p.potential=Math.max(p.ovr,p.potential-rand(1,2));
     enrichDraftProspect(p,G,i);prospects.push(p);
   }
-  G.upcomingDraftClass={season:G.season,era:G.talentHealth?.era?.type||"NORMAL",prospects};
+  G.upcomingDraftClass={season:targetYear,generatedSeason:G.season,era:G.talentHealth?.era?.type||"NORMAL",prospects};
+  // Future prospects are part of the same country-based identity model as NBA,
+  // free-agent and developmental players.
+  if(typeof ensureCountryBasedPlayerNames==="function")ensureCountryBasedPlayerNames();
   return prospects;
 }
 function scoutingEstimate(p,G){
@@ -3133,7 +3156,7 @@ function archiveDraftClass(G){
       const pl=allPlayers(G).find(p=>p.id===pk.selectedPlayerId);
       return{pick:pk.pickNumber,round:pk.round,playerId:pk.selectedPlayerId,playerName:pl?.name||pk.selectedPlayerId,clubId:pk.ownerClubId,clubName:clubById(G,pk.ownerClubId)?.name||pk.ownerClubId,position:pl?.position||"",draftOvr:pl?.ovr??null,draftPotential:pl?.potential??null};
     });
-  G.draftClassHistory.push({season:G.season,era:G.upcomingDraftClass?.era||G.talentHealth?.era?.type||"NORMAL",picks});
+  G.draftClassHistory.push({season:G.season,era:(G.upcomingDraftClass?.season===G.season?G.upcomingDraftClass?.era:null)||G.talentHealth?.era?.type||"NORMAL",picks});
   G.draftClassHistory=G.draftClassHistory.slice(-25);
   awardScoutingXP(G,1);
 }
@@ -3173,6 +3196,13 @@ function normalizeProspectPotential(player) { normalizePlayerPotential(player); 
 function initializeDraftState(G) {
   ensureDraftPickHorizon(G);
   const prospects=ensureUpcomingDraftClass(G);
+  // At Draft Night the persistent class scouted during the previous season
+  // must be the class that is actually drafted.
+  if(G.upcomingDraftClass?.season!==G.season){
+    G.upcomingDraftClass=null;
+    ensureUpcomingDraftClass(G);
+  }
+  const liveProspects=G.upcomingDraftClass?.prospects||prospects;
   const eraMod=talentEraModifier(G);
   const round1OriginalOrder=runDraftLottery(G); runDraftDayTrades(G,round1OriginalOrder);
   const round2OriginalOrder=G.pendingFullStandingsOrder || [...G.clubs].sort(()=>Math.random()-0.5).map(c=>c.id);
@@ -3181,12 +3211,12 @@ function initializeDraftState(G) {
   for(const [round,order] of [[1,round1OriginalOrder],[2,round2OriginalOrder]]) for(const originalClubId of order){
     const asset=draftPickByOriginal(G,G.season,round,originalClubId); queue.push({overallPickNum:overall++,round,originalClubId,pickId:asset?.id||null});
   }
-  G.draftPool=prospects;
-  const draftAvg=prospects.reduce((a,p)=>a+p.ovr,0)/prospects.length;
+  G.draftPool=liveProspects;
+  const draftAvg=liveProspects.reduce((a,p)=>a+p.ovr,0)/liveProspects.length;
   G.talentHealth=G.talentHealth||{};G.talentHealth.draftAudits=G.talentHealth.draftAudits||[];
-  G.talentHealth.draftAudits.push({season:G.season,era:G.talentHealth.era?.type||'NORMAL',avg:+draftAvg.toFixed(2),top:Math.max(...prospects.map(p=>p.ovr)),elite80:prospects.filter(p=>p.ovr>=80).length,highPot:prospects.filter(p=>(p.potential||0)>=88).length});
+  G.talentHealth.draftAudits.push({season:G.season,era:G.talentHealth.era?.type||'NORMAL',avg:+draftAvg.toFixed(2),top:Math.max(...liveProspects.map(p=>p.ovr)),elite80:liveProspects.filter(p=>p.ovr>=80).length,highPot:liveProspects.filter(p=>(p.potential||0)>=88).length});
   G.talentHealth.draftAudits=G.talentHealth.draftAudits.slice(-30);
-  G.draftPool=prospects; G.draftState={season:G.season,queue,index:0,pendingUserPick:null,complete:false};
+  G.draftPool=liveProspects; G.draftState={season:G.season,queue,index:0,pendingUserPick:null,complete:false};
   return G.draftState;
 }
 
@@ -3307,7 +3337,8 @@ function draftBoardSnapshot(G, limit=60) {
   const playerLookup=new Map([...G.clubs.flatMap(c=>c.roster),...(G.freeAgents||[])].map(p=>[p.id,p]));
   const completedUserPicks=(G.draftPicks||[]).filter(p=>p.year===G.season&&p.consumed&&p.ownerClubId===clubId&&p.selectedPlayerId).sort((a,b)=>(a.pickNumber||99)-(b.pickNumber||99)).map(p=>{const pl=playerLookup.get(p.selectedPlayerId);return {pickNumber:p.pickNumber,round:p.round,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,playerId:p.selectedPlayerId,playerName:pl?.name||p.selectedPlayerId,position:pl?.position||'',ovr:pl?.ovr??null,potential:pl?.potential??null};});
   const prospects=draftClassScoutBoard(G,limit);
-  return {mode:G.userDraftMode||'manual',pending,ownedPicks,completedUserPicks,prospects,picksMade:ds?.index||0,totalPicks:ds?.queue?.length||60};
+  const draftYear=(ds&&!ds.complete)?G.season:(G.upcomingDraftClass?.season||upcomingDraftYear(G));
+  return {mode:G.userDraftMode||'manual',pending,ownedPicks,completedUserPicks,prospects,draftYear,picksMade:ds?.index||0,totalPicks:ds?.queue?.length||60};
 }
 
 function runDraftNight(G) {
@@ -4121,7 +4152,9 @@ function advanceNBACupFinalEvent(G){
   const winner=G.clubs.find(c=>c.id===game.winnerClubId);for(const p of winner.roster) if((game.boxScore.home||[]).some(x=>x.playerId===p.id)||(game.boxScore.away||[]).some(x=>x.playerId===p.id)) addAward(G,p,'NBA Cup Champion');
   const winLines=game.winnerClubId===game.homeClubId?game.boxScore.home:game.boxScore.away;const mvpLine=[...winLines].sort((x,y)=>(y.pts+y.reb*.6+y.ast*.8)-(x.pts+x.reb*.6+x.ast*.8))[0];
   if(mvpLine){G.awards[`S${G.season}_NBACupMVP`]=mvpLine.playerId;addAward(G,allPlayers(G).find(p=>p.id===mvpLine.playerId),'NBA Cup MVP');cup.mvpPlayerId=mvpLine.playerId;}
-  logEvent(G,`NBA Cup Champion: ${winner?.name||'n/a'}.`);pushNews(G,`${winner?.name||'A club'} won the NBA Cup${mvpLine?'; '+(allPlayers(G).find(p=>p.id===mvpLine.playerId)?.name||'the winner')+' was Cup MVP':''}.`,'NBA Cup',2);return{ok:true,type:'NBA_CUP_FINAL',games:[game],complete:true};
+  logEvent(G,`NBA Cup Champion: ${winner?.name||'n/a'}.`);pushNews(G,`${winner?.name||'A club'} won the NBA Cup${mvpLine?'; '+(allPlayers(G).find(p=>p.id===mvpLine.playerId)?.name||'the winner')+' was Cup MVP':''}.`,'NBA Cup',2);
+  const userId=G.userClubGM?.clubId,userGame=(game.homeClubId===userId||game.awayClubId===userId)?game:null;
+  return{ok:true,type:'NBA_CUP_FINAL',games:[game],userGame,complete:true};
 }
 
 // All-Star Weekend: a clear four-event showcase, separate from the club schedule.
@@ -4681,7 +4714,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.10.8 NBA Cup Elimination Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.11.0 Future Draft Class & Assets",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -4921,6 +4954,7 @@ function allPlayerObjectsForNaming(){
   const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
   for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
   (G.freeAgents||[]).forEach(add);(G.draftPool||[]).forEach(add);(G.draftState?.prospects||[]).forEach(add);
+  (G.upcomingDraftClass?.prospects||[]).forEach(add);
   return out;
 }
 function ensureCountryBasedPlayerNames(){
@@ -5336,6 +5370,7 @@ function gameById(id){
     G.summerLeagueLive?.games,G.summerLeague?.games,
     G.preseasonLive?.games,G.preseason?.games,
     G.regularSeasonLive?.games,G.regularSeason?.games,
+    G.inSeasonCup?.games,
     G.playInLive?.games,G.playIn?.games,
     G.playoffsLive?.games,G.playoffs?.games,
     G.allStarLive?.games,G.allStar?.games
@@ -5386,6 +5421,7 @@ function renderResultWindow(){
   const resultButtonLabel=historicalSeries?"Back to Series":
     ui.resultReturn==="schedule"?"Back to Schedule":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
+    ui.resultReturn==="cup_final"?"Return to Regular Season":
     "Next Game";
   $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
@@ -5398,6 +5434,9 @@ function renderResultWindow(){
       ui.resultReturn=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;
     }
     if(ui.resultReturn==="summer_summary"){
+      ui.resultReturn=null;ui.page="home";show("game");render();return;
+    }
+    if(ui.resultReturn==="cup_final"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
     }
     ui.resultReturn=null;ui.page="home";show("game");render()
@@ -5532,6 +5571,12 @@ function advanceFromUi(n){
   save();
 
   if(stoppedAtBoundary||G.phase!==phaseBefore){
+    // A user-played NBA Cup Final must always receive the normal game-result/box-score
+    // review before returning to the regular-season schedule.
+    if(newUserGame&&String(newUserGame.phaseTag||"").toLowerCase()==="nba_cup_championship"){
+      openResultWindow(newUserGame,"cup_final");
+      return;
+    }
     // Summer League Game 5 both produces a user result and completes the phase.
     // Show the game result first, then progress to the Summer League summary.
     if(phaseBefore==="SUMMER_LEAGUE"&&G.phase==="SUMMER_LEAGUE_COMPLETE"&&newUserGame){
@@ -5557,7 +5602,9 @@ function advanceFromUi(n){
 
   // Single-game behaviour remains unchanged. For Sim 5 we show only the
   // final completed user game if the batch stayed inside the same phase.
-  if(newUserGame&&["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS"].includes(phaseBefore)){
+  if(newUserGame&&String(newUserGame.phaseTag||"").toLowerCase()==="nba_cup_championship"){
+    openResultWindow(newUserGame,"cup_final");
+  }else if(newUserGame&&["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS"].includes(phaseBefore)){
     openResultWindow(newUserGame);
   }else{
     render();
@@ -6931,7 +6978,25 @@ function reconcileDraftPendingOwnership(){
   }
   return false;
 }
+
+function futureDraftAssetsHtml(G,clubId){
+  ensureDraftPickHorizon(G,4);
+  const assets=clubDraftAssets(G,clubId);
+  const years=[...new Set(assets.map(p=>p.year))].sort((a,b)=>a-b);
+  if(!years.length)return `<div class="card empty">No future draft picks currently owned.</div>`;
+  return `<div class="futurePickYears">${years.map(year=>{
+    const picks=assets.filter(p=>p.year===year);
+    return `<div class="futurePickYear"><div class="futurePickYearHead"><b>Season ${year} Draft</b><small>${picks.length} pick${picks.length===1?"":"s"} owned</small></div><div class="futurePickRows">${picks.map(pk=>{
+      const original=c(pk.originalClubId),own=pk.originalClubId===clubId;
+      const slot=(year===G.season)?expectedPickSlot(G,pk):null;
+      return `<div class="futurePickRow"><span class="futurePickRound">R${pk.round}</span><div><b>${own?"Own pick":`via ${original?.name||pk.originalClubId}`}</b><small>${slot?`Projected #${slot} · `:""}${pk.round===1?"First Round":"Second Round"}</small></div><strong>${pk.round===1?"1ST":"2ND"}</strong></div>`;
+    }).join("")}</div></div>`;
+  }).join("")}</div>`;
+}
+
 function draft(){
+  ensureUpcomingDraftClass(G);
+  ensureCountryBasedPlayerNames();
   if(G.phase==="DRAFT_NIGHT"){
     if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
     reconcileDraftPendingOwnership();
@@ -6981,10 +7046,11 @@ function draft(){
 
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
 
-  let assets=`<div class="sectionTitle">Your Draft Assets</div><div class="card"><div class="smallcopy">${s.ownedPicks?.length?s.ownedPicks.map(x=>`#${x.overallPickNum} R${x.round}${x.originalClubName&&x.originalClubName!==me().name?` (via ${x.originalClubName})`:""}`).join(" · "):"No remaining current-draft picks."}</div></div>`;
+  let assets=`<div class="sectionTitle">Your Draft Assets</div>${futureDraftAssetsHtml(G,clubId)}`;
 
   const scout=scoutingLevelInfo(G);
-  let board=s.prospects.length?`<div class="sectionTitle">Available Prospects · ${s.prospects.length}</div><div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description} · Scouting XP is earned organically by completing drafts.</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  const futureBoard=!(ds&&!ds.complete);
+  let board=s.prospects.length?`<div class="sectionTitle">${futureBoard?`Season ${s.draftYear} Draft Class`:"Available Prospects"} · ${s.prospects.length}</div>${futureBoard?`<div class="draftClassContext"><b>Future Draft Preview</b><small>These are the prospects currently projected for the Season ${s.draftYear} Draft. This class will remain persistent as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description} · Scouting XP is earned organically by completing drafts.</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
 
   return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+assets+board;
 }
@@ -7488,7 +7554,8 @@ function cupStageName(stage){
 }
 function cupTieHtml(tie,label){
   if(!tie)return"";
-  const a=c(tie.aId),b=c(tie.bId),g=tie.gameId?gameById(tie.gameId):null;
+  const a=c(tie.aId),b=c(tie.bId),g=tie.gameId?gameById(tie.gameId):
+    ((label==="NBA Cup Final")?(G.inSeasonCup?.games||[]).slice().reverse().find(x=>String(x.phaseTag||"").toLowerCase()==="nba_cup_championship"):null);
   const result=g?`${g.homeScore}–${g.awayScore}`:(tie.complete&&tie.winnerClubId?(c(tie.winnerClubId)?.mark||"Final"):"Upcoming");
   return `<div class="cupTie"><div class="cupTieMatch"><b>${a?.name||"TBD"} vs ${b?.name||"TBD"}</b><small>${label}</small></div><div class="cupTieState">${tie.complete?"Final":"Upcoming"}</div><b class="cupTieResult">${result}</b></div>`;
 }
@@ -7501,7 +7568,9 @@ function nbaCupPage(){
     return `<div class="sectionTitle">${g.label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th><th>GP</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname"><b>${c(x.clubId)?.name||x.clubId}</b><small>${i===0?"Group leader":""}</small></td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff}</td><td>${x.gp}</td></tr>`).join("")}</tbody></table></div>`;
   };
   if(cup.complete){
-    const winner=c(cup.winnerClubId),final=cup.final?.gameId?gameById(cup.final.gameId):null;
+    const winner=c(cup.winnerClubId);
+    const final=cup.final?.gameId?gameById(cup.final.gameId):
+      (cup.games||[]).slice().reverse().find(g=>String(g.phaseTag||"").toLowerCase()==="nba_cup_championship")||null;
     const runnerId=final?(final.winnerClubId===final.homeClubId?final.awayClubId:final.homeClubId):null,runner=c(runnerId);
     const mvp=allPlayers(G).find(p=>p.id===cup.mvpPlayerId);
     return `${eventSummaryCard({label:"NBA Cup · Final Summary",title:`${winner?.name||"Champion"} win the NBA Cup`,subtitle:runner?`${runner.name} finished runner-up.`:"Tournament complete.",metrics:[{label:"Champion",value:winner?.mark||"—"},{label:"Final",value:final?`${final.homeScore}–${final.awayScore}`:"—"},{label:"Cup MVP",value:mvp?.name||"—"}]})}
