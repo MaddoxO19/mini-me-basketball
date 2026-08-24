@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.11.2 Unified FIBA Box Score</title>
+<title>Mini&Me Basketball — v0.1.11.3 Unified Player Quality Tiers</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -942,10 +942,18 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   .fibaNationCell{gap:6px!important}
 }
 
+
+/* v0.1.11.3 — unified current-OVR quality tiers */
+.boxTierStar.goat{color:#ef5350}
+.boxTierStar.superstar{color:#d9a441}
+.boxTierStar.allnba{color:#b388ff}
+.boxTierStar.allstar{color:#58a6ff}
+.boxTierStar.highstarter{color:#55c47a}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.11.3</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4754,7 +4762,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.11.2 Unified FIBA Box Score",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.11.3 Unified Player Quality Tiers",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5054,24 +5062,30 @@ function ovrBand(ovr){
 }
 function boxQualityTier(ovr){
   const n=+ovr||0;
-  if(n>=96)return{label:"GOAT",cls:"goat",min:96};
-  if(n>=92)return{label:"Elite",cls:"elite",min:92};
-  if(n>=87)return{label:"All-Star",cls:"allstar",min:87};
-  if(n>=82)return{label:"NBA Star",cls:"nbastar",min:82};
-  if(n>=78)return{label:"Starter",cls:"starter",min:78};
+  // Box-score markers now deliberately mirror the roster OVR bands.
+  // The ordinary Starter band is omitted from the icon system to keep the
+  // visual markers selective rather than decorating most of a rotation.
+  if(n>=97)return{label:"GOAT",cls:"goat",min:97};
+  if(n>=94)return{label:"Superstar",cls:"superstar",min:94};
+  if(n>=90)return{label:"All-NBA",cls:"allnba",min:90};
+  if(n>=86)return{label:"All-Star",cls:"allstar",min:86};
+  if(n>=82)return{label:"High Starter",cls:"highstarter",min:82};
   return{label:"",cls:"",min:0};
 }
 function boxPlayerQuality(line){
   const live=line?.playerId?playerByAnyId(line.playerId):null;
-  const ovr=+line?.ovr||+live?.ovr||0;
+  // Always prefer the live player's CURRENT OVR. International box-score
+  // payloads can contain evaluation/potential-adjacent values and must never
+  // override the player's current club rating.
+  const ovr=+live?.ovr||+line?.currentOvr||+line?.ovr||0;
   return{...boxQualityTier(ovr),ovr};
 }
 function boxQualityStar(line){
   const q=boxPlayerQuality(line);
-  return q.cls?`<span class="boxTierStar ${q.cls}" title="${q.label} · OVR ${q.ovr}">★</span>`:"";
+  return q.cls?`<span class="boxTierStar ${q.cls}" title="${q.label} · Current OVR ${q.ovr}">★</span>`:"";
 }
 function boxQualityLegend(){
-  return `<div class="boxTierLegend"><span><i class="boxTierStar goat">★</i> GOAT</span><span><i class="boxTierStar elite">★</i> Elite</span><span><i class="boxTierStar allstar">★</i> All-Star</span><span><i class="boxTierStar nbastar">★</i> NBA Star</span><span><i class="boxTierStar starter">★</i> Starter</span></div>`;
+  return `<div class="boxTierLegend"><span><i class="boxTierStar goat">★</i> GOAT 97+</span><span><i class="boxTierStar superstar">★</i> Superstar 94–96</span><span><i class="boxTierStar allnba">★</i> All-NBA 90–93</span><span><i class="boxTierStar allstar">★</i> All-Star 86–89</span><span><i class="boxTierStar highstarter">★</i> High Starter 82–85</span></div>`;
 }
 
 function ensurePlayerJerseys(club){
