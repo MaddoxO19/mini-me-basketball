@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.13.3 Playoff Matchup Polish</title>
+<title>Mini&Me Basketball — v0.1.14.0 Front Office Engine Integration</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1012,10 +1012,16 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   .postHomeActions .playoffSimAction{font-size:12px!important;min-height:46px!important}
 }
 
+
+/* v0.1.14.0 — Front Office live effects */
+.foLiveEffect{margin:8px 0 9px;padding:7px 8px;border:1px solid #3c4652;background:#0f151c;border-radius:8px}
+.foLiveEffect small{display:block;font-size:5.7px;color:var(--accent2);font-weight:950;letter-spacing:.55px}
+.foLiveEffect b{display:block;font-size:7px;color:var(--text);margin-top:2px;line-height:1.35}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.14.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2929,20 +2935,23 @@ function ensurePersistentGLeague(club) {
   return club.gLeagueRoster;
 }
 
-function injuryRisk(player, minutes=0) {
+function injuryRisk(player, minutes=0, medicalLevel=1) {
   const ageFactor=Math.max(0,player.age-30)*0.00018;
   const fatigueFactor=Math.max(0,(player.fatigue||0)-35)*0.00004;
   const minutesFactor=Math.max(0,minutes-20)*0.00010;
-  return Math.min(0.022,0.0032+ageFactor+fatigueFactor+minutesFactor);
+  const base=Math.min(0.022,0.0032+ageFactor+fatigueFactor+minutesFactor);
+  return base*medicalRiskMultiplier(medicalLevel);
 }
 
-function createInjury(player, season) {
+function createInjury(player, season, medicalLevel=1) {
   const r=Math.random(); let games, label;
   if(r<0.60){games=rand(1,4);label='Minor strain';}
   else if(r<0.88){games=rand(5,10);label='Moderate injury';}
   else if(r<0.98){games=rand(11,24);label='Significant injury';}
   else {games=rand(25,55);label='Major injury';}
-  player.injured=true;player.injury={label,gamesRemaining:games,originalGames:games,season};player.injuryHistory=player.injuryHistory||[];player.injuryHistory.push({season,label,gamesMissed:games,age:player.age,ovr:player.ovr});player.injuryHistory=player.injuryHistory.slice(-20);return player.injury;
+  const originalGames=games;
+  games=Math.max(1,Math.ceil(games*medicalRecoveryMultiplier(medicalLevel)));
+  player.injured=true;player.injury={label,gamesRemaining:games,originalGames,season,medicalLevel};player.injuryHistory=player.injuryHistory||[];player.injuryHistory.push({season,label,gamesMissed:games,originalGames,medicalLevel,age:player.age,ovr:player.ovr});player.injuryHistory=player.injuryHistory.slice(-20);return player.injury;
 }
 
 function progressInjuries(G) {
@@ -3173,11 +3182,33 @@ function awardFrontOfficeSeasonPoint(G,completedSeason){
   return fo;
 }
 function frontOfficeUpgradeCost(level){return Math.max(1,level);}
+
+function frontOfficeLevelForClub(club,key,gameState=G){
+  if(!club)return 1;
+  if(club.id===gameState?.userClubGM?.clubId){
+    const fo=ensureFrontOfficeState(gameState);
+    return Math.max(1,Math.min(5,+fo.departments?.[key]||1));
+  }
+  return 1;
+}
+function medicalRiskMultiplier(level){
+  return ({1:1,2:0.94,3:0.88,4:0.82,5:0.76})[Math.max(1,Math.min(5,+level||1))]||1;
+}
+function medicalRecoveryMultiplier(level){
+  return ({1:1,2:0.95,3:0.90,4:0.85,5:0.80})[Math.max(1,Math.min(5,+level||1))]||1;
+}
+function coachingChemistryBonus(level){
+  return Math.max(0,Math.min(4,+level-1))*1.5;
+}
+function coachingTurnoverBonus(level){
+  return Math.max(0,Math.min(4,+level-1))*0.0015;
+}
+
 function frontOfficeDepartmentInfo(key,level){
   const data={
     training:["Training","Young-player development","Improves the development environment for young players by increasing their chance of converting potential into current OVR."],
-    medical:["Medical","Availability & recovery","Builds the club's long-term medical infrastructure. Injury-risk effects are reserved for the next engine pass."],
-    coaching:["Coaching","Roster performance","Builds the club's coaching infrastructure. Match-engine effects are reserved for the next engine pass."]
+    medical:["Medical","Availability & recovery","Reduces injury risk and shortens recovery time for your NBA roster. Higher levels improve availability without eliminating injuries."],
+    coaching:["Coaching","Roster performance","Provides a small team-execution benefit through chemistry, ball security and offensive organisation without changing player OVR."]
   };
   return{name:data[key][0],short:data[key][1],description:data[key][2],level};
 }
@@ -4054,9 +4085,10 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       const shooter = weightedPick(offPool, x => playerUsageWeight(x.player) * (0.55 + x.line.min/35));
       const p = shooter.player;
       const fatigue = p.fatigue || 0;
-      const chemistry = offenseClub.chemistry || 65;
+      const coachingLevel=frontOfficeLevelForClub(offenseClub,"coaching",options.gameState||G);
+      const chemistry = (offenseClub.chemistry || 65) + coachingChemistryBonus(coachingLevel);
       const handling = (p.position === "PG" ? 0.018 : 0) + (["Floor General","Playmaking Forward"].includes(p.archetype) ? 0.012 : 0);
-      const turnoverProb = Math.max(0.085, Math.min(0.18, 0.132 - (p.ovr-70)*0.0013 - handling + fatigue*0.00045));
+      const turnoverProb = Math.max(0.085, Math.min(0.18, 0.132 - (p.ovr-70)*0.0013 - handling - coachingTurnoverBonus(coachingLevel) + fatigue*0.00045));
       if (Math.random() < turnoverProb) {
         shooter.line.tov++;
         if (Math.random() < 0.54) weightedPick(defPool, x => 0.5 + (x.player.ovr-50)/35 + (x.player.position === "PG" || x.player.position === "SG" ? 0.25 : 0)).line.stl++;
@@ -4163,7 +4195,18 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   });
   const boxA=applyStats(clubA,linesA,margin), boxB=applyStats(clubB,linesB,-margin);
   if(options.allowInjuries!==false && options.gameState?.settings?.injuries!==false && statsField==='seasonStats'){
-    for(const {player,line} of [...linesA,...linesB]) if(!player.injured && Math.random()<injuryRisk(player,line.min)){const inj=createInjury(player,options.season||0);logEvent(options.gameState||{log:[],season:0,phase:'GAME'},`${player.name} suffered ${inj.label} (${inj.gamesRemaining} games).`);}
+    const applyInjuryRisk=(entries,club)=>{
+      const medicalLevel=frontOfficeLevelForClub(club,"medical",options.gameState||G);
+      for(const {player,line} of entries){
+        if(player.injured)continue;
+        if(Math.random()<injuryRisk(player,line.min,medicalLevel)){
+          const inj=createInjury(player,options.season||0,medicalLevel);
+          logEvent(options.gameState||{log:[],season:0,phase:'GAME'},`${player.name} suffered ${inj.label} (${inj.gamesRemaining} games).`);
+        }
+      }
+    };
+    applyInjuryRisk(linesA,clubA);
+    applyInjuryRisk(linesB,clubB);
   }
   const winner = scoreA > scoreB ? clubA.id : clubB.id;
   if (updateStandings) {
@@ -4882,88 +4925,14 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.13.3 Playoff Matchup Polish",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.14.0 Front Office Engine Integration",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
 function c(id){return G?.clubs?.find(x=>x.id===id)}function me(){return c(G?.userClubGM?.clubId)}function nat(id){return G?.nationalTeams?.find(x=>x.code===id)}
-// ---- Club crests -------------------------------------------------------
-// Original, generated badges — not a copy of any real team's logo. Built
-// to the same standard as the football game's crest work: varied frame
-// shapes, emblems chosen with real thematic sense from each club's own
-// identity, gradient depth rather than flat fill, and a curved crest
-// banner — not one template stamped 30 times. National teams use
-// flagEmoji() instead, already implemented elsewhere in this file, since
-// a real flag is the correct and copyright-free choice there.
-//
-// Two independent hashes per club (id+"shape" / id+"emblem") pick a
-// frame and an emblem so the 30 combinations vary richly rather than
-// tracking together. Emblem choice is thematically biased off the
-// club's own `style` tag where a real match exists (Legacy/Historic →
-// laurel, Athletic/Fast/Tempo → bolt, Contender/Championship/Star →
-// star, Defence → tower/shield, International → compass ring) and
-// falls back to the hash otherwise — the same instinct as giving
-// Harbour City a ship instead of a generic mark, without needing every
-// one of the 30 hand-assigned.
-function hashStr(s){let h=0;for(let i=0;i<String(s).length;i++)h=(h*31+String(s).charCodeAt(i))|0;return Math.abs(h)}
-function shadeColor(hex,amt){let n=parseInt(hex.slice(1),16),r=Math.min(255,Math.max(0,(n>>16)+amt)),g=Math.min(255,Math.max(0,(n>>8&255)+amt)),b=Math.min(255,Math.max(0,(n&255)+amt));return "#"+(1<<24|r<<16|g<<8|b).toString(16).slice(1)}
-
-const CREST_FRAMES = [
-  {name:"shield", outer:"M50 3 L93 17 V51 C93 76 74 93 50 97 C26 93 7 76 7 51 V17 Z", inner:"M50 11 L84 22 V51 C84 71 68 85 50 89 C32 85 16 71 16 51 V22 Z", arcTop:"M22 24 A32 32 0 0 1 78 24"},
-  {name:"roundel", outer:"M50 2 A48 48 0 1 1 49.99 2 Z", inner:"M50 10 A40 40 0 1 1 49.99 10 Z", ring:true, arcTop:"M16 30 A38 38 0 0 1 84 30"},
-  {name:"hexagon", outer:"M50 3 L91 26 V74 L50 97 L9 74 V26 Z", inner:"M50 12 L82 30 V70 L50 88 L18 70 V30 Z", arcTop:"M24 28 A30 30 0 0 1 76 28"},
-  {name:"diamond", outer:"M50 2 L88 34 L74 96 H26 L12 34 Z", inner:"M50 12 L78 36 L67 88 H33 L22 36 Z", arcTop:"M27 30 A26 26 0 0 1 73 30"},
-  {name:"oval", outer:"M50 3 C78 3 92 24 92 50 C92 80 74 97 50 97 C26 97 8 80 8 50 C8 24 22 3 50 3 Z", inner:"M50 12 C71 12 83 28 83 50 C83 74 69 88 50 88 C31 88 17 74 17 50 C17 28 29 12 50 12 Z", arcTop:"M18 28 A36 36 0 0 1 82 28"},
-];
-
-const CREST_EMBLEMS = {
-  ball: ()=>`<circle cx="50" cy="48" r="15" fill="none" stroke="#00000038" stroke-width="2.5"/><path d="M35 48 H65 M50 33 V63 M39 37 Q50 48 39 59 M61 37 Q50 48 61 59" fill="none" stroke="#00000038" stroke-width="2"/>`,
-  star: ()=>`<polygon points="50,24 55.5,40 72,40 58.5,50 63.5,66 50,56 36.5,66 41.5,50 28,40 44.5,40" fill="#00000038"/>`,
-  skyline: ()=>`<path d="M22 62 V48 H30 V54 H38 V38 H46 V54 H54 V44 H62 V54 H70 V50 H78 V62 Z" fill="#00000038"/>`,
-  wing: ()=>`<path d="M50 62 L28 40 Q40 42 50 32 Q60 42 72 40 L50 62 Z" fill="#00000038"/>`,
-  laurel: ()=>`<path d="M30 58 Q22 44 30 28 M30 28 L26 32 M30 28 L34 33 M30 38 L25 40 M30 38 L35 42 M30 48 L25 49 M30 48 L35 52" fill="none" stroke="#00000038" stroke-width="2.2"/><path d="M70 58 Q78 44 70 28 M70 28 L74 32 M70 28 L66 33 M70 38 L75 40 M70 38 L65 42 M70 48 L75 49 M70 48 L65 52" fill="none" stroke="#00000038" stroke-width="2.2"/>`,
-  bolt: ()=>`<path d="M56 22 L34 52 H47 L42 74 L67 42 H53 Z" fill="#00000038"/>`,
-  compass: ()=>`<circle cx="50" cy="48" r="16" fill="none" stroke="#00000038" stroke-width="2"/><path d="M50 34 L54 46 L50 50 L46 46 Z M50 62 L46 50 L50 46 L54 50 Z" fill="#00000038"/>`,
-  tower: ()=>`<path d="M42 66 V36 L50 28 L58 36 V66 Z M36 66 H64" fill="none" stroke="#00000038" stroke-width="2.4"/><path d="M45 66 V50 H55 V66" fill="none" stroke="#00000038" stroke-width="2"/>`,
-};
-const EMBLEM_KEYS = Object.keys(CREST_EMBLEMS);
-function emblemForStyle(style){
-  const s=(style||"").toLowerCase();
-  if(s.includes("legacy")||s.includes("historic")) return "laurel";
-  if(s.includes("athletic")||s.includes("fast")||s.includes("tempo")) return "bolt";
-  if(s.includes("contender")||s.includes("championship")||s.includes("star")) return "star";
-  if(s.includes("defence")||s.includes("defense")) return "tower";
-  if(s.includes("international")||s.includes("market")) return "compass";
-  return null;
-}
-
-let __crestGradSeq=0;
-function crestSVG(team){
-  const base=team?.color||"#e6b953", dark=shadeColor(base,-42), deep=shadeColor(base,-66), edge=shadeColor(base,-78), sheen=shadeColor(base,34);
-  const mark=team?.mark||(team?.name||"—").slice(0,3).toUpperCase();
-  const seed=team?.id||mark;
-  const frame=CREST_FRAMES[hashStr(seed+"|shape")%CREST_FRAMES.length];
-  const emblemKey=emblemForStyle(team?.style)||EMBLEM_KEYS[hashStr(seed+"|emblem")%EMBLEM_KEYS.length];
-  const gid="cg"+(__crestGradSeq++)+"_"+hashStr(seed);
-  const arcId="ca"+hashStr(seed);
-  const banner=(team?.name||"").split(" ")[0].toUpperCase().slice(0,12);
-  return `<svg viewBox="0 0 100 100" width="100%" height="100%" role="img" aria-label="${mark} crest">
-<defs>
-<linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
-<stop offset="0%" stop-color="${sheen}"/><stop offset="55%" stop-color="${base}"/><stop offset="100%" stop-color="${dark}"/>
-</linearGradient>
-<path id="${arcId}" d="${frame.arcTop}" fill="none"/>
-</defs>
-<path d="${frame.outer}" fill="url(#${gid})" stroke="${edge}" stroke-width="2.6"/>
-<path d="${frame.inner}" fill="${deep}" stroke="${shadeColor(deep,14)}" stroke-width="1"/>
-${CREST_EMBLEMS[emblemKey]()}
-<text font-size="7.5" font-weight="800" fill="#ffffffb0" font-family="-apple-system,sans-serif" letter-spacing="1"><textPath href="#${arcId}" startOffset="50%" text-anchor="middle">${banner}</textPath></text>
-<text x="50" y="78" text-anchor="middle" font-size="24" font-weight="950" fill="#17100a" font-family="-apple-system,sans-serif">${mark}</text>
-</svg>`;
-}
-function teamMark(t,cl="bigmark"){return `<span class="${cl}" style="background:transparent;display:block">${crestSVG(t)}</span>`}
+function teamMark(t,cl="bigmark"){return `<span class="${cl}" style="background:${t?.color||"#e6b953"}">${t?.mark||t?.name?.slice(0,3).toUpperCase()||"—"}</span>`}
 function phaseName(){return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
 let memorySlots={};
 function openSaveDB(){
@@ -5077,11 +5046,11 @@ function drawTeams(){
   let arr=CLUB_IDENTITIES.filter(x=>x.conference===setup.conf);
   $("#teamGrid").innerHTML=arr.map(t=>{
     const preview=clubById(setup.previewCareer,t.id),ovr=preview?squadOvr(preview):"—";
-    return `<button class="teamPick ${setup.team===t.id?"selected":""}" data-team="${t.id}"><span class="mark" style="background:transparent;display:block">${crestSVG(t)}</span><span class="teamPickText"><b>${t.name}</b><small>${t.division} · ${t.style}</small></span><span class="teamPickOvr"><b>${ovr}</b><small>OVR</small></span></button>`;
+    return `<button class="teamPick ${setup.team===t.id?"selected":""}" data-team="${t.id}"><span class="mark" style="background:${t.color}">${t.mark}</span><span class="teamPickText"><b>${t.name}</b><small>${t.division} · ${t.style}</small></span><span class="teamPickOvr"><b>${ovr}</b><small>OVR</small></span></button>`;
   }).join("");
   $$("[data-team]").forEach(b=>b.onclick=()=>{setup.team=b.dataset.team;drawTeams()})
 }
-function drawSummary(){let t=CLUB_IDENTITIES.find(x=>x.id===setup.team);$("#summary").innerHTML=`<div class="eyebrow">Career Summary</div><div style="display:flex;gap:10px;align-items:center;margin-top:9px"><span class="mark" style="background:transparent;display:block">${crestSVG(t)}</span><div><b>${setup.name}</b><div class="smallcopy">${t.name}</div></div></div><div class="metrics" style="margin-top:11px"><div class="metric"><b>${setup.cap?"ON":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${setup.inj?"ON":"OFF"}</b><small>Injuries</small></div><div class="metric"><b>${t.conference}</b><small>${t.division}</small></div></div>`}
+function drawSummary(){let t=CLUB_IDENTITIES.find(x=>x.id===setup.team);$("#summary").innerHTML=`<div class="eyebrow">Career Summary</div><div style="display:flex;gap:10px;align-items:center;margin-top:9px"><span class="mark" style="background:${t.color}">${t.mark}</span><div><b>${setup.name}</b><div class="smallcopy">${t.name}</div></div></div><div class="metrics" style="margin-top:11px"><div class="metric"><b>${setup.cap?"ON":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${setup.inj?"ON":"OFF"}</b><small>Injuries</small></div><div class="metric"><b>${t.conference}</b><small>${t.division}</small></div></div>`}
 async function startCareer(){
   try{
     if(!activeSlot)throw new Error("No save slot has been selected.");
@@ -8178,10 +8147,13 @@ function frontOfficePage(){
   const fo=ensureFrontOfficeState(G),scout=scoutingLevelInfo(G);
   const cards=["training","medical","coaching"].map(k=>{
     const level=fo.departments[k],info=frontOfficeDepartmentInfo(k,level),cost=frontOfficeUpgradeCost(level),max=level>=5;
-    return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
+    const effect=k==="training"?`Development environment +${(level-1)*2}`:
+      k==="medical"?`${Math.round((1-medicalRiskMultiplier(level))*100)}% lower injury risk · ${Math.round((1-medicalRecoveryMultiplier(level))*100)}% faster recovery`:
+      `+${coachingChemistryBonus(level).toFixed(1)} execution chemistry · improved ball security`;
+    return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
   return header("Front Office","Long-term club infrastructure and department development")+`
-    <div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn one development point after each completed season, then choose where to build the organisation. Department upgrades persist for the full career.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+    <div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn one development point after each completed season, then choose where to build the organisation. Training, Medical and Coaching now each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
     <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Unlike the club departments above, scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>
