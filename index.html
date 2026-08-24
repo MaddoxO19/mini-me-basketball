@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.13.0 Development Pathways</title>
+<title>Mini&Me Basketball — v0.1.13.1 Play-In Direct Qualifier Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -997,10 +997,15 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .developmentCopy{font-size:7.3px;color:var(--muted);line-height:1.45;border-top:1px solid var(--line);padding-top:9px}.developmentLast{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}.developmentLast span{font-size:6.5px;color:var(--muted)}.developmentLast b{font-size:8px;color:var(--accent2)}
 @media(max-width:600px){.developmentDrivers{grid-template-columns:repeat(2,1fr)}.developmentHeadline{align-items:flex-start}.developmentHeadline strong{font-size:16px}}
 
+
+/* v0.1.13.1 — direct playoff qualifier state */
+.directQualifierHome{border-color:#66502c!important}
+.directQualifierHome .postseasonHomeTop span{color:var(--accent2)!important}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4867,7 +4872,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.13.0 Development Pathways",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.13.1 Play-In Direct Qualifier Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5812,7 +5817,10 @@ function phaseStatusCopy(){
   if(G.phase==="SUMMER_LEAGUE_COMPLETE")return["Summer League Complete","Summer League is complete. Review the final standings, championship result and your final game before moving into roster preparation."];
   if(G.phase==="PRESEASON_READINESS")return["Preseason Readiness","Finalise your standard roster and consider filling available two-way positions before the preseason schedule begins."];
   if(G.phase==="PRESEASON")return["Preseason","Rotation roles, chemistry and roster readiness are being tested before opening night."];
-  if(G.phase==="PLAY_IN")return["Play-In Tournament","The season is on the line. Win through to secure a playoff berth."];
+  if(G.phase==="PLAY_IN"){
+    const seed=conferenceSeedForClub(me());
+    return seed&&seed<=6?["Play-In Tournament",`#${seed} seed secured. Your club is already qualified for Round 1 while the league completes the Play-In Tournament.`]:["Play-In Tournament","The season is on the line. Win through to secure a playoff berth."];
+  }
   if(G.phase==="PLAYOFFS")return["NBA Playoffs","Every game matters. Advance the series and pursue the championship."];
   if(G.phase==="WORLD_CUP")return["FIBA World Cup","Club play is paused while the international tournament takes centre stage."];
   if(G.phase==="CHAMPION")return["Season Complete",`${G.champion?.name||"The champion"} has been crowned. Career history and season honours are recorded.`];
@@ -6689,7 +6697,10 @@ function postseasonRoundLabel(round){return({R1:"Round 1",SF:"Conference Semifin
 function postseasonUserHome(){
   const st=userPostseasonState(),x=me();
   if(G.phase==="PLAY_IN"){
-    if(st.qualified)return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>Play-In Tournament</span></div><div class="postseasonHomeBody"><h3>#${st.seed} seed secured</h3><p>${x.name} have qualified for the NBA Playoffs. Complete the remaining league Play-In games before Round 1 is finalised.</p><div class="postSeriesStatus"><div class="postSeriesStat"><b>#${st.seed}</b><small>Your Seed</small></div><div class="postSeriesStat"><b>Qualified</b><small>Your Status</small></div><div class="postSeriesStat"><b>Round 1</b><small>Next Stage</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Complete Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    if(st.qualified){
+      const direct=!!st.directQualified;
+      return `<div class="postseasonHome directQualifierHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>${direct?"Direct Playoff Berth":"Play-In Qualified"}</span></div><div class="postseasonHomeBody"><h3>#${st.seed} seed secured</h3><p>${direct?`${x.name} finished inside the top six and have qualified directly for the NBA Playoffs. The league Play-In Tournament will determine your remaining Round 1 opponent.`:`${x.name} have secured a playoff berth through the Play-In. Complete the remaining league Play-In games before Round 1 is finalised.`}</p><div class="postSeriesStatus"><div class="postSeriesStat"><b>#${st.seed}</b><small>Your Seed</small></div><div class="postSeriesStat"><b>${direct?"Direct":"Qualified"}</b><small>Your Status</small></div><div class="postSeriesStat"><b>Round 1</b><small>Next Stage</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Complete Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    }
     const e=resolveUserPlayInEntry()||st.entry,a=c(e?.teamAId),b=c(e?.teamBId),userIsA=e?.teamAId===x.id,opp=userIsA?b:a;
     const userSeed=Number.isFinite(+(userIsA?e?.seedA:e?.seedB))?+(userIsA?e?.seedA:e?.seedB):(st.seed||"—");
     const oppSeed=Number.isFinite(+(userIsA?e?.seedB:e?.seedA))?+(userIsA?e?.seedB:e?.seedA):"—";
@@ -7041,8 +7052,23 @@ function resolveUserPlayInEntry(){
   const completedInitial=initial.find(e=>e.complete&&(e.teamAId===id||e.teamBId===id));
   return completedInitial||null;
 }
+function conferenceSeedForClub(club){
+  if(!club)return null;
+  const ranked=G.clubs.filter(c=>c.conference===club.conference).sort((a,b)=>
+    b.standings.w-a.standings.w||
+    ((b.standings.pf-b.standings.pa)-(a.standings.pf-a.standings.pa))||
+    String(a.id).localeCompare(String(b.id))
+  );
+  const idx=ranked.findIndex(c=>c.id===club.id);
+  return idx>=0?idx+1:null;
+}
+
 function userPostseasonState(){
   const x=me();if(!x)return{alive:false};const id=x.id;
+  const directSeed=conferenceSeedForClub(x);
+  if(G.phase==="PLAY_IN"&&directSeed&&directSeed<=6){
+    return{alive:true,stage:"Qualified",seed:directSeed,qualified:true,directQualified:true,awaitingPlayoffs:true};
+  }
   const po=G.playoffsLive||G.playoffs;
   const series=(po?.series||[]).filter(s=>s.teamAId===id||s.teamBId===id);
   if(series.length){
