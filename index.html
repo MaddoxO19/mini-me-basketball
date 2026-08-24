@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.13.2 Complete Play-In Flow Fix</title>
+<title>Mini&Me Basketball — v0.1.13.3 Playoff Matchup Polish</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1002,10 +1002,20 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .directQualifierHome{border-color:#66502c!important}
 .directQualifierHome .postseasonHomeTop span{color:var(--accent2)!important}
 
+
+/* v0.1.13.3 — playoff matchup polish */
+.playoffMatchupClean{padding-top:13px!important;padding-bottom:13px!important}
+.playoffMatchupClean .postMatchupTeam{display:flex;align-items:center}
+.playoffMatchupClean .postMatchupTeam b{margin:0}
+.postHomeActions .playoffSimAction{font-size:13px!important;font-weight:950!important;letter-spacing:-.15px;min-height:48px!important}
+@media(max-width:430px){
+  .postHomeActions .playoffSimAction{font-size:12px!important;min-height:46px!important}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.13.3</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4872,7 +4882,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.13.2 Complete Play-In Flow Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.13.3 Playoff Matchup Polish",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6762,7 +6772,7 @@ function postseasonUserHome(){
     }
 
     const status=ctx.userWins===ctx.oppWins?`Series tied ${ctx.userWins}–${ctx.oppWins}`:ctx.userWins>ctx.oppWins?`${x.name} lead ${ctx.userWins}–${ctx.oppWins}`:`${opp?.name||"Opponent"} lead ${ctx.oppWins}–${ctx.userWins}`;
-    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b><small>${ctx.userWins} series wins</small></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b><small>${ctx.oppWins} series wins</small></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Sim Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup playoffMatchupClean"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress playoffSimAction">Sim Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
   }
   return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>${st.stage||"Postseason"}</span></div><div class="postseasonHomeBody"><h3>${x.name} remain alive</h3><p>The next postseason matchup is being prepared.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Postseason</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
 }
