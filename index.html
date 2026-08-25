@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.2 Career Integrity Hotfix</title>
+<title>Mini&Me Basketball — v0.1.17.3 Matchup Stat Ranks</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1115,10 +1115,21 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .teamIdentityProfileLink{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:inherit;font:inherit;text-align:left;padding:0;margin:0;cursor:pointer;max-width:100%}
 .teamIdentityProfileLink:hover b,.teamIdentityProfileLink:hover>span:last-child{color:var(--accent2)}
 
+
+/* v0.1.17.3 — Courtside matchup stat ranks */
+.broadcastStatRanks{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:5px;white-space:nowrap}
+.broadcastStatRanks span{font-size:5.3px;color:var(--muted);font-weight:800;letter-spacing:.08px}
+.broadcastStatRanks b{font-size:5.8px;color:var(--accent2);font-weight:950}
+@media(max-width:600px){
+  .broadcastStatRanks{gap:5px;margin-top:4px}
+  .broadcastStatRanks span{font-size:5px}
+  .broadcastStatRanks b{font-size:5.4px}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.3</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5025,7 +5036,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.2 Career Integrity Hotfix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.3 Matchup Stat Ranks",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6333,6 +6344,15 @@ function upcomingFixturesHtml(){
   const rows=(items)=>items.length?items.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":"Home"}</strong></div>`).join(""):`<div class="fixtureNone"><span>None scheduled</span></div>`;
   return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Club & national schedule</small></div><div class="fixtureSection"><div class="fixtureLabel"><b>League</b><small>Next 3</small></div><div class="fixtureRows">${rows(league)}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>NBA Cup</b><small>Next</small></div><div class="fixtureRows">${rows(cup?[cup]:[])}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>FIBA</b><small>Next</small></div><div class="fixtureRows">${rows(intl?[intl]:[])}</div></div></div>`;
 }
+function matchupStatRanks(club){
+  if(!club)return "";
+  const prod=teamSeasonProduction(club);
+  if(!prod.gp)return `<div class="broadcastStatRanks"><span>PPG <b>—</b></span><span>RPG <b>—</b></span><span>APG <b>—</b></span></div>`;
+  const ppg=leagueTeamMetricRank(club.id,"ppg");
+  const rpg=leagueTeamMetricRank(club.id,"rpg");
+  const apg=leagueTeamMetricRank(club.id,"apg");
+  return `<div class="broadcastStatRanks"><span>PPG <b>#${ppg||"—"}</b></span><span>RPG <b>#${rpg||"—"}</b></span><span>APG <b>#${apg||"—"}</b></span></div>`;
+}
 function gameHub(f){
   let x=me(),h=c(f.homeClubId),a=c(f.awayClubId),spec=actionSpec();
   const xr=phaseRecord(x);
@@ -6341,7 +6361,7 @@ function gameHub(f){
   const competition=f.competition==="NBA Cup"?"NBA Cup":phaseName();
   const roundLabel=f.cupStage||f.displayRound||(typeof f.round==="number"?`Game ${f.round}`:f.round||"");
     const cupLiveLabel=f.eventType==="NBA_CUP_FINAL"?"FINAL":(f.competition==="NBA Cup"?"KNOCKOUT":"NEXT GAME");
-  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${cupLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${awayContext}</small></div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${homeContext}</small></div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${cupLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small>${awayContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(a):""}</div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small>${homeContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(h):""}</div></div><div class="broadcastContext"><div><b>${xr.w}–${xr.l}</b><small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
   return card+upcomingFixturesHtml();
 }
 function scoutingRosterAssessment(){
