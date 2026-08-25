@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.3 Matchup Stat Ranks</title>
+<title>Mini&Me Basketball — v0.1.17.4 Rising Stars Eligibility Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1129,7 +1129,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.4</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4478,13 +4478,39 @@ function advanceNBACupFinalEvent(G){
 
 // All-Star Weekend: a clear four-event showcase, separate from the club schedule.
 function allStarCandidateScore(p){return summerPerformanceScore(p.seasonStats)+(p.ovr||0)*0.12;}
+function risingStarsExperienceYears(p){
+  if(!p)return 99;
+  if(Number.isFinite(+p.experienceYears))return Math.max(0,+p.experienceYears);
+  if(Number.isFinite(+p.draftYear))return Math.max(0,(G.season||1)-(+p.draftYear));
+  if(Array.isArray(p.seasonHistory)&&p.seasonHistory.length)return Math.max(0,p.seasonHistory.length-1);
+  return 99;
+}
+function risingStarsEligible(p){
+  const yrs=risingStarsExperienceYears(p);
+  return yrs===0||yrs===1;
+}
 function initializeAllStarLive(G){
-  if(G.allStarLive?.season===G.season&&!G.allStarLive.complete&&G.allStarLive.format==='WEEKEND_V2')return G.allStarLive;
+  if(G.allStarLive?.season===G.season&&!G.allStarLive.complete&&G.allStarLive.format==='WEEKEND_V2'){
+    const lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
+    const risingIds=[...(G.allStarLive.teams?.RISING_A||[]),...(G.allStarLive.teams?.RISING_B||[])];
+    const invalid=risingIds.some(id=>{const p=lookup.get(id);return !p||!risingStarsEligible(p)});
+    if(!invalid)return G.allStarLive;
+    // Rebuild only the weekend setup before the Rising Stars game is played.
+    // Once Event 1 has a result, historical event data is left untouched.
+    if(!G.allStarLive.results?.rising){
+      G.allStarLive=null;
+      G.allStar=null;
+    }else return G.allStarLive;
+  }
   const eligible=G.clubs.flatMap(c=>c.roster.map(p=>({p,club:c}))).filter(x=>x.p.seasonStats?.gp>=20);
   const east=eligible.filter(x=>x.club.conference==='East').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
   const west=eligible.filter(x=>x.club.conference==='West').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
   const selected=[...east,...west];
-  const young=[...eligible].sort((a,b)=>(a.p.age-b.p.age)||allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,16).map(x=>x.p);
+  const young=[...eligible]
+    .filter(x=>risingStarsEligible(x.p))
+    .sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p))
+    .slice(0,16)
+    .map(x=>x.p);
   const three=[...eligible].sort((a,b)=>((['PG','SG'].includes(b.p.position)?6:0)+allStarCandidateScore(b.p))-((['PG','SG'].includes(a.p.position)?6:0)+allStarCandidateScore(a.p))).slice(0,8).map(x=>x.p);
   const dunk=[...eligible].sort((a,b)=>(((b.p.age<=25?7:0)+(['SG','SF','PF'].includes(b.p.position)?5:0)+(b.p.ovr||0))-((a.p.age<=25?7:0)+(['SG','SF','PF'].includes(a.p.position)?5:0)+(a.p.ovr||0)))).slice(0,8).map(x=>x.p);
   const unique=[...new Map(selected.map(p=>[p.id,p])).values()];for(const p of unique)addAward(G,p,'NBA All-Star');
@@ -5036,7 +5062,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.3 Matchup Stat Ranks",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.4 Rising Stars Eligibility Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6653,7 +6679,7 @@ function renderAllStarWindow(){
     </div>`;
   }else{
     host.innerHTML=`<div class="asWindow">
-      <div class="asEventHeader"><div><div class="eyebrow">NBA ALL-STAR WEEKEND</div><h2>${allStarStageName(live.stage)}</h2><p>${live.stage===1?"The league's best young players open the weekend.":live.stage===2?"Elite perimeter shooters compete for the 3-point crown.":live.stage===3?"The league's most athletic finishers compete for the dunk title.":"The Eastern and Western Conference stars close the weekend."}</p></div><div class="asEventCount">EVENT ${live.stage} / 4</div></div>
+      <div class="asEventHeader"><div><div class="eyebrow">NBA ALL-STAR WEEKEND</div><h2>${allStarStageName(live.stage)}</h2><p>${live.stage===1?"The league's top rookies and sophomores open the weekend.":live.stage===2?"Elite perimeter shooters compete for the 3-point crown.":live.stage===3?"The league's most athletic finishers compete for the dunk title.":"The Eastern and Western Conference stars close the weekend."}</p></div><div class="asEventCount">EVENT ${live.stage} / 4</div></div>
       ${allStarProgressHtml(live)}
       ${allStarEventIntro(live)}
       ${allStarCompletedRows(live)}
