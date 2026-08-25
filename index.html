@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.8 World Cup Home Flow</title>
+<title>Mini&Me Basketball — v0.1.17.9 Universal FIBA Game Flow</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1159,10 +1159,24 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
  .wcHomeContext b{font-size:9px}
 }
 
+
+/* v0.1.17.9 — Universal World Cup game flow */
+.wcUpcoming{padding:0;margin-top:12px;overflow:hidden}
+.wcUpcomingHead{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line)}
+.wcUpcomingHead h3{margin:0;font-size:14px}.wcUpcomingHead small{font-size:7px;color:var(--muted)}
+.wcUpcomingRow{display:grid;grid-template-columns:90px minmax(0,1fr) 54px;gap:8px;align-items:center;padding:10px 12px;border-top:1px solid #222b36}
+.wcUpcomingRow:first-of-type{border-top:0}
+.wcUpcomingRow div b{display:block;font-size:8px}.wcUpcomingRow div small{display:block;color:var(--muted);font-size:6.5px;margin-top:2px}
+.wcUpcomingRow strong{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.wcUpcomingRow span{text-align:right;color:var(--muted);font-size:6.5px;font-weight:850}
+@media(max-width:520px){
+ .wcUpcomingRow{grid-template-columns:82px minmax(0,1fr) 48px;padding:10px 10px}
+ .wcUpcomingRow strong{font-size:8.5px}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.8</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.9</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5095,7 +5109,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.8 World Cup Home Flow",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.9 Universal FIBA Game Flow",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5885,19 +5899,39 @@ function gameById(id){
     G.inSeasonCup?.games,
     G.playInLive?.games,G.playIn?.games,
     G.playoffsLive?.games,G.playoffs?.games,
-    G.allStarLive?.games,G.allStar?.games
+    G.allStarLive?.games,G.allStar?.games,
+    G.worldCupLive?.games,G.worldCup?.games
   ].filter(Boolean);
   for(const pool of pools){const g=pool.find(x=>x.id===id);if(g)return g;}
   return null;
 }
+function isNationalResultGame(game){
+  return !!(game&&game.teamA&&game.teamB&&!game.homeClubId&&!game.awayClubId);
+}
+function nationalCompetitionGameLabel(g){
+  if(!g)return"FIBA";
+  const comp=String(g.competition||g.competitionType||"").toLowerCase();
+  if(comp.includes("qualification"))return "FIBA World Cup Qualification";
+  if(comp.includes("world_cup")||G.worldCupLive?.games?.some(x=>x.id===g.id)||G.worldCup?.games?.some(x=>x.id===g.id)){
+    return `FIBA World Cup · ${worldCupStageLabel(g.stage)}`;
+  }
+  return "FIBA International";
+}
+function universalLineScoreHtml(g){
+  return isNationalResultGame(g)?fibaLineScoreHtml(g):lineScoreHtml(g);
+}
+function universalBoxScoreHtml(g){
+  return isNationalResultGame(g)?fibaBoxScoreHtml(g):boxScoreHtml(g);
+}
 function openResultWindow(game,returnMode=null){
   if(!game)return false;
-  repairLegacyGameBox(game);
+  if(!isNationalResultGame(game))repairLegacyGameBox(game);
   ui.resultGameId=game.id;
   ui.resultReturn=returnMode;
   show("resultWindow");renderResultWindow();return true;
 }
 function competitionGameLabel(g){
+  if(isNationalResultGame(g))return nationalCompetitionGameLabel(g);
   const tag=String(g?.phaseTag||"").toLowerCase();
   if(tag==="nba_cup_group")return "NBA Cup · Group Play";
   if(tag==="nba_cup_quarterfinal")return "NBA Cup · Quarterfinal";
@@ -5934,10 +5968,12 @@ function renderResultWindow(){
     ui.resultReturn==="schedule"?"Back to Schedule":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
     ui.resultReturn==="cup_final"?"Return to Regular Season":
+    ui.resultReturn==="world_cup"?(G.phase==="WORLD_CUP"?"Next World Cup Game":"Continue Career"):
     ui.resultReturn==="postseason_transition"?(G.phase==="CHAMPION"?"View Season Review":G.phase==="PLAYOFFS"?"Continue to Playoffs":"Continue Postseason"):
     "Next Game";
   $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
+  $$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;renderResultWindow()});
   $("#resultWindowNext").onclick=()=>{
     ui.resultGameId=null;
     if(historicalSeries){
@@ -5951,6 +5987,9 @@ function renderResultWindow(){
     }
     if(ui.resultReturn==="cup_final"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
+    }
+    if(ui.resultReturn==="world_cup"){
+      ui.resultReturn=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;
     }
     if(ui.resultReturn==="postseason_transition"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
@@ -6173,14 +6212,9 @@ function advanceFromUi(n){
   // Single-game behaviour remains unchanged. For Sim 5 we show only the
   // final completed user game if the batch stayed inside the same phase.
   if(newUserGame&&phaseBefore==="WORLD_CUP"){
-    if(G.worldCupLive){
-      G.worldCupLive.lastUserGameId=newUserGame.id;
-      G.worldCupLive.awaitingUserContinue=true;
-    }
+    if(G.worldCupLive)G.worldCupLive.lastUserGameId=newUserGame.id;
     save();
-    ui.page="home";
-    show("game");
-    render();
+    openResultWindow(newUserGame,"world_cup");
   }else if(newUserGame&&String(newUserGame.phaseTag||"").toLowerCase()==="nba_cup_championship"){
     openResultWindow(newUserGame,"cup_final");
   }else if(newUserGame&&["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS"].includes(phaseBefore)){
@@ -6347,9 +6381,9 @@ function lineScoreHtml(g){
 }
 function latestResultHtml(g){
   if(!g)return"";
-  repairLegacyGameBox(g);
+  if(!isNationalResultGame(g))repairLegacyGameBox(g);
   const ot=g.overtime>0?`${g.overtime>1?g.overtime+"OT":"OT"}`:"FINAL";
-  return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${competitionGameLabel(g).toUpperCase()}</small></div>${lineScoreHtml(g)}${boxScoreHtml(g)}</div>`;
+  return `<div class="sectionTitle">Latest Result</div><div class="card resultCard"><div class="resultTop"><b>${ot}</b><small>${competitionGameLabel(g).toUpperCase()}</small></div>${universalLineScoreHtml(g)}${universalBoxScoreHtml(g)}</div>`;
 }
 function phaseRecord(club){
   if(!club)return{w:0,l:0};
@@ -6529,6 +6563,38 @@ function worldCupResultHomeHtml(game){
     <button id="continueWorldCupHome" class="primaryProgress">${G.phase==="WORLD_CUP"?"Continue World Cup":"Continue Career"}</button>
   </div>`;
 }
+function worldCupUpcomingFixturesHtml(live){
+  const code=G.userNationalGM?.nationCode;
+  if(!live||!code)return"";
+  const rows=[];
+  const add=(stage,eventNo,a,b)=>{
+    if(a!==code&&b!==code)return;
+    const opp=a===code?b:a;
+    rows.push({stage,eventNo,opp,venue:a===code?"Home":"Away"});
+  };
+  if(live.stage==="FIRST_GROUP_STAGE"){
+    const ownGroup=(live.groups||[]).find(g=>g.teamCodes.includes(code));
+    if(ownGroup){
+      for(let idx=live.eventIndex||0;idx<3;idx++){
+        for(const [a,b] of roundRobinPairs(ownGroup.teamCodes,idx))add("Group Stage",`Matchday ${idx+1}`,a,b);
+      }
+    }
+  }else if(live.stage==="SECOND_GROUP_STAGE"){
+    const own=(live.secondGroups||[]).find(g=>g.teamCodes.includes(code))||(live.classificationGroups||[]).find(g=>g.teamCodes.includes(code));
+    if(own){
+      for(let idx=live.eventIndex||0;idx<2;idx++){
+        const A=live.advByGroup?.[own.sourceA]||live.classByGroup?.[own.sourceA]||[];
+        const B=live.advByGroup?.[own.sourceB]||live.classByGroup?.[own.sourceB]||[];
+        const pairs=idx===0?[[A[0],B[0]],[A[1],B[1]]]:[[A[0],B[1]],[A[1],B[0]]];
+        for(const [a,b] of pairs)if(a&&b)add(own.id?.startsWith("WC-M")||own.id?.startsWith("WC-N")||own.id?.startsWith("WC-O")||own.id?.startsWith("WC-P")?"Classification":"Second Group",`Matchday ${idx+1}`,a,b);
+      }
+    }
+  }else{
+    for(const f of worldCupNextEventPairs(live))add(worldCupStageLabel(f.stage),worldCupStageLabel(f.stage),f.a,f.b);
+  }
+  const top=rows.slice(0,3);
+  return `<div class="card wcUpcoming"><div class="wcUpcomingHead"><h3>Upcoming Fixtures</h3><small>FIBA World Cup schedule</small></div>${top.length?top.map((r,i)=>`<div class="wcUpcomingRow"><div><b>${r.eventNo}</b><small>${r.stage}</small></div><strong>${r.venue==="Home"?"vs":"@"} ${fibaNationName(r.opp)}</strong><span>${i===0?"NEXT":"Scheduled"}</span></div>`).join(""):`<div class="empty">No further World Cup fixture is currently scheduled for your nation.</div>`}</div>`;
+}
 function worldCupHomeHtml(){
   const live=G.worldCupLive||initializeWorldCupLive(G);
   if(!live)return `<div class="card homeStatus"><div class="homeStatusBody"><h3>FIBA World Cup</h3><p>The tournament could not be loaded.</p></div></div>`;
@@ -6545,7 +6611,7 @@ function worldCupHomeHtml(){
       <div class="wcHomeTop"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>${stage}</h2></div><span>TOURNAMENT LIVE</span></div>
       <div class="wcObserverBody"><b>${nation?.name||"Your nation"} has no fixture in the next event</b><p>${record.gp?`Tournament record ${record.w}–${record.l}. `:""}Follow the remaining World Cup from International or advance to the next tournament stage.</p></div>
       <button id="homeMainAction" class="primaryProgress">Advance World Cup</button>
-    </div>`;
+    </div>${worldCupUpcomingFixturesHtml(live)}`;
   }
   const a=fibaNationByCode(next.a),b=fibaNationByCode(next.b);
   const aRec=worldCupNationRecord(live,next.a),bRec=worldCupNationRecord(live,next.b);
@@ -6563,7 +6629,7 @@ function worldCupHomeHtml(){
       <div><b>${live.games?.length||0}</b><small>Tournament Games Played</small></div>
     </div>
     <button id="homeMainAction" class="primaryProgress">Play ${stage==="First Group Stage"||stage==="Second Group Stage"?"World Cup Game":stage.replace(/s$/,"")}</button>
-  </div>`;
+  </div>${worldCupUpcomingFixturesHtml(live)}`;
 }
 
 function gameHub(f){
@@ -7680,7 +7746,6 @@ function userPostseasonState(){
   return{alive:true,stage:null};
 }
 function home(){
-  if(G.worldCupLive?.awaitingUserContinue&&G.worldCupLive?.lastUserGameId)return worldCupResultHomeHtml(worldCupGameById(G.worldCupLive.lastUserGameId));
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
   if(G.phase==="WORLD_CUP")return worldCupHomeHtml();
@@ -8916,11 +8981,6 @@ if($("#openDraftFromTeam"))$("#openDraftFromTeam").onclick=openDraftWindow;
 if($("#manageSquadHome"))$("#manageSquadHome").onclick=()=>{ui.page="team";ui.teamTab="squad";render()};
 if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 
-if($("#continueWorldCupHome"))$("#continueWorldCupHome").onclick=()=>{
-  if(G.worldCupLive)G.worldCupLive.awaitingUserContinue=false;
-  ui.fibaBoxSide="teamA";
-  save();ui.page="home";show("game");render();
-};
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
