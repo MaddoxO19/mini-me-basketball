@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.11 International Flags</title>
+<title>Mini&Me Basketball — v0.1.17.14 Matchup Ranking Layout Polish</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1132,8 +1132,8 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 /* v0.1.17.6 — Courtside OFF / DEF / NET context */
 .broadcastRankStack{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:5px}
 .broadcastRankStack .broadcastStatRanks{margin-top:0}
-.broadcastRankStack .broadcastStatRanks.secondary span{color:#8d98a8}
-.broadcastRankStack .broadcastStatRanks.secondary b{color:#d4dae3}
+.broadcastRankStack .broadcastStatRanks.rankSecondary span{color:var(--muted)}
+.broadcastRankStack .broadcastStatRanks.rankSecondary b{color:var(--accent2)}
 @media(max-width:520px){
   .broadcastRankStack{gap:2px;margin-top:4px}
 }
@@ -1177,19 +1177,19 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 /* v0.1.17.11 — International national flag system */
 .nationalFlagMark{
   display:inline-flex;align-items:center;justify-content:center;
-  width:38px;height:25px;border-radius:3px;overflow:hidden;
-  background:#f4f4f4;border:1px solid rgba(255,255,255,.18);
-  box-shadow:0 1px 3px rgba(0,0,0,.35);
+  width:38px;height:25px;border-radius:0;overflow:visible;
+  background:transparent;border:0;
+  box-shadow:none;
   font-size:29px;line-height:1;vertical-align:middle;
   font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
 }
-.nationalFlagMark.small{width:23px;height:15px;font-size:18px;border-radius:2px;box-shadow:none}
-.nationalFlagMark.heroFlag{width:58px;height:38px;font-size:44px;border-radius:4px}
+.nationalFlagMark.small{width:23px;height:15px;font-size:18px;border-radius:0;box-shadow:none;background:transparent;border:0}
+.nationalFlagMark.heroFlag{width:58px;height:38px;font-size:44px;border-radius:0}
 .nationalFlagMark.headerFlag{width:24px;height:16px;font-size:18px;margin-right:5px}
 .nationalFlagMark.lineScoreFlag{width:38px;height:25px;font-size:29px;margin-right:9px}
 .fibaNationMark.teamMark,.wcNationSide .fibaNationMark{
-  width:58px;height:38px;font-size:44px;border-radius:4px;
-  background:#f5f5f5;padding:0;border:1px solid rgba(255,255,255,.18);
+  width:58px;height:38px;font-size:44px;border-radius:0;
+  background:transparent;padding:0;border:0;
 }
 .nationalFlagLabel{display:inline-flex;align-items:center;gap:6px;min-width:0;vertical-align:middle}
 .nationalFlagLabel>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
@@ -1210,10 +1210,67 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   .fibaNationMark.teamMark,.wcNationSide .fibaNationMark{width:52px;height:34px;font-size:40px}
 }
 
+
+/* v0.1.17.14 — Matchup ranking layout polish */
+.broadcastRankStack{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:5px;
+  margin-top:7px;
+}
+.broadcastRankStack .broadcastStatRanks{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(28px,1fr));
+  width:min(150px,100%);
+  gap:5px;
+  margin:0;
+  padding:0;
+  background:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+.broadcastRankStack .broadcastStatRanks span{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:2px;
+  font-size:8px;
+  line-height:1.1;
+  color:var(--muted);
+  font-weight:850;
+  letter-spacing:.25px;
+}
+.broadcastRankStack .broadcastStatRanks b{
+  display:block;
+  font-size:10px;
+  line-height:1.1;
+  color:var(--accent2);
+  font-weight:950;
+}
+.broadcastRankStack .rankSecondary{
+  background:transparent!important;
+  border:0!important;
+  padding:0!important;
+}
+@media(max-width:520px){
+  .broadcastRankStack{gap:4px;margin-top:6px}
+  .broadcastRankStack .broadcastStatRanks{
+    width:min(142px,100%);
+    grid-template-columns:repeat(3,minmax(26px,1fr));
+    gap:4px;
+  }
+  .broadcastRankStack .broadcastStatRanks span{font-size:7.5px}
+  .broadcastRankStack .broadcastStatRanks b{font-size:9.5px}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.11</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.14</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5146,7 +5203,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.11 International Flags",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.14 Matchup Ranking Layout Polish",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6517,14 +6574,14 @@ function leagueTeamResultMetricRank(clubId,key){
 function matchupStatRanks(club){
   if(!club)return "";
   const prod=teamSeasonProduction(club);
-  if(!prod.gp)return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>—</b></span><span>RPG <b>—</b></span><span>APG <b>—</b></span></div><div class="broadcastStatRanks secondary"><span>OFF <b>—</b></span><span>DEF <b>—</b></span><span>NET <b>—</b></span></div></div>`;
+  if(!prod.gp)return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>—</b></span><span>RPG <b>—</b></span><span>APG <b>—</b></span></div><div class="broadcastStatRanks rankSecondary"><span>OFF <b>—</b></span><span>DEF <b>—</b></span><span>NET <b>—</b></span></div></div>`;
   const ppg=leagueTeamMetricRank(club.id,"ppg");
   const rpg=leagueTeamMetricRank(club.id,"rpg");
   const apg=leagueTeamMetricRank(club.id,"apg");
   const off=leagueTeamResultMetricRank(club.id,"off");
   const def=leagueTeamResultMetricRank(club.id,"def");
   const net=leagueTeamResultMetricRank(club.id,"net");
-  return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>#${ppg||"—"}</b></span><span>RPG <b>#${rpg||"—"}</b></span><span>APG <b>#${apg||"—"}</b></span></div><div class="broadcastStatRanks secondary"><span>OFF <b>#${off||"—"}</b></span><span>DEF <b>#${def||"—"}</b></span><span>NET <b>#${net||"—"}</b></span></div></div>`;
+  return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>#${ppg||"—"}</b></span><span>RPG <b>#${rpg||"—"}</b></span><span>APG <b>#${apg||"—"}</b></span></div><div class="broadcastStatRanks rankSecondary"><span>OFF <b>#${off||"—"}</b></span><span>DEF <b>#${def||"—"}</b></span><span>NET <b>#${net||"—"}</b></span></div></div>`;
 }
 
 function worldCupStageLabel(stage){
