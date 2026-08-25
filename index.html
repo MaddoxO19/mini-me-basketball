@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.0 Team Performance</title>
+<title>Mini&Me Basketball — v0.1.17.2 Career Integrity Hotfix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1080,19 +1080,45 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 @media(max-width:600px){.legacyRecordGrid{grid-template-columns:repeat(2,1fr)}.legacySeasonRow{grid-template-columns:46px minmax(0,1fr)}.legacySeasonAwards{grid-column:1/-1;grid-template-columns:1fr 1fr}.legacySeasonAwards span{border-left:0;border-top:1px solid var(--line);padding:6px 0 0}.legacySeasonHonours{grid-template-columns:1fr}.legacyFranchiseRow{grid-template-columns:18px 25px minmax(0,1fr) 38px 38px 38px}}
 
 
-/* v0.1.17.0 — My Team Performance */
+/* v0.1.17.1 — My Team Performance */
 .performanceHero{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.06),var(--panel));border-radius:14px;padding:13px;margin-top:8px}.performanceHero h3{margin:2px 0;font-size:17px}.performanceHero p{font-size:7px;color:var(--muted);margin:0;line-height:1.4}.performanceHero>strong{font-size:23px;color:var(--accent2);text-align:center}.performanceHero>strong small{display:block;font-size:5.5px;color:var(--muted)}
 .teamProductionGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}.teamProductionGrid>div{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px;text-align:center}.teamProductionGrid small{display:block;font-size:5.5px;color:var(--muted);font-weight:900}.teamProductionGrid b{display:block;font-size:13px;margin:2px 0}.teamProductionGrid span{font-size:5.5px;color:var(--accent2)}
 .performanceInsightStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px}.performanceInsightStrip>div{border:1px solid var(--line);background:#10161d;border-radius:10px;padding:8px}.performanceInsightStrip small{display:block;font-size:5.3px;color:var(--accent2);font-weight:900}.performanceInsightStrip b{display:block;font-size:8px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.performanceInsightStrip span{font-size:6px;color:var(--muted)}
 .performanceToolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}.performanceToolbar>span{font-size:6.5px;color:var(--muted);white-space:nowrap}.performanceToolbar>div{display:flex;gap:4px;overflow-x:auto}.performanceToolbar button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:5px 7px;font-size:6px;font-weight:900;white-space:nowrap}.performanceToolbar button.active{background:var(--accent);border-color:var(--accent);color:#111}
 .performanceTableWrap{border:1px solid var(--line);border-radius:12px;overflow-x:auto;background:var(--panel)}.performanceTable{width:100%;border-collapse:collapse;min-width:760px}.performanceTable th{font-size:5.5px;color:var(--muted);text-align:center;padding:7px 6px;background:#111820;border-bottom:1px solid var(--line)}.performanceTable th:first-child{text-align:left;min-width:220px}.performanceTable td{font-size:7px;text-align:center;padding:8px 6px;border-top:1px solid var(--line)}.performanceTable td:first-child{text-align:left}.performancePlayer{display:flex;align-items:center;justify-content:space-between;gap:7px}.performancePlayer>div{min-width:0}.performancePlayer b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.performancePlayer small{display:block;font-size:5.8px;color:var(--muted);margin-top:2px}.performancePlayer>span{font-size:5.3px;border:1px solid var(--line);border-radius:999px;padding:3px 5px;white-space:nowrap;color:var(--muted)}.performancePlayer>span.high{border-color:#6c5730;color:var(--accent2)}.performancePlayer>span.productive{border-color:#41634c;color:#84c99b}.performancePlayer>span.low{border-color:#6b3b42;color:#e6a0a7}.performancePlayer>span.sample{opacity:.7}
 .performanceLegend{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:7px}.performanceLegend span{font-size:5.7px;color:var(--muted);display:flex;align-items:center;gap:4px}.performanceLegend i{width:7px;height:7px;border-radius:50%;display:inline-block;background:#78838f}.performanceLegend i.high{background:#d8a84d}.performanceLegend i.productive{background:#65b982}.performanceLegend i.low{background:#cc6c78}
-@media(max-width:600px){.teamProductionGrid{grid-template-columns:repeat(3,1fr)}.performanceInsightStrip{grid-template-columns:1fr}.performanceHero{align-items:flex-start}.performanceToolbar{align-items:flex-start;flex-direction:column}.performanceToolbar>div{width:100%}.performanceTable th:first-child{min-width:200px}}
+@media(max-width:600px){.teamProductionGrid{grid-template-columns:repeat(3,1fr)}.performanceInsightStrip{grid-template-columns:repeat(3,minmax(0,1fr))}.performanceHero{align-items:flex-start}.performanceToolbar{align-items:flex-start;flex-direction:column}.performanceToolbar>div{width:100%}.performanceTable th:first-child{min-width:145px}}
+
+
+/* v0.1.17.1 — Team Performance mobile polish */
+.performanceInsightStrip>div{text-align:center;min-width:0;padding:9px 6px}
+.performanceInsightStrip small{font-size:5px}
+.performanceInsightStrip b{font-size:7.3px}
+.performanceInsightStrip span{font-size:5.4px}
+.performanceTable{min-width:630px}
+.performanceTable th:first-child,.performanceTable td:first-child{width:150px;min-width:150px}
+.performancePlayer{gap:4px}
+.performancePlayer>span{padding:3px 4px;font-size:5px}
+@media(max-width:600px){
+  .performanceInsightStrip{gap:5px}
+  .performanceInsightStrip>div{padding:9px 5px}
+  .performanceInsightStrip small{font-size:4.8px}
+  .performanceInsightStrip b{font-size:6.8px}
+  .performanceInsightStrip span{font-size:5.1px}
+  .performanceTable{min-width:610px}
+  .performanceTable th:first-child,.performanceTable td:first-child{width:145px;min-width:145px}
+  .performanceTable th,.performanceTable td{padding-left:4px;padding-right:4px}
+}
+
+
+/* v0.1.17.2 — career integrity hotfix */
+.teamIdentityProfileLink{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:inherit;font:inherit;text-align:left;padding:0;margin:0;cursor:pointer;max-width:100%}
+.teamIdentityProfileLink:hover b,.teamIdentityProfileLink:hover>span:last-child{color:var(--accent2)}
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4687,6 +4713,8 @@ function defensiveAwardScore(G,p) {
 }
 function addAward(G,p,award) { if (!p) return; p.awardHistory=p.awardHistory||[]; p.awardHistory.push({season:G.season,award}); }
 function settleSeasonAwards(G) {
+  G.awards=G.awards||{};
+  if(G.seasonAwards?.season===G.season&&G.awards[`S${G.season}_MVP`])return G.seasonAwards;
   const players=G.clubs.flatMap(c=>c.roster).filter(p=>p.seasonStats?.gp>0);
   const ranked=[...players].sort((a,b)=>awardCandidateScore(G,b)-awardCandidateScore(G,a));
   const mvp=ranked[0]||null;
@@ -4716,6 +4744,7 @@ function settleSeasonAwards(G) {
   G.seasonAwards={season:G.season,mvp:mvp?.id||null,dpoy:dpoy?.id||null,roy:roy?.id||null,sixthMan:sixth?.id||null,mip:mip?.id||null,
     allNbaFirst:allNba1.map(p=>p.id),allNbaSecond:allNba2.map(p=>p.id),allNbaThird:allNba3.map(p=>p.id),allDefensiveFirst:allDef1.map(p=>p.id),allDefensiveSecond:allDef2.map(p=>p.id)};
   logEvent(G, `Season awards settled from recorded performance. MVP: ${mvp?.name||"n/a"}; DPOY: ${dpoy?.name||"n/a"}; ROY: ${roy?.name||"n/a"}.`);
+  return G.seasonAwards;
 }
 
 // ---------------------------------------------------------------------
@@ -4996,7 +5025,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.0 Team Performance",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.2 Career Integrity Hotfix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5102,11 +5131,11 @@ function teamMark(t,cl="bigmark"){return `<span class="${cl}" style="background:
 
 function teamIdentityInline(t,nameClass=""){
   if(!t)return `<span class="teamIdentityInline"><span class="teamMiniCrest emptyCrest">?</span><span class="${nameClass}">TBD</span></span>`;
-  return `<span class="teamIdentityInline">${teamMark(t,"teamMiniCrest")}<span class="${nameClass}">${t.name}</span></span>`;
+  return `<button type="button" class="teamIdentityInline teamIdentityProfileLink" data-clubprofile="${t.id}">${teamMark(t,"teamMiniCrest")}<span class="${nameClass}">${t.name}</span></button>`;
 }
 function teamIdentityCompact(t,label=""){
   if(!t)return `<span class="teamIdentityCompact"><span class="teamMiniCrest emptyCrest">?</span><span><b>TBD</b>${label?`<small>${label}</small>`:""}</span></span>`;
-  return `<span class="teamIdentityCompact">${teamMark(t,"teamMiniCrest")}<span><b>${t.name}</b>${label?`<small>${label}</small>`:""}</span></span>`;
+  return `<button type="button" class="teamIdentityCompact teamIdentityProfileLink" data-clubprofile="${t.id}">${teamMark(t,"teamMiniCrest")}<span><b>${t.name}</b>${label?`<small>${label}</small>`:""}</span></button>`;
 }
 
 function phaseName(){return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
@@ -5835,6 +5864,7 @@ function renderResultWindow(){
     ui.resultReturn==="schedule"?"Back to Schedule":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
     ui.resultReturn==="cup_final"?"Return to Regular Season":
+    ui.resultReturn==="postseason_transition"?(G.phase==="CHAMPION"?"View Season Review":G.phase==="PLAYOFFS"?"Continue to Playoffs":"Continue Postseason"):
     "Next Game";
   $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
@@ -5850,6 +5880,9 @@ function renderResultWindow(){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
     }
     if(ui.resultReturn==="cup_final"){
+      ui.resultReturn=null;ui.page="home";show("game");render();return;
+    }
+    if(ui.resultReturn==="postseason_transition"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
     }
     ui.resultReturn=null;ui.page="home";show("game");render()
@@ -5901,7 +5934,17 @@ function actionSpec(){
     if(cupFixture)return{main:`Play NBA Cup ${cupFixture.cupStage}`,type:"game",competition:"NBA Cup"};
     return{main:"Sim Game",type:"game"};
   }
-  if(["SUMMER_LEAGUE","PRESEASON","PLAY_IN","PLAYOFFS","WORLD_CUP"].includes(G.phase))return{main:"Sim Game",type:"game"};
+  if(G.phase==="PLAY_IN"){
+    const st=userPostseasonState();
+    if(st?.qualified)return{main:"Complete League Play-In",type:"game"};
+    return{main:"Play Play-In Game",type:"game"};
+  }
+  if(G.phase==="PLAYOFFS"){
+    const st=userPostseasonState(),ctx=st?.series?playoffSeriesContext(st.series):null;
+    if(ctx&&!st.series.complete)return{main:`Play Game ${ctx.nextGame}`,type:"game"};
+    return{main:"Advance Playoffs",type:"game"};
+  }
+  if(["SUMMER_LEAGUE","PRESEASON","WORLD_CUP"].includes(G.phase))return{main:"Sim Game",type:"game"};
   if(G.phase==="DRAFT_NIGHT")return{main:"Open Draft Board",type:"draft"};
   if(G.phase==="OFFSEASON")return{main:"Begin Offseason",type:"phase"};
   if(G.phase==="CHAMPION")return null;
@@ -6025,6 +6068,15 @@ function advanceFromUi(n){
     // Show the game result first, then progress to the Summer League summary.
     if(phaseBefore==="SUMMER_LEAGUE"&&G.phase==="SUMMER_LEAGUE_COMPLETE"&&newUserGame){
       openResultWindow(newUserGame,"summer_summary");
+      return;
+    }
+
+    // A user's postseason game must NEVER disappear just because the same
+    // simulation also moved PLAY_IN -> PLAYOFFS or PLAYOFFS -> CHAMPION.
+    // This was the Season 2 flow regression: the result existed, but the UI
+    // jumped directly to the next phase / season summary.
+    if(newUserGame&&(phaseBefore==="PLAY_IN"||phaseBefore==="PLAYOFFS")){
+      openResultWindow(newUserGame,"postseason_transition");
       return;
     }
 
@@ -6730,6 +6782,13 @@ function ensureSeasonSummary(){
   G.seasonSummaries=G.seasonSummaries||[];
   let existing=G.seasonSummaries.find(x=>x.season===G.season);
   if(existing){
+    ensureSeasonAwardsIntegrity();
+    // Repair summaries produced by the Season 2 award regression.
+    const mvpId=G.awards?.[`S${G.season}_MVP`];
+    if(mvpId&&!(existing.awards||[]).some(x=>x.label==="MVP")){
+      existing.awards=existing.awards||[];
+      existing.awards.unshift({label:"MVP",playerId:mvpId,name:summaryPlayerName(mvpId)});
+    }
     // Presentation migration for summaries created before the All-Star winner mapping fix.
     const winner=allStarWinnerCode();
     if(winner){
@@ -6852,7 +6911,17 @@ function allStarNextMatch(live){
   return null;
 }
 function allStarRanking(live){return Object.entries(live.records).map(([team,r])=>({team,...r,diff:r.pf-r.pa})).sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);}
+function ensureSeasonAwardsIntegrity(){
+  G.awards=G.awards||{};
+  const key=`S${G.season}_MVP`;
+  if(!G.awards[key]){
+    const eligible=G.clubs.flatMap(c=>c.roster).filter(p=>p.seasonStats?.gp>0);
+    if(eligible.length)settleSeasonAwards(G);
+  }
+  return G.awards[key]||null;
+}
 function buildSeasonSummary(){
+  ensureSeasonAwardsIntegrity();
   const season=G.season,reg=seasonRegularFinish();
   const po=G.playoffsLive||G.playoffs;
   const finals=(po?.series||[]).find(s=>s.stage==="FINALS");
@@ -6991,7 +7060,7 @@ function postseasonUserHome(){
     }
 
     const status=ctx.userWins===ctx.oppWins?`Series tied ${ctx.userWins}–${ctx.oppWins}`:ctx.userWins>ctx.oppWins?`${x.name} lead ${ctx.userWins}–${ctx.oppWins}`:`${opp?.name||"Opponent"} lead ${ctx.oppWins}–${ctx.userWins}`;
-    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup playoffMatchupClean"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress playoffSimAction">Sim Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup playoffMatchupClean"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress playoffSimAction">Play Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
   }
   return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>${st.stage||"Postseason"}</span></div><div class="postseasonHomeBody"><h3>${x.name} remain alive</h3><p>The next postseason matchup is being prepared.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Postseason</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
 }
@@ -8499,7 +8568,7 @@ function bind(){
   if($("#scoutBackMore"))$("#scoutBackMore").onclick=()=>{ui.page="more";render()};
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
-  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
+  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
   if($("#profileNegotiateFA"))$("#profileNegotiateFA").onclick=()=>{ui.faTargetId=ui.playerProfileId;ui.faFeedback=null;ui.page="team";ui.teamTab="freeagency";render()};
   if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
 if($("#editTeamIdentityBtn"))$("#editTeamIdentityBtn").onclick=()=>{const e=$("#teamIdentityEditor");if(e){e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"start"})}};
