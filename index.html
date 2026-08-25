@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.10 World Cup Result Handoff Fix</title>
+<title>Mini&Me Basketball — v0.1.17.11 International Flags</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1173,10 +1173,47 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
  .wcUpcomingRow strong{font-size:8.5px}
 }
 
+
+/* v0.1.17.11 — International national flag system */
+.nationalFlagMark{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:25px;border-radius:3px;overflow:hidden;
+  background:#f4f4f4;border:1px solid rgba(255,255,255,.18);
+  box-shadow:0 1px 3px rgba(0,0,0,.35);
+  font-size:29px;line-height:1;vertical-align:middle;
+  font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+}
+.nationalFlagMark.small{width:23px;height:15px;font-size:18px;border-radius:2px;box-shadow:none}
+.nationalFlagMark.heroFlag{width:58px;height:38px;font-size:44px;border-radius:4px}
+.nationalFlagMark.headerFlag{width:24px;height:16px;font-size:18px;margin-right:5px}
+.nationalFlagMark.lineScoreFlag{width:38px;height:25px;font-size:29px;margin-right:9px}
+.fibaNationMark.teamMark,.wcNationSide .fibaNationMark{
+  width:58px;height:38px;font-size:44px;border-radius:4px;
+  background:#f5f5f5;padding:0;border:1px solid rgba(255,255,255,.18);
+}
+.nationalFlagLabel{display:inline-flex;align-items:center;gap:6px;min-width:0;vertical-align:middle}
+.nationalFlagLabel>span:last-child{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.nationalFlagLabel.compact{gap:5px}
+.nationalFlagLabel.tableFlag{font-weight:750}
+.nationalFlagLabel.resultFlag{max-width:100%}
+.nationalFlagLabel.tabFlag{justify-content:center}
+.nationalFlagLabel.championFlag{font-size:inherit}
+.nationalFlagLabel.medalFlag,.nationalFlagLabel.historyFlag{gap:5px}
+.wcUpcomingOpponent{display:flex!important;align-items:center;gap:6px}
+.wcUpcomingOpponent>span:first-child{flex:0 0 auto}
+.fibaOtherRow em{font-style:normal;color:var(--muted);margin:0 3px}
+.intlCommandFlag{display:flex;align-items:center;justify-content:center;background:transparent!important;border:0!important}
+@media(max-width:520px){
+  .nationalFlagMark{width:34px;height:22px;font-size:26px}
+  .nationalFlagMark.small{width:21px;height:14px;font-size:16px}
+  .nationalFlagMark.heroFlag{width:52px;height:34px;font-size:40px}
+  .fibaNationMark.teamMark,.wcNationSide .fibaNationMark{width:52px;height:34px;font-size:40px}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.10</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.11</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5109,7 +5146,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.10 World Cup Result Handoff Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.11 International Flags",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5365,6 +5402,13 @@ function flagEmoji(code){
   const iso=NATIONAL_FLAG_ISO[code]||code;
   if(!iso||iso.length!==2)return"🏳";
   return [...iso.toUpperCase()].map(ch=>String.fromCodePoint(127397+ch.charCodeAt(0))).join("");
+}
+function nationalFlagMark(code,cls=""){
+  return `<span class="nationalFlagMark ${cls}" role="img" aria-label="${nationName(code)} flag">${flagEmoji(code)}</span>`;
+}
+function nationalFlagLabel(code,name=null,cls=""){
+  const label=name||nationName(code);
+  return `<span class="nationalFlagLabel ${cls}">${nationalFlagMark(code,"small")}<span>${label}</span></span>`;
 }
 const EXTRA_NATION_NAMES={RUS:"Russia",HAI:"Haiti"};
 function nationName(code){return NATIONAL_TEAMS.find(n=>n.code===code)?.name||EXTRA_NATION_NAMES[code]||code||"International"}
@@ -6596,7 +6640,7 @@ function worldCupUpcomingFixturesHtml(live){
     for(const f of worldCupNextEventPairs(live))add(worldCupStageLabel(f.stage),worldCupStageLabel(f.stage),f.a,f.b);
   }
   const top=rows.slice(0,3);
-  return `<div class="card wcUpcoming"><div class="wcUpcomingHead"><h3>Upcoming Fixtures</h3><small>FIBA World Cup schedule</small></div>${top.length?top.map((r,i)=>`<div class="wcUpcomingRow"><div><b>${r.eventNo}</b><small>${r.stage}</small></div><strong>${r.venue==="Home"?"vs":"@"} ${fibaNationName(r.opp)}</strong><span>${i===0?"NEXT":"Scheduled"}</span></div>`).join(""):`<div class="empty">No further World Cup fixture is currently scheduled for your nation.</div>`}</div>`;
+  return `<div class="card wcUpcoming"><div class="wcUpcomingHead"><h3>Upcoming Fixtures</h3><small>FIBA World Cup schedule</small></div>${top.length?top.map((r,i)=>`<div class="wcUpcomingRow"><div><b>${r.eventNo}</b><small>${r.stage}</small></div><strong class="wcUpcomingOpponent"><span>${r.venue==="Home"?"vs":"@"}</span>${nationalFlagLabel(r.opp,fibaNationName(r.opp),"compact")}</strong><span>${i===0?"NEXT":"Scheduled"}</span></div>`).join(""):`<div class="empty">No further World Cup fixture is currently scheduled for your nation.</div>`}</div>`;
 }
 function worldCupHomeHtml(){
   const live=G.worldCupLive||initializeWorldCupLive(G);
@@ -6966,11 +7010,11 @@ function renderAllStarWindow(){
   });
 }
 function fibaNationName(code){return nat(code)?.name||code||'—'}
-function fibaHomeHtml(){const live=G.internationalWindowLive;if(!live||live.complete)return'';const md=(live.matchdayIndex||0)+1,total=live.matchdays?.length||1,code=G.userNationalGM?.nationCode,fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));return `<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA Window ${live.windowNo}</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>World Cup Qualification</h3><p>Club play is paused while the international window is active.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your National Team</div><div class="allStarTeams"><b>${fibaNationName(fixture.a)}</b><span>vs</span><b>${fibaNationName(fixture.b)}</b></div></div>`:`<div class="card"><h3>International Matchday ${md}</h3><div class="smallcopy">Your nation has no fixture on this matchday. You can advance the window and follow the other qualification results.</div></div>`}<div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`}
+function fibaHomeHtml(){const live=G.internationalWindowLive;if(!live||live.complete)return'';const md=(live.matchdayIndex||0)+1,total=live.matchdays?.length||1,code=G.userNationalGM?.nationCode,fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));return `<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA Window ${live.windowNo}</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>World Cup Qualification</h3><p>Club play is paused while the international window is active.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your National Team</div><div class="allStarTeams"><b>${nationalFlagLabel(fixture.a,fibaNationName(fixture.a))}</b><span>vs</span><b>${nationalFlagLabel(fixture.b,fibaNationName(fixture.b))}</b></div></div>`:`<div class="card"><h3>International Matchday ${md}</h3><div class="smallcopy">Your nation has no fixture on this matchday. You can advance the window and follow the other qualification results.</div></div>`}<div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`}
 function openFibaWindow(){show('fibaWindow');renderFibaWindow()}
 
 function fibaNationByCode(code){return(G.nationalTeams||[]).find(n=>n.code===code)||null}
-function fibaNationMark(code){return`<span class="fibaNationMark teamMark">${String(code||"").slice(0,3)}</span>`}
+function fibaNationMark(code){return nationalFlagMark(code,"fibaNationMark")}
 function fibaUserGame(live){
   if(!live?.lastUserGameId)return null;
   return (live.games||[]).find(g=>g.id===live.lastUserGameId)||null;
@@ -6998,14 +7042,14 @@ function fibaBoxScoreHtml(game){
   const other=side==="teamA"?game.teamB:game.teamA;
   const sorted=[...lines].sort((a,b)=>(b.starter-a.starter)||(b.min-a.min));
   const cols=`<colgroup><col class="playerCol"><col class="minCol"><col class="statCol"><col class="shootCol"><col class="shootCol"><col class="shootCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="statCol"><col class="pmCol"></colgroup>`;
-  return `<div class="boxScoreSection"><div class="fibaBoxTabs"><button data-fibaside="teamA" class="${side==="teamA"?"active":""}">${fibaNationName(game.teamA)}</button><button data-fibaside="teamB" class="${side==="teamB"?"active":""}">${fibaNationName(game.teamB)}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${boxQualityStar(p)}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div>${boxQualityLegend()}<div class="boxHint">Swipe horizontally for shooting and advanced box-score statistics</div></div>`;
+  return `<div class="boxScoreSection"><div class="fibaBoxTabs"><button data-fibaside="teamA" class="${side==="teamA"?"active":""}">${nationalFlagLabel(game.teamA,fibaNationName(game.teamA),"tabFlag")}</button><button data-fibaside="teamB" class="${side==="teamB"?"active":""}">${nationalFlagLabel(game.teamB,fibaNationName(game.teamB),"tabFlag")}</button></div><div class="playerBoxScroll"><table class="playerBox">${cols}<thead><tr><th class="player">PLAYER</th><th>MIN</th><th>PTS</th><th>FG</th><th>3PT</th><th>FT</th><th>REB</th><th>AST</th><th>STL</th><th>BLK</th><th>TO</th><th>PF</th><th>+/-</th></tr></thead><tbody>${sorted.map(p=>{const pm=+p.plusMinus||0;return `<tr><td class="player"><b>${boxQualityStar(p)}${p.name}</b><small>${p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:(p.position||"")}${p.role?` · ${p.role}`:""}</small></td><td>${p.min||0}</td><td class="hi">${p.pts||0}</td><td>${shootingText(p.fgm,p.fga)}</td><td>${shootingText(p.tpm,p.tpa)}</td><td>${shootingText(p.ftm,p.fta)}</td><td>${p.reb||0}</td><td>${p.ast||0}</td><td>${p.stl||0}</td><td>${p.blk||0}</td><td>${p.tov||0}</td><td>${p.pf||0}</td><td class="${pm>0?"pos":pm<0?"neg":""}">${plusMinusText(pm)}</td></tr>`}).join("")}</tbody></table></div>${boxQualityLegend()}<div class="boxHint">Swipe horizontally for shooting and advanced box-score statistics</div></div>`;
 }
 function fibaGroupResultsHtml(live,userGame){
   if(!userGame)return"";
   const sameGroup=(live.games||[]).filter(g=>g.groupId===userGame.groupId&&g.id!==userGame.id);
   if(!sameGroup.length)return"";
   const recent=sameGroup.slice(-3);
-  return `<div class="fibaOtherResults"><h4>Other Results · Your Group</h4><div class="card" style="padding:0;overflow:hidden">${recent.map(g=>`<div class="fibaOtherRow"><span>${fibaNationName(g.teamA)} vs ${fibaNationName(g.teamB)}</span><b>${g.scoreA}–${g.scoreB}</b></div>`).join("")}</div></div>`;
+  return `<div class="fibaOtherResults"><h4>Other Results · Your Group</h4><div class="card" style="padding:0;overflow:hidden">${recent.map(g=>`<div class="fibaOtherRow"><span>${nationalFlagLabel(g.teamA,fibaNationName(g.teamA),"compact")} <em>vs</em> ${nationalFlagLabel(g.teamB,fibaNationName(g.teamB),"compact")}</span><b>${g.scoreA}–${g.scoreB}</b></div>`).join("")}</div></div>`;
 }
 function returnFromFibaWindow(){
   if(G.internationalWindowLive){
@@ -7065,7 +7109,7 @@ function renderFibaWindow(){
     return;
   }
 
-  $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA World Cup Qualification</b><small>Window ${live.windowNo}</small></div><div class="allStarBody"><h3>Matchday ${nextMd} of ${total}</h3><p>Your club schedule is paused. Complete your national team fixture before returning to league action.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>${fibaNationName(fixture.a)}</b><span>vs</span><b>${fibaNationName(fixture.b)}</b></div></div>`:`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>None scheduled</b></div></div>`}</div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Play Matchday ${nextMd}</button></div>`;
+  $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>FIBA World Cup Qualification</b><small>Window ${live.windowNo}</small></div><div class="allStarBody"><h3>Matchday ${nextMd} of ${total}</h3><p>Your club schedule is paused. Complete your national team fixture before returning to league action.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>${nationalFlagLabel(fixture.a,fibaNationName(fixture.a))}</b><span>vs</span><b>${nationalFlagLabel(fixture.b,fibaNationName(fixture.b))}</b></div></div>`:`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>None scheduled</b></div></div>`}</div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Play Matchday ${nextMd}</button></div>`;
 
   $("#playFibaMd").onclick=async()=>{
     const r=advanceQualificationWindowEvent(G);
@@ -8685,13 +8729,13 @@ function intlWorldCupStageLabel(stage){
 }
 function intlWorldCupTableHtml(title,rows,userCode){
   if(!rows?.length)return"";
-  return `<div class="intlWcGroup"><div class="intlWcGroupHead"><b>${title}</b><small>${rows[0]?.gp||0} GP</small></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>W</th><th>L</th><th>DIFF</th><th>PTS</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${r.code===userCode?"userNationRow":""}"><td>${i+1}</td><td>${flagEmoji(r.code)} ${nat(r.code)?.name||r.code}</td><td>${r.w||0}</td><td>${r.l||0}</td><td>${(r.pf||0)-(r.pa||0)>=0?"+":""}${(r.pf||0)-(r.pa||0)}</td><td>${r.points||0}</td></tr>`).join("")}</tbody></table></div></div>`;
+  return `<div class="intlWcGroup"><div class="intlWcGroupHead"><b>${title}</b><small>${rows[0]?.gp||0} GP</small></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>W</th><th>L</th><th>DIFF</th><th>PTS</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${r.code===userCode?"userNationRow":""}"><td>${i+1}</td><td>${nationalFlagLabel(r.code,nat(r.code)?.name||r.code,"tableFlag")}</td><td>${r.w||0}</td><td>${r.l||0}</td><td>${(r.pf||0)-(r.pa||0)>=0?"+":""}${(r.pf||0)-(r.pa||0)}</td><td>${r.points||0}</td></tr>`).join("")}</tbody></table></div></div>`;
 }
 function intlWorldCupGameRows(games,userCode){
   if(!games?.length)return `<div class="card empty">No tournament results recorded for this stage yet.</div>`;
   return `<div class="intlWcGames">${games.slice().reverse().slice(0,12).map(g=>{
     const a=nat(g.teamA),b=nat(g.teamB),user=(g.teamA===userCode||g.teamB===userCode);
-    return `<div class="intlWcGame ${user?"userGame":""}" data-intlresult="${g.id||g.gameId||""}"><div><b>${flagEmoji(g.teamA)} ${a?.name||g.teamA} <span>${g.scoreA}</span></b><b>${flagEmoji(g.teamB)} ${b?.name||g.teamB} <span>${g.scoreB}</span></b></div><small>${intlWorldCupStageLabel(g.stage)} · Final</small></div>`;
+    return `<div class="intlWcGame ${user?"userGame":""}" data-intlresult="${g.id||g.gameId||""}"><div><b>${nationalFlagLabel(g.teamA,a?.name||g.teamA,"resultFlag")} <span>${g.scoreA}</span></b><b>${nationalFlagLabel(g.teamB,b?.name||g.teamB,"resultFlag")} <span>${g.scoreB}</span></b></div><small>${intlWorldCupStageLabel(g.stage)} · Final</small></div>`;
   }).join("")}</div>`;
 }
 
@@ -8701,7 +8745,7 @@ function internationalOverview(n){
   const campaign=internationalCampaignStatus(n);
   const recent=(n.games||[]).slice().reverse().slice(0,3);
   return `<div class="intlCommandHero">
-    <div class="intlCommandIdentity"><div class="intlCommandFlag">${flagEmoji(n.code)}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
+    <div class="intlCommandIdentity"><div class="intlCommandFlag">${nationalFlagMark(n.code,"heroFlag")}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
     <div class="intlCommandRank"><b>#${wr||"—"}</b><small>WORLD</small></div>
   </div>
   <div class="intlCommandMetrics">
@@ -8772,7 +8816,7 @@ function internationalQualification(n){
   const q=G.nationalQualification,groups=(q.groups||[]).filter(g=>filter==="ALL"||g.region===filter);
   return `<div class="card"><div class="eyebrow">${q.round.replaceAll("_"," ")}</div><h3>FIBA World Cup Qualification</h3><div class="smallcopy">Browse your region or the complete qualification field.</div></div>
     <div class="intlRegionTabs">${regions.map(r=>`<button data-intlregion="${r}" class="${filter===r?"active":""}">${r==="ALL"?"All FIBA":r==="AsiaOceania"?"Asia/Oceania":r}</button>`).join("")}</div>
-    ${groups.map(g=>{const table=qualificationTable(G,g.id);return `<div class="card intlGroupCard"><div class="intlGroupHead"><div class="intlGroupTitle"><b>${g.region} · ${g.label||g.id}</b><span>${g.teamCodes.includes(n.code)?"YOUR GROUP":""}</span><small>${q.round.replaceAll("_"," ")}</small></div><div class="intlGroupGp">${table[0]?.gp||0}<small>GP</small></div></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>GP</th><th>W</th><th>L</th><th>PTS</th></tr></thead><tbody>${table.map((x,i)=>`<tr ${x.code===n.code?`style="font-weight:900"`:""}><td>${i+1}</td><td>${flagEmoji(x.code)} ${nat(x.code)?.name||x.code}</td><td>${x.gp}</td><td>${x.w}</td><td>${x.l}</td><td>${x.points}</td></tr>`).join("")}</tbody></table></div></div>`}).join("")}`;
+    ${groups.map(g=>{const table=qualificationTable(G,g.id);return `<div class="card intlGroupCard"><div class="intlGroupHead"><div class="intlGroupTitle"><b>${g.region} · ${g.label||g.id}</b><span>${g.teamCodes.includes(n.code)?"YOUR GROUP":""}</span><small>${q.round.replaceAll("_"," ")}</small></div><div class="intlGroupGp">${table[0]?.gp||0}<small>GP</small></div></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>GP</th><th>W</th><th>L</th><th>PTS</th></tr></thead><tbody>${table.map((x,i)=>`<tr ${x.code===n.code?`style="font-weight:900"`:""}><td>${i+1}</td><td>${nationalFlagLabel(x.code,nat(x.code)?.name||x.code,"tableFlag")}</td><td>${x.gp}</td><td>${x.w}</td><td>${x.l}</td><td>${x.points}</td></tr>`).join("")}</tbody></table></div></div>`}).join("")}`;
 }
 function internationalWorldCup(){
   const userCode=G.userNationalGM?.nationCode;
@@ -8813,15 +8857,15 @@ function internationalWorldCup(){
   const champ=nat(last.championCode),runner=nat(last.runnerUpCode),bronze=nat(last.bronzeCode),mvp=playerByAnyId(last.mvpPlayerId);
   const final=(last.games||[]).slice().reverse().find(g=>g.stage==="FINAL");
   const userFinish=last.championCode===userCode?"CHAMPION":last.runnerUpCode===userCode?"RUNNER-UP":last.bronzeCode===userCode?"BRONZE":(last.qualifiedTeamCodes||[]).includes(userCode)?"QUALIFIED":"DID NOT QUALIFY";
-  return `<div class="intlWcHero complete"><div><div class="eyebrow">WORLD CUP ${last.cycle}</div><h2>${flagEmoji(last.championCode)} ${champ?.name||last.championCode}</h2><p>FIBA World Champions · Season ${last.season}</p></div><div class="intlWcBadge champion">CHAMPION</div></div>
+  return `<div class="intlWcHero complete"><div><div class="eyebrow">WORLD CUP ${last.cycle}</div><h2>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"championFlag")}</h2><p>FIBA World Champions · Season ${last.season}</p></div><div class="intlWcBadge champion">CHAMPION</div></div>
     <div class="intlWcPodium">
-      <div><small>CHAMPION</small><b>${flagEmoji(last.championCode)} ${champ?.name||last.championCode}</b></div>
-      <div><small>RUNNER-UP</small><b>${flagEmoji(last.runnerUpCode)} ${runner?.name||last.runnerUpCode}</b></div>
-      <div><small>BRONZE</small><b>${flagEmoji(last.bronzeCode)} ${bronze?.name||last.bronzeCode}</b></div>
+      <div><small>CHAMPION</small><b>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"medalFlag")}</b></div>
+      <div><small>RUNNER-UP</small><b>${nationalFlagLabel(last.runnerUpCode,runner?.name||last.runnerUpCode,"medalFlag")}</b></div>
+      <div><small>BRONZE</small><b>${nationalFlagLabel(last.bronzeCode,bronze?.name||last.bronzeCode,"medalFlag")}</b></div>
     </div>
     <div class="intlWcFinalScore"><div><small>WORLD CUP FINAL</small><b>${final?`${nat(final.teamA)?.name||final.teamA} ${final.scoreA}–${final.scoreB} ${nat(final.teamB)?.name||final.teamB}`:"Final recorded"}</b></div><strong>${userFinish}</strong></div>
     ${mvp?`<div class="intlWcMvp"><div><small>WORLD CUP MVP</small><b>${playerNameLink(mvp)}</b><span>${positionLabel(mvp)} · ${nationDisplay(mvp.nationality)}</span></div><strong>${mvp.ovr}<small>OVR</small></strong></div>`:""}
-    <div class="sectionTitle">Recent World Cups</div><div class="intlWcHistory">${history.slice(0,5).map(w=>`<div><span>WC ${w.cycle}</span><b>${flagEmoji(w.championCode)} ${nat(w.championCode)?.name||w.championCode}</b><small>Season ${w.season}</small></div>`).join("")}</div>
+    <div class="sectionTitle">Recent World Cups</div><div class="intlWcHistory">${history.slice(0,5).map(w=>`<div><span>WC ${w.cycle}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><small>Season ${w.season}</small></div>`).join("")}</div>
     <div class="sectionTitle">Final Tournament Results</div>${intlWorldCupGameRows((last.games||[]).filter(g=>["QUARTERFINAL","SEMIFINAL","BRONZE","FINAL"].includes(g.stage)),userCode)}`;
 }
 
@@ -8838,7 +8882,7 @@ function international(){
   else if(ui.intlTab==="fixtures")body=internationalFixtures(n);
   else if(ui.intlTab==="qual")body=internationalQualification(n);
   else body=internationalWorldCup();
-  return header(n.name,`${flagEmoji(n.code)} ${n.region} · World #${nationalWorldRank(code)||"—"}`)+`<div class="tabs compactTabRow intlMainTabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+  return header(n.name,`${nationalFlagMark(n.code,"headerFlag")} ${n.region} · World #${nationalWorldRank(code)||"—"}`)+`<div class="tabs compactTabRow intlMainTabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 
 
