@@ -1283,8 +1283,20 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   user-select:none;
   -webkit-user-drag:none;
 }
-.bigmark,.mark,.teamMiniCrest,.teamTinyCrest,.teamProfileCrest,.cupChampionCrest,.profileHeroBadge{
+.bigmark,.mark,.teamMiniCrest,.teamTinyCrest,.teamProfileCrest,.cupChampionCrest{
   background:transparent!important;
+  overflow:visible!important;
+}
+/* v0.1.18.2 — Player Profile jersey badge restored after logo transparency pass */
+.profileHeroBadge{
+  background:var(--panel2)!important;
+  border:1px solid var(--line)!important;
+  color:var(--text)!important;
+  overflow:hidden!important;
+}
+.profileHeroBadge.teamProfileCrest{
+  background:transparent!important;
+  border:0!important;
   overflow:visible!important;
 }
 .broadcastSide .bigmark{
@@ -1319,10 +1331,14 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   }
 }
 
+
+/* v0.1.18.2 — Stability & Career Integrity
+   Ranking calculations use raw values with competition-style ties.
+   Save/load integrity diagnostics remain non-visual and Developer-facing. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.18.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.18.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5255,7 +5271,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.18.1 Logo Presentation Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.18.2 Stability & Career Integrity",ENGINE_VERSION="E2.9-DS2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5444,12 +5460,65 @@ async function migrateLegacySave(){
     await writeSlot(1,old,{gmName:state.gmName||"GM",clubName:club?.name||"Unknown Club",season:state.season||1,phase:state.phase||"Career",createdAt:Date.now()});
   }catch(e){}
 }
+function validateCareerIntegrityState(state=G){
+  const issues=[];
+  if(!state||typeof state!=="object")return["Career state is unavailable."];
+  const phases=new Set(["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","CHAMPION"]);
+  if(!phases.has(state.phase))issues.push(`Unknown career phase: ${state.phase}`);
+  if(!Array.isArray(state.clubs)||state.clubs.length!==30)issues.push(`Expected 30 clubs; found ${state.clubs?.length??0}.`);
+  const clubIds=new Set(),playerOwners=new Map();
+  for(const club of state.clubs||[]){
+    if(clubIds.has(club.id))issues.push(`Duplicate club id: ${club.id}.`);
+    clubIds.add(club.id);
+    for(const [bucket,list] of [["standard",club.roster||[]],["two-way",club.twoWayRoster||[]]]){
+      for(const p of list){
+        if(!p?.id){issues.push(`${club.name}: player without id in ${bucket} roster.`);continue}
+        const owner=playerOwners.get(p.id);
+        if(owner)issues.push(`Player ${p.id} appears on both ${owner} and ${club.name} ${bucket} roster.`);
+        else playerOwners.set(p.id,`${club.name} ${bucket}`);
+      }
+    }
+    const activeLimit=club.regularRosterLimit||15,offLimit=club.offseasonRosterLimit||20;
+    const offseasonLike=["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON"].includes(state.phase);
+    const limit=offseasonLike?offLimit:activeLimit;
+    if((club.roster||[]).length>limit)issues.push(`${club.name}: ${club.roster.length} standard players exceeds ${limit}-player ${offseasonLike?"offseason":"active"} limit.`);
+    if((club.twoWayRoster||[]).length>(club.twoWayLimit||3))issues.push(`${club.name}: two-way roster exceeds limit.`);
+  }
+  if(state.userClubGM?.clubId&&!clubIds.has(state.userClubGM.clubId))issues.push(`User club ${state.userClubGM.clubId} is missing.`);
+  if(state.phase==="CHAMPION"&&state.champion&&!state.awards?.[`S${state.season}_MVP`])issues.push(`Season ${state.season} MVP is missing at Season Review.`);
+  if(state.phase==="CHAMPION"&&state.champion&&!state.awards?.[`S${state.season}_Champion`])issues.push(`Season ${state.season} champion award key is missing.`);
+  if(state.phase==="PLAYOFFS"&&state.playoffsLive?.complete&&!state.playoffsLive?.championClubId)issues.push("Completed playoff state has no champion club id.");
+  if(state.phase==="WORLD_CUP"&&state.worldCupLive?.complete)issues.push("World Cup is marked complete but career phase has not returned to club flow.");
+  return issues;
+}
+function repairCareerIntegrityState(state=G){
+  if(!state)return[];
+  state.awards=state.awards||{};state.transactions=state.transactions||[];state.log=state.log||[];
+  for(const club of state.clubs||[]){club.roster=club.roster||[];club.twoWayRoster=club.twoWayRoster||[];club.gLeagueRoster=club.gLeagueRoster||[];}
+  // Awards can safely be regenerated only while the completed season's player
+  // statistics are still live. This directly protects the previous missing-MVP
+  // failure without inventing awards after a season rollover.
+  if(state===G&&state.phase==="CHAMPION"&&state.champion&&!state.awards[`S${state.season}_MVP`]){
+    try{settleSeasonAwards(state)}catch(err){console.warn("Season award integrity repair failed",err)}
+  }
+  if(state===G&&state.phase==="PLAYOFFS"){try{repairPlayoffSaveState()}catch(err){console.warn("Playoff integrity repair failed",err)}}
+  return validateCareerIntegrityState(state);
+}
+function reportCareerIntegrity(context="runtime"){
+  const issues=repairCareerIntegrityState(G);
+  if(issues.length)console.warn(`[Mini&Me QA · ${context}] ${issues.length} integrity issue(s)`,issues);
+  else console.info(`[Mini&Me QA · ${context}] career integrity check passed`);
+  return issues;
+}
+window.MiniMeBasketballQA={validate:()=>validateCareerIntegrityState(G),repair:()=>repairCareerIntegrityState(G)};
+
 function saveMeta(){
   const club=me();
   return{gmName:G?.gmName||"GM",clubName:club?.name||"Unknown Club",clubId:club?.id||null,season:G?.season||1,phase:G?.phase||"Career",createdAt:G?.createdAt||Date.now()};
 }
 async function save(silent=true){
   if(!G||!activeSlot)return false;
+  reportCareerIntegrity("pre-save");
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
   const ok=await writeSlot(activeSlot,JSON.stringify(G),saveMeta());
   if(!silent)toast(ok?`Career saved · Slot ${activeSlot}`:"Career active · save storage unavailable");
@@ -5460,6 +5529,7 @@ async function loadSlot(slot){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
+    reportCareerIntegrity("load");
 
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
     if(G.phase==="PLAY_IN"&&!G.playInLive&&!G.playIn){
@@ -6650,12 +6720,10 @@ function teamResultMetricValue(club,key){
   return 0;
 }
 function leagueTeamResultMetricRank(clubId,key){
-  const rows=(G.clubs||[]).map(club=>({clubId:club.id,value:teamResultMetricValue(club,key)}));
-  const target=rows.find(x=>x.clubId===clubId);
-  if(!target)return null;
-  const lowerIsBetter=key==="def";
-  const better=rows.filter(x=>lowerIsBetter?x.value<target.value-0.000001:x.value>target.value+0.000001).length;
-  return better+1;
+  const rows=(G.clubs||[])
+    .filter(club=>((club?.standings?.w||0)+(club?.standings?.l||0))>0)
+    .map(club=>({clubId:club.id,value:teamResultMetricValue(club,key)}));
+  return competitionRankFromValues(rows,clubId,{lowerIsBetter:key==="def"});
 }
 function matchupStatRanks(club){
   if(!club)return "";
@@ -7984,16 +8052,22 @@ function leagueTeamMetricValue(club,key){
   if(key==="ppg")return gp?(+club?.standings?.pf||0)/gp:0;
   return Number.isFinite(+prod?.[key])?+prod[key]:0;
 }
+function competitionRankFromValues(rows,clubId,{lowerIsBetter=false}={}){
+  const valid=(rows||[]).filter(x=>Number.isFinite(x.value));
+  const target=valid.find(x=>x.clubId===clubId);
+  if(!target)return null;
+  // Rank from the full-precision underlying value. Presentation rounding never
+  // feeds back into rank calculation. Values equal to floating-point precision
+  // are genuine ties and therefore share the same competition rank.
+  const eps=Math.max(1e-10,Math.abs(target.value)*1e-12);
+  const better=valid.filter(x=>lowerIsBetter?x.value<target.value-eps:x.value>target.value+eps).length;
+  return better+1;
+}
 function leagueTeamMetricRank(clubId,key){
   const rows=(G.clubs||[])
-    .map(club=>({clubId:club.id,value:leagueTeamMetricValue(club,key)}))
-    .filter(x=>Number.isFinite(x.value));
-  rows.sort((a,b)=>(b.value-a.value)||String(a.clubId).localeCompare(String(b.clubId)));
-  const target=rows.find(x=>x.clubId===clubId);
-  if(!target)return null;
-  // Competition ranking: only teams with a genuinely better value rank ahead.
-  const better=rows.filter(x=>x.value>target.value+0.000001).length;
-  return better+1;
+    .filter(club=>((club?.standings?.w||0)+(club?.standings?.l||0))>0)
+    .map(club=>({clubId:club.id,value:leagueTeamMetricValue(club,key)}));
+  return competitionRankFromValues(rows,clubId);
 }
 function playerPerformanceRow(p){
   const st=p.seasonStats||emptyRegularStats(),gp=+st.gp||0;
