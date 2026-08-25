@@ -1335,10 +1335,15 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 /* v0.1.18.2 — Stability & Career Integrity
    Ranking calculations use raw values with competition-style ties.
    Save/load integrity diagnostics remain non-visual and Developer-facing. */
+
+/* v0.1.19.0 — Player Statistical Identity & Distribution */
+.playerBuildTag{color:var(--accent2);font-weight:850}
+.statIdentityNote{margin-top:8px;padding:8px 10px;border:1px solid #394554;background:#10161d;border-radius:9px;color:var(--muted);font-size:7px;line-height:1.4}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.18.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.19.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1763,6 +1768,69 @@ function progressPlayerTalent(p,eraMod=0,developmentCap=99,ctx={}){
   };
   return p.ovr-ovr;
 }
+function derivePlayerBuild(player) {
+  if (!player) return "Basketball Player";
+  if (player.sourceBuild) return player.sourceBuild;
+  const arch=player.archetype||"";
+  const builds={
+    "Floor General":"Pass-First Playmaker",
+    "Combo Guard":"Three-Level Combo Creator",
+    "3-and-D Guard":"Two-Way Perimeter Guard",
+    "Sharpshooter":"Movement Shooter",
+    "Slasher":"Downhill Rim Attacker",
+    "3-and-D Wing":"Two-Way Perimeter Wing",
+    "Playmaking Forward":"Point Forward",
+    "Stretch Four":"Pick-and-Pop Forward",
+    "Rim Protector":"Interior Defensive Anchor",
+    "Stretch Five":"Floor-Spacing Big",
+    "Traditional Big":"Interior Glass Cleaner"
+  };
+  if (builds[arch]) return builds[arch];
+  return player.position==="PG"?"Lead Guard":player.position==="SG"?"Scoring Guard":player.position==="SF"?"Two-Way Wing":player.position==="PF"?"Versatile Forward":player.position==="C"?"Interior Big":"Basketball Player";
+}
+
+// Statistical identity shapes where production goes; OVR still determines how good the player is.
+function playerStatIdentity(player) {
+  const arch=player?.archetype||"";
+  const id={usage:1,assist:1,rebound:1,steal:1,block:1,foulDraw:1,threeRate:0,volatility:1};
+  if(arch==="Floor General"){id.usage=.80;id.assist=1.38;id.steal=1.08;id.volatility=.92;}
+  else if(arch==="Combo Guard"){id.usage=1.01;id.assist=1.18;id.foulDraw=1.08;id.volatility=1.15;}
+  else if(arch==="3-and-D Guard"){id.usage=.94;id.steal=1.34;id.threeRate=.02;id.volatility=.9;}
+  else if(arch==="Sharpshooter"){id.usage=1.01;id.threeRate=.03;id.volatility=1.24;}
+  else if(arch==="Slasher"){id.usage=1.01;id.foulDraw=1.28;id.threeRate=-.03;id.volatility=1.28;}
+  else if(arch==="3-and-D Wing"){id.usage=.93;id.steal=1.24;id.rebound=1.08;id.threeRate=.02;id.volatility=1.02;}
+  else if(arch==="Playmaking Forward"){id.usage=.93;id.assist=1.45;id.rebound=1.18;id.volatility=1.05;}
+  else if(arch==="Stretch Four"){id.usage=.94;id.rebound=1.24;id.threeRate=.03;id.volatility=1.03;}
+  else if(arch==="Rim Protector"){id.usage=.82;id.rebound=1.52;id.block=2.25;id.threeRate=-.03;id.volatility=.9;}
+  else if(arch==="Stretch Five"){id.usage=.92;id.rebound=1.34;id.block=1.16;id.threeRate=.03;id.volatility=1.02;}
+  else if(arch==="Traditional Big"){id.usage=.94;id.rebound=1.68;id.block=1.42;id.foulDraw=1.16;id.threeRate=-.04;id.volatility=.94;}
+  if(player?.position==="PG") id.assist*=1.16;
+  if(player?.position==="C") {id.rebound*=1.10;id.block*=1.10;}
+  return id;
+}
+
+// One pulse per player per game. Most nights stay close to expectation; rare elite nights widen the tail.
+function playerGamePulse(player) {
+  const statId=playerStatIdentity(player),ovr=player?.ovr||70;
+  const scorer=["Combo Guard","Sharpshooter","Slasher","3-and-D Wing","Playmaking Forward","Stretch Four","Stretch Five"].includes(player?.archetype);
+  const creator=["Floor General","Combo Guard","Playmaking Forward"].includes(player?.archetype);
+  const rebounder=["Rim Protector","Traditional Big","Stretch Five","Stretch Four"].includes(player?.archetype);
+  const defender=["Rim Protector","3-and-D Guard","3-and-D Wing","Traditional Big"].includes(player?.archetype);
+  const baseSwing=(Math.random()-.5)*.16*statId.volatility;
+  const pulse={usage:1+baseSwing,efficiency:(Math.random()-.5)*.018,assist:1+(Math.random()-.5)*.14,rebound:1+(Math.random()-.5)*.12,defense:1+(Math.random()-.5)*.12,label:"Normal"};
+  const elite=Math.max(0,Math.min(1,(ovr-86)/13));
+  if(scorer&&elite>0){
+    const r=Math.random();
+    if(r<.0025*elite){pulse.usage*=1.85;pulse.efficiency+=.055;pulse.label="Historic scoring night";}
+    else if(r<.015*elite){pulse.usage*=1.52;pulse.efficiency+=.035;pulse.label="Explosive scoring night";}
+    else if(r<.070*elite){pulse.usage*=1.24;pulse.efficiency+=.018;pulse.label="Hot scoring night";}
+  }
+  if(creator&&elite>0){const r=Math.random();if(r<.006*elite)pulse.assist*=1.62;else if(r<.045*elite)pulse.assist*=1.28;}
+  if(rebounder&&elite>0){const r=Math.random();if(r<.006*elite)pulse.rebound*=1.50;else if(r<.045*elite)pulse.rebound*=1.25;}
+  if(defender&&elite>0){const r=Math.random();if(r<.006*elite)pulse.defense*=1.50;else if(r<.045*elite)pulse.defense*=1.22;}
+  return pulse;
+}
+
 function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr = null, isProspect = false, nationality = null, origin = null } = {}) {
   const pos = position || pick(POSITIONS);
   const [hMin, hMax] = HEIGHT_RANGE_CM_BY_POSITION[pos];
@@ -1775,6 +1843,7 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     secondaryPosition: Math.random()<0.56 ? pick(SECONDARY_POSITION_OPTIONS[pos]) : null,
     heightCm: rand(hMin, hMax),
     archetype: pick(ARCHETYPES_BY_POSITION[pos]),
+    playerBuild: null,
     origin: origin || (isProspect ? pick(PROSPECT_ORIGINS) : "NBA"),
     age,
     ovr: resolvedOvr,
@@ -1806,6 +1875,7 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     nationalRole: null,
     nationalDepthRank: null,
   };
+  player.playerBuild = derivePlayerBuild(player);
   player.salaryM = isProspect ? Math.round((2.0 + Math.max(0, player.ovr - 67) * 0.16) * 10) / 10 : salaryForOvr(player.ovr, player.age);
   player.extensionEligible = player.contractYearsLeft === 1;
   return player;
@@ -1890,6 +1960,7 @@ function makeMappedPlayer(t,rank,teamId){
   p.heightCm=+t.heightCm||p.heightCm;
   p.archetype=mappedEngineArchetype(t);
   p.sourceBuild=t.sourceArchetype||null;
+  p.playerBuild=derivePlayerBuild(p);
   p.sourceThreePt=t.threePt;
   p.sourceDunk=t.dunk;
   p.sourceTemplateName=t.sourceName||null; // developer/audit field only; never shown as player identity
@@ -4285,7 +4356,7 @@ function simulatePreseasonGameLive(G,homeId,awayId,round){
     for(const k of["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])st[k]+=line[k]||0;
     st.plusMinus+=pm;
     player.fatigue=Math.max(0,Math.min(100,player.fatigue+Math.round(line.min/18)));
-    return{playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,role:player.rotationRole,...line,plusMinus:pm};
+    return{playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,role:player.rotationRole,playerBuild:player.playerBuild||derivePlayerBuild(player),gamePulse:pulseFor(player).label,...line,plusMinus:pm};
   });
 
   const bh=apply(h,pmH),ba=apply(a,pmA),hw=h.score>a.score;
@@ -4327,8 +4398,10 @@ function buildRegularRotation(club) {
 function playerUsageWeight(player) {
   const role = player.rotationRole || "Rotation";
   const roleBoost = role === "Primary Starter" ? 1.58 : role === "Starter" ? 1.16 : role === "Sixth Man" ? 1.08 : 0.90;
-  const archetypeBoost = ["Combo Guard", "Sharpshooter", "Slasher", "Playmaking Forward"].includes(player.archetype) ? 1.08 : 1.0;
-  return Math.max(1, Math.pow(Math.max(8, player.ovr - 38), 1.22) * roleBoost * archetypeBoost);
+  const quality=Math.max(8,(player.ovr||70)-38);
+  const eliteBoost=1;
+  const identity=playerStatIdentity(player);
+  return Math.max(1, Math.pow(quality, 1.22) * roleBoost * identity.usage * eliteBoost);
 }
 
 function weightedPick(items, weightFn) {
@@ -4361,7 +4434,8 @@ function shotProfile(player) {
   let threeRate = threeArches.includes(player.archetype) ? 0.48 : rimArches.includes(player.archetype) ? 0.18 : 0.34;
   if (player.position === "PG" || player.position === "SG") threeRate += 0.04;
   if (player.position === "C") threeRate -= 0.06;
-  return Math.max(0.08, Math.min(0.62, threeRate));
+  threeRate += playerStatIdentity(player).threeRate;
+  return Math.max(0.05, Math.min(0.68, threeRate));
 }
 
 function simulatePossessionGame(clubA, clubB, options = {}) {
@@ -4381,6 +4455,8 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pf: 0, plusMinus: 0 }
   }));
   const linesA = initLines(slotsA), linesB = initLines(slotsB);
+  const gamePulses=new Map([...linesA,...linesB].map(x=>[x.player.id,playerGamePulse(x.player)]));
+  const pulseFor=(p)=>gamePulses.get(p.id)||{usage:1,efficiency:0,assist:1,rebound:1,defense:1,label:"Normal"};
   const qA = [0,0,0,0], qB = [0,0,0,0];
   const teamRating = (slots) => slots.reduce((a,x)=>a+x.player.ovr*x.minutes,0)/240;
   const ratingA = teamRating(slotsA), ratingB = teamRating(slotsB);
@@ -4399,7 +4475,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
     const defQ = defenderQuality(defLines);
     for (let poss = 0; poss < possessions; poss++) {
       const q = Math.min(3, Math.floor(poss / Math.max(1, possessions / 4)));
-      const shooter = weightedPick(offPool, x => playerUsageWeight(x.player) * (0.55 + x.line.min/35));
+      const shooter = weightedPick(offPool, x => playerUsageWeight(x.player) * pulseFor(x.player).usage * (0.55 + x.line.min/35));
       const p = shooter.player;
       const fatigue = p.fatigue || 0;
       const coachingLevel=frontOfficeLevelForClub(offenseClub,"coaching",options.gameState||G);
@@ -4408,12 +4484,12 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       const turnoverProb = Math.max(0.085, Math.min(0.18, 0.132 - (p.ovr-70)*0.0013 - handling - coachingTurnoverBonus(coachingLevel) + fatigue*0.00045));
       if (Math.random() < turnoverProb) {
         shooter.line.tov++;
-        if (Math.random() < 0.54) weightedPick(defPool, x => 0.5 + (x.player.ovr-50)/35 + (x.player.position === "PG" || x.player.position === "SG" ? 0.25 : 0)).line.stl++;
+        if (Math.random() < 0.54) weightedPick(defPool, x => (0.5 + (x.player.ovr-50)/35 + (x.player.position === "PG" || x.player.position === "SG" ? 0.25 : 0)) * playerStatIdentity(x.player).steal * pulseFor(x.player).defense).line.stl++;
         continue;
       }
 
       // Shooting foul possessions. These generate real FTA/FTM rather than points being patched later.
-      const foulDraw = Math.max(0.075, Math.min(0.17, 0.105 + (p.archetype === "Slasher" ? 0.032 : 0) + (p.ovr-70)*0.0009));
+      const foulDraw = Math.max(0.065, Math.min(0.22, (0.102 + (p.archetype === "Slasher" ? 0.028 : 0) + (p.ovr-70)*0.0009) * playerStatIdentity(p).foulDraw));
       if (Math.random() < foulDraw) {
         const isThreeFoul = Math.random() < shotProfile(p) * 0.08;
         const attempts = isThreeFoul ? 3 : 2;
@@ -4438,7 +4514,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
         pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0);
         pct -= (defQ-70)*0.0008;
       }
-      pct = Math.max(isThree ? 0.255 : 0.385, Math.min(isThree ? 0.455 : 0.655, pct + chemAdj - fatigueAdj));
+      pct = Math.max(isThree ? 0.245 : 0.375, Math.min(isThree ? 0.495 : 0.695, pct + chemAdj - fatigueAdj + pulseFor(p).efficiency));
       const made = Math.random() < pct;
       if (made) {
         shooter.line.fgm++; if (isThree) shooter.line.tpm++;
@@ -4448,27 +4524,27 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
           const mates = offPool.filter(x => x.player.id !== p.id);
           if (mates.length) weightedPick(mates, x => {
             const pos=x.player.position==="PG"?4.8:x.player.position==="SG"?1.75:x.player.position==="SF"?1.05:0.65;
-            const arch=x.player.archetype==="Floor General"?4.2:x.player.archetype==="Playmaking Forward"?3.1:0;
+            const arch=x.player.archetype==="Floor General"?4.5:x.player.archetype==="Playmaking Forward"?3.2:x.player.archetype==="Combo Guard"?1.0:0;
             const quality=Math.max(0,(x.player.ovr-72)*0.075);
-            return 0.35+pos+arch+quality;
+            return (0.35+pos+arch+quality) * playerStatIdentity(x.player).assist * pulseFor(x.player).assist;
           }).line.ast++;
         }
       } else {
         // Missed shots resolve to a rebound, with a realistic offensive rebound chance.
         const offRebChance = 0.245 + (offPool.filter(x=>x.player.position==="C"||x.player.position==="PF").length-2)*0.012;
         if (Math.random() < offRebChance) {
-          const rebounder = weightedPick(offPool, x => 0.45 + (x.player.position === "C" ? 5.0 : x.player.position === "PF" ? 2.7 : x.player.position === "SF" ? 0.9 : 0.25) + Math.max(0,(x.player.ovr-68)/16) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.5:0));
+          const rebounder = weightedPick(offPool, x => (0.45 + (x.player.position === "C" ? 5.0 : x.player.position === "PF" ? 2.7 : x.player.position === "SF" ? 0.9 : 0.25) + Math.max(0,(x.player.ovr-68)/16) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.5:0)) * playerStatIdentity(x.player).rebound * pulseFor(x.player).rebound);
           rebounder.line.reb++;
           // Second-chance attempt: offensive rebounds create extra offence rather than ending the possession.
           if (Math.random() < 0.68) {
             rebounder.line.fga++;
             const putbackPct = Math.max(0.42, Math.min(0.67, 0.50 + (rebounder.player.ovr-65)*0.003));
             if (Math.random() < putbackPct) { rebounder.line.fgm++; rebounder.line.pts += 2; quarterScores[q] += 2; }
-            else if (Math.random() < 0.16) weightedPick(defPool, x => 0.25 + (x.player.position === "C" ? 5.0 : x.player.position === "PF" ? 2.2 : 0.25) + (x.player.archetype==="Rim Protector"?3.5:0) + Math.max(0,(x.player.ovr-70)/16)).line.blk++;
+            else if (Math.random() < 0.16) weightedPick(defPool, x => (0.25 + (x.player.position === "C" ? 5.0 : x.player.position === "PF" ? 2.2 : 0.25) + (x.player.archetype==="Rim Protector"?3.5:0) + Math.max(0,(x.player.ovr-70)/16)) * playerStatIdentity(x.player).block * pulseFor(x.player).defense).line.blk++;
           }
         } else {
-          weightedPick(defPool, x => 0.45 + (x.player.position === "C" ? 5.4 : x.player.position === "PF" ? 2.9 : x.player.position === "SF" ? 1.0 : 0.25) + Math.max(0,(x.player.ovr-68)/15) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.7:0)).line.reb++;
-          if (!isThree && Math.random() < 0.23) weightedPick(defPool, x => 0.25 + (x.player.position === "C" ? 5.5 : x.player.position === "PF" ? 2.4 : x.player.position === "SF" ? 0.55 : 0.12) + Math.max(0,(x.player.ovr-70)/15) + (x.player.archetype==="Rim Protector"?3.6:x.player.archetype==="Traditional Big"?1.3:0)).line.blk++;
+          weightedPick(defPool, x => (0.45 + (x.player.position === "C" ? 5.4 : x.player.position === "PF" ? 2.9 : x.player.position === "SF" ? 1.0 : 0.25) + Math.max(0,(x.player.ovr-68)/15) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.7:0)) * playerStatIdentity(x.player).rebound * pulseFor(x.player).rebound).line.reb++;
+          if (!isThree && Math.random() < 0.23) weightedPick(defPool, x => (0.25 + (x.player.position === "C" ? 5.5 : x.player.position === "PF" ? 2.4 : x.player.position === "SF" ? 0.55 : 0.12) + Math.max(0,(x.player.ovr-70)/15) + (x.player.archetype==="Rim Protector"?3.6:x.player.archetype==="Traditional Big"?1.3:0)) * playerStatIdentity(x.player).block * pulseFor(x.player).defense).line.blk++;
         }
       }
     }
@@ -5271,7 +5347,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.18.2 Stability & Career Integrity",ENGINE_VERSION="E2.9-DS2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.19.0 Player Statistical Identity",ENGINE_VERSION="E2.10-SID1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -5994,7 +6070,7 @@ function playerProfile(){
         ${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}
         <div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div>
         <div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div>
-        ${p.sourceBuild?`<div class="profileDataRow"><small>Player Build</small><b>${p.sourceBuild}</b></div>`:""}<div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div>
+        <div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div>
       </div></div>
       <div class="profilePanel"><h4>Contract & Value</h4><div class="profilePanelBody">
         <div class="profileDataRow"><small>Salary</small><b>$${(+p.salaryM||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Market Range</small><b>$${(+market||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div><div class="profileDataRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div><div class="profileDataRow"><small>Role</small><b>${p.rotationRole||"Depth"}</b></div><div class="profileDataRow"><small>Availability</small><b>${injury}</b></div>
@@ -9213,6 +9289,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
     p.heightCm=nextHeight;
     const arches=validArchetypesForPosition(p.position);
     p.archetype=arches.includes($("#epArch").value)?$("#epArch").value:(arches[0]||p.archetype);
+    if(!p.sourceBuild)p.playerBuild=derivePlayerBuild(p);
     if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
 
     ui.playerEditMode=null;
