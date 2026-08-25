@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.17.6 Matchup OFF DEF NET</title>
+<title>Mini&Me Basketball — v0.1.17.7 Postseason Round Recap Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1141,7 +1141,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.6</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.7</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5074,7 +5074,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.17.6 Matchup OFF DEF NET",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.7 Postseason Round Recap Fix",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6977,7 +6977,16 @@ function advancePostseasonObserver(){
   for(const [id,s] of Object.entries(after)){const b=before[id];if(s.complete&&(!b||!b.complete))completedSeries.push(s)}
   const phaseAfter=G.phase;
   const roundAfter=phaseAfter==="PLAY_IN"?"Play-In":phaseAfter==="CHAMPION"?"Season Complete":postseasonRoundLabel(G.playoffsLive?.round||G.playoffs?.round||"R1");
-  ui.postUpdate={phaseBefore,phaseAfter,roundBefore,roundAfter,roundChanged:roundBefore!==roundAfter,games,completedSeries,observerMode:"round"};
+  const roundChanged=roundBefore!==roundAfter;
+  // A round-complete recap must show the ENTIRE completed round, not just
+  // series that happened to finish during this observer action. This keeps
+  // previously completed user series and early-finished AI series visible.
+  let recapSeries=completedSeries;
+  if(roundChanged&&phaseBefore==="PLAYOFFS") {
+    const stageCode=roundCodeBefore;
+    recapSeries=Object.values(after).filter(s=>s.complete&&(stageCode==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${stageCode}`)));
+  }
+  ui.postUpdate={phaseBefore,phaseAfter,roundBefore,roundAfter,roundChanged,games,completedSeries:recapSeries,observerMode:"round"};
   save();show("postseasonUpdateWindow");renderPostseasonUpdate();
 }
 function allStarNextMatch(live){
@@ -7156,7 +7165,10 @@ function renderPostseasonUpdate(){
     }).join("")}</div>`;
   }).join("");
   const transition=d.roundChanged?`<div class="postUpdateSeries"><b>${d.roundBefore} complete</b><small>${d.phaseAfter==="CHAMPION"?"The NBA Champion has been crowned.":`The bracket has advanced to ${d.roundAfter}.`}</small></div>`:"";
-  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap"><div class="postUpdateHero"><h3>${d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`}</h3><p>${d.completedSeries.length?`${d.completedSeries.length} series concluded.`:`The postseason advanced.`} Select a series below for its game history and full box scores.</p></div>${seriesHtml}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${d.phaseAfter==="CHAMPION"?"View Season Complete":"Return to Home"}</button></div></div>`;
+  const expectedSeries=d.roundBefore==="Round 1"?8:d.roundBefore==="Conference Semifinals"?4:d.roundBefore==="Conference Finals"?2:d.roundBefore==="NBA Finals"?1:null;
+  const recapCount=d.completedSeries.length;
+  const recapCopy=d.roundChanged&&expectedSeries?`${recapCount} of ${expectedSeries} series concluded.`:recapCount?`${recapCount} series concluded.`:`The postseason advanced.`;
+  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap"><div class="postUpdateHero"><h3>${d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`}</h3><p>${recapCopy} Select a series below for its game history and full box scores.</p></div>${seriesHtml}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${d.phaseAfter==="CHAMPION"?"View Season Complete":"Return to Home"}</button></div></div>`;
   $$("[data-update-series]").forEach(el=>el.onclick=()=>{
     const id=el.dataset.updateSeries,stage=el.dataset.updateStage,conf=el.dataset.updateConf;
     ui.postUpdate=null;ui.page="league";ui.leagueTab="post";ui.postseasonStage=stage;ui.postSeriesId=id;
