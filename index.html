@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.16.0 League Legacy</title>
+<title>Mini&Me Basketball — v0.1.17.0 Team Performance</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1079,10 +1079,20 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .legacyFranchiseList{border:1px solid var(--line);border-radius:12px;overflow:hidden}.legacyFranchiseRow{display:grid;grid-template-columns:22px 28px minmax(0,1fr) 48px 48px 48px;gap:6px;align-items:center;padding:8px 10px;border-top:1px solid var(--line);background:var(--panel)}.legacyFranchiseRow:first-child{border-top:0}.legacyFranchiseRow>span{font-size:7px;color:var(--muted);font-weight:900}.legacyFranchiseRow>b{font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.legacyFranchiseRow>div{text-align:center}.legacyFranchiseRow strong{display:block;font-size:9px}.legacyFranchiseRow small{font-size:5px;color:var(--muted)}
 @media(max-width:600px){.legacyRecordGrid{grid-template-columns:repeat(2,1fr)}.legacySeasonRow{grid-template-columns:46px minmax(0,1fr)}.legacySeasonAwards{grid-column:1/-1;grid-template-columns:1fr 1fr}.legacySeasonAwards span{border-left:0;border-top:1px solid var(--line);padding:6px 0 0}.legacySeasonHonours{grid-template-columns:1fr}.legacyFranchiseRow{grid-template-columns:18px 25px minmax(0,1fr) 38px 38px 38px}}
 
+
+/* v0.1.17.0 — My Team Performance */
+.performanceHero{display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.06),var(--panel));border-radius:14px;padding:13px;margin-top:8px}.performanceHero h3{margin:2px 0;font-size:17px}.performanceHero p{font-size:7px;color:var(--muted);margin:0;line-height:1.4}.performanceHero>strong{font-size:23px;color:var(--accent2);text-align:center}.performanceHero>strong small{display:block;font-size:5.5px;color:var(--muted)}
+.teamProductionGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:8px 0}.teamProductionGrid>div{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:9px;text-align:center}.teamProductionGrid small{display:block;font-size:5.5px;color:var(--muted);font-weight:900}.teamProductionGrid b{display:block;font-size:13px;margin:2px 0}.teamProductionGrid span{font-size:5.5px;color:var(--accent2)}
+.performanceInsightStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:9px}.performanceInsightStrip>div{border:1px solid var(--line);background:#10161d;border-radius:10px;padding:8px}.performanceInsightStrip small{display:block;font-size:5.3px;color:var(--accent2);font-weight:900}.performanceInsightStrip b{display:block;font-size:8px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.performanceInsightStrip span{font-size:6px;color:var(--muted)}
+.performanceToolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 0}.performanceToolbar>span{font-size:6.5px;color:var(--muted);white-space:nowrap}.performanceToolbar>div{display:flex;gap:4px;overflow-x:auto}.performanceToolbar button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:999px;padding:5px 7px;font-size:6px;font-weight:900;white-space:nowrap}.performanceToolbar button.active{background:var(--accent);border-color:var(--accent);color:#111}
+.performanceTableWrap{border:1px solid var(--line);border-radius:12px;overflow-x:auto;background:var(--panel)}.performanceTable{width:100%;border-collapse:collapse;min-width:760px}.performanceTable th{font-size:5.5px;color:var(--muted);text-align:center;padding:7px 6px;background:#111820;border-bottom:1px solid var(--line)}.performanceTable th:first-child{text-align:left;min-width:220px}.performanceTable td{font-size:7px;text-align:center;padding:8px 6px;border-top:1px solid var(--line)}.performanceTable td:first-child{text-align:left}.performancePlayer{display:flex;align-items:center;justify-content:space-between;gap:7px}.performancePlayer>div{min-width:0}.performancePlayer b{display:block;font-size:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.performancePlayer small{display:block;font-size:5.8px;color:var(--muted);margin-top:2px}.performancePlayer>span{font-size:5.3px;border:1px solid var(--line);border-radius:999px;padding:3px 5px;white-space:nowrap;color:var(--muted)}.performancePlayer>span.high{border-color:#6c5730;color:var(--accent2)}.performancePlayer>span.productive{border-color:#41634c;color:#84c99b}.performancePlayer>span.low{border-color:#6b3b42;color:#e6a0a7}.performancePlayer>span.sample{opacity:.7}
+.performanceLegend{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:7px}.performanceLegend span{font-size:5.7px;color:var(--muted);display:flex;align-items:center;gap:4px}.performanceLegend i{width:7px;height:7px;border-radius:50%;display:inline-block;background:#78838f}.performanceLegend i.high{background:#d8a84d}.performanceLegend i.productive{background:#65b982}.performanceLegend i.low{background:#cc6c78}
+@media(max-width:600px){.teamProductionGrid{grid-template-columns:repeat(3,1fr)}.performanceInsightStrip{grid-template-columns:1fr}.performanceHero{align-items:flex-start}.performanceToolbar{align-items:flex-start;flex-direction:column}.performanceToolbar>div{width:100%}.performanceTable th:first-child{min-width:200px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.16.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.17.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4986,7 +4996,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.16.0 League Legacy",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.17.0 Team Performance",ENGINE_VERSION="E2.9-DS1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -7380,7 +7390,70 @@ function home(){
 function eventSummaryCard({label,title,subtitle,metrics=[]}){
   return `<div class="eventHero"><div class="eventHeroTop"><b>${label}</b><small>Season ${G.season}</small></div><div class="eventHeroBody"><h3>${title}</h3><p>${subtitle||""}</p>${metrics.length?`<div class="eventMetrics">${metrics.map(m=>`<div class="eventMetric"><b>${m.value}</b><small>${m.label}</small></div>`).join("")}</div>`:""}</div></div>`;
 }
-function team(){let tabs=[["squad","Squad"],["contracts","Contracts & Cap"],["schedule","Schedule"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
+
+function safeRate(made,attempts){return attempts?made/attempts*100:null}
+function teamSeasonProduction(club){
+  const players=club?.roster||[],gp=Math.max(0,(club?.standings?.w||0)+(club?.standings?.l||0));
+  const totals=players.reduce((a,p)=>{
+    const st=p.seasonStats||emptyRegularStats();
+    for(const k of ["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta"])a[k]+=(+st[k]||0);
+    return a;
+  },{min:0,pts:0,reb:0,ast:0,stl:0,blk:0,tov:0,fgm:0,fga:0,tpm:0,tpa:0,ftm:0,fta:0});
+  return{
+    gp,
+    ppg:gp?totals.pts/gp:0,rpg:gp?totals.reb/gp:0,apg:gp?totals.ast/gp:0,
+    spg:gp?totals.stl/gp:0,bpg:gp?totals.blk/gp:0,tov:gp?totals.tov/gp:0,
+    fg:safeRate(totals.fgm,totals.fga),three:safeRate(totals.tpm,totals.tpa),ft:safeRate(totals.ftm,totals.fta),
+    totals
+  };
+}
+function leagueTeamMetricRank(clubId,key){
+  const rows=(G.clubs||[]).map(club=>({clubId,value:teamSeasonProduction(club)[key]??0}));
+  rows.sort((a,b)=>b.value-a.value);
+  const idx=rows.findIndex(x=>x.clubId===clubId);
+  return idx>=0?idx+1:null;
+}
+function playerPerformanceRow(p){
+  const st=p.seasonStats||emptyRegularStats(),gp=+st.gp||0;
+  const mpg=gp?(+st.min||0)/gp:0,ppg=gp?(+st.pts||0)/gp:0,rpg=gp?(+st.reb||0)/gp:0,apg=gp?(+st.ast||0)/gp:0;
+  const spg=gp?(+st.stl||0)/gp:0,bpg=gp?(+st.blk||0)/gp:0,tov=gp?(+st.tov||0)/gp:0;
+  const fg=safeRate(st.fgm,st.fga),three=safeRate(st.tpm,st.tpa),ft=safeRate(st.ftm,st.fta);
+  const role=p.rotationRole||"Depth";
+  const expected=role==="Primary Starter"?22:role==="Starter"?16:role==="Sixth Man"||role==="Sixth Player"?13:role==="Rotation"?8:4;
+  const impact=ppg+rpg*.7+apg*.9+spg*1.6+bpg*1.5-tov*.7;
+  const per36=mpg>0?impact*(36/mpg):0;
+  let label="Expected",tone="expected";
+  if(gp<5){label="Limited Sample";tone="sample"}
+  else if((mpg>=12&&per36>=expected+6)||(role==="Depth"&&impact>=10)){label="High Impact";tone="high"}
+  else if(mpg>=10&&per36>=expected+2){label="Productive";tone="productive"}
+  else if(mpg>=15&&per36<Math.max(4,expected-5)){label="Underperforming";tone="low"}
+  return{p,st,gp,mpg,ppg,rpg,apg,spg,bpg,tov,fg,three,ft,impact,per36,label,tone};
+}
+function teamPerformance(){
+  const club=me(),prod=teamSeasonProduction(club),gp=prod.gp;
+  const sortKey=ui.performanceSort||"mpg",dir=ui.performanceDir||"desc";
+  let rows=(club.roster||[]).map(playerPerformanceRow);
+  const numeric={gp:"gp",mpg:"mpg",ppg:"ppg",rpg:"rpg",apg:"apg",spg:"spg",bpg:"bpg",fg:"fg",three:"three",ft:"ft"};
+  rows.sort((a,b)=>{
+    if(sortKey==="player")return (dir==="asc"?1:-1)*a.p.name.localeCompare(b.p.name);
+    const k=numeric[sortKey]||"mpg",av=a[k]??-1,bv=b[k]??-1;
+    return dir==="asc"?av-bv:bv-av;
+  });
+  const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"—";
+  const pct=v=>v==null?"—":`${v.toFixed(1)}%`;
+  const teamCards=[
+    ["PPG",prod.ppg,"ppg"],["RPG",prod.rpg,"rpg"],["APG",prod.apg,"apg"],["FG%",prod.fg,"fg"],["3PT%",prod.three,"three"]
+  ];
+  const sortButton=(key,label)=>`<button data-perfsort="${key}" class="${sortKey===key?"active":""}">${label}${sortKey===key?` ${dir==="desc"?"↓":"↑"}`:""}</button>`;
+  return `<div class="performanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played. Review team output and individual production against role and minutes.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
+    <div class="teamProductionGrid">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${key==="fg"||key==="three"?pct(val):fmt(val)}</b><span>${gp?`#${leagueTeamMetricRank(club.id,key)||"—"} NBA`:"—"}</span></div>`).join("")}</div>
+    <div class="performanceInsightStrip"><div><small>SCORING LEADER</small><b>${[...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.ppg||0)} PPG</span></div><div><small>TOP PLAYMAKER</small><b>${[...rows].sort((a,b)=>b.apg-a.apg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.apg-a.apg)[0]?.apg||0)} APG</span></div><div><small>TOP REBOUNDER</small><b>${[...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.rpg||0)} RPG</span></div></div>
+    <div class="performanceToolbar"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
+    <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>PLAYER</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${r.p.rotationRole||"Depth"} · ${r.p.ovr} OVR</small></div><span class="${r.tone}">${r.label}</span></div></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join("")}</tbody></table></div>
+    <div class="performanceLegend"><span><i class="high"></i>High Impact</span><span><i class="productive"></i>Productive</span><span><i class="expected"></i>Expected</span><span><i class="low"></i>Underperforming</span></div>`;
+}
+
+function team(){let tabs=[["squad","Squad"],["performance","Performance"],["contracts","Contracts & Cap"],["schedule","Schedule"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("My Team",`${me().name} · Basketball Operations`)+`<div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
 function gmBrief(){
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
   return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="sectionTitle">Career</div><div class="card"><div class="more"><div><b>Career Record</b><small>Regular season</small></div><b>${gm.careerW}–${gm.careerL}</b></div><div class="more"><div><b>NBA Championships</b><small>Career honours</small></div><b>${gm.championships}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>Career honours</small></div><b>${gm.cupTitles}</b></div></div>`;
@@ -8519,7 +8592,7 @@ if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
+$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
 $$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
 if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
