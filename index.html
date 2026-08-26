@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.30.0 Monte Carlo Season Outlook</title>
+<title>Mini&Me Basketball — v0.1.30.1 Squad Performance Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1553,7 +1553,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .internationalCareerPanel .profileDataRow small{font-size:7.2px}.internationalCareerPanel .profileDataRow b{font-size:9.5px}
 @media(max-width:430px){.profileTabs.profileTabs4 button{font-size:6.2px}.draftIdentity.compact3 b{font-size:9.5px}}
 
-/* v0.1.30.0 — Monte Carlo Season Outlook */
+/* v0.1.30.1 — Monte Carlo Season Outlook */
 .seasonOutlook{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.055),var(--panel));border-radius:14px;padding:11px 12px;margin:9px 0}
 .seasonOutlookHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.seasonOutlookHead small{display:block;color:var(--accent2);font-size:5.8px;font-weight:950;letter-spacing:.55px;text-transform:uppercase}.seasonOutlookHead b{display:block;font-size:11px;margin-top:2px}.seasonOutlookHead span{font-size:6px;color:var(--muted);white-space:nowrap}
 .outlookGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.outlookMetric{border:1px solid var(--line);background:#10161d;border-radius:10px;padding:8px 5px;text-align:center;min-width:0}.outlookMetric small{display:block;color:var(--muted);font-size:5.5px;text-transform:uppercase}.outlookMetric b{display:block;font-size:14px;margin:2px 0;line-height:1.05}.outlookMetric span{display:block;color:var(--accent2);font-size:5.5px;line-height:1.2}.outlookNote{margin-top:7px;color:var(--muted);font-size:6px;line-height:1.4}
@@ -5819,7 +5819,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.30.0 Monte Carlo Season Outlook",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.30.1 Squad Performance Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -8727,7 +8727,10 @@ function playerPerformanceRow(p){
   return{p,st,gp,mpg,ppg,rpg,apg,spg,bpg,tov,fg,three,ft,impact,per36,label,tone};
 }
 
-// v0.1.30.0 — Career Intelligence / Monte Carlo Season Outlook
+// v0.1.30.1 — Career Intelligence / Monte Carlo Season Outlook
+// Performance fix: precompute team ratings once per outlook run and use a mobile-safe
+// simulation count. This prevents Squad/Performance navigation from synchronously
+// recalculating squad OVR thousands of times.
 let _seasonOutlookCache={signature:null,result:null};
 function outlookClamp(v,a,b){return Math.max(a,Math.min(b,v));}
 function outlookClubRating(club){
@@ -8737,65 +8740,66 @@ function outlookClubRating(club){
   const unavailable=(club?.roster||[]).filter(p=>(p.injury?.gamesRemaining||0)>0).reduce((sum,p)=>sum+Math.max(0,(p.ovr||70)-72),0);
   return roster + net*.42 + (pct-.5)*5 + (chem-70)*.025 - unavailable*.018;
 }
-function outlookWinProbability(a,b,homeId=null){
-  const ra=outlookClubRating(a),rb=outlookClubRating(b),home=homeId===a.id?1.7:homeId===b.id?-1.7:0;
+function outlookRatingFor(club,ratings){return ratings?.get(club.id)??outlookClubRating(club);}
+function outlookWinProbability(a,b,homeId=null,ratings=null){
+  const ra=outlookRatingFor(a,ratings),rb=outlookRatingFor(b,ratings),home=homeId===a.id?1.7:homeId===b.id?-1.7:0;
   return outlookClamp(1/(1+Math.exp(-((ra-rb+home)/7.4))),.08,.92);
 }
-function outlookGameWinner(a,b,homeId=null){return Math.random()<outlookWinProbability(a,b,homeId)?a:b;}
-function outlookSeriesWinner(a,b){
+function outlookGameWinner(a,b,homeId=null,ratings=null){return Math.random()<outlookWinProbability(a,b,homeId,ratings)?a:b;}
+function outlookSeriesWinner(a,b,ratings=null){
   let aw=0,bw=0,g=0; const pattern=[a.id,a.id,b.id,b.id,a.id,b.id,a.id];
-  while(aw<4&&bw<4&&g<7){const w=outlookGameWinner(a,b,pattern[g]);if(w.id===a.id)aw++;else bw++;g++;}
+  while(aw<4&&bw<4&&g<7){const w=outlookGameWinner(a,b,pattern[g],ratings);if(w.id===a.id)aw++;else bw++;g++;}
   return aw>bw?a:b;
 }
-function outlookPlayInSeeds(rows,clubsById){
+function outlookPlayInSeeds(rows,clubsById,ratings=null){
   const get=i=>clubsById.get(rows[i]?.clubId); if(rows.length<10)return [get(6),get(7)].filter(Boolean);
   const s7=get(6),s8=get(7),s9=get(8),s10=get(9);
-  const g78=outlookGameWinner(s7,s8,s7.id), loser78=g78.id===s7.id?s8:s7;
-  const g910=outlookGameWinner(s9,s10,s9.id);
-  const seed8=outlookGameWinner(loser78,g910,loser78.id);
+  const g78=outlookGameWinner(s7,s8,s7.id,ratings), loser78=g78.id===s7.id?s8:s7;
+  const g910=outlookGameWinner(s9,s10,s9.id,ratings);
+  const seed8=outlookGameWinner(loser78,g910,loser78.id,ratings);
   return [g78,seed8];
 }
-function outlookConferenceChampion(rows,clubsById){
-  const top=rows.slice(0,6).map(r=>clubsById.get(r.clubId)); const pi=outlookPlayInSeeds(rows,clubsById); if(top.some(x=>!x)||pi.length<2)return top[0]||null;
+function outlookConferenceChampion(rows,clubsById,ratings=null){
+  const top=rows.slice(0,6).map(r=>clubsById.get(r.clubId)); const pi=outlookPlayInSeeds(rows,clubsById,ratings); if(top.some(x=>!x)||pi.length<2)return top[0]||null;
   const seeds=[...top,pi[0],pi[1]];
-  let q=[outlookSeriesWinner(seeds[0],seeds[7]),outlookSeriesWinner(seeds[3],seeds[4]),outlookSeriesWinner(seeds[2],seeds[5]),outlookSeriesWinner(seeds[1],seeds[6])];
-  let sem=[outlookSeriesWinner(q[0],q[1]),outlookSeriesWinner(q[2],q[3])];
-  return outlookSeriesWinner(sem[0],sem[1]);
+  let q=[outlookSeriesWinner(seeds[0],seeds[7],ratings),outlookSeriesWinner(seeds[3],seeds[4],ratings),outlookSeriesWinner(seeds[2],seeds[5],ratings),outlookSeriesWinner(seeds[1],seeds[6],ratings)];
+  let sem=[outlookSeriesWinner(q[0],q[1],ratings),outlookSeriesWinner(q[2],q[3],ratings)];
+  return outlookSeriesWinner(sem[0],sem[1],ratings);
 }
 function seasonOutlookSignature(){
   const live=G?.regularSeasonLive,club=me(); if(!G||!club)return 'none';
   return [G.season,G.phase,live?.roundIndex??-1,...G.clubs.map(c=>`${c.id}:${c.standings?.w||0}-${c.standings?.l||0}:${squadOvr(c)}`)].join('|');
 }
-function calculateSeasonOutlook(iterations=500){
+function calculateSeasonOutlook(iterations=160){
   if(!G||!me()||G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive)return null;
   const sig=seasonOutlookSignature(); if(_seasonOutlookCache.signature===sig&&_seasonOutlookCache.result)return _seasonOutlookCache.result;
   const userId=G.userClubGM?.clubId, live=G.regularSeasonLive, clubs=G.clubs||[], byId=new Map(clubs.map(c=>[c.id,c]));
+  const ratings=new Map(clubs.map(c=>[c.id,outlookClubRating(c)]));
   const base=new Map(clubs.map(c=>[c.id,{w:c.standings?.w||0,l:c.standings?.l||0,pf:c.standings?.pf||0,pa:c.standings?.pa||0}]));
   let winSum=0,seedSum=0,playoffs=0,titles=0,top6=0,playIn=0,bestSeed=99,worstSeed=0;
   const remaining=(live.rounds||[]).slice(live.roundIndex||0);
   for(let n=0;n<iterations;n++){
     const rec=new Map([...base].map(([id,r])=>[id,{...r}]));
     for(const rd of remaining){for(const pair of (rd.pairings||[])){
-      const a=byId.get(pair[0]),b=byId.get(pair[1]); if(!a||!b)continue; const w=outlookGameWinner(a,b,pair[0]);
+      const a=byId.get(pair[0]),b=byId.get(pair[1]); if(!a||!b)continue; const w=outlookGameWinner(a,b,pair[0],ratings);
       const ra=rec.get(a.id),rb=rec.get(b.id); if(w.id===a.id){ra.w++;rb.l++;}else{rb.w++;ra.l++;}
     }}
     const confRows={};
-    for(const conf of CONFERENCES){confRows[conf]=clubs.filter(c=>c.conference===conf).map(c=>({clubId:c.id,w:rec.get(c.id).w,l:rec.get(c.id).l,rating:outlookClubRating(c)})).sort((a,b)=>b.w-a.w||b.rating-a.rating);}
+    for(const conf of CONFERENCES){confRows[conf]=clubs.filter(c=>c.conference===conf).map(c=>({clubId:c.id,w:rec.get(c.id).w,l:rec.get(c.id).l,rating:ratings.get(c.id)})).sort((a,b)=>b.w-a.w||b.rating-a.rating);}
     const uc=byId.get(userId), rows=confRows[uc.conference], seed=rows.findIndex(r=>r.clubId===userId)+1;
     const uw=rec.get(userId).w; winSum+=uw; seedSum+=seed; bestSeed=Math.min(bestSeed,seed);worstSeed=Math.max(worstSeed,seed);
     if(seed<=6)top6++; else if(seed<=10)playIn++;
-    const clubsMap=byId; const east=outlookConferenceChampion(confRows.East,clubsMap),west=outlookConferenceChampion(confRows.West,clubsMap);
+    const east=outlookConferenceChampion(confRows.East,byId,ratings),west=outlookConferenceChampion(confRows.West,byId,ratings);
     let made=false,champ=null;
-    if(east&&west){made=(east.id===userId||west.id===userId);champ=outlookSeriesWinner(east,west);}
-    // A team can make the playoffs without winning its conference, so resolve qualification separately.
-    if(seed<=6)made=true; else if(seed<=10){const pi=outlookPlayInSeeds(rows,clubsMap);made=pi.some(x=>x?.id===userId);}
+    if(east&&west){made=(east.id===userId||west.id===userId);champ=outlookSeriesWinner(east,west,ratings);}
+    if(seed<=6)made=true; else if(seed<=10){const pi=outlookPlayInSeeds(rows,byId,ratings);made=pi.some(x=>x?.id===userId);}
     if(made)playoffs++; if(champ?.id===userId)titles++;
   }
   const result={iterations,projectedWins:winSum/iterations,expectedSeed:seedSum/iterations,playoffPct:playoffs/iterations*100,titlePct:titles/iterations*100,top6Pct:top6/iterations*100,playInPct:playIn/iterations*100,bestSeed,worstSeed,round:live.roundIndex||0};
   _seasonOutlookCache={signature:sig,result}; return result;
 }
 function seasonOutlookHtml(){
-  const o=calculateSeasonOutlook(500); if(!o)return '';
+  const o=calculateSeasonOutlook(160); if(!o)return '';
   const pct=v=>`${v<0.05?'<0.1':v.toFixed(1)}%`, seed=`#${Math.max(1,Math.min(15,Math.round(o.expectedSeed)))}`;
   return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>${o.iterations} simulations · after Game ${o.round}</span></div><div class="outlookGrid"><div class="outlookMetric"><small>Projected Wins</small><b>${o.projectedWins.toFixed(1)}</b><span>of 82 games</span></div><div class="outlookMetric"><small>Expected Seed</small><b>${seed}</b><span>Range #${o.bestSeed}–#${o.worstSeed}</span></div><div class="outlookMetric"><small>Playoff Chance</small><b>${pct(o.playoffPct)}</b><span>${pct(o.top6Pct)} direct top 6</span></div><div class="outlookMetric"><small>Title Chance</small><b>${pct(o.titlePct)}</b><span>NBA Championship</span></div></div><div class="outlookNote">Projection uses the remaining league schedule, current team strength, record, net performance, injuries and repeated Play-In / playoff simulations. It does not alter your live career.</div></div>`;
 }
