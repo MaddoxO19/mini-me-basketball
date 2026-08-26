@@ -6484,16 +6484,24 @@ function renderResultWindow(){
     if(ui.resultReturn==="postseason_transition"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
     }
-    // Summer League result flow: "Next Game" must actually advance the
-    // career to the next Summer League fixture. Previously this branch only
-    // returned to Home, leaving the user on the same round with no visible
-    // progression from the result screen.
+    // v0.1.21.2 — Summer League result-window progression.
+    // Advance exactly one Summer League round directly from the result window.
+    // Do not bounce through the generic Home/advanceFromUi flow: on mobile Safari
+    // that could leave the previous result DOM visible while later rounds were
+    // simulated underneath it.
     const isSummerLeagueResult=String(g.phaseTag||"").toLowerCase()==="summer_league";
-    ui.resultReturn=null;ui.page="home";show("game");render();
     if(isSummerLeagueResult&&G.phase==="SUMMER_LEAGUE"){
-      advanceFromUi(1);
-      return;
+      ui.resultReturn=null;
+      const r=advanceSummerLeagueRound(G);
+      if(!r?.ok){toast(r?.reason||"Unable to advance Summer League");renderResultWindow();return;}
+      save();
+      if(r.userGame){
+        openResultWindow(r.userGame,r.complete?"summer_summary":null);
+        return;
+      }
+      ui.page="home";show("game");render();return;
     }
+    ui.resultReturn=null;ui.page="home";show("game");render();
   };
 }
 function recentGame(){
