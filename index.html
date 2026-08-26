@@ -1342,7 +1342,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 
 
 
-/* v0.1.21.1 — League & Club Historical Records */
+/* v0.1.21.3 — League & Club Historical Records */
 .recordBookIntro{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.065),var(--panel));border-radius:14px;padding:13px;margin:10px 0}
 .recordBookIntro h3{margin:3px 0 4px;font-size:17px}.recordBookIntro p{margin:0;color:var(--muted);font-size:7px;line-height:1.45}
 .recordCategory{margin-top:13px}.recordCategoryHead{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;margin:0 2px 6px}.recordCategoryHead b{font-size:12px}.recordCategoryHead small{font-size:6px;color:var(--muted)}
@@ -1352,7 +1352,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 @media(max-width:560px){.recordGrid{grid-template-columns:1fr 1fr}.recordCard{padding:9px}.recordCard strong{font-size:16px}.clubRecordStrip{grid-template-columns:1fr 1fr}.clubRecordStrip .recordCard:last-child{grid-column:1/-1}}
 
 
-/* v0.1.21.1 — Football-style fixed navigation + Club Hub */
+/* v0.1.21.3 — Football-style fixed navigation + Club Hub */
 :root{--mm-topbar-h:94px;--mm-bottombar-h:66px}
 .game{padding-top:calc(var(--mm-topbar-h) + env(safe-area-inset-top));padding-bottom:calc(var(--mm-bottombar-h) + env(safe-area-inset-bottom));min-height:100vh}
 .status{position:fixed!important;left:50%;top:0;transform:translateX(-50%);width:min(560px,100%);z-index:1001;background:#0b1017f4!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 22px rgba(0,0,0,.24)}
@@ -1379,7 +1379,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.21.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.21.3</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5507,7 +5507,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.21.1 Fixed Navigation & Club Hub",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.21.3 Career Result Flow Fix",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6457,6 +6457,7 @@ function renderResultWindow(){
   const resultButtonLabel=historicalSeries?"Back to Series":
     ui.resultReturn==="schedule"?"Back to Schedule":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
+    ui.resultReturn==="preseason_complete"?"Continue to Regular Season":
     ui.resultReturn==="cup_final"?"Return to Regular Season":
     ui.resultReturn==="world_cup"?(G.phase==="WORLD_CUP"?"Next World Cup Game":"Continue Career"):
     ui.resultReturn==="postseason_transition"?(G.phase==="CHAMPION"?"View Season Review":G.phase==="PLAYOFFS"?"Continue to Playoffs":"Continue Postseason"):
@@ -6473,6 +6474,9 @@ function renderResultWindow(){
       ui.resultReturn=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;
     }
     if(ui.resultReturn==="summer_summary"){
+      ui.resultReturn=null;ui.page="home";show("game");render();return;
+    }
+    if(ui.resultReturn==="preseason_complete"){
       ui.resultReturn=null;ui.page="home";show("game");render();return;
     }
     if(ui.resultReturn==="cup_final"){
@@ -6497,6 +6501,21 @@ function renderResultWindow(){
       save();
       if(r.userGame){
         openResultWindow(r.userGame,r.complete?"summer_summary":null);
+        return;
+      }
+      ui.page="home";show("game");render();return;
+    }
+    // v0.1.21.3 — Preseason result-window progression.
+    // Keep the result window authoritative: advance exactly one preseason round,
+    // save once, then replace the current result with the next user's game.
+    const isPreseasonResult=String(g.phaseTag||"").toLowerCase()==="preseason";
+    if(isPreseasonResult&&G.phase==="PRESEASON"){
+      ui.resultReturn=null;
+      const r=advancePreseasonRound(G);
+      if(!r?.ok){toast(r?.reason||"Unable to advance Preseason");renderResultWindow();return;}
+      save();
+      if(r.userGame){
+        openResultWindow(r.userGame,r.complete?"preseason_complete":null);
         return;
       }
       ui.page="home";show("game");render();return;
@@ -6611,6 +6630,20 @@ function advanceFromUi(n){
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete){openFibaWindow();return}
   if(G.allStarLive&&!G.allStarLive.complete){openAllStarWindow();return}
   if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);save();render();return}
+
+  // v0.1.21.3 — explicit single-game Preseason path.
+  // This avoids the generic phase/boundary routine swallowing the result when
+  // Game 3 transitions immediately into the Regular Season.
+  if(G.phase==="PRESEASON"&&Math.max(1,Math.floor(+n||1))===1){
+    const r=advancePreseasonRound(G);
+    if(!r?.ok){toast(r?.reason||"Unable to simulate Preseason game");return;}
+    save();
+    if(r.userGame){
+      openResultWindow(r.userGame,r.complete?"preseason_complete":null);
+      return;
+    }
+    ui.page="home";show("game");render();return;
+  }
 
   // Seeds 1–6 are observers during the Play-In. "Complete Play-In" should
   // therefore resolve the entire tournament in one action, not one stage.
