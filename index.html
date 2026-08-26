@@ -5169,7 +5169,22 @@ function runRegularSeason(G) {
     } else if(G.inSeasonCup?.finalPending){
       const cr=advanceNBACupFinalEvent(G); if(!cr.ok) throw new Error(cr.reason);
     } else if(G.allStarLive && !G.allStarLive.complete){
-      const ar=advanceAllStarEvent(G); if(!ar.ok) throw new Error(ar.reason);
+      // Each of the 4 All-Star Weekend stages sets a "reviewStage" flag
+      // meant for a human to acknowledge (via continueAllStarWeekend) before
+      // the next stage can run — advanceAllStarEvent() itself just rejects
+      // with "Review the current All-Star result before continuing." while
+      // that flag is set. This loop never called continueAllStarWeekend(),
+      // so on the very next iteration after the first stage set the flag,
+      // it called advanceAllStarEvent() again, got the same rejection, and
+      // threw — confirmed by direct reproduction: an unattended multi-season
+      // run consistently died here, mid-regular-season, at the All-Star
+      // break, every time. Fixed by clearing the review the same way the
+      // real UI's own "Continue" button does, before asking for the next stage.
+      if(G.allStarLive.reviewStage){
+        const cr=continueAllStarWeekend(G); if(!cr.ok) throw new Error(cr.reason);
+      } else {
+        const ar=advanceAllStarEvent(G); if(!ar.ok) throw new Error(ar.reason);
+      }
     } else {
       const r=advanceRegularSeasonRound(G); if(!r.ok) throw new Error(r.reason);
     }
@@ -5483,11 +5498,48 @@ function advance(G) {
 }
 
 // runs full seasons (OFFSEASON round-trip back to OFFSEASON counts as one)
+//
+// Two phases — SUMMER_LEAGUE_COMPLETE and PRESEASON_READINESS — are
+// deliberate "gates" that only move forward via an explicit action
+// (continueFromSummerLeague / beginPreseasonFromReadiness), not through
+// the generic advance() driver: PHASE_HANDLERS has no entry for either,
+// so advance() throws "No handler for phase..." if it's ever called
+// while G.phase is one of these two. A human playing normally never
+// hits this — the real UI's own buttons call those two functions
+// directly instead of going through advance(). Bulk multi-season
+// simulation has no human to click through, so it has to resolve these
+// gates itself before calling advance() again. Confirmed by direct
+// reproduction: calling simSeasons() on a fresh career reliably threw
+// "No handler for phase SUMMER_LEAGUE_COMPLETE" at the Summer League →
+// Preseason boundary, then the same error for PRESEASON_READINESS
+// immediately after — exactly the boundary reported as unreliable
+// during season testing.
 function simSeasons(G, count) {
   let seasonsCompleted = 0;
   let startingSeason = G.season;
   let safety = 0;
   while (seasonsCompleted < count) {
+    if (G.phase === "SUMMER_LEAGUE_COMPLETE") {
+      const r = continueFromSummerLeague(G);
+      if (!r.ok) throw new Error("simSeasons: continueFromSummerLeague failed — " + r.reason);
+      safety++;
+      if (safety > 10000) throw new Error("simSeasons did not converge — loop is stuck.");
+      continue;
+    }
+    if (G.phase === "PRESEASON_READINESS") {
+      const r = beginPreseasonFromReadiness(G);
+      if (!r.ok) {
+        // Legitimate stop condition, not a bug: the user's own roster needs
+        // manual attention before preseason can start. Same shape as the
+        // existing PRESEASON-phase roster-compliance guard below, one phase
+        // earlier in the sequence.
+        if (G.userClubGM?.clubId && G.rosterCompliancePending?.clubId === G.userClubGM.clubId) return G;
+        throw new Error("simSeasons: beginPreseasonFromReadiness failed — " + r.reason);
+      }
+      safety++;
+      if (safety > 10000) throw new Error("simSeasons did not converge — loop is stuck.");
+      continue;
+    }
     advance(G);
     if (G.phase === "DRAFT_NIGHT" && G.draftState?.pendingUserPick && G.userDraftMode !== "auto") return G;
     if (G.userClubGM?.clubId && G.phase === "PRESEASON" && G.rosterCompliancePending?.clubId === G.userClubGM.clubId) return G;
