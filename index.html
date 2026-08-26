@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.30.1 Squad Performance Fix</title>
+<title>Mini&Me Basketball — v0.1.30.2 Squad Navigation & Performance Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1553,15 +1553,18 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .internationalCareerPanel .profileDataRow small{font-size:7.2px}.internationalCareerPanel .profileDataRow b{font-size:9.5px}
 @media(max-width:430px){.profileTabs.profileTabs4 button{font-size:6.2px}.draftIdentity.compact3 b{font-size:9.5px}}
 
-/* v0.1.30.1 — Monte Carlo Season Outlook */
+/* v0.1.30.2 — Monte Carlo Season Outlook */
 .seasonOutlook{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.055),var(--panel));border-radius:14px;padding:11px 12px;margin:9px 0}
 .seasonOutlookHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.seasonOutlookHead small{display:block;color:var(--accent2);font-size:5.8px;font-weight:950;letter-spacing:.55px;text-transform:uppercase}.seasonOutlookHead b{display:block;font-size:11px;margin-top:2px}.seasonOutlookHead span{font-size:6px;color:var(--muted);white-space:nowrap}
 .outlookGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.outlookMetric{border:1px solid var(--line);background:#10161d;border-radius:10px;padding:8px 5px;text-align:center;min-width:0}.outlookMetric small{display:block;color:var(--muted);font-size:5.5px;text-transform:uppercase}.outlookMetric b{display:block;font-size:14px;margin:2px 0;line-height:1.05}.outlookMetric span{display:block;color:var(--accent2);font-size:5.5px;line-height:1.2}.outlookNote{margin-top:7px;color:var(--muted);font-size:6px;line-height:1.4}
 @media(max-width:430px){.outlookGrid{grid-template-columns:repeat(2,1fr)}.outlookMetric b{font-size:15px}}
+
+/* v0.1.30.2 — Squad navigation responsiveness */
+.outlookIdle{padding:12px;border-top:1px solid var(--line);display:grid;gap:6px}.outlookIdle b{font-size:10px}.outlookIdle span{font-size:7px;color:var(--muted);line-height:1.4}.outlookRun{width:100%;margin-top:3px;min-height:34px}.outlookActions{padding:9px 0 0}.outlookActions .outlookRun{width:100%}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.29.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.30.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2234,16 +2237,24 @@ function makeDraftPick(originalClubId, year, round) {
   };
 }
 
+const _draftHorizonMemo=new WeakMap();
 function ensureDraftPickHorizon(G, seasonsAhead = 5) {
   if (!Array.isArray(G.draftPicks)) G.draftPicks = [];
-  for (let year = G.season; year <= G.season + seasonsAhead; year++) {
+  const endSeason=(G.season||1)+seasonsAhead;
+  const memo=_draftHorizonMemo.get(G);
+  // Asset ownership can change without changing the existence of the original
+  // pick horizon. Avoid re-scanning the full pick array on every Trade render.
+  if(memo && memo.season===G.season && memo.endSeason>=endSeason && memo.count===G.draftPicks.length) return G.draftPicks;
+  const existing=new Set(G.draftPicks.map(p=>`${p.year}|${p.round}|${p.originalClubId}`));
+  for (let year = G.season; year <= endSeason; year++) {
     for (const club of G.clubs) {
       for (const round of [1, 2]) {
-        const exists = G.draftPicks.some(p => p.year === year && p.round === round && p.originalClubId === club.id);
-        if (!exists) G.draftPicks.push(makeDraftPick(club.id, year, round));
+        const key=`${year}|${round}|${club.id}`;
+        if (!existing.has(key)) { G.draftPicks.push(makeDraftPick(club.id, year, round)); existing.add(key); }
       }
     }
   }
+  _draftHorizonMemo.set(G,{season:G.season,endSeason,count:G.draftPicks.length});
   return G.draftPicks;
 }
 
@@ -5819,7 +5830,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.30.1 Squad Performance Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.30.2 Squad Navigation & Performance Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -8727,7 +8738,7 @@ function playerPerformanceRow(p){
   return{p,st,gp,mpg,ppg,rpg,apg,spg,bpg,tov,fg,three,ft,impact,per36,label,tone};
 }
 
-// v0.1.30.1 — Career Intelligence / Monte Carlo Season Outlook
+// v0.1.30.2 — Career Intelligence / Monte Carlo Season Outlook
 // Performance fix: precompute team ratings once per outlook run and use a mobile-safe
 // simulation count. This prevents Squad/Performance navigation from synchronously
 // recalculating squad OVR thousands of times.
@@ -8799,9 +8810,13 @@ function calculateSeasonOutlook(iterations=160){
   _seasonOutlookCache={signature:sig,result}; return result;
 }
 function seasonOutlookHtml(){
-  const o=calculateSeasonOutlook(160); if(!o)return '';
+  if(!G||!me()||G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive)return '';
+  const sig=seasonOutlookSignature(),o=_seasonOutlookCache.signature===sig?_seasonOutlookCache.result:null;
+  if(!o){
+    return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>On demand</span></div><div class="outlookIdle"><b>Monte Carlo projection ready</b><span>Run the outlook when you want updated projected wins, seed, playoff and championship probabilities. It no longer calculates automatically when you open Squad.</span><button id="runSeasonOutlook" class="pick outlookRun">Run 120 Simulations</button></div></div>`;
+  }
   const pct=v=>`${v<0.05?'<0.1':v.toFixed(1)}%`, seed=`#${Math.max(1,Math.min(15,Math.round(o.expectedSeed)))}`;
-  return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>${o.iterations} simulations · after Game ${o.round}</span></div><div class="outlookGrid"><div class="outlookMetric"><small>Projected Wins</small><b>${o.projectedWins.toFixed(1)}</b><span>of 82 games</span></div><div class="outlookMetric"><small>Expected Seed</small><b>${seed}</b><span>Range #${o.bestSeed}–#${o.worstSeed}</span></div><div class="outlookMetric"><small>Playoff Chance</small><b>${pct(o.playoffPct)}</b><span>${pct(o.top6Pct)} direct top 6</span></div><div class="outlookMetric"><small>Title Chance</small><b>${pct(o.titlePct)}</b><span>NBA Championship</span></div></div><div class="outlookNote">Projection uses the remaining league schedule, current team strength, record, net performance, injuries and repeated Play-In / playoff simulations. It does not alter your live career.</div></div>`;
+  return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>${o.iterations} simulations · after Game ${o.round}</span></div><div class="outlookGrid"><div class="outlookMetric"><small>Projected Wins</small><b>${o.projectedWins.toFixed(1)}</b><span>of 82 games</span></div><div class="outlookMetric"><small>Expected Seed</small><b>${seed}</b><span>Range #${o.bestSeed}–#${o.worstSeed}</span></div><div class="outlookMetric"><small>Playoff Chance</small><b>${pct(o.playoffPct)}</b><span>${pct(o.top6Pct)} direct top 6</span></div><div class="outlookMetric"><small>Title Chance</small><b>${pct(o.titlePct)}</b><span>NBA Championship</span></div></div><div class="outlookActions"><button id="runSeasonOutlook" class="pick outlookRun">Refresh Outlook</button></div><div class="outlookNote">Projection uses the remaining league schedule, current team strength, record, net performance, injuries and repeated Play-In / playoff simulations. It does not alter your live career.</div></div>`;
 }
 
 function teamPerformance(){
@@ -9818,6 +9833,10 @@ function bind(){
   });
   if($("#openScouting"))$("#openScouting").onclick=()=>{ui.page="facilities";ui.facilitiesTab="draftintel";render()};
   if($("#scoutBackFacilities"))$("#scoutBackFacilities").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
+  if($("#runSeasonOutlook"))$("#runSeasonOutlook").onclick=()=>{
+    const btn=$("#runSeasonOutlook"); if(btn){btn.disabled=true;btn.textContent="Running Outlook…";}
+    setTimeout(()=>{try{calculateSeasonOutlook(120);render();}catch(err){console.error("Season Outlook error",err);toast("Unable to calculate season outlook");if(btn){btn.disabled=false;btn.textContent="Run Season Outlook";}}},20);
+  };
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.playerProfileTab="overview";ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
   if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
