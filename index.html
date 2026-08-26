@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.22.1 Home Between Games Flow</title>
+<title>Mini&Me Basketball — v0.1.23.2 Facilities Tabs</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -23,7 +23,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .statusIdentity{min-width:0}
 .statusClub{font-size:12px;font-weight:850;color:#e9edf2;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .phaseBadge{flex:none;border:1px solid #6a4d26;background:#241b10;color:var(--accent2);border-radius:999px;padding:6px 9px;font-size:8px;font-weight:950;letter-spacing:.7px;text-transform:uppercase}
-.globalTabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+.globalTabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:9px}
 .globalTabs button{border:1px solid var(--line);background:#111821;color:var(--muted);border-radius:10px;padding:7px 9px;font-size:9px;font-weight:900}
 .globalTabs button.active{background:#202719;color:var(--accent2);border-color:#6b5632}
 .homeStatus{padding:0;overflow:hidden}
@@ -1357,7 +1357,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .game{padding-top:calc(var(--mm-topbar-h) + env(safe-area-inset-top));padding-bottom:calc(var(--mm-bottombar-h) + env(safe-area-inset-bottom));min-height:100vh}
 .status{position:fixed!important;left:50%;top:0;transform:translateX(-50%);width:min(560px,100%);z-index:1001;background:#0b1017f4!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 8px 22px rgba(0,0,0,.24)}
 .statusTop{min-height:35px}
-.globalTabs{grid-template-columns:1fr 1fr;margin-top:7px;gap:5px}
+.globalTabs{grid-template-columns:1fr 1fr 1fr;margin-top:7px;gap:5px}
 .globalTabs button{min-height:30px;padding:6px 8px;font-size:8px}
 .nav{grid-template-columns:repeat(6,1fr)!important;min-height:var(--mm-bottombar-h)}
 .footballNav button{min-width:0;padding:4px 1px!important}
@@ -1376,10 +1376,76 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .clubSeasonLeaders{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.clubSeasonLeader{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:9px;min-width:0}.clubSeasonLeader small{display:block;color:var(--muted);font-size:5.5px}.clubSeasonLeader b{display:block;font-size:8.5px;margin:2px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.clubSeasonLeader strong{font-size:13px;color:var(--accent2)}
 .clubHonourHero{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}.clubHonourHero>div{border:1px solid #66502c;background:rgba(241,168,77,.05);border-radius:12px;padding:12px;text-align:center}.clubHonourHero b{display:block;font-size:20px}.clubHonourHero small{display:block;color:var(--muted);font-size:6px;margin-top:3px}
 @media(max-width:430px){:root{--mm-topbar-h:92px;--mm-bottombar-h:64px}.clubHubHeroMain{grid-template-columns:60px minmax(0,1fr);padding:12px}.clubHubCrest{width:60px;height:60px}.clubHubHero h2{font-size:18px}.clubHubMetrics{grid-template-columns:repeat(2,1fr)}.clubCurrentGrid{grid-template-columns:1fr}.clubSeasonLeaders{grid-template-columns:1fr 1fr}.footballNav button b{font-size:6.5px!important}}
+
+
+/* v0.1.22.3 — Responsiveness & FIBA presentation polish */
+/* Fixed translucent blur layers were expensive on mobile Safari, especially on long
+   box-score/profile pages. Keep the Football-style fixed bars, but make them opaque. */
+.status,.nav{
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  background:#0b1017!important;
+}
+.status{box-shadow:0 1px 0 var(--line),0 6px 16px rgba(0,0,0,.18)!important}
+.nav{box-shadow:0 -1px 0 var(--line),0 -5px 14px rgba(0,0,0,.14)!important}
+html,body{overscroll-behavior-y:none}
+button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
+.game,.page,.draftWindowWrap{ -webkit-overflow-scrolling:touch }
+
+/* The flag system replaced the old FIBA monogram badge. In line scores the flag
+   now sits directly on the table rather than inside the legacy gold square. */
+.fibaLineScore .nationalFlagMark.fibaNationMark{
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex:0 0 31px!important;
+  width:31px!important;
+  height:21px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  font-size:24px!important;
+  line-height:1!important;
+  overflow:visible!important;
+}
+.fibaLineScore .fibaNationCell{gap:7px!important}
+.fibaLineScore .fibaNationCell b{min-width:0}
+@media(max-width:520px){
+  .fibaLineScore .nationalFlagMark.fibaNationMark{
+    flex-basis:27px!important;width:27px!important;height:18px!important;font-size:21px!important;
+  }
+  .fibaLineScore .fibaNationCell{gap:5px!important}
+}
+
+
+/* v0.1.23.2 — Facilities hub tabs */
+.gmProfileTab{display:flex!important;align-items:center;justify-content:center;gap:6px}
+.gmProfileTab>span:last-child{white-space:nowrap}
+.gmNavAvatar{position:relative;display:inline-block;width:16px;height:17px;flex:0 0 16px}
+.gmNavAvatar:before{content:"";position:absolute;left:5px;top:0;width:6px;height:6px;border-radius:50%;background:currentColor}
+.gmNavAvatar i{position:absolute;left:2px;bottom:0;width:12px;height:8px;border-radius:8px 8px 3px 3px;background:currentColor}
+.gmProfileHero{display:grid;grid-template-columns:82px minmax(0,1fr);gap:14px;align-items:center;border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.07),var(--panel));border-radius:16px;padding:15px;margin-bottom:10px}
+.gmSilhouette{position:relative;width:76px;height:76px;border:1px solid #55452d;border-radius:18px;background:#10161d;overflow:hidden}
+.gmSilhouette:before{content:"";position:absolute;width:25px;height:25px;border-radius:50%;left:25px;top:12px;background:var(--accent2)}
+.gmSilhouette:after{content:"";position:absolute;width:54px;height:34px;border-radius:30px 30px 12px 12px;left:11px;bottom:8px;background:var(--accent2)}
+.gmProfileHero h2{margin:2px 0 4px;font-size:22px}.gmProfileHero p{margin:0;color:var(--muted);font-size:8px;line-height:1.4}
+.gmCareerMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0}.gmCareerMetrics>div{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px;text-align:center;min-width:0}.gmCareerMetrics b{display:block;font-size:14px}.gmCareerMetrics small{display:block;color:var(--muted);font-size:5.8px;margin-top:3px;text-transform:uppercase}
+.facilitiesHero{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.06),var(--panel));border-radius:15px;padding:14px;margin-bottom:10px}.facilitiesHero h3{margin:3px 0 5px;font-size:18px}.facilitiesHero p{margin:0;color:var(--muted);font-size:8px;line-height:1.45}
+.facilitiesGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.facilityLaunch{appearance:none;border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:14px;padding:14px;text-align:left;cursor:pointer}.facilityLaunch:hover{border-color:#66502c}.facilityLaunch span{display:block;color:var(--accent);font-size:19px;margin-bottom:7px}.facilityLaunch b{display:block;font-size:12px}.facilityLaunch small{display:block;color:var(--muted);font-size:7px;line-height:1.4;margin-top:4px}
+.teamProductionGrid.extended{grid-template-columns:repeat(4,1fr)}
+@media(max-width:430px){.globalTabs button{padding-left:5px;padding-right:5px}.gmProfileTab{gap:4px}.gmNavAvatar{transform:scale(.9)}.gmCareerMetrics{grid-template-columns:repeat(2,1fr)}.facilitiesGrid{grid-template-columns:1fr}.teamProductionGrid.extended{grid-template-columns:repeat(2,1fr)}}
+
+/* v0.1.23.2 — Facilities tab integration */
+.facilitiesMainTabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin-bottom:12px}
+.facilitiesMainTabs button{min-height:36px;font-size:8px}
+@media(max-width:430px){.facilitiesMainTabs button{font-size:7.5px;padding:8px 3px}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.22.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.23.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1388,7 +1454,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 <div id="s3" class="card" style="display:none"><h3>Career settings</h3><div class="smallcopy">These settings are stored with this career and applied to the simulation.</div><div class="setting"><div><b>Salary Cap</b><small>Enforce cap space and salary matching for signings and trades.</small></div><button id="capSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>Injuries</b><small>Players can miss games based on fatigue, age and workload.</small></div><button id="injSwitch" class="switch on"><span></span></button></div><div id="summary" class="card"></div><button id="startBtn" class="btn primary">Start Career</button></div>
 </div></section>
 
-<section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">MINI&ME BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div id="phaseBadge" class="phaseBadge"></div></div><div class="globalTabs"><button data-global="gm">GM Brief</button><button data-global="news">News</button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav footballNav"><button class="active" data-page="home"><span class="navIcon">⌂</span><b>Home</b></button><button data-page="team"><span class="navIcon">▦</span><b>Squad</b></button><button data-page="club"><span class="navIcon">◆</span><b>Club</b></button><button data-page="league"><span class="navIcon">≡</span><b>League</b></button><button data-page="international"><span class="navIcon">◎</span><b>Intl</b></button><button data-page="more"><span class="navIcon">•••</span><b>More</b></button></nav></div></section>
+<section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">MINI&ME BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div id="phaseBadge" class="phaseBadge"></div></div><div class="globalTabs"><button data-global="gm">GM Brief</button><button data-global="news">News</button><button data-global="gmProfile" class="gmProfileTab"><span class="gmNavAvatar" aria-hidden="true"><i></i></span><span>GM Profile</span></button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav footballNav"><button class="active" data-page="home"><span class="navIcon">⌂</span><b>Home</b></button><button data-page="team"><span class="navIcon">▦</span><b>Squad</b></button><button data-page="club"><span class="navIcon">◆</span><b>Club</b></button><button data-page="league"><span class="navIcon">≡</span><b>League</b></button><button data-page="international"><span class="navIcon">◎</span><b>Intl</b></button><button data-page="facilities"><span class="navIcon">▤</span><b>Facilities</b></button></nav></div></section>
 <section id="resultWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="resultWindowTitle">Game Result</b></div></div></div><div id="resultWindowHost"></div></div></section>
 <section id="postseasonUpdateWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="postseasonUpdateTitle">Postseason Update</b></div></div></div><div id="postseasonUpdateHost"></div></div></section>
 <section id="draftWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Mini&Me Draft</div><b id="draftWindowStatus">Draft Night</b></div><button id="draftWindowClose" class="draftClose">Return Home</button></div></div><div id="draftWindowHost"></div></div></section>
@@ -5159,6 +5225,25 @@ function advanceCareerEvent(G,count=1){
   return{ok:true,results};
 }
 
+function continueAllStarWeekendCore(G){
+  const live=G.allStarLive;
+  if(!live?.reviewStage)return{ok:false,reason:"No All-Star result awaiting review."};
+  const finished=live.reviewStage;
+  live.reviewStage=null;
+  if(finished<4){
+    live.stage=finished+1;
+    G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,live:true};
+    return{ok:true,complete:false};
+  }
+  live.complete=true;
+  G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,mvpPlayerId:live.mvpPlayerId,live:false,complete:true};
+  G.allStarDone=true;
+  if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;
+  logEvent(G,"NBA All-Star Weekend complete.");
+  pushNews(G,`NBA All-Star Weekend complete. ${allPlayers(G).find(p=>p.id===live.mvpPlayerId)?.name||"The game standout"} earned All-Star MVP.`,"All-Star",1);
+  return{ok:true,complete:true};
+}
+
 function runRegularSeason(G) {
   initializeRegularSeasonLive(G);
   let safety=0;
@@ -5181,7 +5266,7 @@ function runRegularSeason(G) {
       // break, every time. Fixed by clearing the review the same way the
       // real UI's own "Continue" button does, before asking for the next stage.
       if(G.allStarLive.reviewStage){
-        const cr=continueAllStarWeekend(G); if(!cr.ok) throw new Error(cr.reason);
+        const cr=continueAllStarWeekendCore(G); if(!cr.ok) throw new Error(cr.reason);
       } else {
         const ar=advanceAllStarEvent(G); if(!ar.ok) throw new Error(ar.reason);
       }
@@ -5559,9 +5644,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.22.1 Home Between Games Flow",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.23.2 Facilities Tabs",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -6707,6 +6792,7 @@ function advanceFromUi(n){
   if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);save();render();return}
 
   // v0.1.22.1 — one owner for every single playable career event.
+  // v0.1.22.3 preserves the audited v0.1.22.2 phase fixes and only optimises presentation/render cost.
   // Home does not contain separate Summer League/Preseason/Regular/Postseason
   // simulation paths anymore. A one-game action advances one career event,
   // extracts the user's game, and opens the universal result screen.
@@ -7098,14 +7184,11 @@ function leagueTeamResultMetricRank(clubId,key){
 function matchupStatRanks(club){
   if(!club)return "";
   const prod=teamSeasonProduction(club);
-  if(!prod.gp)return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>—</b></span><span>RPG <b>—</b></span><span>APG <b>—</b></span></div><div class="broadcastStatRanks rankSecondary"><span>OFF <b>—</b></span><span>DEF <b>—</b></span><span>NET <b>—</b></span></div></div>`;
-  const ppg=leagueTeamMetricRank(club.id,"ppg");
-  const rpg=leagueTeamMetricRank(club.id,"rpg");
-  const apg=leagueTeamMetricRank(club.id,"apg");
+  if(!prod.gp)return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>OFF <b>—</b></span><span>DEF <b>—</b></span><span>NET <b>—</b></span></div></div>`;
   const off=leagueTeamResultMetricRank(club.id,"off");
   const def=leagueTeamResultMetricRank(club.id,"def");
   const net=leagueTeamResultMetricRank(club.id,"net");
-  return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>PPG <b>#${ppg||"—"}</b></span><span>RPG <b>#${rpg||"—"}</b></span><span>APG <b>#${apg||"—"}</b></span></div><div class="broadcastStatRanks rankSecondary"><span>OFF <b>#${off||"—"}</b></span><span>DEF <b>#${def||"—"}</b></span><span>NET <b>#${net||"—"}</b></span></div></div>`;
+  return `<div class="broadcastRankStack"><div class="broadcastStatRanks"><span>OFF <b>#${off||"—"}</b></span><span>DEF <b>#${def||"—"}</b></span><span>NET <b>#${net||"—"}</b></span></div></div>`;
 }
 
 function worldCupStageLabel(stage){
@@ -7507,24 +7590,7 @@ function allStarReviewHtml(live){
   }
   return"";
 }
-function continueAllStarWeekend(G){
-  const live=G.allStarLive;
-  if(!live?.reviewStage)return{ok:false,reason:"No All-Star result awaiting review."};
-  const finished=live.reviewStage;
-  live.reviewStage=null;
-  if(finished<4){
-    live.stage=finished+1;
-    G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,live:true};
-    return{ok:true,complete:false};
-  }
-  live.complete=true;
-  G.allStar={season:G.season,playerIds:[...new Set(Object.values(live.teams).flat())],teams:live.teams,games:live.games,results:live.results,mvpPlayerId:live.mvpPlayerId,live:false,complete:true};
-  G.allStarDone=true;
-  if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;
-  logEvent(G,"NBA All-Star Weekend complete.");
-  pushNews(G,`NBA All-Star Weekend complete. ${allPlayers(G).find(p=>p.id===live.mvpPlayerId)?.name||"The game standout"} earned All-Star MVP.`,"All-Star",1);
-  return{ok:true,complete:true};
-}
+function continueAllStarWeekend(G){return continueAllStarWeekendCore(G)}
 function allStarProgressHtml(live){
   const events=[['Rising Stars',1],['3-Point',2],['Dunk',3],['All-Star Game',4]];
   return `<div class="asProgress">${events.map(([n,i])=>{const done=i<live.stage||live.complete||live.reviewStage===i;const active=(live.stage===i&&!live.complete&&!live.reviewStage);return `<div class="asStep ${active?"active":""} ${done?"done":""}"><span>${done?"✓":i}</span><b>${n}</b></div>`}).join("")}</div>`;
@@ -7678,8 +7744,8 @@ function renderFibaWindow(){
       }
       live.awaitingUserContinue=false;
       ui.fibaBoxSide="teamA";
-      await save();
       renderFibaWindow();
+      save();
     };
     return;
   }
@@ -7700,8 +7766,8 @@ function renderFibaWindow(){
     liveNow.lastPlayedMatchday=r.matchday;
     if(r.userGame)liveNow.lastUserGameId=r.userGame.id;
     ui.fibaBoxSide="teamA";
-    await save();
     renderFibaWindow();
+    save();
   };
 }
 
@@ -8468,11 +8534,13 @@ function teamPerformance(){
   const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"—";
   const pct=v=>v==null?"—":`${v.toFixed(1)}%`;
   const teamCards=[
-    ["PPG",prod.ppg,"ppg"],["RPG",prod.rpg,"rpg"],["APG",prod.apg,"apg"],["FG%",prod.fg,"fg"],["3PT%",prod.three,"three"]
+    ["PPG",prod.ppg,"ppg"],["RPG",prod.rpg,"rpg"],["APG",prod.apg,"apg"],
+    ["OFF",teamResultMetricValue(club,"off"),"off"],["DEF",teamResultMetricValue(club,"def"),"def"],["NET",teamResultMetricValue(club,"net"),"net"],
+    ["FG%",prod.fg,"fg"],["3PT%",prod.three,"three"]
   ];
   const sortButton=(key,label)=>`<button data-perfsort="${key}" class="${sortKey===key?"active":""}">${label}${sortKey===key?` ${dir==="desc"?"↓":"↑"}`:""}</button>`;
   return `<div class="performanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played. Review team output and individual production against role and minutes.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
-    <div class="teamProductionGrid">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${key==="fg"||key==="three"?pct(val):fmt(val)}</b><span>${gp?`#${leagueTeamMetricRank(club.id,key)||"—"} NBA`:"—"}</span></div>`).join("")}</div>
+    <div class="teamProductionGrid extended">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${key==="fg"||key==="three"?pct(val):fmt(val)}</b><span>${gp?`#${(["off","def","net"].includes(key)?leagueTeamResultMetricRank(club.id,key):leagueTeamMetricRank(club.id,key))||"—"} NBA`:"—"}</span></div>`).join("")}</div>
     <div class="performanceInsightStrip"><div><small>SCORING LEADER</small><b>${[...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.ppg||0)} PPG</span></div><div><small>TOP PLAYMAKER</small><b>${[...rows].sort((a,b)=>b.apg-a.apg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.apg-a.apg)[0]?.apg||0)} APG</span></div><div><small>TOP REBOUNDER</small><b>${[...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.rpg||0)} RPG</span></div></div>
     <div class="performanceToolbar"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
     <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>PLAYER</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${r.p.rotationRole||"Depth"} · ${r.p.ovr} OVR</small></div><span class="${r.tone}">${r.label}</span></div></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join("")}</tbody></table></div>
@@ -8523,7 +8591,22 @@ function clubHub(){
 }
 function gmBrief(){
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
-  return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="sectionTitle">Career</div><div class="card"><div class="more"><div><b>Career Record</b><small>Regular season</small></div><b>${gm.careerW}–${gm.careerL}</b></div><div class="more"><div><b>NBA Championships</b><small>Career honours</small></div><b>${gm.championships}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>Career honours</small></div><b>${gm.cupTitles}</b></div></div>`;
+  return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="card"><button id="openGmProfile" class="btn secondary">Open GM Profile</button></div>`;
+}
+function gmProfile(){
+  const club=me(),gm=gmCareerState(G),history=[...(G.seasonSummaries||[])].slice().reverse();
+  const seasons=Math.max(gm.seasons?.length||0,history.length);
+  const winPct=(gm.careerW+gm.careerL)?(gm.careerW/(gm.careerW+gm.careerL)*100).toFixed(1):"—";
+  const recent=history.slice(0,6);
+  const national=G.userNationalGM?.nationCode?nat(G.userNationalGM.nationCode):null;
+  return `${header("GM Profile",`${G.gmName||"GM"} · Career Command`)}
+    <div class="gmProfileHero"><div class="gmSilhouette" aria-hidden="true"></div><div><div class="eyebrow">GENERAL MANAGER</div><h2>${G.gmName||"GM"}</h2><p>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation · ${club?.name||"—"}</p><p>Season ${G.season}${national?` · National GM: ${national.name}`:""}</p></div></div>
+    <div class="gmCareerMetrics"><div><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div><b>${winPct}${winPct!=="—"?"%":""}</b><small>Win Rate</small></div><div><b>${gm.playoffAppearances||0}</b><small>Playoffs</small></div><div><b>${seasons}</b><small>Seasons</small></div></div>
+    <div class="sectionTitle">Career Honours</div><div class="card"><div class="more"><div><b>NBA Championships</b><small>GM career honours</small></div><b>${gm.championships||0}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>GM career honours</small></div><b>${gm.cupTitles||0}</b></div><div class="more"><div><b>National Honours</b><small>International career</small></div><b>${gm.nationalHonours||0}</b></div></div>
+    <div class="sectionTitle">Career History</div><div class="card">${recent.length?recent.map(x=>`<div class="seasonHistoryRow"><b>Season ${x.season} · ${x.user?.clubName||club?.name||"Club"}</b><small>${x.user?.record||"—"} · ${x.user?.postseasonFinish||"Season complete"}${x.user?.champion?" · NBA Champion":""}${x.user?.cupChampion?" · NBA Cup":""}</small></div>`).join(""):`<div class="empty">Career history will build as seasons are completed.</div>`}</div>
+    <div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div>
+    <div class="sectionTitle">Career Controls</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>
+    <div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div>`;
 }
 function newsPage(){
   return `${header("News","Club and league news from around the basketball world")}<div class="newsFilter"><button data-newsfilter="all" class="${ui.newsFilter==="all"?"active":""}">All</button><button data-newsfilter="club" class="${ui.newsFilter==="club"?"active":""}">Club</button><button data-newsfilter="league" class="${ui.newsFilter==="league"?"active":""}">League</button></div><div class="card">${news()}</div>`;
@@ -9515,7 +9598,21 @@ function international(){
 }
 
 
-function frontOfficePage(){
+function facilitiesPage(){
+  const tabs=[["overview","Overview"],["frontoffice","Front Office"],["draftintel","Draft Intel"]];
+  const active=ui.facilitiesTab||"overview";
+  let body="";
+  if(active==="frontoffice") body=frontOfficePage(true);
+  else if(active==="draftintel") body=scoutingPage(true);
+  else {
+    const fo=ensureFrontOfficeState(G),scout=scoutingLevelInfo(G);
+    body=`<div class="facilitiesHero"><div class="eyebrow">CLUB INFRASTRUCTURE</div><h3>Build the organisation behind the team</h3><p>Facilities brings together the departments and intelligence systems that improve long-term club capability without crowding the Squad or Club history areas.</p></div>
+      <div class="sectionTitle">Capability Snapshot</div><div class="card"><div class="more"><div><b>Training Department</b><small>Player development environment</small></div><b>LV ${fo.departments.training||1}</b></div><div class="more"><div><b>Medical Department</b><small>Injury prevention and recovery</small></div><b>LV ${fo.departments.medical||1}</b></div><div class="more"><div><b>Coaching Department</b><small>Execution and chemistry</small></div><b>LV ${fo.departments.coaching||1}</b></div><div class="more"><div><b>Scouting Department</b><small>${scout.name}</small></div><b>LV ${scout.level}</b></div></div>`;
+  }
+  return `${header("Facilities",`${me().name} · Organisational Capability`)}<div class="clubMainTabs facilitiesMainTabs">${tabs.map(x=>`<button data-factab="${x[0]}" class="${active===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>${body}`;
+}
+
+function frontOfficePage(embedded=false){
   const fo=ensureFrontOfficeState(G),scout=scoutingLevelInfo(G);
   const cards=["training","medical","coaching"].map(k=>{
     const level=fo.departments[k],info=frontOfficeDepartmentInfo(k,level),cost=frontOfficeUpgradeCost(level),max=level>=5;
@@ -9524,19 +9621,17 @@ function frontOfficePage(){
       `+${coachingChemistryBonus(level).toFixed(1)} execution chemistry · improved ball security`;
     return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
-  return header("Front Office","Long-term club infrastructure and department development")+`
-    <div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn one development point after each completed season, then choose where to build the organisation. Training, Medical and Coaching now each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn one development point after each completed season, then choose where to build the organisation. Training, Medical and Coaching each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
-    <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Unlike the club departments above, scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>
-    <div class="card"><button id="frontOfficeBack" class="btn secondary">Return to More</button></div>`;
+    <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>`;
+  return embedded?content:header("Front Office","Long-term club infrastructure and department development")+content;
 }
 
-function scoutingPage(){
+function scoutingPage(embedded=false){
   const scout=scoutingLevelInfo(G),board=draftClassScoutBoard(G,20),era=G.upcomingDraftClass?.era||G.talentHealth?.era?.type||"NORMAL";
   const topBoard=board.length?`<div class="scoutDraftBoard">${board.map(x=>`<div class="scoutProspect"><div class="scoutProspectRank">#${x.rank}</div><div class="scoutProspectMain"><b>${x.name}</b><small>${x.position} · Age ${x.age} · ${x.archetype} · ${x.origin}</small><span>${x.strength} · Risk: ${x.risk}</span></div><div class="scoutProspectRatings"><b>${x.ovrRange}</b><small>OVR EST</small><b>${x.potRange}</b><small>POT EST</small></div><div class="scoutProspectProj"><b>${x.projection}</b><small>${x.confidence} CONF.</small></div></div>`).join("")}</div>`:"";
-  return header("Scouting","Draft intelligence, roster needs and player targeting")+`
-    <div class="scoutingDeptHero"><div><div class="eyebrow">SCOUTING DEPARTMENT</div><h3>Level ${scout.level} · ${scout.name}</h3><p>${scout.description}. Ratings remain estimates until a player enters your roster. Scouting XP is earned organically through completed drafts, improving the department over multiple seasons.</p></div><div class="scoutLevelBadge"><b>${scout.level}/5</b><small>${scout.level>=5?"MAX LEVEL":`${scout.xp}/${scout.nextXp} XP`}</small></div></div>
+  const content=`<div class="scoutingDeptHero"><div><div class="eyebrow">SCOUTING DEPARTMENT</div><h3>Level ${scout.level} · ${scout.name}</h3><p>${scout.description}. Ratings remain estimates until a player enters your roster. Scouting XP is earned organically through completed drafts, improving the department over multiple seasons.</p></div><div class="scoutLevelBadge"><b>${scout.level}/5</b><small>${scout.level>=5?"MAX LEVEL":`${scout.xp}/${scout.nextXp} XP`}</small></div></div>
     <div class="scoutingCapabilities"><div><b>${scout.level<=2?"Broad":scout.level===3?"Moderate":"Tight"}</b><small>OVR ranges</small></div><div><b>${scout.level===1?"Very Broad":scout.level<=3?"Moderate":"Tight"}</b><small>POT ranges</small></div><div><b>${scout.level>=4?"Strong":scout.level>=2?"Useful":"Limited"}</b><small>Projection confidence</small></div><div><b>${era}</b><small>Current class environment</small></div></div>
     <div class="sectionTitle">Draft Intelligence · Top 20</div>
     <div class="scoutDraftIntro"><b>Scouted Board</b><small>The board ranks prospects by your department's current evaluation, not by hidden true ratings. A player can outperform or underperform this projection.</small></div>
@@ -9544,27 +9639,49 @@ function scoutingPage(){
     <div class="sectionTitle">Roster Needs & Targets</div>
     ${scoutingReportHtml()}
     <div class="sectionTitle">Draft Class History</div>
-    ${draftHistoryHtml(G)}
-    <div class="card"><button id="scoutBackMore" class="btn secondary">Return to More</button></div>`;
+    ${draftHistoryHtml(G)}`;
+  return embedded?content:header("Scouting","Draft intelligence, roster needs and player targeting")+content;
 }
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
   return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button id="openScouting" class="moreLaunch"><b>Scouting</b><small>Roster needs & targets</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>Season 1 talent baseline</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div></div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
-function render(){ensureTalentLifecycleState(G);ensureTwoWayDevelopmentPool(G,42);ensureCountryBasedPlayerNames();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="gm"?gmBrief():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():more();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
+let _renderPrepSignature="";
+function renderPrepSignature(){
+  if(!G)return"";
+  let roster=0,twoWay=0,gLeague=0;
+  for(const club of (G.clubs||[])){
+    roster+=(club.roster||[]).length;
+    twoWay+=(club.twoWayRoster||[]).length;
+    gLeague+=(club.gLeagueRoster||[]).length;
+  }
+  return [activeSlot||0,G.createdAt||0,G.season||0,G.phase||"",roster,twoWay,gLeague,(G.freeAgents||[]).length,(G.draftPool||[]).length,(G.upcomingDraftClass?.prospects||[]).length].join("|");
+}
+function prepareRenderState(force=false){
+  if(!G)return;
+  const sig=renderPrepSignature();
+  if(!force&&sig===_renderPrepSignature)return;
+  ensureTalentLifecycleState(G);
+  ensureTwoWayDevelopmentPool(G,42);
+  ensureCountryBasedPlayerNames();
+  _renderPrepSignature=renderPrepSignature();
+}
+function render(){prepareRenderState();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   $$("[data-scoutgroup]").forEach(b=>b.onclick=()=>{ui.scoutGroup=b.dataset.scoutgroup;render()});
-  if($("#openFrontOffice"))$("#openFrontOffice").onclick=()=>{ui.page="frontOffice";render()};
-  if($("#frontOfficeBack"))$("#frontOfficeBack").onclick=()=>{ui.page="more";render()};
+  $$("[data-factab]").forEach(b=>b.onclick=()=>{ui.page="facilities";ui.facilitiesTab=b.dataset.factab;render()});
+  if($("#openGmProfile"))$("#openGmProfile").onclick=()=>{ui.page="gmProfile";render()};
+  if($("#openFrontOffice"))$("#openFrontOffice").onclick=()=>{ui.page="facilities";ui.facilitiesTab="frontoffice";render()};
+  if($("#frontOfficeBack"))$("#frontOfficeBack").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
   $$("[data-foupgrade]").forEach(b=>b.onclick=()=>{
     const fo=ensureFrontOfficeState(G),k=b.dataset.foupgrade,level=fo.departments[k]||1,cost=frontOfficeUpgradeCost(level);
     if(level>=5){toast("Department is already at maximum level");return}
     if(fo.points<cost){toast("Not enough development points");return}
     fo.points-=cost;fo.departments[k]=level+1;save();toast(`${frontOfficeDepartmentInfo(k,level+1).name} upgraded to Level ${level+1}`);render();
   });
-  if($("#openScouting"))$("#openScouting").onclick=()=>{ui.page="scouting";render()};
-  if($("#scoutBackMore"))$("#scoutBackMore").onclick=()=>{ui.page="more";render()};
+  if($("#openScouting"))$("#openScouting").onclick=()=>{ui.page="facilities";ui.facilitiesTab="draftintel";render()};
+  if($("#scoutBackFacilities"))$("#scoutBackFacilities").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
   if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
