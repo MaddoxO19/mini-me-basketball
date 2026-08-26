@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.23.3 Postseason State Integrity</title>
+<title>Mini&Me Basketball — v0.1.24.0 Squad UI/UX Refinement</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1442,10 +1442,25 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .facilitiesMainTabs{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin-bottom:12px}
 .facilitiesMainTabs button{min-height:36px;font-size:8px}
 @media(max-width:430px){.facilitiesMainTabs button{font-size:7.5px;padding:8px 3px}}
+
+/* v0.1.24.0 — Squad UI/UX refinement */
+.squadPageTitle{margin:2px 2px 10px}.squadPageTitle h2{margin:0;font-size:23px}.squadPageTitle p{margin:3px 0 0;color:var(--muted);font-size:8px}
+.squadSectionHead{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:14px 2px 8px}.squadSectionHead h3{margin:0;font-size:17px}.squadSectionHead small{color:var(--muted);font-size:7px}
+.depthChart{display:grid;gap:9px}.depthPosition{border:1px solid var(--line);background:var(--panel);border-radius:14px;overflow:hidden}.depthPositionHead{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#111820;border-bottom:1px solid var(--line)}.depthPositionHead b{color:var(--accent2);font-size:13px}.depthPositionHead small{font-size:7px;color:var(--muted)}
+.depthPlayerRow{display:grid;grid-template-columns:27px minmax(0,1fr) 72px 42px;gap:8px;align-items:center;padding:10px 11px;border-top:1px solid var(--line)}.depthPlayerRow:first-of-type{border-top:0}.depthOrder{display:grid;place-items:center;width:23px;height:23px;border:1px solid #4a5664;border-radius:7px;color:var(--muted);font-size:8px;font-weight:950}.depthPlayerMain{min-width:0}.depthPlayerMain b{font-size:10px}.depthPlayerMain small{display:block;margin-top:3px;color:var(--muted);font-size:6.5px;white-space:normal}.depthOvr,.depthMin{text-align:right}.depthOvr b,.depthMin b{display:block;font-size:11px}.depthOvr small,.depthMin small{display:block;color:var(--muted);font-size:5.5px;margin-top:2px}.depthOvr small{color:var(--accent2);white-space:nowrap}.depthEmpty{padding:12px;color:var(--muted);font-size:8px}
+.teamProductionGrid.compactNine{grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.teamProductionGrid.compactNine>div{padding:8px 5px}.teamProductionGrid.compactNine small{font-size:5px}.teamProductionGrid.compactNine b{font-size:12px}.teamProductionGrid.compactNine span{font-size:5px}.compactPerformanceHero{padding:11px 12px}.compactPerformanceHero h3{font-size:15px}.compactPerformanceHero p{font-size:6.5px}.compactPerformanceHero>strong{font-size:20px}
+.performanceInsightStrip.enlarged>div{padding:11px 7px}.performanceInsightStrip.enlarged small{font-size:5.5px}.performanceInsightStrip.enlarged b{font-size:8.5px;margin:3px 0}.performanceInsightStrip.enlarged strong{display:block;font-size:10px;color:var(--accent2)}
+.performanceToolbar.expandedFilters{display:block}.performanceToolbar.expandedFilters>span{display:block;margin-bottom:6px}.performanceToolbar.expandedFilters>div{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;width:100%;overflow:visible}.performanceToolbar.expandedFilters button{width:100%;padding:8px 6px;font-size:7px;border-radius:9px}
+.compactConstruction .contractEconomyHead{padding:10px 12px}.compactConstruction .contractEconomyHead small{font-size:6.5px}.constructionRows{padding:0 12px 8px}.constructionRow{display:grid;grid-template-columns:minmax(0,1fr) 58px 62px;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line)}.constructionRow.head{padding:6px 0;color:var(--muted);font-size:5.5px;font-weight:900}.constructionRow>div b{display:block;font-size:8px}.constructionRow>div small{display:block;color:var(--muted);font-size:5.5px;margin-top:2px}.constructionRow>strong{text-align:center;font-size:12px;color:var(--accent2)}.constructionRow>span{text-align:right;font-size:7px;font-weight:850}
+.squadScheduleTabs{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:5px!important;overflow:visible!important}.squadScheduleTabs button{width:100%;padding:8px 4px!important;font-size:7px!important}.squadScheduleTabs button:nth-child(n+5){grid-column:auto}
+.draftPlanningTabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0 10px}.draftPlanningTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:10px;padding:9px;font-size:8px;font-weight:900}.draftPlanningTabs button.active{background:var(--accent);border-color:var(--accent);color:#17100a}.draftAssetYears{display:grid;gap:8px}.draftAssetSeason{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}.draftAssetSeasonHead{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:#111820;border-bottom:1px solid var(--line)}.draftAssetSeasonHead b{font-size:10px}.draftAssetSeasonHead small{font-size:6px;color:var(--muted)}.draftAssetRound{display:grid;grid-template-columns:32px minmax(0,1fr);gap:8px;align-items:start;padding:9px 11px;border-top:1px solid var(--line)}.draftAssetRound:first-of-type{border-top:0}.draftAssetRound>strong{display:grid;place-items:center;height:26px;border:1px solid #66502c;border-radius:7px;color:var(--accent2);font-size:7px}.draftAssetRound>div{display:flex;gap:5px;flex-wrap:wrap}.draftAssetChip{border:1px solid #35414d;background:#0f151c;border-radius:999px;padding:5px 7px;font-size:6.5px}.draftAssetChip b{font-size:6.5px}.draftAssetChip em{font-style:normal;color:var(--accent2);font-weight:900}.draftAssetNone{font-size:7px;color:var(--muted);padding:5px}.draftClassSummary{display:flex;justify-content:space-between;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px 11px;margin-bottom:8px}.draftClassSummary b{font-size:10px}.draftClassSummary small{display:block;color:var(--muted);font-size:6.5px;margin-top:2px}.draftClassSummary strong{font-size:7px;color:var(--accent2)}
+.faTopMetrics .metric small{line-height:1.3}.modernFaNegotiate{padding:13px}.modernFaNegotiate .faHead h3{font-size:19px}.faAskLine{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin:10px 0}.faAskLine span{font-size:6px;color:var(--muted);font-weight:900}.faAskLine b{font-size:9px;color:var(--accent2);text-align:right}.faStepperGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.faStepper{border:1px solid var(--line);background:#0f151c;border-radius:11px;padding:9px}.faStepper>small{display:block;font-size:5.7px;color:var(--muted);font-weight:900;margin-bottom:6px}.faStepper>div{display:grid;grid-template-columns:34px minmax(0,1fr) 34px;gap:5px;align-items:center}.faStepper button{height:34px;border:1px solid #485463;background:#171e28;color:var(--text);border-radius:8px;font-size:16px;font-weight:900}.faStepper input{height:34px;width:100%;margin:0!important;border:1px solid #3b4652!important;background:#121923!important;color:var(--text)!important;text-align:center;font-size:11px;font-weight:950;border-radius:8px!important;appearance:textfield}.faStepper input::-webkit-inner-spin-button,.faStepper input::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}.faStepper>span{display:block;text-align:center;color:var(--muted);font-size:5.5px;margin-top:5px}.faOfferActions.modern{display:grid;grid-template-columns:1fr auto;align-items:center}.faOfferActions.modern .btn{margin:0}.matchAsk{min-height:42px;padding:8px 10px}.freeAgentTable table{min-width:540px}.freeAgentTable th:nth-child(1){width:40%}.freeAgentTable th:nth-child(4){width:16%}.freeAgentTable .pname small{font-size:6.5px}
+@media(max-width:430px){.depthPlayerRow{grid-template-columns:25px minmax(0,1fr) 62px 38px;padding:9px 8px;gap:6px}.depthOvr small{font-size:5px}.teamProductionGrid.compactNine{gap:4px}.performanceInsightStrip.enlarged{gap:5px}.performanceInsightStrip.enlarged>div{padding:10px 5px}.performanceInsightStrip.enlarged b{font-size:7.6px}.performanceInsightStrip.enlarged strong{font-size:9px}.squadScheduleTabs{grid-template-columns:repeat(4,1fr)!important}.faStepperGrid{grid-template-columns:1fr}.faOfferActions.modern{grid-template-columns:1fr}.matchAsk{width:100%}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.23.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.24.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5651,7 +5666,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.23.3 Postseason State Integrity",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.24.0 Squad UI/UX Refinement",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6486,9 +6501,9 @@ function clubScheduleEntries(){
 function clubSchedule(){
   const all=clubScheduleEntries(),filter=ui.scheduleFilter||"all";
   const filtered=filter==="all"?all:all.filter(x=>x.comp===filter);
-  const filters=[["all","All"],["League","League"],["NBA Cup","Cup"],["Play-In","Play-In"],["Playoffs","Playoffs"],["Preseason","Pre"],["Summer League","Summer"]];
-  return `${header("Schedule",`${me().name} · Club calendar`)}
-    <div class="scheduleToolbar compactScheduleTabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
+  const filters=[["Summer League","Summer"],["Preseason","Pre"],["NBA Cup","Cup"],["League","League"],["Play-In","Play-In"],["Playoffs","Playoffs"],["all","All"]];
+  return `<div class="squadSectionHead"><h3>Schedule</h3><small>Club calendar</small></div>
+    <div class="scheduleToolbar compactScheduleTabs squadScheduleTabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
     <div class="scheduleList compactScheduleList">${filtered.length?filtered.map(e=>{
       const opp=c(e.oppId),g=e.game,score=e.kind==="completed"?(e.home?`${g.homeScore}–${g.awayScore}`:`${g.awayScore}–${g.homeScore}`):"—";
       const outcome=e.kind==="completed"?(g.winnerClubId===me().id?"W":"L"):"UPCOMING";
@@ -8537,32 +8552,26 @@ function playerPerformanceRow(p){
   return{p,st,gp,mpg,ppg,rpg,apg,spg,bpg,tov,fg,three,ft,impact,per36,label,tone};
 }
 function teamPerformance(){
-  const club=me(),prod=teamSeasonProduction(club),gp=prod.gp;
-  const sortKey=ui.performanceSort||"mpg",dir=ui.performanceDir||"desc";
-  let rows=(club.roster||[]).map(playerPerformanceRow);
-  const numeric={gp:"gp",mpg:"mpg",ppg:"ppg",rpg:"rpg",apg:"apg",spg:"spg",bpg:"bpg",fg:"fg",three:"three",ft:"ft"};
-  rows.sort((a,b)=>{
-    if(sortKey==="player")return (dir==="asc"?1:-1)*a.p.name.localeCompare(b.p.name);
-    const k=numeric[sortKey]||"mpg",av=a[k]??-1,bv=b[k]??-1;
-    return dir==="asc"?av-bv:bv-av;
-  });
-  const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"—";
-  const pct=v=>v==null?"—":`${v.toFixed(1)}%`;
-  const teamCards=[
-    ["PPG",prod.ppg,"ppg"],["RPG",prod.rpg,"rpg"],["APG",prod.apg,"apg"],
-    ["OFF",teamResultMetricValue(club,"off"),"off"],["DEF",teamResultMetricValue(club,"def"),"def"],["NET",teamResultMetricValue(club,"net"),"net"],
-    ["FG%",prod.fg,"fg"],["3PT%",prod.three,"three"]
-  ];
+  const club=me(),prod=teamSeasonProduction(club),gp=prod.gp,sortKey=ui.performanceSort||"mpg",dir=ui.performanceDir||"desc";
+  let rows=(club.roster||[]).map(playerPerformanceRow);const numeric={gp:"gp",mpg:"mpg",ppg:"ppg",rpg:"rpg",apg:"apg",spg:"spg",bpg:"bpg",fg:"fg",three:"three",ft:"ft"};
+  rows.sort((a,b)=>{if(sortKey==="player")return(dir==="asc"?1:-1)*a.p.name.localeCompare(b.p.name);const k=numeric[sortKey]||"mpg",av=a[k]??-1,bv=b[k]??-1;return dir==="asc"?av-bv:bv-av});
+  const fmt=(v,d=1)=>Number.isFinite(v)?v.toFixed(d):"—",pct=v=>v==null?"—":`${v.toFixed(1)}%`;
+  const teamCards=[["PPG",prod.ppg,"ppg"],["RPG",prod.rpg,"rpg"],["APG",prod.apg,"apg"],["OFF",teamResultMetricValue(club,"off"),"off"],["DEF",teamResultMetricValue(club,"def"),"def"],["NET",teamResultMetricValue(club,"net"),"net"],["FG%",prod.fg,"fg"],["3PT%",prod.three,"three"],["FT%",prod.ft,"ft"]];
   const sortButton=(key,label)=>`<button data-perfsort="${key}" class="${sortKey===key?"active":""}">${label}${sortKey===key?` ${dir==="desc"?"↓":"↑"}`:""}</button>`;
-  return `<div class="performanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played. Review team output and individual production against role and minutes.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
-    <div class="teamProductionGrid extended">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${key==="fg"||key==="three"?pct(val):fmt(val)}</b><span>${gp?`#${(["off","def","net"].includes(key)?leagueTeamResultMetricRank(club.id,key):leagueTeamMetricRank(club.id,key))||"—"} NBA`:"—"}</span></div>`).join("")}</div>
-    <div class="performanceInsightStrip"><div><small>SCORING LEADER</small><b>${[...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.ppg-a.ppg)[0]?.ppg||0)} PPG</span></div><div><small>TOP PLAYMAKER</small><b>${[...rows].sort((a,b)=>b.apg-a.apg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.apg-a.apg)[0]?.apg||0)} APG</span></div><div><small>TOP REBOUNDER</small><b>${[...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.p.name||"—"}</b><span>${fmt([...rows].sort((a,b)=>b.rpg-a.rpg)[0]?.rpg||0)} RPG</span></div></div>
-    <div class="performanceToolbar"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
+  const scoring=[...rows].sort((a,b)=>b.ppg-a.ppg)[0],playmaker=[...rows].sort((a,b)=>b.apg-a.apg)[0],rebounder=[...rows].sort((a,b)=>b.rpg-a.rpg)[0];
+  return `<div class="performanceHero compactPerformanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
+    <div class="teamProductionGrid compactNine">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${["fg","three","ft"].includes(key)?pct(val):fmt(val)}</b><span>${gp?`#${(["off","def","net"].includes(key)?leagueTeamResultMetricRank(club.id,key):leagueTeamMetricRank(club.id,key))||"—"} NBA`:"—"}</span></div>`).join("")}</div>
+    <div class="performanceInsightStrip enlarged"><div><small>SCORING LEADER</small><b>${scoring?.p.name||"—"}</b><strong>${fmt(scoring?.ppg||0)} PPG</strong></div><div><small>TOP PLAYMAKER</small><b>${playmaker?.p.name||"—"}</b><strong>${fmt(playmaker?.apg||0)} APG</strong></div><div><small>TOP REBOUNDER</small><b>${rebounder?.p.name||"—"}</b><strong>${fmt(rebounder?.rpg||0)} RPG</strong></div></div>
+    <div class="performanceToolbar expandedFilters"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
     <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>PLAYER</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${r.p.rotationRole||"Depth"} · ${r.p.ovr} OVR</small></div><span class="${r.tone}">${r.label}</span></div></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join("")}</tbody></table></div>
     <div class="performanceLegend"><span><i class="high"></i>High Impact</span><span><i class="productive"></i>Productive</span><span><i class="expected"></i>Expected</span><span><i class="low"></i>Underperforming</span></div>`;
 }
 
-function team(){let tabs=[["squad","Squad"],["performance","Performance"],["contracts","Contracts & Cap"],["schedule","Schedule"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?(G.phase==="DRAFT_NIGHT"?`<div class="card"><div class="eyebrow">Draft Night</div><h3>Live Draft Room</h3><div class="smallcopy">Draft Night runs as its own career window. Open the Draft Room to make your selections and follow all 60 picks.</div><button id="openDraftFromTeam" class="btn primary" style="margin-top:12px">Open Draft Room</button></div>`:draft()):ui.teamTab==="trades"?trades():freeagency();return header("Squad",`${me().name} · Basketball Operations`)+`<div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body}
+function team(){
+  let tabs=[["squad","Squad"],["performance","Performance"],["contracts","Contracts & Cap"],["schedule","Schedule"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];
+  let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?draft():ui.teamTab==="trades"?trades():freeagency();
+  return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+}
 
 function clubCurrentSeasonRecordSnapshot(G,club){
   const sg={},tg={},seen=new Set(),games=[...(G.regularSeasonLive?.games||[]),...(G.regularSeason?.games||[])];
@@ -8675,15 +8684,17 @@ function reconcileDraftPendingOwnership(){
 function futureDraftAssetsHtml(G,clubId){
   ensureDraftPickHorizon(G,4);
   const assets=clubDraftAssets(G,clubId);
-  const years=[...new Set(assets.map(p=>p.year))].sort((a,b)=>a-b);
+  const years=[...new Set(assets.map(p=>p.year))].sort((a,b)=>a-b).slice(0,3);
   if(!years.length)return `<div class="card empty">No future draft picks currently owned.</div>`;
-  return `<div class="futurePickYears">${years.map(year=>{
-    const picks=assets.filter(p=>p.year===year);
-    return `<div class="futurePickYear"><div class="futurePickYearHead"><b>Season ${year} Draft</b><small>${picks.length} pick${picks.length===1?"":"s"} owned</small></div><div class="futurePickRows">${picks.map(pk=>{
-      const original=c(pk.originalClubId),own=pk.originalClubId===clubId;
-      const slot=(year===G.season)?expectedPickSlot(G,pk):null;
-      return `<div class="futurePickRow"><span class="futurePickRound">R${pk.round}</span><div><b>${own?"Own pick":`via ${original?.name||pk.originalClubId}`}</b><small>${slot?`Projected #${slot} · `:""}${pk.round===1?"First Round":"Second Round"}</small></div><strong>${pk.round===1?"1ST":"2ND"}</strong></div>`;
-    }).join("")}</div></div>`;
+  const pickText=(pk,year)=>{
+    const original=c(pk.originalClubId),own=pk.originalClubId===clubId,slot=(year===G.season)?expectedPickSlot(G,pk):null;
+    return `<span class="draftAssetChip"><b>${own?"Own":`via ${original?.name||pk.originalClubId}`}</b>${slot?` <em>#${slot}</em>`:""}</span>`;
+  };
+  return `<div class="draftAssetYears">${years.map(year=>{
+    const picks=assets.filter(p=>p.year===year),r1=picks.filter(p=>p.round===1),r2=picks.filter(p=>p.round===2);
+    return `<div class="draftAssetSeason"><div class="draftAssetSeasonHead"><b>Season ${year}</b><small>${picks.length} pick${picks.length===1?"":"s"}</small></div>
+      <div class="draftAssetRound"><strong>R1</strong><div>${r1.length?r1.map(p=>pickText(p,year)).join(""):`<span class="draftAssetNone">None</span>`}</div></div>
+      <div class="draftAssetRound"><strong>R2</strong><div>${r2.length?r2.map(p=>pickText(p,year)).join(""):`<span class="draftAssetNone">None</span>`}</div></div></div>`;
   }).join("")}</div>`;
 }
 
@@ -8693,119 +8704,51 @@ function draft(){
   if(G.phase==="DRAFT_NIGHT"){
     if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
     reconcileDraftPendingOwnership();
-    if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual"){
-      advanceDraftUntilUserDecision(G);
-    }
+    if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual") advanceDraftUntilUserDecision(G);
   }
   let s=draftBoardSnapshot(G,60),ds=G.draftState,p=s.pending,clubId=me().id;
-  let currentEntry=ds&&!ds.complete?ds.queue[ds.index]:null;
-  let currentAsset=currentEntry?.pickId?(G.draftPicks||[]).find(x=>x.id===currentEntry.pickId):null;
-  let currentOwner=currentAsset?.ownerClubId||currentEntry?.originalClubId||null;
-  let currentClub=currentOwner?c(currentOwner):null;
-
-  const pickDetails=(entry,idx)=>{
-    let asset=entry.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null;
-    let owner=asset?.ownerClubId||entry.originalClubId,ownerClub=c(owner);
-    let selected=asset?.selectedPlayerId?allPlayers(G).find(pl=>pl.id===asset.selectedPlayerId):null;
-    let cls=[idx===ds?.index?"current":"",owner===clubId?"user":""].filter(Boolean).join(" ");
-    return `<div class="draftPickCard ${cls}"><small>PICK #${entry.overallPickNum} · R${entry.round}</small><b>${ownerClub?.name||owner}</b><span>${selected?selected.name:(idx===ds?.index?"ON THE CLOCK":"UPCOMING")}</span></div>`;
-  };
-  let strip="";
-  if(ds?.queue?.length){
-    let from=Math.max(0,(ds.index||0)-5),to=Math.min(ds.queue.length,(ds.index||0)+7);
-    strip=ds.queue.slice(from,to).map((entry,i)=>pickDetails(entry,from+i)).join("");
+  let currentEntry=ds&&!ds.complete?ds.queue[ds.index]:null,currentAsset=currentEntry?.pickId?(G.draftPicks||[]).find(x=>x.id===currentEntry.pickId):null;
+  let currentOwner=currentAsset?.ownerClubId||currentEntry?.originalClubId||null,currentClub=currentOwner?c(currentOwner):null;
+  const pickDetails=(entry,idx)=>{let asset=entry.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null,owner=asset?.ownerClubId||entry.originalClubId,ownerClub=c(owner),selected=asset?.selectedPlayerId?allPlayers(G).find(pl=>pl.id===asset.selectedPlayerId):null,cls=[idx===ds?.index?"current":"",owner===clubId?"user":""].filter(Boolean).join(" ");return `<div class="draftPickCard ${cls}"><small>PICK #${entry.overallPickNum} · R${entry.round}</small><b>${ownerClub?.name||owner}</b><span>${selected?selected.name:(idx===ds?.index?"ON THE CLOCK":"UPCOMING")}</span></div>`};
+  let strip="";if(ds?.queue?.length){let from=Math.max(0,(ds.index||0)-5),to=Math.min(ds.queue.length,(ds.index||0)+7);strip=ds.queue.slice(from,to).map((entry,i)=>pickDetails(entry,from+i)).join("")}
+  let completedLeague=[];if(ds?.queue?.length){for(let i=0;i<(ds.index||0);i++){let entry=ds.queue[i],asset=entry.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null;if(!asset?.selectedPlayerId)continue;let owner=c(asset.ownerClubId||entry.originalClubId),pl=allPlayers(G).find(x=>x.id===asset.selectedPlayerId);completedLeague.push({pick:entry.overallPickNum,round:entry.round,club:owner?.name||asset.ownerClubId,player:pl})}}
+  let liveCard="";
+  if(G.phase==="DRAFT_NIGHT"){
+    if(ds?.complete)liveCard=`<div class="card draftLive"><h3>Draft Complete</h3><p>60 selections completed. Your new rookies have been added to the roster.</p></div>`;
+    else if(p&&currentOwner===clubId)liveCard=`<div class="card draftLive"><div class="draftLiveTop"><div><h3>Pick #${p.overallPickNum} · ${me().name}</h3></div><div class="draftClock">YOU'RE ON THE CLOCK</div></div><p>Select any remaining prospect below. Other clubs will draft automatically until your next owned selection.</p></div>`;
+    else liveCard=`<div class="card draftLive"><h3>${currentClub?`${currentClub.name} is on the clock`:"Draft Board"}</h3><p>${ds?`${s.picksMade}/${s.totalPicks} selections completed.`:"Draft order will populate when Draft Night begins."}</p></div>`;
   }
-
-  let completedLeague=[];
-  if(ds?.queue?.length){
-    for(let i=0;i<(ds.index||0);i++){
-      let entry=ds.queue[i],asset=entry.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null;
-      if(!asset?.selectedPlayerId)continue;
-      let owner=c(asset.ownerClubId||entry.originalClubId),pl=allPlayers(G).find(x=>x.id===asset.selectedPlayerId);
-      completedLeague.push({pick:entry.overallPickNum,round:entry.round,club:owner?.name||asset.ownerClubId,player:pl});
-    }
-  }
-
-  let liveCard;
-  if(ds?.complete){
-    liveCard=`<div class="card draftLive"><div class="eyebrow">Draft Complete</div><h3>60 selections completed</h3><p>The two-round draft is complete. Your new rookies have been added to the roster.</p></div>`;
-  }else if(p&&currentOwner===clubId){
-    liveCard=`<div class="card draftLive"><div class="draftLiveTop"><div><div class="eyebrow">Draft Night</div><h3>Pick #${p.overallPickNum} · ${me().name}</h3></div><div class="draftClock">YOU'RE ON THE CLOCK</div></div><p>Select any remaining prospect below. After your pick, the other clubs will draft automatically until your next owned selection.</p><div class="draftMetrics"><div class="draftMetric"><b>${s.picksMade}/${s.totalPicks}</b><small>Picks Made</small></div><div class="draftMetric"><b>${s.prospects.length}</b><small>Available</small></div><div class="draftMetric"><b>${s.ownedPicks.length}</b><small>Your Picks Left</small></div></div></div>`;
-  }else{
-    liveCard=`<div class="card draftLive"><div class="eyebrow">Draft Night</div><h3>${currentClub?`${currentClub.name} is on the clock`:"Draft Board"}</h3><p>${ds?`${s.picksMade}/${s.totalPicks} selections completed.`:"Draft order will populate when Draft Night begins."}</p></div>`;
-  }
-
   let yourPicks=s.completedUserPicks?.length?`<div class="sectionTitle">Your Selections</div><div class="card">${s.completedUserPicks.map(x=>`<div class="draftSelection"><div><b>Pick #${x.pickNumber} · ${x.playerName}</b><small>${x.position} · OVR ${x.ovr} · POT ${x.potential}</small></div><strong>R${x.round}</strong></div>`).join("")}</div>`:"";
-
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
-
-  let assets=`<div class="sectionTitle">Your Draft Assets</div>${futureDraftAssetsHtml(G,clubId)}`;
-
-  const scout=scoutingLevelInfo(G);
-  const futureBoard=!(ds&&!ds.complete);
-  let board=s.prospects.length?`<div class="sectionTitle">${futureBoard?`Season ${s.draftYear} Draft Class`:"Available Prospects"} · ${s.prospects.length}</div>${futureBoard?`<div class="draftClassContext"><b>Future Draft Preview</b><small>These are the prospects currently projected for the Season ${s.draftYear} Draft. This class will remain persistent as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description} · Scouting XP is earned organically by completing drafts.</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
-
-  return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+assets+board;
+  const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
+  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>Season ${s.draftYear} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  const mode=ui.draftPlanningTab||"assets";
+  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
+  return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
 }
 function freeagency(){
-  const club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,220),cap=mkt.cap,allPlayersMarket=mkt.players;
-  const rosterCount=club.roster.length;
-  const rosterGoal=G.phase==="REGULAR_SEASON"?15:(club.offseasonRosterLimit||20);
-
-  const roleClass=p=>{
-    if(p.ovr>=82)return"starter";
-    if(p.ovr>=76)return"rotation";
-    if(p.ovr>=70)return"depth";
-    return"minimum";
-  };
-  const posClass=p=>{
-    const pos=p.position;
-    if(pos==="PG"||pos==="SG")return"guards";
-    if(pos==="C")return"centers";
-    return"wings";
-  };
-
+  const club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,220),cap=mkt.cap,allPlayersMarket=mkt.players,rosterCount=club.roster.length,twoWayCount=(club.twoWayRoster||[]).length,twoWayLimit=club.twoWayLimit||3;
+  const roleClass=p=>p.ovr>=82?"starter":p.ovr>=76?"rotation":p.ovr>=70?"depth":"minimum";
+  const posClass=p=>p.position==="PG"||p.position==="SG"?"guards":p.position==="C"?"centers":"wings";
   const bandFilter=ui.faBandFilter||"all",posFilter=ui.faPosFilter||"all";
-  const players=allPlayersMarket.filter(p=>
-    (bandFilter==="all"||roleClass(p)===bandFilter) &&
-    (posFilter==="all"||posClass(p)===posFilter)
-  );
-
+  const players=allPlayersMarket.filter(p=>(bandFilter==="all"||roleClass(p)===bandFilter)&&(posFilter==="all"||posClass(p)===posFilter));
   const target=ui.faTargetId?allPlayersMarket.find(p=>p.id===ui.faTargetId):null;
   let negotiate="";
   if(target){
-    const live=playerByAnyId(target.id);
-    const fb=ui.faFeedback?.playerId===target.id?ui.faFeedback:null;
-    negotiate=`<div class="faNegotiate">
-      <div class="faHead"><div><div class="eyebrow">Free Agent Negotiation</div><h3>${playerNameLink(live||target)}</h3><small>${nationDisplay(live?.nationality)} · ${target.position} · Age ${target.age} · OVR ${target.ovr}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
-      <div class="faAsk">
-        <div><b>${target.demandYears} yr</b><small>Asking Term</small></div>
-        <div><b>$${target.demandAnnualM.toFixed(1)}M</b><small>Asking Salary / Yr</small></div>
-        <div><b>${ovrBand(target.ovr)}</b><small>Player Band</small></div>
-      </div>
-      <div class="smallcopy">The asking price is the player's preferred contract, not a fixed deal. You can offer a different term or salary. Other clubs may also be competing for the player.</div>
-      <div class="faOfferGrid" style="margin-top:12px">
-        <label>Offer Term<select id="faOfferYears">${[1,2,3,4].map(y=>`<option value="${y}" ${y===target.demandYears?"selected":""}>${y} year${y===1?"":"s"}</option>`).join("")}</select></label>
-        <label>Offer Salary per Year<input id="faOfferSalary" type="number" min="1.2" max="60" step="0.1" value="${target.demandAnnualM.toFixed(1)}"></label>
-      </div>
-      <div class="faOfferActions"><button id="submitFaOffer" class="btn primary">Make Offer</button><button id="resetFaAsk" class="btn secondary">Use Asking Price</button></div>
-      ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${fb.message}</small>${fb.competing?`<small style="display:block;margin-top:4px">Strongest competing offer: ${fb.competing.years} yr · $${(+fb.competing.annualM).toFixed(1)}M from ${c(fb.competing.clubId)?.name||"another club"}.</small>`:""}</div>`:""}
-    </div>`;
+    const live=playerByAnyId(target.id),fb=ui.faFeedback?.playerId===target.id?ui.faFeedback:null;
+    negotiate=`<div class="faNegotiate modernFaNegotiate"><div class="faHead"><div><div class="eyebrow">Free Agent Negotiation</div><h3>${playerNameLink(live||target)}</h3><small>${nationDisplay(live?.nationality)} · ${target.position} · Age ${target.age} · OVR ${target.ovr} · ${ovrBand(target.ovr)}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
+      <div class="faAskLine"><span>ASKING CONTRACT</span><b>${target.demandYears} years · $${target.demandAnnualM.toFixed(1)}M / year</b></div>
+      <div class="faStepperGrid"><div class="faStepper"><small>OFFER TERM</small><div><button type="button" data-fa-years="-1">−</button><input id="faOfferYears" type="number" min="1" max="4" step="1" value="${target.demandYears}" aria-label="Offer years"><button type="button" data-fa-years="1">+</button></div><span>Years</span></div>
+      <div class="faStepper"><small>SALARY / YEAR</small><div><button type="button" data-fa-salary="-1">−</button><input id="faOfferSalary" type="number" min="1.2" max="60" step="0.5" value="${target.demandAnnualM.toFixed(1)}" aria-label="Offer salary"><button type="button" data-fa-salary="1">+</button></div><span>Millions</span></div></div>
+      <div class="faOfferActions modern"><button id="submitFaOffer" class="btn primary">Make Offer</button><button id="resetFaAsk" class="pick matchAsk">Match Asking Price</button></div>
+      ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${fb.message}</small>${fb.competing?`<small style="display:block;margin-top:4px">Strongest competing offer: ${fb.competing.years} yr · $${(+fb.competing.annualM).toFixed(1)}M from ${c(fb.competing.clubId)?.name||"another club"}.</small>`:""}</div>`:""}</div>`;
   }
-
-  const bandTabs=[["all","All"],["starter","Starter+"],["rotation","Rotation"],["depth","Depth"],["minimum","Minimum"]];
-  const posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]];
-  const countBand=k=>allPlayersMarket.filter(p=>k==="all"||roleClass(p)===k).length;
-
-  return `<div class="metrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${rosterCount}/${rosterGoal}</b><small>Roster</small></div></div>
-  <div class="faIntro compactFaIntro"><div><b>Free Agent Market</b><small>Filter by roster role and position. Asking prices are negotiation starting points.</small></div><span>${allPlayersMarket.length} available</span></div>
+  const bandTabs=[["all","All"],["starter","Starter+"],["rotation","Rotation"],["depth","Depth"],["minimum","Minimum"]],posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]],countBand=k=>allPlayersMarket.filter(p=>k==="all"||roleClass(p)===k).length;
+  return `<div class="metrics faTopMetrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric"><b>$${cap.capSpaceM.toFixed(1)}M</b><small>Cap Room</small></div><div class="metric"><b>${rosterCount}/15</b><small>Roster · ${twoWayCount}/${twoWayLimit} Two-Way</small></div></div>
   ${negotiate}
-  <div class="faFilters compactFaFilters">
-    <div class="faFilterRow">${bandTabs.map(([k,label])=>`<button data-faband="${k}" class="${bandFilter===k?"active":""}">${label}<small>${countBand(k)}</small></button>`).join("")}</div>
-    <div class="faFilterRow">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}">${label}</button>`).join("")}</div>
-  </div>
+  <div class="faFilters compactFaFilters"><div class="faFilterRow">${bandTabs.map(([k,label])=>`<button data-faband="${k}" class="${bandFilter===k?"active":""}">${label}<small>${countBand(k)}</small></button>`).join("")}</div><div class="faFilterRow">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}">${label}</button>`).join("")}</div></div>
   <div class="faMarketSummary"><div class="sectionTitle" style="margin:0">Available Free Agents</div><small>${players.length} shown</small></div>
-  ${players.length?`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>ASKING PRICE</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(playerByAnyId(p.id)?.nationality)} · Age ${p.age}${p.lastSeason?` · Last: ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} PPG`:""}</small></td><td>${p.position}</td><td>${p.ovr}<span class="faBandTag">${ovrBand(p.ovr)}</span></td><td><b>${p.demandYears} yr · $${p.demandAnnualM.toFixed(1)}M</b><small class="market">${rosterSalarySlot(playerByAnyId(p.id)||p,p.demandAnnualM).label}</small></td><td><button class="pick" data-negotiatefa="${p.id}">Negotiate</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents match these filters.</div>`}`;
+  ${players.length?`<div class="table freeAgentTable"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>ASKING</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(playerByAnyId(p.id)?.nationality)} · Age ${p.age}${p.lastSeason?` · Last ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} PPG`:""}</small></td><td>${p.position}</td><td><b>${p.ovr}</b></td><td><b>$${p.demandAnnualM.toFixed(1)}M</b></td><td><button class="pick" data-negotiatefa="${p.id}">Negotiate</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents match these filters.</div>`}`;
 }
 function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
 
@@ -8913,40 +8856,17 @@ function twoWayCandidates(){
     .sort((a,b)=>twoWayDevelopmentScore(b)-twoWayDevelopmentScore(a)).slice(0,36);
 }
 function squad(){
-  let club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3,cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
-  const allDev=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])].filter(twoWayEligible);
-  const pathOptions=[["all","All"],["Undrafted","Undrafted"],["G League","G League"],["Young FA","Young FA"],["International","International"]];
-  const posOptions=[["all","All Positions"],["guards","Guards"],["forwards","Forwards"],["centers","Centers"]];
-
-  const nbaPlayers=d.nba.map(x=>({
-    player:playerByAnyId(x.id)||x,
-    depth:x
-  }));
-  const groups=["Starters","Rotation","Depth"].map(name=>[
-    name,
-    nbaPlayers.filter(x=>squadRoleGroup(x.player,x.depth)===name)
-  ]);
-  const renderRosterTable=list=>`<div class="table"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>AGE</th><th>MIN</th></tr></thead><tbody>${list.map(item=>{
-    const p=item.player||item;
-    const depth=item.depth||d.nba.find(x=>x.id===p.id)||p;
-    const injTag=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"} · ${p.injury?.gamesRemaining||"?"}g</span>`:"";
-    return `<tr><td class="pname"><div class="rosterIdentity"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${playerExperienceLabel(p)} · ${depth.role||p.rotationRole||ovrBand(p.ovr)}</small>${injTag}</div></td><td>${positionLabel(p)}</td><td>${p.ovr}<span class="ovrBand">${ovrBand(p.ovr)}</span></td><td>${p.age}</td><td>${depth.mins||0}</td></tr>`;
-  }).join("")}</tbody></table></div>`;
-
-  let twoWayRows=d.twoWay.map(p=>{
-    const live=playerByAnyId(p.id)||p;
-    let injTag=p.injured?` · <span class="inj">${p.injury?.label||"Injured"}</span>`:"",convertDisabled=d.nba.length>=15?"disabled":"";
-    return `<div class="more"><div><b>${playerNameLink(live)}</b><small>${nationDisplay(live.nationality)} · ${p.pos} · Age ${p.age} · ${playerExperienceLabel(live)} · POT ${live.potential||p.ovr}${injTag}</small></div><div class="pickrow"><b style="margin-right:6px">${p.ovr} OVR</b><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`;
-  }).join("");
-
-  let candRows=cands.map(p=>`<div class="twCandidate"><div class="meta"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age}</small><small class="twPath">${twoWayPath(p)} · ${playerExperienceLabel(p)}</small></div><div class="num"><b class="twCurrent">${p.ovr}</b><small>OVR</small></div><div class="num"><b class="twPotential">${p.potential||p.ovr}</b><small>POT</small></div><div class="num ageCol"><b>${p.age}</b><small>AGE</small></div><button class="pick" data-twoway-sign="${p.id}">Sign Two-Way</button></div>`).join("");
-
-  let twoWayBlock=d.twoWay.length?twoWayRows:'<div class="empty">No two-way players signed.</div>';
-  let candBlock=cands.length?`<div class="sectionTitle" style="margin-top:14px">Development Market</div><div class="twIntro"><b>Two-Way Development Pool</b><small>Built primarily from undrafted prospects, G League players and young unsigned players. Current OVR and development ceiling are shown separately.</small></div><div class="twFilters"><div class="twFilterRow">${pathOptions.map(([k,l])=>`<button data-twpath="${k}" class="${(ui.twoWayPathFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div><div class="twFilterRow">${posOptions.map(([k,l])=>`<button data-twpos="${k}" class="${(ui.twoWayPosFilter||"all")===k?"active":""}">${l}</button>`).join("")}</div></div><div class="smallcopy" style="margin:5px 0 8px">${cands.length} shown · ${allDev.length} eligible developmental players</div><div class="card">${candRows}</div>`:"<div class='card empty'>No players match the current two-way filters.</div>";
-
-  return `<div class="metrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div>
-  <div class="faIntro"><b>Roster Structure</b><small>Squad is grouped by playing role so you can quickly see where the roster lacks starting quality, rotation support or depth. Contracts & Cap remains grouped by Guards, Forwards and Centers for positional and salary planning.</small></div>
-  ${groups.map(([name,list])=>`<div class="rosterRoleSection"><div class="rosterRoleHeader"><div><b>${name}</b><div class="rosterRoleNote">${roleGroupDescription(name)}</div></div><small>${list.length} players</small></div>${list.length?renderRosterTable(list):`<div class="card empty">No players currently classified as ${name.toLowerCase()}.</div>`}</div>`).join("")}`;
+  const club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3;
+  const players=(club.roster||[]).map(p=>({player:p,depth:d.nba.find(x=>x.id===p.id)||{mins:p.targetMinutes||0,role:p.rotationRole||"Depth"}}));
+  const score=x=>(+x.depth.mins||0)*3+(+x.player.ovr||0)+(String(x.depth.role||"").toLowerCase().includes("starter")?30:0);
+  const chart=Object.fromEntries(POSITIONS.map(pos=>[pos,[]])),used=new Set();
+  for(const pos of POSITIONS){const eligible=players.filter(x=>!used.has(x.player.id)&&canPlayPosition(x.player,pos)).sort((a,b)=>score(b)-score(a));if(eligible[0]){chart[pos].push(eligible[0]);used.add(eligible[0].player.id)}}
+  for(const item of [...players].filter(x=>!used.has(x.player.id)).sort((a,b)=>score(b)-score(a))){const opts=[item.player.position,item.player.secondaryPosition].filter(Boolean);opts.sort((a,b)=>(chart[a]?.length||0)-(chart[b]?.length||0));const pos=opts[0]||item.player.position;chart[pos]=(chart[pos]||[]);chart[pos].push(item);used.add(item.player.id)}
+  for(const pos of POSITIONS)chart[pos].sort((a,b)=>score(b)-score(a));
+  const row=(item,i)=>{const p=item.player,depth=item.depth,inj=p.injured?`<span class="rosterAlert">${p.injury?.label||"Injured"}</span>`:"";return `<div class="depthPlayerRow"><span class="depthOrder">${i+1}</span><div class="depthPlayerMain"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${positionLabel(p)} · Age ${p.age}${inj?` · ${inj}`:""}</small></div><div class="depthOvr"><b>${p.ovr}</b><small>${ovrBand(p.ovr)}</small></div><div class="depthMin"><b>${depth.mins||0}</b><small>MIN</small></div></div>`};
+  return `<div class="metrics squadRosterMetrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div>
+    <div class="squadSectionHead"><h3>Depth Chart</h3><small>Primary assignment by position</small></div>
+    <div class="depthChart">${POSITIONS.map(pos=>`<section class="depthPosition"><div class="depthPositionHead"><b>${pos}</b><small>${chart[pos].length} player${chart[pos].length===1?"":"s"}</small></div>${chart[pos].length?chart[pos].map(row).join(""):`<div class="depthEmpty">No assigned ${pos}</div>`}</section>`).join("")}</div>`;
 }
 
 function twoWayContractsHtml(){
@@ -9010,8 +8930,8 @@ function contracts(){
     }).join("")}</tbody></table></div>`;
   };
 
-  return `<div class="contractEconomy"><div class="contractEconomyHead"><b>Roster Construction Plan</b><small>Use salary slots to balance franchise talent, starters, rotation players, development and minimum depth. These are roster-building guides, not hard quotas.</small></div>
-    <div class="salarySlotGrid">${salaryPlan.recommended.map(x=>`<div class="salarySlotCard"><div><b>${x.label}</b><small>${x.note}</small></div><strong>${salaryPlan.slots[x.key]||0}</strong><span>Target ${x.target}</span></div>`).join("")}</div>
+  return `<div class="contractEconomy compactConstruction"><div class="contractEconomyHead"><b>Roster Construction Plan</b><small>Current salary-slot mix against recommended roster-building ranges.</small></div>
+    <div class="constructionRows"><div class="constructionRow head"><span>ROLE</span><span>CURRENT</span><span>TARGET</span></div>${salaryPlan.recommended.map(x=>`<div class="constructionRow"><div><b>${x.label}</b><small>${x.note}</small></div><strong>${salaryPlan.slots[x.key]||0}</strong><span>${x.target}</span></div>`).join("")}</div>
   </div>
   <div class="cbaToolGrid">${tools.map(x=>`<div class="cbaTool"><small>${x.label}</small><b>${x.value}</b><span>${x.note}</span></div>`).join("")}</div>
   <div class="capOffNote">${capNote}</div>
@@ -9724,6 +9644,9 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
 };
   $$("[data-schedulefilter]").forEach(b=>b.onclick=()=>{ui.scheduleFilter=b.dataset.schedulefilter;render()});
   $$("[data-schedulegame]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-clubprofile]"))return;const g=gameById(b.dataset.schedulegame);if(g)openResultWindow(g,"schedule")});
+  $$('[data-draftplanning]').forEach(b=>b.onclick=()=>{ui.draftPlanningTab=b.dataset.draftplanning;render()});
+  $$('[data-fa-years]').forEach(b=>b.onclick=()=>{const el=$("#faOfferYears");if(!el)return;el.value=String(Math.max(1,Math.min(4,(+el.value||1)+(+b.dataset.faYears||0))))});
+  $$('[data-fa-salary]').forEach(b=>b.onclick=()=>{const el=$("#faOfferSalary");if(!el)return;el.value=(Math.max(1.2,Math.min(60,(+el.value||1.2)+(+b.dataset.faSalary||0)*0.5))).toFixed(1)});
   if($("#editPlayerBtn"))$("#editPlayerBtn").onclick=()=>{
     const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||club?.id!==me()?.id)return;
     ui.playerEditMode=p.id;render();
