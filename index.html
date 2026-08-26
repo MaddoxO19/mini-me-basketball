@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.30.2 Squad Navigation & Performance Fix</title>
+<title>Mini&Me Basketball — v0.1.31.0 Media Forecast News</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1553,7 +1553,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .internationalCareerPanel .profileDataRow small{font-size:7.2px}.internationalCareerPanel .profileDataRow b{font-size:9.5px}
 @media(max-width:430px){.profileTabs.profileTabs4 button{font-size:6.2px}.draftIdentity.compact3 b{font-size:9.5px}}
 
-/* v0.1.30.2 — Monte Carlo Season Outlook */
+/* v0.1.31.0 — Media Forecast Engine */
 .seasonOutlook{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.055),var(--panel));border-radius:14px;padding:11px 12px;margin:9px 0}
 .seasonOutlookHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}.seasonOutlookHead small{display:block;color:var(--accent2);font-size:5.8px;font-weight:950;letter-spacing:.55px;text-transform:uppercase}.seasonOutlookHead b{display:block;font-size:11px;margin-top:2px}.seasonOutlookHead span{font-size:6px;color:var(--muted);white-space:nowrap}
 .outlookGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.outlookMetric{border:1px solid var(--line);background:#10161d;border-radius:10px;padding:8px 5px;text-align:center;min-width:0}.outlookMetric small{display:block;color:var(--muted);font-size:5.5px;text-transform:uppercase}.outlookMetric b{display:block;font-size:14px;margin:2px 0;line-height:1.05}.outlookMetric span{display:block;color:var(--accent2);font-size:5.5px;line-height:1.2}.outlookNote{margin-top:7px;color:var(--muted);font-size:6px;line-height:1.4}
@@ -1561,10 +1561,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 /* v0.1.30.2 — Squad navigation responsiveness */
 .outlookIdle{padding:12px;border-top:1px solid var(--line);display:grid;gap:6px}.outlookIdle b{font-size:10px}.outlookIdle span{font-size:7px;color:var(--muted);line-height:1.4}.outlookRun{width:100%;margin-top:3px;min-height:34px}.outlookActions{padding:9px 0 0}.outlookActions .outlookRun{width:100%}
+
+/* v0.1.31.0 — Sports Desk forecast articles */
+.news.articleNews{padding:12px 0}
+.news.articleNews h4{margin:2px 0 5px;font-size:12px;line-height:1.25;color:var(--text)}
+.news.articleNews p{font-size:9px;line-height:1.55;color:#c9d0d9}
+.news.articleNews .newsOddsLine{display:block;margin-top:5px;color:var(--muted);font-size:8px;line-height:1.45}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.30.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.31.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2819,6 +2825,11 @@ function pushNews(G, headline, category="League", importance=1) {
   G.newsFeed=G.newsFeed||[];
   G.newsFeed.unshift({season:G.season,phase:G.phase,headline,category,importance});
   if(G.newsFeed.length>80) G.newsFeed=G.newsFeed.slice(0,80);
+}
+function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag=""){
+  G.newsFeed=G.newsFeed||[];
+  G.newsFeed.unshift({season:G.season,phase:G.phase,headline:title,body,category,importance,article:true,tag});
+  if(G.newsFeed.length>80)G.newsFeed=G.newsFeed.slice(0,80);
 }
 function gmCareerState(G) {
   if(!G.gmCareer) G.gmCareer={reputation:50,seasons:[],jobs:[],milestones:[],championships:0,cupTitles:0,playoffAppearances:0,careerW:0,careerL:0,nationalHonours:0};
@@ -5277,6 +5288,7 @@ function initializeRegularSeasonLive(G) {
   G.regularSeasonLive={season:G.season,roundIndex:0,rounds,games:[],callUpsThisSeason:0,allStarDone:false,complete:false,lastUserGameId:null};
   G.allStarDone=false; G.allStar=null; G.allStarLive=null;
   refreshRegularSeasonSnapshot(G);
+  if(typeof publishPreseasonForecast==="function")publishPreseasonForecast(G);
   return G.regularSeasonLive;
 }
 
@@ -5419,6 +5431,7 @@ function continueAllStarWeekendCore(G){
   if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;
   logEvent(G,"NBA All-Star Weekend complete.");
   pushNews(G,`NBA All-Star Weekend complete. ${allPlayers(G).find(p=>p.id===live.mvpPlayerId)?.name||"The game standout"} earned All-Star MVP.`,"All-Star",1);
+  if(typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
   return{ok:true,complete:true};
 }
 
@@ -5830,7 +5843,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.30.2 Squad Navigation & Performance Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.31.0 Media Forecast News",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -7163,7 +7176,7 @@ function news(filter=ui.newsFilter){
     feed=feed.filter(n=>n.category!=="GM"&&n.category!=="Club");
   }
   feed=feed.slice(0,14);
-  return feed.length?feed.map(n=>`<div class="news"><small>SEASON ${n.season} · ${n.category}</small><p>${n.headline}</p></div>`).join(""):`<div class="empty">No news in this category yet.</div>`;
+  return feed.length?feed.map(n=>n.article?`<div class="news articleNews"><small>SEASON ${n.season} · ${n.category}</small><h4>${n.headline}</h4><p>${n.body||""}</p></div>`:`<div class="news"><small>SEASON ${n.season} · ${n.category}</small><p>${n.headline}</p></div>`).join(""):`<div class="empty">No news in this category yet.</div>`;
 }
 function homeActionHtml(){
   let a=actionSpec();if(!a)return"";
@@ -8738,7 +8751,7 @@ function playerPerformanceRow(p){
   return{p,st,gp,mpg,ppg,rpg,apg,spg,bpg,tov,fg,three,ft,impact,per36,label,tone};
 }
 
-// v0.1.30.2 — Career Intelligence / Monte Carlo Season Outlook
+// v0.1.31.0 — Media Forecast Engine
 // Performance fix: precompute team ratings once per outlook run and use a mobile-safe
 // simulation count. This prevents Squad/Performance navigation from synchronously
 // recalculating squad OVR thousands of times.
@@ -8762,6 +8775,100 @@ function outlookSeriesWinner(a,b,ratings=null){
   while(aw<4&&bw<4&&g<7){const w=outlookGameWinner(a,b,pattern[g],ratings);if(w.id===a.id)aw++;else bw++;g++;}
   return aw>bw?a:b;
 }
+function mediaForecastState(G){
+  if(!G.mediaOutlooks)G.mediaOutlooks={};
+  const key=`S${G.season}`;
+  if(!G.mediaOutlooks[key])G.mediaOutlooks[key]={season:G.season,preseason:null,postAllStar:null};
+  return G.mediaOutlooks[key];
+}
+function mediaCupWinner(G,ratings){
+  const cup=G.inSeasonCup;if(!cup?.groups?.length)return null;
+  const standings={};
+  for(const group of cup.groups)for(const id of group.teamIds)standings[id]={clubId:id,groupId:group.id,w:0,l:0,pf:0,pa:0,diff:0};
+  for(const group of cup.groups){
+    const ids=group.teamIds;
+    // Five-team group: round robin once for media projection.
+    for(let i=0;i<ids.length;i++)for(let j=i+1;j<ids.length;j++){
+      const a=G.clubs.find(c=>c.id===ids[i]),b=G.clubs.find(c=>c.id===ids[j]);if(!a||!b)continue;
+      const w=outlookGameWinner(a,b,Math.random()<.5?a.id:b.id,ratings);
+      const sa=standings[a.id],sb=standings[b.id];
+      if(w.id===a.id){sa.w++;sb.l++;}else{sb.w++;sa.l++;}
+      // lightweight differential proxy improves wild-card ordering
+      const margin=Math.max(1,Math.round(Math.abs((ratings.get(a.id)||75)-(ratings.get(b.id)||75))*0.55+Math.random()*9));
+      if(w.id===a.id){sa.diff+=margin;sb.diff-=margin;}else{sb.diff+=margin;sa.diff-=margin;}
+    }
+  }
+  const qualifiers=[];
+  for(const conf of CONFERENCES){
+    const groups=cup.groups.filter(g=>g.conference===conf),winners=[],runners=[];
+    for(const g of groups){
+      const rows=g.teamIds.map(id=>standings[id]).sort((a,b)=>b.w-a.w||b.diff-a.diff||(ratings.get(b.clubId)||0)-(ratings.get(a.clubId)||0));
+      if(rows[0])winners.push(rows[0]);if(rows[1])runners.push(rows[1]);
+    }
+    const wild=runners.sort((a,b)=>b.w-a.w||b.diff-a.diff||(ratings.get(b.clubId)||0)-(ratings.get(a.clubId)||0))[0];
+    const seeded=[...winners,...(wild?[wild]:[])].sort((a,b)=>b.w-a.w||b.diff-a.diff||(ratings.get(b.clubId)||0)-(ratings.get(a.clubId)||0));
+    if(seeded.length>=4){
+      const q1=outlookGameWinner(G.clubs.find(c=>c.id===seeded[0].clubId),G.clubs.find(c=>c.id===seeded[3].clubId),seeded[0].clubId,ratings);
+      const q2=outlookGameWinner(G.clubs.find(c=>c.id===seeded[1].clubId),G.clubs.find(c=>c.id===seeded[2].clubId),seeded[1].clubId,ratings);
+      qualifiers.push(outlookGameWinner(q1,q2,null,ratings));
+    }
+  }
+  return qualifiers.length===2?outlookGameWinner(qualifiers[0],qualifiers[1],null,ratings):qualifiers[0]||null;
+}
+function calculateMediaLeagueForecast(iterations=100){
+  if(!G?.clubs?.length||!G.regularSeasonLive)return null;
+  const clubs=G.clubs,byId=new Map(clubs.map(c=>[c.id,c])),ratings=new Map(clubs.map(c=>[c.id,outlookClubRating(c)]));
+  const base=new Map(clubs.map(c=>[c.id,{w:c.standings?.w||0,l:c.standings?.l||0}]));
+  const remaining=(G.regularSeasonLive.rounds||[]).slice(G.regularSeasonLive.roundIndex||0);
+  const stats=new Map(clubs.map(c=>[c.id,{clubId:c.id,wins:0,seeds:0,titles:0,conf:0,cups:0,playoffs:0}]));
+  for(let n=0;n<iterations;n++){
+    const rec=new Map([...base].map(([id,r])=>[id,{...r}]));
+    for(const rd of remaining)for(const pair of (rd.pairings||[])){
+      const a=byId.get(pair[0]),b=byId.get(pair[1]);if(!a||!b)continue;
+      const w=outlookGameWinner(a,b,pair[0],ratings),ra=rec.get(a.id),rb=rec.get(b.id);
+      if(w.id===a.id){ra.w++;rb.l++;}else{rb.w++;ra.l++;}
+    }
+    const confRows={};
+    for(const conf of CONFERENCES){
+      confRows[conf]=clubs.filter(c=>c.conference===conf).map(c=>({clubId:c.id,w:rec.get(c.id).w,l:rec.get(c.id).l,rating:ratings.get(c.id)})).sort((a,b)=>b.w-a.w||b.rating-a.rating);
+      confRows[conf].forEach((r,i)=>{const s=stats.get(r.clubId);s.wins+=r.w;s.seeds+=i+1;if(i<10)s.playoffs++;});
+    }
+    const east=outlookConferenceChampion(confRows.East,byId,ratings),west=outlookConferenceChampion(confRows.West,byId,ratings);
+    if(east)stats.get(east.id).conf++;if(west)stats.get(west.id).conf++;
+    if(east&&west){const champ=outlookSeriesWinner(east,west,ratings);if(champ)stats.get(champ.id).titles++;}
+    // Cup is only forecast before it has been completed.
+    if(!G.inSeasonCup?.complete){
+      const cupWinner=mediaCupWinner(G,ratings);if(cupWinner)stats.get(cupWinner.id).cups++;
+    }
+  }
+  const rows=clubs.map(c=>{const s=stats.get(c.id);return{clubId:c.id,name:c.name,conference:c.conference,projectedWins:s.wins/iterations,expectedSeed:s.seeds/iterations,playoffPct:s.playoffs/iterations*100,conferencePct:s.conf/iterations*100,titlePct:s.titles/iterations*100,cupPct:s.cups/iterations*100,rating:ratings.get(c.id)}}).sort((a,b)=>b.titlePct-a.titlePct||b.projectedWins-a.projectedWins);
+  return{season:G.season,iterations,round:G.regularSeasonLive.roundIndex||0,rows,generatedAt:Date.now()};
+}
+function mediaPct(v){return `${Math.max(0,v||0).toFixed(1)}%`;}
+function mediaTopLine(rows,key,count=5){return [...rows].sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,count).map((x,i)=>`${i+1}. ${x.name} ${mediaPct(x[key])}`).join(" · ");}
+function publishPreseasonForecast(G){
+  const state=mediaForecastState(G);if(state.preseason)return state.preseason;
+  const f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;
+  const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
+  const titleLine=mediaTopLine(f.rows,"titlePct",5),cupLine=mediaTopLine(f.rows,"cupPct",5);
+  const body=`The Courtside Network model has run ${f.iterations} simulations before opening night. Championship favourites: ${titleLine}. NBA Cup favourites: ${cupLine}.${user?` ${user.name} projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
+  pushNewsArticle(G,`Preseason Forecast: ${f.rows[0]?.name||"The contenders"} opens as title favourite`,body,"Sports Desk",3,`PRESEASON_FORECAST_S${G.season}`);
+  return f;
+}
+function publishPostAllStarForecast(G){
+  const state=mediaForecastState(G);if(state.postAllStar)return state.postAllStar;
+  const f=calculateMediaLeagueForecast(100);if(!f)return null;state.postAllStar=f;
+  const pre=state.preseason,preMap=new Map((pre?.rows||[]).map(x=>[x.clubId,x]));
+  const movement=f.rows.map(x=>({...x,deltaTitle:x.titlePct-(preMap.get(x.clubId)?.titlePct||0)}));
+  const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,3);
+  const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,3);
+  const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId),titleLine=mediaTopLine(f.rows,"titlePct",5);
+  const moveText=(arr,sign)=>arr.map(x=>`${x.name} ${sign}${Math.abs(x.deltaTitle).toFixed(1)} pts`).join(" · ");
+  const body=`With All-Star Weekend complete, the model has rerun the season ${f.iterations} times. Updated title board: ${titleLine}. Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
+  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,`POST_ALLSTAR_FORECAST_S${G.season}`);
+  return f;
+}
+
 function outlookPlayInSeeds(rows,clubsById,ratings=null){
   const get=i=>clubsById.get(rows[i]?.clubId); if(rows.length<10)return [get(6),get(7)].filter(Boolean);
   const s7=get(6),s8=get(7),s9=get(8),s10=get(9);
@@ -8809,15 +8916,6 @@ function calculateSeasonOutlook(iterations=160){
   const result={iterations,projectedWins:winSum/iterations,expectedSeed:seedSum/iterations,playoffPct:playoffs/iterations*100,titlePct:titles/iterations*100,top6Pct:top6/iterations*100,playInPct:playIn/iterations*100,bestSeed,worstSeed,round:live.roundIndex||0};
   _seasonOutlookCache={signature:sig,result}; return result;
 }
-function seasonOutlookHtml(){
-  if(!G||!me()||G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive)return '';
-  const sig=seasonOutlookSignature(),o=_seasonOutlookCache.signature===sig?_seasonOutlookCache.result:null;
-  if(!o){
-    return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>On demand</span></div><div class="outlookIdle"><b>Monte Carlo projection ready</b><span>Run the outlook when you want updated projected wins, seed, playoff and championship probabilities. It no longer calculates automatically when you open Squad.</span><button id="runSeasonOutlook" class="pick outlookRun">Run 120 Simulations</button></div></div>`;
-  }
-  const pct=v=>`${v<0.05?'<0.1':v.toFixed(1)}%`, seed=`#${Math.max(1,Math.min(15,Math.round(o.expectedSeed)))}`;
-  return `<div class="seasonOutlook"><div class="seasonOutlookHead"><div><small>Career Intelligence</small><b>Season Outlook</b></div><span>${o.iterations} simulations · after Game ${o.round}</span></div><div class="outlookGrid"><div class="outlookMetric"><small>Projected Wins</small><b>${o.projectedWins.toFixed(1)}</b><span>of 82 games</span></div><div class="outlookMetric"><small>Expected Seed</small><b>${seed}</b><span>Range #${o.bestSeed}–#${o.worstSeed}</span></div><div class="outlookMetric"><small>Playoff Chance</small><b>${pct(o.playoffPct)}</b><span>${pct(o.top6Pct)} direct top 6</span></div><div class="outlookMetric"><small>Title Chance</small><b>${pct(o.titlePct)}</b><span>NBA Championship</span></div></div><div class="outlookActions"><button id="runSeasonOutlook" class="pick outlookRun">Refresh Outlook</button></div><div class="outlookNote">Projection uses the remaining league schedule, current team strength, record, net performance, injuries and repeated Play-In / playoff simulations. It does not alter your live career.</div></div>`;
-}
 
 function teamPerformance(){
   const club=me(),prod=teamSeasonProduction(club),gp=prod.gp,sortKey=ui.performanceSort||"mpg",dir=ui.performanceDir||"desc";
@@ -8829,7 +8927,6 @@ function teamPerformance(){
   const scoring=[...rows].sort((a,b)=>b.ppg-a.ppg)[0],playmaker=[...rows].sort((a,b)=>b.apg-a.apg)[0],rebounder=[...rows].sort((a,b)=>b.rpg-a.rpg)[0];
   return `<div class="performanceHero compactPerformanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
     <div class="teamProductionGrid compactNine">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${["fg","three","ft"].includes(key)?pct(val):fmt(val)}</b><span>${gp?`#${(["off","def","net"].includes(key)?leagueTeamResultMetricRank(club.id,key):leagueTeamMetricRank(club.id,key))||"—"} NBA`:"—"}</span></div>`).join("")}</div>
-    ${seasonOutlookHtml()}
     <div class="performanceInsightStrip enlarged"><div><small>SCORING LEADER</small><b>${scoring?.p.name||"—"}</b><strong>${fmt(scoring?.ppg||0)} PPG</strong></div><div><small>TOP PLAYMAKER</small><b>${playmaker?.p.name||"—"}</b><strong>${fmt(playmaker?.apg||0)} APG</strong></div><div><small>TOP REBOUNDER</small><b>${rebounder?.p.name||"—"}</b><strong>${fmt(rebounder?.rpg||0)} RPG</strong></div></div>
     <div class="performanceToolbar expandedFilters"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
     <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>PLAYER</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${r.p.rotationRole||"Depth"} · ${r.p.ovr} OVR</small></div><span class="${r.tone}">${r.label}</span></div></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join("")}</tbody></table></div>
@@ -9833,10 +9930,6 @@ function bind(){
   });
   if($("#openScouting"))$("#openScouting").onclick=()=>{ui.page="facilities";ui.facilitiesTab="draftintel";render()};
   if($("#scoutBackFacilities"))$("#scoutBackFacilities").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
-  if($("#runSeasonOutlook"))$("#runSeasonOutlook").onclick=()=>{
-    const btn=$("#runSeasonOutlook"); if(btn){btn.disabled=true;btn.textContent="Running Outlook…";}
-    setTimeout(()=>{try{calculateSeasonOutlook(120);render();}catch(err){console.error("Season Outlook error",err);toast("Unable to calculate season outlook");if(btn){btn.disabled=false;btn.textContent="Run Season Outlook";}}},20);
-  };
   $$("[data-playerprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.playerProfileId=b.dataset.playerprofile;ui.playerProfileTab="overview";ui.page="playerProfile";render()});
   $$("[data-clubprofile]").forEach(b=>b.onclick=e=>{e.stopPropagation();ui.profileReturnPage=ui.page;ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:null;ui.clubProfileId=b.dataset.clubprofile;ui.page="clubProfile";render()});
   if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
