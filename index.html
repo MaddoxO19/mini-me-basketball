@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.21.4 Full Game Flow Regression</title>
+<title>Mini&Me Basketball — v0.1.22.0 Game Flow Integration</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1379,7 +1379,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.21.4</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.22.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5507,7 +5507,7 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.21.4 Full Game Flow Regression",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.22.0 Game Flow Integration",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6448,6 +6448,73 @@ function postseasonResultContextHtml(g){
   const finish=s.complete?(s.stage==="FINALS"?` · ${c(s.winnerClubId)?.name||"Winner"} are NBA Champions`:` · ${c(s.winnerClubId)?.name||"Winner"} advances`):"";
   return `<div class="postResultContext"><b>${stage} · Game ${idx+1} of 7</b><small>${status}${finish}</small></div>`;
 }
+// v0.1.22.0 — integrated playable-event/result controller.
+// Result navigation and Home simulation now share the same event model instead
+// of each competition inventing its own phase-specific button behaviour.
+function resultFlowType(game){
+  if(!game)return"unknown";
+  if(isNationalResultGame(game))return"world_cup";
+  const tag=String(game.phaseTag||"").toLowerCase();
+  if(tag==="summer_league")return"summer_league";
+  if(tag==="preseason")return"preseason";
+  if(tag==="nba_cup_championship")return"nba_cup_final";
+  if(tag.startsWith("east_playin")||tag.startsWith("west_playin")||tag.includes("playin"))return"play_in";
+  if(tag==="finals"||tag.includes("_r1")||tag.includes("_sf")||tag.includes("_cf")||tag.includes("playoff"))return"playoffs";
+  if(tag==="regular"||tag.startsWith("nba_cup_"))return"regular_season";
+  return"other";
+}
+function extractUserGameFromAdvance(r){
+  if(!r)return null;
+  if(r.userGame)return r.userGame;
+  let found=null;
+  for(const ev of (r.results||[])){
+    if(ev?.userGame)found=ev.userGame;
+    for(const sub of(ev?.results||[]))if(sub?.userGame)found=sub.userGame;
+  }
+  return found;
+}
+function resultReturnModeForAdvance(phaseBefore,game){
+  const flow=resultFlowType(game);
+  if(flow==="nba_cup_final")return"cup_final";
+  if(flow==="summer_league"&&G.phase==="SUMMER_LEAGUE_COMPLETE")return"summer_summary";
+  if(flow==="preseason"&&G.phase!=="PRESEASON")return"preseason_complete";
+  if(phaseBefore==="WORLD_CUP"||flow==="world_cup")return"world_cup";
+  if((phaseBefore==="PLAY_IN"||phaseBefore==="PLAYOFFS")&&G.phase!==phaseBefore)return"postseason_transition";
+  return null;
+}
+function closeResultToHome(){
+  ui.resultGameId=null;ui.resultReturn=null;ui.page="home";show("game");render();
+}
+function advanceResultSequence(game){
+  const flow=resultFlowType(game);
+  // Summer League and Preseason are intentionally continuous mini-slates.
+  // The result button advances exactly one user game and replaces the current
+  // result in place. The final result is always reviewed before phase exit.
+  if(flow==="summer_league"){
+    if(G.phase==="SUMMER_LEAGUE_COMPLETE"){closeResultToHome();return true;}
+    if(G.phase!=="SUMMER_LEAGUE"){closeResultToHome();return true;}
+    const r=advanceSummerLeagueRound(G);
+    if(!r?.ok)throw new Error(r?.reason||"Unable to advance Summer League");
+    const next=r.userGame;
+    if(next){
+      ui.resultGameId=next.id;ui.resultReturn=r.complete?"summer_summary":null;
+      renderResultWindow();save();return true;
+    }
+    closeResultToHome();save();return true;
+  }
+  if(flow==="preseason"){
+    if(G.phase!=="PRESEASON"){closeResultToHome();return true;}
+    const r=advancePreseasonRound(G);
+    if(!r?.ok)throw new Error(r?.reason||"Unable to advance Preseason");
+    const next=r.userGame;
+    if(next){
+      ui.resultGameId=next.id;ui.resultReturn=r.complete?"preseason_complete":null;
+      renderResultWindow();save();return true;
+    }
+    closeResultToHome();save();return true;
+  }
+  return false;
+}
 function renderResultWindow(){
   const g=gameById(ui.resultGameId);
   if(!g){show("game");ui.page="home";render();return}
@@ -6465,62 +6532,35 @@ function renderResultWindow(){
   $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
   $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;renderResultWindow()});
   $$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;renderResultWindow()});
-  $("#resultWindowNext").onclick=()=>{
-    ui.resultGameId=null;
-    if(historicalSeries){
-      ui.resultReturn=null;ui.page="league";ui.leagueTab="post";show("game");render();return;
+  const nextBtn=$("#resultWindowNext");
+  nextBtn.onclick=()=>{
+    if(nextBtn.dataset.busy==="1")return;
+    nextBtn.dataset.busy="1";nextBtn.disabled=true;
+    try{
+      if(historicalSeries){ui.resultReturn=null;ui.resultGameId=null;ui.page="league";ui.leagueTab="post";show("game");render();return;}
+      if(ui.resultReturn==="schedule"){ui.resultReturn=null;ui.resultGameId=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;}
+      if(ui.resultReturn==="summer_summary"){ui.resultReturn=null;ui.resultGameId=null;ui.page="home";show("game");render();return;}
+      if(ui.resultReturn==="preseason_complete"){ui.resultReturn=null;ui.resultGameId=null;ui.page="home";show("game");render();return;}
+      if(ui.resultReturn==="cup_final"){ui.resultReturn=null;ui.resultGameId=null;ui.page="home";show("game");render();return;}
+      if(ui.resultReturn==="world_cup"){ui.resultReturn=null;ui.resultGameId=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;}
+      if(ui.resultReturn==="postseason_transition"){ui.resultReturn=null;ui.resultGameId=null;ui.page="home";show("game");render();return;}
+
+      // Integrated mini-slate progression. Do not clear the current result id
+      // until the next event has successfully been simulated and rendered.
+      if(advanceResultSequence(g))return;
+
+      // Regular season, NBA Cup group/knockout, Play-In and Playoffs return to
+      // Home, where the same central career controller determines the next event.
+      closeResultToHome();
+    }catch(err){
+      console.error("Result flow integration error",err);
+      toast(err?.message||"Unable to advance to the next game");
+      // Keep the current result visible and re-arm the button for a retry.
+      ui.resultGameId=g.id;
+    }finally{
+      const liveBtn=$("#resultWindowNext");
+      if(liveBtn){liveBtn.dataset.busy="0";liveBtn.disabled=false;}
     }
-    if(ui.resultReturn==="schedule"){
-      ui.resultReturn=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;
-    }
-    if(ui.resultReturn==="summer_summary"){
-      ui.resultReturn=null;ui.page="home";show("game");render();return;
-    }
-    if(ui.resultReturn==="preseason_complete"){
-      ui.resultReturn=null;ui.page="home";show("game");render();return;
-    }
-    if(ui.resultReturn==="cup_final"){
-      ui.resultReturn=null;ui.page="home";show("game");render();return;
-    }
-    if(ui.resultReturn==="world_cup"){
-      ui.resultReturn=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;
-    }
-    if(ui.resultReturn==="postseason_transition"){
-      ui.resultReturn=null;ui.page="home";show("game");render();return;
-    }
-    // v0.1.21.2 — Summer League result-window progression.
-    // Advance exactly one Summer League round directly from the result window.
-    // Do not bounce through the generic Home/advanceFromUi flow: on mobile Safari
-    // that could leave the previous result DOM visible while later rounds were
-    // simulated underneath it.
-    const isSummerLeagueResult=String(g.phaseTag||"").toLowerCase()==="summer_league";
-    if(isSummerLeagueResult&&G.phase==="SUMMER_LEAGUE"){
-      ui.resultReturn=null;
-      const r=advanceSummerLeagueRound(G);
-      if(!r?.ok){toast(r?.reason||"Unable to advance Summer League");renderResultWindow();return;}
-      save();
-      if(r.userGame){
-        openResultWindow(r.userGame,r.complete?"summer_summary":null);
-        return;
-      }
-      ui.page="home";show("game");render();return;
-    }
-    // v0.1.21.3 — Preseason result-window progression.
-    // Keep the result window authoritative: advance exactly one preseason round,
-    // save once, then replace the current result with the next user's game.
-    const isPreseasonResult=String(g.phaseTag||"").toLowerCase()==="preseason";
-    if(isPreseasonResult&&G.phase==="PRESEASON"){
-      ui.resultReturn=null;
-      const r=advancePreseasonRound(G);
-      if(!r?.ok){toast(r?.reason||"Unable to advance Preseason");renderResultWindow();return;}
-      save();
-      if(r.userGame){
-        openResultWindow(r.userGame,r.complete?"preseason_complete":null);
-        return;
-      }
-      ui.page="home";show("game");render();return;
-    }
-    ui.resultReturn=null;ui.page="home";show("game");render();
   };
 }
 function recentGame(){
@@ -6631,18 +6671,30 @@ function advanceFromUi(n){
   if(G.allStarLive&&!G.allStarLive.complete){openAllStarWindow();return}
   if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);save();render();return}
 
-  // v0.1.21.3 — explicit single-game Preseason path.
-  // This avoids the generic phase/boundary routine swallowing the result when
-  // Game 3 transitions immediately into the Regular Season.
-  if(G.phase==="PRESEASON"&&Math.max(1,Math.floor(+n||1))===1){
-    const r=advancePreseasonRound(G);
-    if(!r?.ok){toast(r?.reason||"Unable to simulate Preseason game");return;}
-    save();
-    if(r.userGame){
-      openResultWindow(r.userGame,r.complete?"preseason_complete":null);
-      return;
+  // v0.1.22.0 — one owner for every single playable career event.
+  // Home does not contain separate Summer League/Preseason/Regular/Postseason
+  // simulation paths anymore. A one-game action advances one career event,
+  // extracts the user's game, and opens the universal result screen.
+  if(Math.max(1,Math.floor(+n||1))===1 && ["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP"].includes(G.phase)){
+    // Direct playoff qualifiers are observers while the league Play-In resolves.
+    if(G.phase==="PLAY_IN"){
+      const pst=userPostseasonState();
+      if(pst.directQualified){
+        const qr=completePlayInForDirectQualifier();
+        if(!qr.ok){toast(qr.reason||"Unable to complete Play-In");return;}
+        save();ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;show("game");render();return;
+      }
     }
-    ui.page="home";show("game");render();return;
+    const phaseBefore=G.phase;
+    const r=(G.phase==="PLAYOFFS")?advanceUserPostseasonGame():advanceCareerEvent(G,1);
+    if(!r?.ok){toast(r?.reason||"Unable to advance career");return;}
+    const userGame=extractUserGameFromAdvance(r);
+    if(userGame&&!isNationalResultGame(userGame))repairLegacyGameBox(userGame);
+    save();
+    if(userGame){openResultWindow(userGame,resultReturnModeForAdvance(phaseBefore,userGame));return;}
+    // Event may have been an observer/background transition. Re-render the new
+    // authoritative Home state rather than leaving a stale action on screen.
+    ui.resultGameId=null;ui.resultReturn=null;ui.page="home";show("game");render();return;
   }
 
   // Seeds 1–6 are observers during the Play-In. "Complete Play-In" should
