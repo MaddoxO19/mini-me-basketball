@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.28.3 Player Profile IA Refinement</title>
+<title>Mini&Me Basketball — v0.1.29.0 Engine Review Integration</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1555,7 +1555,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.28.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.29.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4806,14 +4806,21 @@ function allocateGameMinutes(rotation) {
   return active.map((player, i) => ({ player, minutes: mins[i], starter: i < 5 }));
 }
 
+// v0.1.29.0 — simulation tuning is intentionally centralised here so
+// future engine calibration can be changed without hunting through the
+// possession resolver. Values are probabilities, not rating boosts.
+const SIM_TUNING={
+  shotProfile:{threeArchetype:0.58,rimArchetype:0.24,defaultThreeRate:0.45,guardBonus:0.04,centerPenalty:0.06,minThreeRate:0.05,maxThreeRate:0.75}
+};
 function shotProfile(player) {
   const threeArches = ["Sharpshooter", "Stretch Four", "Stretch Five", "3-and-D Guard", "3-and-D Wing"];
   const rimArches = ["Slasher", "Traditional Big", "Rim Protector"];
-  let threeRate = threeArches.includes(player.archetype) ? 0.48 : rimArches.includes(player.archetype) ? 0.18 : 0.34;
-  if (player.position === "PG" || player.position === "SG") threeRate += 0.04;
-  if (player.position === "C") threeRate -= 0.06;
+  const t=SIM_TUNING.shotProfile;
+  let threeRate = threeArches.includes(player.archetype) ? t.threeArchetype : rimArches.includes(player.archetype) ? t.rimArchetype : t.defaultThreeRate;
+  if (player.position === "PG" || player.position === "SG") threeRate += t.guardBonus;
+  if (player.position === "C") threeRate -= t.centerPenalty;
   threeRate += playerStatIdentity(player).threeRate;
-  return Math.max(0.05, Math.min(0.68, threeRate));
+  return Math.max(t.minThreeRate, Math.min(t.maxThreeRate, threeRate));
 }
 
 function simulatePossessionGame(clubA, clubB, options = {}) {
@@ -5805,7 +5812,8 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.28.3 Player Profile IA Refinement",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
+const BUILD_ID="v0.1.29.0 Engine Review Integration",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6051,7 +6059,38 @@ function reportCareerIntegrity(context="runtime"){
   else console.info(`[Mini&Me QA · ${context}] career integrity check passed`);
   return issues;
 }
-window.MiniMeBasketballQA={validate:()=>validateCareerIntegrityState(G),repair:()=>repairCareerIntegrityState(G)};
+function runReleaseGate(options={}){
+  const seasons=Math.max(1,Math.min(10,Number(options.seasons)||3));
+  const currentIssues=validateCareerIntegrityState(G);
+  const report={build:BUILD_ID,engine:ENGINE_VERSION,seasonsRequested:seasons,currentIssues:[...currentIssues],simulationIssues:[],passed:false};
+  if(currentIssues.length){report.simulationIssues.push("Current career state failed integrity validation before stress simulation.");return report;}
+  try{
+    const test=JSON.parse(JSON.stringify(G));
+    // Release-gate simulation is intentionally AI-only so user roster/draft
+    // decisions cannot create legitimate manual stop conditions.
+    test.userClubGM={clubId:null,appointedSeason:null};
+    test.userDraftMode="auto";
+    const startSeason=test.season;
+    simSeasons(test,seasons);
+    report.completedSeasons=Math.max(0,test.season-startSeason);
+    report.endPhase=test.phase;
+    report.simulationIssues=validateCareerIntegrityState(test);
+    const history=(test.leagueHistory||[]).filter(h=>h.season>=startSeason&&h.season<test.season);
+    report.champions=history.filter(h=>h.championClubId||h.championName).length;
+    report.mvps=history.filter(h=>h.mvpName||test.awards?.[`S${h.season}_MVP`]).length;
+    if(report.completedSeasons<seasons)report.simulationIssues.push(`Stress simulation completed ${report.completedSeasons}/${seasons} requested seasons.`);
+    if(report.champions<seasons)report.simulationIssues.push(`Only ${report.champions}/${seasons} simulated seasons recorded a champion.`);
+    if(report.mvps<seasons)report.simulationIssues.push(`Only ${report.mvps}/${seasons} simulated seasons recorded an MVP.`);
+  }catch(err){report.simulationIssues.push(err?.message||String(err));}
+  report.passed=!report.currentIssues.length&&!report.simulationIssues.length;
+  return report;
+}
+window.MiniMeBasketballQA={
+  validate:()=>validateCareerIntegrityState(G),
+  repair:()=>repairCareerIntegrityState(G),
+  releaseGate:(options={})=>runReleaseGate(options),
+  tuning:()=>JSON.parse(JSON.stringify(SIM_TUNING))
+};
 
 function saveMeta(){
   const club=me();
