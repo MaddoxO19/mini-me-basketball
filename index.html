@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.25.0 Club UI/UX Refinement</title>
+<title>Mini&Me Basketball — v0.1.26.0 League UI/UX Refinement</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1468,10 +1468,26 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .clubLegendList{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}.clubLegendRow{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(125px,.9fr);gap:8px;align-items:center;padding:10px 11px;border-top:1px solid var(--line)}.clubLegendRow:first-child{border-top:0}.clubLegendRow>span{font-size:8px;color:var(--accent2);font-weight:950;text-align:center}.clubLegendRow b{font-size:9px}.clubLegendRow small{display:block;color:var(--muted);font-size:6.3px;margin-top:2px}.clubLegendRow>strong{text-align:right;font-size:7px;line-height:1.35;color:var(--accent2);font-weight:900}
 @media(max-width:430px){.clubPageTitle{margin-bottom:8px}.compactClubCurrent{grid-template-columns:repeat(2,minmax(0,1fr))!important}.clubCurrentLeaderGrid{gap:5px}.clubCurrentLeader{padding:8px 5px}.clubCurrentLeader small{font-size:4.8px}.clubCurrentLeader b{font-size:6.8px}.clubCurrentLeader strong{font-size:8px}.clubSeasonLeadersEight{grid-template-columns:repeat(2,minmax(0,1fr))}.clubHistoryClean .teamSeasonRow{grid-template-columns:42px 72px minmax(0,1fr)!important;padding:9px 10px}.clubLegendRow{grid-template-columns:20px minmax(0,1fr);gap:6px}.clubLegendRow>strong{grid-column:2;text-align:left;font-size:6.5px;margin-top:1px}}
 
+
+/* v0.1.26.0 — League UI/UX refinement */
+.leaguePageHead{margin:4px 1px 12px}
+.leaguePageHead h2{margin:0;font-size:23px}
+.leaguePageHead p{margin:4px 0 0;color:var(--muted);font-size:10px}
+.standingSwitch.leagueSlimSwitch{grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
+.standingSwitch.leagueSlimSwitch button{padding:7px 9px;border-radius:9px;font-size:8px;min-height:32px}
+.cupStageCard .cupTieTeams .teamIdentityInline>span:last-child{font-size:8.5px}
+.cupStageCard .cupTieMatch b{font-size:8px!important}
+.leagueHistoryTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 11px}
+.leagueHistoryTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:10px;padding:8px 5px;font-size:7.5px;font-weight:900;min-width:0}
+.leagueHistoryTabs button.active{background:var(--accent);border-color:var(--accent);color:#17100a}
+.leagueHistoryIntro{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.055),var(--panel));border-radius:13px;padding:11px 12px;margin:0 0 10px}
+.leagueHistoryIntro b{display:block;font-size:12px}
+.leagueHistoryIntro small{display:block;color:var(--muted);font-size:7px;line-height:1.4;margin-top:3px}
+@media(max-width:520px){.leaguePageHead{margin-top:2px}.leaguePageHead h2{font-size:21px}.standingSwitch.leagueSlimSwitch button{padding:6px 7px;font-size:7.5px;min-height:30px}.cupStageCard .cupTieTeams .teamIdentityInline>span:last-child{font-size:7.8px}.leagueHistoryTabs button{font-size:7px;padding:8px 3px}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.25.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.26.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2682,14 +2698,24 @@ function ingestCurrentSeasonRecordBackfill(G){
   for(const g of G.regularSeasonLive?.games||[])ingestHistoricalGameRecords(G,g);
   for(const g of G.regularSeason?.games||[])ingestHistoricalGameRecords(G,g);
 }
-function leagueHistoricalRecordsHtml(G){
+function leagueHistoryGameRecordsHtml(G){
   ingestCurrentSeasonRecordBackfill(G);
   const x=historicalRecordSnapshot(G),sg=x.league.singleGame||{},tg=x.league.teamGame||{};
-  return `<div class="recordBookIntro"><div class="eyebrow">Official Record Book</div><h3>League Records</h3><p>Regular-season records persist for the life of this career. Single-game marks update immediately; season-rate and career leaderboards grow as seasons are played.</p></div>
-  <div class="recordCategory"><div class="recordCategoryHead"><b>Single-Game Player Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points)}${recordCard("Assists",sg.assists)}${recordCard("Rebounds",sg.rebounds)}${recordCard("Steals",sg.steals)}${recordCard("Blocks",sg.blocks)}${recordCard("3-Pointers Made",sg.threes)}</div></div>
-  <div class="recordCategory"><div class="recordCategoryHead"><b>Team Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Highest Team Score",tg.teamScore)}${recordCard("Largest Winning Margin",tg.winMargin)}</div></div>
-  ${recordLeaderList("Season Scoring Average",x.seasonRates.ppg," PPG",1)}${recordLeaderList("Season Assist Average",x.seasonRates.apg," APG",1)}${recordLeaderList("Season Rebound Average",x.seasonRates.rpg," RPG",1)}${recordLeaderList("Season Steals Average",x.seasonRates.spg," SPG",1)}${recordLeaderList("Season Blocks Average",x.seasonRates.bpg," BPG",1)}
-  ${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}`;
+  return `<div class="leagueHistoryIntro"><b>Game Records</b><small>Official regular-season single-game player and team records across the career.</small></div><div class="recordCategory"><div class="recordCategoryHead"><b>Single-Game Player Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points)}${recordCard("Assists",sg.assists)}${recordCard("Rebounds",sg.rebounds)}${recordCard("Steals",sg.steals)}${recordCard("Blocks",sg.blocks)}${recordCard("3-Pointers Made",sg.threes)}</div></div><div class="recordCategory"><div class="recordCategoryHead"><b>Team Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Highest Team Score",tg.teamScore)}${recordCard("Largest Winning Margin",tg.winMargin)}</div></div>`;
+}
+function leagueHistorySeasonAveragesHtml(G){
+  ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G);
+  return `<div class="leagueHistoryIntro"><b>Season Averages</b><small>Best qualifying regular-season per-game performances recorded in a single season.</small></div>${recordLeaderList("Season Scoring Average",x.seasonRates.ppg," PPG",1)}${recordLeaderList("Season Assist Average",x.seasonRates.apg," APG",1)}${recordLeaderList("Season Rebound Average",x.seasonRates.rpg," RPG",1)}${recordLeaderList("Season Steals Average",x.seasonRates.spg," SPG",1)}${recordLeaderList("Season Blocks Average",x.seasonRates.bpg," BPG",1)}`;
+}
+function leagueHistoryAllTimeHtml(G){
+  ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
+  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12);
+  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>Career leaders, recent champions and franchise honours accumulated throughout this save.</small></div>${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+}
+function leagueHistoricalRecordsHtml(G){
+  const tabs=[["game","Game Records"],["season","Season Averages"],["alltime","All-Time"]],mode=ui.leagueHistoryTab||"game";
+  const body=mode==="season"?leagueHistorySeasonAveragesHtml(G):mode==="alltime"?leagueHistoryAllTimeHtml(G):leagueHistoryGameRecordsHtml(G);
+  return `<div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}`;
 }
 function clubHistoricalRecordsHtml(G,club){
   ingestCurrentSeasonRecordBackfill(G);
@@ -5688,9 +5714,9 @@ if (typeof module !== "undefined") {
 
 </script>
 <script>
-const BUILD_ID="v0.1.25.0 Club UI/UX Refinement",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.26.0 League UI/UX Refinement",ENGINE_VERSION="E2.11-REC1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -9215,7 +9241,7 @@ function standingTable(rows,label){
 }
 function standings(){
   const rows=standingsRows();
-  const switcher=`<div class="standingSwitch"><button data-standingview="conference" class="${ui.standingsView==="conference"?"active":""}">Conference</button><button data-standingview="division" class="${ui.standingsView==="division"?"active":""}">Division</button></div>`;
+  const switcher=`<div class="standingSwitch leagueSlimSwitch"><button data-standingview="conference" class="${ui.standingsView==="conference"?"active":""}">Conference</button><button data-standingview="division" class="${ui.standingsView==="division"?"active":""}">Division</button></div>`;
   if(ui.standingsView==="division"){
     const myDiv=me()?.division;
     const divisions=[myDiv,...Object.values(DIVISIONS).flat().filter(d=>d!==myDiv)];
@@ -9340,35 +9366,12 @@ function postseasonPage(){
 }
 
 function leagueLegacy(){
-  const hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season);
-  const book=basketballRecordBook(G),clubs=G.clubs||[];
-  const titleCounts=clubs.map(club=>({
-    club,nba:hist.filter(h=>h.championClubId===club.id).length,
-    cup:hist.filter(h=>h.cupChampionClubId===club.id).length,
-    best:hist.filter(h=>h.bestRecordClubId===club.id).length
-  })).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10);
-  const seasons=hist.slice(0,12);
-  const playerRecords=[
-    ["Career Points",book.points],
-    ["Career Rebounds",book.rebounds],
-    ["Career Assists",book.assists],
-    ["GM Career Wins",book.gmWins]
-  ];
-  return `<div class="legacyHero"><div><div class="eyebrow">League Archive</div><h2>Basketball History</h2><p>Champions, award winners and career records generated during this career.</p></div><strong>${hist.length}<small>SEASONS</small></strong></div>
-    <div class="legacyRecordGrid">${playerRecords.map(([label,r])=>`<div><small>${label}</small><b>${r?.name||"—"}</b><strong>${r?.value??"—"}</strong></div>`).join("")}</div>
-    ${leagueHistoricalRecordsHtml(G)}
-    <div class="sectionTitle">Recent Seasons</div>
-    <div class="legacySeasonList">${seasons.length?seasons.map(h=>{
-      const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);
-      return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;
-    }).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div>
-    <div class="sectionTitle">Franchise Honours</div>
-    <div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+  return leagueHistoricalRecordsHtml(G);
 }
 function league(){
   const tabs=[["standings","Standings"],["cup","NBA Cup"],["leaders","Leaders"],["awards","Awards"],["post","Postseason"],["legacy","History"]];
   let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="leaders"?leagueLeaders():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():postseasonPage();
-  return header("League","Standings, competitions, leaders and awards")+`<div class="tabs compactTabRow">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+  return `<div class="leaguePageHead"><h2>League</h2><p>Standings, competitions, leaders and awards</p></div><div class="tabs compactTabRow">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 function nationalRecentForm(team,limit=5){
   return (team.games||[]).slice(-limit).reverse().map(g=>g.winner===team.code?"W":"L");
@@ -9778,7 +9781,7 @@ if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;render()});$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
+$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;render()});$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
 $$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
 if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
