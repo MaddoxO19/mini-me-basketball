@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.31.2 Draft Night Intel Fix</title>
+<title>Mini&Me Basketball — v0.1.32.0 Scouting Department Depth</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1567,10 +1567,20 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .news.articleNews h4{margin:2px 0 5px;font-size:12px;line-height:1.25;color:var(--text)}
 .news.articleNews p{font-size:9px;line-height:1.55;color:#c9d0d9}
 .news.articleNews .newsOddsLine{display:block;margin-top:5px;color:var(--muted);font-size:8px;line-height:1.45}
+
+/* v0.1.32.0 — Scouting Department Depth */
+.scoutFocusCard{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;margin-bottom:14px}
+.scoutFocusHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:9px}
+.scoutFocusHead b{display:block;font-size:11px}.scoutFocusHead small{display:block;color:var(--muted);font-size:7px;margin-top:3px;line-height:1.35}
+.scoutFocusHead strong{font-size:9px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.scoutFocusButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.scoutFocusButtons button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:10px;padding:9px 5px;font-weight:800;font-size:8px}
+.scoutFocusButtons button.active{border-color:var(--gold);color:#111;background:var(--gold)}.scoutFocusButtons button:disabled{opacity:.75}
+.scoutFocusCard p{font-size:7px;line-height:1.45;color:var(--muted);margin:9px 0 0}
+@media(max-width:520px){.scoutFocusButtons{grid-template-columns:repeat(2,1fr)}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.31.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4014,9 +4024,15 @@ function applyUserTrainingDevelopment(G){
 }
 
 function ensureScoutingState(G){
-  G.scouting=G.scouting||{level:2,xp:0,lastSeasonAwarded:0};
+  G.scouting=G.scouting||{level:2,xp:0,lastSeasonAwarded:0,focus:"Balanced",focusDraftSeason:null};
   G.scouting.level=Math.max(1,Math.min(5,+G.scouting.level||2));
   G.scouting.xp=Math.max(0,+G.scouting.xp||0);
+  if(!["Balanced","Guard","Forward","Center"].includes(G.scouting.focus))G.scouting.focus="Balanced";
+  const target=(typeof upcomingDraftYear==="function"&&G?.season)?upcomingDraftYear(G):(G?.season||1);
+  if(G.scouting.focusDraftSeason!==target){
+    G.scouting.focus="Balanced";
+    G.scouting.focusDraftSeason=null;
+  }
   G.draftClassHistory=G.draftClassHistory||[];
   return G.scouting;
 }
@@ -4031,6 +4047,26 @@ function scoutingLevelInfo(G){
   };
   const next=s.level>=5?null:(s.level===1?2:s.level===2?4:s.level===3?7:11);
   return{...s,name:labels[s.level][0],description:labels[s.level][1],nextXp:next};
+}
+function scoutingPositionGroup(p){
+  const pos=p?.position||"";
+  return ["PG","SG"].includes(pos)?"Guard":pos==="C"?"Center":"Forward";
+}
+function scoutingFocusInfo(G){
+  const s=ensureScoutingState(G),target=upcomingDraftYear(G);
+  return{focus:s.focus||"Balanced",locked:s.focusDraftSeason===target,target};
+}
+function setScoutingFocus(G,focus){
+  if(!["Balanced","Guard","Forward","Center"].includes(focus))return{ok:false,reason:"Invalid scouting focus."};
+  const s=ensureScoutingState(G),target=upcomingDraftYear(G);
+  if(s.focusDraftSeason===target)return{ok:false,reason:`Scouting focus is locked for the Season ${target} draft.`};
+  s.focus=focus;s.focusDraftSeason=target;
+  return{ok:true,focus,target};
+}
+function effectiveScoutingLevel(G,p){
+  const base=scoutingLevelInfo(G).level,fi=scoutingFocusInfo(G);
+  if(fi.focus==="Balanced")return base;
+  return scoutingPositionGroup(p)===fi.focus?Math.min(5,base+1):Math.max(1,base-1);
 }
 function awardScoutingXP(G,amount=1){
   const s=ensureScoutingState(G);
@@ -4100,7 +4136,7 @@ function ensureUpcomingDraftClass(G){
   return prospects;
 }
 function scoutingEstimate(p,G){
-  const level=scoutingLevelInfo(G).level;
+  const level=effectiveScoutingLevel(G,p);
   const widths={
     1:{o:6,p:9},2:{o:5,p:7},3:{o:3,p:5},4:{o:2,p:3},5:{o:1,p:2}
   }[level];
@@ -5845,7 +5881,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.31.2 Draft Night Intel Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.32.0 Scouting Department Depth",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9885,10 +9921,16 @@ function frontOfficePage(embedded=false){
 }
 
 function scoutingPage(embedded=false){
-  const scout=scoutingLevelInfo(G),board=draftClassScoutBoard(G,20),era=G.upcomingDraftClass?.era||G.talentHealth?.era?.type||"NORMAL";
+  const scout=scoutingLevelInfo(G),focus=scoutingFocusInfo(G),board=draftClassScoutBoard(G,20),era=G.upcomingDraftClass?.era||G.talentHealth?.era?.type||"NORMAL";
   const topBoard=board.length?`<div class="scoutDraftBoard">${board.map(x=>`<div class="scoutProspect"><div class="scoutProspectRank">#${x.rank}</div><div class="scoutProspectMain"><b>${x.name}</b><small>${x.position} · Age ${x.age} · ${x.archetype} · ${x.origin}</small><span>${x.strength} · Risk: ${x.risk}</span></div><div class="scoutProspectRatings"><b>${x.ovrRange}</b><small>OVR EST</small><b>${x.potRange}</b><small>POT EST</small></div><div class="scoutProspectProj"><b>${x.projection}</b><small>${x.confidence} CONF.</small></div></div>`).join("")}</div>`:"";
+  const focusButtons=["Balanced","Guard","Forward","Center"].map(k=>`<button data-scoutfocus="${k}" class="${focus.focus===k?"active":""}" ${focus.locked?"disabled":""}>${k}${k==="Balanced"?"":"s"}</button>`).join("");
+  const focusEffect=focus.focus==="Balanced"
+    ?`Balanced coverage keeps Level ${scout.level} evaluation across every position group.`
+    :`${focus.focus}s are evaluated at effective Level ${Math.min(5,scout.level+1)}; other groups fall to effective Level ${Math.max(1,scout.level-1)} for this draft cycle.`;
   const content=`<div class="scoutingDeptHero"><div><div class="eyebrow">SCOUTING DEPARTMENT</div><h3>Level ${scout.level} · ${scout.name}</h3><p>${scout.description}. Ratings remain estimates until a player enters your roster. Scouting XP is earned organically through completed drafts, improving the department over multiple seasons.</p></div><div class="scoutLevelBadge"><b>${scout.level}/5</b><small>${scout.level>=5?"MAX LEVEL":`${scout.xp}/${scout.nextXp} XP`}</small></div></div>
     <div class="scoutingCapabilities"><div><b>${scout.level<=2?"Broad":scout.level===3?"Moderate":"Tight"}</b><small>OVR ranges</small></div><div><b>${scout.level===1?"Very Broad":scout.level<=3?"Moderate":"Tight"}</b><small>POT ranges</small></div><div><b>${scout.level>=4?"Strong":scout.level>=2?"Useful":"Limited"}</b><small>Projection confidence</small></div><div><b>${era}</b><small>Current class environment</small></div></div>
+    <div class="sectionTitle">Season ${focus.target} Scouting Focus</div>
+    <div class="scoutFocusCard"><div class="scoutFocusHead"><div><b>${focus.locked?`${focus.focus}${focus.focus==="Balanced"?"":"s"} · Locked`:"Choose Department Focus"}</b><small>${focus.locked?`Committed for the Season ${focus.target} draft.`:`One choice per draft cycle. Focus improves one group but reduces coverage elsewhere.`}</small></div><strong>${focus.focus}</strong></div><div class="scoutFocusButtons">${focusButtons}</div><p>${focusEffect}</p></div>
     <div class="sectionTitle">Draft Intelligence · Top 20</div>
     <div class="scoutDraftIntro"><b>Scouted Board</b><small>The board ranks prospects by your department's current evaluation, not by hidden true ratings. A player can outperform or underperform this projection.</small></div>
     ${topBoard}
@@ -9926,6 +9968,12 @@ function prepareRenderState(force=false){
 function render(){prepareRenderState();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   $$("[data-scoutgroup]").forEach(b=>b.onclick=()=>{ui.scoutGroup=b.dataset.scoutgroup;render()});
+  $$("[data-scoutfocus]").forEach(b=>b.onclick=async()=>{
+    const r=setScoutingFocus(G,b.dataset.scoutfocus);
+    if(!r.ok){toast(r.reason);return;}
+    toast(`${r.focus}${r.focus==="Balanced"?"":"s"} scouting focus locked for Season ${r.target}.`);
+    await save();render();
+  });
   $$("[data-factab]").forEach(b=>b.onclick=()=>{ui.page="facilities";ui.facilitiesTab=b.dataset.factab;render()});
   if($("#openGmProfile"))$("#openGmProfile").onclick=()=>{ui.page="gmProfile";render()};
   if($("#openFrontOffice"))$("#openFrontOffice").onclick=()=>{ui.page="facilities";ui.facilitiesTab="frontoffice";render()};
