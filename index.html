@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.32.7 Club Profile Runtime Diagnostic</title>
+<title>Mini&Me Basketball — v0.1.32.8 Club Profile Link Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1587,18 +1587,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 
 
-/* v0.1.32.7 — temporary Club Profile runtime diagnostic */
-#clubProfileDiagBox{position:fixed;z-index:999999;left:12px;right:12px;bottom:calc(92px + env(safe-area-inset-bottom));background:#0c1118;border:1px solid #f0b04c;border-radius:14px;box-shadow:0 10px 36px rgba(0,0,0,.55);padding:10px;color:#f4f6f9;font-family:inherit}
-.profileDiagHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;color:#f0b04c;font-size:11px;letter-spacing:.05em}
-.profileDiagHead button{width:30px;height:30px;border-radius:8px;border:1px solid #394452;background:#141b25;color:#fff;font-size:18px}
-#clubProfileDiagBody{display:grid;gap:3px;font-size:10px;line-height:1.35}
-#clubProfileDiagBody div{display:flex;gap:7px;word-break:break-word}
-#clubProfileDiagBody span{color:#f0b04c;min-width:14px;font-weight:800}
+
+/* v0.1.32.8 — clickable League standings team identities */
+.standingsClubLink{display:block;color:inherit;text-decoration:none}
+.standingsClubLink .teamIdentityCompact{pointer-events:none}
+@media (hover:hover){.standingsClubLink:hover{color:var(--accent2)}}
+@media (hover:none),(pointer:coarse){.standingsClubLink:active{color:var(--accent2)}}
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.7</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.8</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5904,7 +5903,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.32.7 Club Profile Runtime Diagnostic",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.32.8 Club Profile Link Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6424,22 +6423,6 @@ function playerByAnyId(id){
 }
 
 
-function clubProfileDiag(stage,detail=""){
-  window.__clubProfileDiag=window.__clubProfileDiag||[];
-  const msg=`${stage}${detail?`: ${detail}`:""}`;
-  window.__clubProfileDiag.push(msg);
-  if(window.__clubProfileDiag.length>8)window.__clubProfileDiag.shift();
-  let box=document.getElementById("clubProfileDiagBox");
-  if(!box){
-    box=document.createElement("div");
-    box.id="clubProfileDiagBox";
-    box.innerHTML=`<div class="profileDiagHead"><b>CLUB PROFILE DIAGNOSTIC</b><button type="button" id="clubProfileDiagClose">×</button></div><div id="clubProfileDiagBody"></div>`;
-    document.body.appendChild(box);
-    const c=box.querySelector("#clubProfileDiagClose"); if(c)c.onclick=()=>box.remove();
-  }
-  const body=box.querySelector("#clubProfileDiagBody");
-  if(body)body.innerHTML=window.__clubProfileDiag.map((x,i)=>`<div><span>${i+1}</span>${x}</div>`).join("");
-}
 function rememberProfileReturn(){
   ui.profileReturnPage=ui.page;
   ui.profileReturnTab=ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:ui.page==="international"?ui.intlTab:ui.page==="facilities"?ui.facilitiesTab:null;
@@ -6461,26 +6444,15 @@ function openPlayerProfileDirect(id,e){
   return false;
 }
 function openClubProfileDirect(id,e){
-  try{
-    clubProfileDiag("1 TAP",String(id));
-    if(e){e.preventDefault();e.stopPropagation();}
-    const club=G.clubs.find(c=>String(c.id)===String(id));
-    clubProfileDiag("2 LOOKUP",club?`${club.name} · ${club.id}`:"NOT FOUND");
-    if(!club){toast("Club profile unavailable");return false;}
-    rememberProfileReturn();
-    ui.clubProfileId=club.id;
-    ui.page="clubProfile";
-    clubProfileDiag("3 STATE",`${ui.page} · ${ui.clubProfileId}`);
-    closeProfileBlockingWindows();
-    clubProfileDiag("4 RENDER","starting");
-    render();
-    clubProfileDiag("5 RENDER","completed");
-    return false;
-  }catch(err){
-    console.error("Club profile runtime failure",err);
-    clubProfileDiag("ERROR",`${err?.name||"Error"} · ${err?.message||String(err)}`);
-    return false;
-  }
+  if(e){e.preventDefault();e.stopPropagation();}
+  const club=G.clubs.find(c=>String(c.id)===String(id));
+  if(!club){toast("Club profile unavailable");return false;}
+  rememberProfileReturn();
+  ui.clubProfileId=club.id;
+  ui.page="clubProfile";
+  closeProfileBlockingWindows();
+  render();
+  return false;
 }
 function playerNameLink(p){
   if(!p)return"—";
@@ -6777,9 +6749,7 @@ function playerProfile(){
     ${tab==="career"?career:tab==="contract"?contract:tab==="gameshealth"?gamesHealth:overview}`;
 }
 function clubProfile(){
-  clubProfileDiag("4A PROFILE","renderer entered");
   const club=c(ui.clubProfileId);
-  clubProfileDiag("4B PROFILE",club?`${club.name} found`:"club missing");
   if(!club)return header("Team Profile","Club could not be located")+`<div class="card empty">This club is unavailable.</div>`;
   const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0,diff:0},confRows=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff),rank=confRows.findIndex(x=>x.clubId===club.id)+1;
   const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr);ensurePlayerJerseys(club);
@@ -9703,7 +9673,9 @@ function standingTable(rows,label){
   const leader=sorted[0],leaderPct=(leader?.w||0)/Math.max(1,(leader?.w||0)+(leader?.l||0));
   return `<div class="sectionTitle">${label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead><tbody>${sorted.map((x,i)=>{
     const gp=x.w+x.l,pct=gp?x.w/gp:0,gb=i===0?"—":Math.max(0,((leader.w-x.w)+(x.l-leader.l))/2).toFixed(1);
-    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamIdentityCompact(c(x.clubId),x.division)}</td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
+    const club=c(x.clubId);
+    const teamHtml=club?`<a class="standingsClubLink" data-clubprofile="${club.id}" href="#club-profile/${encodeURIComponent(String(club.id))}">${teamIdentityCompact(club,x.division)}</a>`:teamIdentityCompact(club,x.division);
+    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamHtml}</td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
   }).join("")}</tbody></table></div>`;
 }
 function standings(){
