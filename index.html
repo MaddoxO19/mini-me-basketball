@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.32.8 Club Profile Link Fix</title>
+<title>Mini&Me Basketball — v0.1.33.0 Historical Depth & Persistence</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1594,10 +1594,24 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 @media (hover:hover){.standingsClubLink:hover{color:var(--accent2)}}
 @media (hover:none),(pointer:coarse){.standingsClubLink:active{color:var(--accent2)}}
 
+
+/* v0.1.33.0 — Historical Depth & Persistence */
+.retirementBanner{border:1px solid rgba(240,176,76,.45);background:linear-gradient(135deg,rgba(240,176,76,.08),rgba(255,255,255,.015));border-radius:14px;padding:13px;margin-bottom:12px}
+.retirementBanner small,.careerPeakCard small{display:block;color:var(--accent2);font-size:7px;font-weight:900;letter-spacing:.1em}
+.retirementBanner b{display:block;font-size:12px;margin:3px 0}.retirementBanner span{font-size:8px;color:var(--muted)}
+.careerRankGrid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:13px}
+.careerRankCard{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:10px;text-align:center}
+.careerRankCard small{display:block;font-size:7px;color:var(--muted)}.careerRankCard b{display:block;font-size:17px;margin:3px 0;color:var(--accent2)}.careerRankCard span{font-size:8px;color:var(--text)}
+.careerPeakCard{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}
+.careerPeakCard b{display:block;font-size:12px;margin:3px 0}.careerPeakCard span{font-size:8px;color:var(--muted)}.careerPeakCard strong{font-size:14px;white-space:nowrap}
+.retiredOverview{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0;overflow:hidden}.retiredOverview>div{padding:14px}.retiredOverview>div+div{border-left:1px solid var(--line)}.retiredOverview small{display:block;color:var(--muted);font-size:7px}.retiredOverview b{display:block;font-size:14px;margin:3px 0}.retiredOverview span{font-size:8px;color:var(--muted)}
+.retiredLegendList{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}.retiredLegendRow{display:grid;grid-template-columns:24px minmax(0,1fr) 58px 48px;gap:8px;align-items:center;padding:10px 12px;background:var(--panel)}.retiredLegendRow+.retiredLegendRow{border-top:1px solid var(--line)}.retiredLegendRow>span{color:var(--muted);font-size:8px}.retiredLegendRow b{font-size:9px}.retiredLegendRow small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.retiredLegendRow>div:nth-last-child(-n+2){text-align:right}.retiredLegendRow strong{font-size:10px}
+@media(max-width:520px){.careerRankGrid{grid-template-columns:repeat(3,1fr)}.careerRankCard{padding:8px 4px}.retiredLegendRow{grid-template-columns:20px minmax(0,1fr) 52px 40px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.8</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.33.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2772,11 +2786,14 @@ function ingestHistoricalGameRecords(G,game){
 }
 function currentCareerTotal(p,key){return +(p?.careerStats?.[key]||0)+ +(p?.seasonStats?.[key]||0)}
 function allSeasonRateEntries(G,key,minGp=20){
-  const out=[];
-  for(const club of G.clubs||[])for(const p of club.roster||[]){
-    for(const h of p.seasonHistory||[]){const st=h.stats||{},gp=+st.gp||0;if(gp>=minGp)out.push({playerId:p.id,playerName:p.name,clubId:h.clubId||club.id,clubName:h.clubName||clubById(G,h.clubId)?.name||club.name,season:h.season,value:(+st[key]||0)/gp,gp});}
-    const st=p.seasonStats||{},gp=+st.gp||0;if(gp>=minGp)out.push({playerId:p.id,playerName:p.name,clubId:club.id,clubName:club.name,season:G.season,value:(+st[key]||0)/gp,gp});
-  }
+  const out=[],seen=new Set();
+  const addHistory=(p,fallbackClub=null)=>{
+    if(!p||seen.has(String(p.id)))return;seen.add(String(p.id));
+    for(const h of p.seasonHistory||[]){const st=h.stats||{},gp=+st.gp||0;if(gp>=minGp)out.push({playerId:p.id,playerName:p.name,clubId:h.clubId||fallbackClub?.id||null,clubName:h.clubName||clubById(G,h.clubId)?.name||fallbackClub?.name||"—",season:h.season,value:(+st[key]||0)/gp,gp});}
+    if(!p.retired&&fallbackClub){const st=p.seasonStats||{},gp=+st.gp||0;if(gp>=minGp)out.push({playerId:p.id,playerName:p.name,clubId:fallbackClub.id,clubName:fallbackClub.name,season:G.season,value:(+st[key]||0)/gp,gp});}
+  };
+  for(const club of G.clubs||[])for(const p of club.roster||[])addHistory(p,club);
+  for(const p of retiredPlayerPool(G))addHistory(p,null);
   return out;
 }
 function mergeHistoricalTop(stored,current,identityKey="playerId"){
@@ -2788,7 +2805,7 @@ function mergeHistoricalTop(stored,current,identityKey="playerId"){
   return [...map.values()].sort((a,b)=>(+b.value||0)-(+a.value||0)).slice(0,10);
 }
 function historicalRecordSnapshot(G){
-  const hr=ensureHistoricalRecords(G),players=allPlayers(G);
+  const hr=ensureHistoricalRecords(G),players=[...allPlayers(G),...retiredPlayerPool(G)];
   const career={};for(const [label,key] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"],["games","gp"]]){
     const active=players.map(p=>({playerId:p.id,playerName:p.name,clubId:clubForPlayer(G,p)?.id||null,clubName:clubForPlayer(G,p)?.name||"—",value:currentCareerTotal(p,key)}));career[label]=mergeHistoricalTop(hr.league.career?.[label],active);
   }
@@ -2796,7 +2813,7 @@ function historicalRecordSnapshot(G){
   return{...hr,career,seasonRates};
 }
 function clubHistoricalSnapshot(G,clubId){
-  const bucket=clubHistoricalBucket(G,clubId),players=allPlayers(G),career={};
+  const bucket=clubHistoricalBucket(G,clubId),players=[...allPlayers(G),...retiredPlayerPool(G)],career={};
   const associated=(p)=>{const current=clubForPlayer(G,p)?.id===clubId;const past=(p.seasonHistory||[]).some(h=>h.clubId===clubId);return current||past};
   for(const [label,key] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"],["games","gp"]]){
     const active=players.filter(associated).map(p=>{let value=0;for(const h of p.seasonHistory||[])if(h.clubId===clubId)value+=+(h.stats?.[key]||0);if(clubForPlayer(G,p)?.id===clubId)value+=+(p.seasonStats?.[key]||0);return{playerId:p.id,playerName:p.name,clubId,clubName:clubById(G,clubId)?.name||clubId,value}});career[label]=mergeHistoricalTop(bucket.career?.[label],active);
@@ -2827,8 +2844,9 @@ function leagueHistorySeasonAveragesHtml(G){
 }
 function leagueHistoryAllTimeHtml(G){
   ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
-  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12);
-  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>Career leaders, recent champions and franchise honours accumulated throughout this save.</small></div>${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12),legends=[...retiredPlayerPool(G)].sort((a,b)=>retiredLegendScore(b)-retiredLegendScore(a)).slice(0,10);
+  const legendsHtml=legends.length?`<div class="sectionTitle">Retired Legends</div><div class="retiredLegendList">${legends.map((p,i)=>{const cs=p.careerStats||{},hc=playerHonourCounts(p);return `<div class="retiredLegendRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Retired S${p.retirementSeason||"—"} · ${p.retiredFromClubName||"Career Complete"}</small></div><div><strong>${(+cs.pts||0).toLocaleString()}</strong><small>PTS</small></div><div><strong>${hc.total}</strong><small>HON</small></div></div>`}).join("")}</div>`:"";
+  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>Career leaders, recent champions, retired legends and franchise honours accumulated throughout this save.</small></div>${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
 }
 function leagueHistoricalRecordsHtml(G){
   const tabs=[["game","Game Records"],["season","Season Averages"],["alltime","All-Time"]],mode=ui.leagueHistoryTab||"game";
@@ -3199,7 +3217,7 @@ function ensureInternationalAffiliation(p){
   }
   return"Free Agent";
 }
-function playerAffiliation(p){return ensureInternationalAffiliation(p)}
+function playerAffiliation(p){return p?.retired?`Retired · ${p.retiredFromClubName||"Career Complete"}`:ensureInternationalAffiliation(p)}
 function gameYearForSeason(season){return 2025+(Number(season)||1)}
 function nationalCompetitionYear(){return gameYearForSeason(G.season)}
 function internationalPlayerAverages(p){const st=p?.internationalStats||{},gp=Math.max(0,+st.gp||0);return{gp,ppg:gp?(+st.pts||0)/gp:0,rpg:gp?(+st.reb||0)/gp:0,apg:gp?(+st.ast||0)/gp:0,spg:gp?(+st.stl||0)/gp:0,bpg:gp?(+st.blk||0)/gp:0}}
@@ -3833,7 +3851,7 @@ function runOffseason(G) {
         p.extensionEligible=(p.contractYearsLeft||0)<=1;
       }
       p.age++;
-      if (Math.random()<retirementChance(p)) { logEvent(G, `${p.name} (${club.name}) retires at age ${p.age} (OVR ${p.ovr}).`); summary.retired++; continue; }
+      if (Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,club); logEvent(G, `${p.name} (${club.name}) retires at age ${p.age} (OVR ${p.ovr}).`); summary.retired++; continue; }
       if (completedSeason && (p.contractYearsLeft||0)<=0) {
         p.contractStatus="Free Agent"; p.contractType="Unsigned"; G.freeAgents.push(p); summary.expired++; G.transactions.push({type:"contract_expired",season:G.season,clubId:club.id,playerId:p.id}); continue;
       }
@@ -3854,7 +3872,7 @@ function runOffseason(G) {
   const faSurvivors=[];
   for (const p of G.freeAgents) {
     p.age++; p.fatigue=0; p.recentForm=[];
-    if (Math.random()<retirementChance(p)) { logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
+    if (Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,null); logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
     progressPlayerTalent(p,talentEraModifier(G),99,{trainingLevel:1,season:G.season-1}); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
   }
   G.freeAgents=faSurvivors;
@@ -5903,7 +5921,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.32.8 Club Profile Link Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.33.0 Historical Depth & Persistence",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6416,10 +6434,31 @@ function ensureCountryBasedPlayerNames(){
 function playerClub(playerId){
   return G.clubs.find(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])].some(p=>p.id===playerId))||null;
 }
+function retiredPlayerPool(G){
+  if(!Array.isArray(G.retiredPlayers))G.retiredPlayers=[];
+  return G.retiredPlayers;
+}
+function archiveRetiredPlayer(G,p,club=null){
+  if(!p)return null;
+  const pool=retiredPlayerPool(G);
+  const existing=pool.find(x=>String(x.id)===String(p.id));
+  p.retired=true;
+  p.retirementSeason=G.season;
+  p.retirementAge=p.age;
+  p.retiredFromClubId=club?.id||p.retiredFromClubId||null;
+  p.retiredFromClubName=club?.name||p.retiredFromClubName||"Free Agency";
+  p.contractYearsLeft=0;
+  p.contractStatus="Retired";
+  p.contractType="Retired";
+  p.salaryM=0;
+  p.injured=false;p.injury=null;p.fatigue=0;
+  if(!existing)pool.push(p);
+  return p;
+}
 function playerByAnyId(id){
   if(!id)return null;
   const key=String(id);
-  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[])].find(p=>String(p.id)===key)||null;
+  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[]),...retiredPlayerPool(G)].find(p=>String(p.id)===key)||null;
 }
 
 
@@ -6598,6 +6637,26 @@ function playerHonourCounts(p){
   const count=term=>awards.filter(a=>String(a.award).includes(term)).length;
   return{mvp:count("MVP"),allNba:count("AllNBA"),def:count("Defensive"),world:count("World Cup"),total:awards.length};
 }
+function playerAllTimeRanks(p){
+  if(!p)return[];
+  const snap=historicalRecordSnapshot(G);
+  const cats=[["points","PTS"],["assists","AST"],["rebounds","REB"],["steals","STL"],["blocks","BLK"],["threes","3PM"],["games","GP"]];
+  return cats.map(([key,label])=>{
+    const list=snap.career?.[key]||[],i=list.findIndex(x=>String(x.playerId)===String(p.id));
+    return i>=0?{label,rank:i+1,value:list[i].value}:null;
+  }).filter(Boolean).sort((a,b)=>a.rank-b.rank);
+}
+function playerPeakSeason(p){
+  const rows=(p?.seasonHistory||[]).filter(h=>(h.stats?.gp||0)>0).map(h=>{
+    const s=h.stats||{},gp=Math.max(1,+s.gp||1),score=(+s.pts||0)/gp+((+s.reb||0)/gp)*.45+((+s.ast||0)/gp)*.65+((+s.stl||0)/gp)*1.2+((+s.blk||0)/gp)*1.1;
+    return{...h,score,ppg:(+s.pts||0)/gp,rpg:(+s.reb||0)/gp,apg:(+s.ast||0)/gp};
+  }).sort((a,b)=>b.score-a.score);
+  return rows[0]||null;
+}
+function retiredLegendScore(p){
+  const c=p?.careerStats||{},aw=(p?.awardHistory||[]).length;
+  return (+c.pts||0)+(+c.ast||0)*1.2+(+c.reb||0)*.7+(+c.stl||0)*2+(+c.blk||0)*2+aw*900;
+}
 function clubSeasonArchive(club){
   const summaries=new Map((G.seasonSummaries||[]).map(x=>[x.season,x]));
   return (G.leagueHistory||[]).slice().filter(h=>h.season<G.season).reverse().map(h=>{
@@ -6672,7 +6731,7 @@ function playerInjuryRows(p){
 function clubNotablePlayers(club){
   const snap=clubHistoricalSnapshot(G,club.id);
   const cats=[["points","PTS"],["assists","AST"],["rebounds","REB"],["steals","STL"],["blocks","BLK"],["threes","3PM"]];
-  const historic=allPlayers(G).filter(p=>(p.seasonHistory||[]).some(h=>h.clubId===club.id||h.clubName===club.name));
+  const historic=[...allPlayers(G),...retiredPlayerPool(G)].filter(p=>(p.seasonHistory||[]).some(h=>h.clubId===club.id||h.clubName===club.name));
   const unique=[...new Map([...(club.roster||[]),...historic].map(p=>[p.id,p])).values()];
   const seasonAtClub=(p,season)=>clubForPlayer(G,p)?.id===club.id&&season===G.season||(p.seasonHistory||[]).some(h=>h.season===season&&(h.clubId===club.id||h.clubName===club.name));
   return unique.map(p=>{
@@ -6716,23 +6775,26 @@ function playerProfile(){
   if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
   const club=playerClub(p.id);if(club)ensurePlayerJerseys(club);
   const s=p.seasonStats||{},cs=p.careerStats||{},pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
-  const injury=p.injured?(p.injury?.label||"Injured"):"Available",awards=(p.awardHistory||[]).slice().reverse(),history=(p.seasonHistory||[]).slice().reverse();
+  const injury=p.retired?"Retired":p.injured?(p.injury?.label||"Injured"):"Available",awards=(p.awardHistory||[]).slice().reverse(),history=(p.seasonHistory||[]).slice().reverse();
   const editable=club?.id===me()?.id,isFreeAgent=!club&&(G.freeAgents||[]).some(x=>x.id===p.id),nation=G.nationalTeams?.find(n=>n.code===p.nationality);
   const editing=editable&&ui.playerEditMode===p.id,tab=ui.playerProfileTab||"overview";
   const nationOptions=editing?NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join(""):"";
   const secOptions=editing?`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`:"";
   const archOptions=editing?validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join(""):"";
-  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p);
+  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p);
   const draftLabel=playerDraftLabel(p),draftSeason=p.draftYear?`Season ${p.draftYear}`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=p.draftPick?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
   const timeline=history.length?history.map(h=>{const st=h.stats||{};return `<div class="timelineRow"><div class="season">S${h.season||"—"}</div><div><b>${h.clubName||clubById(G,h.clubId)?.name||"Club"}</b><small>${st.gp||0} GP · ${perGame(st,"pts")} PPG · ${perGame(st,"reb")} RPG · ${perGame(st,"ast")} APG · OVR ${h.ovr??"—"}</small></div><div class="right">${h.role||""}</div></div>`}).join(""):`<div class="empty">Career timeline will build as seasons are completed.</div>`;
   const overview=`
     <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${p.potential??"—"}</b>`}<small>Potential</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2"><b>${playerExperienceLabel(p)}</b><small>Experience</small></div></div>
-    <div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>
+    ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in Season ${p.retirementSeason||"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
     <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):playerAffiliation(p)}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div></div></div></div>
     <div class="sectionTitle">Development Outlook</div>${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel"><div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div><div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${Number(d.avgMin||0).toFixed(1)}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}</div>`})()}`;
   const career=`
     <div class="sectionTitle">Draft & Career Identity</div><div class="draftIdentity compact3"><div><b>${draftSeason}</b><small>Draft Class</small></div><div><b>${draftDetail}</b><small>Entry</small></div><div><b>${teams.length}</b><small>NBA Clubs</small></div></div>
     <div class="sectionTitle">Career Overview</div><div class="profilePanel"><div class="profileStatsGrid"><div class="profileStat"><b>${cs.gp||0}</b><small>Career GP</small></div><div class="profileStat"><b>${perGame(cs,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(cs,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(cs,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${statPct(cs,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(cs,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(cs,"ftm","fta")}</b><small>FT%</small></div><div class="profileStat"><b>${hc.total}</b><small>Honours</small></div></div></div>
+    ${p.retired?`<div class="retirementBanner"><div><small>CAREER COMPLETE</small><b>Retired Season ${p.retirementSeason||"—"} · Age ${p.retirementAge||p.age}</b><span>Last affiliation: ${p.retiredFromClubName||"Free Agency"}</span></div></div>`:""}
+    <div class="sectionTitle">All-Time League Standing</div><div class="careerRankGrid">${allTimeRanks.length?allTimeRanks.slice(0,6).map(r=>`<div class="careerRankCard"><small>${r.label}</small><b>#${r.rank}</b><span>${Math.round(+r.value||0).toLocaleString()}</span></div>`).join(""):`<div class="profilePanel" style="grid-column:1/-1"><div class="empty">All-time rankings will appear as career history builds.</div></div>`}</div>
+    <div class="sectionTitle">Career Peak</div>${peak?`<div class="careerPeakCard"><div><small>SEASON ${peak.season}</small><b>${peak.clubName||clubById(G,peak.clubId)?.name||"Club"}</b><span>${peak.ppg.toFixed(1)} PPG · ${peak.rpg.toFixed(1)} RPG · ${peak.apg.toFixed(1)} APG</span></div><strong>OVR ${peak.ovr??"—"}</strong></div>`:`<div class="profilePanel"><div class="empty">Peak season will appear after a completed regular season.</div></div>`}
     <div class="sectionTitle">Career Timeline</div><div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${awards.length?awards.slice(0,20).map(a=>`<div class="historyItem"><div class="season">S${a.season}</div><div><b>${displayAwardName(a.award)}</b><small>${a.cycle?`World Cup ${a.cycle}`:"Career Honour"}</small></div><div class="right">Award</div></div>`).join(""):`<div class="empty">No recorded honours yet.</div>`}</div>
     <div class="sectionTitle">International Career</div><div class="profilePanel internationalCareerPanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>`;
   const contract=`
