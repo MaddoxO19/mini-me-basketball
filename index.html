@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.32.0 Scouting Department Depth</title>
+<title>Mini&Me Basketball — v0.1.32.1 All-Star Forecast Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1580,7 +1580,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5396,7 +5396,11 @@ function advanceRegularSeasonRound(G) {
 
   if(round===5 && G.inSeasonCup?.stage==='GROUP_PLAY') resolveCupGroupPlay(G);
   if(round===12 || round===15) completeCupKnockoutRound(G,round,roundGames);
-  if(round===41 && !G.allStarDone && !G.allStarLive){initializeAllStarLive(G);logEvent(G,'NBA All-Star mini-tournament opened.');}
+  if(round===41 && !G.allStarDone && !G.allStarLive){
+    initializeAllStarLive(G);
+    logEvent(G,'NBA All-Star mini-tournament opened.');
+    if(typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
+  }
   if((round===22||round===55) && live.callUpsThisSeason<2 && !G.internationalWindowLive){
     const intl=initializeQualificationWindowLive(G);
     if(intl && !intl.complete) logEvent(G,`Club calendar paused for FIBA qualification window ${intl.windowNo}.`);
@@ -5404,6 +5408,7 @@ function advanceRegularSeasonRound(G) {
   }
 
   refreshRegularSeasonSnapshot(G);
+  if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   if(live.roundIndex>=82){
     live.complete=true; G.regularSeason.complete=true;
     logEvent(G,`Regular season complete: ${live.games.length} games with player box scores, live standings and player leaders.`);
@@ -5881,7 +5886,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.32.0 Scouting Department Depth",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.32.1 All-Star Forecast Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -8902,9 +8907,20 @@ function publishPostAllStarForecast(G){
   const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,3);
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId),titleLine=mediaTopLine(f.rows,"titlePct",5);
   const moveText=(arr,sign)=>arr.map(x=>`${x.name} ${sign}${Math.abs(x.deltaTitle).toFixed(1)} pts`).join(" · ");
-  const body=`With All-Star Weekend complete, the model has rerun the season ${f.iterations} times. Updated title board: ${titleLine}. Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,`POST_ALLSTAR_FORECAST_S${G.season}`);
+  const body=`At the All-Star break, the model has rerun the remaining season ${f.iterations} times. Updated title board: ${titleLine}. Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
+  pushNewsArticle(G,`All-Star Break Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,`POST_ALLSTAR_FORECAST_S${G.season}`);
   return f;
+}
+function ensureMediaForecastMilestones(G){
+  if(!G?.regularSeasonLive)return;
+  const state=mediaForecastState(G);
+  const round=G.regularSeasonLive.roundIndex||0;
+  // New careers publish preseason at schedule creation. Do not fabricate a
+  // "preseason" baseline for old saves that are already deep into the season.
+  if(round===0 && !state.preseason && typeof publishPreseasonForecast==="function")publishPreseasonForecast(G);
+  // All-Star begins immediately after regular-season round 41. Any career
+  // already beyond that point should have one and only one midseason article.
+  if(round>=42 && !state.postAllStar && typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
 }
 
 function outlookPlayInSeeds(rows,clubsById,ratings=null){
@@ -9051,6 +9067,7 @@ function gmProfile(){
     <div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div>`;
 }
 function newsPage(){
+  if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   return `${header("News","Club and league news from around the basketball world")}<div class="newsFilter"><button data-newsfilter="all" class="${ui.newsFilter==="all"?"active":""}">All</button><button data-newsfilter="club" class="${ui.newsFilter==="club"?"active":""}">Club</button><button data-newsfilter="league" class="${ui.newsFilter==="league"?"active":""}">League</button></div><div class="card">${news()}</div>`;
 }
 function reconcileDraftPendingOwnership(){
