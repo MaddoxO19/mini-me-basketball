@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.32.3 Direct Profile Navigation Fix</title>
+<title>Mini&Me Basketball — v0.1.32.4 iOS Profile Navigation Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1577,10 +1577,18 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .scoutFocusButtons button.active{border-color:var(--gold);color:#111;background:var(--gold)}.scoutFocusButtons button:disabled{opacity:.75}
 .scoutFocusCard p{font-size:7px;line-height:1.45;color:var(--muted);margin:9px 0 0}
 @media(max-width:520px){.scoutFocusButtons{grid-template-columns:repeat(2,1fr)}}
+
+/* v0.1.32.4 — iOS profile navigation hardening */
+.profileLink,.clubLink{-webkit-tap-highlight-color:rgba(240,176,76,.18);text-decoration:none}
+@media (hover:none),(pointer:coarse){
+  .profileLink:hover,.clubLink:hover{color:inherit}
+  .profileLink:active,.clubLink:active{color:var(--accent2)}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.32.4</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5886,7 +5894,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.32.3 Direct Profile Navigation Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.32.4 iOS Profile Navigation Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -6437,11 +6445,34 @@ function openClubProfileDirect(id,e){
 }
 function playerNameLink(p){
   if(!p)return"—";
-  return `<button type="button" class="profileLink" data-playerprofile="${p.id}" onclick="return openPlayerProfileDirect('${p.id}',event)">${p.name}</button>`;
+  return `<a class="profileLink" data-playerprofile="${p.id}" href="#player-profile/${encodeURIComponent(String(p.id))}">${p.name}</a>`;
 }
 function clubNameLink(club){
   if(!club)return"—";
-  return `<button type="button" class="clubLink" data-clubprofile="${club.id}" onclick="return openClubProfileDirect('${club.id}',event)">${club.name}</button>`;
+  return `<a class="clubLink" data-clubprofile="${club.id}" href="#club-profile/${encodeURIComponent(String(club.id))}">${club.name}</a>`;
+}
+function clearProfileRouteHash(){
+  if(location.hash.startsWith("#player-profile/")||location.hash.startsWith("#club-profile/")){
+    history.replaceState(null,"",location.pathname+location.search);
+  }
+}
+function handleProfileRouteHash(){
+  const h=location.hash||"";
+  if(h.startsWith("#player-profile/")){
+    const id=decodeURIComponent(h.slice("#player-profile/".length));
+    openPlayerProfileDirect(id);
+    return true;
+  }
+  if(h.startsWith("#club-profile/")){
+    const id=decodeURIComponent(h.slice("#club-profile/".length));
+    openClubProfileDirect(id);
+    return true;
+  }
+  return false;
+}
+if(!window.__miniMeProfileHashRouter){
+  window.__miniMeProfileHashRouter=true;
+  window.addEventListener("hashchange",handleProfileRouteHash);
 }
 function ovrBand(ovr){
   const n=+ovr||0;
@@ -10016,6 +10047,8 @@ function prepareRenderState(force=false){
 }
 function render(){prepareRenderState();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
+  $$("a[data-playerprofile]").forEach(a=>a.onclick=e=>openPlayerProfileDirect(a.dataset.playerprofile,e));
+  $$("a[data-clubprofile]").forEach(a=>a.onclick=e=>openClubProfileDirect(a.dataset.clubprofile,e));
   $$("[data-scoutgroup]").forEach(b=>b.onclick=()=>{ui.scoutGroup=b.dataset.scoutgroup;render()});
   $$("[data-scoutfocus]").forEach(b=>b.onclick=async()=>{
     const r=setScoutingFocus(G,b.dataset.scoutfocus);
@@ -10035,8 +10068,8 @@ function bind(){
   });
   if($("#openScouting"))$("#openScouting").onclick=()=>{ui.page="facilities";ui.facilitiesTab="draftintel";render()};
   if($("#scoutBackFacilities"))$("#scoutBackFacilities").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
-  if($("#profileBack"))$("#profileBack").onclick=()=>{ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
-  if($("#profileClose"))$("#profileClose").onclick=()=>{ui.playerEditMode=null;ui.playerProfileTab="overview";ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;if(ui.page==="international"&&ui.profileReturnTab)ui.intlTab=ui.profileReturnTab;if(ui.page==="facilities"&&ui.profileReturnTab)ui.facilitiesTab=ui.profileReturnTab;render()};
+  if($("#profileBack"))$("#profileBack").onclick=()=>{clearProfileRouteHash();ui.playerEditMode=null;ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;render()};
+  if($("#profileClose"))$("#profileClose").onclick=()=>{clearProfileRouteHash();ui.playerEditMode=null;ui.playerProfileTab="overview";ui.clubProfileId=null;ui.page=ui.profileReturnPage||"team";if(ui.page==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;if(ui.page==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;if(ui.page==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;if(ui.page==="international"&&ui.profileReturnTab)ui.intlTab=ui.profileReturnTab;if(ui.page==="facilities"&&ui.profileReturnTab)ui.facilitiesTab=ui.profileReturnTab;render()};
   $$(`[data-playerprofiletab]`).forEach(b=>b.onclick=()=>{ui.playerProfileTab=b.dataset.playerprofiletab;render()});
   if($("#profileNegotiateFA"))$("#profileNegotiateFA").onclick=()=>{ui.faTargetId=ui.playerProfileId;ui.faFeedback=null;ui.page="team";ui.teamTab="freeagency";render()};
   if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
