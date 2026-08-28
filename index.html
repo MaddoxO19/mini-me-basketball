@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.39.1 Courtside Career-Stage Guardrails</title>
+<title>Mini&Me Basketball — v0.1.40.0 Playoff Rotation Intelligence</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1786,7 +1786,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.39.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.40.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5539,6 +5539,88 @@ function weightedPick(items, weightFn) {
   return items[items.length - 1];
 }
 
+
+function isPlayoffPhaseTag(tag){
+  const t=String(tag||"").toUpperCase();
+  return t==="FINALS"||/_R1$/.test(t)||/_SF$/.test(t)||/_CF$/.test(t)||t.includes("PLAYOFF");
+}
+function playoffRotationScore(p){
+  const role=p.rotationRole||"Depth";
+  const roleBonus=role==="Primary Starter"?18:role==="Starter"?12:role==="Sixth Man"?9:role==="Rotation"?5:0;
+  return (+p.targetMinutes||0)*1.15+(+p.ovr||70)*.72+roleBonus;
+}
+function buildPlayoffRotation(club){
+  const regular=buildRegularRotation(club).filter(p=>!p.injured);
+  if(regular.length<=8)return regular;
+
+  // Preserve the five players the normal rotation regards as starters.
+  const starters=regular.slice(0,5);
+  const bench=regular.slice(5).sort((a,b)=>playoffRotationScore(b)-playoffRotationScore(a));
+
+  // Elite depth earns a ninth postseason spot. Otherwise rotations tighten to 8.
+  const ninth=bench[3];
+  const useNine=!!ninth&&((+ninth.ovr||0)>=81||(+ninth.targetMinutes||0)>=16);
+  return [...starters,...bench.slice(0,useNine?4:3)];
+}
+function allocatePlayoffGameMinutes(rotation){
+  const active=rotation.filter(p=>!p.injured);
+  if(active.length<5)return allocateGameMinutes(active);
+
+  // Postseason minutes are calculated separately and never overwrite the GM's
+  // Depth Chart target minutes.
+  const starterBase=[37,36,35,34,32];
+  const benchBase=active.length>=9?[25,20,13,8]:active.length===8?[27,22,17]:active.length===7?[29,24]:[31];
+  const raw=active.map((p,i)=>{
+    let base=i<5?starterBase[i]:(benchBase[i-5]||8);
+    const ovr=+p.ovr||70;
+    const qualityAdj=i<5?Math.max(-2,Math.min(2,Math.round((ovr-84)/4))):Math.max(-2,Math.min(3,Math.round((ovr-78)/3)));
+    const fatiguePenalty=Math.min(3,Math.round((p.fatigue||0)/28));
+    return Math.max(i<5?28:7,base+qualityAdj-fatiguePenalty);
+  });
+
+  // Scale precisely to the 240 available player-minutes.
+  const scale=240/Math.max(1,raw.reduce((a,b)=>a+b,0));
+  const mins=raw.map((m,i)=>Math.max(i<5?28:6,Math.round(m*scale)));
+  let diff=240-mins.reduce((a,b)=>a+b,0);
+  const order=[0,1,2,3,4,5,6,7,8].filter(i=>i<mins.length);
+  let safety=0;
+  while(diff!==0&&safety<500){
+    const i=order[safety%order.length];
+    if(diff>0){mins[i]++;diff--;}
+    else if(mins[i]>(i<5?28:6)){mins[i]--;diff++;}
+    safety++;
+  }
+  return active.map((player,i)=>({player,minutes:mins[i],starter:i<5}));
+}
+function playoffOffensiveRank(lines,p){
+  return [...lines].sort((a,b)=>{
+    const wa=playerUsageWeight(a.player)*(0.65+a.line.min/45);
+    const wb=playerUsageWeight(b.player)*(0.65+b.line.min/45);
+    return wb-wa;
+  }).findIndex(x=>x.player.id===p.id)+1;
+}
+function playoffUsageMultiplier(lines,p,pulse){
+  const rank=playoffOffensiveRank(lines,p);
+  // The primary option remains primary, but elite secondary talent receives a
+  // more realistic share of playoff possessions.
+  let mult=rank===1?1.00:rank===2?1.14:rank===3?1.10:rank===4?1.04:.94;
+
+  // If the lead option is having an ordinary/cold night, redistribute a modest
+  // amount of creation rather than forcing every possession through him.
+  const leader=[...lines].sort((a,b)=>playerUsageWeight(b.player)-playerUsageWeight(a.player))[0]?.player;
+  if(leader){
+    const leaderPulse=lines._pulseFor?lines._pulseFor(leader):null;
+    if(leaderPulse&&(leaderPulse.usage<.96||leaderPulse.efficiency<-.004)){
+      if(p.id===leader.id)mult*=.91;
+      else if(rank<=3)mult*=1.09;
+    }
+  }
+
+  // Genuine high-end players should remain involved even when not labelled
+  // Primary Starter.
+  if((+p.ovr||0)>=88&&rank<=4)mult*=1.05;
+  return mult;
+}
 function allocateGameMinutes(rotation) {
   const available = rotation.filter((p) => !p.injured);
   const active = available;
@@ -5575,10 +5657,11 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   const updateStandings = options.updateStandings !== false;
   const statsField = options.statsField || "seasonStats";
   const trackForm = options.trackForm !== false;
-  const rotationA = buildRegularRotation(clubA);
-  const rotationB = buildRegularRotation(clubB);
-  const slotsA = allocateGameMinutes(rotationA);
-  const slotsB = allocateGameMinutes(rotationB);
+  const playoffMode=isPlayoffPhaseTag(phaseTag);
+  const rotationA = playoffMode?buildPlayoffRotation(clubA):buildRegularRotation(clubA);
+  const rotationB = playoffMode?buildPlayoffRotation(clubB):buildRegularRotation(clubB);
+  const slotsA = playoffMode?allocatePlayoffGameMinutes(rotationA):allocateGameMinutes(rotationA);
+  const slotsB = playoffMode?allocatePlayoffGameMinutes(rotationB):allocateGameMinutes(rotationB);
 
   const initLines = (slots) => slots.map(({ player, minutes, starter }) => ({
     player, starter,
@@ -5588,6 +5671,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   const linesA = initLines(slotsA), linesB = initLines(slotsB);
   const gamePulses=new Map([...linesA,...linesB].map(x=>[x.player.id,playerGamePulse(x.player)]));
   const pulseFor=(p)=>gamePulses.get(p.id)||{usage:1,efficiency:0,assist:1,rebound:1,defense:1,label:"Normal"};
+  linesA._pulseFor=pulseFor;linesB._pulseFor=pulseFor;
   const qA = [0,0,0,0], qB = [0,0,0,0];
   const teamRating = (slots) => slots.reduce((a,x)=>a+x.player.ovr*x.minutes,0)/240;
   const ratingA = teamRating(slotsA), ratingB = teamRating(slotsB);
@@ -5606,7 +5690,11 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
     const defQ = defenderQuality(defLines);
     for (let poss = 0; poss < possessions; poss++) {
       const q = Math.min(3, Math.floor(poss / Math.max(1, possessions / 4)));
-      const shooter = weightedPick(offPool, x => playerUsageWeight(x.player) * pulseFor(x.player).usage * (0.55 + x.line.min/35));
+      const shooter = weightedPick(offPool, x => {
+        const pulse=pulseFor(x.player);
+        const postseason=playoffMode?playoffUsageMultiplier(offPool,x.player,pulse):1;
+        return playerUsageWeight(x.player)*pulse.usage*(0.55+x.line.min/35)*postseason;
+      });
       const p = shooter.player;
       const fatigue = p.fatigue || 0;
       const coachingLevel=frontOfficeLevelForClub(offenseClub,"coaching",options.gameState||null);
@@ -5740,6 +5828,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   }
   for (const p of [...clubA.roster,...clubB.roster]) p.fatigue=Math.max(0,(p.fatigue||0)-rand(2,4));
   const gameResult={ id:nextId("game"), round, phaseTag, homeClubId:clubA.id, awayClubId:clubB.id,
+    playoffRotationIntelligence:playoffMode,
     homeScore:scoreA, awayScore:scoreB, winnerClubId:winner, possessions:{home:pace,away:pace}, overtime,
     quarters:{home:qA,away:qB}, overtimePeriods:{home:otA,away:otB}, boxScore:{home:boxA,away:boxB} };
   if(options.gameState)ingestHistoricalGameRecords(options.gameState,gameResult);
@@ -6573,7 +6662,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.39.1 Courtside Career-Stage Guardrails",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.40.0 Playoff Rotation Intelligence",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
