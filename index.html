@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.5 World Cup Recap</title>
+<title>Mini&Me Basketball — v0.1.35.1 Chemistry Deals & News Reliability</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1724,10 +1724,19 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .wcRecapTeam b{font-size:9px}.wcRecapTeam small{font-size:7px;color:var(--muted)}
 .wcRecapContinue{padding-bottom:18px!important}
 
+
+/* v0.1.35.1 — Sports Desk news flash */
+.newsFlashOverlay{position:fixed;inset:0;z-index:99990;background:rgba(3,7,12,.74);display:flex;align-items:center;justify-content:center;padding:22px}
+.newsFlashCard{width:min(680px,100%);background:#111823;border:1px solid rgba(240,176,76,.65);border-radius:18px;padding:18px;box-shadow:0 20px 55px rgba(0,0,0,.55)}
+.newsFlashHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.newsFlashHead small{display:block;color:var(--accent2);font-size:7px;font-weight:900;letter-spacing:.1em}.newsFlashHead b{display:block;font-size:9px;margin-top:3px}
+.newsFlashHead button{width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:18px}
+.newsFlashCard h3{font-size:20px;margin:15px 0 8px}.newsFlashCard p{font-size:10px;line-height:1.55;color:var(--muted);margin:0}
+.newsFlashActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.newsFlashActions button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800}.newsFlashActions button:first-child{background:var(--accent2);color:#111;border-color:var(--accent2)}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.5</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.35.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2577,28 +2586,108 @@ function recentTeamStrength(club) {
   return top.length ? top.reduce((a,p)=>a+p.ovr,0)/top.length : 65;
 }
 
+function ensureContractEconomyState(G){
+  if(!G.contractEconomyVersion)G.contractEconomyVersion="CE2";
+  return G.contractEconomyVersion;
+}
+function contractStatsForMarket(player){
+  const current=player?.seasonStats||{},currentGp=+current.gp||0;
+  if(currentGp>=12)return current;
+  const hist=(player?.seasonHistory||[]).slice().reverse().find(h=>(+h?.stats?.gp||0)>=12);
+  return hist?.stats||current;
+}
+function contractProductionIndex(player){
+  const s=contractStatsForMarket(player),gp=Math.max(1,+s.gp||0);
+  if(!(+s.gp||0))return 1;
+  const ppg=(+s.pts||0)/gp,rpg=(+s.reb||0)/gp,apg=(+s.ast||0)/gp,spg=(+s.stl||0)/gp,bpg=(+s.blk||0)/gp;
+  const raw=ppg+apg*.72+rpg*.42+spg*1.35+bpg*1.2;
+  const o=+player.ovr||75;
+  const expected=o>=95?38:o>=90?31:o>=85?24:o>=80?18:o>=75?13:9;
+  return Math.max(.86,Math.min(1.14,raw/Math.max(8,expected)));
+}
+function contractRoleMultiplier(player){
+  const role=String(player?.rotationRole||player?.role||"").toLowerCase();
+  if(role.includes("primary starter"))return 1.06;
+  if(role==="starter"||role.includes(" starter"))return 1.035;
+  if(role.includes("sixth"))return .98;
+  if(role.includes("rotation"))return .95;
+  if(role.includes("depth")||role.includes("reserve"))return .91;
+  return 1;
+}
+function contractAgePotentialMultiplier(player){
+  const age=+player.age||26,o=+player.ovr||70,pot=Math.max(o,+player.potential||o);
+  let m=1;
+  if(age<=23)m*=1.035;
+  else if(age<=26)m*=1.02;
+  else if(age>=36)m*=.67;
+  else if(age>=34)m*=.76;
+  else if(age>=32)m*=.86;
+  else if(age>=30)m*=.94;
+  const upside=Math.max(0,pot-o);
+  if(age<=25)m*=1+Math.min(.055,upside*.007);
+  return m;
+}
+function contractReputationMultiplier(player){
+  const awards=player?.awardHistory||[];
+  let premium=0;
+  for(const a of awards){
+    const name=String(a?.award||a||"").toLowerCase();
+    if(name.includes("mvp")&&!name.includes("all-star"))premium+=.028;
+    else if(name.includes("allnba")||name.includes("all-nba"))premium+=.014;
+    else if(name.includes("defensive player"))premium+=.018;
+    else if(name.includes("all-star"))premium+=.006;
+  }
+  return 1+Math.min(.10,premium);
+}
+function contractTeamSuccessMultiplier(player){
+  const club=typeof playerClub==="function"?playerClub(player?.id):null;
+  if(!club)return 1;
+  const gp=(+club.standings?.w||0)+(+club.standings?.l||0);
+  if(!gp)return 1;
+  const pct=(+club.standings.w||0)/gp;
+  return pct>=.65?1.035:pct>=.58?1.02:pct<=.35?.985:1;
+}
+function contractBaseSalaryFromOvr(ovr){
+  const anchors=[
+    [99,60],[97,56],[95,51],[93,47],[91,42],[90,39],[88,34],[86,28],[84,23],
+    [82,18],[80,13.5],[78,10],[76,7.3],[74,5.2],[72,3.8],[70,2.8],[60,1.2]
+  ];
+  const o=Math.max(60,Math.min(99,+ovr||60));
+  for(let i=0;i<anchors.length-1;i++){
+    const [hiO,hiS]=anchors[i],[loO,loS]=anchors[i+1];
+    if(o<=hiO&&o>=loO){
+      const t=(o-loO)/Math.max(1,hiO-loO);
+      return loS+(hiS-loS)*t;
+    }
+  }
+  return 1.2;
+}
+function contractEconomySeasonFactor(){
+  // Salaries follow the growing financial environment, but much more slowly
+  // than the cap so long careers do not become an uncontrolled wage spiral.
+  return Math.pow(1.0125,Math.max(0,(G?.season||1)-1));
+}
 function marketSalaryForPlayer(player) {
-  // E2 market value uses a tiered NBA-style salary curve.
-  // OVR remains the primary anchor until the deeper player/stat economy pass.
-  const o=+player.ovr||0;
-  let annual=o>=94?55:o>=91?48:o>=88?39:o>=85?29:o>=82?21:o>=79?14:o>=76?9:o>=73?5.5:o>=70?3.3:1.8;
-  const age=+player.age||26;
-  if(age>=35)annual*=0.68;
-  else if(age>=33)annual*=0.80;
-  else if(age>=31)annual*=0.90;
-  else if(age<=24 && (+player.potential||o)>=o+8)annual*=1.06;
-  // High-end players can still command premium money; ordinary starters cannot drift there.
-  return Math.round(Math.max(1.2,annual)*10)/10;
+  ensureContractEconomyState(G);
+  if(!player)return 1.2;
+  const base=contractBaseSalaryFromOvr(player.ovr);
+  const production=contractProductionIndex(player);
+  const role=contractRoleMultiplier(player);
+  const agePotential=contractAgePotentialMultiplier(player);
+  const reputation=contractReputationMultiplier(player);
+  const success=contractTeamSuccessMultiplier(player);
+  const annual=base*production*role*agePotential*reputation*success*contractEconomySeasonFactor();
+  return Math.round(Math.max(1.2,Math.min(68,annual))*10)/10;
 }
 function salaryBandForPlayer(player,annualM=null){
   const salary=annualM==null?marketSalaryForPlayer(player):+annualM;
-  if((+player.ovr||0)>=91 || salary>=43)return{key:"franchise",label:"Franchise / Max",range:"$43M+"};
-  if((+player.ovr||0)>=85 || salary>=25)return{key:"star",label:"Star",range:"$25–42.9M"};
-  if((+player.ovr||0)>=82 || salary>=17)return{key:"starterPlus",label:"High Starter",range:"$17–24.9M"};
-  if((+player.ovr||0)>=79 || salary>=11)return{key:"starter",label:"Starter",range:"$11–16.9M"};
-  if((+player.ovr||0)>=76 || salary>=7)return{key:"rotation",label:"Rotation",range:"$7–10.9M"};
-  if((+player.ovr||0)>=73 || salary>=4.2)return{key:"bench",label:"Bench",range:"$4.2–6.9M"};
-  return{key:"minimum",label:"Depth / Minimum",range:"$1.2–4.1M"};
+  if(salary>=45)return{key:"franchise",label:"Franchise / Max",range:"$45M+"};
+  if(salary>=28)return{key:"star",label:"Star",range:"$28–44.9M"};
+  if(salary>=18)return{key:"starterPlus",label:"High Starter",range:"$18–27.9M"};
+  if(salary>=11)return{key:"starter",label:"Starter",range:"$11–17.9M"};
+  if(salary>=7)return{key:"rotation",label:"Rotation",range:"$7–10.9M"};
+  if(salary>=4)return{key:"bench",label:"Bench",range:"$4–6.9M"};
+  return{key:"minimum",label:"Depth / Minimum",range:"$1.2–3.9M"};
 }
 function contractValueStatus(player){
   const market=marketSalaryForPlayer(player),actual=+player.salaryM||0;
@@ -2616,12 +2705,11 @@ function rosterSalarySlot(player,annualM=null){
   const salary=annualM==null?(+player.salaryM||marketSalaryForPlayer(player)):+annualM;
   if(player.contractType==="Rookie Scale")return{key:"rookie",label:"Rookie Scale",range:"Draft slot"};
   if(player.contractType==="Two-Way")return{key:"twoWay",label:"Two-Way",range:"Two-Way slot"};
-  const o=+player.ovr||0;
-  if(o>=91||salary>=43)return{key:"max",label:"Franchise / Max",range:"$43M+"};
-  if(o>=85||salary>=25)return{key:"star",label:"Star Contract",range:"$25–42.9M"};
-  if(o>=80||salary>=17)return{key:"starter",label:"Starter Salary",range:"$17–24.9M"};
-  if(o>=76||salary>=9)return{key:"mle",label:"MLE / Rotation",range:"$9–16.9M"};
-  if(o>=72||salary>=4)return{key:"rotation",label:"Rotation / Bench",range:"$4–8.9M"};
+  if(salary>=45)return{key:"max",label:"Franchise / Max",range:"$45M+"};
+  if(salary>=28)return{key:"star",label:"Star Contract",range:"$28–44.9M"};
+  if(salary>=18)return{key:"starter",label:"Starter Salary",range:"$18–27.9M"};
+  if(salary>=10)return{key:"mle",label:"MLE / Rotation",range:"$10–17.9M"};
+  if(salary>=4)return{key:"rotation",label:"Rotation / Bench",range:"$4–9.9M"};
   return{key:"minimum",label:"Veteran Minimum",range:"$1.2–3.9M"};
 }
 function rosterSalaryPlan(club){
@@ -2636,8 +2724,8 @@ function rosterSalaryPlan(club){
   };
   return {slots,recommended:[
     {key:"max",label:"Franchise / Max",target:"1–2",note:"Primary franchise talent"},
-    {key:"star",label:"Star Contract",target:"1–3",note:"Secondary star / high starter"},
-    {key:"starter",label:"Starter Salary",target:"2–4",note:"Core starting lineup"},
+    {key:"star",label:"Star Contract",target:"1–3",note:"Secondary star / premium starter"},
+    {key:"starter",label:"Starter Salary",target:"2–4",note:"Core starter / high rotation"},
     {key:"mle",label:"MLE / Rotation",target:"2–4",note:"High-value rotation"},
     {key:"rotation",label:"Rotation / Bench",target:"3–6",note:"Bench contributors"},
     {key:"minimum",label:"Veteran Minimum",target:"2–5",note:"Depth and specialists"},
@@ -2675,19 +2763,23 @@ function rookieScaleSalary(overallPick,round){
 }
 
 function freeAgentDemand(player) {
-  const annual=marketSalaryForPlayer(player);
-  const years=player.age<=26?4:player.age<=30?3:player.age<=33?2:1;
-  return {annualM:annual,years};
+  const market=marketSalaryForPlayer(player);
+  const age=+player.age||26;
+  const years=age<=24?4:age<=28?3:age<=32?2:1;
+  // Asking price is a starting point, not an immutable intrinsic value.
+  const rep=contractReputationMultiplier(player);
+  const askPremium=Math.min(1.045,1.01+(rep-1)*.22);
+  return {annualM:Math.round(market*askPremium*10)/10,years,marketM:market};
 }
 
 function contractOfferInterest(G, club, player, years, annualM) {
   const demand=freeAgentDemand(player);
-  const money=(annualM/Math.max(1,demand.annualM))*52;
-  const yearsFit=Math.min(12,Math.max(-6,(years-demand.years)*3));
-  const need=Math.max(0,3-club.roster.filter(p=>p.position===player.position).length)*4;
-  const quality=(recentTeamStrength(club)-76)*0.9;
-  const agePreference=player.age>=31?Math.max(0,quality)*0.35:0;
-  return Math.round((money+yearsFit+need+quality+agePreference)*10)/10;
+  const money=(annualM/Math.max(1,demand.annualM))*54;
+  const yearsFit=Math.min(10,Math.max(-7,(years-demand.years)*2.6));
+  const rosterFit=Math.max(-4,Math.min(12,needAwareScore(club,player,{direction:aiTeamDirection(club)})-(+player.ovr||0)));
+  const quality=(recentTeamStrength(club)-76)*.55;
+  const contenderVeteran=(+player.age||0)>=30&&aiTeamDirection(club)==="CONTEND"?2.5:0;
+  return Math.round((money+yearsFit+rosterFit+quality+contenderVeteran)*10)/10;
 }
 
 function canSignSalary(G, club, annualM, rosterAfter=club.roster.length+1) {
@@ -2722,7 +2814,7 @@ function makeFreeAgentOffer(G, clubId, playerId, years, annualM) {
   if(!capCheck.ok) return {accepted:false,reason:capCheck.reason};
   const userScore=contractOfferInterest(G,club,p,years,annualM);
   const competitors=G.clubs.filter(c=>c.id!==clubId && c.id!==G.userClubGM?.clubId && c.roster.length<(c.offseasonRosterLimit||20)).map(c=>{
-    const demand=freeAgentDemand(p), offered=Math.round(demand.annualM*(0.88+Math.random()*0.22)*10)/10, yrs=Math.max(1,Math.min(4,demand.years+rand(-1,1)));
+    const demand=freeAgentDemand(p), marketFloor=Math.max(1.2,demand.marketM*.90), offered=Math.round(Math.max(marketFloor,demand.annualM*(0.91+Math.random()*.16))*10)/10, yrs=Math.max(1,Math.min(4,demand.years+rand(-1,1)));
     const capOk=canSignSalary(G,c,offered);
     return capOk.ok?{club:c,annualM:offered,years:yrs,score:contractOfferInterest(G,c,p,yrs,offered)}:null;
   }).filter(Boolean).sort((a,b)=>b.score-a.score).slice(0,3);
@@ -2739,20 +2831,89 @@ function makeFreeAgentOffer(G, clubId, playerId, years, annualM) {
   return {accepted:true,reason:'Offer accepted',offer,player:p};
 }
 
+function playerClubTenure(player,club){
+  if(!player||!club)return 0;
+  const completed=(player.seasonHistory||[]).filter(h=>h.clubId===club.id||h.clubName===club.name).length;
+  return completed+(playerClub(player.id)?.id===club.id?1:0);
+}
+
+function teamFriendlyDealState(G){
+  if(!G.teamFriendlyDeals)G.teamFriendlyDeals={};
+  return G.teamFriendlyDeals;
+}
+function teamFriendlyDealKey(club,p){return `S${G.season}_${club?.id||"FA"}_${p?.id||"P"}`;}
+function teamFriendlyDealReason(club,p,tenure){
+  const chemistry=+club?.chemistry||0,age=+p?.age||0;
+  if(chemistry>=88&&tenure>=4)return"core continuity";
+  if(age>=31&&recentTeamStrength(club)>=84)return"championship pursuit";
+  if(tenure>=5)return"club loyalty";
+  return"strong team chemistry";
+}
+function eligibleForTeamFriendlyDeal(club,p){
+  if(!club||!p)return false;
+  const age=+p.age||0,tenure=playerClubTenure(p,club),chem=+club.chemistry||0;
+  const exp=typeof playerExperienceYears==="function"?playerExperienceYears(p):(+p.experienceYears||0);
+  const firstMajorDeal=p.contractType==="Rookie Scale"||(exp<4&&age<=25);
+  const role=String(p.rotationRole||"").toLowerCase();
+  const roleSatisfied=!role.includes("depth")||(+p.ovr||0)<78;
+  const market=marketSalaryForPlayer(p),underpaid=(+p.salaryM||0)>0&&(+p.salaryM||0)<market*.72;
+  if(firstMajorDeal||age<26||underpaid||!roleSatisfied||chem<78)return false;
+  return tenure>=2||age>=30;
+}
+function ensureTeamFriendlyDeal(G,club,p){
+  const state=teamFriendlyDealState(G),key=teamFriendlyDealKey(club,p);
+  if(Object.prototype.hasOwnProperty.call(state,key))return state[key]||null;
+  state[key]=null;
+  if(!eligibleForTeamFriendlyDeal(club,p))return null;
+
+  const tenure=playerClubTenure(p,club),chem=+club.chemistry||0,gp=(club.standings?.w||0)+(club.standings?.l||0);
+  const winPct=gp?(club.standings.w/gp):.5;
+  let chance=.02+Math.max(0,chem-78)*.0055+Math.min(.04,Math.max(0,tenure-2)*.01);
+  if(winPct>=.58)chance+=.02;
+  if(winPct>=.68)chance+=.018;
+  if((+p.age||0)>=30)chance+=.015;
+  chance=Math.min(.15,chance);
+  if(Math.random()>=chance)return null;
+
+  const chemistryStrength=Math.max(0,Math.min(1,(chem-78)/18));
+  const tenureStrength=Math.max(0,Math.min(1,(tenure-2)/5));
+  const discount=.03+chemistryStrength*.045+tenureStrength*.025+((+p.age||0)>=32?.015:0);
+  const pct=Math.max(.03,Math.min(.12,discount));
+  const deal={season:G.season,clubId:club.id,playerId:p.id,discountPct:+pct.toFixed(3),reason:teamFriendlyDealReason(club,p,tenure),chemistry:chem,tenure,used:false};
+  state[key]=deal;
+
+  const market=marketSalaryForPlayer(p),saving=market*pct;
+  pushNewsArticle(G,
+    `${p.name} willing to help keep ${club.name} core together`,
+    `${p.name} has indicated a willingness to consider a team-friendly extension worth roughly ${(pct*100).toFixed(0)}% below his current market expectation. Sources point to ${deal.reason}, with club chemistry at ${Math.round(chem)} and ${tenure} season${tenure===1?"":"s"} of continuity. The flexibility could save approximately $${saving.toFixed(1)}M per season and help the front office retain or add talent.`,
+    "Sports Desk",3,`TEAM_FRIENDLY_S${G.season}_${p.id}`,true);
+  return deal;
+}
+function teamFriendlyExtensionAdjustment(club,p,baseDemand){
+  const deal=ensureTeamFriendlyDeal(G,club,p);
+  return deal?{annualM:Math.round(Math.max(1.2,baseDemand*(1-deal.discountPct))*10)/10,deal}:{annualM:baseDemand,deal:null};
+}
 function extensionDemand(player, years=2) {
-  const base=marketSalaryForPlayer(player), premium=player.age<=29?1.06:0.96;
-  const annualM=Math.round(base*premium*10)/10;
-  return {years:Math.max(1,Math.min(4,years)),annualM,slot:rosterSalarySlot(player,annualM)};
+  const base=marketSalaryForPlayer(player),club=playerClub(player.id),tenure=playerClubTenure(player,club);
+  let incumbent=1;
+  if(tenure>=5)incumbent=.955;
+  else if(tenure>=3)incumbent=.972;
+  else if(tenure>=2)incumbent=.985;
+  if((+player.age||0)>=32)incumbent*=.97;
+  const normalDemand=Math.round(Math.max(1.2,base*incumbent)*10)/10;
+  const friendly=club?teamFriendlyExtensionAdjustment(club,player,normalDemand):{annualM:normalDemand,deal:null};
+  return {years:Math.max(1,Math.min(4,years)),annualM:friendly.annualM,normalAnnualM:normalDemand,marketM:base,incumbentMultiplier:incumbent,teamFriendlyDeal:friendly.deal,slot:rosterSalarySlot(player,friendly.annualM)};
 }
 
 function negotiateExtension(G, clubId, playerId, years=2, annualM=null) {
   const club=clubById(G,clubId), p=club?.roster.find(x=>x.id===playerId);
   if(!p || (p.contractYearsLeft||0)>1) return {accepted:false,reason:'Player is not extension eligible'};
   const demand=extensionDemand(p,years); years=demand.years; annualM=Math.round((annualM==null?demand.annualM:Number(annualM))*10)/10;
-  const ratio=annualM/Math.max(1,demand.annualM), role=needAwareScore(club,p,{direction:aiTeamDirection(club)})-p.ovr, accepted=ratio>=0.94 || (ratio>=0.88 && role>=5);
+  const ratio=annualM/Math.max(1,demand.annualM), role=needAwareScore(club,p,{direction:aiTeamDirection(club)})-p.ovr, tenure=playerClubTenure(p,club), floor=tenure>=4?.90:tenure>=2?.92:.94, accepted=ratio>=floor || (ratio>=Math.max(.88,floor-.035) && role>=5);
   if(!accepted) return {accepted:false,reason:'Player wants a stronger extension offer',demand};
+  if(demand.teamFriendlyDeal)demand.teamFriendlyDeal.used=true;
   p.contractYearsLeft=(p.contractYearsLeft||0)+years; p.salaryM=annualM; p.contractType='Extension'; p.contractStatus='Under Contract'; p.extensionEligible=false; recalcClubCap(club);
-  G.transactions.push({type:'extension',season:G.season,clubId,playerId,years,salaryM:annualM});
+  G.transactions.push({type:'extension',season:G.season,clubId,playerId,years,salaryM:annualM,teamFriendly:!!demand.teamFriendlyDeal,discountPct:demand.teamFriendlyDeal?.discountPct||0});
   return {accepted:true,demand,player:p};
 }
 
@@ -2792,6 +2953,7 @@ function makeCareer() {
     season: 1,
     phase: "OFFSEASON",
     rosterFoundation:{version:ROSTER_FOUNDATION_VERSION,source:"Supplied NBA 2K27 roster templates",mappedSeason:1,playerIdentity:"Fictional"},
+    contractEconomyVersion:"CE2",
     gmName: "GM",
     settings: { salaryCap:true, injuries:true },
     clubs,
@@ -2989,19 +3151,29 @@ function pushNews(G, headline, category="League", importance=1) {
   G.newsFeed.unshift({season:G.season,phase:G.phase,headline,category,importance});
   if(G.newsFeed.length>80) G.newsFeed=G.newsFeed.slice(0,80);
 }
-function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag=""){
+function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag="",flash=false){
   G.newsFeed=G.newsFeed||[];
   if(tag){
     const existing=G.newsFeed.find(n=>n?.tag===tag);
     if(existing){
       existing.season=G.season;existing.phase=G.phase;existing.headline=title;existing.body=body;existing.category=category;existing.importance=importance;existing.article=true;
+      if(flash)queueNewsFlash(G,existing);
       return existing;
     }
   }
   const article={season:G.season,phase:G.phase,headline:title,body,category,importance,article:true,tag};
   G.newsFeed.unshift(article);
   if(G.newsFeed.length>80)G.newsFeed=G.newsFeed.slice(0,80);
+  if(flash)queueNewsFlash(G,article);
   return article;
+}
+function queueNewsFlash(G,article){
+  if(!article)return;
+  G.newsFlashPending={headline:article.headline,body:article.body,category:article.category||"Sports Desk",tag:article.tag||"",season:G.season};
+}
+function newsFlashHtml(){
+  const n=G?.newsFlashPending;if(!n)return"";
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard"><div class="newsFlashHead"><div><small>${n.category||"SPORTS DESK"}</small><b>NEWS UPDATE</b></div><button type="button" id="closeNewsFlash">×</button></div><h3>${n.headline}</h3><p>${n.body||""}</p><div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button></div></div></div>`;
 }
 function gmCareerState(G) {
   if(!G.gmCareer) G.gmCareer={reputation:50,seasons:[],jobs:[],milestones:[],championships:0,cupTitles:0,playoffAppearances:0,careerW:0,careerL:0,nationalHonours:0};
@@ -5592,7 +5764,7 @@ function initializeRegularSeasonLive(G) {
   G.regularSeasonLive={season:G.season,roundIndex:0,rounds,games:[],callUpsThisSeason:0,allStarDone:false,complete:false,lastUserGameId:null};
   G.allStarDone=false; G.allStar=null; G.allStarLive=null;
   refreshRegularSeasonSnapshot(G);
-  if(typeof publishPreseasonForecast==="function")publishPreseasonForecast(G);
+  if(typeof publishPreseasonForecast==="function")publishPreseasonForecast(G,{forceArticle:true});
   return G.regularSeasonLive;
 }
 
@@ -6157,7 +6329,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.5 World Cup Recap",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.35.1 Chemistry Deals & News Reliability",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9287,13 +9459,26 @@ function calculateMediaLeagueForecast(iterations=100){
 }
 function mediaPct(v){return `${Math.max(0,v||0).toFixed(1)}%`;}
 function mediaTopLine(rows,key,count=5){return [...rows].sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,count).map((x,i)=>`${i+1}. ${x.name} ${mediaPct(x[key])}`).join(" · ");}
-function publishPreseasonForecast(G){
-  const state=mediaForecastState(G);if(state.preseason)return state.preseason;
-  const f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;
+function preseasonForecastTag(G){return `PRESEASON_FORECAST_S${G.season}`;}
+function hasPreseasonForecastArticle(G){return (G.newsFeed||[]).some(n=>n?.tag===preseasonForecastTag(G));}
+function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
+  const state=mediaForecastState(G);
+  let f=state.preseason;
+  if(!f){
+    f=calculateMediaLeagueForecast(100);
+    if(!f)return null;
+    state.preseason=f;
+  }
+  if(!forceArticle&&hasPreseasonForecastArticle(G))return f;
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
   const titleLine=mediaTopLine(f.rows,"titlePct",5),cupLine=mediaTopLine(f.rows,"cupPct",5);
-  const body=`The Courtside Network model has run ${f.iterations} simulations before opening night. Championship favourites: ${titleLine}. NBA Cup favourites: ${cupLine}.${user?` ${user.name} projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`Preseason Forecast: ${f.rows[0]?.name||"The contenders"} opens as title favourite`,body,"Sports Desk",3,`PRESEASON_FORECAST_S${G.season}`);
+  const intro=lateRepair
+    ?`The Courtside Network has restored the missing Season ${G.season} forecast for this career. `
+    :`The Courtside Network model has run ${f.iterations} simulations before opening night. `;
+  const body=`${intro}Championship favourites: ${titleLine}. NBA Cup favourites: ${cupLine}.${user?` ${user.name} projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
+  pushNewsArticle(G,`${lateRepair?"Season Forecast":"Preseason Forecast"}: ${f.rows[0]?.name||"The contenders"} opens as title favourite`,body,"Sports Desk",3,preseasonForecastTag(G),true);
+  G.mediaMilestones=G.mediaMilestones||{};
+  G.mediaMilestones[`preseasonForecastS${G.season}`]=true;
   return f;
 }
 function postAllStarForecastTag(G){return `POST_ALLSTAR_FORECAST_S${G.season}`;}
@@ -9321,7 +9506,7 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
     ?` Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.`
     :"";
   const body=`With All-Star Weekend complete, the model has rerun the remaining season ${f.iterations} times. Updated title board: ${titleLine}.${movementText}${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,postAllStarForecastTag(G));
+  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,postAllStarForecastTag(G),true);
   G.mediaMilestones=G.mediaMilestones||{};
   G.mediaMilestones[`allStarForecastS${G.season}`]=true;
   return f;
@@ -9329,20 +9514,18 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
 function ensureMediaForecastMilestones(G){
   if(!G?.regularSeasonLive)return;
   const state=mediaForecastState(G);
-  const round=G.regularSeasonLive.roundIndex||0;
+  const round=+G.regularSeasonLive.roundIndex||0;
 
-  if(round===0 && !state.preseason && typeof publishPreseasonForecast==="function"){
-    publishPreseasonForecast(G);
+  // Repair the actual missing article, even if cached forecast state already exists.
+  if(!hasPreseasonForecastArticle(G)){
+    if(state.preseason)publishPreseasonForecast(G,{forceArticle:true,lateRepair:round>0});
+    else if(round<=5)publishPreseasonForecast(G,{forceArticle:true,lateRepair:round>0});
+    else publishPreseasonForecast(G,{forceArticle:true,lateRepair:true});
   }
 
-  // Publish only after All-Star Weekend is complete. For old or migrated saves,
-  // round 42+ is treated as post-All-Star if the live event is no longer open.
-  const allStarComplete=!!G.allStarDone || (!!G.allStarLive?.complete);
-  const clearlyPastBreak=round>=42 && !G.allStarLive;
-  if((allStarComplete||clearlyPastBreak) && typeof publishPostAllStarForecast==="function"){
-    if(!hasPostAllStarForecastArticle(G)){
-      publishPostAllStarForecast(G,{forceArticle:true});
-    }
+  // Round 42 is beyond the All-Star break. Do not rely on allStarLive cleanup.
+  if(round>=42&&!hasPostAllStarForecastArticle(G)){
+    publishPostAllStarForecast(G,{forceArticle:true});
   }
 }
 
@@ -10494,6 +10677,7 @@ function renderPrepSignature(){
 }
 function prepareRenderState(force=false){
   if(!G)return;
+  if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   const sig=renderPrepSignature();
   if(!force&&sig===_renderPrepSignature)return;
   ensureTalentLifecycleState(G);
@@ -10501,8 +10685,11 @@ function prepareRenderState(force=false){
   ensureCountryBasedPlayerNames();
   _renderPrepSignature=renderPrepSignature();
 }
-function render(){prepareRenderState();status();action();$("#host").innerHTML=ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
+function render(){prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
+  if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
+  if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
+  if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
   $$("a[data-playerprofile]").forEach(a=>a.onclick=e=>openPlayerProfileDirect(a.dataset.playerprofile,e));
   $$("a[data-clubprofile]").forEach(a=>a.onclick=e=>openClubProfileDirect(a.dataset.clubprofile,e));
   $$("[data-scoutgroup]").forEach(b=>b.onclick=()=>{ui.scoutGroup=b.dataset.scoutgroup;render()});
