@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.3 World Cup Results & Rankings</title>
+<title>Mini&Me Basketball — v0.1.34.4 World Cup Stage Navigator</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1680,10 +1680,37 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .intlRankingsHead span:nth-child(3),.intlRankingRow>span{display:none}
 }
 
+
+/* v0.1.34.4 — functional World Cup stage navigator + scheduled knockout draw */
+.wcNavTitle{margin-bottom:7px!important}
+.intlWcStageNav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:16px}
+.intlWcStageNav button{min-height:38px;padding:7px 5px;border:1px solid var(--line);border-radius:11px;background:var(--panel);color:var(--muted);font-size:7px;font-weight:800;line-height:1.15}
+.intlWcStageNav button.selected{border-color:var(--accent2);color:var(--accent2);background:rgba(240,176,76,.07)}
+.intlWcStageNav button.current:not(.selected){box-shadow:inset 0 -2px 0 rgba(240,176,76,.6)}
+.intlWcStageNav button:disabled{opacity:.38;cursor:default}
+.wcStageSubhead{display:flex;justify-content:space-between;align-items:end;margin:8px 2px 7px}.wcStageSubhead b{font-size:10px}.wcStageSubhead small{font-size:7px;color:var(--muted)}
+.intlWcScheduledList{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.intlWcScheduledRow{display:grid;grid-template-columns:minmax(0,1fr) 105px;background:var(--panel);align-items:stretch}
+.intlWcScheduledRow+.intlWcScheduledRow{border-top:1px solid var(--line)}
+.intlWcScheduledRow.userGame{box-shadow:inset 3px 0 0 var(--accent2)}
+.intlWcScheduledTeams{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);align-items:center;padding:11px 12px;gap:6px}
+.intlWcScheduledTeams>div{display:flex;align-items:center;gap:8px;min-width:0}.intlWcScheduledTeams>div:nth-child(3){justify-content:flex-end;text-align:right}
+.intlWcScheduledTeams .nationalFlagMark{margin:0!important;flex:0 0 auto}
+.intlWcScheduledTeams span{min-width:0}.intlWcScheduledTeams b{display:block;font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.intlWcScheduledTeams small{display:block;font-size:7px;color:var(--muted);margin-top:2px}
+.intlWcScheduledTeams em{font-size:7px;font-style:normal;font-weight:900;color:var(--muted);text-align:center}
+.intlWcScheduledStatus{border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;gap:4px}.intlWcScheduledStatus small{font-size:7px;color:var(--muted);line-height:1.2}.intlWcScheduledStatus b{font-size:7px;color:var(--accent2);letter-spacing:.08em}
+@media(max-width:520px){
+  .intlWcStageNav{grid-template-columns:repeat(5,minmax(56px,1fr));overflow-x:auto;padding-bottom:2px}
+  .intlWcStageNav button{font-size:6.5px}
+  .intlWcScheduledRow{grid-template-columns:minmax(0,1fr) 78px}
+  .intlWcScheduledTeams{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr);padding:10px 8px;gap:3px}
+  .intlWcScheduledTeams>div{gap:5px}.intlWcScheduledTeams b{font-size:8px}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.3</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.4</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -6112,7 +6139,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.3 World Cup Results & Rankings",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.4 World Cup Stage Navigator",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10153,7 +10180,7 @@ function intlQualificationPosition(code){
   return idx>=0?{group:g,position:idx+1,row:table[idx],table}:null;
 }
 function intlWorldCupStageLabel(stage){
-  const labels={FIRST_GROUP_STAGE:"First Group Stage",SECOND_GROUP_STAGE:"Second Group Stage",CLASSIFICATION:"Classification",QUARTERFINAL:"Quarterfinals",SEMIFINAL:"Semifinals",FINAL:"Final",BRONZE:"Bronze Medal",FIFTH_PLACE:"5th Place",SEVENTH_PLACE:"7th Place"};
+  const labels={FIRST_GROUP_STAGE:"First Group Stage",SECOND_GROUP_STAGE:"Second Group Stage",CLASSIFICATION:"Classification",QUARTERFINAL:"Quarterfinals",SEMIFINAL:"Semifinals",FINALS:"Finals",FINAL:"Final",BRONZE:"Bronze Medal",FIFTH_PLACE:"5th Place",SEVENTH_PLACE:"7th Place"};
   return labels[stage]||String(stage||"Tournament").replaceAll("_"," ");
 }
 function intlWorldCupTableHtml(title,rows,userCode){
@@ -10273,10 +10300,71 @@ function internationalWorldRankings(){
     <div class="intlRankingsTable"><div class="intlRankingsHead"><span>RANK</span><span>NATION</span><span>REGION</span><span>RECORD</span></div>
     ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${r.name}</b>${r.code===userCode?`<small>Your Nation</small>`:""}</div></div><span>${r.region}</span><b>${r.w||r.l?`${r.w}–${r.l}`:"—"}</b></div>`).join("")}</div>`;
 }
+
+function intlWorldCupNavStages(){
+  return[
+    {key:"FIRST_GROUP_STAGE",label:"First Group Stage"},
+    {key:"SECOND_GROUP_STAGE",label:"Second Group Stage"},
+    {key:"QUARTERFINAL",label:"Quarterfinals"},
+    {key:"SEMIFINAL",label:"Semifinals"},
+    {key:"FINALS",label:"Final"}
+  ];
+}
+function intlWorldCupProgressIndex(stage){
+  const map={FIRST_GROUP_STAGE:0,SECOND_GROUP_STAGE:1,CLASSIFICATION:1,QUARTERFINAL:2,SEMIFINAL:3,FINALS:4,FINAL:4,BRONZE:4};
+  return map[stage]??0;
+}
+function intlWorldCupReviewStage(live){
+  const max=intlWorldCupProgressIndex(live?.stage);
+  const requested=ui.wcReviewStage;
+  const idx=intlWorldCupNavStages().findIndex(x=>x.key===requested);
+  if(idx>=0&&idx<=max)return requested;
+  return intlWorldCupNavStages()[max]?.key||"FIRST_GROUP_STAGE";
+}
+function intlWorldCupStageNavHtml(live,selected){
+  const max=intlWorldCupProgressIndex(live?.stage);
+  return `<div class="intlWcStageNav">${intlWorldCupNavStages().map((x,i)=>`<button type="button" data-wcstage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label}</button>`).join("")}</div>`;
+}
+function intlWorldCupCompletedGamesForStage(live,stage){
+  const games=live?.games||[];
+  if(stage==="FINALS")return games.filter(g=>g.stage==="FINAL"||g.stage==="BRONZE");
+  return games.filter(g=>g.stage===stage);
+}
+function intlWorldCupScheduledPairsForStage(live,stage){
+  if(!live)return[];
+  const currentIndex=intlWorldCupProgressIndex(live.stage),requestedIndex=intlWorldCupProgressIndex(stage);
+  if(requestedIndex!==currentIndex)return[];
+  let pairs=worldCupNextEventPairs(live)||[];
+  if(stage==="FINALS")pairs=pairs.filter(x=>x.stage==="FINAL"||x.stage==="BRONZE");
+  else pairs=pairs.filter(x=>x.stage===stage);
+  const completed=intlWorldCupCompletedGamesForStage(live,stage);
+  const played=new Set(completed.map(g=>[g.teamA,g.teamB].sort().join("|")));
+  return pairs.filter(x=>!played.has([x.a,x.b].sort().join("|")));
+}
+function intlWorldCupScheduledRows(pairs,userCode){
+  if(!pairs?.length)return"";
+  return `<div class="intlWcScheduledList">${pairs.map(p=>{
+    const a=nat(p.a),b=nat(p.b),userGame=p.a===userCode||p.b===userCode;
+    return `<div class="intlWcScheduledRow ${userGame?"userGame":""}">
+      <div class="intlWcScheduledTeams">
+        <div>${nationalFlagMark(p.a,"resultFlag")}<span><b>${a?.name||p.a}</b><small>World #${nationalWorldRank(p.a)||"—"}</small></span></div>
+        <em>VS</em>
+        <div>${nationalFlagMark(p.b,"resultFlag")}<span><b>${b?.name||p.b}</b><small>World #${nationalWorldRank(p.b)||"—"}</small></span></div>
+      </div>
+      <div class="intlWcScheduledStatus"><small>${intlWorldCupStageLabel(p.stage||"")}</small><b>SCHEDULED</b></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+function intlWorldCupStageContentHtml(live,stage,userCode){
+  const completed=intlWorldCupCompletedGamesForStage(live,stage),scheduled=intlWorldCupScheduledPairsForStage(live,stage);
+  const label=stage==="FINALS"?"Finals":intlWorldCupStageLabel(stage);
+  if(!completed.length&&!scheduled.length)return `<div class="card empty">No ${label.toLowerCase()} fixtures are available yet.</div>`;
+  return `${scheduled.length?`<div class="wcStageSubhead"><b>${label} Matchups</b><small>${scheduled.length} scheduled</small></div>${intlWorldCupScheduledRows(scheduled,userCode)}`:""}${completed.length?`<div class="wcStageSubhead"><b>${label} Results</b><small>${completed.length} completed</small></div>${intlWorldCupGameRows(completed,userCode)}`:""}`;
+}
 function internationalWorldCup(){
   const userCode=G.userNationalGM?.nationCode,live=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:null,history=(G.worldCupHistory||[]).slice().reverse(),last=history[0]||null,q=G.nationalQualification;
   if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup tournament hub will activate when qualification is complete. Until then, use Qualification and Fixtures to follow the campaign.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
-  if(live){const stage=intlWorldCupStageLabel(live.stage),userInField=(live.field||[]).includes(userCode),year=gameYearForSeason(G.season);let groupHtml="";if(live.stage==="FIRST_GROUP_STAGE"){const gr=(live.groups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.groupState?.[gr.id]||{}),userCode)}else if(live.stage==="SECOND_GROUP_STAGE"){const gr=(live.secondGroups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.secondState?.[gr.id]||{}),userCode)}else if(live.stage==="CLASSIFICATION"){const gr=(live.classificationGroups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.classificationState?.[gr.id]||{}),userCode)}const stageGames=(live.games||[]).filter(g=>g.stage===live.stage);return `<div class="intlWcHero live neutral"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${stage}</h2><p>${(live.games||[]).length} games completed · ${(live.field||[]).length} nations entered</p></div><div class="intlWcBadge live">LIVE</div></div><div class="intlWcProgress"><div><b>${stage}</b><small>Tournament Stage</small></div><div><b>${userInField?"ACTIVE":"OUT"}</b><small>${nat(userCode)?.name||"Your Nation"}</small></div><div><b>${(live.games||[]).length}</b><small>Games Played</small></div></div>${groupHtml?`<div class="sectionTitle">Your World Cup Group</div>${groupHtml}`:""}<div class="sectionTitle">${stage} Results</div>${intlWorldCupGameRows(stageGames,userCode)}<div class="sectionTitle">Tournament Navigation</div><div class="intlWcStageStrip">${["FIRST_GROUP_STAGE","SECOND_GROUP_STAGE","QUARTERFINAL","SEMIFINAL","FINAL"].map(st=>`<span class="${st===live.stage?"active":""}">${intlWorldCupStageLabel(st)}</span>`).join("")}</div>`}
+  if(live){const stage=intlWorldCupStageLabel(live.stage),userInField=(live.field||[]).includes(userCode),year=gameYearForSeason(G.season),reviewStage=intlWorldCupReviewStage(live),reviewLabel=reviewStage==="FINALS"?"Finals":intlWorldCupStageLabel(reviewStage);let groupHtml="";if(reviewStage==="FIRST_GROUP_STAGE"){const gr=(live.groups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.groupState?.[gr.id]||{}),userCode)}else if(reviewStage==="SECOND_GROUP_STAGE"){const gr=(live.secondGroups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.secondState?.[gr.id]||{}),userCode)}return `<div class="intlWcHero live neutral"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${stage}</h2><p>${(live.games||[]).length} games completed · ${(live.field||[]).length} nations entered</p></div><div class="intlWcBadge live">LIVE</div></div><div class="intlWcProgress"><div><b>${stage}</b><small>Tournament Stage</small></div><div><b>${userInField?"ACTIVE":"OUT"}</b><small>${nat(userCode)?.name||"Your Nation"}</small></div><div><b>${(live.games||[]).length}</b><small>Games Played</small></div></div><div class="sectionTitle wcNavTitle">Tournament Navigation</div>${intlWorldCupStageNavHtml(live,reviewStage)}${groupHtml?`<div class="sectionTitle">Your World Cup Group</div>${groupHtml}`:""}<div class="sectionTitle">${reviewLabel}</div>${intlWorldCupStageContentHtml(live,reviewStage,userCode)}` }
   const champ=nat(last.championCode),runner=nat(last.runnerUpCode),bronze=nat(last.bronzeCode),mvp=playerByAnyId(last.mvpPlayerId),final=(last.games||[]).slice().reverse().find(g=>g.stage==="FINAL"),year=gameYearForSeason(last.season),userFinish=last.championCode===userCode?"CHAMPION":last.runnerUpCode===userCode?"RUNNER-UP":last.bronzeCode===userCode?"BRONZE":(last.qualifiedTeamCodes||[]).includes(userCode)?"QUALIFIED":"DID NOT QUALIFY",wcLeaders=worldCupAwardLeaders(last);
   return `<div class="intlWcCompleteHead"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${year} FIBA World Cup</h2><p>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"championFlag")} · Champions</p></div><span>${userFinish}</span></div>
     <div class="intlWcSummary"><div><small>CHAMPION</small><b>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"medalFlag")}</b></div><div><small>RUNNER-UP</small><b>${nationalFlagLabel(last.runnerUpCode,runner?.name||last.runnerUpCode,"medalFlag")}</b></div><div><small>BRONZE</small><b>${nationalFlagLabel(last.bronzeCode,bronze?.name||last.bronzeCode,"medalFlag")}</b></div><div><small>FINAL</small><b>${final?`${nat(final.teamA)?.name||final.teamA} ${final.scoreA}–${final.scoreB} ${nat(final.teamB)?.name||final.teamB}`:"Final recorded"}</b></div></div>
@@ -10493,6 +10581,7 @@ $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;rend
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
 $$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;render()});$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
+  $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
 $$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
 if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
