@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.2 World Cup Flag & Rank Fix</title>
+<title>Mini&Me Basketball — v0.1.34.3 World Cup Results & Rankings</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1643,10 +1643,47 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   }
 }
 
+
+/* v0.1.34.3 — World Cup results + World Rankings */
+.intlWcResultList{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.intlWcResultRow{display:grid;grid-template-columns:minmax(0,1fr) 105px;align-items:center;background:var(--panel)}
+.intlWcResultRow+.intlWcResultRow{border-top:1px solid var(--line)}
+.intlWcResultRow.userGame{box-shadow:inset 3px 0 0 var(--accent2)}
+.intlWcResultTeams{padding:10px 12px}
+.intlWcResultTeam{display:grid;grid-template-columns:30px minmax(0,1fr) 42px;align-items:center;gap:8px;min-height:32px}
+.intlWcResultTeam .nationalFlagMark{margin:0!important}
+.intlWcResultTeam b{font-size:11px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.intlWcResultTeam strong{text-align:right;font-size:14px}
+.intlWcResultTeam.winner b,.intlWcResultTeam.winner strong{font-weight:900;color:var(--text)}
+.intlWcResultStage{border-left:1px solid var(--line);align-self:stretch;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px;text-align:center}
+.intlWcResultStage small{font-size:7px;color:var(--muted);line-height:1.25}
+.intlWcResultStage span{font-size:7px;font-weight:900;color:var(--accent2);letter-spacing:.08em}
+
+.intlRankingsHero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;border:1px solid rgba(240,176,76,.42);border-radius:14px;padding:14px;margin-bottom:14px;background:linear-gradient(135deg,rgba(240,176,76,.06),rgba(255,255,255,.01))}
+.intlRankingsHero h2{margin:3px 0 5px}.intlRankingsHero p{margin:0;color:var(--muted);font-size:8px;line-height:1.45}
+.intlRankingsTotal{text-align:center;min-width:62px}.intlRankingsTotal b{display:block;font-size:22px}.intlRankingsTotal small{font-size:7px;color:var(--muted)}
+.intlRankingsTable{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.intlRankingsHead,.intlRankingRow{display:grid;grid-template-columns:50px minmax(0,1.8fr) minmax(80px,.9fr) 68px;align-items:center}
+.intlRankingsHead{background:var(--panel2);padding:8px 10px;font-size:7px;color:var(--muted);font-weight:900}
+.intlRankingRow{padding:9px 10px;background:var(--panel);min-height:52px}
+.intlRankingRow+.intlRankingRow{border-top:1px solid var(--line)}
+.intlRankingRow.me{background:rgba(240,176,76,.07);box-shadow:inset 3px 0 0 var(--accent2)}
+.intlRankingRow>strong{font-size:12px;color:var(--accent2)}
+.intlRankingNation{display:flex;align-items:center;gap:8px;min-width:0}.intlRankingNation .nationalFlagMark{margin:0!important;flex:0 0 auto}
+.intlRankingNation b{font-size:10px}.intlRankingNation small{display:block;font-size:7px;color:var(--accent2);margin-top:2px}
+.intlRankingRow>span{font-size:8px;color:var(--muted)}.intlRankingRow>b{text-align:right;font-size:9px}
+@media(max-width:520px){
+  .intlWcResultRow{grid-template-columns:minmax(0,1fr) 82px}
+  .intlWcResultTeam{grid-template-columns:26px minmax(0,1fr) 38px;gap:6px}
+  .intlWcResultTeam b{font-size:10px}.intlWcResultTeam strong{font-size:13px}
+  .intlRankingsHead,.intlRankingRow{grid-template-columns:42px minmax(0,1fr) 64px}
+  .intlRankingsHead span:nth-child(3),.intlRankingRow>span{display:none}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.3</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -6075,7 +6112,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.2 World Cup Flag & Rank Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.3 World Cup Results & Rankings",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10124,10 +10161,17 @@ function intlWorldCupTableHtml(title,rows,userCode){
   return `<div class="intlWcGroup"><div class="intlWcGroupHead"><b>${title}</b><small>${rows[0]?.gp||0} GP</small></div><div class="table"><table><thead><tr><th>#</th><th>NATION</th><th>W</th><th>L</th><th>DIFF</th><th>PTS</th></tr></thead><tbody>${rows.map((r,i)=>`<tr class="${r.code===userCode?"userNationRow":""}"><td>${i+1}</td><td>${nationalFlagLabel(r.code,nat(r.code)?.name||r.code,"tableFlag")}</td><td>${r.w||0}</td><td>${r.l||0}</td><td>${(r.pf||0)-(r.pa||0)>=0?"+":""}${(r.pf||0)-(r.pa||0)}</td><td>${r.points||0}</td></tr>`).join("")}</tbody></table></div></div>`;
 }
 function intlWorldCupGameRows(games,userCode){
-  if(!games?.length)return `<div class="card empty">No tournament results recorded for this stage yet.</div>`;
-  return `<div class="intlWcGames">${games.slice().reverse().slice(0,12).map(g=>{
-    const a=nat(g.teamA),b=nat(g.teamB),user=(g.teamA===userCode||g.teamB===userCode),aWon=g.winner===g.teamA,bWon=g.winner===g.teamB;
-    return `<div class="intlWcGame ${user?"userGame":""}" data-intlresult="${g.id||g.gameId||""}"><div class="intlWcGameTeams"><div class="${aWon?"winner":""}">${nationalFlagLabel(g.teamA,a?.name||g.teamA,"resultFlag")}<strong>${g.scoreA}</strong></div><div class="${bWon?"winner":""}">${nationalFlagLabel(g.teamB,b?.name||g.teamB,"resultFlag")}<strong>${g.scoreB}</strong></div></div><small>${intlWorldCupStageLabel(g.stage)}</small></div>`;
+  if(!games?.length)return `<div class="empty">No results recorded for this stage yet.</div>`;
+  return `<div class="intlWcResultList">${games.map(g=>{
+    const a=nat(g.teamA),b=nat(g.teamB),sa=+g.scoreA||0,sb=+g.scoreB||0;
+    const aWin=sa>sb,bWin=sb>sa,userGame=g.teamA===userCode||g.teamB===userCode;
+    return `<div class="intlWcResultRow ${userGame?"userGame":""}">
+      <div class="intlWcResultTeams">
+        <div class="intlWcResultTeam ${aWin?"winner":""}"><span>${nationalFlagMark(g.teamA,"resultFlag")}</span><b>${a?.name||g.teamA}</b><strong>${sa}</strong></div>
+        <div class="intlWcResultTeam ${bWin?"winner":""}"><span>${nationalFlagMark(g.teamB,"resultFlag")}</span><b>${b?.name||g.teamB}</b><strong>${sb}</strong></div>
+      </div>
+      <div class="intlWcResultStage"><small>${intlWorldCupStageLabel(g.stage||"")}</small><span>FINAL</span></div>
+    </div>`;
   }).join("")}</div>`;
 }
 function intlWorldCupKnockoutResults(games,userCode){
@@ -10207,6 +10251,28 @@ function worldCupAwardCard(label,item,detail){
   if(!item?.player)return"";
   return `<div class="intlWcAward"><small>${label}</small><b>${playerNameLink(item.player)}</b><span>${detail(item)}</span></div>`;
 }
+
+function internationalWorldRankingRows(){
+  const teams=(G.nationalTeams||[]).map(n=>{
+    const rank=nationalWorldRank(n.code);
+    const rec=G.nationalRecords?.[n.code]||n.record||{};
+    return{
+      code:n.code,
+      name:n.name||nationDisplay(n.code)||n.code,
+      region:n.region||"—",
+      rank:Number.isFinite(+rank)?+rank:999,
+      w:+rec.w||0,
+      l:+rec.l||0
+    };
+  }).filter(x=>x.rank<999).sort((a,b)=>a.rank-b.rank||a.name.localeCompare(b.name));
+  return teams.slice(0,50);
+}
+function internationalWorldRankings(){
+  const rows=internationalWorldRankingRows(),userCode=G.userNationalGM?.nationCode;
+  return `<div class="intlRankingsHero"><div><div class="eyebrow">FIBA WORLD RANKINGS</div><h2>Top 50 Nations</h2><p>Current in-game national rankings across the international basketball world.</p></div><div class="intlRankingsTotal"><b>${rows.length}</b><small>NATIONS</small></div></div>
+    <div class="intlRankingsTable"><div class="intlRankingsHead"><span>RANK</span><span>NATION</span><span>REGION</span><span>RECORD</span></div>
+    ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${r.name}</b>${r.code===userCode?`<small>Your Nation</small>`:""}</div></div><span>${r.region}</span><b>${r.w||r.l?`${r.w}–${r.l}`:"—"}</b></div>`).join("")}</div>`;
+}
 function internationalWorldCup(){
   const userCode=G.userNationalGM?.nationCode,live=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:null,history=(G.worldCupHistory||[]).slice().reverse(),last=history[0]||null,q=G.nationalQualification;
   if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup tournament hub will activate when qualification is complete. Until then, use Qualification and Fixtures to follow the campaign.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
@@ -10222,8 +10288,8 @@ function internationalWorldCup(){
 function international(){
   let code=G.userNationalGM?.nationCode;
   if(!code){const options=G.nationalTeams.filter(n=>NATIONAL_GM_CONTROLLABLE.has(n.code)).sort((a,b)=>a.name.localeCompare(b.name));return `<div class="intlPageHead"><h2>International</h2><p>Take your career onto the international stage</p></div><div class="card"><div class="eyebrow">National Team Management</div><h3>Manage a Basketball Nation</h3><div class="smallcopy">National GM control is limited to established programs with enough player depth to support meaningful squad selection. Other nations remain active in FIBA qualification and the World Cup.</div><label>NATION</label><select id="nation">${options.map(n=>`<option value="${n.code}">${flagEmoji(n.code)} ${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`}
-  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"]],body;
-  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else body=internationalWorldCup();
+  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["rankings","World Rankings"]],body;
+  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else body=internationalWorldCup();
   return `<div class="intlPageHead"><h2>${nationalFlagMark(n.code,"headerFlag")} ${n.name}</h2><p>${n.region} · World #${nationalWorldRank(code)||"—"}</p></div><div class="tabs compactTabRow intlMainTabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 
