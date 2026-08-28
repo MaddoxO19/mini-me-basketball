@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.1 All-Star News Reliability Fix</title>
+<title>Mini&Me Basketball — v0.1.34.2 World Cup Flag & Rank Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1608,10 +1608,45 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .retiredLegendList{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:14px}.retiredLegendRow{display:grid;grid-template-columns:24px minmax(0,1fr) 58px 48px;gap:8px;align-items:center;padding:10px 12px;background:var(--panel)}.retiredLegendRow+.retiredLegendRow{border-top:1px solid var(--line)}.retiredLegendRow>span{color:var(--muted);font-size:8px}.retiredLegendRow b{font-size:9px}.retiredLegendRow small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.retiredLegendRow>div:nth-last-child(-n+2){text-align:right}.retiredLegendRow strong{font-size:10px}
 @media(max-width:520px){.careerRankGrid{grid-template-columns:repeat(3,1fr)}.careerRankCard{padding:8px 4px}.retiredLegendRow{grid-template-columns:20px minmax(0,1fr) 52px 40px}}
 
+
+/* v0.1.34.2 — World Cup matchup flag/ranking correction */
+.wcNationSide .nationalFlagMark.fibaNationMark{
+  display:inline-flex!important;
+  width:58px!important;
+  height:38px!important;
+  min-width:0!important;
+  flex:0 0 auto!important;
+  margin:0 auto 8px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  color:inherit!important;
+  font-size:44px!important;
+  line-height:1!important;
+}
+.wcNationSide .wcNationRank{
+  color:var(--text)!important;
+  font-size:7px!important;
+  font-weight:800!important;
+  margin-top:4px!important;
+}
+.wcNationSide .wcNationRank + small{
+  margin-top:2px!important;
+}
+@media(max-width:520px){
+  .wcNationSide .nationalFlagMark.fibaNationMark{
+    width:52px!important;
+    height:34px!important;
+    font-size:40px!important;
+  }
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -6040,7 +6075,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.1 All-Star News Reliability Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.2 World Cup Flag & Rank Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -7856,9 +7891,9 @@ function worldCupHomeHtml(){
   return `<div class="wcHomeCard">
     <div class="wcHomeTop"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>${stage}</h2><p>${eventNo}</p></div><span>NEXT GAME</span></div>
     <div class="wcHomeTeams">
-      <div class="wcNationSide">${fibaNationMark(next.a)}<b>${a?.name||next.a}</b><small>${aRec.w}–${aRec.l} tournament</small></div>
+      <div class="wcNationSide">${fibaNationMark(next.a)}<b>${a?.name||next.a}</b><small class="wcNationRank">World #${nationalWorldRank(next.a)||"—"}</small><small>${aRec.w}–${aRec.l} tournament</small></div>
       <div class="wcHomeVs">VS</div>
-      <div class="wcNationSide">${fibaNationMark(next.b)}<b>${b?.name||next.b}</b><small>${bRec.w}–${bRec.l} tournament</small></div>
+      <div class="wcNationSide">${fibaNationMark(next.b)}<b>${b?.name||next.b}</b><small class="wcNationRank">World #${nationalWorldRank(next.b)||"—"}</small><small>${bRec.w}–${bRec.l} tournament</small></div>
     </div>
     <div class="wcHomeContext">
       <div><b>${nation?.name||code||"—"}</b><small>Your Nation</small></div>
