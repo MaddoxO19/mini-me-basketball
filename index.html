@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.4 World Cup Stage Navigator</title>
+<title>Mini&Me Basketball — v0.1.34.5 World Cup Recap</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1707,10 +1707,27 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .intlWcScheduledTeams>div{gap:5px}.intlWcScheduledTeams b{font-size:8px}
 }
 
+
+/* v0.1.34.5 — World Cup completion recap */
+.wcRecapHero{border:1px solid var(--line);border-radius:16px;overflow:hidden;background:var(--panel);margin-bottom:16px}
+.wcRecapTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:18px;border-bottom:1px solid var(--line)}
+.wcRecapTop h2{font-size:22px;margin:5px 0 6px}.wcRecapTop p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.wcRecapTop>span{border:1px solid var(--accent2);border-radius:999px;padding:7px 10px;color:var(--accent2);font-size:7px;font-weight:900;letter-spacing:.08em}
+.wcRecapMetrics{display:grid;grid-template-columns:repeat(3,1fr)}
+.wcRecapMetrics>div{padding:13px 8px;text-align:center;min-width:0}.wcRecapMetrics>div+div{border-left:1px solid var(--line)}
+.wcRecapMetrics b{display:block;font-size:10px}.wcRecapMetrics small{display:block;color:var(--muted);font-size:7px;margin-top:4px}
+.wcRecapFinal{border:1px solid var(--line);border-radius:14px;background:var(--panel);display:grid;grid-template-columns:1fr 58px 1fr;align-items:center;padding:14px;margin-bottom:16px}
+.wcRecapFinal>div{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;font-weight:800}.wcRecapFinal>div:last-child{flex-direction:row-reverse;text-align:right}
+.wcRecapFinal>span{text-align:center;color:var(--accent2);font-size:7px;font-weight:900}.wcRecapFinal strong{font-size:18px}
+.wcRecapPodium{margin-bottom:16px}.wcRecapTeam{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel);margin-bottom:16px}
+.wcRecapTeam>div{display:flex;justify-content:space-between;align-items:center;padding:11px 13px}.wcRecapTeam>div+div{border-top:1px solid var(--line)}
+.wcRecapTeam b{font-size:9px}.wcRecapTeam small{font-size:7px;color:var(--muted)}
+.wcRecapContinue{padding-bottom:18px!important}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.4</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.5</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3649,6 +3666,7 @@ function finalizeWorldCupLive(G){
     mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats:live.tournamentStats};
   live.complete=true;live.status="COMPLETE";
   G.worldCup=wc;G.worldCupHistory.push(wc);q.worldCupPlayed=true;
+  G.worldCupRecapPending={cycle:wc.cycle,season:wc.season};
   G.awards[`WC${q.cycle}_Champion`]=championCode;G.awards[`WC${q.cycle}_MVP`]=mvp?.id||null;
   champTeam.history.push({season:G.season,type:"World Cup Champion",cycle:q.cycle});
   logEvent(G,`FIBA World Cup complete. Champion: ${champTeam.name}. MVP: ${mvp?.name||"n/a"}.`);
@@ -6139,7 +6157,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.4 World Cup Stage Navigator",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.5 World Cup Recap",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9065,8 +9083,34 @@ function userPostseasonState(){
   }
   return{alive:true,stage:null};
 }
+
+function worldCupRecapPendingTournament(){
+  const pending=G.worldCupRecapPending;
+  if(!pending)return null;
+  return [...(G.worldCupHistory||[])].reverse().find(w=>w.status==="COMPLETE"&&w.cycle===pending.cycle&&w.season===pending.season)||null;
+}
+function worldCupTournamentRecapHtml(wc){
+  if(!wc)return"";
+  const userCode=G.userNationalGM?.nationCode,champ=nat(wc.championCode),runner=nat(wc.runnerUpCode),bronze=nat(wc.bronzeCode);
+  const final=(wc.games||[]).find(g=>g.stage==="FINAL"),mvp=playerByAnyId(wc.mvpPlayerId),leaders=worldCupAwardLeaders(wc);
+  const userGames=(wc.games||[]).filter(g=>g.teamA===userCode||g.teamB===userCode);
+  const userWins=userGames.filter(g=>g.winner===userCode).length,userLosses=userGames.length-userWins;
+  const userFinish=wc.championCode===userCode?"World Champions":wc.runnerUpCode===userCode?"Runner-Up":wc.bronzeCode===userCode?"Bronze Medal":(wc.qualifiedTeamCodes||[]).includes(userCode)?"Tournament Complete":"Did Not Qualify";
+  const year=gameYearForSeason(wc.season);
+  const allTournament=(wc.allTournamentPlayerIds||[]).map(playerByAnyId).filter(Boolean);
+  return `<div class="wcRecapHero"><div class="wcRecapTop"><div><div class="eyebrow">${year} FIBA WORLD CUP · TOURNAMENT RECAP</div><h2>${champ?.name||wc.championCode} are World Champions</h2><p>${runner?.name||wc.runnerUpCode} finished runner-up, with ${bronze?.name||wc.bronzeCode} taking bronze.</p></div><span>COMPLETE</span></div>
+    <div class="wcRecapMetrics"><div><b>${nationalFlagLabel(wc.championCode,champ?.name||wc.championCode,"medalFlag")}</b><small>Champion</small></div><div><b>${userGames.length?`${userWins}–${userLosses}`:"—"}</b><small>Your Record</small></div><div><b>${userFinish}</b><small>Your Finish</small></div></div></div>
+    <div class="sectionTitle">Championship Game</div><div class="wcRecapFinal">${final?`<div>${nationalFlagLabel(final.teamA,nat(final.teamA)?.name||final.teamA,"resultFlag")}<strong>${final.scoreA}</strong></div><span>FINAL</span><div>${nationalFlagLabel(final.teamB,nat(final.teamB)?.name||final.teamB,"resultFlag")}<strong>${final.scoreB}</strong></div>`:`<div class="empty">Final result unavailable.</div>`}</div>
+    <div class="sectionTitle">Tournament Podium</div><div class="intlWcSummary wcRecapPodium"><div><small>WORLD CHAMPIONS</small><b>${nationalFlagLabel(wc.championCode,champ?.name||wc.championCode,"medalFlag")}</b></div><div><small>RUNNER-UP</small><b>${nationalFlagLabel(wc.runnerUpCode,runner?.name||wc.runnerUpCode,"medalFlag")}</b></div><div><small>BRONZE</small><b>${nationalFlagLabel(wc.bronzeCode,bronze?.name||wc.bronzeCode,"medalFlag")}</b></div></div>
+    <div class="sectionTitle">Tournament Honours</div><div class="intlWcAwards">${mvp?`<div class="intlWcAward"><small>WORLD CUP MVP</small><b>${playerNameLink(mvp)}</b><span>${positionLabel(mvp)} · ${nationDisplay(mvp.nationality)}</span></div>`:""}${worldCupAwardCard("TOP SCORER",leaders.scorer,x=>`${(x.stats.pts/x.gp).toFixed(1)} PPG · ${nationDisplay(x.player.nationality)}`)}${worldCupAwardCard("BEST DEFENDER",leaders.defender,x=>`${(x.stats.stl/x.gp).toFixed(1)} SPG · ${(x.stats.blk/x.gp).toFixed(1)} BPG`)}</div>
+    ${allTournament.length?`<div class="sectionTitle">All-World Cup Team</div><div class="wcRecapTeam">${allTournament.map(p=>`<div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${nationDisplay(p.nationality)}</small></div>`).join("")}</div>`:""}
+    <div class="sectionTitle">Knockout Recap</div>${intlWorldCupKnockoutResults(wc.games||[],userCode)}
+    <div class="transitionActions one wcRecapContinue"><button id="continueWorldCupRecap" class="transitionPrimary">Continue Career</button></div>`;
+}
 function home(){
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
+  const worldCupRecap=worldCupRecapPendingTournament();
+  if(worldCupRecap)return worldCupTournamentRecapHtml(worldCupRecap);
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
   if(G.phase==="WORLD_CUP")return worldCupHomeHtml();
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
@@ -10564,6 +10608,7 @@ if($("#beginPreseasonReadiness"))$("#beginPreseasonReadiness").onclick=()=>{
   const r=beginPreseasonFromReadiness(G);if(!r.ok){toast(r.reason);if(G.rosterCompliancePending){ui.page="team";ui.teamTab="squad";}render();return}
   save();render();
 };
+if($("#continueWorldCupRecap"))$("#continueWorldCupRecap").onclick=()=>{G.worldCupRecapPending=null;ui.page="home";save();render()};
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
 if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;const st=userPostseasonState();if(G.phase==="PLAY_IN")ui.postseasonStage="playin";else if(st.series)ui.postseasonStage=postseasonStageKey(st.series.stage);render()};
