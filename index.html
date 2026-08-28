@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.35.1 Chemistry Deals & News Reliability</title>
+<title>Mini&Me Basketball — v0.1.36.0 Courtside Network</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1733,10 +1733,32 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsFlashCard h3{font-size:20px;margin:15px 0 8px}.newsFlashCard p{font-size:10px;line-height:1.55;color:var(--muted);margin:0}
 .newsFlashActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.newsFlashActions button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800}.newsFlashActions button:first-child{background:var(--accent2);color:#111;border-color:var(--accent2)}
 
+
+/* v0.1.36.0 — Courtside Network broadcast identity */
+.courtsideOverlay{background:radial-gradient(circle at 50% 20%,rgba(40,48,60,.28),rgba(2,5,9,.86))}
+.courtsideCast{padding:0!important;overflow:hidden;border-color:#e4ab4b!important;background:#101722!important}
+.cnTopBar{display:flex;justify-content:space-between;align-items:center;padding:11px 16px;background:#e5aa45;color:#101318}
+.cnTopBar small{display:block;font-size:7px;font-weight:1000;letter-spacing:.14em}.cnTopBar b{display:block;font-size:11px;margin-top:2px}.cnTopBar>span{font-size:7px;font-weight:1000;border:1px solid rgba(16,19,24,.45);border-radius:999px;padding:4px 7px}
+.cnAnalyst{display:grid;grid-template-columns:46px minmax(0,1fr) 36px;gap:10px;align-items:center;padding:13px 16px 9px}
+.cnAvatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#252e3a,#111720);border:2px solid #e5aa45;color:#f7d28c;font-size:14px;font-weight:1000}
+.cnAnalyst>div:nth-child(2) b{display:block;font-size:10px;letter-spacing:.04em}.cnAnalyst>div:nth-child(2) small{display:block;color:var(--muted);font-size:6.5px;margin-top:2px;letter-spacing:.05em}
+.cnAnalyst button{width:36px;height:36px;border:1px solid var(--line);border-radius:10px;background:#17202b;color:#fff;font-size:19px}
+.cnTicker{padding:6px 16px;background:#080d13;border-top:1px solid #27313e;border-bottom:1px solid #27313e;color:#d8a44f;font-size:6.5px;font-weight:900;letter-spacing:.09em;white-space:nowrap;overflow:hidden}
+.courtsideCast h3{padding:0 16px;margin:17px 0 8px!important;font-size:22px!important;line-height:1.12}
+.courtsideCast>p{padding:0 16px;margin:0!important;font-size:10px!important;line-height:1.55!important}
+.cnOddsBoard{margin:15px 16px 0;border:1px solid #303b49;border-radius:12px;overflow:hidden;background:#0b1118}
+.cnOddsBoard>div{display:grid;grid-template-columns:24px minmax(0,1fr) 52px;align-items:center;gap:7px;padding:8px 10px}.cnOddsBoard>div+div{border-top:1px solid #27313e}
+.cnOddsBoard span{color:#d8a44f;font-size:8px;font-weight:900}.cnOddsBoard b{font-size:8.5px}.cnOddsBoard strong{text-align:right;color:#f3c66f;font-size:10px}
+.courtsideCast blockquote{margin:15px 16px 0;padding:11px 12px;border-left:3px solid #e5aa45;background:#0b1118;color:#f1f3f6;font-size:9px;font-style:italic;line-height:1.4}
+.courtsideCast blockquote small{display:block;margin-top:6px;color:#d8a44f;font-size:6px;font-style:normal;font-weight:900;letter-spacing:.08em}
+.courtsideCast .newsFlashActions{margin:16px!important;padding:0!important}
+.newsAnalystByline{display:flex;gap:6px;align-items:baseline;margin:6px 0 8px;color:var(--accent2)}.newsAnalystByline b{font-size:8px}.newsAnalystByline span{font-size:7px;color:var(--muted)}
+@media(max-width:520px){.courtsideCast h3{font-size:20px!important}.cnAnalyst{grid-template-columns:42px minmax(0,1fr) 34px}.cnAvatar{width:42px;height:42px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.35.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.36.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3169,10 +3191,38 @@ function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag=""
 }
 function queueNewsFlash(G,article){
   if(!article)return;
-  G.newsFlashPending={headline:article.headline,body:article.body,category:article.category||"Sports Desk",tag:article.tag||"",season:G.season};
+  G.newsFlashPending={
+    headline:article.headline,body:article.body,category:article.category||"Sports Desk",
+    tag:article.tag||"",season:G.season,analyst:article.analyst||null,
+    analystRole:article.analystRole||null,quote:article.quote||null,
+    broadcastLabel:article.broadcastLabel||null,board:article.board||null
+  };
+}
+function chaseMaddonQuote(use=false){return use?"“Numbers don’t lie, but sometimes they whisper.”":null;}
+function pushChaseMaddonArticle(G,title,body,{importance=2,tag="",flash=false,label="MADDON'S TAKE",quote=false,board=null}={}){
+  const article=pushNewsArticle(G,title,body,"Courtside Network",importance,tag,false);
+  article.analyst="Chase Maddon";
+  article.analystRole="Senior Basketball Analyst";
+  article.broadcastLabel=label;
+  article.quote=chaseMaddonQuote(quote);
+  article.board=board;
+  if(flash)queueNewsFlash(G,article);
+  return article;
 }
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
+  if(n.analyst==="Chase Maddon"){
+    const board=Array.isArray(n.board)&&n.board.length
+      ?`<div class="cnOddsBoard">${n.board.map((x,i)=>`<div><span>${i+1}</span><b>${x.name}</b><strong>${x.value}</strong></div>`).join("")}</div>`:"";
+    return `<div class="newsFlashOverlay courtsideOverlay"><div class="newsFlashCard courtsideCast">
+      <div class="cnTopBar"><div><small>COURTSIDE NETWORK</small><b>${n.broadcastLabel||"BREAKING ANALYSIS"}</b></div><span>LIVE</span></div>
+      <div class="cnAnalyst"><div class="cnAvatar">CM</div><div><b>CHASE MADDON</b><small>SENIOR BASKETBALL ANALYST</small></div><button type="button" id="closeNewsFlash">×</button></div>
+      <div class="cnTicker">COURTSIDE NETWORK • SEASON ${n.season} • ANALYSIS</div>
+      <h3>${n.headline}</h3><p>${n.body||""}</p>${board}
+      ${n.quote?`<blockquote>${n.quote}<small>CHASE MADDON</small></blockquote>`:""}
+      <div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button></div>
+    </div></div>`;
+  }
   return `<div class="newsFlashOverlay"><div class="newsFlashCard"><div class="newsFlashHead"><div><small>${n.category||"SPORTS DESK"}</small><b>NEWS UPDATE</b></div><button type="button" id="closeNewsFlash">×</button></div><h3>${n.headline}</h3><p>${n.body||""}</p><div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button></div></div></div>`;
 }
 function gmCareerState(G) {
@@ -5846,6 +5896,7 @@ function advanceRegularSeasonRound(G) {
 
   refreshRegularSeasonSnapshot(G);
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
+  if(typeof courtsideAnalystTick==="function")courtsideAnalystTick(G);
   if(live.roundIndex>=82){
     live.complete=true; G.regularSeason.complete=true;
     logEvent(G,`Regular season complete: ${live.games.length} games with player box scores, live standings and player leaders.`);
@@ -6329,7 +6380,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.35.1 Chemistry Deals & News Reliability",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.36.0 Courtside Network",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9464,21 +9515,20 @@ function hasPreseasonForecastArticle(G){return (G.newsFeed||[]).some(n=>n?.tag==
 function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
   const state=mediaForecastState(G);
   let f=state.preseason;
-  if(!f){
-    f=calculateMediaLeagueForecast(100);
-    if(!f)return null;
-    state.preseason=f;
-  }
+  if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;}
   if(!forceArticle&&hasPreseasonForecastArticle(G))return f;
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const titleLine=mediaTopLine(f.rows,"titlePct",5),cupLine=mediaTopLine(f.rows,"cupPct",5);
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaPct(x.titlePct)}));
+  const cup=f.rows.slice().sort((a,b)=>b.cupPct-a.cupPct).slice(0,3);
   const intro=lateRepair
-    ?`The Courtside Network has restored the missing Season ${G.season} forecast for this career. `
-    :`The Courtside Network model has run ${f.iterations} simulations before opening night. `;
-  const body=`${intro}Championship favourites: ${titleLine}. NBA Cup favourites: ${cupLine}.${user?` ${user.name} projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`${lateRepair?"Season Forecast":"Preseason Forecast"}: ${f.rows[0]?.name||"The contenders"} opens as title favourite`,body,"Sports Desk",3,preseasonForecastTag(G),true);
-  G.mediaMilestones=G.mediaMilestones||{};
-  G.mediaMilestones[`preseasonForecastS${G.season}`]=true;
+    ?`We did not get the opening board on air earlier, so here is the season outlook as it stands. `
+    :`${f.rows[0]?.name||"The early favourite"} starts the year at the top of my championship board, but the gap is far from decisive. `;
+  const rivals=board.slice(1,4).map(x=>x.name).join(", ");
+  const body=`${intro}${rivals?`${rivals} are the leading challengers. `:""}${user?`${user.name} looks like a ${user.projectedWins.toFixed(0)}-win team with a likely top-${Math.max(1,Math.round(user.expectedSeed))} conference seed. I have them at ${mediaPct(user.conferencePct)} to win the conference and ${mediaPct(user.titlePct)} to win the championship. `:""}On the Cup side, ${cup.map(x=>`${x.name} ${mediaPct(x.cupPct)}`).join(", ")} head the early board.`;
+  pushChaseMaddonArticle(G,
+    `${f.rows[0]?.name||"The contenders"} enters the season as the team to beat`,
+    body,{importance:3,tag:preseasonForecastTag(G),flash:true,label:"SEASON FORECAST",quote:true,board});
+  G.mediaMilestones=G.mediaMilestones||{};G.mediaMilestones[`preseasonForecastS${G.season}`]=true;
   return f;
 }
 function postAllStarForecastTag(G){return `POST_ALLSTAR_FORECAST_S${G.season}`;}
@@ -9489,27 +9539,129 @@ function hasPostAllStarForecastArticle(G){
 function publishPostAllStarForecast(G,{forceArticle=false}={}){
   const state=mediaForecastState(G);
   let f=state.postAllStar;
-  if(!f){
-    f=calculateMediaLeagueForecast(100);
-    if(!f)return null;
-    state.postAllStar=f;
-  }
-  if(!forceArticle && hasPostAllStarForecastArticle(G))return f;
+  if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.postAllStar=f;}
+  if(!forceArticle&&hasPostAllStarForecastArticle(G))return f;
 
   const pre=state.preseason,preMap=new Map((pre?.rows||[]).map(x=>[x.clubId,x]));
   const movement=f.rows.map(x=>({...x,deltaTitle:x.titlePct-(preMap.get(x.clubId)?.titlePct||0)}));
-  const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,3);
-  const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,3);
-  const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId),titleLine=mediaTopLine(f.rows,"titlePct",5);
-  const moveText=(arr,sign)=>arr.map(x=>`${x.name} ${sign}${Math.abs(x.deltaTitle).toFixed(1)} pts`).join(" · ");
-  const movementText=pre?.rows?.length
-    ?` Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.`
-    :"";
-  const body=`With All-Star Weekend complete, the model has rerun the remaining season ${f.iterations} times. Updated title board: ${titleLine}.${movementText}${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,postAllStarForecastTag(G),true);
-  G.mediaMilestones=G.mediaMilestones||{};
-  G.mediaMilestones[`allStarForecastS${G.season}`]=true;
+  const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,2);
+  const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,2);
+  const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaPct(x.titlePct)}));
+  const body=`The title picture has changed since opening night. ${f.rows[0]?.name||"The current leader"} now sits at the top of my board.${pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:""}${user?` ${user.name} is tracking toward ${user.projectedWins.toFixed(0)} wins and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed, with ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""} This is the point of the season where contenders stop being theoretical.`;
+  pushChaseMaddonArticle(G,
+    `Maddon's Midseason Board: ${f.rows[0]?.name||"The leaders"} sets the pace`,
+    body,{importance:3,tag:postAllStarForecastTag(G),flash:true,label:"MIDSEASON TITLE BOARD",quote:true,board});
+  G.mediaMilestones=G.mediaMilestones||{};G.mediaMilestones[`allStarForecastS${G.season}`]=true;
   return f;
+}
+
+function courtsideAnalystState(G){
+  if(!G.courtsideAnalyst)G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:0,lastFlashRound:-99,stories:{}};
+  if(G.courtsideAnalyst.season!==G.season)G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:0,lastFlashRound:-99,stories:{}};
+  return G.courtsideAnalyst;
+}
+function courtsideStoryOnce(G,key){
+  const s=courtsideAnalystState(G);
+  if(s.stories[key])return false;s.stories[key]=true;return true;
+}
+function courtsideCanFlash(G,round,gap=6){
+  const s=courtsideAnalystState(G);return round-(s.lastFlashRound??-99)>=gap&&!G.newsFlashPending;
+}
+function courtsidePublish(G,key,title,body,{flash=false,label="MADDON'S TAKE",quote=false,board=null}={}){
+  if(!courtsideStoryOnce(G,key))return null;
+  const round=+G.regularSeasonLive?.roundIndex||0;
+  const actualFlash=flash&&courtsideCanFlash(G,round);
+  const article=pushChaseMaddonArticle(G,title,body,{importance:actualFlash?3:2,tag:`CHASE_S${G.season}_${key}`,flash:actualFlash,label,quote,board});
+  if(actualFlash)courtsideAnalystState(G).lastFlashRound=round;
+  return article;
+}
+function courtsideUserRegularGames(G){
+  const id=G.userClubGM?.clubId;
+  return (G.regularSeasonLive?.games||[]).filter(g=>g.homeClubId===id||g.awayClubId===id);
+}
+function courtsideCurrentStreak(G){
+  const games=courtsideUserRegularGames(G),id=G.userClubGM?.clubId;if(!games.length)return{type:null,count:0};
+  const lastWin=games[games.length-1].winnerClubId===id,type=lastWin?"W":"L";let count=0;
+  for(let i=games.length-1;i>=0;i--){if((games[i].winnerClubId===id)===lastWin)count++;else break;}
+  return{type,count};
+}
+function courtsideLastUserGame(G){
+  const games=courtsideUserRegularGames(G);return games[games.length-1]||null;
+}
+function courtsideLastGameStar(G,game){
+  if(!game?.boxScore)return null;
+  const userId=G.userClubGM?.clubId,lines=game.homeClubId===userId?game.boxScore.home:game.boxScore.away;
+  return [...(lines||[])].sort((a,b)=>(b.pts||0)-(a.pts||0))[0]||null;
+}
+function courtsideCheckLastGame(G,round){
+  const s=courtsideAnalystState(G),game=courtsideLastUserGame(G);if(!game||game.id===s.lastGameId)return;
+  s.lastGameId=game.id;
+  const club=me(),streak=courtsideCurrentStreak(G),star=courtsideLastGameStar(G,game),opp=clubById(G,game.homeClubId===club.id?game.awayClubId:game.homeClubId);
+  if(streak.type==="W"&&streak.count>=7){
+    courtsidePublish(G,`WINSTREAK_${streak.count}`,`${club.name} is becoming impossible to ignore`,`${club.name} has pushed its winning streak to ${streak.count}. This is no longer just a good week. The rotations look settled, the confidence is obvious and the rest of the league has to start treating this group like a problem.`,{flash:streak.count===7||streak.count===10,label:"MADDON'S TAKE",quote:streak.count>=10});
+  }else if(streak.type==="L"&&streak.count>=5){
+    courtsidePublish(G,`LOSINGSTREAK_${streak.count}`,`Pressure building as ${club.name} slide reaches ${streak.count}`,`${club.name} has now dropped ${streak.count} straight. One loss can be noise. Five becomes a pattern. The question now is whether this is simply a bad stretch or the first sign that something in the rotation needs to change.`,{flash:streak.count===5||streak.count===8,label:"MADDON'S TAKE",quote:true});
+  }
+  if(star){
+    const p=playerByAnyId(star.playerId),triple=[star.pts,star.reb,star.ast].filter(x=>(+x||0)>=10).length>=3;
+    if((star.pts||0)>=45||(star.ast||0)>=16||(star.reb||0)>=22||triple){
+      const feat=triple?`${star.pts} points, ${star.reb} rebounds and ${star.ast} assists`:(star.pts||0)>=45?`${star.pts}-point performance`:(star.ast||0)>=16?`${star.ast}-assist night`:`${star.reb}-rebound performance`;
+      courtsidePublish(G,`BIGGAME_${game.id}_${star.playerId}`,`${p?.name||star.name} puts the league on notice`,`${p?.name||star.name} delivered a ${feat} against ${opp?.name||"the opposition"}. Nights like this change the conversation around a player, especially when they arrive in meaningful games.`,{flash:(star.pts||0)>=55||triple,label:"GAME NIGHT",quote:false});
+    }
+  }
+}
+function courtsideCheckExpectation(G,round){
+  const club=me(),gp=(club?.standings?.w||0)+(club?.standings?.l||0);if(!club||gp<18)return;
+  if(![20,30,41,60].some(x=>Math.abs(round-x)<=1))return;
+  const state=mediaForecastState(G),pre=state.preseason?.rows?.find(x=>x.clubId===club.id);if(!pre)return;
+  const pace=(club.standings.w/gp)*82,diff=pace-pre.projectedWins;
+  if(diff>=8){
+    courtsidePublish(G,`OVERPERFORM_${round}`,`${club.name} is running ahead of the script`,`${club.name} is playing at a ${pace.toFixed(0)}-win pace, well ahead of where I had them entering the season. Whether it lasts is the next question, but this team has earned a different level of respect.`,{flash:diff>=12,label:"MADDON'S TAKE"});
+  }else if(diff<=-8){
+    courtsidePublish(G,`UNDERPERFORM_${round}`,`${club.name} has not matched the preseason expectation`,`${club.name} is tracking at roughly a ${pace.toFixed(0)}-win pace, materially below the level expected entering the year. There is still time to recover, but reputation does not win games.`,{flash:diff<=-12,label:"MADDON'S TAKE",quote:true});
+  }
+}
+function courtsideCheckLeagueSurprise(G,round){
+  if(round<20||round%10>1)return;
+  const candidates=(G.clubs||[]).map(c=>{const gp=(c.standings?.w||0)+(c.standings?.l||0);return{c,gp,pct:gp?c.standings.w/gp:0,ovr:squadOvr(c)}}).filter(x=>x.gp>=18&&x.ovr<=81&&x.pct>=.62).sort((a,b)=>b.pct-a.pct);
+  const x=candidates[0];if(!x)return;
+  courtsidePublish(G,`SURPRISE_${x.c.id}`,`${x.c.name} has become the season's early disruption`,`A ${Math.round(x.pct*82)}-win pace from a roster that did not enter the year among the obvious heavyweights deserves attention. ${x.c.name} has moved from pleasant surprise to a team opponents have to prepare for seriously.`,{flash:false,label:"AROUND THE LEAGUE"});
+}
+function courtsideCheckTransactions(G){
+  const s=courtsideAnalystState(G),tx=G.transactions||[];
+  if(s.lastTxnCount>tx.length)s.lastTxnCount=0;
+  const fresh=tx.slice(s.lastTxnCount);s.lastTxnCount=tx.length;
+  const userId=G.userClubGM?.clubId;
+  for(const t of fresh){
+    if(t.season!==G.season)continue;
+    if(t.type==="trade"&&(t.clubAId===userId||t.clubBId===userId)){
+      const userA=t.clubAId===userId,out=userA?(+t.values?.aSends||0):(+t.values?.bSends||0),incoming=userA?(+t.values?.bSends||0):(+t.values?.aSends||0);
+      const partner=clubById(G,userA?t.clubBId:t.clubAId),ratio=out?incoming/out:1;
+      if(ratio>=1.22){
+        courtsidePublish(G,`TRADE_${tx.indexOf(t)}_WIN`,`Maddon likes the value in ${me().name}'s latest deal`,`${me().name} appears to have added more value than it surrendered in the deal with ${partner?.name||"its trade partner"}. Trades are judged over years, not minutes, but on first look this is smart asset management.`,{flash:true,label:"TRADE DESK"});
+      }else if(ratio<=.80){
+        courtsidePublish(G,`TRADE_${tx.indexOf(t)}_RISK`,`${me().name} paid a serious price in its latest trade`,`${me().name} gave up substantial value in the deal with ${partner?.name||"its trade partner"}. There may be a basketball reason for the aggression, but this is the kind of move that creates pressure if the return does not deliver.`,{flash:true,label:"TRADE DESK",quote:true});
+      }
+    }
+    if(t.type==="draft"&&t.clubId===userId){
+      const p=playerByAnyId(t.playerId),pick=+t.pickNum||60,ovr=+p?.ovr||0;
+      if(pick>=15&&ovr>=76) courtsidePublish(G,`DRAFT_${t.playerId}_STEAL`,`${p?.name||"The rookie"} could be one of Draft Night's best values`,`${me().name} landed ${p?.name||"a prospect"} at pick #${pick}, and the early talent profile suggests the league may have let a useful player slide too far. Draft grades are dangerous on night one, but I like this value.`,{flash:pick>=25&&ovr>=78,label:"DRAFT DESK"});
+      else if(pick<=10&&ovr<=70) courtsidePublish(G,`DRAFT_${t.playerId}_REACH`,`${me().name}'s pick at #${pick} raises an early question`,`${p?.name||"The selection"} has upside, but the current talent level makes this one of the more aggressive calls near the top of the draft. Development will decide whether conviction becomes foresight or a reach.`,{flash:false,label:"DRAFT DESK"});
+    }
+  }
+}
+function courtsideAnalystTick(G){
+  if(!G)return;
+  const s=courtsideAnalystState(G);
+  courtsideCheckTransactions(G);
+  if(G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive)return;
+  const round=+G.regularSeasonLive.roundIndex||0;
+  if(round===s.lastRound)return;
+  s.lastRound=round;
+  courtsideCheckLastGame(G,round);
+  courtsideCheckExpectation(G,round);
+  courtsideCheckLeagueSurprise(G,round);
 }
 function ensureMediaForecastMilestones(G){
   if(!G?.regularSeasonLive)return;
