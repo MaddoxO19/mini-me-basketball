@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.40.0 Playoff Rotation Intelligence</title>
+<title>Mini&Me Basketball — v0.1.41.0 Draft Night Control & Trade-Up</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1783,10 +1783,22 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .foProgressCard strong{font-size:10px;color:var(--accent2);white-space:nowrap}
 .foEconomyNote b{display:block;font-size:9px;margin-bottom:4px}
 
+
+/* v0.1.41.0 — Draft Night live controls */
+.draftControlCard{margin:12px 0;border:1px solid var(--line);border-radius:15px;background:var(--panel);padding:12px}
+.draftControlStatus{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.draftControlStatus small{display:block;font-size:7px;color:var(--accent2);font-weight:900;letter-spacing:.08em}
+.draftControlStatus b{display:block;font-size:12px;margin:3px 0}.draftControlStatus span{display:block;color:var(--muted);font-size:8px;line-height:1.4}
+.draftCountdown{min-width:58px;text-align:center;border:1px solid var(--line);border-radius:11px;padding:9px 8px;font-size:11px;font-weight:950;color:var(--accent2)}
+.draftControlActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.draftControlActions .btn{margin:0}
+.draftControlHint{display:block;margin-top:8px;color:var(--muted);font-size:7px;line-height:1.4}
+.draftTradeReturn{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--accent2);border-radius:14px;padding:10px 12px;margin-bottom:10px;background:var(--panel)}
+.draftTradeReturn b{display:block;font-size:10px}.draftTradeReturn small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.draftTradeReturn .btn{margin:0;width:auto}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.40.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.41.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2633,7 +2645,7 @@ function tradeCenterSnapshot(G, clubId, partnerClubId=null) {
   const assetView=(c)=>({
     clubId:c.id, clubName:c.name, rosterCount:c.roster.length, payrollM:recalcClubCap(c),
     players:[...c.roster].sort((a,b)=>b.ovr-a.ovr).map(p=>({id:p.id,name:p.name,position:p.position,age:p.age,ovr:p.ovr,yearsLeft:p.contractYearsLeft||0,salaryM:p.salaryM||0,value:playerTradeValue(p)})),
-    picks:clubDraftAssets(G,c.id).map(p=>({id:p.id,year:p.year,round:p.round,originalClubId:p.originalClubId,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,value:draftPickTradeValue(G,p)})),
+    picks:clubDraftAssets(G,c.id).map(p=>({id:p.id,year:p.year,round:p.round,overallPickNum:(p.year===G.season&&G.phase==="DRAFT_NIGHT")?expectedPickSlot(G,p):null,originalClubId:p.originalClubId,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,value:draftPickTradeValue(G,p)})),
   });
   return {club:assetView(club),partner:partnerClubId?assetView(clubById(G,partnerClubId)):null};
 }
@@ -4820,7 +4832,7 @@ function initializeDraftState(G) {
   G.talentHealth=G.talentHealth||{};G.talentHealth.draftAudits=G.talentHealth.draftAudits||[];
   G.talentHealth.draftAudits.push({season:G.season,era:G.talentHealth.era?.type||'NORMAL',avg:+draftAvg.toFixed(2),top:Math.max(...liveProspects.map(p=>p.ovr)),elite80:liveProspects.filter(p=>p.ovr>=80).length,highPot:liveProspects.filter(p=>(p.potential||0)>=88).length});
   G.talentHealth.draftAudits=G.talentHealth.draftAudits.slice(-30);
-  G.draftPool=liveProspects; G.draftState={season:G.season,queue,index:0,pendingUserPick:null,complete:false};
+  G.draftPool=liveProspects; G.draftState={season:G.season,queue,index:0,pendingUserPick:null,complete:false,control:{started:false,paused:true}};
   return G.draftState;
 }
 
@@ -4895,6 +4907,70 @@ function twoWayDevelopmentScore(player){
   return player.ovr*1.6+upside*1.15+ageBonus+pathBonus+Math.random()*2.5;
 }
 
+
+function ensureDraftControl(G){
+  const ds=G.draftState||initializeDraftState(G);
+  ds.control=ds.control||{started:false,paused:true};
+  return ds.control;
+}
+function draftCurrentOwnership(G){
+  const ds=G.draftState;
+  if(!ds||ds.complete)return null;
+  const entry=ds.queue?.[ds.index];if(!entry)return null;
+  const asset=entry.pickId?(G.draftPicks||[]).find(p=>p.id===entry.pickId):null;
+  const ownerClubId=asset?.ownerClubId||entry.originalClubId;
+  return {entry,asset,ownerClubId,club:clubById(G,ownerClubId)};
+}
+function finalizeDraftBoard(G){
+  const ds=G.draftState;if(!ds||ds.complete)return true;
+  ds.complete=true;ds.pendingUserPick=null;
+  if(ds.control){ds.control.paused=true;ds.control.started=true;}
+  const undrafted=finalizeUndraftedClass(G);ensureTwoWayDevelopmentPool(G,42);
+  archiveDraftClass(G);
+  G.upcomingDraftClass=null;
+  logEvent(G,`Draft complete: ${ds.queue.length} picks made across two rounds; ${undrafted} prospects went undrafted.`);
+  G.phase='SUMMER_LEAGUE';
+  return true;
+}
+function advanceDraftOneControlledPick(G){
+  const ds=G.draftState||initializeDraftState(G);
+  if(ds.complete)return {ok:false,complete:true,reason:"Draft complete"};
+  if(ds.index>=ds.queue.length){finalizeDraftBoard(G);return {ok:true,complete:true};}
+
+  const live=draftCurrentOwnership(G);if(!live){finalizeDraftBoard(G);return {ok:true,complete:true};}
+  const {entry,ownerClubId,club}=live;
+
+  if(ownerClubId===G.userClubGM?.clubId&&(G.userDraftMode||"manual")==="manual"){
+    ds.pendingUserPick={...entry,ownerClubId,clubName:club?.name||ownerClubId};
+    ensureDraftControl(G).paused=true;
+    logEvent(G,`Draft paused: ${ds.pendingUserPick.clubName} is on the clock at pick ${entry.overallPickNum}.`);
+    return {ok:true,userPick:true,entry};
+  }
+
+  let best=G.draftPool[0],bestScore=-Infinity;
+  const direction=aiTeamDirection(club);
+  for(const pr of G.draftPool){
+    const sc=needAwareScore(club,pr,{direction,ignoreContract:true});
+    if(sc>bestScore){bestScore=sc;best=pr;}
+  }
+  if(!best)return {ok:false,reason:"No prospect available"};
+
+  executeDraftSelection(G,entry,best);
+  ds.index++;
+  if(ds.index>=ds.queue.length){
+    finalizeDraftBoard(G);
+    return {ok:true,complete:true,entry,player:best};
+  }
+
+  // If the NEXT live selection belongs to the GM, stop immediately before it.
+  const next=draftCurrentOwnership(G);
+  if(next?.ownerClubId===G.userClubGM?.clubId&&(G.userDraftMode||"manual")==="manual"){
+    ds.pendingUserPick={...next.entry,ownerClubId:next.ownerClubId,clubName:next.club?.name||next.ownerClubId};
+    ensureDraftControl(G).paused=true;
+    logEvent(G,`Draft paused: ${ds.pendingUserPick.clubName} is on the clock at pick ${next.entry.overallPickNum}.`);
+  }
+  return {ok:true,entry,player:best,userPick:!!ds.pendingUserPick};
+}
 function advanceDraftUntilUserDecision(G) {
   const ds=G.draftState||initializeDraftState(G);
   while(ds.index<ds.queue.length){
@@ -4907,12 +4983,7 @@ function advanceDraftUntilUserDecision(G) {
     let best=G.draftPool[0],bestScore=-Infinity; const direction=aiTeamDirection(club); for(const pr of G.draftPool){const sc=needAwareScore(club,pr,{direction,ignoreContract:true});if(sc>bestScore){bestScore=sc;best=pr;}}
     executeDraftSelection(G,entry,best); ds.index++;
   }
-  ds.complete=true; ds.pendingUserPick=null;
-  const undrafted=finalizeUndraftedClass(G);ensureTwoWayDevelopmentPool(G,42);
-  archiveDraftClass(G);
-  G.upcomingDraftClass=null;
-  logEvent(G,`Draft complete: ${ds.queue.length} picks made across two rounds; ${undrafted} prospects went undrafted.`);
-  G.phase='SUMMER_LEAGUE'; return true;
+  finalizeDraftBoard(G); return true;
 }
 
 function makeUserDraftSelection(G, playerId) {
@@ -4920,7 +4991,10 @@ function makeUserDraftSelection(G, playerId) {
   const entry=ds.queue[ds.index], asset=entry.pickId?(G.draftPicks||[]).find(p=>p.id===entry.pickId):null, ownerId=asset?.ownerClubId||entry.originalClubId;
   if(ownerId!==G.userClubGM?.clubId) return {ok:false,reason:'Pending pick is not owned by the user club'};
   const player=G.draftPool.find(p=>p.id===playerId); if(!player) return {ok:false,reason:'Prospect not available'};
-  executeDraftSelection(G,entry,player); ds.index++; ds.pendingUserPick=null; advanceDraftUntilUserDecision(G); return {ok:true,player,entry};
+  executeDraftSelection(G,entry,player); ds.index++; ds.pendingUserPick=null;
+  const ctl=ensureDraftControl(G);ctl.started=true;ctl.paused=true;
+  if(ds.index>=ds.queue.length)finalizeDraftBoard(G);
+  return {ok:true,player,entry};
 }
 
 function setUserDraftMode(G, mode) {
@@ -6662,7 +6736,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.40.0 Playoff Rotation Intelligence",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.41.0 Draft Night Control & Trade-Up",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -8619,7 +8693,7 @@ function draftScoutBriefHtml(prospects,nextPick){
 function draftHomeContext(){
   if(G.phase!=="DRAFT_NIGHT")return"";
   if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
-  if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual") advanceDraftUntilUserDecision(G);
+  ensureDraftControl(G);
   let s=draftBoardSnapshot(G,60),prospects=s.prospects||[],picks=s.ownedPicks||[];
   let avg=prospects.length?(prospects.reduce((a,p)=>a+(+p.ovr||0),0)/prospects.length).toFixed(1):"—";
   let top=prospects.length?Math.max(...prospects.map(p=>+p.ovr||0)):"—";
@@ -10317,47 +10391,28 @@ function newsPage(){
 function reconcileDraftPendingOwnership(){
   const ds=G.draftState;
   if(G.phase!=="DRAFT_NIGHT"||!ds||ds.complete)return false;
-
+  const ctl=ensureDraftControl(G);
   const current=ds.queue?.[ds.index];
-  if(!current){
-    ds.pendingUserPick=null;
-    return false;
-  }
+  if(!current){ds.pendingUserPick=null;return false;}
 
   const asset=current.pickId?(G.draftPicks||[]).find(x=>x.id===current.pickId):null;
   const actualOwner=asset?.ownerClubId||current.originalClubId;
   const userId=me()?.id;
-
-  // pendingUserPick is only valid while the CURRENT live asset still belongs to the user.
   const pending=ds.pendingUserPick;
-  const stalePending=!!pending&&(
-    pending.overallPickNum!==current.overallPickNum ||
-    pending.pickId!==current.pickId ||
-    actualOwner!==userId
-  );
 
-  if(stalePending){
+  if(pending&&(pending.overallPickNum!==current.overallPickNum||pending.pickId!==current.pickId||actualOwner!==userId)){
     ds.pendingUserPick=null;
-    advanceDraftUntilUserDecision(G);
-    save();
-    return true;
   }
 
-  // If current ownership has become the user's but no pending state exists, rebuild it.
-  if(actualOwner===userId&&!ds.pendingUserPick&&(G.userDraftMode||"manual")==="manual"){
-    advanceDraftUntilUserDecision(G);
-    save();
-    return true;
-  }
-
-  // If the current pick belongs to another club, it should never wait for the GM.
-  if(actualOwner!==userId&&ds.pendingUserPick){
+  if(actualOwner===userId&&(G.userDraftMode||"manual")==="manual"){
+    if(!ds.pendingUserPick){
+      ds.pendingUserPick={...current,ownerClubId:actualOwner,clubName:me()?.name||actualOwner};
+    }
+    ctl.paused=true;
+  }else if(ds.pendingUserPick){
     ds.pendingUserPick=null;
-    advanceDraftUntilUserDecision(G);
-    save();
-    return true;
   }
-  return false;
+  return true;
 }
 
 function futureDraftAssetsHtml(G,clubId){
@@ -10384,7 +10439,7 @@ function draft(){
   if(G.phase==="DRAFT_NIGHT"){
     if(!G.draftState || G.draftState.season!==G.season || G.draftState.complete) initializeDraftState(G);
     reconcileDraftPendingOwnership();
-    if(!G.draftState.complete && !G.draftState.pendingUserPick && (G.userDraftMode||"manual")==="manual") advanceDraftUntilUserDecision(G);
+    ensureDraftControl(G);
   }
   let s=draftBoardSnapshot(G,60),ds=G.draftState,p=s.pending,clubId=me().id;
   let currentEntry=ds&&!ds.complete?ds.queue[ds.index]:null,currentAsset=currentEntry?.pickId?(G.draftPicks||[]).find(x=>x.id===currentEntry.pickId):null;
@@ -10398,13 +10453,22 @@ function draft(){
     else if(p&&currentOwner===clubId)liveCard=`<div class="card draftLive"><div class="draftLiveTop"><div><h3>Pick #${p.overallPickNum} · ${me().name}</h3></div><div class="draftClock">YOU'RE ON THE CLOCK</div></div><p>Select any remaining prospect below. Other clubs will draft automatically until your next owned selection.</p></div>`;
     else liveCard=`<div class="card draftLive"><h3>${currentClub?`${currentClub.name} is on the clock`:"Draft Board"}</h3><p>${ds?`${s.picksMade}/${s.totalPicks} selections completed.`:"Draft order will populate when Draft Night begins."}</p></div>`;
   }
+  const ctl=ds&&!ds.complete?ensureDraftControl(G):null;
+  const controlCard=ds&&!ds.complete?`<div class="draftControlCard">
+    <div class="draftControlStatus"><div><small>DRAFT CONTROL</small><b>${p&&currentOwner===clubId?"Your selection is on the clock":!ctl.started?"Draft paused before Pick #1":ctl.paused?"Draft paused":`${currentClub?.name||"League"} is on the clock`}</b><span>${!ctl.started?"Review the board or trade for a higher pick before starting.":ctl.paused&&!p?"Resume when you are ready.":"AI selections advance every 2 seconds."}</span></div><div id="draftCountdown" class="draftCountdown">${ctl.started&&!ctl.paused&&!p?"2s":"PAUSED"}</div></div>
+    <div class="draftControlActions">
+      ${!ctl.started?`<button id="startLiveDraft" class="btn primary">Start Draft</button>`:ctl.paused&&!p?`<button id="resumeLiveDraft" class="btn primary">Resume Draft</button>`:!p?`<button id="pauseLiveDraft" class="btn secondary">Pause Draft</button>`:""}
+      <button id="openDraftTradeCenter" class="btn secondary">Trade Picks</button>
+    </div>
+    <small class="draftControlHint">Any unconsumed current-season pick can be traded. Once a selection is made, that pick is locked.</small>
+  </div>`:"";
   let yourPicks=s.completedUserPicks?.length?`<div class="sectionTitle">Your Selections</div><div class="card">${s.completedUserPicks.map(x=>`<div class="draftSelection"><div><b>Pick #${x.pickNumber} · ${x.playerName}</b><small>${x.position} · OVR ${x.ovr} · POT ${x.potential}</small></div><strong>R${x.round}</strong></div>`).join("")}</div>`:"";
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
   const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
   let board=s.prospects.length?`<div class="draftClassSummary"><div><b>Season ${s.draftYear} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${i===0?"bestAvailable":""}"><td>${x.rank}</td><td class="pname"><b>${x.name}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"assets";
   const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
-  return liveCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
+  return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
 }
 function freeagency(){
   const club=me(),mkt=freeAgencyMarketSnapshot(G,club.id,220),cap=mkt.cap,allPlayersMarket=mkt.players,rosterCount=club.roster.length,twoWayCount=(club.twoWayRoster||[]).length,twoWayLimit=club.twoWayLimit||3;
@@ -10460,11 +10524,55 @@ function tradeClubSummary(club){
 }
 
 function trades(){let myId=me().id;if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};let snap=tradeCenterSnapshot(G,myId,ui.tradePartner);if(!snap||!snap.partner)return `<div class="card empty">No trade partner available.</div>`;
-let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>S${a.year} Round ${a.round}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
+let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>${a.overallPickNum?`#${a.overallPickNum} · R${a.round}`:`S${a.year} Round ${a.round}`}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
 let ev=ui.tradeEval;let evalHtml=ev?(ev.valid?`<div class="card evalcard ${ev.accepted?"":"rej"}"><div class="eyebrow">${ev.accepted?"AI ACCEPTS":"AI REJECTS"}</div><div class="smallcopy">${ev.reason}</div><div class="metrics" style="margin-top:9px"><div class="metric"><b>${ev.aSendsValue}</b><small>You Send</small></div><div class="metric"><b>${ev.bSendsValue}</b><small>They Send</small></div><div class="metric"><b>${ev.ratio}</b><small>Value Ratio</small></div></div></div>`:`<div class="card evalcard rej"><div class="eyebrow">INVALID</div><div class="smallcopy">${ev.reason}</div></div>`):"";
-return `<div class="card"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div><div class="sectionTitle">${c(myId).name} Sends</div><div class="card">${assetRows(snap.club.players,"out","players")}${assetRows(snap.club.picks,"out","picks")}</div><div class="sectionTitle">${snap.partner.clubName} Sends</div><div class="card">${assetRows(snap.partner.players,"in","players")}${assetRows(snap.partner.picks,"in","picks")}</div>${evalHtml}<div class="quick" style="margin-top:10px"><button id="evalTradeBtn" class="btn secondary" style="margin:0">Evaluate</button><button id="execTradeBtn" class="btn primary" style="margin:0">Execute</button></div>`}
+const draftTradeReturn=G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete?`<div class="draftTradeReturn"><div><b>Draft Night Trade Room</b><small>The live draft remains paused while you negotiate.</small></div><button id="returnDraftBoard" class="btn secondary">Return to Draft Board</button></div>`:"";
+return `${draftTradeReturn}<div class="card"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div><div class="sectionTitle">${c(myId).name} Sends</div><div class="card">${assetRows(snap.club.players,"out","players")}${assetRows(snap.club.picks,"out","picks")}</div><div class="sectionTitle">${snap.partner.clubName} Sends</div><div class="card">${assetRows(snap.partner.players,"in","players")}${assetRows(snap.partner.picks,"in","picks")}</div>${evalHtml}<div class="quick" style="margin-top:10px"><button id="evalTradeBtn" class="btn secondary" style="margin:0">Evaluate</button><button id="execTradeBtn" class="btn primary" style="margin:0">Execute</button></div>`}
+let draftAutoTimer=null,draftCountdownValue=2;
+function stopDraftAutoTimer(){
+  if(draftAutoTimer){clearInterval(draftAutoTimer);draftAutoTimer=null;}
+}
+function scheduleDraftAutoTimer(){
+  stopDraftAutoTimer();
+  if(G.phase!=="DRAFT_NIGHT"||!G.draftState||G.draftState.complete)return;
+  const ctl=ensureDraftControl(G);
+  if(!ctl.started||ctl.paused||G.draftState.pendingUserPick)return;
+  draftCountdownValue=2;
+  const paint=()=>{const el=$("#draftCountdown");if(el)el.textContent=`${draftCountdownValue}s`;};
+  paint();
+  draftAutoTimer=setInterval(async()=>{
+    if(G.phase!=="DRAFT_NIGHT"||!G.draftState||G.draftState.complete){stopDraftAutoTimer();return;}
+    const liveCtl=ensureDraftControl(G);
+    if(liveCtl.paused||G.draftState.pendingUserPick){stopDraftAutoTimer();renderDraftWindow();return;}
+    draftCountdownValue--;
+    paint();
+    if(draftCountdownValue<=0){
+      stopDraftAutoTimer();
+      const r=advanceDraftOneControlledPick(G);
+      await save();
+      renderDraftWindow();
+    }
+  },1000);
+}
+function pauseLiveDraft(){
+  if(!G.draftState||G.draftState.complete)return;
+  const ctl=ensureDraftControl(G);ctl.started=true;ctl.paused=true;
+  stopDraftAutoTimer();save();renderDraftWindow();
+}
+function startOrResumeLiveDraft(){
+  if(!G.draftState||G.draftState.complete)return;
+  reconcileDraftPendingOwnership();
+  const ctl=ensureDraftControl(G);ctl.started=true;
+  if(G.draftState.pendingUserPick){ctl.paused=true;renderDraftWindow();return;}
+  ctl.paused=false;save();renderDraftWindow();
+}
 function openDraftWindow(){
   if(G.phase!=="DRAFT_NIGHT" && !G.draftState){toast("Draft Night is not active");return}
+  if(G.phase==="DRAFT_NIGHT"){
+    if(!G.draftState||G.draftState.season!==G.season||G.draftState.complete)initializeDraftState(G);
+    reconcileDraftPendingOwnership();
+    ensureDraftControl(G);
+  }
   show("draftWindow");renderDraftWindow();
 }
 function renderDraftWindow(){
@@ -10483,9 +10591,20 @@ function bindDraftWindow(){
   });
   $$("[data-pick]").forEach(b=>b.onclick=async()=>{
     const r=makeUserDraftSelection(G,b.dataset.pick);
-    if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);await save();renderDraftWindow()}else toast(r.reason);
+    if(r.ok){stopDraftAutoTimer();toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);await save();renderDraftWindow()}else toast(r.reason);
   });
-  if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{ui.page="home";show("game");render();save()};
+  if($("#startLiveDraft"))$("#startLiveDraft").onclick=startOrResumeLiveDraft;
+  if($("#resumeLiveDraft"))$("#resumeLiveDraft").onclick=startOrResumeLiveDraft;
+  if($("#pauseLiveDraft"))$("#pauseLiveDraft").onclick=pauseLiveDraft;
+  if($("#openDraftTradeCenter"))$("#openDraftTradeCenter").onclick=()=>{
+    if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){const ctl=ensureDraftControl(G);ctl.started=ctl.started||false;ctl.paused=true;}
+    stopDraftAutoTimer();ui.page="team";ui.teamTab="trades";show("game");save();render();
+  };
+  if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{stopDraftAutoTimer();ui.page="home";show("game");render();save()};
+  if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){
+    const ctl=ensureDraftControl(G);
+    if(ctl.started&&!ctl.paused&&!G.draftState.pendingUserPick)scheduleDraftAutoTimer();
+  }
 }
 function playerExperienceYears(p){
   if(!p)return 0;
@@ -11522,6 +11641,7 @@ $$("[data-buildtrade]").forEach(b=>b.onclick=()=>{
 });
 if($("#tradePartnerSel"))$("#tradePartnerSel").onchange=e=>{ui.tradePartner=e.target.value;ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;render()};
 $$("[data-tradeasset]").forEach(b=>b.onchange=()=>{let bucket=(b.dataset.side==="out"?ui.tradeOut:ui.tradeIn)[b.dataset.type],id=b.dataset.id,i=bucket.indexOf(id);if(b.checked&&i<0)bucket.push(id);if(!b.checked&&i>=0)bucket.splice(i,1);ui.tradeEval=null;ui.tradeCounter=null;render()});
+if($("#returnDraftBoard"))$("#returnDraftBoard").onclick=()=>openDraftWindow();
 if($("#clearTradeBtn"))$("#clearTradeBtn").onclick=()=>{ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;render()};
 if($("#evalTradeBtn"))$("#evalTradeBtn").onclick=()=>{ui.tradeEval=evaluateTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks});ui.tradeCounter=null;render()};
 if($("#counterTradeBtn"))$("#counterTradeBtn").onclick=()=>{
@@ -11534,7 +11654,7 @@ if($("#applyCounterBtn"))$("#applyCounterBtn").onclick=()=>{
   ui.tradeEval=ui.tradeCounter.evaluation||evaluateTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks});
   ui.tradeCounter=null;render();
 };
-if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
+if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
 $$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.natSelected.indexOf(id);if(b.checked){if(ui.natSelected.length>=12){toast("Squad is already full (12)");b.checked=false;return}ui.natSelected.push(id)}else if(i>=0)ui.natSelected.splice(i,1);render()});
 if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode;ui.natSelected=nationalCandidates(G,code).filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id);render()};
 if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
@@ -11553,6 +11673,6 @@ function refreshLandingSaveCount(){
 }
 refreshLandingSaveCount();
 
-$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;render()});
+$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;render()});
 drawTeams();
 </script></body></html>
