@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.37.1 Draft Asset Slot Fix</title>
+<title>Mini&Me Basketball — v0.1.37.2 Fractional Odds & Naming Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1773,7 +1773,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.37.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.37.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -6423,7 +6423,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.37.1 Draft Asset Slot Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.37.2 Fractional Odds & Naming Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9552,6 +9552,28 @@ function calculateMediaLeagueForecast(iterations=100){
   return{season:G.season,iterations,round:G.regularSeasonLive.roundIndex||0,rows,generatedAt:Date.now()};
 }
 function mediaPct(v){return `${Math.max(0,v||0).toFixed(1)}%`;}
+function mediaFractionalOdds(prob){
+  let p=+prob||0;
+  // Accept either 0..1 probabilities or 0..100 percentages.
+  if(p>1)p/=100;
+  if(p<=0)return "100/1";
+  if(p>=.995)return "1/100";
+
+  const raw=(1-p)/p;
+  const common=[
+    [1,10],[1,8],[1,6],[1,5],[1,4],[2,7],[1,3],[2,5],[1,2],[4,7],[8,11],
+    [4,5],[5,6],[10,11],[1,1],[11,10],[6,5],[5,4],[11,8],[6,4],[7,4],
+    [2,1],[9,4],[5,2],[11,4],[3,1],[7,2],[4,1],[9,2],[5,1],[6,1],[7,1],
+    [8,1],[9,1],[10,1],[12,1],[14,1],[16,1],[18,1],[20,1],[25,1],[30,1],
+    [33,1],[40,1],[50,1],[66,1],[80,1],[100,1]
+  ];
+  let best=common[0],bestDiff=Infinity;
+  for(const f of common){
+    const v=f[0]/f[1],d=Math.abs(Math.log(Math.max(v,.0001))-Math.log(Math.max(raw,.0001)));
+    if(d<bestDiff){best=f;bestDiff=d;}
+  }
+  return `${best[0]}/${best[1]}`;
+}
 function mediaTopLine(rows,key,count=5){return [...rows].sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,count).map((x,i)=>`${i+1}. ${x.name} ${mediaPct(x[key])}`).join(" · ");}
 function preseasonForecastTag(G){return `PRESEASON_FORECAST_S${G.season}`;}
 function hasPreseasonForecastArticle(G){return (G.newsFeed||[]).some(n=>n?.tag===preseasonForecastTag(G));}
@@ -9562,13 +9584,13 @@ function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
   if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;}
   if(!forceArticle&&hasPreseasonForecastArticle(G))return f;
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaPct(x.titlePct)}));
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaFractionalOdds(x.titlePct)}));
   const cup=f.rows.slice().sort((a,b)=>b.cupPct-a.cupPct).slice(0,3);
   const intro=lateRepair
     ?`We did not get the opening board on air earlier, so here is the season outlook as it stands. `
     :`${f.rows[0]?.name||"The early favourite"} starts the year at the top of my championship board, but the gap is far from decisive. `;
   const rivals=board.slice(1,4).map(x=>x.name).join(", ");
-  const body=`${intro}${rivals?`${rivals} are the leading challengers. `:""}${user?`${user.name} looks like a ${user.projectedWins.toFixed(0)}-win team with a likely top-${Math.max(1,Math.round(user.expectedSeed))} conference seed. I have them at ${mediaPct(user.conferencePct)} to win the conference and ${mediaPct(user.titlePct)} to win the championship. `:""}On the Cup side, ${cup.map(x=>`${x.name} ${mediaPct(x.cupPct)}`).join(", ")} head the early board.`;
+  const body=`${intro}${rivals?`${rivals} are the leading challengers. `:""}${user?`${user.name} looks like a ${user.projectedWins.toFixed(0)}-win team with a likely top-${Math.max(1,Math.round(user.expectedSeed))} conference seed. I have them at ${mediaFractionalOdds(user.conferencePct)} to win the conference and ${mediaFractionalOdds(user.titlePct)} to win the championship. `:""}On the Cup side, ${cup.map(x=>`${x.name} ${mediaFractionalOdds(x.cupPct)}`).join(", ")} head the early board.`;
   pushChaseMaddonArticle(G,
     `${f.rows[0]?.name||"The contenders"} enters the season as the team to beat`,
     body,{importance:3,tag:preseasonForecastTag(G),flash:true,label:"SEASON FORECAST",quote:true,board});
@@ -9592,8 +9614,8 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
   const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,2);
   const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,2);
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaPct(x.titlePct)}));
-  const body=`The title picture has changed since opening night. ${f.rows[0]?.name||"The current leader"} now sits at the top of my board.${pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:""}${user?` ${user.name} is tracking toward ${user.projectedWins.toFixed(0)} wins and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed, with ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""} This is the point of the season where contenders stop being theoretical.`;
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaFractionalOdds(x.titlePct)}));
+  const body=`The title picture has changed since opening night. ${f.rows[0]?.name||"The current leader"} now sits at the top of my board.${pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:""}${user?` ${user.name} is tracking toward ${user.projectedWins.toFixed(0)} wins and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed, with ${mediaFractionalOdds(user.conferencePct)} conference-title odds and ${mediaFractionalOdds(user.titlePct)} championship odds.`:""} This is the point of the season where contenders stop being theoretical.`;
   pushChaseMaddonArticle(G,
     `Maddon's Midseason Board: ${f.rows[0]?.name||"The leaders"} sets the pace`,
     body,{importance:3,tag:postAllStarForecastTag(G),flash:true,label:"MIDSEASON TITLE BOARD",quote:true,board});
@@ -11039,7 +11061,23 @@ function renderPrepSignature(){
   }
   return [activeSlot||0,G.createdAt||0,G.season||0,G.phase||"",roster,twoWay,gLeague,(G.freeAgents||[]).length,(G.draftPool||[]).length,(G.upcomingDraftClass?.prospects||[]).length].join("|");
 }
+
+function ensureCanonicalTeamNames(G){
+  if(!G)return;
+  const aliases={
+    "Atlanta Flight":"Atlanta Firebirds",
+    "Chicago Flight":"Chicago Rams",
+    "Milwaukee North":"Milwaukee Lakefront",
+    "Oklahoma City Thunder":"Oklahoma City Storm"
+  };
+  for(const club of (G.clubs||[])){
+    if(aliases[club.name])club.name=aliases[club.name];
+  }
+  // Historical/news text is left intact except current generated labels; saved
+  // club objects are the source used by live UI and new media stories.
+}
 function prepareRenderState(force=false){
+  if(typeof ensureCanonicalTeamNames==="function")ensureCanonicalTeamNames(G);
   if(!G)return;
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   const sig=renderPrepSignature();
