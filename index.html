@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.36.2 Global Tab Binding Fix</title>
+<title>Mini&Me Basketball — v0.1.37.1 Draft Asset Slot Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1765,10 +1765,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsMeta{display:flex;justify-content:space-between;gap:8px;align-items:center}.newsMeta span,.newsMeta small{font-size:7px;color:var(--muted)}
 .newsItem h3{font-size:13px;margin:7px 0}.newsArticleBody{font-size:9px;line-height:1.5;color:var(--muted)}
 
+
+/* v0.1.37.0 — expanded Courtside Network story system */
+.newsItem .newsAnalystByline b{letter-spacing:.02em}
+.cnOddsBoard strong{font-variant-numeric:tabular-nums}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.36.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.37.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2473,20 +2478,47 @@ function clubDraftAssets(G, clubId) {
 }
 
 function expectedPickSlot(G, pickAsset) {
-  if (pickAsset.round === 2) {
-    const idx=(G.pendingFullStandingsOrder||[]).indexOf(pickAsset.originalClubId);
-    return idx >= 0 ? 31 + idx : 45;
+  if(!pickAsset)return null;
+
+  // Once Draft Night has been initialized, the draft queue is the authoritative
+  // source for the current season. It already includes the lottery and the
+  // correct round-two order, so Draft Assets must use it rather than an older
+  // standings-based estimate.
+  if(pickAsset.year===G.season && G.draftState?.season===G.season && Array.isArray(G.draftState.queue)){
+    const liveEntry=G.draftState.queue.find(e =>
+      (e.pickId && e.pickId===pickAsset.id) ||
+      (!e.pickId && e.round===pickAsset.round && e.originalClubId===pickAsset.originalClubId)
+    );
+    if(liveEntry?.overallPickNum)return +liveEntry.overallPickNum;
   }
+
+  // A consumed current-season pick also stores its exact number on the asset.
+  if(pickAsset.year===G.season && pickAsset.pickNumber)return +pickAsset.pickNumber;
+
+  // Before Draft Night, current-season slots remain estimates based on the
+  // completed standings order. Future-season assets are projections only.
   const full=(G.pendingFullStandingsOrder||[]);
   const idx=full.indexOf(pickAsset.originalClubId);
-  if (idx >= 0) return idx + 1;
+
+  if(pickAsset.round===2){
+    if(idx>=0)return 31+idx;
+    const club=clubById(G,pickAsset.originalClubId);
+    if(club && (club.standings.w+club.standings.l)>0){
+      const ordered=[...G.clubs].sort((a,b)=>a.standings.w-b.standings.w);
+      const j=ordered.findIndex(c=>c.id===pickAsset.originalClubId);
+      if(j>=0)return 31+j;
+    }
+    return 45;
+  }
+
+  if(idx>=0)return idx+1;
   const club=clubById(G,pickAsset.originalClubId);
-  if (club && (club.standings.w+club.standings.l)>0) {
+  if(club && (club.standings.w+club.standings.l)>0){
     const ordered=[...G.clubs].sort((a,b)=>a.standings.w-b.standings.w);
     const j=ordered.findIndex(c=>c.id===pickAsset.originalClubId);
-    if (j>=0) return j+1;
+    if(j>=0)return j+1;
   }
-  return pickAsset.round===1 ? 16 : 46;
+  return 16;
 }
 
 function draftPickTradeValue(G, pickAsset) {
@@ -6391,7 +6423,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.36.2 Global Tab Binding Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.37.1 Draft Asset Slot Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9632,6 +9664,7 @@ function courtsideCheckExpectation(G,round){
   if(diff>=8){
     courtsidePublish(G,`OVERPERFORM_${round}`,`${club.name} is running ahead of the script`,`${club.name} is playing at a ${pace.toFixed(0)}-win pace, well ahead of where I had them entering the season. Whether it lasts is the next question, but this team has earned a different level of respect.`,{flash:diff>=12,label:"MADDON'S TAKE"});
   }else if(diff<=-8){
+    courtsideRememberTeam(G,club.id,"underperforming",{season:G.season,round,pace,expected:pre.projectedWins});
     courtsidePublish(G,`UNDERPERFORM_${round}`,`${club.name} has not matched the preseason expectation`,`${club.name} is tracking at roughly a ${pace.toFixed(0)}-win pace, materially below the level expected entering the year. There is still time to recover, but reputation does not win games.`,{flash:diff<=-12,label:"MADDON'S TAKE",quote:true});
   }
 }
@@ -9664,6 +9697,123 @@ function courtsideCheckTransactions(G){
     }
   }
 }
+
+function courtsideCareerMemory(G){
+  const s=courtsideAnalystState(G);
+  s.memory=s.memory||{teams:{},players:{},trades:{},draft:{},seasonThreads:[]};
+  return s.memory;
+}
+function courtsideRememberTeam(G,clubId,key,value=true){
+  const m=courtsideCareerMemory(G);m.teams[clubId]=m.teams[clubId]||{};m.teams[clubId][key]=value;
+}
+function courtsideRememberPlayer(G,playerId,key,value=true){
+  const m=courtsideCareerMemory(G);m.players[playerId]=m.players[playerId]||{};m.players[playerId][key]=value;
+}
+function courtsidePlayerSeasonLine(p){
+  const s=p?.seasonStats||{},gp=Math.max(1,+s.gp||0);
+  return {gp:+s.gp||0,ppg:(+s.pts||0)/gp,rpg:(+s.reb||0)/gp,apg:(+s.ast||0)/gp,spg:(+s.stl||0)/gp,bpg:(+s.blk||0)/gp};
+}
+function courtsidePlayerImpact(p){
+  const l=courtsidePlayerSeasonLine(p);
+  return l.ppg+l.apg*.75+l.rpg*.45+l.spg*1.4+l.bpg*1.25;
+}
+function courtsideCheckBreakouts(G,round){
+  if(round<18||round%8>1)return;
+  const candidates=[];
+  for(const club of G.clubs||[])for(const p of club.roster||[]){
+    const l=courtsidePlayerSeasonLine(p);if(l.gp<15)continue;
+    const impact=courtsidePlayerImpact(p),ovr=+p.ovr||70;
+    if((ovr<=82&&impact>=23)||(ovr<=78&&impact>=19))candidates.push({club,p,l,impact});
+  }
+  candidates.sort((a,b)=>b.impact-a.impact);
+  const x=candidates[0];if(!x)return;
+  const key=`BREAKOUT_${x.p.id}`;
+  const prior=courtsideCareerMemory(G).players[x.p.id]?.breakout;
+  if(prior)return;
+  courtsideRememberPlayer(G,x.p.id,"breakout",{season:G.season,round});
+  courtsidePublish(G,key,`${x.p.name} is forcing his way into the conversation`,
+    `${x.p.name} has become one of the season's most interesting developments for ${x.club.name}. At ${x.l.ppg.toFixed(1)} points, ${x.l.rpg.toFixed(1)} rebounds and ${x.l.apg.toFixed(1)} assists per game, the production has moved beyond a short hot streak. This looks like a genuine step forward.`,
+    {flash:x.club.id===G.userClubGM?.clubId,label:"PLAYER WATCH"});
+}
+function courtsideCheckRookies(G,round){
+  if(round<22||round%10>1)return;
+  const rookies=[];
+  for(const club of G.clubs||[])for(const p of club.roster||[]){
+    const pick=+p.draftPick||0,l=courtsidePlayerSeasonLine(p);
+    if(!pick||l.gp<18)continue;
+    const impact=courtsidePlayerImpact(p);
+    if((pick>=15&&impact>=17)||(pick>=25&&impact>=14))rookies.push({club,p,pick,l,impact});
+  }
+  rookies.sort((a,b)=>b.impact-a.impact);
+  const x=rookies[0];if(!x)return;
+  if(courtsideCareerMemory(G).draft[x.p.id]?.validated)return;
+  courtsideCareerMemory(G).draft[x.p.id]={validated:true,season:G.season,round};
+  courtsideRememberPlayer(G,x.p.id,"draftValueFollowup",true);
+  courtsidePublish(G,`ROOKIE_VALUE_${x.p.id}`,`${x.p.name} is making Draft Night look different`,
+    `${x.p.name}, selected at #${x.pick}, is producing ${x.l.ppg.toFixed(1)} points, ${x.l.rpg.toFixed(1)} rebounds and ${x.l.apg.toFixed(1)} assists per game. We were careful not to grade this pick too early. There is enough evidence now to say ${x.club.name} may have found real value.`,
+    {flash:x.club.id===G.userClubGM?.clubId&&x.pick>=20,label:"ROOKIE WATCH",quote:x.pick>=25});
+}
+function courtsideCheckTurnaround(G,round){
+  const club=me(),gp=(club?.standings?.w||0)+(club?.standings?.l||0);if(!club||gp<28)return;
+  const mem=courtsideCareerMemory(G).teams[club.id]||{};
+  if(!mem.underperforming)return;
+  const state=mediaForecastState(G),pre=state.preseason?.rows?.find(x=>x.clubId===club.id);if(!pre)return;
+  const pace=(club.standings.w/gp)*82;
+  if(pace>=pre.projectedWins-2){
+    courtsideRememberTeam(G,club.id,"underperforming",false);
+    courtsideRememberTeam(G,club.id,"turnaround",{season:G.season,round});
+    courtsidePublish(G,`TURNAROUND_${club.id}`,`${club.name} has answered the early questions`,
+      `Earlier in the season I questioned whether ${club.name} was living up to its preseason expectation. The response has been convincing. The club has dragged its pace back toward the level expected in October and changed the tone around its season.`,
+      {flash:true,label:"MADDON'S FOLLOW-UP",quote:true});
+  }
+}
+function courtsideCheckAwardRace(G,round){
+  if(round<55||round%8>1)return;
+  const pool=[];
+  for(const club of G.clubs||[])for(const p of club.roster||[]){
+    const l=courtsidePlayerSeasonLine(p);if(l.gp<40)continue;
+    const score=l.ppg+l.apg*.8+l.rpg*.45+l.spg*1.3+l.bpg*1.2+(club.standings?.w||0)*.08;
+    pool.push({club,p,l,score});
+  }
+  pool.sort((a,b)=>b.score-a.score);if(pool.length<3)return;
+  const top=pool.slice(0,3);
+  courtsidePublish(G,`AWARD_RACE_${Math.floor(round/8)}`,`Maddon's MVP board is taking shape`,
+    `${top[0].p.name} has the inside lane right now, with ${top[1].p.name} and ${top[2].p.name} keeping the race alive. Team success matters, but the individual production at the top of this board has separated from the field.`,
+    {flash:false,label:"AWARD WATCH",board:top.map(x=>({name:x.p.name,value:`${x.l.ppg.toFixed(1)} PPG`}))});
+}
+function courtsideCheckPlayoffRace(G,round){
+  if(round<68||round%5>1)return;
+  const club=me();if(!club)return;
+  const conf=(G.clubs||[]).filter(x=>x.conference===club.conference).sort((a,b)=>(b.standings?.w||0)-(a.standings?.w||0));
+  const seed=conf.findIndex(x=>x.id===club.id)+1;if(seed<1)return;
+  if(seed>=5&&seed<=10){
+    courtsidePublish(G,`PLAYOFF_RACE_${round}`,`${club.name} enters the pressure stretch at #${seed}`,
+      `The margin is shrinking now. ${club.name} sits #${seed} in the ${club.conference}, where every result can change home-court position, Play-In seeding or the postseason path entirely. This is where the regular season starts to feel like playoff basketball.`,
+      {flash:round>=76,label:"PLAYOFF RACE"});
+  }
+}
+function courtsideCheckTradeFollowups(G,round){
+  if(round<15||round%8>1)return;
+  const tx=(G.transactions||[]).filter(t=>t.type==="trade"&&t.season===G.season);
+  const mem=courtsideCareerMemory(G);
+  for(let i=0;i<tx.length;i++){
+    const t=tx[i],key=`S${G.season}_${i}`;if(mem.trades[key]?.reviewed)continue;
+    const userA=t.clubAId===G.userClubGM?.clubId,userB=t.clubBId===G.userClubGM?.clubId;
+    if(!userA&&!userB)continue;
+    const ids=userA?(t.fromB?.playerIds||[]):(t.fromA?.playerIds||[]);
+    const acquired=ids.map(id=>playerByAnyId(id)).filter(Boolean);
+    const gp=Math.max(0,...acquired.map(p=>courtsidePlayerSeasonLine(p).gp));
+    if(gp<12)continue;
+    mem.trades[key]={reviewed:true,season:G.season,round};
+    const best=acquired.sort((a,b)=>courtsidePlayerImpact(b)-courtsidePlayerImpact(a))[0];
+    if(best){
+      const l=courtsidePlayerSeasonLine(best);
+      courtsidePublish(G,`TRADE_FOLLOWUP_${i}`,`${best.name} gives us our first real read on the trade`,
+        `Enough games have passed to move beyond the first reaction. ${best.name} is giving ${me().name} ${l.ppg.toFixed(1)} points, ${l.rpg.toFixed(1)} rebounds and ${l.apg.toFixed(1)} assists per game. The final verdict is still years away, but we now have evidence rather than theory.`,
+        {flash:false,label:"TRADE DESK"});
+    }
+  }
+}
 function courtsideAnalystTick(G){
   if(!G)return;
   const s=courtsideAnalystState(G);
@@ -9674,7 +9824,13 @@ function courtsideAnalystTick(G){
   s.lastRound=round;
   courtsideCheckLastGame(G,round);
   courtsideCheckExpectation(G,round);
+  courtsideCheckTurnaround(G,round);
   courtsideCheckLeagueSurprise(G,round);
+  courtsideCheckBreakouts(G,round);
+  courtsideCheckRookies(G,round);
+  courtsideCheckTradeFollowups(G,round);
+  courtsideCheckAwardRace(G,round);
+  courtsideCheckPlayoffRace(G,round);
 }
 function ensureMediaForecastMilestones(G){
   // Forecast delivery is valid only during the ACTIVE current regular season.
@@ -9935,8 +10091,10 @@ function futureDraftAssetsHtml(G,clubId){
   const years=[...new Set(assets.map(p=>p.year))].sort((a,b)=>a-b).slice(0,5);
   if(!years.length)return `<div class="card empty">No future draft picks currently owned.</div>`;
   const pickText=(pk,year)=>{
-    const original=c(pk.originalClubId),own=pk.originalClubId===clubId,slot=(year===G.season)?expectedPickSlot(G,pk):null;
-    return `<span><b>${own?"Own":`via ${original?.name||pk.originalClubId}`}</b>${slot?` <em>#${slot}</em>`:""}</span>`;
+    const original=c(pk.originalClubId),own=pk.originalClubId===clubId;
+    const slot=(year===G.season)?expectedPickSlot(G,pk):null;
+    const exact=year===G.season&&G.draftState?.season===G.season&&Array.isArray(G.draftState.queue)&&G.draftState.queue.some(e=>e.pickId===pk.id);
+    return `<span><b>${own?"Own":`via ${original?.name||pk.originalClubId}`}</b>${slot?` <em title="${exact?"Confirmed Draft Night slot":"Projected slot"}">#${slot}</em>`:""}</span>`;
   };
   const roundLine=(label,picks,year)=>`<div class="draftAssetRound"><strong>${label}</strong><div class="draftAssetRoundText">${picks.length?picks.map(p=>pickText(p,year)).join('<span class="draftAssetSeparator">·</span>'):`<span class="draftAssetNone">None</span>`}</div></div>`;
   return `<div class="draftAssetYears">${years.map(year=>{
