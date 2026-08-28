@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.33.0 Historical Depth & Persistence</title>
+<title>Mini&Me Basketball — v0.1.34.0 AI Roster Construction</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1611,7 +1611,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.33.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2364,7 +2364,9 @@ function tradePackageValueForClub(G, receivingClub, playerIds, pickIds) {
   for (const id of playerIds||[]) {
     const p=allPlayers(G).find(x=>x.id===id);
     if (!p) continue;
-    const needBonus=Math.max(0,needAwareScore(receivingClub,p)-p.ovr)*0.65;
+    const direction=aiTeamDirection(receivingClub);
+    const fitDelta=needAwareScore(receivingClub,p,{direction})-p.ovr;
+    const needBonus=Math.max(-4,fitDelta)*0.72;
     total+=playerTradeValue(p)+needBonus;
   }
   for (const id of pickIds||[]) {
@@ -2631,7 +2633,7 @@ function negotiateExtension(G, clubId, playerId, years=2, annualM=null) {
   const club=clubById(G,clubId), p=club?.roster.find(x=>x.id===playerId);
   if(!p || (p.contractYearsLeft||0)>1) return {accepted:false,reason:'Player is not extension eligible'};
   const demand=extensionDemand(p,years); years=demand.years; annualM=Math.round((annualM==null?demand.annualM:Number(annualM))*10)/10;
-  const ratio=annualM/Math.max(1,demand.annualM), role=needAwareScore(club,p)-p.ovr, accepted=ratio>=0.94 || (ratio>=0.88 && role>=5);
+  const ratio=annualM/Math.max(1,demand.annualM), role=needAwareScore(club,p,{direction:aiTeamDirection(club)})-p.ovr, accepted=ratio>=0.94 || (ratio>=0.88 && role>=5);
   if(!accepted) return {accepted:false,reason:'Player wants a stronger extension offer',demand};
   p.contractYearsLeft=(p.contractYearsLeft||0)+years; p.salaryM=annualM; p.contractType='Extension'; p.contractStatus='Under Contract'; p.extensionEligible=false; recalcClubCap(club);
   G.transactions.push({type:'extension',season:G.season,clubId,playerId,years,salaryM:annualM});
@@ -2998,10 +3000,85 @@ function basketballRecordBook(G){
 // every phase below calls it, instead of each phase inventing its own.
 // ---------------------------------------------------------------------
 
-function needAwareScore(club, player) {
-  const posCount = club.roster.filter((p) => canPlayPosition(p,player.position)).length;
-  const needWeight = Math.max(0, 3 - posCount) * 5; // thin roster at that spot = higher weight
-  return player.ovr + needWeight;
+function aiTeamDirection(club){
+  const roster=club?.roster||[],gp=(club?.standings?.w||0)+(club?.standings?.l||0);
+  const pct=gp?(club.standings.w/gp):.5;
+  const top=[...roster].sort((a,b)=>(b.ovr||0)-(a.ovr||0)).slice(0,8);
+  const avgAge=top.length?top.reduce((s,p)=>s+(p.age||25),0)/top.length:25;
+  const elite=top.filter(p=>(p.ovr||0)>=88).length;
+  if(pct>=.58||elite>=2)return"CONTEND";
+  if(pct<=.40||avgAge<=24.5)return"DEVELOP";
+  return"BALANCED";
+}
+function rosterPositionNeed(club,pos,excludePlayerId=null){
+  const roster=(club?.roster||[]).filter(p=>String(p.id)!==String(excludePlayerId||""));
+  const eligible=roster.filter(p=>canPlayPosition(p,pos));
+  const starterQuality=eligible.filter(p=>(p.ovr||0)>=80).length;
+  const rotationQuality=eligible.filter(p=>(p.ovr||0)>=74).length;
+  const total=eligible.length;
+  // Strongest need is no credible starter, then lack of a two-deep rotation.
+  let score=0;
+  if(starterQuality===0)score+=9;
+  else if(starterQuality===1)score+=3;
+  if(rotationQuality<2)score+=(2-rotationQuality)*4;
+  if(total<3)score+=(3-total)*1.5;
+  if(total>=5)score-=Math.min(5,(total-4)*2);
+  return score;
+}
+function playerContractEfficiency(player){
+  if(!player||!Number.isFinite(+player.salaryM)||(+player.salaryM)<=0)return 0;
+  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(player):salaryForOvr(player.ovr||70);
+  const ratio=(+player.salaryM)/Math.max(1,market);
+  if(ratio<=.65)return 4;
+  if(ratio<=.85)return 2;
+  if(ratio<=1.05)return 0;
+  if(ratio<=1.25)return-2;
+  return-5;
+}
+function needAwareScore(club,player,options={}){
+  if(!club||!player)return-Infinity;
+  const direction=options.direction||aiTeamDirection(club);
+  const primary=player.position||"SF",secondary=player.secondaryPosition||null;
+  const primaryNeed=rosterPositionNeed(club,primary,options.excludePlayerId);
+  const secondaryNeed=secondary?rosterPositionNeed(club,secondary,options.excludePlayerId):primaryNeed;
+  const need=Math.max(primaryNeed,secondaryNeed*.72);
+
+  const ovr=+player.ovr||60,pot=Math.max(ovr,+player.potential||ovr),age=+player.age||25;
+  const upside=Math.max(0,pot-ovr);
+  let quality=ovr;
+  let future=upside*.32;
+  let ageFit=0;
+
+  if(direction==="CONTEND"){
+    quality*=1.08;
+    future=upside*.12;
+    if(age>=32)ageFit-=Math.max(0,age-32)*.65;
+    if(ovr>=84)ageFit+=2;
+  }else if(direction==="DEVELOP"){
+    future=upside*.62;
+    if(age<=23)ageFit+=4;
+    else if(age<=26)ageFit+=2;
+    else if(age>=31)ageFit-=Math.min(8,(age-30)*1.4);
+  }else{
+    future=upside*.38;
+    if(age<=25)ageFit+=1.5;
+    if(age>=34)ageFit-=Math.min(5,(age-33));
+  }
+
+  const roleBonus=(player.rotationRole==="Primary Starter"?2.5:player.rotationRole==="Starter"?1.5:player.rotationRole==="Sixth Man"?.7:0);
+  const injuryPenalty=player.injured?6:0;
+  const contract=options.ignoreContract?0:playerContractEfficiency(player);
+  const versatility=secondary&&secondary!==primary?1.1:0;
+
+  return quality+need+future+ageFit+roleBonus+contract+versatility-injuryPenalty;
+}
+function aiRosterFitSummary(club){
+  const direction=aiTeamDirection(club);
+  const needs=POSITIONS.map(pos=>({pos,need:rosterPositionNeed(club,pos)})).sort((a,b)=>b.need-a.need);
+  const roster=club?.roster||[];
+  const top=[...roster].sort((a,b)=>b.ovr-a.ovr).slice(0,8);
+  const avgAge=top.length?top.reduce((s,p)=>s+p.age,0)/top.length:0;
+  return{direction,needs,avgAge,topNeed:needs[0]?.pos||"—",secondaryNeed:needs[1]?.pos||"—"};
 }
 
 // ---------------------------------------------------------------------
@@ -3021,7 +3098,18 @@ function nationalCandidates(G, nationCode) {
     .sort((a,b)=>nationalSelectionScore(b)-nationalSelectionScore(a));
 }
 function selectNationalRoster(G, nationCode) {
-  return nationalCandidates(G,nationCode).filter(p=>p.nationalStatus!=="Opted Out" && !p.injured).slice(0,12);
+  const candidates=nationalCandidates(G,nationCode).filter(p=>p.nationalStatus!=="Opted Out" && !p.injured);
+  const selected=[],synthetic={roster:selected,standings:{w:0,l:0},chemistry:75};
+  while(selected.length<12&&candidates.length){
+    let best=null,bestScore=-Infinity,bestIdx=-1;
+    candidates.forEach((p,i)=>{
+      const shared=needAwareScore(synthetic,p,{direction:"CONTEND",ignoreContract:true});
+      const score=shared+nationalSelectionScore(p)*.35;
+      if(score>bestScore){bestScore=score;best=p;bestIdx=i;}
+    });
+    if(!best)break;selected.push(best);candidates.splice(bestIdx,1);
+  }
+  return selected;
 }
 function buildNationalDepthChart(roster) {
   const chart=[];
@@ -3706,20 +3794,37 @@ function signFreeAgent(G, clubId, playerId, years=1) {
   G.transactions.push({type:'sign',season:G.season,clubId,playerId,years,salaryM:p.salaryM,mechanism:capCheck.mechanism,ai:true}); return true;
 }
 function aiExtensionDecision(club,p) {
-  const positionalNeed=Math.max(0,3-club.roster.filter(x=>x.position===p.position).length)*3;
-  const score=p.ovr + positionalNeed - Math.max(0,p.age-30)*1.8;
-  return score >= 76 || (score>=72 && Math.random()<0.35);
+  const direction=aiTeamDirection(club);
+  const fit=needAwareScore(club,p,{excludePlayerId:p.id,direction});
+  const demand=extensionDemand(p,2),market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):demand.annualM;
+  const costPenalty=Math.max(0,(demand.annualM/Math.max(1,market))-1)*7;
+  const threshold=direction==="CONTEND"?77:direction==="DEVELOP"?74:76;
+  return (fit-costPenalty)>=threshold || ((fit-costPenalty)>=threshold-3 && Math.random()<0.28);
 }
 function ensureRosterCompliance(G, club, isUser=false) {
   const max=club.regularRosterLimit||15, min=12;
   if(isUser && (club.roster.length>max || club.roster.length<min)) {
     G.rosterCompliancePending={clubId:club.id,count:club.roster.length,min,max,season:G.season}; return false;
   }
-  club.roster.sort((a,b)=>needAwareScore(club,b)-needAwareScore(club,a));
-  while(club.roster.length>max) { const p=club.roster[club.roster.length-1]; releasePlayer(G,club.id,p.id); }
-  while(club.roster.length<15 && G.freeAgents.length) {
-    let best=null,bestScore=-Infinity; for(const p of G.freeAgents){const sc=needAwareScore(club,p); if(sc>bestScore){bestScore=sc;best=p;}}
-    if(!best) break; if(!signFreeAgent(G,club.id,best.id,rand(1,3))) { G.freeAgents.splice(G.freeAgents.indexOf(best),1); G.freeAgents.push(best); break; }
+  const direction=aiTeamDirection(club);
+  club.roster.sort((a,b)=>needAwareScore(club,b,{excludePlayerId:b.id,direction})-needAwareScore(club,a,{excludePlayerId:a.id,direction}));
+  while(club.roster.length>max) {
+    club.roster.sort((a,b)=>needAwareScore(club,b,{excludePlayerId:b.id,direction})-needAwareScore(club,a,{excludePlayerId:a.id,direction}));
+    const p=club.roster[club.roster.length-1]; releasePlayer(G,club.id,p.id);
+  }
+  let failedTargets=0;
+  while(club.roster.length<15 && G.freeAgents.length && failedTargets<Math.min(12,G.freeAgents.length)) {
+    const cap=clubCapPosition(G,club.id);
+    let best=null,bestScore=-Infinity;
+    for(const p of G.freeAgents){
+      const demand=freeAgentDemand(p),fit=needAwareScore(club,p,{direction});
+      const affordability=(cap.capRoom>=demand.annualM)?2:(club.roster.length<15&&demand.annualM<=3.5?0:-6);
+      const sc=fit+affordability;
+      if(sc>bestScore){bestScore=sc;best=p;}
+    }
+    if(!best)break;
+    if(!signFreeAgent(G,club.id,best.id,direction==="DEVELOP"?rand(2,4):rand(1,3))){failedTargets++;G.freeAgents.push(G.freeAgents.splice(G.freeAgents.indexOf(best),1)[0]);}
+    else failedTargets=0;
   }
   recalcClubCap(club); return club.roster.length>=min && club.roster.length<=max;
 }
@@ -4366,7 +4471,7 @@ function advanceDraftUntilUserDecision(G) {
       ds.pendingUserPick={...entry,ownerClubId:ownerId,clubName:club?.name||ownerId};
       logEvent(G,`Draft paused: ${ds.pendingUserPick.clubName} is on the clock at pick ${entry.overallPickNum}.`); return false;
     }
-    let best=G.draftPool[0],bestScore=-Infinity; for(const pr of G.draftPool){const sc=needAwareScore(club,pr);if(sc>bestScore){bestScore=sc;best=pr;}}
+    let best=G.draftPool[0],bestScore=-Infinity; const direction=aiTeamDirection(club); for(const pr of G.draftPool){const sc=needAwareScore(club,pr,{direction,ignoreContract:true});if(sc>bestScore){bestScore=sc;best=pr;}}
     executeDraftSelection(G,entry,best); ds.index++;
   }
   ds.complete=true; ds.pendingUserPick=null;
@@ -5915,13 +6020,13 @@ function simSeasons(G, count) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
+  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, aiTeamDirection, rosterPositionNeed, aiRosterFitSummary, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
 }
 
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.33.0 Historical Depth & Persistence",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.0 AI Roster Construction",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
