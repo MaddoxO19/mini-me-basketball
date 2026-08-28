@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.34.0 AI Roster Construction</title>
+<title>Mini&Me Basketball — v0.1.34.1 All-Star News Reliability Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1611,7 +1611,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.34.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2875,8 +2875,17 @@ function pushNews(G, headline, category="League", importance=1) {
 }
 function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag=""){
   G.newsFeed=G.newsFeed||[];
-  G.newsFeed.unshift({season:G.season,phase:G.phase,headline:title,body,category,importance,article:true,tag});
+  if(tag){
+    const existing=G.newsFeed.find(n=>n?.tag===tag);
+    if(existing){
+      existing.season=G.season;existing.phase=G.phase;existing.headline=title;existing.body=body;existing.category=category;existing.importance=importance;existing.article=true;
+      return existing;
+    }
+  }
+  const article={season:G.season,phase:G.phase,headline:title,body,category,importance,article:true,tag};
+  G.newsFeed.unshift(article);
   if(G.newsFeed.length>80)G.newsFeed=G.newsFeed.slice(0,80);
+  return article;
 }
 function gmCareerState(G) {
   if(!G.gmCareer) G.gmCareer={reputation:50,seasons:[],jobs:[],milestones:[],championships:0,cupTitles:0,playoffAppearances:0,careerW:0,careerL:0,nationalHonours:0};
@@ -5539,7 +5548,6 @@ function advanceRegularSeasonRound(G) {
   if(round===41 && !G.allStarDone && !G.allStarLive){
     initializeAllStarLive(G);
     logEvent(G,'NBA All-Star mini-tournament opened.');
-    if(typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
   }
   if((round===22||round===55) && live.callUpsThisSeason<2 && !G.internationalWindowLive){
     const intl=initializeQualificationWindowLive(G);
@@ -5614,7 +5622,13 @@ function continueAllStarWeekendCore(G){
   if(G.regularSeasonLive)G.regularSeasonLive.allStarDone=true;
   logEvent(G,"NBA All-Star Weekend complete.");
   pushNews(G,`NBA All-Star Weekend complete. ${allPlayers(G).find(p=>p.id===live.mvpPlayerId)?.name||"The game standout"} earned All-Star MVP.`,"All-Star",1);
-  if(typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
+  if(typeof publishPostAllStarForecast==="function"){
+    const forecast=publishPostAllStarForecast(G);
+    if(forecast){
+      G.mediaMilestones=G.mediaMilestones||{};
+      G.mediaMilestones[`allStarForecastS${G.season}`]=true;
+    }
+  }
   return{ok:true,complete:true};
 }
 
@@ -6026,7 +6040,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.34.0 AI Roster Construction",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.34.1 All-Star News Reliability Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9139,29 +9153,54 @@ function publishPreseasonForecast(G){
   pushNewsArticle(G,`Preseason Forecast: ${f.rows[0]?.name||"The contenders"} opens as title favourite`,body,"Sports Desk",3,`PRESEASON_FORECAST_S${G.season}`);
   return f;
 }
-function publishPostAllStarForecast(G){
-  const state=mediaForecastState(G);if(state.postAllStar)return state.postAllStar;
-  const f=calculateMediaLeagueForecast(100);if(!f)return null;state.postAllStar=f;
+function postAllStarForecastTag(G){return `POST_ALLSTAR_FORECAST_S${G.season}`;}
+function hasPostAllStarForecastArticle(G){
+  const tag=postAllStarForecastTag(G);
+  return (G.newsFeed||[]).some(n=>n?.tag===tag);
+}
+function publishPostAllStarForecast(G,{forceArticle=false}={}){
+  const state=mediaForecastState(G);
+  let f=state.postAllStar;
+  if(!f){
+    f=calculateMediaLeagueForecast(100);
+    if(!f)return null;
+    state.postAllStar=f;
+  }
+  if(!forceArticle && hasPostAllStarForecastArticle(G))return f;
+
   const pre=state.preseason,preMap=new Map((pre?.rows||[]).map(x=>[x.clubId,x]));
   const movement=f.rows.map(x=>({...x,deltaTitle:x.titlePct-(preMap.get(x.clubId)?.titlePct||0)}));
   const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,3);
   const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,3);
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId),titleLine=mediaTopLine(f.rows,"titlePct",5);
   const moveText=(arr,sign)=>arr.map(x=>`${x.name} ${sign}${Math.abs(x.deltaTitle).toFixed(1)} pts`).join(" · ");
-  const body=`At the All-Star break, the model has rerun the remaining season ${f.iterations} times. Updated title board: ${titleLine}. Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
-  pushNewsArticle(G,`All-Star Break Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,`POST_ALLSTAR_FORECAST_S${G.season}`);
+  const movementText=pre?.rows?.length
+    ?` Biggest risers since preseason: ${moveText(risers,"+")}. Biggest fallers: ${moveText(fallers,"-")}.`
+    :"";
+  const body=`With All-Star Weekend complete, the model has rerun the remaining season ${f.iterations} times. Updated title board: ${titleLine}.${movementText}${user?` ${user.name} now projects to ${user.projectedWins.toFixed(1)} wins, an average #${Math.max(1,Math.round(user.expectedSeed))} seed, ${mediaPct(user.conferencePct)} conference-title odds and ${mediaPct(user.titlePct)} championship odds.`:""}`;
+  pushNewsArticle(G,`Post-All-Star Forecast: ${f.rows[0]?.name||"The leaders"} heads the updated title race`,body,"Sports Desk",3,postAllStarForecastTag(G));
+  G.mediaMilestones=G.mediaMilestones||{};
+  G.mediaMilestones[`allStarForecastS${G.season}`]=true;
   return f;
 }
 function ensureMediaForecastMilestones(G){
   if(!G?.regularSeasonLive)return;
   const state=mediaForecastState(G);
   const round=G.regularSeasonLive.roundIndex||0;
-  // New careers publish preseason at schedule creation. Do not fabricate a
-  // "preseason" baseline for old saves that are already deep into the season.
-  if(round===0 && !state.preseason && typeof publishPreseasonForecast==="function")publishPreseasonForecast(G);
-  // All-Star begins immediately after regular-season round 41. Any career
-  // already beyond that point should have one and only one midseason article.
-  if(round>=42 && !state.postAllStar && typeof publishPostAllStarForecast==="function")publishPostAllStarForecast(G);
+
+  if(round===0 && !state.preseason && typeof publishPreseasonForecast==="function"){
+    publishPreseasonForecast(G);
+  }
+
+  // Publish only after All-Star Weekend is complete. For old or migrated saves,
+  // round 42+ is treated as post-All-Star if the live event is no longer open.
+  const allStarComplete=!!G.allStarDone || (!!G.allStarLive?.complete);
+  const clearlyPastBreak=round>=42 && !G.allStarLive;
+  if((allStarComplete||clearlyPastBreak) && typeof publishPostAllStarForecast==="function"){
+    if(!hasPostAllStarForecastArticle(G)){
+      publishPostAllStarForecast(G,{forceArticle:true});
+    }
+  }
 }
 
 function outlookPlayInSeeds(rows,clubsById,ratings=null){
@@ -9289,6 +9328,7 @@ function clubHub(){
   return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>${body}`;
 }
 function gmBrief(){
+  if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
   return `${header("GM Brief",`${x.name} · Basketball Operations`)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div><div class="card"><button id="openGmProfile" class="btn secondary">Open GM Profile</button></div>`;
 }
