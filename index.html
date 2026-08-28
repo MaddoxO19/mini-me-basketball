@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.36.0 Courtside Network</title>
+<title>Mini&Me Basketball — v0.1.36.1 News Lifecycle Fix</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1755,10 +1755,20 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsAnalystByline{display:flex;gap:6px;align-items:baseline;margin:6px 0 8px;color:var(--accent2)}.newsAnalystByline b{font-size:8px}.newsAnalystByline span{font-size:7px;color:var(--muted)}
 @media(max-width:520px){.courtsideCast h3{font-size:20px!important}.cnAnalyst{grid-template-columns:42px minmax(0,1fr) 34px}.cnAvatar{width:42px;height:42px}}
 
+
+/* v0.1.36.1 — current-season News lifecycle */
+.newsLifecycleHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.newsLifecycleHead h2{margin:3px 0 4px}.newsLifecycleHead p{margin:0;color:var(--muted);font-size:8px}
+.newsSeasonBadge{min-width:58px;text-align:center;border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:8px 9px}
+.newsSeasonBadge b{display:block;font-size:13px;color:var(--accent2)}.newsSeasonBadge small{display:block;font-size:6px;color:var(--muted);margin-top:2px}
+.newsItem{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px;margin-bottom:9px}
+.newsMeta{display:flex;justify-content:space-between;gap:8px;align-items:center}.newsMeta span,.newsMeta small{font-size:7px;color:var(--muted)}
+.newsItem h3{font-size:13px;margin:7px 0}.newsArticleBody{font-size:9px;line-height:1.5;color:var(--muted)}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.36.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.36.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -6287,6 +6297,7 @@ function runChampion(G) {
   G.playoffsLive=null;
   G.playoffs=null;
   G.season++;
+  if(typeof resetNewsViewForNewSeason==="function")resetNewsViewForNewSeason();
   G.draftState=null;
   if(G.worldCupLive?.complete) G.worldCupLive=null;
   ensureDraftPickHorizon(G);
@@ -6380,7 +6391,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.36.0 Courtside Network",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.36.1 News Lifecycle Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9513,6 +9524,7 @@ function mediaTopLine(rows,key,count=5){return [...rows].sort((a,b)=>(b[key]||0)
 function preseasonForecastTag(G){return `PRESEASON_FORECAST_S${G.season}`;}
 function hasPreseasonForecastArticle(G){return (G.newsFeed||[]).some(n=>n?.tag===preseasonForecastTag(G));}
 function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
+  if(!G||G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive||G.regularSeasonLive.complete||(+G.regularSeasonLive.season||0)!==(+G.season||0))return null;
   const state=mediaForecastState(G);
   let f=state.preseason;
   if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;}
@@ -9537,6 +9549,7 @@ function hasPostAllStarForecastArticle(G){
   return (G.newsFeed||[]).some(n=>n?.tag===tag);
 }
 function publishPostAllStarForecast(G,{forceArticle=false}={}){
+  if(!G||G.phase!=="REGULAR_SEASON"||!G.regularSeasonLive||G.regularSeasonLive.complete||(+G.regularSeasonLive.season||0)!==(+G.season||0))return null;
   const state=mediaForecastState(G);
   let f=state.postAllStar;
   if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.postAllStar=f;}
@@ -9664,9 +9677,15 @@ function courtsideAnalystTick(G){
   courtsideCheckLeagueSurprise(G,round);
 }
 function ensureMediaForecastMilestones(G){
-  if(!G?.regularSeasonLive)return;
+  // Forecast delivery is valid only during the ACTIVE current regular season.
+  // Old completed regular-season objects can remain in save state through
+  // postseason/review/offseason and must never trigger repaired midseason news.
+  if(!G||G.phase!=="REGULAR_SEASON")return;
+  const live=G.regularSeasonLive;
+  if(!live||live.complete||(+live.season||0)!==(+G.season||0))return;
+
   const state=mediaForecastState(G);
-  const round=+G.regularSeasonLive.roundIndex||0;
+  const round=+live.roundIndex||0;
 
   // Repair the actual missing article, even if cached forecast state already exists.
   if(!hasPreseasonForecastArticle(G)){
@@ -9675,7 +9694,7 @@ function ensureMediaForecastMilestones(G){
     else publishPreseasonForecast(G,{forceArticle:true,lateRepair:true});
   }
 
-  // Round 42 is beyond the All-Star break. Do not rely on allStarLive cleanup.
+  // Round 42 is beyond the All-Star break, but only while this season is still live.
   if(round>=42&&!hasPostAllStarForecastArticle(G)){
     publishPostAllStarForecast(G,{forceArticle:true});
   }
@@ -9825,9 +9844,44 @@ function gmProfile(){
     <div class="sectionTitle">Career Controls</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>
     <div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div></div>`;
 }
+
+function newsSeasonFilter(){
+  if(ui.newsSeason==null)ui.newsSeason=G.season;
+  // New season automatically resets visible News to the new current season.
+  if(+ui.newsSeason!==+G.season&&!ui.newsHistoryMode)ui.newsSeason=G.season;
+  return +ui.newsSeason||+G.season;
+}
+function newsCurrentSeasonItems(items){
+  const season=newsSeasonFilter();
+  return (items||[]).filter(n=>(+n.season||0)===season);
+}
+function resetNewsViewForNewSeason(){
+  ui.newsSeason=G.season;
+  ui.newsHistoryMode=false;
+  ui.newsFilter="all";
+}
 function newsPage(){
-  if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
-  return `${header("News","Club and league news from around the basketball world")}<div class="newsFilter"><button data-newsfilter="all" class="${ui.newsFilter==="all"?"active":""}">All</button><button data-newsfilter="club" class="${ui.newsFilter==="club"?"active":""}">Club</button><button data-newsfilter="league" class="${ui.newsFilter==="league"?"active":""}">League</button></div><div class="card">${news()}</div>`;
+  const season=newsSeasonFilter(),clubId=G.userClubGM?.clubId,filter=ui.newsFilter||"all";
+  const seasonItems=newsCurrentSeasonItems(G.newsFeed||[]);
+  const filtered=seasonItems.filter(n=>{
+    if(filter==="all")return true;
+    if(filter==="club")return n.clubId===clubId||n.category==="Club"||String(n.headline||"").includes(me()?.name||"");
+    if(filter==="league")return n.category!=="Club"&&n.category!=="GM";
+    return true;
+  });
+
+  return `<div class="newsLifecycleHead"><div><div class="eyebrow">COURTSIDE NETWORK</div><h2>News</h2><p>Season ${season} coverage</p></div><div class="newsSeasonBadge"><b>S${season}</b><small>CURRENT</small></div></div>
+    <div class="tabs subTabs newsTabs">
+      <button class="${filter==="all"?"active":""}" data-newsfilter="all">All</button>
+      <button class="${filter==="club"?"active":""}" data-newsfilter="club">Club</button>
+      <button class="${filter==="league"?"active":""}" data-newsfilter="league">League</button>
+    </div>
+    <div class="newsList">${filtered.length?filtered.map(n=>`<div class="newsItem ${n.article?"article":""}">
+      <div class="newsMeta"><span>${n.category||"League"}</span><small>Season ${n.season}</small></div>
+      <h3>${n.headline||"News Update"}</h3>
+      ${n.analyst?`<div class="newsAnalystByline"><b>${n.analyst}</b><span>${n.analystRole||"Courtside Network"}</span></div>`:""}
+      ${n.article?`<div class="newsArticleBody">${n.body||""}</div>`:""}
+    </div>`).join(""):`<div class="card empty">No ${filter==="all"?"news":filter+" news"} recorded yet for Season ${season}.</div>`}</div>`;
 }
 function reconcileDraftPendingOwnership(){
   const ds=G.draftState;
@@ -10962,58 +11016,7 @@ if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
-$$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;render()});
-$$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;render()});$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
-  $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
-$$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
-$$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
-if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
-if($("#resetExtensionAsk"))$("#resetExtensionAsk").onclick=()=>{
-  const p=playerByAnyId(ui.extTargetId);if(!p)return;
-  const d=extensionDemand(p,2);$("#extYears").value=String(d.years);$("#extSalary").value=d.annualM.toFixed(1);
-};
-$$('[data-ext-years]').forEach(b=>b.onclick=()=>{const el=$("#extYears");if(!el)return;el.value=String(Math.max(1,Math.min(4,(+el.value||1)+(+b.dataset.extYears||0))))});
-$$('[data-ext-salary]').forEach(b=>b.onclick=()=>{const el=$("#extSalary");if(!el)return;el.value=Math.max(1.2,Math.min(65,(+el.value||1.2)+(+b.dataset.extSalary||0))).toFixed(1)});
-if($("#submitExtension"))$("#submitExtension").onclick=()=>{
-  const id=ui.extTargetId,p=playerByAnyId(id),years=+$("#extYears").value,salary=+$("#extSalary").value;
-  const r=negotiateExtension(G,me().id,id,years,salary);
-  ui.extFeedback={playerId:id,accepted:!!r.accepted,message:r.accepted?`${p?.name||"Player"} agreed to add ${years} year${years===1?"":"s"} at $${salary.toFixed(1)}M per year.`:(r.reason||"Extension rejected")};
-  toast(r.accepted?"Extension agreed":r.reason);
-  if(r.accepted)ui.extTargetId=null;
-  save();render();
-};
-$$("[data-waive]").forEach(b=>b.onclick=()=>{releasePlayer(G,me().id,b.dataset.waive);toast("Player waived");save();render()});
-$$("[data-twoway-sign]").forEach(b=>b.onclick=()=>{let r=assignTwoWayContract(G,me().id,b.dataset.twowaySign);toast(r.ok?"Signed to a two-way contract":r.reason);save();render()});
-$$("[data-twpath]").forEach(b=>b.onclick=()=>{ui.twoWayPathFilter=b.dataset.twpath;render()});
-$$("[data-twpos]").forEach(b=>b.onclick=()=>{ui.twoWayPosFilter=b.dataset.twpos;render()});
-$$("[data-twoway-convert]").forEach(b=>b.onclick=()=>{let r=convertTwoWayToStandard(G,me().id,b.dataset.twowayConvert);toast(r.ok?"Converted to a standard NBA contract":r.reason);save();render()});
-$$("[data-twoway-waive]").forEach(b=>b.onclick=()=>{waiveTwoWay(G,me().id,b.dataset.twowayWaive);toast("Two-way player waived");save();render()});
-$$("[data-negotiatefa]").forEach(b=>b.onclick=()=>{ui.faTargetId=b.dataset.negotiatefa;ui.faFeedback=null;render()});
-if($("#closeFaNegotiation"))$("#closeFaNegotiation").onclick=()=>{ui.faTargetId=null;ui.faFeedback=null;render()};
-$$("[data-faband]").forEach(b=>b.onclick=()=>{ui.faBandFilter=b.dataset.faband;ui.faTargetId=null;ui.faFeedback=null;render()});
-$$("[data-fapos]").forEach(b=>b.onclick=()=>{ui.faPosFilter=b.dataset.fapos;ui.faTargetId=null;ui.faFeedback=null;render()});
-if($("#resetFaAsk"))$("#resetFaAsk").onclick=()=>{
-  const p=freeAgencyMarketSnapshot(G,me().id,220)?.players.find(x=>x.id===ui.faTargetId);
-  if(!p)return;
-  $("#faOfferYears").value=String(p.demandYears);$("#faOfferSalary").value=p.demandAnnualM.toFixed(1);
-};
-if($("#submitFaOffer"))$("#submitFaOffer").onclick=()=>{
-  const id=ui.faTargetId,years=+$("#faOfferYears").value,salary=+$("#faOfferSalary").value;
-  const r=makeFreeAgentOffer(G,me().id,id,years,salary);
-  ui.faFeedback={playerId:id,accepted:!!r.accepted,message:r.accepted?`${r.player?.name||"Player"} agreed to ${years} year${years===1?"":"s"} at $${salary.toFixed(1)}M per year.`:(r.reason||"Offer rejected"),competing:r.offer?.competingBest||null};
-  toast(r.accepted?"Free agent signed":r.reason);
-  if(r.accepted)ui.faTargetId=null;
-  save();render();
-};
-$$("[data-tradeview]").forEach(b=>b.onclick=()=>{ui.tradeView=b.dataset.tradeview;ui.tradeEval=null;ui.tradeCounter=null;render()});
-$$("[data-tradefindergroup]").forEach(b=>b.onclick=()=>{ui.tradeFinderGroup=b.dataset.tradefindergroup;render()});
-$$("[data-buildtrade]").forEach(b=>b.onclick=()=>{
-  const clubId=b.dataset.buildclub,playerId=b.dataset.buildtrade,targetClub=c(clubId),target=playerByAnyId(playerId);
-  if(!targetClub||!target)return;
-  const pkg=buildSuggestedOutgoingPackage(targetClub,target);
-  ui.tradePartner=clubId;ui.tradeOut={players:[...pkg.playerIds],picks:[...pkg.pickIds]};ui.tradeIn={players:[playerId],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;ui.tradeView="builder";render();
-});
+$$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;ui.newsSeason=G.season;ui.newsHistoryMode=false;render()});
 if($("#tradePartnerSel"))$("#tradePartnerSel").onchange=e=>{ui.tradePartner=e.target.value;ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;render()};
 $$("[data-tradeasset]").forEach(b=>b.onchange=()=>{let bucket=(b.dataset.side==="out"?ui.tradeOut:ui.tradeIn)[b.dataset.type],id=b.dataset.id,i=bucket.indexOf(id);if(b.checked&&i<0)bucket.push(id);if(!b.checked&&i>=0)bucket.splice(i,1);ui.tradeEval=null;ui.tradeCounter=null;render()});
 if($("#clearTradeBtn"))$("#clearTradeBtn").onclick=()=>{ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;render()};
