@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.37.2 Fractional Odds & Naming Fix</title>
+<title>Mini&Me Basketball — v0.1.38.0 Two-Way Usage & Contracts</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1770,10 +1770,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsItem .newsAnalystByline b{letter-spacing:.02em}
 .cnOddsBoard strong{font-variant-numeric:tabular-nums}
 
+
+/* v0.1.38.0 — two-way roster / conversion presentation */
+.twoWayConversionHint{display:block;margin-top:3px;color:var(--accent2)!important;font-size:7px!important}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.37.2</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.38.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2798,11 +2802,14 @@ function rosterSalaryPlan(club){
 }
 function simplifiedCbaTools(G,club){
   const cap=clubCapPosition(G,club.id);
-  if(G.settings.salaryCap===false)return[
-    {label:"Salary Cap",value:"OFF",note:"Transactions unrestricted"},
-    {label:"Market Economy",value:"ACTIVE",note:"Salary demands still apply"},
-    {label:"Roster Limit",value:`${club.roster.length}/${club.offseasonRosterLimit||20}`,note:"Standard contracts"}
-  ];
+  if(G.settings.salaryCap===false){
+    const regularLimit=club.regularRosterLimit||15,twoWayLimit=club.twoWayLimit||3;
+    return[
+      {label:"Salary Cap",value:"OFF",note:"Transactions unrestricted"},
+      {label:"Market Economy",value:"ACTIVE",note:"Salary demands still apply"},
+      {label:"Roster Limit",value:`${club.roster.length}/${regularLimit}`,note:`Standard · ${(club.twoWayRoster||[]).length}/${twoWayLimit} Two-Way`}
+    ];
+  }
   const season=Math.max(0,(G.season||1)-1);
   const mle=Math.round(13.0*Math.pow(CAP_GROWTH,season)*10)/10;
   const taxpayer=Math.round(5.7*Math.pow(CAP_GROWTH,season)*10)/10;
@@ -4246,7 +4253,7 @@ function convertTwoWayToStandard(G, clubId, playerId) {
   const club=clubById(G,clubId); if(!club) return {ok:false,reason:'Club not found'};
   if(club.roster.length >= (club.regularRosterLimit||15)) return {ok:false,reason:'NBA roster is already at 15'};
   const idx=(club.twoWayRoster||[]).findIndex(p=>p.id===playerId); if(idx<0) return {ok:false,reason:'Two-way player not found'};
-  const [p]=club.twoWayRoster.splice(idx,1); p.contractType='Standard';p.contractStatus='Under Contract';p.contractYearsLeft=1;p.salaryM=Math.max(1.2,Math.round(marketSalaryForPlayer(p)*10)/10);
+  const [p]=club.twoWayRoster.splice(idx,1); p.contractType='Standard';p.contractStatus='Under Contract';p.contractYearsLeft=1;p.salaryM=twoWayConversionSalaryM(p);p.extensionEligible=true;
   club.roster.push(p);recalcClubCap(club);G.transactions.push({type:'two_way_convert',season:G.season,clubId,playerId:p.id});return {ok:true,player:p};
 }
 
@@ -5357,15 +5364,122 @@ function runPreseason(G){initializePreseasonLive(G);while(G.phase==="PRESEASON"&
 // call-up window INSIDE this phase's own run, as scoped.
 // ---------------------------------------------------------------------
 
+
+function twoWayUsageState(G){
+  G.twoWayUsage=G.twoWayUsage||{season:G.season,players:{}};
+  if(G.twoWayUsage.season!==G.season)G.twoWayUsage={season:G.season,players:{}};
+  return G.twoWayUsage;
+}
+function twoWayUsageFor(G,p){
+  const s=twoWayUsageState(G);
+  s.players[p.id]=s.players[p.id]||{nbaGames:0,lastRound:-99,callups:0};
+  return s.players[p.id];
+}
+function twoWayDeterministicRoll(G,club,p,round){
+  const key=`${G.season}|${round}|${club.id}|${p.id}`;
+  let h=2166136261;
+  for(let i=0;i<key.length;i++){h^=key.charCodeAt(i);h=Math.imul(h,16777619);}
+  return ((h>>>0)%10000)/10000;
+}
+function twoWayCallupScore(G,club,p){
+  const u=twoWayUsageFor(G,p),round=+G.regularSeasonLive?.roundIndex||0;
+  const ovr=+p.ovr||65,pot=+p.potential||ovr,age=+p.age||22;
+  let score=ovr*.68+pot*.22-Math.max(0,age-25)*.45;
+  if(pot>=82)score+=3;
+  if(ovr>=74)score+=4;
+  if(ovr>=78)score+=4;
+  if(round-u.lastRound<3)score-=12;
+  if(u.nbaGames>=30)score-=7;
+  if(u.nbaGames>=40)score-=14;
+  return score;
+}
+function twoWayShouldDress(G,club,p,healthyStandard,round){
+  const u=twoWayUsageFor(G,p);
+  if(healthyStandard<8)return true;
+  if(u.nbaGames>=45||round-u.lastRound<3)return false;
+
+  const score=twoWayCallupScore(G,club,p);
+  let chance=0;
+  if(healthyStandard<=10)chance=.55;
+  else if(healthyStandard<=12)chance=.28;
+  else if(score>=82)chance=.18;
+  else if(score>=77)chance=.10;
+  else if(round>=55&&score>=73)chance=.07;
+
+  // Better prospects get a modest additional evaluation chance.
+  chance+=Math.max(0,((+p.potential||p.ovr||70)-82))*0.008;
+  chance=Math.min(.62,chance);
+  return chance>0&&twoWayDeterministicRoll(G,club,p,round)<chance;
+}
+function twoWayRecordCallup(G,p,round){
+  const u=twoWayUsageFor(G,p);
+  if(u.lastRound===round)return;
+  u.nbaGames++;
+  u.callups++;
+  u.lastRound=round;
+}
+function twoWayConversionSalaryM(p){
+  const ovr=+p.ovr||65,age=+p.age||22,exp=playerExperienceYears(p);
+  let salary=1.2;
+  if(ovr>=70)salary+=.2;
+  if(ovr>=74)salary+=.35;
+  if(ovr>=78)salary+=.45;
+  if(ovr>=82)salary+=.55;
+  if(exp>=2||age>=25)salary+=.2;
+  if(exp>=4||age>=28)salary+=.2;
+  return Math.min(3.25,Math.max(1.2,Math.round(salary*10)/10));
+}
+
 function buildRegularRotation(club) {
   const healthy=club.roster.filter(p=>!p.injured);
   let rotation = healthy.filter((p) => p.targetMinutes > 0).sort((a, b) => b.targetMinutes - a.targetMinutes).slice(0, 10);
   const depth=healthy.filter(p=>!rotation.some(r=>r.id===p.id)).sort((a,b)=>b.ovr-a.ovr);
   while(rotation.length<Math.min(10,healthy.length)&&depth.length) rotation.push(depth.shift());
-  // Emergency call-up of a two-way player when injuries leave fewer than eight NBA players available.
-  if(rotation.length<8){const tw=(club.twoWayRoster||[]).filter(p=>!p.injured).sort((a,b)=>b.ovr-a.ovr);while(rotation.length<8&&tw.length)rotation.push(tw.shift());}
+
+  const round=+G.regularSeasonLive?.roundIndex||0;
+  const twoWays=(club.twoWayRoster||[]).filter(p=>!p.injured).sort((a,b)=>twoWayCallupScore(G,club,b)-twoWayCallupScore(G,club,a));
+
+  // Emergency coverage remains automatic when fewer than eight standard players
+  // are available. Two-way players can now also earn occasional evaluation games.
+  if(rotation.length<8){
+    while(rotation.length<8&&twoWays.length){
+      const p=twoWays.shift();
+      p.rotationRole="Two-Way Call-Up";
+      p.targetMinutes=Math.max(8,Math.min(14,Math.round((p.ovr-60)*.45)));
+      rotation.push(p);
+      twoWayRecordCallup(G,p,round);
+    }
+  }else if(G.phase==="REGULAR_SEASON"&&twoWays.length){
+    const p=twoWays[0];
+    if(twoWayShouldDress(G,club,p,healthy.length,round)){
+      p.rotationRole="Two-Way Call-Up";
+      p.targetMinutes=Math.max(7,Math.min(14,Math.round((p.ovr-60)*.45)));
+
+      if(rotation.length<10){
+        rotation.push(p);
+        twoWayRecordCallup(G,p,round);
+      }else{
+        // A promising call-up can take the final bench slot, but never displace
+        // a starter and should not replace a clearly superior rotation player.
+        const bench=rotation.map((x,i)=>({x,i})).filter(v=>v.i>=5).sort((a,b)=>(a.x.ovr||0)-(b.x.ovr||0));
+        const weakest=bench[0];
+        if(weakest&&(p.ovr||0)>=(weakest.x.ovr||0)-2){
+          rotation[weakest.i]=p;
+          twoWayRecordCallup(G,p,round);
+        }
+      }
+    }
+  }
+
   if(rotation.length<5) throw new Error(`${club.name} has fewer than five healthy players available.`);
-  const base=[34,33,32,31,30,24,22,18,10,6];rotation.forEach((p,i)=>{if(!p.targetMinutes||p.targetMinutes<5)p.targetMinutes=base[i]||8;});
+  const base=[34,33,32,31,30,24,22,18,10,6];
+  rotation.forEach((p,i)=>{
+    if(p.contractType==="Two-Way"){
+      p.targetMinutes=Math.max(7,Math.min(14,p.targetMinutes||9));
+    }else if(!p.targetMinutes||p.targetMinutes<5){
+      p.targetMinutes=base[i]||8;
+    }
+  });
   return rotation.slice(0, 10);
 }
 
@@ -6423,7 +6537,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.37.2 Fractional Odds & Naming Fix",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.38.0 Two-Way Usage & Contracts",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10313,7 +10427,7 @@ function twoWayContractsHtml(){
   const posOptions=[["all","All Positions"],["guards","Guards"],["forwards","Forwards"],["centers","Centers"]];
   const signed=d.twoWay.map(p=>{
     const live=playerByAnyId(p.id)||p,convertDisabled=d.nba.length>=15?"disabled":"";
-    return `<div class="more"><div><b>${playerNameLink(live)}</b><small>${nationDisplay(live.nationality)} · ${p.pos} · Age ${p.age} · ${playerExperienceLabel(live)} · ${p.ovr} OVR · POT ${live.potential||p.ovr}</small></div><div class="pickrow"><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`;
+    return `<div class="more"><div><b>${playerNameLink(live)}</b><small>${nationDisplay(live.nationality)} · ${p.pos} · Age ${p.age} · ${playerExperienceLabel(live)} · ${p.ovr} OVR · POT ${live.potential||p.ovr}</small><small class="twoWayConversionHint">Conversion: 1 yr · $${twoWayConversionSalaryM(live).toFixed(1)}M standard contract</small></div><div class="pickrow"><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`;
   }).join("");
   const market=cands.map(p=>`<div class="twCandidate"><div class="meta"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age}</small><small class="twPath">${twoWayPath(p)} · ${playerExperienceLabel(p)}</small></div><div class="num"><b class="twCurrent">${p.ovr}</b><small>OVR</small></div><div class="num"><b class="twPotential">${p.potential||p.ovr}</b><small>POT</small></div><button class="pick" data-twoway-sign="${p.id}">Sign Two-Way</button></div>`).join("");
   return `<div class="sectionTitle">Two-Way Contracts</div>
@@ -11065,8 +11179,8 @@ function renderPrepSignature(){
 function ensureCanonicalTeamNames(G){
   if(!G)return;
   const aliases={
-    "Atlanta Flight":"Atlanta Firebirds",
-    "Chicago Flight":"Chicago Rams",
+    "Atlanta Firebirds":"Atlanta Firebirds",
+    "Chicago Rams":"Chicago Rams",
     "Milwaukee North":"Milwaukee Lakefront",
     "Oklahoma City Thunder":"Oklahoma City Storm"
   };
