@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.38.0 Two-Way Usage & Contracts</title>
+<title>Mini&Me Basketball — v0.1.39.0 Facilities Progression Rebalance</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1774,10 +1774,19 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.38.0 — two-way roster / conversion presentation */
 .twoWayConversionHint{display:block;margin-top:3px;color:var(--accent2)!important;font-size:7px!important}
 
+
+/* v0.1.39.0 — Facilities progression rebalance */
+.foProgressCard,.foEconomyNote{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:12px;margin:10px 0 14px}
+.foProgressCard{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.foProgressCard div{min-width:0}.foProgressCard small{display:block;font-size:7px;color:var(--muted);letter-spacing:.08em}
+.foProgressCard b{display:block;font-size:12px;margin:3px 0}.foProgressCard span,.foEconomyNote span{display:block;font-size:8px;line-height:1.45;color:var(--muted)}
+.foProgressCard strong{font-size:10px;color:var(--accent2);white-space:nowrap}
+.foEconomyNote b{display:block;font-size:9px;margin-bottom:4px}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.38.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.39.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4510,6 +4519,17 @@ function ensureFrontOfficeState(G){
   G.frontOffice.departments=G.frontOffice.departments||{training:1,medical:1,coaching:1};
   for(const k of ["training","medical","coaching"])G.frontOffice.departments[k]=Math.max(1,Math.min(5,+G.frontOffice.departments[k]||1));
   G.frontOffice.points=Math.max(0,+G.frontOffice.points||0);
+
+  // v0.1.39.0 migration: the old economy awarded one point per completed season.
+  // Credit one additional point for each season that the save confirms was
+  // already awarded, preserving the new two-points-per-season economy fairly
+  // for existing careers without estimating seasons the old system did not record.
+  if(!G.frontOffice.facilitiesRebalanceApplied){
+    const confirmedOldAwards=Math.max(0,+G.frontOffice.lastAwardSeason||0);
+    G.frontOffice.points+=confirmedOldAwards;
+    G.frontOffice.facilitiesRebalanceApplied=true;
+    G.frontOffice.rebalanceCatchupPoints=confirmedOldAwards;
+  }
   return G.frontOffice;
 }
 function awardFrontOfficeSeasonPoint(G,completedSeason){
@@ -4517,12 +4537,28 @@ function awardFrontOfficeSeasonPoint(G,completedSeason){
   if(!completedSeason)return fo;
   const seasonJustCompleted=Math.max(1,(G.season||1)-1);
   if((fo.lastAwardSeason||0)<seasonJustCompleted){
-    fo.points+=1;
+    fo.points+=2;
     fo.lastAwardSeason=seasonJustCompleted;
   }
   return fo;
 }
 function frontOfficeUpgradeCost(level){return Math.max(1,level);}
+function frontOfficeTotalUpgradeInvestment(){
+  return ["training","medical","coaching"].reduce((sum)=>sum+(1+2+3+4),0);
+}
+function frontOfficePointsInvested(fo){
+  let total=0;
+  for(const k of ["training","medical","coaching"]){
+    const level=Math.max(1,Math.min(5,+fo.departments?.[k]||1));
+    for(let l=1;l<level;l++)total+=frontOfficeUpgradeCost(l);
+  }
+  return total;
+}
+function frontOfficeProgressInfo(G){
+  const fo=ensureFrontOfficeState(G),total=frontOfficeTotalUpgradeInvestment(),invested=frontOfficePointsInvested(fo);
+  const remaining=Math.max(0,total-invested);
+  return {total,invested,remaining,seasonsAtCurrentRate:Math.ceil(Math.max(0,remaining-fo.points)/2)};
+}
 
 function frontOfficeLevelForClub(club,key,gameState=null){
   if(!club)return 1;
@@ -6537,7 +6573,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.38.0 Two-Way Usage & Contracts",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.39.0 Facilities Progression Rebalance",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -11132,10 +11168,13 @@ function frontOfficePage(embedded=false){
       `+${coachingChemistryBonus(level).toFixed(1)} execution chemistry · improved ball security`;
     return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
-  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn one development point after each completed season, then choose where to build the organisation. Training, Medical and Coaching each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+  const progress=frontOfficeProgressInfo(G);
+  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn two development points after each completed season, then choose where to build the organisation. Training, Medical and Coaching each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+    <div class="foProgressCard"><div><small>ORGANISATIONAL BUILD</small><b>${progress.invested}/${progress.total} points invested</b><span>${progress.remaining===0?"All Front Office departments are fully developed.":`${progress.remaining} points remain to fully max Training, Medical and Coaching.`}</span></div><strong>${progress.remaining===0?"MAX":`~${progress.seasonsAtCurrentRate} SEASONS`}</strong></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
-    <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>`;
+    <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>
+    <div class="foEconomyNote"><b>Development Economy</b><span>Each completed season now awards 2 Development Points. From Level 1, fully developing all three Front Office departments requires 30 points, or approximately 15 completed seasons before accounting for points already earned or invested.</span></div>`;
   return embedded?content:header("Front Office","Long-term club infrastructure and department development")+content;
 }
 
