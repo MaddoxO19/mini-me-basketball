@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.42.0 Production Data Foundation</title>
+<title>Mini&Me Basketball — v0.1.43.0 Historical Universe & Career Baselines</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.42.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.43.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1860,6 +1860,49 @@ const FIBA_INITIAL_RATINGS={
   ROU:{rank:62,zoneRank:31,pts:243.4},MLI:{rank:63,zoneRank:10,pts:231.5},KSA:{rank:65,zoneRank:10,pts:228.4},AUT:{rank:66,zoneRank:33,pts:226.5},CUB:{rank:67,zoneRank:14,pts:210.9},TPE:{rank:68,zoneRank:11,pts:210.0},CYP:{rank:69,zoneRank:34,pts:207.3},GUI:{rank:71,zoneRank:11,pts:193.3},COD:{rank:72,zoneRank:12,pts:187.3},NCA:{rank:73,zoneRank:15,pts:185.6},
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
+
+// v0.1.43.0 — Historical universe & active career baselines.
+// NBA franchise championship inheritance is frozen to the end of the 2025/26 season.
+const FRANCHISE_LEGACY_VERSION="NBA-HISTORY-2026.1";
+const FRANCHISE_LEGACY={
+  BOS:{titles:[1957,1959,1960,1961,1962,1963,1964,1965,1966,1968,1969,1974,1976,1981,1984,1986,2008,2024]},
+  BKN:{titles:[]},NYE:{titles:[1970,1973,2026]},PHI:{titles:[1955,1967,1983]},TOR:{titles:[2019]},
+  CHI:{titles:[1991,1992,1993,1996,1997,1998]},CLE:{titles:[2016]},DET:{titles:[1989,1990,2004]},IND:{titles:[]},MIL:{titles:[1971,2021]},
+  ATL:{titles:[1958]},CHA:{titles:[]},MIA:{titles:[2006,2012,2013]},ORL:{titles:[]},WAS:{titles:[1978]},
+  DEN:{titles:[2023]},MIN:{titles:[]},OKC:{titles:[1979,2025]},POR:{titles:[1977]},UTA:{titles:[]},
+  GSB:{titles:[1947,1956,1975,2015,2017,2018,2022]},LAC:{titles:[]},LAG:{titles:[1949,1950,1952,1953,1954,1972,1980,1982,1985,1987,1988,2000,2001,2002,2009,2010,2020]},PHX:{titles:[]},SAC:{titles:[1951]},
+  DAL:{titles:[2011]},HOU:{titles:[1994,1995]},MEM:{titles:[]},NOP:{titles:[]},SAS:{titles:[1999,2003,2005,2007,2014]}
+};
+function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]};return{...x,titleCount:(x.titles||[]).length,version:FRANCHISE_LEGACY_VERSION}}
+
+// Verified career-to-date baselines for the most historically significant active launch players.
+// Totals are regular-season figures through 2025/26. Other launch players retain game-generated
+// history until their verified production baseline is added in a later data pass.
+const ACTIVE_CAREER_BASELINES={
+  "LeBron James":{age:42,experienceYears:23,legacyAliasId:"LEG_LEBRON",stats:{gp:1622,gs:1620,min:61030,fgm:15961,fga:31502,tpm:2636,tpa:7565,ftm:8882,fta:12051,reb:12095,ast:12016,stl:2417,blk:1185,tov:5650,pf:2862,pts:43440},championships:[2012,2013,2016,2020],awards:["4× MVP","4× Finals MVP","21× All-NBA","22× All-Star","Rookie of the Year"]},
+  "Stephen Curry":{age:38,experienceYears:17,legacyAliasId:"LEG_CURRY",stats:{gp:1069,gs:1061,min:36304,fgm:9022,fga:19155,tpm:4248,tpa:10073,ftm:4236,fta:4645,reb:4973,ast:6743,stl:1602,blk:282,tov:3308,pf:2385,pts:26528},championships:[2015,2017,2018,2022],awards:["2× MVP","Finals MVP","NBA 75th Anniversary Team"]},
+  "Kevin Durant":{age:38,experienceYears:18,stats:{gp:1201,gs:1198,min:44077,fgm:11258,fga:22375,tpm:2377,tpa:6070,ftm:7704,fta:8738,reb:8254,ast:5280,stl:1236,blk:1344,tov:3800,pf:2279,pts:32597},championships:[2017,2018],awards:["MVP","2× Finals MVP","NBA 75th Anniversary Team"]},
+  "James Harden":{age:37,experienceYears:17,legacyAliasId:"LEG_HARDEN",stats:{gp:1221,gs:1007,min:42449,fgm:8661,fga:19733,tpm:3390,tpa:9323,ftm:8627,fta:10002,reb:6809,ast:8873,stl:1794,blk:683,tov:4505,pf:2994,pts:29339},championships:[],awards:["MVP","8× All-NBA","11× All-Star","3× Scoring Champion","2× Assist Champion"]},
+  "Nikola Jokic":{age:31,experienceYears:11,stats:{gp:810,gs:769,min:25914,fgm:6880,fga:12274,tpm:926,tpa:2559,ftm:3323,fta:4030,reb:8977,ast:6080,stl:1041,blk:589,tov:2419,pf:2168,pts:18009},championships:[2023],awards:["3× MVP","Finals MVP","8× All-NBA","8× All-Star"]},
+  "Giannis Antetokounmpo":{age:32,experienceYears:13,championships:[2021],awards:["2× MVP","Finals MVP","NBA Champion"]},
+  "Jalen Brunson":{age:30,experienceYears:8,championships:[2026],awards:["Finals MVP","3× All-NBA","3× All-Star"]},
+  "Jayson Tatum":{age:28,experienceYears:9,championships:[2024],awards:["NBA Champion"]},
+  "Kawhi Leonard":{age:35,experienceYears:14,championships:[2014,2019],awards:["2× Finals MVP","2× Defensive Player of the Year"]},
+  "Anthony Davis":{age:33,experienceYears:14,championships:[2020],awards:["NBA Champion"]},
+  "Shai Gilgeous-Alexander":{age:28,experienceYears:8,championships:[2025],awards:["MVP","Finals MVP","NBA Champion"]}
+};
+function applyActiveCareerBaseline(p,sourceName){
+  const b=ACTIVE_CAREER_BASELINES[sourceName];if(!b)return p;
+  if(Number.isFinite(+b.age))p.age=+b.age;
+  if(Number.isFinite(+b.experienceYears))p.experienceYears=+b.experienceYears;
+  if(b.stats)p.careerStats={...emptyRegularStats(),...b.stats};
+  p.preCareerBaseline=true;p.preCareerBaselineSource="NBA through 2025/26";
+  if(b.legacyAliasId)p.legacyAliasId=b.legacyAliasId;
+  p.awardHistory=p.awardHistory||[];
+  for(const season of b.championships||[])p.awardHistory.push({season,award:"NBA Champion",historicalSeed:true});
+  for(const award of b.awards||[])p.awardHistory.push({season:0,award,historicalSeed:true});
+  return p;
+}
 
 // Fictionalised launch identities remain intentionally recognisable without reproducing the real-world name verbatim.
 const PRODUCTION_NAME_OVERRIDES={
@@ -2402,6 +2445,7 @@ function makeClub(name, conference, division, identity={}) {
     // drafts, or a top-5 pick in three straight drafts. Tracked per club
     // regardless of whether the pick is later traded.
     draftHistory: { lastNo1Season: null, top5Seasons: [] },
+    franchiseLegacy: franchiseLegacyFor(identity.id || null),
   };
 }
 
@@ -2472,6 +2516,8 @@ function makeMappedPlayer(t,rank,teamId){
   p.contractYearsLeft=t.isRookie?(t.draftPick&&t.draftPick<=30?4:2):rand(1,4);
   p.contractType=t.isRookie?'Rookie Scale':'Standard';
   p.extensionEligible=p.contractYearsLeft===1;
+  applyActiveCareerBaseline(p,t.sourceName);
+  if(p.preCareerBaseline&&!t.isRookie)p.salaryM=salaryForOvr(p.ovr,p.age);
   return normalizePlayerPotential(p);
 }
 function makeMappedClub(identity){
@@ -2491,6 +2537,7 @@ function makeMappedClub(identity){
     standings:{w:0,l:0,pf:0,pa:0},preseasonRecord:{w:0,l:0},chemistry:rand(58,76),
     capUsed:roster.reduce((a,p)=>a+(p.salaryM||0),0),offseasonRosterLimit:20,regularRosterLimit:15,
     draftHistory:{lastNo1Season:null,top5Seasons:[]},rosterFoundationVersion:ROSTER_FOUNDATION_VERSION,
+    franchiseLegacy:franchiseLegacyFor(identity.id),
     productionSourceOvr:sourceRosterOvr(identity.id),productionSnapshot:PRODUCTION_DATA_SNAPSHOT
   };
 }
@@ -3083,7 +3130,7 @@ function makeCareer() {
   return {
     season: 1,
     phase: "OFFSEASON",
-    rosterFoundation:{version:ROSTER_FOUNDATION_VERSION,source:"Supplied NBA 2K27 roster templates",mappedSeason:1,playerIdentity:"Fictional"},
+    rosterFoundation:{version:ROSTER_FOUNDATION_VERSION,source:"Supplied NBA 2K27 roster templates",mappedSeason:1,playerIdentity:"Fictional",historicalUniverseVersion:FRANCHISE_LEGACY_VERSION,activeCareerBaseline:"2025/26 verified priority players"},
     contractEconomyVersion:"CE2",
     gmName: "GM",
     settings: { salaryCap:true, injuries:true },
@@ -3250,7 +3297,7 @@ function mergeHistoricalTop(stored,current,identityKey="playerId"){
 function historicalRecordSnapshot(G){
   const hr=ensureHistoricalRecords(G),players=[...allPlayers(G),...retiredPlayerPool(G)];
   const career={};for(const [label,key] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"],["games","gp"]]){
-    const active=players.map(p=>({playerId:p.id,playerName:p.name,clubId:clubForPlayer(G,p)?.id||null,clubName:clubForPlayer(G,p)?.name||"—",value:currentCareerTotal(p,key)}));career[label]=mergeHistoricalTop(hr.league.career?.[label],active);
+    const active=players.map(p=>({playerId:p.legacyAliasId||p.id,playerName:p.name,clubId:clubForPlayer(G,p)?.id||null,clubName:clubForPlayer(G,p)?.name||"—",value:currentCareerTotal(p,key),activePlayerId:p.id}));career[label]=mergeHistoricalTop(hr.league.career?.[label],active);
   }
   const seasonRates={};for(const [label,key] of [["ppg","pts"],["rpg","reb"],["apg","ast"],["spg","stl"],["bpg","blk"]])seasonRates[label]=mergeHistoricalTop(hr.league.seasonRates?.[label],allSeasonRateEntries(G,key,20),"season");
   return{...hr,career,seasonRates};
@@ -6887,7 +6934,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.42.0 Production Data Foundation",ENGINE_VERSION="E2.13-PROD1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.43.0 Historical Universe & Career Baselines",ENGINE_VERSION="E2.14-PROD2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -7639,9 +7686,11 @@ function playoffFinishForHistorical(h,clubId){
   return h.clubRecords?.[clubId]?.postseasonFinish||"Season Complete";
 }
 function clubHonourTotals(club){
-  const hist=G.leagueHistory||[];
+  const hist=G.leagueHistory||[],legacy=franchiseLegacyFor(club.id);
+  const careerTitles=hist.filter(h=>h.championClubId===club.id).length;
   return{
-    nba:hist.filter(h=>h.championClubId===club.id).length,
+    nba:legacy.titleCount+careerTitles,
+    legacyNba:legacy.titleCount,careerNba:careerTitles,legacyTitleYears:legacy.titles||[],
     cup:hist.filter(h=>h.cupChampionClubId===club.id).length,
     best:hist.filter(h=>h.bestRecordClubId===club.id).length
   };
@@ -10474,7 +10523,7 @@ function clubHub(){
     body=`<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">Franchise Archive</div><h3>Season History</h3><p>Every completed season remains part of the club's permanent career history.</p></div><div class="profileTimeline clubHistoryClean">${archive.length?archive.map(h=>{const extras=[h.cup?"NBA Cup Winner":"",h.best?"Best Record":""].filter(Boolean).join(" · ");return `<div class="teamSeasonRow"><div class="season">S${h.season}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.finish||"Season Complete"}</b>${extras?`<small>${extras}</small>`:""}</div></div>`}).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`}</div>`;
   }else if(ui.clubTab==="honours"){
     const legends=clubNotablePlayers(club);
-    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Archived in this career</small></div><b>${archive.length}</b></div><div class="more"><div><b>Career Record</b><small>Archived regular-season record</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best Season</b><small>${cr.best?`Season ${cr.best.season}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${legends.length?legends.map((x,i)=>`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
+    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more"><div><b>Inherited Franchise Legacy</b><small>${honours.legacyNba?`${honours.legacyNba} pre-career championship${honours.legacyNba===1?"":"s"} · ${honours.legacyTitleYears.join(", ")}`:"No pre-career NBA championships"}</small></div><b>${honours.careerNba} Career</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Archived in this career</small></div><b>${archive.length}</b></div><div class="more"><div><b>Career Record</b><small>Archived regular-season record</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best Season</b><small>${cr.best?`Season ${cr.best.season}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${legends.length?legends.map((x,i)=>`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
   }else{
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
     body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div><div class="sectionTitle">Current Season Leaders</div><div class="clubCurrentLeaderGrid">${leaderCard("Scoring Leader",scoring,"pts")}${leaderCard("Playmaking Leader",playmaker,"ast")}${leaderCard("Rebounding Leader",rebounder,"reb")}</div>`;
