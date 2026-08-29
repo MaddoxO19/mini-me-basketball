@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.45.12 Jersey Number Consolidation & OVR Priority</title>
+<title>Mini&Me Basketball — v0.1.45.13 OVR/POT Source Verification Audit</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.12</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.13</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1861,7 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -3577,11 +3577,25 @@ function applyDraftJerseyPreference(p,row){
   p.jerseyNumber=null;
   return p;
 }
+
+// v0.1.45.13 — direct rating recovery from the user's supplied NBA 2K27 document.
+// These are source OVRs, not estimates. POT is not supplied by that source.
+const PRODUCTION_2026_DRAFT_RECOVERED_RATINGS={"Kingston Flemings":{"ovr":74,"badges":0,"threePt":null,"dunk":null,"sourceArchetype":"","position":"PG","heightCm":193},"Brayden Burries":{"ovr":73,"badges":0,"threePt":null,"dunk":null,"sourceArchetype":"","position":"SG","heightCm":193},"Labaron Philon Jr.":{"ovr":71,"badges":0,"threePt":null,"dunk":null,"sourceArchetype":"","position":"PG","heightCm":193}};
+function recovered2026DraftRating(name){
+  return PRODUCTION_2026_DRAFT_RECOVERED_RATINGS[name]||null;
+}
 function makeOfficial2026DraftProspect(row,G){
   const src=sourceTemplateFor2026Draft(row.sourceName);
-  const t=src?{...src,isRookie:true,draftPick:row.pick}:{sourceName:row.sourceName,nationality:"USA",position:row.position,secondaryPosition:null,heightCm:null,sourceArchetype:"",ovr:null,badges:0,threePt:null,dunk:null,isRookie:true,draftPick:row.pick};
+  const recovered=recovered2026DraftRating(row.sourceName);
+  const t=src
+    ?{...src,isRookie:true,draftPick:row.pick}
+    :recovered
+      ?{sourceName:row.sourceName,nationality:"USA",secondaryPosition:null,isRookie:true,draftPick:row.pick,...recovered}
+      :{sourceName:row.sourceName,nationality:"USA",position:row.position,secondaryPosition:null,heightCm:null,sourceArchetype:"",ovr:null,badges:0,threePt:null,dunk:null,isRookie:true,draftPick:row.pick};
   if(!t.position)t.position=row.position;
-  const est=launchRookieRating(t); if(!Number.isFinite(+t.ovr))t.ovr=est.ovr;
+  const est=launchRookieRating(t);
+  const sourceOvr=Number.isFinite(+t.ovr)?+t.ovr:null;
+  if(sourceOvr===null)t.ovr=est.ovr;
   const p=makeMappedPlayer(t,row.pick-1,null);
   const officialBio=OFFICIAL_2026_DRAFT_BIO[row.sourceName]||null;
   p.age=officialBio?.age??official2026DraftAge(row);
@@ -3590,10 +3604,16 @@ function makeOfficial2026DraftProspect(row,G){
   p.experienceYears=0;p.draftYear=1;p.isProspect=true;p.entryPath="Draft Prospect";p.origin="2026 Draft";
   p.productionDraftBioVerified=!!officialBio;
   p.productionDraftBioSource=officialBio?"NBA.com 2026 Draft Prospects / Draft Board":null;
+  p.productionRatingSource=src||recovered?"User-supplied NBA 2K27":"Mini&Me 2026 draft-slot estimate";
+  p.productionRatingEstimated=!(src||recovered);
+  p.productionRatingRecoveredFromSource=!!recovered&&!src;
+  p.productionSourceOvr=src?+src.ovr:(recovered?+recovered.ovr:null);
+  p.productionPotentialSource="Mini&Me development model";
+  p.productionPotentialEstimated=true;
   applyDraftJerseyPreference(p,row);
   p.contractYearsLeft=0;p.contractStatus="Prospect";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
   p.official2026DraftPick=row.pick;p.official2026DraftedBy=row.draftedBy;p.official2026RightsOwner=row.ownerClubId;p.productionDraftSource="NBA.com 2026 Draft Results";
-  if(!src){p.potential=est.potential;p.launchRookieRating={...est,draftPick:row.pick};}
+  if(!src&&!recovered){p.potential=est.potential;p.launchRookieRating={...est,draftPick:row.pick};}
   enrichDraftProspect(p,G,row.pick-1);return normalizeProspectPotential(p);
 }
 function ensureOfficial2026DraftClass(G){
@@ -3640,6 +3660,11 @@ function makeMappedPlayer(t,rank,teamId){
   p.sourceThreePt=t.threePt;
   p.sourceDunk=t.dunk;
   p.sourceTemplateName=t.sourceName||null; // developer/audit field only
+  p.productionRatingSource=Number.isFinite(+t.ovr)?"User-supplied NBA 2K27":"Mini&Me rating model";
+  p.productionRatingEstimated=!Number.isFinite(+t.ovr);
+  p.productionSourceOvr=Number.isFinite(+t.ovr)?+t.ovr:null;
+  p.productionPotentialSource="Mini&Me development model";
+  p.productionPotentialEstimated=true;
   p.name=fictionalizeProductionName(t.sourceName||p.name);
   p.rosterFoundationVersion=ROSTER_FOUNDATION_VERSION;
   p.rosterFoundationClubId=teamId;
@@ -8109,7 +8134,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.12 Jersey Number Consolidation & OVR Priority",ENGINE_VERSION="E2.15-PROD4E";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.13 OVR/POT Source Verification Audit",ENGINE_VERSION="E2.15-PROD4F";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -12927,12 +12952,69 @@ function ensureProductionJerseyAudit(G){
   if(!G.productionJerseyAudit||G.productionJerseyAudit.version!=="v0.1.45.12")productionJerseyCoverageAudit(G);
 }
 
+
+function productionRatingSourceAudit(G){
+  const templateRows=Object.entries(SEASON1_ROSTER_TEMPLATES)
+    .flatMap(([clubId,arr])=>arr.map(t=>({clubId,...t})));
+  const invalidTemplateOvr=templateRows.filter(t=>!Number.isFinite(+t.ovr));
+  const templateOvrRange=templateRows.length
+    ?{min:Math.min(...templateRows.map(t=>+t.ovr)),max:Math.max(...templateRows.map(t=>+t.ovr))}
+    :{min:null,max:null};
+
+  const draft=OFFICIAL_2026_DRAFT_RESULTS.map(row=>{
+    const src=sourceTemplateFor2026Draft(row.sourceName);
+    const recovered=recovered2026DraftRating(row.sourceName);
+    const sourceOvr=src?+src.ovr:(recovered?+recovered.ovr:null);
+    const est=sourceOvr==null?launchRookieRating({sourceName:row.sourceName,draftPick:row.pick,isRookie:true}):null;
+    return {
+      pick:row.pick,
+      sourceName:row.sourceName,
+      sourceOvr,
+      ratingSource:src?"2K27 template":recovered?"2K27 recovered":"Mini&Me estimate",
+      estimatedOvr:est?.ovr??null,
+      estimatedPot:est?.potential??null
+    };
+  });
+
+  const sourceDraft=draft.filter(x=>x.sourceOvr!=null);
+  const estimatedDraft=draft.filter(x=>x.sourceOvr==null);
+  const liveDraft=(G?.upcomingDraftClass?.season===1?G.upcomingDraftClass.prospects:[])||[];
+  const potBelowOvr=liveDraft.filter(p=>Number.isFinite(+p.ovr)&&Number.isFinite(+p.potential)&&+p.potential<+p.ovr)
+    .map(p=>({name:p.sourceTemplateName||p.name,ovr:p.ovr,potential:p.potential}));
+
+  const report={
+    version:"v0.1.45.13",
+    sourceDataset:"User-supplied NBA 2K27",
+    templateCount:templateRows.length,
+    templateOvrCount:templateRows.length-invalidTemplateOvr.length,
+    invalidTemplateOvr,
+    templateOvrRange,
+    official2026DraftCount:draft.length,
+    draftSourceOvrCount:sourceDraft.length,
+    draftTemplateOvrCount:draft.filter(x=>x.ratingSource==="2K27 template").length,
+    draftRecoveredOvrCount:draft.filter(x=>x.ratingSource==="2K27 recovered").length,
+    draftEstimatedOvrCount:estimatedDraft.length,
+    draftEstimatedNames:estimatedDraft.map(x=>x.sourceName),
+    recoveredDraftRatings:draft.filter(x=>x.ratingSource==="2K27 recovered"),
+    potentialSource:"Mini&Me development model; POT was not present in the supplied 2K27 source",
+    potBelowOvr,
+    passed:invalidTemplateOvr.length===0&&draft.length===60&&potBelowOvr.length===0
+  };
+  if(G)G.productionRatingAudit=report;
+  return report;
+}
+function ensureProductionRatingAudit(G){
+  if(!G)return;
+  if(!G.productionRatingAudit||G.productionRatingAudit.version!=="v0.1.45.13")productionRatingSourceAudit(G);
+}
+
 function render(){
   ensureCareerBaselineMetadata(G);
   ensureVerifiedProductionBio(G);
   ensureProductionLaunchAudit(G);
   applyVerifiedLaunchJerseys(G);
   ensureProductionJerseyAudit(G);
+  ensureProductionRatingAudit(G);
 prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
