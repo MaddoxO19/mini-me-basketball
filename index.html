@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.45.14.2 Haymes Family Identity Fix</title>
+<title>Mini&Me Basketball — v0.1.45.15.1 Verified 2026/27 Contracts — Phase B Pass 2</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1861,6 +1861,8 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
+// v0.1.45.15.1 — Phase B Pass 2: expands verified 2026/27 contract coverage, distinguishes verified two-way launch deals, and deepens contract/payroll audit provenance.
+// v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
 // v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.45.14.1 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
@@ -3713,6 +3715,7 @@ function makeMappedPlayer(t,rank,teamId){
   applyLaunchCareerContext(p,t);
   applyVerifiedProductionBio(p,t.sourceName);
   if(p.preCareerBaseline&&!t.isRookie)p.salaryM=salaryForOvr(p.ovr,p.age);
+  if(!t.isRookie)applyVerifiedLaunchContract(p,t.sourceName);
   return normalizePlayerPotential(p);
 }
 function makeMappedClub(identity){
@@ -3938,6 +3941,549 @@ const ROOM_MLE_BASE_M = 9.366;
 const CAP_GROWTH = 1.05;
 const CAP_FOUNDATION_VERSION="NBA-2026-27-CAP-1";
 
+// ---------------------------------------------------------------------
+// PRODUCTION 2026/27 CONTRACT SNAPSHOT — PHASE B
+// Source: Basketball-Reference 2026-27 player/team contract tables, checked
+// 30 Aug 2026. Values are stored against source identities and applied to
+// fictionalised players only after launch-roster construction. The listed
+// future salary schedule is used for term/rollover; player/team option or
+// non-guarantee status is NOT inferred unless independently explicit.
+// Players not yet present in this verified tranche retain the Mini&Me
+// generated contract economy and are marked as fallback in the audit.
+// ---------------------------------------------------------------------
+const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B2";
+const CONTRACT_SNAPSHOT_SOURCE="Basketball-Reference 2026-27 player/team payroll, roster and transaction pages, checked 30 Aug 2026";
+function verifiedContract(schedule,guaranteedM=null,note=null){
+  return {scheduleM:schedule.map(v=>v==null?null:+v),guaranteedM:guaranteedM==null?null:+guaranteedM,note};
+}
+const VERIFIED_2026_27_TWO_WAY_NAMES=new Set([
+  "Jalen Wilson","Elijah Harkless","Kobe Brown","Quenton Jackson","Vladislav Goldin",
+  "Colin Castleton","Caleb Love","Pat Spencer","Jonathan Mogbo","Adam Flagler","Chucky Hepburn"
+].map(normalizeSourcePlayerName));
+const VERIFIED_2026_27_CONTRACTS={
+  "Stephen Curry":verifiedContract([62.587158],62.587158),
+  "Nikola Jokic":verifiedContract([59.033114,62.841702],59.033114),
+  "Nikola Jokić":verifiedContract([59.033114,62.841702],59.033114),
+  "Jayson Tatum":verifiedContract([58.456566,62.786682,67.116798,71.446914],188.360046),
+  "Anthony Davis":verifiedContract([58.456566,62.786682],58.456566),
+  "Giannis Antetokounmpo":verifiedContract([58.456566,62.786682],58.456566),
+  "Joel Embiid":verifiedContract([58.100000,62.748000,67.396000],120.848000),
+  "Jaylen Brown":verifiedContract([57.078728,61.015192,64.951656],183.045576),
+  "Devin Booker":verifiedContract([57.078728,61.015192,64.065952,69.191228],182.159872),
+  "Karl-Anthony Towns":verifiedContract([57.078728,61.015192],57.078728),
+  "Jimmy Butler":verifiedContract([56.832773],56.832773),
+  "Paul George":verifiedContract([54.126380,56.586670],54.126380),
+  "Kawhi Leonard":verifiedContract([50.300000],50.300000),
+  "Donovan Mitchell":verifiedContract([50.105628,60.911900,65.784852,70.657804,75.530756],247.460184),
+  "Cade Cunningham":verifiedContract([50.105628,53.817156,57.528684,61.240212],222.691680),
+  "Evan Mobley":verifiedContract([50.105628,53.817156,57.528684,61.240212],222.691680),
+  "Jamal Murray":verifiedContract([50.105628,53.817156,57.528684],161.451468),
+  "De'Aaron Fox":verifiedContract([49.800000,53.784000,57.768000,61.752000],223.104000),
+  "Bam Adebayo":verifiedContract([49.800000,53.784000,57.768000],103.584000),
+  "Luka Doncic":verifiedContract([49.800000,53.784000,57.768000],103.584000),
+  "Luka Dončić":verifiedContract([49.800000,53.784000,57.768000],103.584000),
+  "Trae Young":verifiedContract([49.488300,50.478066,54.437130,58.396194],154.403496),
+  "Jaren Jackson Jr.":verifiedContract([49.000000,50.500000,52.000000,53.500000],151.500000),
+  "Zach LaVine":verifiedContract([48.967380],48.967380),
+  "Anthony Edwards":verifiedContract([48.924624,52.298736,55.672848],156.896208),
+  "Kevin Durant":verifiedContract([43.902439,46.097561],43.902439,"2027-28 listed as player option by Spotrac; game stores listed term without automatic option logic"),
+  "James Harden":verifiedContract([42.317307],null),
+  "Franz Wagner":verifiedContract([41.754690,44.847630,47.940570,51.033510],185.576400),
+  "Jalen Williams":verifiedContract([41.500000,44.820000,48.140000,51.460000,54.780000],240.700000),
+  "Chet Holmgren":verifiedContract([41.500000,44.820000,48.140000,51.460000,54.780000],240.700000),
+  "Paolo Banchero":verifiedContract([41.500000,44.820000,48.140000,51.460000,54.780000],185.920000),
+  "Austin Reaves":verifiedContract([41.240250,44.539470,47.838690,51.137910],133.618410),
+  "Shai Gilgeous-Alexander":verifiedContract([40.806150,61.005000,65.885400,70.765800,75.646200],238.462350),
+  "Michael Porter Jr.":verifiedContract([40.806150],12.000000),
+  "Tyrese Maxey":verifiedContract([40.770520,43.582280,46.394040],130.746840),
+  "LaMelo Ball":verifiedContract([40.770520,43.582280,46.394040],130.746840),
+  "Brandon Ingram":verifiedContract([40.000000,41.904762],40.000000),
+  "Kyrie Irving":verifiedContract([39.491282,42.416562],39.491282),
+  "Desmond Bane":verifiedContract([39.446090,42.166510,44.886930],126.499530),
+  "Jalen Brunson":verifiedContract([37.739521,40.535041,43.330561],78.274562),
+  "Rudy Gobert":verifiedContract([36.500000,38.000000],36.500000),
+  "Jalen Green":verifiedContract([36.251166,36.000000],36.251166),
+  "Alperen Sengun":verifiedContract([35.642202,37.339450,39.036697,39.036697],112.018349),
+  "Alperen Şengün":verifiedContract([35.642202,37.339450,39.036697,39.036697],112.018349),
+  "Julius Randle":verifiedContract([33.333334,35.802468],33.333334),
+  "Derrick White":verifiedContract([30.348000,32.596000,34.844000],62.944000),
+  "Walker Kessler":verifiedContract([30.232558,31.744186,33.255814,34.767442],95.232558),
+  "Andrew Wiggins":verifiedContract([30.169644,16.346154,17.653846],46.515798),
+  "Jalen Johnson":verifiedContract([30.000000,30.000000,30.000000,30.000000],120.000000),
+  "RJ Barrett":verifiedContract([29.616071],29.616071),
+  "Jarrett Allen":verifiedContract([28.000000,30.240000,32.480000],90.720000),
+  "Draymond Green":verifiedContract([27.678571],27.678571),
+  "Trey Murphy III":verifiedContract([27.000000,29.000000,31.000000],87.000000),
+  "Dyson Daniels":verifiedContract([25.000000,25.000000,25.000000,25.000000],100.000000),
+  "Fred VanVleet":verifiedContract([25.000000],25.000000),
+  "Josh Giddey":verifiedContract([25.000000,25.000000,25.000000],75.000000),
+  "Jonathan Kuminga":verifiedContract([24.300000],null),
+  "Jabari Smith Jr.":verifiedContract([23.643411,21.751940,23.643411,25.534883,27.426355],122.000000),
+  "Nic Claxton":verifiedContract([23.147727,20.943184],44.090911),
+  "Norman Powell":verifiedContract([21.500000,22.575000],21.500000),
+  "CJ McCollum":verifiedContract([21.000000],21.000000),
+  "Peyton Watson":verifiedContract([20.465116,21.488372,22.511628,23.534884],64.465116),
+  "Kentavious Caldwell-Pope":verifiedContract([20.194392],2.449421),
+  "P.J. Washington":verifiedContract([19.813044,21.398088,22.983132,24.568176],88.762440),
+  "Alex Caruso":verifiedContract([19.550160,20.998320,22.446480],62.994960),
+  "Andrew Nembhard":verifiedContract([19.550160,20.998320],40.548480),
+  "Kristaps Porzingis":verifiedContract([19.512195,20.487805],19.512195),
+  "Kristaps Porziņģis":verifiedContract([19.512195,20.487805],19.512195),
+  "Jakob Poeltl":verifiedContract([19.500000,27.300000,29.484000,27.300000],76.284000),
+  "Ayo Dosunmu":verifiedContract([19.310345,20.855173,22.400001,23.944829,25.489652],86.510348),
+  "Luguentz Dort":verifiedContract([18.222222],18.222222),
+  "Patrick Williams":verifiedContract([18.000000,18.000000,18.000000],36.000000),
+  "John Collins":verifiedContract([17.000000,17.000000,17.000000],17.000000),
+  "Victor Wembanyama":verifiedContract([16.868246,43.500000,46.980000,50.460000,53.940000,57.420000],211.748246),
+  "Max Strus":verifiedContract([16.660836],16.660836),
+  "Nikola Jovic":verifiedContract([16.200000,14.904000,15.096000,16.200000],62.400000),
+  "Nikola Jović":verifiedContract([16.200000,14.904000,15.096000,16.200000],62.400000),
+  "Onyeka Okongwu":verifiedContract([16.120000,16.880000],33.000000),
+  "Duncan Robinson":verifiedContract([15.992957,15.151222],null),
+  "Terance Mann":verifiedContract([15.500000,16.000000],31.500000),
+  "Gary Trent Jr.":verifiedContract([15.200000,16.400000,16.400000,16.000000],64.000000),
+  "Mitchell Robinson":verifiedContract([15.044000,15.796200,16.548400],47.388600),
+  "Nickeil Alexander-Walker":verifiedContract([14.403710,15.161800,15.919890],29.565510),
+  "Tari Eason":verifiedContract([14.051724,15.175862,16.300000,17.424138,18.548276],62.951724),
+  "Steven Adams":verifiedContract([13.000000,11.869566],24.869566),
+  "Isaac Okoro":verifiedContract([11.814814],11.814814),
+  "Isaiah Joe":verifiedContract([11.323006,11.323006],11.323006),
+  "Ausar Thompson":verifiedContract([11.117925],11.117925),
+  "Reed Sheppard":verifiedContract([11.108880,14.041625],11.108880),
+  "Aaron Nesmith":verifiedContract([11.000000,19.418000,20.971440],51.389440),
+  "Sam Hauser":verifiedContract([10.848215,11.651785,12.455356],34.955356),
+  "Day'Ron Sharpe":verifiedContract([10.000000,10.000000],10.000000),
+  "Jalen Smith":verifiedContract([9.428571],9.428571),
+  "Moritz Wagner":verifiedContract([9.268293,9.731707],9.268293),
+  "Sam Merrill":verifiedContract([9.160715,9.839285,10.517856],29.517856),
+  "Keon Ellis":verifiedContract([8.780488,9.219512],8.780488),
+  "Jarace Walker":verifiedContract([8.478542],8.478542),
+  "Kevin Huerter":verifiedContract([8.333333,9.000000,9.666667],27.000000),
+  "Zach Collins":verifiedContract([8.292683,8.707317],17.000000),
+  "Quinten Post":verifiedContract([8.285714,8.700000,9.114286],8.285714),
+  "Max Christie":verifiedContract([8.285714,8.857143],8.285714),
+  "Tre Jones":verifiedContract([8.000000,8.000000],8.000000),
+  "Payton Pritchard":verifiedContract([7.767857,8.303571],16.071428),
+  "Rob Dillingham":verifiedContract([6.889320,8.763216],6.889320),
+  "Matas Buzelis":verifiedContract([5.715360,7.584283],5.715360),
+  "Precious Achiuwa":verifiedContract([5.477000,5.750850],11.227850),
+  "De'Anthony Melton":verifiedContract([5.477000,5.750850],5.477000),
+  "Cam Whitmore":verifiedContract([5.458310],5.458310),
+  "Nikola Topic":verifiedContract([5.429760,7.482210],5.429760),
+  "Nikola Topić":verifiedContract([5.429760,7.482210],5.429760),
+  "Noah Clowney":verifiedContract([5.414034],5.414034),
+  "Kevin Porter Jr.":verifiedContract([5.390700],5.390700),
+  "Landry Shamet":verifiedContract([5.357143,5.785714,6.214286,6.642857],24.000000),
+  "Josh Minott":verifiedContract([4.500000,4.500000],4.500000),
+  "Ryan Rollins":verifiedContract([4.000000,4.000000],4.000000),
+  "Miles McBride":verifiedContract([3.956523],3.956523),
+  "LeBron James":verifiedContract([3.876529,4.070355],3.876529,"2027-28 is a player option; option decision remains gameplay-neutral in this tranche"),
+  "Bones Hyland":verifiedContract([2.845883],2.845883),
+  "Terrence Shannon Jr.":verifiedContract([2.801640,5.054159],2.801640),
+  "Micah Potter":verifiedContract([2.801346],2.801346),
+  "Mike Conley":verifiedContract([2.449421],2.449421),
+  "Thomas Bryant":verifiedContract([2.449421],2.449421),
+  "Jordan Clarkson":verifiedContract([2.449421],2.449421),
+  "Andre Drummond":verifiedContract([2.449421],2.449421),
+  "Nae'Qwan Tomlin":verifiedContract([2.411090],2.411090),
+  "Justin Edwards":verifiedContract([2.411090,2.616754],2.411090),
+  "Craig Porter Jr.":verifiedContract([2.406205],2.406205),
+  "Leonard Miller":verifiedContract([2.406205],2.406205),
+  "Bronny James":verifiedContract([2.296271,2.486995],null),
+  "Tyrese Haliburton":verifiedContract([48.924624,52.298736,55.672848],156.896208),
+  "Pascal Siakam":verifiedContract([48.924624,52.298736],101.223360),
+  "Lauri Markkanen":verifiedContract([46.113154,49.824681,53.536209],149.474044),
+  "Domantas Sabonis":verifiedContract([45.472000,48.608000],94.080000),
+  "OG Anunoby":verifiedContract([42.500000,45.431034,48.362068],87.931034),
+  "Ja Morant":verifiedContract([42.166510,44.886930],87.053440),
+  "Zion Williamson":verifiedContract([42.166510,44.886930],87.053440),
+  "Darius Garland":verifiedContract([42.166510,44.886930],87.053440),
+  "Scottie Barnes":verifiedContract([41.754690,44.847630,47.940570,51.033510],185.576400),
+  "Tyler Herro":verifiedContract([33.000000],33.000000),
+  "Aaron Gordon":verifiedContract([33.658037,36.350680,39.043323],70.008717),
+  "Immanuel Quickley":verifiedContract([32.500000,32.500000,32.500000],97.500000),
+  "Jordan Poole":verifiedContract([34.044642],34.044642),
+  "Jerami Grant":verifiedContract([34.206898,36.413790],34.206898),
+  "Jrue Holiday":verifiedContract([34.800000,37.200000],34.800000),
+  "Mikal Bridges":verifiedContract([33.482145,36.160714,38.839285,41.517856],108.482144),
+  "Dejounte Murray":verifiedContract([32.785071,30.751504],32.785071),
+  "Jalen Suggs":verifiedContract([32.400000,29.600000,26.800000,26.700000],88.800000),
+  "Myles Turner":verifiedContract([26.584164,27.850077,29.115990],54.434241),
+  "Jaden McDaniels":verifiedContract([26.200001,28.006898,29.813790],84.020689),
+  "Kyle Kuzma":verifiedContract([20.345152],20.345152),
+  "Ivica Zubac":verifiedContract([20.342140,21.790300],42.132440),
+  "Josh Hart":verifiedContract([20.923760,22.375280],20.923760),
+  "Malik Monk":verifiedContract([20.190035,21.582451],20.190035),
+  "Dillon Brooks":verifiedContract([19.992727,22.530864,24.333333,26.135802],92.992726),
+  "Naz Reid":verifiedContract([23.275862,25.000000,26.724138,28.448276],75.000000),
+  "Isaiah Hartenstein":verifiedContract([23.148148,25.000000,26.851852],48.148148),
+  "Cameron Johnson":verifiedContract([23.062500],23.062500),
+  "Coby White":verifiedContract([22.839506,24.666667,26.493827],74.000000),
+  "Miles Bridges":verifiedContract([22.826087],22.826087),
+  "Shaedon Sharpe":verifiedContract([20.089287,21.696429,23.303571,24.910713],90.000000),
+  "Toumani Camara":verifiedContract([18.080358,19.526786,20.973214,22.419642],81.000000),
+  "Grayson Allen":verifiedContract([18.125000,19.375000],18.125000),
+  "Wendell Carter Jr.":verifiedContract([18.102000,19.550160,20.998320],37.652160),
+  "Keldon Johnson":verifiedContract([17.500000],17.500000),
+  "Klay Thompson":verifiedContract([17.460317],17.460317),
+  "Daniel Gafford":verifiedContract([17.263584,18.126763,18.989942],54.380289),
+  "Santi Aldama":verifiedContract([17.007043,17.007043],17.007043),
+  "Brandon Miller":verifiedContract([15.104626],15.104626),
+  "Tobias Harris":verifiedContract([15.044000,15.796200],30.840200),
+  "Obi Toppin":verifiedContract([15.000000,16.025000],31.025000),
+  "Isaiah Stewart":verifiedContract([15.000000,15.000000],15.000000),
+  "Herbert Jones":verifiedContract([14.898786,20.858300,22.526964,24.195628],58.284050),
+  "Caris LeVert":verifiedContract([14.809200],14.809200),
+  "Dennis Schroder":verifiedContract([14.809200,15.514400],14.809200),
+  "Dennis Schröder":verifiedContract([14.809200,15.514400],14.809200),
+  "Josh Green":verifiedContract([14.679012],14.679012),
+  "Bobby Portis":verifiedContract([14.521414,15.597074],14.521414),
+  "Grant Williams":verifiedContract([14.265750],14.265750),
+  "Jock Landale":verifiedContract([14.100000],14.100000),
+  "Rui Hachimura":verifiedContract([14.000000,14.000000],14.000000),
+  "Corey Kispert":verifiedContract([13.975000,13.050000,13.050000],27.025000),
+  "Robert Williams":verifiedContract([13.968254,14.666667,15.365079],18.968254),
+  "Quentin Grimes":verifiedContract([13.953489,14.651163,15.348837,16.046511],43.953489),
+  "Julian Champagnie":verifiedContract([13.888889,15.000000,16.111111],45.000000),
+  "Zaccharie Risacher":verifiedContract([13.826040,17.434637],13.826040),
+  "Scoot Henderson":verifiedContract([13.585523],13.585523),
+  "Dorian Finney-Smith":verifiedContract([13.335000,13.335000,13.335000],26.670000),
+  "Deni Avdija":verifiedContract([13.125000,11.875000],25.000000),
+  "Sandro Mamukelashvili":verifiedContract([13.000000,12.350000,13.000000,13.650000],38.350000),
+  "Donte DiVincenzo":verifiedContract([12.535000],12.535000),
+  "Moses Moody":verifiedContract([12.500000,13.425925],25.925925),
+  "Brandon Clarke":verifiedContract([12.500000],12.500000),
+  "Davion Mitchell":verifiedContract([12.400000],12.400000),
+  "Jarred Vanderbilt":verifiedContract([12.428571,13.285714],12.428571),
+  "Alex Sarr":verifiedContract([12.370680,15.611798],12.370680),
+  "Amen Thompson":verifiedContract([12.258609],12.258609),
+  "Mark Williams":verifiedContract([11.728395,12.666667,13.604938],38.000000),
+  "Royce O'Neale":verifiedContract([10.875000,11.625000],22.500000),
+  "Sam Hauser":verifiedContract([10.848215,11.651785,12.455356],34.955356),
+  "Collin Gillespie":verifiedContract([10.714286,11.571429,12.428571,13.285714],48.000000),
+  "Jusuf Nurkic":verifiedContract([10.576923,11.423077],22.000000),
+  "Jusuf Nurkić":verifiedContract([10.576923,11.423077],22.000000),
+  "Derrick Jones Jr.":verifiedContract([10.476190],10.476190),
+  "Jonathan Isaac":verifiedContract([10.449421],10.449421),
+  "Luke Kornet":verifiedContract([10.450000,9.900000,9.350000],13.000000),
+  "Anthony Black":verifiedContract([10.106316],10.106316),
+  "A.J. Green":verifiedContract([10.044644,10.848215,11.651786,12.455355],45.000000),
+  "Caleb Martin":verifiedContract([10.001493,9.371351],10.001493),
+  "Bilal Coulibaly":verifiedContract([9.240012],9.240012),
+  "Ty Jerome":verifiedContract([9.220050,9.659100],9.220050),
+  "Brook Lopez":verifiedContract([9.187500],9.187500),
+  "Ron Holland":verifiedContract([9.069600,11.491183],9.069600),
+  "Dean Wade":verifiedContract([9.000000,9.450000,9.900000,10.350000],30.000000),
+  "Goga Bitadze":verifiedContract([7.608696],7.608696),
+  "Donovan Clingan":verifiedContract([7.519920,9.550298],7.519920),
+  "Zeke Nnaji":verifiedContract([7.466667,7.466667],7.466667),
+  "Cason Wallace":verifiedContract([7.420806],7.420806),
+  "Dereck Lively II":verifiedContract([7.239131],7.239131),
+  "Gradey Dick":verifiedContract([7.131511],7.131511),
+  "Clint Capela":verifiedContract([7.035000,7.370000],14.405000),
+  "Jordan Hawkins":verifiedContract([7.021895],7.021895),
+  "Al Horford":verifiedContract([6.822000,7.163100],13.985100),
+  "Keyonte George":verifiedContract([6.563925],6.563925),
+  "Tim Hardaway Jr.":verifiedContract([6.500000],6.500000),
+  "Saddiq Bey":verifiedContract([6.440678],6.440678),
+  "Zach Edey":verifiedContract([6.332760,8.067937],6.332760),
+  "John Konchar":verifiedContract([6.165000],6.165000),
+  "Luke Kennard":verifiedContract([6.064000,6.367200],6.064000),
+  "Marcus Smart":verifiedContract([6.064000,6.367200],6.064000),
+  "Jaxson Hayes":verifiedContract([6.000000,6.000000],6.000000),
+  "Josh Okogie":verifiedContract([6.000000,6.000000],6.000000),
+  "Spencer Jones":verifiedContract([6.000000,5.750000],11.750000),
+  "D'Angelo Russell":verifiedContract([5.969250],5.969250),
+  "Jaime Jaquez Jr.":verifiedContract([5.939141],5.939141),
+  "Jordan Goodwin":verifiedContract([5.864198,6.333333,6.802469],12.197531),
+  "Ousmane Dieng":verifiedContract([5.750000,5.750000,5.750000],11.500000),
+  "Brandin Podziemski":verifiedContract([5.679459],5.679459),
+  "Paul Reed":verifiedContract([5.602689],null),
+  "Khris Middleton":verifiedContract([5.591122,5.870678,6.150234],6.499000),
+  "Kris Murray":verifiedContract([5.315004],5.315004),
+  "Marcus Sasser":verifiedContract([5.198983],5.198983),
+  "Ben Sheppard":verifiedContract([5.031669],5.031669),
+  "Kenrich Williams":verifiedContract([5.000000],5.000000),
+  "Bub Carrington":verifiedContract([4.900560,7.257730],4.900560),
+  "Brice Sensabaugh":verifiedContract([4.862237],4.862237),
+  "Julian Strawther":verifiedContract([4.826931],4.826931),
+  "Gui Santos":verifiedContract([4.629630,5.000000,5.370370],9.629630),
+  "Josh Minott":verifiedContract([4.500000,4.500000],4.500000),
+  "Jose Alvarado":verifiedContract([4.500000,4.860000,5.220000],14.580000),
+  "Jared McCain":verifiedContract([4.422600,6.784268],4.422600),
+  "Jaylin Williams":verifiedContract([7.774648,7.774648],7.774648),
+  "Jaylen Clark":verifiedContract([3.086420,3.333334,3.580246],10.000000),
+  "DaRon Holmes":verifiedContract([3.372120,5.547138],3.372120),
+  "Dominick Barlow":verifiedContract([3.415000],3.415000),
+  "Ariel Hukporti":verifiedContract([3.400000],3.400000),
+  "Mo Bamba":verifiedContract([3.286399,3.681991],6.968390),
+  "Cole Anthony":verifiedContract([3.700000,3.700000],7.400000),
+  "Javonte Green":verifiedContract([3.943679],3.943679),
+  "Gary Harris":verifiedContract([3.815861],3.815861),
+  "Taurean Prince":verifiedContract([3.815861],3.815861),
+  "Pat Connaughton":verifiedContract([3.815861],3.815861),
+  "Kyle Filipowski":verifiedContract([3.000000,3.000000],null),
+  "Tarik Biberovic":verifiedContract([3.000000,3.000000],3.000000),
+  "Pacome Dadiet":verifiedContract([2.983680,5.373608],2.983680),
+  "Pacôme Dadiet":verifiedContract([2.983680,5.373608],2.983680),
+  "Isaiah Collier":verifiedContract([2.763960,4.988948],2.763960),
+  "Ryan Dunn":verifiedContract([2.784240,5.025553],2.784240),
+  "Jericho Sims":verifiedContract([2.801346],2.801346),
+  "Jay Huff":verifiedContract([2.667944,3.005085],null),
+  "Justin Champagnie":verifiedContract([2.667944,3.005085],2.667944),
+  "Vit Krejci":verifiedContract([2.667944,3.005085],null),
+  "Vít Krejčí":verifiedContract([2.667944,3.005085],null),
+  "Caleb Houstan":verifiedContract([2.625627],null),
+  "Christian Koloko":verifiedContract([2.625627],2.625627),
+  "Dru Smith":verifiedContract([2.584539,2.934742],null),
+  "Simone Fontecchio":verifiedContract([2.449421],2.449421),
+  "Larry Nance Jr.":verifiedContract([2.449421],2.449421),
+  "Trey Lyles":verifiedContract([2.449421],2.449421),
+  "Marvin Bagley III":verifiedContract([2.449421],2.449421),
+  "Tyus Jones":verifiedContract([2.449421],2.449421),
+  "Charles Bassey":verifiedContract([2.449421],2.449421),
+  "Gary Payton II":verifiedContract([2.449421],2.449421),
+  "Jae'Sean Tate":verifiedContract([2.449421],2.449421),
+  "Bogdan Bogdanovic":verifiedContract([2.449421],2.449421),
+  "Bogdan Bogdanović":verifiedContract([2.449421],2.449421),
+  "Jordan McLaughlin":verifiedContract([2.449421],2.449421),
+  "Harrison Ingram":verifiedContract([2.449421],2.449421),
+  "Moussa Diabate":verifiedContract([2.461462],null),
+  "Moussa Diabaté":verifiedContract([2.461462],null),
+  "Scotty Pippen Jr.":verifiedContract([2.461462,2.789215],null),
+  "Bryce McGowens":verifiedContract([2.584539,2.934742],2.584539),
+  "Trendon Watford":verifiedContract([2.449421],null),
+  "Kobe Bufkin":verifiedContract([2.449421],2.449421),
+  "Karlo Matkovic":verifiedContract([2.296271],2.296271),
+  "Karlo Matković":verifiedContract([2.296271],2.296271),
+  "Pelle Larsson":verifiedContract([2.296271],2.296271),
+  "Johnny Furphy":verifiedContract([2.296271,2.486995],2.296271),
+  "Jamison Battle":verifiedContract([2.296271],null),
+  "Oso Ighodaro":verifiedContract([2.296271,2.486995],null),
+  "Adem Bona":verifiedContract([2.296271,2.486995],null),
+  "Jaylen Wells":verifiedContract([2.296271,2.486995],null),
+  "Cam Christie":verifiedContract([2.296271,2.486995],null),
+  "Tyler Kolek":verifiedContract([2.296271,2.486995],2.296271),
+  "Jamal Shead":verifiedContract([2.296271],2.296271),
+  "Sion James":verifiedContract([2.411090,2.525901,2.735698],2.411090),
+  "Ryan Kalkbrenner":verifiedContract([2.411090,2.525901,2.735698],2.411090),
+  "Jordan Walsh":verifiedContract([2.406205,4.629630,5.000000,5.370370],17.406205),
+  "Trayce Jackson-Davis":verifiedContract([2.406205],2.406205),
+  "GG Jackson II":verifiedContract([2.406205],2.406205),
+  "Mouhamed Gueye":verifiedContract([2.406205],2.406205),
+  "Pete Nance":verifiedContract([2.537526,2.756912],2.537526),
+  "Oscar Tshiebwe":verifiedContract([2.537526],2.537526),
+  "Julian Phillips":verifiedContract([2.537526],2.537526),
+  "Andre Jackson Jr.":verifiedContract([2.537526],null),
+  "Jabari Walker":verifiedContract([2.584539],null),
+  "Haywood Highsmith":verifiedContract([3.449421],1.000000),
+  "Nassir Little":verifiedContract([3.107143,3.107143,3.107143],9.321429),
+  "Bradley Beal":verifiedContract([19.383010,19.383010,19.383010,19.383010],77.532040),
+  "Damian Lillard":verifiedContract([35.915403,36.620603,22.516603,22.516603],90.066412),
+  // Phase B Pass 2 — additional verified established-player contracts
+  "Aaron Wiggins":verifiedContract([9.224300,8.345797,8.345797],17.570097),
+  "Devin Carter":verifiedContract([5.158080,7.370897],5.158080),
+  "Buddy Hield":verifiedContract([9.658536,10.097560],9.658536),
+  "Asa Newell":verifiedContract([3.399480,3.560880,6.042814],3.399480),
+  "Ryan Nembhard":verifiedContract([2.150917],2.150917),
+  "Neemias Queta":verifiedContract([2.667944,12.500000,13.500000,14.500000,15.500000],58.667944),
+  "Luka Garza":verifiedContract([2.801346],2.801346),
+  "Baylor Scheierman":verifiedContract([2.744040,4.952993],2.744040),
+  "Hugo Gonzalez":verifiedContract([2.923560,3.062640,5.528065],2.923560),
+  "Hugo González":verifiedContract([2.923560,3.062640,5.528065],2.923560),
+  "Ron Harper Jr.":verifiedContract([3.150752,3.308290,3.465828,3.779359],6.459042),
+  "Egor Demin":verifiedContract([7.233720,7.578240,9.639522],7.233720),
+  "Egor Dëmin":verifiedContract([7.233720,7.578240,9.639522],7.233720),
+  "Nolan Traore":verifiedContract([4.002000,4.193040,6.457282],4.002000),
+  "Nolan Traoré":verifiedContract([4.002000,4.193040,6.457282],4.002000),
+  "Danny Wolf":verifiedContract([2.941440,3.081840,5.559640],2.941440),
+  "Ben Saraf":verifiedContract([3.028560,3.172920,5.720776],3.028560),
+  "Drake Powell":verifiedContract([3.540600,3.709320,6.101832],3.540600),
+  "Kon Knueppel":verifiedContract([10.516560,11.017560,13.937214],10.516560),
+  "Tidjane Salaun":verifiedContract([8.237880,10.445633],8.237880),
+  "Tidjane Salaün":verifiedContract([8.237880,10.445633],8.237880),
+  "Noa Essengue":verifiedContract([5.701200,5.972760,8.230464],5.701200),
+  "Jaylon Tyson":verifiedContract([3.658560,5.641500],3.658560),
+  "Mario Hezonja":verifiedContract([2.449421],2.449421),
+  "Tyrese Proctor":verifiedContract([2.150917,2.525901,2.735698],2.150917),
+  "Cooper Flagg":verifiedContract([14.517480,15.208680,19.178146],14.517480),
+  "Naji Marshall":verifiedContract([9.428571,18.195600,17.285820,16.376040],61.286031),
+  "Moussa Cisse":verifiedContract([2.185116,2.571895],2.185116),
+  "Christian Braun":verifiedContract([21.551726,23.275863,25.000000,26.724137,28.448274],125.000000),
+  "DaRon Holmes II":verifiedContract([3.372120,5.547138],3.372120),
+  "Daniss Jenkins":verifiedContract([4.000000],4.000000),
+  "Ronald Holland II":verifiedContract([9.069600,11.491183],9.069600),
+  "Ron Holland":verifiedContract([9.069600,11.491183],9.069600),
+  "Will Richard":verifiedContract([2.150917,2.525901,2.735698],2.150917),
+  "T.J. McConnell":verifiedContract([11.000000,11.800000,11.800000],22.800000),
+  "Kelly Oubre Jr.":verifiedContract([8.050000,8.450000],16.500000),
+  "Isaiah Jackson":verifiedContract([7.000000,6.400000],13.400000),
+  "Jordan Miller":verifiedContract([5.300000,5.000000,5.000000],5.300000),
+  "Kris Dunn":verifiedContract([5.684800],null),
+  "Kobe Sanders":verifiedContract([2.622139,2.753246,2.884353,3.019474],5.375385),
+  "Yanic Konan Niederhauser":verifiedContract([2.880960,3.018480,5.448356],2.880960),
+  "Yanic Konan Niederhäuser":verifiedContract([2.880960,3.018480,5.448356],2.880960),
+  "Collin Sexton":verifiedContract([9.366000,9.834300],19.200300),
+  "Ziaire Williams":verifiedContract([2.449421],2.449421),
+  "Matisse Thybulle":verifiedContract([2.449421],2.449421),
+  "Jaden Hardy":verifiedContract([6.000000,6.000000],6.000000),
+  "Jake LaRavia":verifiedContract([6.000000],6.000000),
+  "Kevon Looney":verifiedContract([2.449421],2.449421),
+  "Dalton Knecht":verifiedContract([4.201080,6.452860],4.201080),
+  "Cedric Coward":verifiedContract([6.001080,6.286920,8.342743],6.001080),
+  "GG Jackson":verifiedContract([2.406205],2.406205),
+  "Cam Spencer":verifiedContract([2.411090,2.616754,2.830685],5.027844),
+  "Olivier-Maxence Prosper":verifiedContract([2.497812],2.497812),
+  "Walter Clayton Jr.":verifiedContract([4.190520,4.390320,6.752312],4.190520),
+  "Myron Gardner":verifiedContract([2.150917,2.525901],null),
+  "Kel'el Ware":verifiedContract([4.654920,7.135992],4.654920),
+  "Kel’el Ware":verifiedContract([4.654920,7.135992],4.654920),
+  "Kasparas Jakucionis":verifiedContract([3.841680,4.024440,6.205687],3.841680),
+  "Kasparas Jakučionis":verifiedContract([3.841680,4.024440,6.205687],3.841680),
+  "Joan Beringer":verifiedContract([4.411200,4.621200,7.098163],4.411200),
+  "Derik Queen":verifiedContract([5.416080,5.673840,8.107918],5.416080),
+  "Jeremiah Fears":verifiedContract([7.896240,8.271960,10.505389],7.896240),
+  "Yves Missi":verifiedContract([3.512760,5.595827],3.512760),
+  "DeAndre Jordan":verifiedContract([3.876529,4.070355],7.946884),
+  "Mohamed Diawara":verifiedContract([2.232143,2.410714,2.589286,2.767857],10.000000),
+  "Ajay Mitchell":verifiedContract([2.850000,2.850000],null),
+  "Thomas Sorber":verifiedContract([4.887720,5.120400,7.849573],4.887720),
+  "Nikola Vucevic":verifiedContract([2.449421],2.449421),
+  "Nikola Vučević":verifiedContract([2.449421],2.449421),
+  "Tristan da Silva":verifiedContract([3.991200,6.138466],3.991200),
+  "Jevon Carter":verifiedContract([2.449421],2.449421),
+  "Noah Penda":verifiedContract([2.150917,2.525901,2.735698],2.150917),
+  "Jamal Cain":verifiedContract([2.584539],2.584539),
+  "Jase Richardson":verifiedContract([3.132360,3.282000,5.910882],3.132360),
+  "VJ Edgecombe":verifiedContract([11.663880,12.219720,15.445727],11.663880),
+  "Anfernee Simons":verifiedContract([6.000000,6.300000],6.000000),
+  "Khaman Maluach":verifiedContract([6.316680,6.617160,8.436880],6.316680),
+  "Jamaree Bouyea":verifiedContract([2.584539],2.584539),
+  "Rasheer Fleming":verifiedContract([2.150917,2.525901,2.735698],4.676818),
+  "Robert Williams III":verifiedContract([13.968254,14.666667,15.365079],18.968254),
+  "Jeremy Sochan":verifiedContract([2.449421],2.449421),
+  "Sidy Cissoko":verifiedContract([2.497812],null),
+  "Branden Carlson":verifiedContract([2.449421],2.449421),
+  "Yang Hansen":verifiedContract([4.643520,4.864920,7.462788],4.643520),
+  "Maxime Raynaud":verifiedContract([2.150917,2.525901],2.150917),
+  "De’Andre Hunter":verifiedContract([24.910714],24.910714),
+  "De'Andre Hunter":verifiedContract([24.910714],24.910714),
+  "Keegan Murray":verifiedContract([24.137936,26.068965,27.999999,29.931033,31.862067],140.000000),
+  "Nique Clifford":verifiedContract([3.263400,3.418800,5.979481],3.263400),
+  "Daeqwon Plowden":verifiedContract([2.449421,2.664401],5.113822),
+  "Stephon Castle":verifiedContract([10.015920,12.670139],10.015920),
+  "Dylan Harper":verifiedContract([12.989040,13.607760,17.172994],12.989040),
+  "Devin Vassell":verifiedContract([27.000000,24.652174,27.000000],78.652174),
+  "Harrison Barnes":verifiedContract([8.000000],8.000000),
+  "Carter Bryant":verifiedContract([5.145360,5.390640,7.983539],5.145360),
+  "Collin Murray-Boyles":verifiedContract([6.649560,6.966000,8.874684],6.649560),
+  "Ja'Kobe Walter":verifiedContract([3.811800,5.870172],3.811800),
+  "Ja’Kobe Walter":verifiedContract([3.811800,5.870172],3.811800),
+  "Kyle Anderson":verifiedContract([2.449421],2.449421),
+  "Alijah Martin":verifiedContract([2.185116,2.571895],2.185116),
+  "Ace Bailey":verifiedContract([9.523080,9.976560,12.640302],9.523080),
+  "Cody Williams":verifiedContract([6.015600,7.669890],6.015600),
+  "Svi Mykhailiuk":verifiedContract([3.850000,4.025000],null),
+  "KyShawn George":verifiedContract([3.108000,5.435892],3.108000),
+  "Kyshawn George":verifiedContract([3.108000,5.435892],3.108000),
+  "Will Riley":verifiedContract([3.688320,3.864000,6.155352],3.688320),
+  "Deandre Ayton":verifiedContract([8.104000],8.104000),
+  "Tre Johnson":verifiedContract([8.649600,9.061680,11.490211],8.649600),
+  "Tre Mann":verifiedContract([8.000000,8.000000],8.000000),
+};
+
+const VERIFIED_2026_27_CONTRACTS_NORMALIZED=new Map(
+  Object.entries(VERIFIED_2026_27_CONTRACTS).map(([name,row])=>[normalizeSourcePlayerName(name),row])
+);
+function verifiedLaunchContract(sourceName){
+  if(!sourceName)return null;
+  return VERIFIED_2026_27_CONTRACTS[sourceName]||VERIFIED_2026_27_CONTRACTS_NORMALIZED.get(normalizeSourcePlayerName(sourceName))||null;
+}
+function applyVerifiedLaunchContract(player,sourceName){
+  if(!player||!sourceName)return player;
+  const row=verifiedLaunchContract(sourceName);
+  player.productionContractSnapshotVersion=CONTRACT_SNAPSHOT_VERSION;
+  player.productionContractSourceName=sourceName;
+  if(!row){
+    if(VERIFIED_2026_27_TWO_WAY_NAMES.has(normalizeSourcePlayerName(sourceName))){
+      player.salaryM=0;
+      player.contractYearsLeft=1;
+      player.contractType="Two-Way";
+      player.contractStatus="Under Contract";
+      player.extensionEligible=false;
+      player.productionContractVerified=true;
+      player.productionContractVerifiedKind="Two-Way";
+      player.productionContractStatus="Verified 2026/27 two-way contract";
+      player.productionContractSource=CONTRACT_SNAPSHOT_SOURCE;
+      player.productionContractScheduleM=[];
+      player.productionContractOriginalScheduleM=[];
+      player.productionContractGuaranteedM=null;
+      player.productionContractTermBasis="Two-way roster status verified; two-way salary is excluded from standard team payroll in the source table.";
+      return player;
+    }
+    player.productionContractStatus="Mini&Me fallback — verification pending";
+    player.productionContractSource="Mini&Me generated contract economy";
+    player.productionContractVerified=false;
+    player.productionContractVerifiedKind="Fallback";
+    return player;
+  }
+  const schedule=(row.scheduleM||[]).filter(v=>Number.isFinite(+v)&&+v>=0);
+  if(!schedule.length)return player;
+  player.salaryM=+schedule[0];
+  player.contractYearsLeft=schedule.length;
+  player.contractType="Standard";
+  player.contractStatus="Under Contract";
+  player.extensionEligible=schedule.length===1;
+  player.productionContractVerified=true;
+  player.productionContractVerifiedKind="Standard";
+  player.productionContractStatus="Verified 2026/27 salary snapshot";
+  player.productionContractSource=CONTRACT_SNAPSHOT_SOURCE;
+  player.productionContractScheduleM=[...schedule];
+  player.productionContractOriginalScheduleM=[...schedule];
+  player.productionContractGuaranteedM=row.guaranteedM;
+  player.productionContractTermBasis="Listed salary schedule; guarantee/option status not inferred unless explicitly noted";
+  player.productionContractNote=row.note||null;
+  return player;
+}
+function advanceVerifiedContractSchedule(player){
+  if(!player?.productionContractVerified||player.contractType!=="Standard"||!Array.isArray(player.productionContractScheduleM))return;
+  if(player.productionContractScheduleM.length>1){
+    player.productionContractScheduleM=player.productionContractScheduleM.slice(1);
+    if(Number.isFinite(+player.productionContractScheduleM[0]))player.salaryM=+player.productionContractScheduleM[0];
+  }else if(player.productionContractScheduleM.length===1){
+    player.productionContractScheduleM=[];
+  }
+}
+function productionContractSnapshotAudit(G){
+  const players=(G?.clubs||[]).flatMap(c=>(c.roster||[]).map(p=>({clubId:c.id,clubName:c.name,p})));
+  const launch=players.filter(x=>x.p?.origin==="Mapped Pro"||x.p?.entryPath==="Mapped Veteran");
+  const verified=launch.filter(x=>x.p.productionContractVerified);
+  const verifiedStandard=verified.filter(x=>x.p.productionContractVerifiedKind==="Standard");
+  const verifiedTwoWay=verified.filter(x=>x.p.productionContractVerifiedKind==="Two-Way");
+  const fallback=launch.filter(x=>!x.p.productionContractVerified);
+  const invalid=verifiedStandard.filter(x=>!(+x.p.salaryM>0)||!(x.p.contractYearsLeft>0));
+  const draftLeak=(G?.upcomingDraftClass?.season===1?G.upcomingDraftClass.prospects:[]).filter(p=>(+p.salaryM||0)>0||(p.contractYearsLeft||0)>0);
+  const clubPayrolls=(G?.clubs||[]).map(c=>({clubId:c.id,clubName:c.name,payrollM:recalcClubCap(c),verifiedPlayers:(c.roster||[]).filter(p=>p.productionContractVerified).length,fallbackPlayers:(c.roster||[]).filter(p=>p.entryPath==="Mapped Veteran"&&!p.productionContractVerified).length}));
+  const report={
+    version:CONTRACT_SNAPSHOT_VERSION,source:CONTRACT_SNAPSHOT_SOURCE,
+    launchVeterans:launch.length,verifiedPlayers:verified.length,verifiedStandardPlayers:verifiedStandard.length,verifiedTwoWayPlayers:verifiedTwoWay.length,fallbackPlayers:fallback.length,
+    coveragePct:launch.length?Math.round(verified.length/launch.length*1000)/10:0,
+    fallbackSourceNames:fallback.map(x=>x.p.sourceTemplateName||x.p.name).sort(),
+    invalidVerifiedContracts:invalid.map(x=>x.p.sourceTemplateName||x.p.name),
+    draftProspectContractLeak:draftLeak.map(p=>p.sourceTemplateName||p.name),clubPayrolls,
+    guaranteePolicy:"Guaranteed totals retained where source table exposes them; per-year guarantee/option state is not invented.",
+    twoWayPolicy:"Verified two-way roster status is stored separately from standard payroll because source payroll tables do not list a standard cap salary for those deals.",
+    passed:invalid.length===0&&draftLeak.length===0
+  };
+  if(G)G.productionContractAudit=report;
+  return report;
+}
+function ensureProductionContractSnapshot(G){
+  if(!G)return;
+  if(!G.productionContractAudit||G.productionContractAudit.version!==CONTRACT_SNAPSHOT_VERSION)productionContractSnapshotAudit(G);
+}
+
+
 function financialThresholds(G) {
   const yearIndex=Math.max(0,(G.season||1)-1), growth=Math.pow(CAP_GROWTH,yearIndex);
   const r=n=>Math.round(n*growth*1000)/1000;
@@ -3983,7 +4529,7 @@ function productionCapFoundationAudit(G){
     salaryCapSetting:G?.settings?.salaryCap!==false,
     draftProspectContractLeak:draftContractLeak,
     futureCapModel:"5% annual Mini&Me growth from the official 2026/27 base",
-    playerContractSnapshotStatus:"pending verified player-by-player import",
+    playerContractSnapshotStatus:"Phase B verified contract snapshot active; unresolved identities remain explicitly marked Mini&Me fallback",
     passed:mismatches.length===0&&draftContractLeak.length===0,
     mismatches
   };
@@ -5855,6 +6401,7 @@ function runOffseason(G) {
           G.transactions.push({type:"extension",season:G.season,clubId:club.id,playerId:p.id,years:add,salaryM:p.salaryM});
         }
         if ((p.contractYearsLeft||0)>0) p.contractYearsLeft--;
+        if((p.contractYearsLeft||0)>0)advanceVerifiedContractSchedule(p);
         p.extensionEligible=(p.contractYearsLeft||0)<=1;
       }
       p.age++;
@@ -8240,7 +8787,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.14.2 Haymes Family Identity Fix",ENGINE_VERSION="E2.15-PROD5A2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.15.1 Verified 2026/27 Contracts — Phase B Pass 2",ENGINE_VERSION="E2.15-PROD6B2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13122,6 +13669,7 @@ function render(){
   ensureProductionJerseyAudit(G);
   ensureProductionRatingAudit(G);
   ensureProductionCapFoundation(G);
+  ensureProductionContractSnapshot(G);
 prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
