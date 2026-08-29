@@ -1861,7 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.45.15.2 — Phase B closure: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
+// v0.1.45.16.0 — Player Market & Two-Way Realism: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
 // v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
 // v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.45.14.1 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
@@ -2237,7 +2237,7 @@ function allTalentPlayers(G){
   const out=[],seen=new Set();
   const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
   for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
-  (G.freeAgents||[]).forEach(add);(G.draftPool||[]).forEach(add);
+  (G.freeAgents||[]).forEach(add);(G.externalProfessionals||[]).forEach(add);(G.draftPool||[]).forEach(add);
   return out;
 }
 function talentSnapshot(G){
@@ -3951,14 +3951,18 @@ const CAP_FOUNDATION_VERSION="NBA-2026-27-CAP-1";
 // Players not yet present in this verified tranche retain the Mini&Me
 // generated contract economy and are marked as fallback in the audit.
 // ---------------------------------------------------------------------
-const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B3-CLOSURE";
-const CONTRACT_SNAPSHOT_SOURCE="Spotrac primary for Phase B closure; existing Basketball-Reference verified tranche retained where not contradicted; current transaction reporting used only where Spotrac has not yet reflected a newly signed status. Checked 30 Aug 2026";
+const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B4-EXCEPTIONS";
+const CONTRACT_SNAPSHOT_SOURCE="Spotrac-priority 2026/27 contract snapshot with NBA/G League transaction verification for two-way and transition cases. Checked 30 Aug 2026";
 function verifiedContract(schedule,guaranteedM=null,note=null){
   return {scheduleM:schedule.map(v=>v==null?null:+v),guaranteedM:guaranteedM==null?null:+guaranteedM,note};
 }
 const VERIFIED_2026_27_TWO_WAY_NAMES=new Set([
   "Jalen Wilson","Elijah Harkless","Kobe Brown","Quenton Jackson","Vladislav Goldin",
-  "Colin Castleton","Caleb Love","Pat Spencer","Jonathan Mogbo","Adam Flagler","Chucky Hepburn"
+  "Colin Castleton","Caleb Love","Pat Spencer","Jonathan Mogbo","Adam Flagler","Chucky Hepburn",
+  // v0.1.45.15.3 — launch contract exceptions resolved as verified/current two-way status.
+  "Blake Hinson","Brooks Barnhizer","Chaney Johnson","David Jones Garcia","Dillon Jones",
+  "Enrique Freeman","Javon Small","Jett Howard","KJ Simpson","LJ Cryer","Malevy Leons",
+  "Rayan Rupert","Rocco Zikarsky","Trevor Keels","Trey Jemison III","Tristan Enaruna"
 ].map(normalizeSourcePlayerName));
 const VERIFIED_2026_27_CONTRACTS={
   "Stephen Curry":verifiedContract([62.587158],62.587158),
@@ -4396,6 +4400,9 @@ const VERIFIED_2026_27_CONTRACTS={
 // These are intentionally applied after the earlier verified tranche so the
 // closure source takes precedence where a clearer current contract is available.
 Object.assign(VERIFIED_2026_27_CONTRACTS,{
+  // v0.1.45.15.3 — remaining clear standard-contract exceptions.
+  "Dylan Cardwell":verifiedContract([2.150917,2.525901,2.735698],3.021917,"2026/27 salary fully guaranteed; 2027/28 non-guaranteed and 2028/29 team option retained as source metadata rather than auto-resolved."),
+  "Nick Richards":verifiedContract([3.066143],3.066143,"One-year 2026/27 veteran minimum contract; current reported deal carries a $2.449421M cap hit. Mini&Me retains the launch-team assignment independently of real-world transaction timing."),
   "AJ Green":verifiedContract([10.044644,10.848215,11.651786,12.455355],45.000000,"Spotrac: 4-year veteran extension, fully guaranteed."),
   "DeMar DeRozan":verifiedContract([25.740000],10.000000,"Spotrac: 2026/27 salary $25.74M; $10M base guarantee with conditional guarantee escalators. Game does not auto-resolve those real-world conditions."),
   "Tristan Vukcevic":verifiedContract([3.000000,3.000000],3.000000,"Spotrac: 2027/28 is a club option; stored as listed salary schedule without automatic option exercise."),
@@ -4410,6 +4417,27 @@ const CURRENT_TWO_WAY_STATUS_SOURCE=new Map([
   [normalizeSourcePlayerName("Keshad Johnson"),"Current 2026/27 two-way signing reporting, checked 30 Aug 2026"],
 ]);
 for(const key of CURRENT_TWO_WAY_STATUS_SOURCE.keys())VERIFIED_2026_27_TWO_WAY_NAMES.add(key);
+
+
+// v0.1.45.15.3 — explicit launch exceptions.
+// These players no longer receive random Mini&Me 1–4 year fallback contracts.
+// They remain attached to the supplied launch universe, but their real 2026/27
+// contract state is represented honestly until ordinary career logic resolves it.
+const PRODUCTION_2026_27_CONTRACT_EXCEPTIONS=new Map([
+  [normalizeSourcePlayerName("Jalen Duren"),{
+    kind:"RFA",status:"Restricted Free Agent",salaryM:0,years:0,
+    capHoldM:19.449432,qualifyingOfferM:9.615600,
+    note:"Detroit submitted a qualifying offer. No 2026/27 standard contract was verified at the 30 Aug 2026 snapshot."
+  }],
+  [normalizeSourcePlayerName("Bruce Brown"),{
+    kind:"UFA",status:"Unrestricted Free Agent",salaryM:0,years:0,
+    note:"Listed as an unrestricted free agent for 2026/27 at the 30 Aug 2026 snapshot."
+  }],
+  [normalizeSourcePlayerName("Kyle Lowry"),{
+    kind:"Retired",status:"Retired",salaryM:0,years:0,
+    note:"Officially retired 7 July 2026 after a ceremonial one-day Toronto contract. Retained only as a launch-data transition record so the supplied roster identity is not silently given a fictional playing contract."
+  }]
+]);
 
 const VERIFIED_2026_27_CONTRACTS_NORMALIZED=new Map(
   Object.entries(VERIFIED_2026_27_CONTRACTS).map(([name,row])=>[normalizeSourcePlayerName(name),row])
@@ -4438,6 +4466,27 @@ function applyVerifiedLaunchContract(player,sourceName){
       player.productionContractOriginalScheduleM=[];
       player.productionContractGuaranteedM=null;
       player.productionContractTermBasis="Two-way roster status verified; two-way salary is excluded from standard team payroll in the source table.";
+      return player;
+    }
+    const exception=PRODUCTION_2026_27_CONTRACT_EXCEPTIONS.get(normalizeSourcePlayerName(sourceName));
+    if(exception){
+      player.salaryM=+exception.salaryM||0;
+      player.contractYearsLeft=+exception.years||0;
+      player.contractType=exception.kind;
+      player.contractStatus=exception.status;
+      player.extensionEligible=false;
+      player.productionContractVerified=true;
+      player.productionContractVerifiedKind="Exception";
+      player.productionContractStatus=`Verified 2026/27 ${exception.status} exception`;
+      player.productionContractSource=CONTRACT_SNAPSHOT_SOURCE;
+      player.productionContractScheduleM=[];
+      player.productionContractOriginalScheduleM=[];
+      player.productionContractGuaranteedM=0;
+      player.productionContractCapHoldM=Number.isFinite(+exception.capHoldM)?+exception.capHoldM:null;
+      player.productionContractQualifyingOfferM=Number.isFinite(+exception.qualifyingOfferM)?+exception.qualifyingOfferM:null;
+      player.productionContractTermBasis="Explicit launch exception; no generated standard contract.";
+      player.productionContractNote=exception.note||null;
+      player.launchContractException=true;
       return player;
     }
     player.productionContractStatus="Mini&Me fallback — verification pending";
@@ -4479,6 +4528,7 @@ function productionContractSnapshotAudit(G){
   const verified=launch.filter(x=>x.p.productionContractVerified);
   const verifiedStandard=verified.filter(x=>x.p.productionContractVerifiedKind==="Standard");
   const verifiedTwoWay=verified.filter(x=>x.p.productionContractVerifiedKind==="Two-Way");
+  const verifiedExceptions=verified.filter(x=>x.p.productionContractVerifiedKind==="Exception");
   const fallback=launch.filter(x=>!x.p.productionContractVerified);
   const invalid=verifiedStandard.filter(x=>!(+x.p.salaryM>0)||!(x.p.contractYearsLeft>0));
   const draftLeak=(G?.upcomingDraftClass?.season===1?G.upcomingDraftClass.prospects:[]).filter(p=>(+p.salaryM||0)>0||(p.contractYearsLeft||0)>0);
@@ -4493,7 +4543,7 @@ function productionContractSnapshotAudit(G){
   const unresolvedStatus=fallback.map(x=>({clubId:x.clubId,clubName:x.clubName,sourceName:x.p.sourceTemplateName||x.p.name,status:"Mini&Me fallback retained — no reliable current 2026/27 standard salary imported"})).sort((a,b)=>a.sourceName.localeCompare(b.sourceName));
   const report={
     version:CONTRACT_SNAPSHOT_VERSION,source:CONTRACT_SNAPSHOT_SOURCE,
-    launchVeterans:launch.length,verifiedPlayers:verified.length,verifiedStandardPlayers:verifiedStandard.length,verifiedTwoWayPlayers:verifiedTwoWay.length,fallbackPlayers:fallback.length,
+    launchVeterans:launch.length,verifiedPlayers:verified.length,verifiedStandardPlayers:verifiedStandard.length,verifiedTwoWayPlayers:verifiedTwoWay.length,verifiedExceptionPlayers:verifiedExceptions.length,fallbackPlayers:fallback.length,
     coveragePct:launch.length?Math.round(verified.length/launch.length*1000)/10:0,
     fallbackSourceNames:fallback.map(x=>x.p.sourceTemplateName||x.p.name).sort(),unresolvedStatus,
     invalidVerifiedContracts:invalid.map(x=>x.p.sourceTemplateName||x.p.name),
@@ -4504,8 +4554,8 @@ function productionContractSnapshotAudit(G){
     launchThresholds:thresholds,
     guaranteePolicy:"Guaranteed totals retained where reliably exposed. Conditional guarantees and options are recorded as metadata and are not auto-resolved unless the game explicitly supports that mechanism.",
     twoWayPolicy:"Verified two-way roster status is stored separately from standard payroll and does not receive an invented standard salary.",
-    unresolvedPolicy:"A verified UFA/RFA/transition status is not converted into a fabricated 2026/27 salary. The existing Mini&Me contract is retained until the launch snapshot has a reliable standard contract value.",
-    passed:invalid.length===0&&draftLeak.length===0&&payrollIntegrityIssues.length===0&&clubPayrolls.length===30
+    unresolvedPolicy:"Launch exceptions are explicit. Verified two-way players carry two-way status; UFA/RFA/retired transition cases carry zero standard salary rather than a random generated contract.",
+    passed:invalid.length===0&&draftLeak.length===0&&payrollIntegrityIssues.length===0&&clubPayrolls.length===30&&fallback.length===0
   };
   if(G)G.productionContractAudit=report;
   return report;
@@ -4982,12 +5032,25 @@ function makeCareer() {
   const launchRosterRepairs=ensureLaunchRosterTemplateIntegrity(clubs);
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
   const freeAgents = [];
-  // Seed each nation with non-NBA professional depth so international squads
-  // can be complete without inventing duplicate national-team players.
+  const externalProfessionals = [];
+  // v0.1.45.16.0 — international professionals belong to an external
+  // professional market, not the NBA free-agent list. Their OVR can remain
+  // strong because ability and NBA availability are now separate concepts.
   for (const nation of NATIONAL_TEAMS) {
     for (let i=0;i<10;i++) {
       const base = nation.tier===1 ? rand(70,84) : nation.tier===2 ? rand(67,79) : nation.tier===3 ? rand(64,75) : rand(60,71);
-      freeAgents.push(makePlayer({age:rand(20,34),ovr:base,nationality:nation.code,origin:"International Pro"}));
+      const p=makePlayer({age:rand(20,34),ovr:base,nationality:nation.code,origin:"International Pro"});
+      const affiliation=externalAffiliationForNation(nation,`${nation.code}|launch|${i}|${p.id}`);
+      p.contractYearsLeft=rand(1,3);
+      p.contractStatus="External League";
+      p.contractType="International";
+      p.salaryM=0;
+      p.extensionEligible=false;
+      p.externalClub=affiliation;
+      p.externalLeague=affiliation;
+      p.entryPath="International Pro";
+      p.nbaAvailability="External Contract";
+      externalProfessionals.push(p);
     }
   }
   return {
@@ -5001,6 +5064,8 @@ function makeCareer() {
     settings: { salaryCap:true, injuries:true },
     clubs,
     freeAgents,
+    externalProfessionals,
+    playerMarketVersion:"PM1",
     nationalTeams: NATIONAL_TEAMS.map(n => {const init=FIBA_INITIAL_RATINGS[n.code]||{rank:null,zoneRank:null,pts:Math.max(100,520-(n.tier-1)*120)};return ({ ...n, rosterPlayerIds: [], record:{w:0,l:0}, games:[], history:[], currentDepthChart:[], selectedSquadPlayerIds:[], rankingPoints:init.pts, initialWorldRank:init.rank, initialZoneRank:init.zoneRank, rankingEngineVersion:FIBA_RANKING_ENGINE_VERSION, rankingSource:FIBA_RANKING_SOURCE, rankingLedger:[] })}),
     userNationalGM: { nationCode: null, appointedSeason: null },
     userClubGM: { clubId: null, appointedSeason: null },
@@ -5506,9 +5571,88 @@ function aiRosterFitSummary(club){
 }
 
 // ---------------------------------------------------------------------
+// PLAYER MARKET ARCHITECTURE — v0.1.45.16.0
+// Free Agent = immediately available to an NBA club.
+// External Professional = contracted outside the NBA ecosystem.
+// Developmental/G League = NBA-adjacent talent with bounded two-way OVR.
+// ---------------------------------------------------------------------
+const PLAYER_MARKET_VERSION="PM1";
+
+function ensurePlayerMarketState(G){
+  if(!G)return null;
+  G.freeAgents=Array.isArray(G.freeAgents)?G.freeAgents:[];
+  G.externalProfessionals=Array.isArray(G.externalProfessionals)?G.externalProfessionals:[];
+
+  // Save migration: older builds stored every generated International Pro
+  // in G.freeAgents. Move only true external professionals; do not touch
+  // legitimate NBA free agents merely because they have non-USA nationality.
+  const keep=[],externalIds=new Set(G.externalProfessionals.map(p=>p?.id).filter(Boolean));
+  for(const p of G.freeAgents){
+    const external=p && (
+      p.origin==="International Pro" ||
+      p.contractType==="International" ||
+      p.contractStatus==="External League" ||
+      p.nbaAvailability==="External Contract"
+    );
+    if(external){
+      if(!externalIds.has(p.id)){
+        const nation=(G.nationalTeams||[]).find(n=>n.code===p.nationality)||{code:p.nationality,region:"Europe"};
+        const affiliation=p.externalClub||p.externalLeague||externalAffiliationForNation(nation,p.id||p.name);
+        p.externalClub=affiliation;p.externalLeague=affiliation;
+        p.contractType="International";p.contractStatus="External League";
+        p.contractYearsLeft=Math.max(1,+p.contractYearsLeft||rand(1,3));
+        p.salaryM=0;p.extensionEligible=false;p.nbaAvailability="External Contract";
+        G.externalProfessionals.push(p);externalIds.add(p.id);
+      }
+    }else{
+      if(!p.nbaAvailability)p.nbaAvailability="Available";
+      keep.push(p);
+    }
+  }
+  G.freeAgents=keep;
+  G.playerMarketVersion=PLAYER_MARKET_VERSION;
+  return productionPlayerMarketAudit(G);
+}
+
+function productionPlayerMarketAudit(G){
+  const fa=G?.freeAgents||[],ext=G?.externalProfessionals||[];
+  const twoWayCandidates=allPlayers(G).filter(p=>twoWayEligible(p));
+  const highFA=fa.filter(p=>(+p.ovr||0)>=81);
+  const externalInFA=fa.filter(p=>p.origin==="International Pro"||p.contractType==="International"||p.contractStatus==="External League");
+  const highTwoWayCandidate=twoWayCandidates.filter(p=>(+p.ovr||0)>74);
+  const report={
+    version:PLAYER_MARKET_VERSION,
+    nbaFreeAgents:fa.length,
+    externalProfessionals:ext.length,
+    freeAgents81Plus:highFA.length,
+    freeAgents78to80:fa.filter(p=>(+p.ovr||0)>=78&&(+p.ovr||0)<=80).length,
+    freeAgents77AndBelow:fa.filter(p=>(+p.ovr||0)<=77).length,
+    twoWayEligible:twoWayCandidates.length,
+    twoWayEligible75Plus:highTwoWayCandidate.length,
+    externalProfessionalsMisclassifiedAsFreeAgents:externalInFA.length,
+    highestFreeAgentOvr:fa.length?Math.max(...fa.map(p=>+p.ovr||0)):null,
+    highestTwoWayEligibleOvr:twoWayCandidates.length?Math.max(...twoWayCandidates.map(p=>+p.ovr||0)):null,
+    passed:externalInFA.length===0&&highTwoWayCandidate.length===0
+  };
+  G.productionPlayerMarketAudit=report;
+  return report;
+}
+
+// ---------------------------------------------------------------------
 // NATIONAL TEAM / FREE AGENT HELPERS
 // ---------------------------------------------------------------------
-function allPlayers(G) { return [...G.clubs.flatMap(c=>c.roster), ...(G.freeAgents||[])]; }
+function allPlayers(G) {
+  const out=[],seen=new Set();
+  const add=p=>{if(p?.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
+  for(const c of G.clubs||[]){
+    (c.roster||[]).forEach(add);
+    (c.twoWayRoster||[]).forEach(add);
+    (c.gLeagueRoster||[]).forEach(add);
+  }
+  (G.freeAgents||[]).forEach(add);
+  (G.externalProfessionals||[]).forEach(add);
+  return out;
+}
 function nationalSelectionScore(player) {
   const s=player.seasonStats||emptyRegularStats();
   const form=player.recentForm?.length ? player.recentForm.reduce((a,b)=>a+b,0)/player.recentForm.length : 0;
@@ -5767,7 +5911,7 @@ function externalAffiliationForNation(nation,seed=""){
 }
 function ensureInternationalAffiliation(p){
   if(!p)return"International Pro";
-  const club=G.clubs.find(cl=>(cl.roster||[]).some(x=>x.id===p.id));
+  const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id));
   if(club)return club.name;
   if(p.externalClub)return p.externalClub;
   if(p.origin==="G League"||p.contractType==="G League")return"G League";
@@ -5814,9 +5958,10 @@ function ensureNationalDepth(G, nationCode, minHealthy=12) {
     const base=nation.tier===1?rand(69,82):nation.tier===2?rand(66,78):nation.tier===3?rand(62,74):rand(60,70);
     const affiliation=externalAffiliationForNation(nation,`${nationCode}|${healthy.length}|${G.season}`);
     const p=makePlayer({age:rand(19,32),ovr:base,nationality:nationCode,origin:"International Pro"});
-    p.contractYearsLeft=0;p.contractStatus="External League";p.contractType="International";p.salaryM=0;
-    p.externalClub=affiliation;p.externalLeague=affiliation;p.entryPath="International Pro";
-    G.freeAgents.push(p);healthy.push(p);guard++;
+    p.contractYearsLeft=rand(1,3);p.contractStatus="External League";p.contractType="International";p.salaryM=0;
+    p.externalClub=affiliation;p.externalLeague=affiliation;p.entryPath="International Pro";p.nbaAvailability="External Contract";
+    G.externalProfessionals=G.externalProfessionals||[];
+    G.externalProfessionals.push(p);healthy.push(p);guard++;
   }
 }
 function prepareNationalRosters(G, teamCodes=null) {
@@ -6261,12 +6406,14 @@ function extendPlayerContract(G, clubId, playerId, years=2) {
 }
 function releasePlayer(G, clubId, playerId) {
   const club=clubById(G,clubId); if(!club) return false; const idx=club.roster.findIndex(p=>p.id===playerId); if(idx<0) return false;
-  const [p]=club.roster.splice(idx,1); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; G.freeAgents.push(p); recalcClubCap(club);
+  const [p]=club.roster.splice(idx,1); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.nbaAvailability="Available"; G.freeAgents.push(p); recalcClubCap(club);
   G.transactions.push({type:"waive",season:G.season,clubId,playerId}); return true;
 }
 function signFreeAgent(G, clubId, playerId, years=1) {
   const club=clubById(G,clubId), idx=(G.freeAgents||[]).findIndex(x=>x.id===playerId); if(!club||idx<0||club.roster.length>=(club.offseasonRosterLimit||20)) return false;
-  const p=G.freeAgents[idx], demand=freeAgentDemand(p); years=Math.max(1,Math.min(4,Number(years)||1));
+  const p=G.freeAgents[idx];
+  if(p.contractStatus==="External League"||p.contractType==="International"||p.nbaAvailability==="External Contract")return false;
+  const demand=freeAgentDemand(p); years=Math.max(1,Math.min(4,Number(years)||1));
   let annualM=demand.annualM, capCheck=canSignSalary(G,club,annualM);
   if(!capCheck.ok && club.roster.length<15){ annualM=Math.min(3.5,Math.max(1.2,annualM*0.35)); capCheck=canSignSalary(G,club,annualM); }
   if(!capCheck.ok) return false;
@@ -6311,8 +6458,12 @@ function ensureRosterCompliance(G, club, isUser=false) {
 
 
 function twoWayEligible(player) {
-  return !!player && player.age<=25 && player.ovr>=60 && player.ovr<=76 &&
-    player.contractType!=="Rookie Scale" && player.contractType!=="Standard";
+  // v0.1.45.16.0 — ordinary two-way candidates are developmental players,
+  // not established NBA rotation talent. Existing source-verified two-way
+  // contracts remain valid even if their source OVR sits above this ceiling.
+  return !!player && player.age<=25 && player.ovr>=60 && player.ovr<=74 &&
+    player.contractType!=="Rookie Scale" && player.contractType!=="Standard" &&
+    player.contractStatus!=="External League" && player.contractType!=="International";
 }
 
 function assignTwoWayContract(G, clubId, playerId) {
@@ -6928,7 +7079,7 @@ function finalizeUndraftedClass(G){
   let moved=0;
   for(const p of [...G.draftPool]){
     p.contractYearsLeft=0;p.contractStatus="Free Agent";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
-    p.entryPath="Undrafted";p.origin=`Undrafted · Class S${G.season}`;p.undraftedSeason=G.season;
+    p.entryPath="Undrafted";p.origin=`Undrafted · Class S${G.season}`;p.undraftedSeason=G.season;p.nbaAvailability="Available";
     if(!G.freeAgents.some(x=>x.id===p.id))G.freeAgents.push(p);
     moved++;
   }
@@ -6938,10 +7089,10 @@ function finalizeUndraftedClass(G){
 }
 function developmentalPoolOvr(){
   const roll=Math.random();
-  if(roll<0.08)return rand(74,76);
-  if(roll<0.34)return rand(71,73);
-  if(roll<0.74)return rand(68,70);
-  return rand(64,67);
+  if(roll<0.035)return rand(73,74);  // rare upper-end developmental player
+  if(roll<0.22)return rand(70,72);
+  if(roll<0.62)return rand(66,69);
+  return rand(62,65);
 }
 function developmentalOrigin(){
   const r=Math.random();
@@ -6967,7 +7118,7 @@ function ensureTwoWayDevelopmentPool(G,minSize=42){
     const p=makePlayer({age,ovr,isProspect:false,origin:path==="Undrafted"?"Undrafted · Previous Class":path});
     p.potential=Math.max(p.ovr,Math.min(90,p.ovr+(age<=20?rand(4,11):age<=22?rand(2,8):rand(0,5))));
     p.contractYearsLeft=0;p.contractStatus="Free Agent";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
-    p.entryPath=path;p.developmentEntrySeason=G.season;
+    p.entryPath=path;p.developmentEntrySeason=G.season;p.nbaAvailability="Available";
     G.freeAgents.push(p);
   }
   G.twoWayPoolSeason=G.season;
@@ -8819,7 +8970,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.15.2 Verified 2026/27 Contracts — Phase B Closure",ENGINE_VERSION="E2.15-PROD6B3";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.16.0 Player Market & Two-Way Realism",ENGINE_VERSION="E2.16-PROD7";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -9040,6 +9191,15 @@ function validateCareerIntegrityState(state=G){
     if(obj&&obj.season!=null&&obj.season!==state.season)issues.push(`${label} belongs to Season ${obj.season}, not active Season ${state.season}.`);
   }
   if(state.phase==="WORLD_CUP"&&state.worldCupLive?.complete)issues.push("World Cup is marked complete but career phase has not returned to club flow.");
+  for(const p of state.externalProfessionals||[]){
+    if(!p?.id){issues.push("External professional without player id.");continue}
+    const owner=playerOwners.get(p.id);
+    if(owner)issues.push(`Player ${p.id} appears on both ${owner} and the external professional market.`);
+    else playerOwners.set(p.id,"external professional market");
+  }
+  for(const p of state.freeAgents||[]){
+    if(p?.contractStatus==="External League"||p?.contractType==="International")issues.push(`External professional ${p.name||p.id} is incorrectly stored as an NBA free agent.`);
+  }
   return issues;
 }
 function repairCareerIntegrityState(state=G){
@@ -13702,6 +13862,7 @@ function render(){
   ensureProductionRatingAudit(G);
   ensureProductionCapFoundation(G);
   ensureProductionContractSnapshot(G);
+  ensurePlayerMarketState(G);
 prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
