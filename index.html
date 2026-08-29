@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.45.0 2026/27 Career Baseline Expansion</title>
+<title>Mini&Me Basketball — v0.1.45.1 2026 Draft Restoration & Age Guardrails</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.1</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1861,6 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
+// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -1881,7 +1882,7 @@ function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]
 // Totals are regular-season figures through 2025/26. Other launch players retain game-generated
 // history until their verified production baseline is added in a later data pass.
 const ACTIVE_CAREER_BASELINES={
-  "LeBron James":{age:42,experienceYears:23,legacyAliasId:"LEG_LEBRON",stats:{gp:1622,gs:1620,min:61030,fgm:15961,fga:31502,tpm:2636,tpa:7565,ftm:8882,fta:12051,reb:12095,ast:12016,stl:2417,blk:1185,tov:5650,pf:2862,pts:43440},championships:[2012,2013,2016,2020],awards:["4× MVP","4× Finals MVP","21× All-NBA","22× All-Star","Rookie of the Year"]},
+  "LeBron James":{age:41,experienceYears:23,legacyAliasId:"LEG_LEBRON",stats:{gp:1622,gs:1620,min:61030,fgm:15961,fga:31502,tpm:2636,tpa:7565,ftm:8882,fta:12051,reb:12095,ast:12016,stl:2417,blk:1185,tov:5650,pf:2862,pts:43440},championships:[2012,2013,2016,2020],awards:["4× MVP","4× Finals MVP","21× All-NBA","22× All-Star","Rookie of the Year"]},
   "Stephen Curry":{age:38,experienceYears:17,legacyAliasId:"LEG_CURRY",stats:{gp:1069,gs:1061,min:36304,fgm:9022,fga:19155,tpm:4248,tpa:10073,ftm:4236,fta:4645,reb:4973,ast:6743,stl:1602,blk:282,tov:3308,pf:2385,pts:26528},championships:[2015,2017,2018,2022],awards:["2× MVP","Finals MVP","NBA 75th Anniversary Team"]},
   "Kevin Durant":{age:38,experienceYears:18,stats:{gp:1201,gs:1198,min:44077,fgm:11258,fga:22375,tpm:2377,tpa:6070,ftm:7704,fta:8738,reb:8254,ast:5280,stl:1236,blk:1344,tov:3800,pf:2279,pts:32597},championships:[2017,2018],awards:["MVP","2× Finals MVP","NBA 75th Anniversary Team"]},
   "James Harden":{age:37,experienceYears:17,legacyAliasId:"LEG_HARDEN",stats:{gp:1221,gs:1007,min:42449,fgm:8661,fga:19733,tpm:3390,tpa:9323,ftm:8627,fta:10002,reb:6809,ast:8873,stl:1794,blk:683,tov:4505,pf:2994,pts:29339},championships:[],awards:["MVP","8× All-NBA","11× All-Star","3× Scoring Champion","2× Assist Champion"]},
@@ -2508,23 +2509,31 @@ function makeClub(name, conference, division, identity={}) {
   };
 }
 
+
+// v0.1.45.1 — verified 2026/27 age overrides (Pass 1).
+const PRODUCTION_2026_27_AGE_OVERRIDES={
+  "Tyrese Maxey":25,"Jaylen Brown":29,"VJ Edgecombe":21,"LeBron James":41,"Joel Embiid":32,
+  "Anfernee Simons":27,"Kyle Lowry":40,"Justin Edwards":22,"Trendon Watford":25,
+  "MarJon Beauchamp":25,"Rayan Rupert":22,"Tyrese Martin":27,"Dominick Barlow":23,
+  "Adem Bona":23,"Dean Wade":29,"Jabari Walker":24,"Ariel Hukporti":24
+};
 function stableTemplateHash(s){
   let h=2166136261;
   for(const ch of String(s||"")){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}
   return h>>>0;
 }
 function mappedAgeForTemplate(t,rank){
+  if(Number.isFinite(+PRODUCTION_2026_27_AGE_OVERRIDES[t.sourceName]))return +PRODUCTION_2026_27_AGE_OVERRIDES[t.sourceName];
   if(t.isRookie)return 19+(stableTemplateHash(t.sourceName)%4);
   const b=+t.badges||0,h=stableTemplateHash(`${t.sourceName}|age`);
-  let lo=21,hi=28;
-  if(b>=20){lo=29;hi=35}
-  else if(b>=15){lo=27;hi=33}
-  else if(b>=10){lo=25;hi=31}
-  else if(b>=5){lo=23;hi=29}
+  let lo=21,hi=29;
+  if(b>=20){lo=26;hi=33}
+  else if(b>=15){lo=25;hi=32}
+  else if(b>=10){lo=24;hi=31}
+  else if(b>=5){lo=22;hi=29}
   else if(b>=1){lo=21;hi=27}
-  else {lo=20;hi=24}
-  // Top-end stars should not all be generated as very young players.
-  if((+t.ovr||0)>=92){lo=Math.max(lo,26);hi=Math.max(hi,32)}
+  else {lo=20;hi=25}
+  if((+t.ovr||0)>=92){lo=Math.max(lo,25);hi=Math.max(hi,32)}
   return lo+(h%(hi-lo+1));
 }
 function mappedEngineArchetype(t){
@@ -2550,6 +2559,44 @@ function mappedRoleForRank(rank,ovr){
 function mappedTargetMinutes(rank){
   return [34,33,32,31,30,27,25,23,21,18,12,9,6,4,2][rank]||0;
 }
+
+// v0.1.45.1 — official 2026 launch draft (NBA.com picks 1–60).
+const OFFICIAL_2026_DRAFT_RESULTS=[{"pick":1,"round":1,"draftedBy":"WAS","ownerClubId":"WAS","sourceName":"AJ Dybantsa","position":"SF"},{"pick":2,"round":1,"draftedBy":"UTA","ownerClubId":"UTA","sourceName":"Darryn Peterson","position":"PG"},{"pick":3,"round":1,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Cameron Boozer","position":"PF"},{"pick":4,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Caleb Wilson","position":"PF"},{"pick":5,"round":1,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Keaton Wagler","position":"PG"},{"pick":6,"round":1,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Mikel Brown Jr.","position":"PG"},{"pick":7,"round":1,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Darius Acuff Jr.","position":"PG"},{"pick":8,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Kingston Flemings","position":"PG"},{"pick":9,"round":1,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Morez Johnson Jr.","position":"PF"},{"pick":10,"round":1,"draftedBy":"MIL","ownerClubId":"MIL","sourceName":"Brayden Burries","position":"SG"},{"pick":11,"round":1,"draftedBy":"GSW","ownerClubId":"GSW","sourceName":"Yaxel Lendeborg","position":"PF"},{"pick":12,"round":1,"draftedBy":"OKC","ownerClubId":"OKC","sourceName":"Aday Mara","position":"C"},{"pick":13,"round":1,"draftedBy":"MIA","ownerClubId":"MIL","sourceName":"Nate Ament","position":"SF"},{"pick":14,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Hannes Steinbach","position":"PF"},{"pick":15,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Dailyn Swain","position":"SF"},{"pick":16,"round":1,"draftedBy":"MEM","ownerClubId":"OKC","sourceName":"Bennett Stirtz","position":"PG"},{"pick":17,"round":1,"draftedBy":"OKC","ownerClubId":"DET","sourceName":"Ebuka Okorie","position":"PG"},{"pick":18,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Christian Anderson","position":"PG"},{"pick":19,"round":1,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Allen Graves","position":"SF"},{"pick":20,"round":1,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Jayden Quaintance","position":"PF"},{"pick":21,"round":1,"draftedBy":"DET","ownerClubId":"MEM","sourceName":"Karim López","position":"SF"},{"pick":22,"round":1,"draftedBy":"PHI","ownerClubId":"PHI","sourceName":"Labaron Philon Jr.","position":"PG"},{"pick":23,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Zuby Ejiofor","position":"PF"},{"pick":24,"round":1,"draftedBy":"NYK","ownerClubId":"LAL","sourceName":"Cameron Carr","position":"SG"},{"pick":25,"round":1,"draftedBy":"LAL","ownerClubId":"DAL","sourceName":"Sergio De Larrea","position":"PG"},{"pick":26,"round":1,"draftedBy":"DEN","ownerClubId":"SAS","sourceName":"Tarris Reed Jr.","position":"C"},{"pick":27,"round":1,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Chris Cenac Jr.","position":"PF"},{"pick":28,"round":1,"draftedBy":"MIN","ownerClubId":"BKN","sourceName":"Joshua Jefferson","position":"PF"},{"pick":29,"round":1,"draftedBy":"CLE","ownerClubId":"SAC","sourceName":"Alex Karaban","position":"SF"},{"pick":30,"round":1,"draftedBy":"DAL","ownerClubId":"PHX","sourceName":"Koa Peat","position":"PF"},{"pick":31,"round":2,"draftedBy":"NYK","ownerClubId":"HOU","sourceName":"Bruce Thornton","position":"PG"},{"pick":32,"round":2,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Richie Saunders","position":"SG"},{"pick":33,"round":2,"draftedBy":"BKN","ownerClubId":"MIN","sourceName":"Isaiah Evans","position":"SG"},{"pick":34,"round":2,"draftedBy":"SAC","ownerClubId":"CLE","sourceName":"Meleek Thomas","position":"SG"},{"pick":35,"round":2,"draftedBy":"SAS","ownerClubId":"DEN","sourceName":"Trevon Brazile","position":"PF"},{"pick":36,"round":2,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Baba Miller","position":"PF"},{"pick":37,"round":2,"draftedBy":"OKC","ownerClubId":"MIA","sourceName":"Ryan Conwell","position":"SG"},{"pick":38,"round":2,"draftedBy":"CHI","ownerClubId":"IND","sourceName":"Braden Smith","position":"PG"},{"pick":39,"round":2,"draftedBy":"HOU","ownerClubId":"NYK","sourceName":"Jack Kayil","position":"PG"},{"pick":40,"round":2,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Dillon Mitchell","position":"SF"},{"pick":41,"round":2,"draftedBy":"MIA","ownerClubId":"OKC","sourceName":"Otega Oweh","position":"SG"},{"pick":42,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Ja’Kobi Gillespie","position":"PG"},{"pick":43,"round":2,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Tyler Bilodeau","position":"PF"},{"pick":44,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Maliq Brown","position":"PF"},{"pick":45,"round":2,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Emanuel Sharp","position":"SG"},{"pick":46,"round":2,"draftedBy":"ORL","ownerClubId":"WAS","sourceName":"Felix Okpara","position":"C"},{"pick":47,"round":2,"draftedBy":"PHX","ownerClubId":"NYK","sourceName":"Tyler Nickel","position":"SF"},{"pick":48,"round":2,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Tobi Lawal","position":"PF"},{"pick":49,"round":2,"draftedBy":"DEN","ownerClubId":"DEN","sourceName":"Bryce Hopkins","position":"PF"},{"pick":50,"round":2,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Jaden Bradley","position":"PG"},{"pick":51,"round":2,"draftedBy":"WAS","ownerClubId":"ORL","sourceName":"Izaiyah Nelson","position":"PF"},{"pick":52,"round":2,"draftedBy":"LAC","ownerClubId":"ATL","sourceName":"Henri Veesaar","position":"C"},{"pick":53,"round":2,"draftedBy":"HOU","ownerClubId":"DET","sourceName":"Ugonna Onyenso","position":"C"},{"pick":54,"round":2,"draftedBy":"GSW","ownerClubId":"GSW","sourceName":"Lajae Jones","position":"SF"},{"pick":55,"round":2,"draftedBy":"NYK","ownerClubId":"LAC","sourceName":"Nick Martinelli","position":"SF"},{"pick":56,"round":2,"draftedBy":"CHI","ownerClubId":"DAL","sourceName":"Vsevolod Ishchenko","position":"PF"},{"pick":57,"round":2,"draftedBy":"ATL","ownerClubId":"LAC","sourceName":"Narcisse Ngoy","position":"C"},{"pick":58,"round":2,"draftedBy":"NOP","ownerClubId":"NOP","sourceName":"Jaron Pierre Jr.","position":"SG"},{"pick":59,"round":2,"draftedBy":"MIN","ownerClubId":"MIN","sourceName":"Trey Kaufman-Renn","position":"PF"},{"pick":60,"round":2,"draftedBy":"WAS","ownerClubId":"MIL","sourceName":"Malique Lewis","position":"SF"}];
+const OFFICIAL_2026_DRAFT_NAME_ALIASES={"Sergio De Larrea":"Sergio de Larrea","Emanuel Sharp":"Emanuel Sharp Emanuel Sharp  Israel"};
+function normalizeSourcePlayerName(name){return String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’‘]/g,"'").replace(/\s+/g," ").trim().toLowerCase();}
+const OFFICIAL_2026_DRAFT_NAMES=new Set(OFFICIAL_2026_DRAFT_RESULTS.map(x=>normalizeSourcePlayerName(x.sourceName)));
+function sourceTemplateFor2026Draft(name){
+  const wanted=normalizeSourcePlayerName(OFFICIAL_2026_DRAFT_NAME_ALIASES[name]||name);
+  for(const list of Object.values(SEASON1_ROSTER_TEMPLATES))for(const t of list)if(normalizeSourcePlayerName(t.sourceName)===wanted)return t;
+  return null;
+}
+function isOfficial2026DraftTemplate(t){return !!t&&OFFICIAL_2026_DRAFT_NAMES.has(normalizeSourcePlayerName(t.sourceName));}
+function official2026DraftAge(row){return 19+(stableTemplateHash(row.sourceName)%4);}
+function makeOfficial2026DraftProspect(row,G){
+  const src=sourceTemplateFor2026Draft(row.sourceName);
+  const t=src?{...src,isRookie:true,draftPick:row.pick}:{sourceName:row.sourceName,nationality:"USA",position:row.position,secondaryPosition:null,heightCm:null,sourceArchetype:"",ovr:null,badges:0,threePt:null,dunk:null,isRookie:true,draftPick:row.pick};
+  if(!t.position)t.position=row.position;
+  const est=launchRookieRating(t); if(!Number.isFinite(+t.ovr))t.ovr=est.ovr;
+  const p=makeMappedPlayer(t,row.pick-1,null);
+  p.age=official2026DraftAge(row);p.experienceYears=0;p.draftYear=1;p.isProspect=true;p.entryPath="Draft Prospect";p.origin="2026 Draft";
+  p.contractYearsLeft=0;p.contractStatus="Prospect";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
+  p.official2026DraftPick=row.pick;p.official2026DraftedBy=row.draftedBy;p.official2026RightsOwner=row.ownerClubId;p.productionDraftSource="NBA.com 2026 Draft Results";
+  if(!src){p.potential=est.potential;p.launchRookieRating={...est,draftPick:row.pick};}
+  enrichDraftProspect(p,G,row.pick-1);return normalizeProspectPotential(p);
+}
+function ensureOfficial2026DraftClass(G){
+  if(G.upcomingDraftClass?.season===1&&G.upcomingDraftClass?.productionClass==="2026_OFFICIAL")return G.upcomingDraftClass.prospects;
+  const prospects=OFFICIAL_2026_DRAFT_RESULTS.map(r=>makeOfficial2026DraftProspect(r,G));
+  G.upcomingDraftClass={season:1,generatedSeason:1,era:"2026 LAUNCH",productionClass:"2026_OFFICIAL",source:"NBA.com 2026 Draft Results",prospects};
+  return prospects;
+}
+function seedOfficial2026DraftAssets(G){
+  if(G.production2026DraftAssetsSeeded)return;
+  G.draftPicks=(G.draftPicks||[]).filter(p=>p.year!==1);
+  for(const row of OFFICIAL_2026_DRAFT_RESULTS)G.draftPicks.push({id:nextId("pick"),year:1,round:row.round,originalClubId:row.draftedBy,ownerClubId:row.ownerClubId,consumed:false,pickNumber:null,selectedPlayerId:null,tradeHistory:[],historicalPickNumber:row.pick,production2026:true});
+  G.production2026DraftAssetsSeeded=true;G.production2026Draft={source:"NBA.com 2026 Draft Results",rightsSnapshot:"Reported draft-night trades",diverged:false};
+}
+
 // Production launch-class ratings for source rookies that do not carry a complete 2K rating profile.
 // Draft slot sets the expectation, while deterministic variance creates occasional reaches and sleepers.
 function launchRookieHash(name){
@@ -2606,16 +2653,8 @@ function makeMappedPlayer(t,rank,teamId){
   return normalizePlayerPotential(p);
 }
 function makeMappedClub(identity){
-  const templates=[...(SEASON1_ROSTER_TEMPLATES[identity.id]||[])];
+  const templates=[...(SEASON1_ROSTER_TEMPLATES[identity.id]||[])].filter(t=>!isOfficial2026DraftTemplate(t));
   const roster=templates.map((t,i)=>makeMappedPlayer(t,i,identity.id));
-  // A handful of source teams list fewer than 15 active players. Fill only the missing end-of-roster slots.
-  while(roster.length<15){
-    const existing=roster.map(p=>p.ovr),floor=existing.length?Math.max(66,Math.min(...existing)-2):68;
-    const p=makePlayer({age:rand(20,27),ovr:rand(floor,Math.min(74,floor+4)),origin:'Roster Depth'});
-    p.potential=Math.max(p.ovr,Math.min(84,p.ovr+rand(1,6)));
-    p.rotationRole='Depth';p.targetMinutes=0;p.rosterFoundationVersion=ROSTER_FOUNDATION_VERSION;p.rosterFoundationClubId=identity.id;
-    roster.push(p);
-  }
   return {
     id:identity.id,name:identity.name,city:identity.city,mark:identity.mark,style:identity.style,color:identity.color,
     conference:identity.conference,division:identity.division,roster,gLeagueRoster:[],twoWayRoster:[],twoWayLimit:3,
@@ -4981,6 +5020,7 @@ function upcomingDraftYear(G){
 function ensureUpcomingDraftClass(G){
   ensureScoutingState(G);
   const targetYear=upcomingDraftYear(G);
+  if(targetYear===1)return ensureOfficial2026DraftClass(G);
   if(G.upcomingDraftClass?.season===targetYear&&Array.isArray(G.upcomingDraftClass.prospects)&&G.upcomingDraftClass.prospects.length===90){
     G.upcomingDraftClass.prospects.forEach((p,i)=>enrichDraftProspect(p,G,i));
     return G.upcomingDraftClass.prospects;
@@ -5102,12 +5142,21 @@ function initializeDraftState(G) {
   }
   const liveProspects=G.upcomingDraftClass?.prospects||prospects;
   const eraMod=talentEraModifier(G);
-  const round1OriginalOrder=runDraftLottery(G); runDraftDayTrades(G,round1OriginalOrder);
-  const round2OriginalOrder=G.pendingFullStandingsOrder || [...G.clubs].sort(()=>Math.random()-0.5).map(c=>c.id);
-  G.pendingLotteryPool=null; G.pendingNonLotteryOrder=null; G.pendingFullStandingsOrder=null;
-  const queue=[]; let overall=1;
-  for(const [round,order] of [[1,round1OriginalOrder],[2,round2OriginalOrder]]) for(const originalClubId of order){
-    const asset=draftPickByOriginal(G,G.season,round,originalClubId); queue.push({overallPickNum:overall++,round,originalClubId,pickId:asset?.id||null});
+  let queue=[];
+  if(G.season===1){
+    seedOfficial2026DraftAssets(G);
+    queue=OFFICIAL_2026_DRAFT_RESULTS.map(row=>{
+      const asset=(G.draftPicks||[]).find(p=>p.year===1&&p.production2026&&p.historicalPickNumber===row.pick);
+      return {overallPickNum:row.pick,round:row.round,originalClubId:row.draftedBy,pickId:asset?.id||null,historicalSourceName:row.sourceName,historicalOwnerClubId:row.ownerClubId};
+    });
+  }else{
+    const round1OriginalOrder=runDraftLottery(G); runDraftDayTrades(G,round1OriginalOrder);
+    const round2OriginalOrder=G.pendingFullStandingsOrder || [...G.clubs].sort(()=>Math.random()-0.5).map(c=>c.id);
+    G.pendingLotteryPool=null; G.pendingNonLotteryOrder=null; G.pendingFullStandingsOrder=null;
+    let overall=1;
+    for(const [round,order] of [[1,round1OriginalOrder],[2,round2OriginalOrder]]) for(const originalClubId of order){
+      const asset=draftPickByOriginal(G,G.season,round,originalClubId); queue.push({overallPickNum:overall++,round,originalClubId,pickId:asset?.id||null});
+    }
   }
   G.draftPool=liveProspects;
   const draftAvg=liveProspects.reduce((a,p)=>a+p.ovr,0)/liveProspects.length;
@@ -5229,11 +5278,17 @@ function advanceDraftOneControlledPick(G){
     return {ok:true,userPick:true,entry};
   }
 
-  let best=G.draftPool[0],bestScore=-Infinity;
-  const direction=aiTeamDirection(club);
-  for(const pr of G.draftPool){
-    const sc=needAwareScore(club,pr,{direction,ignoreContract:true});
-    if(sc>bestScore){bestScore=sc;best=pr;}
+  let best=null,bestScore=-Infinity;
+  if(G.season===1&&!G.production2026Draft?.diverged&&entry.historicalSourceName){
+    best=G.draftPool.find(pr=>normalizeSourcePlayerName(pr.sourceTemplateName||pr.name)===normalizeSourcePlayerName(entry.historicalSourceName))||null;
+  }
+  if(!best){
+    best=G.draftPool[0];
+    const direction=aiTeamDirection(club);
+    for(const pr of G.draftPool){
+      const sc=needAwareScore(club,pr,{direction,ignoreContract:true});
+      if(sc>bestScore){bestScore=sc;best=pr;}
+    }
   }
   if(!best)return {ok:false,reason:"No prospect available"};
 
@@ -5273,6 +5328,9 @@ function makeUserDraftSelection(G, playerId) {
   const entry=ds.queue[ds.index], asset=entry.pickId?(G.draftPicks||[]).find(p=>p.id===entry.pickId):null, ownerId=asset?.ownerClubId||entry.originalClubId;
   if(ownerId!==G.userClubGM?.clubId) return {ok:false,reason:'Pending pick is not owned by the user club'};
   const player=G.draftPool.find(p=>p.id===playerId); if(!player) return {ok:false,reason:'Prospect not available'};
+  if(G.season===1&&entry.historicalSourceName&&normalizeSourcePlayerName(player.sourceTemplateName||player.name)!==normalizeSourcePlayerName(entry.historicalSourceName)){
+    G.production2026Draft=G.production2026Draft||{};G.production2026Draft.diverged=true;G.production2026Draft.divergedAtPick=entry.overallPickNum;
+  }
   executeDraftSelection(G,entry,player); ds.index++; ds.pendingUserPick=null;
   const ctl=ensureDraftControl(G);ctl.started=true;ctl.paused=true;
   if(ds.index>=ds.queue.length)finalizeDraftBoard(G);
@@ -7019,7 +7077,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.0 2026/27 Career Baseline Expansion",ENGINE_VERSION="E2.15-PROD3";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.1 2026 Draft Restoration & Age Guardrails",ENGINE_VERSION="E2.15-PROD3A";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -11935,7 +11993,7 @@ if($("#applyCounterBtn"))$("#applyCounterBtn").onclick=()=>{
   ui.tradeEval=ui.tradeCounter.evaluation||evaluateTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks});
   ui.tradeCounter=null;render();
 };
-if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
+if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;if(G.season===1){G.production2026Draft=G.production2026Draft||{};G.production2026Draft.diverged=true;G.production2026Draft.divergedAtPick=G.draftState.index+1;}reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
 $$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.natSelected.indexOf(id);if(b.checked){if(ui.natSelected.length>=12){toast("Squad is already full (12)");b.checked=false;return}ui.natSelected.push(id)}else if(i>=0)ui.natSelected.splice(i,1);render()});
 if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode;ui.natSelected=nationalCandidates(G,code).filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id);render()};
 if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
