@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.41.0 Draft Night Control & Trade-Up</title>
+<title>Mini&Me Basketball — v0.1.42.0 Production Data Foundation</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.41.0</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.42.0</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1842,7 +1842,44 @@ function canPlayPosition(player,pos){
 function positionLabel(player){
   return player?.secondaryPosition ? `${player.position}/${player.secondaryPosition}` : (player?.position||"—");
 }
-const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#55B68A"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#D8D8D8"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#E68B4F"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#6D97D4"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#D96464"},{"id":"CHI","name":"Chicago Rams","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#E85D64"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#D7A758"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#6F9ED6"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#E2C65B"},{"id":"MIL","name":"Milwaukee Lakefront","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#78B884"},{"id":"ATL","name":"Atlanta Firebirds","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E26A4A"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#6DC7D4"},{"id":"MIA","name":"Miami Waves","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#E56F85"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#68A9DB"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#788DAF"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#E0B95F"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#74B6A1"},{"id":"OKC","name":"Oklahoma Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#6FB6DD"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#D36C6C"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#8EBB6D"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#E8BD55"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#6D9AD6"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#E6B953"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#E58D4F"},{"id":"SAC","name":"Sacramento Royals","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#9A7FC1"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#5F9ED4"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#DE6262"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#7D9FCB"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#D3B35C"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C6CCD2"}];
+const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#55B68A"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#D8D8D8"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#E68B4F"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#6D97D4"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#D96464"},{"id":"CHI","name":"Chicago Rams","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#E85D64"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#D7A758"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#6F9ED6"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#E2C65B"},{"id":"MIL","name":"Milwaukee Lakefront","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#78B884"},{"id":"ATL","name":"Atlanta Firebirds","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E26A4A"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#6DC7D4"},{"id":"MIA","name":"Miami Waves","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#E56F85"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#68A9DB"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#788DAF"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#E0B95F"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#74B6A1"},{"id":"OKC","name":"Oklahoma City Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#6FB6DD"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#D36C6C"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#8EBB6D"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#E8BD55"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#6D9AD6"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#E6B953"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#E58D4F"},{"id":"SAC","name":"Sacramento Royals","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#9A7FC1"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#5F9ED4"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#DE6262"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#7D9FCB"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#D3B35C"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C6CCD2"}];
+
+// v0.1.42.0 — Production launch data foundation.
+// The career begins from a recognisable 2026/27 basketball universe, then evolves entirely inside the save.
+const PRODUCTION_DATA_SNAPSHOT="2026-07-13";
+const FIBA_RANKING_ENGINE_VERSION="FIBA-MEN-2026.1";
+const FIBA_RANKING_SOURCE="FIBA World Ranking Men · 13 Jul 2026";
+const FIBA_REGION_FACTOR={Europe:1.00,Americas:0.93,AsiaOceania:0.68,Africa:0.69};
+const FIBA_INITIAL_RATINGS={
+  USA:{rank:1,zoneRank:1,pts:920.7},GER:{rank:2,zoneRank:1,pts:843.6},SRB:{rank:3,zoneRank:2,pts:836.6},FRA:{rank:4,zoneRank:3,pts:836.0},CAN:{rank:5,zoneRank:2,pts:831.4},ESP:{rank:6,zoneRank:4,pts:798.1},AUS:{rank:7,zoneRank:1,pts:796.8},ARG:{rank:8,zoneRank:3,pts:783.1},BRA:{rank:9,zoneRank:4,pts:776.6},LTU:{rank:10,zoneRank:5,pts:773.7},
+  TUR:{rank:11,zoneRank:6,pts:770.6},LAT:{rank:12,zoneRank:7,pts:759.4},GRE:{rank:13,zoneRank:8,pts:756.2},SLO:{rank:14,zoneRank:9,pts:728.0},ITA:{rank:15,zoneRank:10,pts:721.4},PUR:{rank:16,zoneRank:5,pts:676.5},FIN:{rank:17,zoneRank:11,pts:676.0},MNE:{rank:18,zoneRank:12,pts:647.2},POL:{rank:19,zoneRank:13,pts:622.7},GEO:{rank:20,zoneRank:14,pts:580.8},
+  DOM:{rank:21,zoneRank:6,pts:571.5},JPN:{rank:22,zoneRank:2,pts:526.2},CZE:{rank:23,zoneRank:15,pts:521.9},SSD:{rank:24,zoneRank:1,pts:497.5},NZL:{rank:25,zoneRank:3,pts:492.0},IRI:{rank:26,zoneRank:4,pts:455.7},VEN:{rank:27,zoneRank:7,pts:455.0},MEX:{rank:28,zoneRank:8,pts:448.5},ISR:{rank:29,zoneRank:16,pts:447.9},CHN:{rank:30,zoneRank:5,pts:446.4},
+  LBN:{rank:31,zoneRank:6,pts:442.6},ANG:{rank:32,zoneRank:2,pts:441.7},BIH:{rank:33,zoneRank:17,pts:437.6},CRO:{rank:34,zoneRank:18,pts:428.7},BEL:{rank:35,zoneRank:19,pts:406.7},EST:{rank:36,zoneRank:20,pts:386.3},CIV:{rank:37,zoneRank:3,pts:384.2},UKR:{rank:38,zoneRank:21,pts:376.9},PHI:{rank:39,zoneRank:7,pts:376.0},SWE:{rank:40,zoneRank:22,pts:375.9},
+  JOR:{rank:41,zoneRank:8,pts:370.7},URU:{rank:42,zoneRank:9,pts:346.2},EGY:{rank:43,zoneRank:4,pts:345.3},ISL:{rank:44,zoneRank:23,pts:342.7},POR:{rank:45,zoneRank:24,pts:342.3},GBR:{rank:46,zoneRank:25,pts:339.2},HUN:{rank:47,zoneRank:26,pts:333.5},SEN:{rank:48,zoneRank:5,pts:323.2},BAH:{rank:49,zoneRank:10,pts:312.1},CPV:{rank:50,zoneRank:6,pts:305.2},
+  TUN:{rank:51,zoneRank:7,pts:303.1},NED:{rank:52,zoneRank:27,pts:298.7},NGR:{rank:53,zoneRank:8,pts:298.0},COL:{rank:54,zoneRank:11,pts:293.7},PAN:{rank:56,zoneRank:12,pts:268.0},KOR:{rank:57,zoneRank:9,pts:264.1},CMR:{rank:58,zoneRank:9,pts:260.6},DEN:{rank:59,zoneRank:29,pts:255.4},CHI:{rank:60,zoneRank:13,pts:248.4},SUI:{rank:61,zoneRank:30,pts:247.0},
+  ROU:{rank:62,zoneRank:31,pts:243.4},MLI:{rank:63,zoneRank:10,pts:231.5},KSA:{rank:65,zoneRank:10,pts:228.4},AUT:{rank:66,zoneRank:33,pts:226.5},CUB:{rank:67,zoneRank:14,pts:210.9},TPE:{rank:68,zoneRank:11,pts:210.0},CYP:{rank:69,zoneRank:34,pts:207.3},GUI:{rank:71,zoneRank:11,pts:193.3},COD:{rank:72,zoneRank:12,pts:187.3},NCA:{rank:73,zoneRank:15,pts:185.6},
+  SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
+};
+
+// Fictionalised launch identities remain intentionally recognisable without reproducing the real-world name verbatim.
+const PRODUCTION_NAME_OVERRIDES={
+  "Luka Doncic":"Lucas Doncick","Luka Dončić":"Lucas Doncick","LeBron James":"Lebron Haymes","Reed Sheppard":"Mead Sheppard","James Harden":"James Pardon",
+  "Nikola Jokic":"Nikola Jokich","Nikola Jokić":"Nikola Jokich","Stephen Curry":"Stefan Curry","Kevin Durant":"Kevon Durrant","Giannis Antetokounmpo":"Giannis Antetokumbo",
+  "Jayson Tatum":"Jayson Tatam","Anthony Edwards":"Antony Edwards","Shai Gilgeous-Alexander":"Shay Gilgeous-Alexander","Donovan Mitchell":"Donovan Mitchel","Jalen Brunson":"Jaylen Brunson"
+};
+function fictionalizeProductionName(sourceName){
+  const raw=String(sourceName||"Player").trim();if(PRODUCTION_NAME_OVERRIDES[raw])return PRODUCTION_NAME_OVERRIDES[raw];
+  const parts=raw.split(/\s+/);if(parts.length===1)return raw+"n";
+  const last=parts.pop();
+  const swaps={a:"e",e:"a",i:"y",o:"u",u:"o",A:"E",E:"A",I:"Y",O:"U",U:"O"};
+  let changed=false,out="";
+  for(let i=0;i<last.length;i++){
+    const ch=last[i];if(!changed&&i>0&&swaps[ch]){out+=swaps[ch];changed=true}else out+=ch;
+  }
+  if(!changed&&last.length>2)out=last.slice(0,-1)+(last.endsWith("s")?"z":last.endsWith("n")?"m":"s");
+  return [...parts,out].join(" ");
+}
+function sourceRosterOvr(teamId){const t=SEASON1_ROSTER_TEMPLATES?.[teamId]||[];const top=[...t].sort((a,b)=>(b.ovr||0)-(a.ovr||0)).slice(0,8);return top.length?Math.round(top.reduce((s,p)=>s+(+p.ovr||0),0)/top.length):0}
 
 // v0.1.4.0 — Season 1 roster foundation mapped from the supplied NBA 2K27 player dataset.
 // Player identities remain fictional; underlying OVR/position/height/nationality/build structure follows the source roster.
@@ -2420,7 +2457,8 @@ function makeMappedPlayer(t,rank,teamId){
   p.playerBuild=derivePlayerBuild(p);
   p.sourceThreePt=t.threePt;
   p.sourceDunk=t.dunk;
-  p.sourceTemplateName=t.sourceName||null; // developer/audit field only; never shown as player identity
+  p.sourceTemplateName=t.sourceName||null; // developer/audit field only
+  p.name=fictionalizeProductionName(t.sourceName||p.name);
   p.rosterFoundationVersion=ROSTER_FOUNDATION_VERSION;
   p.rosterFoundationClubId=teamId;
   p.experienceYears=t.isRookie?0:Math.max(1,age-20);
@@ -2452,7 +2490,8 @@ function makeMappedClub(identity){
     conference:identity.conference,division:identity.division,roster,gLeagueRoster:[],twoWayRoster:[],twoWayLimit:3,
     standings:{w:0,l:0,pf:0,pa:0},preseasonRecord:{w:0,l:0},chemistry:rand(58,76),
     capUsed:roster.reduce((a,p)=>a+(p.salaryM||0),0),offseasonRosterLimit:20,regularRosterLimit:15,
-    draftHistory:{lastNo1Season:null,top5Seasons:[]},rosterFoundationVersion:ROSTER_FOUNDATION_VERSION
+    draftHistory:{lastNo1Season:null,top5Seasons:[]},rosterFoundationVersion:ROSTER_FOUNDATION_VERSION,
+    productionSourceOvr:sourceRosterOvr(identity.id),productionSnapshot:PRODUCTION_DATA_SNAPSHOT
   };
 }
 
@@ -3050,7 +3089,7 @@ function makeCareer() {
     settings: { salaryCap:true, injuries:true },
     clubs,
     freeAgents,
-    nationalTeams: NATIONAL_TEAMS.map(n => ({ ...n, rosterPlayerIds: [], record:{w:0,l:0}, games:[], history:[], currentDepthChart:[], selectedSquadPlayerIds:[], rankingPoints: Math.max(1000, 1750 - (n.tier-1)*180 + rand(-30,30)) })),
+    nationalTeams: NATIONAL_TEAMS.map(n => {const init=FIBA_INITIAL_RATINGS[n.code]||{rank:null,zoneRank:null,pts:Math.max(100,520-(n.tier-1)*120)};return ({ ...n, rosterPlayerIds: [], record:{w:0,l:0}, games:[], history:[], currentDepthChart:[], selectedSquadPlayerIds:[], rankingPoints:init.pts, initialWorldRank:init.rank, initialZoneRank:init.zoneRank, rankingEngineVersion:FIBA_RANKING_ENGINE_VERSION, rankingSource:FIBA_RANKING_SOURCE, rankingLedger:[] })}),
     userNationalGM: { nationCode: null, appointedSeason: null },
     userClubGM: { clubId: null, appointedSeason: null },
     draftPicks: clubs.flatMap(c => Array.from({length:6},(_,i)=>[makeDraftPick(c.id,1+i,1),makeDraftPick(c.id,1+i,2)]).flat()),
@@ -3108,8 +3147,36 @@ function logEvent(G, msg) {
 // The first pass records NBA regular-season games only. Postseason and
 // international record books remain separate future extensions.
 // ---------------------------------------------------------------------
+const HISTORICAL_LEGACY_BASELINE={
+  snapshot:"2026 production baseline",source:"NBA historical benchmarks · fictionalised identities",
+  singleGame:{
+    points:{key:"points",value:100,season:"1961-62",playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"Philadelphia legacy",historical:true},
+    rebounds:{key:"rebounds",value:55,season:"1960-61",playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"Philadelphia legacy",historical:true},
+    assists:{key:"assists",value:30,season:"1990-91",playerId:"LEG_SKILES",playerName:"Scott Styles",clubName:"Orlando legacy",historical:true},
+    steals:{key:"steals",value:11,season:"historical",playerId:"LEG_STEALS",playerName:"Larry Kennon / Kendall Hill",clubName:"League legacy",historical:true},
+    blocks:{key:"blocks",value:17,season:"1973-74",playerId:"LEG_SMITH",playerName:"Elmer Smith",clubName:"Los Angeles legacy",historical:true},
+    threes:{key:"threes",value:14,season:"2018-19",playerId:"LEG_KLAY",playerName:"Clay Thompson",clubName:"Golden State legacy",historical:true}
+  },
+  seasonRates:{
+    ppg:[{playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"Philadelphia legacy",season:"1961-62",value:50.36,historical:true}],
+    rpg:[{playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"Philadelphia legacy",season:"1960-61",value:27.20,historical:true}],
+    apg:[{playerId:"LEG_STOCKTON",playerName:"John Stockman",clubName:"Utah legacy",season:"1989-90",value:14.5,historical:true}],
+    spg:[{playerId:"LEG_ROBERTSON",playerName:"Alvin Robertsen",clubName:"San Antonio legacy",season:"1985-86",value:3.7,historical:true}],
+    bpg:[{playerId:"LEG_EATON",playerName:"Mark Eton",clubName:"Utah legacy",season:"1984-85",value:5.6,historical:true}]
+  },
+  career:{
+    points:[{playerId:"LEG_LEBRON",playerName:"LeBron Jaymes",clubName:"League legacy",value:43440,historical:true},{playerId:"LEG_KAREEM",playerName:"Kareem Abdul-Jaffar",clubName:"League legacy",value:38387,historical:true},{playerId:"LEG_MALONE",playerName:"Karl Maloney",clubName:"League legacy",value:36928,historical:true}],
+    rebounds:[{playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"League legacy",value:23924,historical:true},{playerId:"LEG_RUSSELL",playerName:"Bill Russel",clubName:"League legacy",value:21620,historical:true},{playerId:"LEG_KAREEM",playerName:"Kareem Abdul-Jaffar",clubName:"League legacy",value:17440,historical:true}],
+    assists:[{playerId:"LEG_STOCKTON",playerName:"John Stockman",clubName:"League legacy",value:15806,historical:true},{playerId:"LEG_PAUL",playerName:"Chris Pall",clubName:"League legacy",value:12552,historical:true},{playerId:"LEG_KIDD",playerName:"Jason Kydd",clubName:"League legacy",value:12091,historical:true}],
+    steals:[{playerId:"LEG_STOCKTON",playerName:"John Stockman",clubName:"League legacy",value:3265,historical:true},{playerId:"LEG_PAUL",playerName:"Chris Pall",clubName:"League legacy",value:2728,historical:true},{playerId:"LEG_KIDD",playerName:"Jason Kydd",clubName:"League legacy",value:2684,historical:true}],
+    blocks:[{playerId:"LEG_HAKEEM",playerName:"Hakeem Olajawon",clubName:"League legacy",value:3830,historical:true},{playerId:"LEG_MUTOMBO",playerName:"Dikembe Mutomboh",clubName:"League legacy",value:3289,historical:true},{playerId:"LEG_KAREEM",playerName:"Kareem Abdul-Jaffar",clubName:"League legacy",value:3189,historical:true}],
+    threes:[{playerId:"LEG_CURRY",playerName:"Stephen Currie",clubName:"League legacy",value:4248,historical:true},{playerId:"LEG_HARDEN",playerName:"James Pardon",clubName:"League legacy",value:3390,historical:true},{playerId:"LEG_ALLEN",playerName:"Ray Allan",clubName:"League legacy",value:2973,historical:true}],
+    games:[]
+  },
+  honours:{playerChampionships:[{playerName:"Bill Russel",value:11},{playerName:"Sam Jonez",value:10},{playerName:"John Havlichek",value:8}],consecutiveTitles:{playerName:"Bill Russel",value:8,label:"Eight straight championships"},threePeats:[{playerName:"Michael Jordon",value:2,label:"Two career three-peats"},{playerName:"Kobe Brayant",value:1,label:"2000–02 style three-peat benchmark"}]}
+};
 function makeHistoricalRecordState(){
-  return {version:1,league:{singleGame:{},teamGame:{},seasonRates:{},career:{}},clubs:{},processedGameIds:{}};
+  return {version:2,league:{singleGame:{...HISTORICAL_LEGACY_BASELINE.singleGame},teamGame:{},seasonRates:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE.seasonRates)),career:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE.career))},legacy:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE)),clubs:{},processedGameIds:{}};
 }
 function ensureHistoricalRecords(G){
   if(!G.historicalRecords||typeof G.historicalRecords!=="object")G.historicalRecords=makeHistoricalRecordState();
@@ -3120,6 +3187,10 @@ function ensureHistoricalRecords(G){
   G.historicalRecords.league.career=G.historicalRecords.league.career||{};
   G.historicalRecords.clubs=G.historicalRecords.clubs||{};
   G.historicalRecords.processedGameIds=G.historicalRecords.processedGameIds||{};
+  if(!G.historicalRecords.legacy){G.historicalRecords.legacy=JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE));G.historicalRecords.version=2;}
+  for(const [k,v] of Object.entries(HISTORICAL_LEGACY_BASELINE.singleGame)){if(recordValueBetter(v,G.historicalRecords.league.singleGame[k]))G.historicalRecords.league.singleGame[k]={...v};}
+  for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.career))G.historicalRecords.league.career[k]=mergeHistoricalTop(G.historicalRecords.league.career[k],list);
+  for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.seasonRates))G.historicalRecords.league.seasonRates[k]=mergeHistoricalTop(G.historicalRecords.league.seasonRates[k],list,"season");
   return G.historicalRecords;
 }
 function recordValueBetter(next,cur){return !cur || (+next.value||0)>(+cur.value||0)}
@@ -3198,7 +3269,7 @@ function persistHistoricalLeaderboards(G){
   for(const club of G.clubs||[]){const snap=clubHistoricalSnapshot(G,club.id),bucket=clubHistoricalBucket(G,club.id);bucket.career=snap.career;bucket.seasonRates=snap.seasonRates;}
 }
 function formatHistoricalRecord(r,decimals=0){return r?Number(r.value).toFixed(decimals):"—"}
-function recordCard(label,r,unit="",decimals=0){return `<div class="recordCard"><small>${label}</small><strong>${r?`${Number(r.value).toFixed(decimals)}${unit}`:"—"}</strong><b>${r?.playerName||r?.clubName||"No record yet"}</b><span>${r?`Season ${r.season}${r.opponentName?` · vs ${r.opponentName}`:""}`:"Records begin as official games are played."}</span></div>`}
+function recordCard(label,r,unit="",decimals=0){const era=r?.historical?`Historical benchmark${r.season&&r.season!=="historical"?` · ${r.season}`:""}`:`Season ${r?.season||"—"}${r?.opponentName?` · vs ${r.opponentName}`:""}`;return `<div class="recordCard"><small>${label}</small><strong>${r?`${Number(r.value).toFixed(decimals)}${unit}`:"—"}</strong><b>${r?.playerName||r?.clubName||"No record yet"}</b><span>${r?era:"Records begin as official games are played."}</span></div>`}
 function recordLeaderList(title,list,unit="",decimals=0){return `<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP ${Math.min(10,list?.length||0)}</small></div><div class="recordLeaderList">${(list||[]).length?(list||[]).map((r,i)=>`<div class="recordLeaderRow"><span>${i+1}</span><div><b>${r.playerName}</b><small>${r.clubName||""}${r.season?` · S${r.season}`:""}</small></div><strong>${Number(r.value).toFixed(decimals)}${unit}</strong></div>`).join(""):`<div class="empty">No qualifying record yet.</div>`}</div></div>`}
 function ingestCurrentSeasonRecordBackfill(G){
   ensureHistoricalRecords(G);
@@ -3214,11 +3285,35 @@ function leagueHistorySeasonAveragesHtml(G){
   ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G);
   return `<div class="leagueHistoryIntro"><b>Season Averages</b><small>Best qualifying regular-season per-game performances recorded in a single season.</small></div>${recordLeaderList("Season Scoring Average",x.seasonRates.ppg," PPG",1)}${recordLeaderList("Season Assist Average",x.seasonRates.apg," APG",1)}${recordLeaderList("Season Rebound Average",x.seasonRates.rpg," RPG",1)}${recordLeaderList("Season Steals Average",x.seasonRates.spg," SPG",1)}${recordLeaderList("Season Blocks Average",x.seasonRates.bpg," BPG",1)}`;
 }
+function playerTitleLegacySnapshot(G){
+  const baseline=HISTORICAL_LEGACY_BASELINE.honours?.playerChampionships||[];
+  const current=[];
+  for(const p of [...allPlayers(G),...retiredPlayerPool(G)]){
+    const seasons=(p.awardHistory||[]).filter(a=>a.award==="NBA Champion").map(a=>+a.season).filter(Number.isFinite).sort((a,b)=>a-b);
+    if(!seasons.length)continue;
+    let run=1,bestRun=1,threePeats=0;
+    for(let i=1;i<seasons.length;i++){if(seasons[i]===seasons[i-1]+1){run++;bestRun=Math.max(bestRun,run)}else run=1;}
+    let i=0;while(i<seasons.length){let j=i;while(j+1<seasons.length&&seasons[j+1]===seasons[j]+1)j++;threePeats+=Math.floor((j-i+1)/3);i=j+1;}
+    current.push({playerName:p.name,playerId:p.id,value:seasons.length,bestRun,threePeats});
+  }
+  const champs=[...baseline.map(x=>({...x,historical:true})),...current].sort((a,b)=>b.value-a.value).slice(0,10);
+  const baselineTriples=HISTORICAL_LEGACY_BASELINE.honours?.threePeats||[];
+  const triples=[...baselineTriples.map(x=>({...x,historical:true})),...current.filter(x=>x.threePeats>0).map(x=>({playerName:x.playerName,playerId:x.playerId,value:x.threePeats,bestRun:x.bestRun}))].sort((a,b)=>b.value-a.value||((b.bestRun||0)-(a.bestRun||0))).slice(0,10);
+  return{championships:champs,threePeats:triples};
+}
+function dynastyLegacySnapshot(G){
+  const hist=[...(G.leagueHistory||[])].sort((a,b)=>a.season-b.season);let best={clubId:null,value:0},run={clubId:null,value:0},threePeats=new Map();
+  for(const h of hist){const cid=h.championClubId;if(!cid){run={clubId:null,value:0};continue;}if(run.clubId===cid)run.value++;else run={clubId:cid,value:1};if(run.value>best.value)best={...run};if(run.value>=3&&run.value%3===0)threePeats.set(cid,(threePeats.get(cid)||0)+1);}
+  const tripleLeader=[...threePeats.entries()].map(([clubId,value])=>({clubId,value,clubName:clubById(G,clubId)?.name||clubId})).sort((a,b)=>b.value-a.value)[0]||null;
+  return{bestRun:best.clubId?{...best,clubName:clubById(G,best.clubId)?.name||best.clubId}:null,threePeatLeader:tripleLeader};
+}
 function leagueHistoryAllTimeHtml(G){
   ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
   const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12),legends=[...retiredPlayerPool(G)].sort((a,b)=>retiredLegendScore(b)-retiredLegendScore(a)).slice(0,10);
   const legendsHtml=legends.length?`<div class="sectionTitle">Retired Legends</div><div class="retiredLegendList">${legends.map((p,i)=>{const cs=p.careerStats||{},hc=playerHonourCounts(p);return `<div class="retiredLegendRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Retired S${p.retirementSeason||"—"} · ${p.retiredFromClubName||"Career Complete"}</small></div><div><strong>${(+cs.pts||0).toLocaleString()}</strong><small>PTS</small></div><div><strong>${hc.total}</strong><small>HON</small></div></div>`}).join("")}</div>`:"";
-  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>Career leaders, recent champions, retired legends and franchise honours accumulated throughout this save.</small></div>${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+  const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,ring=legacy.honours?.playerChampionships?.[0],run=legacy.honours?.consecutiveTitles,titleLegacy=playerTitleLegacySnapshot(G),dynasty=dynastyLegacySnapshot(G),three=titleLegacy.threePeats?.[0];
+  const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>Historical Legacy Benchmarks</b><small>PRODUCTION BASELINE</small></div><div class="recordGrid">${recordCard("Single-Game Points",legacy.singleGame?.points)}${recordCard("Career Scoring",legacy.career?.points?.[0])}<div class="recordCard"><small>Player Championships</small><strong>${titleLegacy.championships?.[0]?.value||ring?.value||11}</strong><b>${titleLegacy.championships?.[0]?.playerName||ring?.playerName||"Bill Russel"}</b><span>All-time title chase</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${three?.value||2}</strong><b>${three?.playerName||"Michael Jordon"}</b><span>${three?.historical?"Historical benchmark":"Career achievement"}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${(dynasty.bestRun?.value||0)>(run?.value||8)?dynasty.bestRun.clubName:(run?.playerName||"Bill Russel")}</b><span>Consecutive championships</span></div></div></div>`;
+  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>NBA-inspired historical benchmarks are already in the book. Your career can rewrite them.</small></div>${legacyHtml}${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0)}${recordLeaderList("All-Time Games Played",x.career.games,"",0)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>SEASON</small><b>${h.season}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${h.mvpName||"—"}</b></span><span><small>FINALS MVP</small><b>${h.finalsMvpName||"—"}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
 }
 function leagueHistoricalRecordsHtml(G){
   const tabs=[["game","Game Records"],["season","Season Averages"],["alltime","All-Time"]],mode=ui.leagueHistoryTab||"game";
@@ -3572,9 +3667,62 @@ function nationalTeamRating(roster) {
   const top=[...roster].sort((a,b)=>b.ovr-a.ovr).slice(0,8);
   return top.reduce((a,p)=>a+p.ovr,0)/top.length;
 }
+function ensureFibaRankingState(G){
+  for(const n of G.nationalTeams||[]){
+    const init=FIBA_INITIAL_RATINGS[n.code];
+    if(!Array.isArray(n.rankingLedger))n.rankingLedger=[];
+    if(!n.rankingEngineVersion)n.rankingEngineVersion=FIBA_RANKING_ENGINE_VERSION; // existing saves keep their accumulated point total
+    if(n.initialWorldRank==null&&init)n.initialWorldRank=init.rank;
+    if(n.initialZoneRank==null&&init)n.initialZoneRank=init.zoneRank;
+    if(!n.rankingSource)n.rankingSource=FIBA_RANKING_SOURCE;
+  }
+}
+function fibaCompetitionStageFactor(competitionTag,stage){
+  const tag=String(competitionTag||"").toLowerCase(),st=String(stage||"").toUpperCase();
+  if(tag.includes("world_cup")){
+    if(st==="FINAL")return 8.0;if(st==="SEMIFINAL")return 7.0;if(st==="BRONZE")return 6.0;if(st==="QUARTERFINAL")return 5.0;
+    if(st.includes("CLASSIFICATION_5_8")||st==="FIFTH_PLACE"||st==="SEVENTH_PLACE")return 4.0;
+    if(st.includes("FIRST_GROUP")||st.includes("SECOND_GROUP")||st.includes("CLASSIFICATION_17_32")||st.includes("GROUP"))return 2.0;
+    return 2.0;
+  }
+  // Mini&Me currently simulates World Cup regional qualifiers: first-round windows = Q1, second-round windows = Q2.
+  const q=G?.nationalQualification;
+  if(q?.round==="SECOND_ROUND"||String(stage||"").includes("SR-"))return 1.2;
+  return 1.0;
+}
+function fibaGameRatingPoints(G,teamA,teamB,result,{competitionTag="national_qualifier",stage=null,homeTeamCode=null}={}){
+  const interRegional=teamA.region!==teamB.region||String(competitionTag).toLowerCase().includes("world_cup");
+  const R=interRegional?1:(FIBA_REGION_FACTOR[teamA.region]||1);
+  const S=fibaCompetitionStageFactor(competitionTag,stage),B=10,W=1.25;
+  const aWon=result.winner===teamA.code,margin=Math.abs((+result.scoreA||0)-(+result.scoreB||0));
+  const loser=aWon?teamB:teamA,winner=aWon?teamA:teamB;
+  const Gbase=B*R*S;
+  const O=1+0.0001*(+loser.rankingPoints||0);
+  const awayWin=homeTeamCode&&winner.code!==homeTeamCode&&loser.code===homeTeamCode;
+  const A=awayWin?1.1:1;
+  const M=margin>=30?1.20:margin>=15?1.05:1;
+  const winnerGain=Gbase*W*O*A*M,loserGain=Gbase;
+  return {winnerGain,loserGain,B,R,S,W,O,A,M,margin};
+}
+function applyFibaRankingResult(G,teamA,teamB,result,context={}){
+  ensureFibaRankingState(G);const calc=fibaGameRatingPoints(G,teamA,teamB,result,context),aWon=result.winner===teamA.code;
+  const aGain=aWon?calc.winnerGain:calc.loserGain,bGain=aWon?calc.loserGain:calc.winnerGain;
+  teamA.rankingPoints=Math.round(((+teamA.rankingPoints||0)+aGain)*10)/10;teamB.rankingPoints=Math.round(((+teamB.rankingPoints||0)+bGain)*10)/10;
+  const entryA={season:G.season,opponent:teamB.code,result:aWon?"W":"L",gain:+aGain.toFixed(2),points:teamA.rankingPoints,competition:context.competitionTag||"national_qualifier",stage:context.stage||null};
+  const entryB={season:G.season,opponent:teamA.code,result:aWon?"L":"W",gain:+bGain.toFixed(2),points:teamB.rankingPoints,competition:context.competitionTag||"national_qualifier",stage:context.stage||null};
+  teamA.rankingLedger.push(entryA);teamB.rankingLedger.push(entryB);teamA.rankingLedger=teamA.rankingLedger.slice(-120);teamB.rankingLedger=teamB.rankingLedger.slice(-120);
+  return calc;
+}
+function applyFibaMajorEventDiscount(G,eventKey){
+  G.fibaDiscounts=G.fibaDiscounts||{};if(G.fibaDiscounts[eventKey])return false;
+  ensureFibaRankingState(G);for(const n of G.nationalTeams||[])n.rankingPoints=Math.round((+n.rankingPoints||0)*0.66*10)/10;
+  G.fibaDiscounts[eventKey]={season:G.season,factor:0.66,engine:FIBA_RANKING_ENGINE_VERSION};
+  logEvent(G,`FIBA ranking discount applied before ${eventKey}: all nations ×0.66.`);return true;
+}
 function nationalProgramAdjustment(team) {
   const tierAdj = team.tier===1 ? 5.2 : team.tier===2 ? -1.2 : -5.0;
-  const rankingAdj = Math.max(-1.2,Math.min(1.2,((team.rankingPoints||1400)-1400)/300));
+  // New FIBA points sit on the real 2026 scale (roughly 0-920), so centre the small simulation modifier around 500.
+  const rankingAdj = Math.max(-1.2,Math.min(1.2,((team.rankingPoints||500)-500)/180));
   return tierAdj + rankingAdj;
 }
 function simulateNationalGame(G, teamA, teamB, windowId, groupId=null, competitionTag="national_qualifier") {
@@ -3595,9 +3743,9 @@ function simulateNationalGame(G, teamA, teamB, windowId, groupId=null, competiti
   for (const p of [...ra,...rb]) { const v=saved.get(p.id); if (v) { p.rotationRole=v.rotationRole; p.targetMinutes=v.targetMinutes; p.ovr=v.ovr; } }
   const aWon=sim.winnerClubId===fakeA.id; const winner=aWon?teamA:teamB;
   winner.record.w++; (aWon?teamB:teamA).record.l++;
-  teamA.rankingPoints=Math.round((teamA.rankingPoints+(aWon?8:-5))*10)/10;
-  teamB.rankingPoints=Math.round((teamB.rankingPoints+(aWon?-5:8))*10)/10;
   const result={id:nextId("intl"),windowId,groupId,teamA:teamA.code,teamB:teamB.code,scoreA:sim.homeScore,scoreB:sim.awayScore,winner:winner.code,quarters:sim.quarters,boxScore:{teamA:sim.boxScore.home,teamB:sim.boxScore.away}};
+  const rankingCalc=applyFibaRankingResult(G,teamA,teamB,result,{competitionTag,stage:groupId,homeTeamCode:competitionTag==="world_cup"?null:teamA.code});
+  result.ranking={engine:FIBA_RANKING_ENGINE_VERSION,teamAGain:+(aWon?rankingCalc.winnerGain:rankingCalc.loserGain).toFixed(2),teamBGain:+(aWon?rankingCalc.loserGain:rankingCalc.winnerGain).toFixed(2)};
   for (const line of result.boxScore.teamA) {
     const p=lookup.get(line.playerId); if (p) { p.internationalHistory.push({season:G.season,windowId,nation:p.nationality,opponent:teamB.code,pts:line.pts,reb:line.reb,ast:line.ast,won:aWon}); p.internationalHistory=p.internationalHistory.slice(-80); }
   }
@@ -3792,6 +3940,7 @@ function worldCupGame(G,aCode,bCode,stage,tournamentStats,games) {
 function runWorldCupLegacy(G) {
   const q=G.nationalQualification;
   if (!q.complete || q.worldCupPlayed || q.qualifiedTeamCodes.length!==32) return null;
+  applyFibaMajorEventDiscount(G,`World Cup ${q.cycle}`);
   const field=[...q.qualifiedTeamCodes]; prepareNationalRosters(G,field);
   const groups=worldCupSeededGroups(G,field), games=[], tournamentStats={}, groupTables={};
   const firstRoundResults={};
@@ -3890,6 +4039,7 @@ function initializeWorldCupLive(G){
   const q=G.nationalQualification;
   if(G.worldCupLive?.cycle===q.cycle && !G.worldCupLive.complete) return G.worldCupLive;
   if(!q.complete || q.worldCupPlayed || q.qualifiedTeamCodes.length!==32) return null;
+  applyFibaMajorEventDiscount(G,`World Cup ${q.cycle}`);
   const field=[...q.qualifiedTeamCodes]; prepareNationalRosters(G,field);
   const groups=worldCupSeededGroups(G,field);
   const groupState=Object.fromEntries(groups.map(gr=>[gr.id,Object.fromEntries(gr.teamCodes.map(c=>[c,{code:c,gp:0,w:0,l:0,pf:0,pa:0,points:0}]))]));
@@ -6596,6 +6746,7 @@ function finalizePlayoffsLive(G){
   if(G.champion){
     const finalsPlayers=G.champion.roster.filter(p=>p.playoffStats?.gp>0).sort((a,b)=>summerPerformanceScore(b.playoffStats)-summerPerformanceScore(a.playoffStats));
     const fmvp=finalsPlayers[0]||null;G.awards[`S${G.season}_FinalsMVP`]=fmvp?.id||null;addAward(G,fmvp,"Finals MVP");G.finalsMvpPlayerId=fmvp?.id||null;
+    for(const p of G.champion.roster)addAward(G,p,"NBA Champion");
   }
   settleSeasonAwards(G);
   logEvent(G,`Playoffs complete: ${live.games.length} games recorded. Champion: ${G.champion?.name||"n/a"}`);
@@ -6736,7 +6887,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.41.0 Draft Night Control & Trade-Up",ENGINE_VERSION="E2.12-QA1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.42.0 Production Data Foundation",ENGINE_VERSION="E2.13-PROD1";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -7912,7 +8063,8 @@ function recentGame(){
 }
 function squadOvr(club){
   if(!club?.roster?.length)return 0;
-  let top=[...club.roster].sort((a,b)=>b.ovr-a.ovr).slice(0,10);
+  // Production alignment: mirrors the supplied 2K27 team OVR convention — average of the best eight active players.
+  let top=[...club.roster].sort((a,b)=>b.ovr-a.ovr).slice(0,8);
   return Math.round(top.reduce((s,p)=>s+p.ovr,0)/top.length);
 }
 function leaguePowerRank(club){
@@ -11266,24 +11418,17 @@ function worldCupAwardCard(label,item,detail){
 
 function internationalWorldRankingRows(){
   const teams=(G.nationalTeams||[]).map(n=>{
-    const rank=nationalWorldRank(n.code);
+    const rank=nationalWorldRank(n.code),regionalRank=nationalRegionalRank(n.code);
     const rec=G.nationalRecords?.[n.code]||n.record||{};
-    return{
-      code:n.code,
-      name:n.name||nationDisplay(n.code)||n.code,
-      region:n.region||"—",
-      rank:Number.isFinite(+rank)?+rank:999,
-      w:+rec.w||0,
-      l:+rec.l||0
-    };
+    return{code:n.code,name:n.name||nationDisplay(n.code)||n.code,region:n.region||"—",rank:Number.isFinite(+rank)?+rank:999,regionalRank:Number.isFinite(+regionalRank)?+regionalRank:null,points:+n.rankingPoints||0,w:+rec.w||0,l:+rec.l||0};
   }).filter(x=>x.rank<999).sort((a,b)=>a.rank-b.rank||a.name.localeCompare(b.name));
-  return teams.slice(0,50);
+  return teams;
 }
 function internationalWorldRankings(){
   const rows=internationalWorldRankingRows(),userCode=G.userNationalGM?.nationCode;
-  return `<div class="intlRankingsHero"><div><div class="eyebrow">FIBA WORLD RANKINGS</div><h2>Top 50 Nations</h2><p>Current in-game national rankings across the international basketball world.</p></div><div class="intlRankingsTotal"><b>${rows.length}</b><small>NATIONS</small></div></div>
-    <div class="intlRankingsTable"><div class="intlRankingsHead"><span>RANK</span><span>NATION</span><span>REGION</span><span>RECORD</span></div>
-    ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${r.name}</b>${r.code===userCode?`<small>Your Nation</small>`:""}</div></div><span>${r.region}</span><b>${r.w||r.l?`${r.w}–${r.l}`:"—"}</b></div>`).join("")}</div>`;
+  return `<div class="intlRankingsHero"><div><div class="eyebrow">FIBA WORLD RANKINGS</div><h2>World Rankings</h2><p>${FIBA_RANKING_ENGINE_VERSION} · launch ratings seeded from the official 13 Jul 2026 FIBA table, then evolved by career results.</p></div><div class="intlRankingsTotal"><b>${rows.length}</b><small>NATIONS</small></div></div>
+    <div class="intlRankingsTable"><div class="intlRankingsHead"><span>RANK</span><span>NATION</span><span>REGION</span><span>PTS</span></div>
+    ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${r.name}</b><small>#${r.regionalRank||"—"} ${r.region}${r.code===userCode?" · Your Nation":""}</small></div></div><span>${r.region}</span><b>${r.points.toFixed(1)}</b></div>`).join("")}</div>`;
 }
 
 function intlWorldCupNavStages(){
@@ -11423,7 +11568,7 @@ function scoutingPage(embedded=false){
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>Season ${s.season} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
-  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button id="openScouting" class="moreLaunch"><b>Scouting</b><small>Roster needs & targets</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>Season 1 talent baseline</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div></div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
+  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button id="openScouting" class="moreLaunch"><b>Scouting</b><small>Roster needs & targets</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>2026/27 fictionalised 2K27 launch universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div></div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
 let _renderPrepSignature="";
 function renderPrepSignature(){
