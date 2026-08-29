@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.45.1 2026 Draft Restoration & Age Guardrails</title>
+<title>Mini&Me Basketball — v0.1.45.2 Age & Experience Audit — Tranche 1</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.1</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.2</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1861,7 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -1888,7 +1888,7 @@ const ACTIVE_CAREER_BASELINES={
   "James Harden":{age:37,experienceYears:17,legacyAliasId:"LEG_HARDEN",stats:{gp:1221,gs:1007,min:42449,fgm:8661,fga:19733,tpm:3390,tpa:9323,ftm:8627,fta:10002,reb:6809,ast:8873,stl:1794,blk:683,tov:4505,pf:2994,pts:29339},championships:[],awards:["MVP","8× All-NBA","11× All-Star","3× Scoring Champion","2× Assist Champion"]},
   "Nikola Jokic":{age:31,experienceYears:11,stats:{gp:810,gs:769,min:25914,fgm:6880,fga:12274,tpm:926,tpa:2559,ftm:3323,fta:4030,reb:8977,ast:6080,stl:1041,blk:589,tov:2419,pf:2168,pts:18009},championships:[2023],awards:["3× MVP","Finals MVP","8× All-NBA","8× All-Star"]},
   "Giannis Antetokounmpo":{age:32,experienceYears:13,championships:[2021],awards:["2× MVP","Finals MVP","NBA Champion"]},
-  "Jalen Brunson":{age:30,experienceYears:8,championships:[2026],awards:["Finals MVP","3× All-NBA","3× All-Star"]},
+  "Jalen Brunson":{age:29,experienceYears:8,championships:[2026],awards:["Finals MVP","3× All-NBA","3× All-Star"]},
   "Jayson Tatum":{age:28,experienceYears:9,championships:[2024],awards:["NBA Champion"]},
   "Kawhi Leonard":{age:35,experienceYears:14,championships:[2014,2019],awards:["2× Finals MVP","2× Defensive Player of the Year"]},
   "Anthony Davis":{age:33,experienceYears:14,championships:[2020],awards:["NBA Champion"]},
@@ -2517,6 +2517,112 @@ const PRODUCTION_2026_27_AGE_OVERRIDES={
   "MarJon Beauchamp":25,"Rayan Rupert":22,"Tyrese Martin":27,"Dominick Barlow":23,
   "Adem Bona":23,"Dean Wade":29,"Jabari Walker":24,"Ariel Hukporti":24
 };
+
+// v0.1.45.2 — verified age/experience audit, Tranche 1.
+// Official NBA 2026/27 roster data. Rookies from the 2026 Draft remain in the prospect pool.
+const PRODUCTION_2026_27_VERIFIED_BIO={
+  "Jayson Tatum":{age:28,experienceYears:9},
+  "Mitchell Robinson":{age:28,experienceYears:8},
+  "Paul George":{age:36,experienceYears:16},
+  "Derrick White":{age:32,experienceYears:9},
+  "Payton Pritchard":{age:28,experienceYears:6},
+  "Ron Harper Jr.":{age:26,experienceYears:4},
+  "Jordan Walsh":{age:22,experienceYears:3},
+  "Hugo Gonzalez":{age:20,experienceYears:1},
+  "Sam Hauser":{age:28,experienceYears:5},
+  "Mike Conley":{age:38,experienceYears:19},
+  "Luka Garza":{age:27,experienceYears:5},
+  "Baylor Scheierman":{age:25,experienceYears:2},
+  "Neemias Queta":{age:27,experienceYears:5},
+  "Josh Minott":{age:23,experienceYears:4},
+  "Danny Wolf":{age:22,experienceYears:1},
+  "Drake Powell":{age:20,experienceYears:1},
+  "Egor Demin":{age:20,experienceYears:1},
+  "Nolan Traore":{age:20,experienceYears:1},
+  "Keon Ellis":{age:26,experienceYears:4},
+  "Terance Mann":{age:29,experienceYears:7},
+  "Michael Porter Jr.":{age:28,experienceYears:7},
+  "Day’Ron Sharpe":{age:24,experienceYears:5},
+  "Moritz Wagner":{age:29,experienceYears:8},
+  "Noah Clowney":{age:22,experienceYears:3},
+  "Julius Randle":{age:31,experienceYears:12},
+  "Chaney Johnson":{age:24,experienceYears:1},
+  "Ben Saraf":{age:20,experienceYears:1},
+  "Andre Drummond":{age:33,experienceYears:14},
+  "Jordan Clarkson":{age:34,experienceYears:12},
+  "Miles McBride":{age:25,experienceYears:5},
+  "Josh Hart":{age:31,experienceYears:9},
+  "Pacome Dadiet":{age:21,experienceYears:2},
+  "Jose Alvarado":{age:28,experienceYears:5},
+  "OG Anunoby":{age:29,experienceYears:9},
+  "Kevin McCullar Jr.":{age:25,experienceYears:2},
+  "Jalen Brunson":{age:29,experienceYears:8},
+  "Tyler Kolek":{age:25,experienceYears:2},
+  "Mikal Bridges":{age:29,experienceYears:8},
+  "Karl-Anthony Towns":{age:30,experienceYears:11},
+  "Landry Shamet":{age:29,experienceYears:8},
+  "Mohamed Diawara":{age:21,experienceYears:1},
+  "Tyrese Maxey":{age:25,experienceYears:6},
+  "Caleb Love":{age:24,experienceYears:1},
+  "Kentavious Caldwell-Pope":{age:33,experienceYears:13},
+  "Kyle Lowry":{age:40,experienceYears:20},
+  "Jaylen Brown":{age:29,experienceYears:10},
+  "Justin Edwards":{age:22,experienceYears:2},
+  "MarJon Beauchamp":{age:25,experienceYears:4},
+  "Rayan Rupert":{age:22,experienceYears:3},
+  "Joel Embiid":{age:32,experienceYears:10},
+  "Anfernee Simons":{age:27,experienceYears:8},
+  "LeBron James":{age:41,experienceYears:23},
+  "Tyrese Martin":{age:27,experienceYears:3},
+  "Dominick Barlow":{age:23,experienceYears:4},
+  "Adem Bona":{age:23,experienceYears:2},
+  "Dean Wade":{age:29,experienceYears:7},
+  "Jabari Walker":{age:24,experienceYears:4},
+  "Ariel Hukporti":{age:24,experienceYears:2},
+  "VJ Edgecombe":{age:21,experienceYears:1},
+  "Gradey Dick":{age:22,experienceYears:3},
+  "Brandon Ingram":{age:28,experienceYears:10},
+  "Scottie Barnes":{age:25,experienceYears:5},
+  "Immanuel Quickley":{age:27,experienceYears:6},
+  "RJ Barrett":{age:26,experienceYears:7},
+  "Kyle Anderson":{age:32,experienceYears:12},
+  "Ja’Kobe Walter":{age:21,experienceYears:2},
+  "Jakob Poeltl":{age:30,experienceYears:10},
+  "Jamal Shead":{age:24,experienceYears:2},
+  "Chucky Hepburn":{age:23,experienceYears:1},
+  "Collin Murray-Boyles":{age:21,experienceYears:1},
+  "Trayce Jackson-Davis":{age:26,experienceYears:3},
+  "Trey Jemison III":{age:26,experienceYears:3},
+  "Alijah Martin":{age:24,experienceYears:1},
+  "Jamison Battle":{age:25,experienceYears:2},
+  "Josh Giddey":{age:23,experienceYears:5},
+  "Rob Dillingham":{age:21,experienceYears:2},
+  "Nic Claxton":{age:27,experienceYears:7},
+  "Leonard Miller":{age:22,experienceYears:3},
+  "Zach Collins":{age:28,experienceYears:9},
+  "Matas Buzelis":{age:21,experienceYears:2},
+  "Norman Powell":{age:33,experienceYears:11},
+  "Noa Essengue":{age:19,experienceYears:1},
+  "Jalen Smith":{age:26,experienceYears:6},
+  "Tre Jones":{age:26,experienceYears:6},
+  "Isaac Okoro":{age:25,experienceYears:6},
+  "Patrick Williams":{age:25,experienceYears:6}
+};
+function applyVerifiedProductionBio(p,sourceName){
+  const b=PRODUCTION_2026_27_VERIFIED_BIO[sourceName];if(!b)return p;
+  p.age=b.age;p.experienceYears=b.experienceYears;
+  p.productionBioVerified=true;p.productionBioSource="NBA.com 2026/27 roster";
+  p.productionBioAudit="v0.1.45.2-T1";
+  return p;
+}
+function ensureVerifiedProductionBio(G){
+  // Never rewind an advanced career to launch ages. This migration is only for the opening season.
+  if(!G||G.season!==1)return;
+  for(const club of G.clubs||[])for(const p of club.roster||[]){
+    if(!p.rosterFoundationVersion||!p.sourceTemplateName)continue;
+    applyVerifiedProductionBio(p,p.sourceTemplateName);
+  }
+}
 function stableTemplateHash(s){
   let h=2166136261;
   for(const ch of String(s||"")){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}
@@ -2571,7 +2677,8 @@ function sourceTemplateFor2026Draft(name){
   return null;
 }
 function isOfficial2026DraftTemplate(t){return !!t&&OFFICIAL_2026_DRAFT_NAMES.has(normalizeSourcePlayerName(t.sourceName));}
-function official2026DraftAge(row){return 19+(stableTemplateHash(row.sourceName)%4);}
+const VERIFIED_2026_DRAFT_AGES={"Chris Cenac Jr.":19,"Dillon Mitchell":22,"Mikel Brown Jr.":20,"Joshua Jefferson":22,"Jack Kayil":20,"Tyler Nickel":22,"Allen Graves":20,"Dailyn Swain":21,"Caleb Wilson":20,"Labaron Philon Jr.":20};
+function official2026DraftAge(row){return Number.isFinite(+VERIFIED_2026_DRAFT_AGES[row.sourceName])?+VERIFIED_2026_DRAFT_AGES[row.sourceName]:19+(stableTemplateHash(row.sourceName)%4);}
 function makeOfficial2026DraftProspect(row,G){
   const src=sourceTemplateFor2026Draft(row.sourceName);
   const t=src?{...src,isRookie:true,draftPick:row.pick}:{sourceName:row.sourceName,nationality:"USA",position:row.position,secondaryPosition:null,heightCm:null,sourceArchetype:"",ovr:null,badges:0,threePt:null,dunk:null,isRookie:true,draftPick:row.pick};
@@ -2649,6 +2756,7 @@ function makeMappedPlayer(t,rank,teamId){
   p.extensionEligible=p.contractYearsLeft===1;
   applyActiveCareerBaseline(p,t.sourceName);
   applyLaunchCareerContext(p,t);
+  applyVerifiedProductionBio(p,t.sourceName);
   if(p.preCareerBaseline&&!t.isRookie)p.salaryM=salaryForOvr(p.ovr,p.age);
   return normalizePlayerPotential(p);
 }
@@ -7077,7 +7185,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.1 2026 Draft Restoration & Age Guardrails",ENGINE_VERSION="E2.15-PROD3A";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.2 Age & Experience Audit — Tranche 1",ENGINE_VERSION="E2.15-PROD3B";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -11801,6 +11909,7 @@ function prepareRenderState(force=false){
 }
 function render(){
   ensureCareerBaselineMetadata(G);
+  ensureVerifiedProductionBio(G);
 prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
