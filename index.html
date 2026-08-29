@@ -1861,7 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.45.15.1 — Phase B Pass 2: expands verified 2026/27 contract coverage, distinguishes verified two-way launch deals, and deepens contract/payroll audit provenance.
+// v0.1.45.15.2 — Phase B closure: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
 // v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
 // v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.45.14.1 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
@@ -3951,8 +3951,8 @@ const CAP_FOUNDATION_VERSION="NBA-2026-27-CAP-1";
 // Players not yet present in this verified tranche retain the Mini&Me
 // generated contract economy and are marked as fallback in the audit.
 // ---------------------------------------------------------------------
-const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B2";
-const CONTRACT_SNAPSHOT_SOURCE="Basketball-Reference 2026-27 player/team payroll, roster and transaction pages, checked 30 Aug 2026";
+const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B3-CLOSURE";
+const CONTRACT_SNAPSHOT_SOURCE="Spotrac primary for Phase B closure; existing Basketball-Reference verified tranche retained where not contradicted; current transaction reporting used only where Spotrac has not yet reflected a newly signed status. Checked 30 Aug 2026";
 function verifiedContract(schedule,guaranteedM=null,note=null){
   return {scheduleM:schedule.map(v=>v==null?null:+v),guaranteedM:guaranteedM==null?null:+guaranteedM,note};
 }
@@ -4392,6 +4392,25 @@ const VERIFIED_2026_27_CONTRACTS={
   "Tre Mann":verifiedContract([8.000000,8.000000],8.000000),
 };
 
+// Phase B closure overrides — Spotrac-priority 2026/27 figures checked 30 Aug 2026.
+// These are intentionally applied after the earlier verified tranche so the
+// closure source takes precedence where a clearer current contract is available.
+Object.assign(VERIFIED_2026_27_CONTRACTS,{
+  "AJ Green":verifiedContract([10.044644,10.848215,11.651786,12.455355],45.000000,"Spotrac: 4-year veteran extension, fully guaranteed."),
+  "DeMar DeRozan":verifiedContract([25.740000],10.000000,"Spotrac: 2026/27 salary $25.74M; $10M base guarantee with conditional guarantee escalators. Game does not auto-resolve those real-world conditions."),
+  "Tristan Vukcevic":verifiedContract([3.000000,3.000000],3.000000,"Spotrac: 2027/28 is a club option; stored as listed salary schedule without automatic option exercise."),
+  "Jamir Watkins":verifiedContract([2.150917],0,"Spotrac: 2026/27 club option/non-guaranteed at source snapshot; fully guaranteed 10 Jan 2027 if retained."),
+});
+
+// Current two-way status overrides used only when a newly signed 2026/27 status
+// is newer than the indexed Spotrac player page. These remain excluded from
+// standard team payroll.
+const CURRENT_TWO_WAY_STATUS_SOURCE=new Map([
+  [normalizeSourcePlayerName("Jalen Pickett"),"Current 2026/27 two-way signing reporting, checked 30 Aug 2026"],
+  [normalizeSourcePlayerName("Keshad Johnson"),"Current 2026/27 two-way signing reporting, checked 30 Aug 2026"],
+]);
+for(const key of CURRENT_TWO_WAY_STATUS_SOURCE.keys())VERIFIED_2026_27_TWO_WAY_NAMES.add(key);
+
 const VERIFIED_2026_27_CONTRACTS_NORMALIZED=new Map(
   Object.entries(VERIFIED_2026_27_CONTRACTS).map(([name,row])=>[normalizeSourcePlayerName(name),row])
 );
@@ -4414,7 +4433,7 @@ function applyVerifiedLaunchContract(player,sourceName){
       player.productionContractVerified=true;
       player.productionContractVerifiedKind="Two-Way";
       player.productionContractStatus="Verified 2026/27 two-way contract";
-      player.productionContractSource=CONTRACT_SNAPSHOT_SOURCE;
+      player.productionContractSource=CURRENT_TWO_WAY_STATUS_SOURCE.get(normalizeSourcePlayerName(sourceName))||CONTRACT_SNAPSHOT_SOURCE;
       player.productionContractScheduleM=[];
       player.productionContractOriginalScheduleM=[];
       player.productionContractGuaranteedM=null;
@@ -4463,17 +4482,30 @@ function productionContractSnapshotAudit(G){
   const fallback=launch.filter(x=>!x.p.productionContractVerified);
   const invalid=verifiedStandard.filter(x=>!(+x.p.salaryM>0)||!(x.p.contractYearsLeft>0));
   const draftLeak=(G?.upcomingDraftClass?.season===1?G.upcomingDraftClass.prospects:[]).filter(p=>(+p.salaryM||0)>0||(p.contractYearsLeft||0)>0);
-  const clubPayrolls=(G?.clubs||[]).map(c=>({clubId:c.id,clubName:c.name,payrollM:recalcClubCap(c),verifiedPlayers:(c.roster||[]).filter(p=>p.productionContractVerified).length,fallbackPlayers:(c.roster||[]).filter(p=>p.entryPath==="Mapped Veteran"&&!p.productionContractVerified).length}));
+  const thresholds=financialThresholds({...G,season:1});
+  const clubPayrolls=(G?.clubs||[]).map(c=>{
+    const payrollM=recalcClubCap(c);
+    const status=payrollM<=thresholds.salaryCapM?"Under Cap":payrollM<=thresholds.taxLineM?"Over Cap":payrollM<=thresholds.firstApronM?"Tax Team":payrollM<=thresholds.secondApronM?"First Apron":"Second Apron";
+    return {clubId:c.id,clubName:c.name,payrollM,capStatus:status,belowMinimum:payrollM<thresholds.minimumTeamSalaryM,verifiedPlayers:(c.roster||[]).filter(p=>p.productionContractVerified).length,fallbackPlayers:(c.roster||[]).filter(p=>(p.origin==="Mapped Pro"||p.entryPath==="Mapped Veteran")&&!p.productionContractVerified).length};
+  });
+  const payrollIntegrityIssues=clubPayrolls.filter(x=>!Number.isFinite(+x.payrollM)||+x.payrollM<0).map(x=>x.clubName);
+  const capStatusCounts=clubPayrolls.reduce((a,x)=>(a[x.capStatus]=(a[x.capStatus]||0)+1,a),{});
+  const unresolvedStatus=fallback.map(x=>({clubId:x.clubId,clubName:x.clubName,sourceName:x.p.sourceTemplateName||x.p.name,status:"Mini&Me fallback retained — no reliable current 2026/27 standard salary imported"})).sort((a,b)=>a.sourceName.localeCompare(b.sourceName));
   const report={
     version:CONTRACT_SNAPSHOT_VERSION,source:CONTRACT_SNAPSHOT_SOURCE,
     launchVeterans:launch.length,verifiedPlayers:verified.length,verifiedStandardPlayers:verifiedStandard.length,verifiedTwoWayPlayers:verifiedTwoWay.length,fallbackPlayers:fallback.length,
     coveragePct:launch.length?Math.round(verified.length/launch.length*1000)/10:0,
-    fallbackSourceNames:fallback.map(x=>x.p.sourceTemplateName||x.p.name).sort(),
+    fallbackSourceNames:fallback.map(x=>x.p.sourceTemplateName||x.p.name).sort(),unresolvedStatus,
     invalidVerifiedContracts:invalid.map(x=>x.p.sourceTemplateName||x.p.name),
-    draftProspectContractLeak:draftLeak.map(p=>p.sourceTemplateName||p.name),clubPayrolls,
-    guaranteePolicy:"Guaranteed totals retained where source table exposes them; per-year guarantee/option state is not invented.",
-    twoWayPolicy:"Verified two-way roster status is stored separately from standard payroll because source payroll tables do not list a standard cap salary for those deals.",
-    passed:invalid.length===0&&draftLeak.length===0
+    draftProspectContractLeak:draftLeak.map(p=>p.sourceTemplateName||p.name),
+    teamsAudited:clubPayrolls.length,clubPayrolls,capStatusCounts,
+    teamsBelowMinimumSalary:clubPayrolls.filter(x=>x.belowMinimum).map(x=>x.clubName),
+    payrollIntegrityIssues,
+    launchThresholds:thresholds,
+    guaranteePolicy:"Guaranteed totals retained where reliably exposed. Conditional guarantees and options are recorded as metadata and are not auto-resolved unless the game explicitly supports that mechanism.",
+    twoWayPolicy:"Verified two-way roster status is stored separately from standard payroll and does not receive an invented standard salary.",
+    unresolvedPolicy:"A verified UFA/RFA/transition status is not converted into a fabricated 2026/27 salary. The existing Mini&Me contract is retained until the launch snapshot has a reliable standard contract value.",
+    passed:invalid.length===0&&draftLeak.length===0&&payrollIntegrityIssues.length===0&&clubPayrolls.length===30
   };
   if(G)G.productionContractAudit=report;
   return report;
@@ -4529,7 +4561,7 @@ function productionCapFoundationAudit(G){
     salaryCapSetting:G?.settings?.salaryCap!==false,
     draftProspectContractLeak:draftContractLeak,
     futureCapModel:"5% annual Mini&Me growth from the official 2026/27 base",
-    playerContractSnapshotStatus:"Phase B verified contract snapshot active; unresolved identities remain explicitly marked Mini&Me fallback",
+    playerContractSnapshotStatus:"Phase B closure snapshot active; Spotrac-priority verified contracts applied, two-way deals separated, and unresolved UFA/RFA/transition identities explicitly retained as Mini&Me fallback rather than guessed",
     passed:mismatches.length===0&&draftContractLeak.length===0,
     mismatches
   };
@@ -8787,7 +8819,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.15.1 Verified 2026/27 Contracts — Phase B Pass 2",ENGINE_VERSION="E2.15-PROD6B2";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.15.2 Verified 2026/27 Contracts — Phase B Closure",ENGINE_VERSION="E2.15-PROD6B3";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
