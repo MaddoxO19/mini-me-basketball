@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.45.7 Southwest Division Age & Experience Audit</title>
+<title>Mini&Me Basketball — v0.1.45.12 Jersey Number Consolidation & OVR Priority</title>
 <style>
 :root{--bg:#090c11;--panel:#121720;--panel2:#171d27;--line:#2a3442;--text:#f4f6f8;--muted:#98a3b2;--accent:#f4a340;--accent2:#ffd28a;--good:#55c889;--bad:#e56b6f}
 *{box-sizing:border-box}html,body{margin:0;min-height:100%;background:linear-gradient(180deg,#090c11,#0d1219 50%,#090c11);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
@@ -1798,7 +1798,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.7</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.45.12</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1861,7 +1861,7 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -2962,8 +2962,20 @@ const PRODUCTION_2026_27_VERIFIED_BIO_T6={
   "Jordan McLaughlin":{age:30,experienceYears:7,audit:"v0.1.45.7-SOUTHWEST"},
   "David Jones Garcia":{age:24,experienceYears:1,audit:"v0.1.45.7-SOUTHWEST"}
 };
+
+// v0.1.45.8 — final unresolved launch age/experience consolidation.
+const PRODUCTION_2026_27_VERIFIED_BIO_T7={
+  "Nick Richards":{age:28,experienceYears:6,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Cam Whitmore":{age:22,experienceYears:3,audit:"v0.1.45.8-CONSOLIDATION"},
+  "DeMar DeRozan":{age:37,experienceYears:18,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Tim Hardaway Jr.":{age:34,experienceYears:13,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Jalen Pickett":{age:26,experienceYears:3,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Pete Nance":{age:26,experienceYears:3,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Dillon Jones":{age:24,experienceYears:2,audit:"v0.1.45.8-CONSOLIDATION"},
+  "Kawhi Leonard":{age:35,experienceYears:15,audit:"v0.1.45.8-CONSOLIDATION"}
+};
 function applyVerifiedProductionBio(p,sourceName){
-  const b=PRODUCTION_2026_27_VERIFIED_BIO[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T2[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T3[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T4[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T5[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T6[sourceName];if(!b)return p;
+  const b=PRODUCTION_2026_27_VERIFIED_BIO[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T2[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T3[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T4[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T5[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T6[sourceName]||PRODUCTION_2026_27_VERIFIED_BIO_T7[sourceName];if(!b)return p;
   p.age=b.age;p.experienceYears=b.experienceYears;
   p.productionBioVerified=true;p.productionBioSource="NBA.com 2026/27 roster";
   p.productionBioAudit=b.audit||"v0.1.45.2-T1";
@@ -2975,6 +2987,465 @@ function ensureVerifiedProductionBio(G){
   for(const club of G.clubs||[])for(const p of club.roster||[]){
     if(!p.rosterFoundationVersion||!p.sourceTemplateName)continue;
     applyVerifiedProductionBio(p,p.sourceTemplateName);
+  }
+}
+
+// v0.1.45.9 — jersey-number production foundation, Atlantic tranche.
+const PRODUCTION_2026_27_JERSEY_ATLANTIC={
+  "BOS|Jayson Tatum":"0",
+  "BOS|Mitchell Robinson":"4",
+  "BOS|Paul George":"8",
+  "BOS|Derrick White":"9",
+  "BOS|Payton Pritchard":"11",
+  "BOS|Ron Harper Jr.":"13",
+  "BOS|Jordan Walsh":"27",
+  "BOS|Hugo Gonzalez":"28",
+  "BOS|Sam Hauser":"30",
+  "BOS|Mike Conley":"44",
+  "BOS|Luka Garza":"52",
+  "BOS|Baylor Scheierman":"55",
+  "BOS|Neemias Queta":"88",
+  "BKN|Josh Minott":"00",
+  "BKN|Danny Wolf":"2",
+  "BKN|Drake Powell":"4",
+  "BKN|Egor Demin":"8",
+  "BKN|Nolan Traore":"13",
+  "BKN|Keon Ellis":"14",
+  "BKN|Terance Mann":"14",
+  "BKN|Michael Porter Jr.":"17",
+  "BKN|Day’Ron Sharpe":"20",
+  "BKN|Moritz Wagner":"21",
+  "BKN|Noah Clowney":"21",
+  "BKN|Julius Randle":"30",
+  "BKN|Chaney Johnson":"31",
+  "BKN|Ben Saraf":"77",
+  "NYE|Andre Drummond":"0",
+  "NYE|Jordan Clarkson":"00",
+  "NYE|Miles McBride":"2",
+  "NYE|Josh Hart":"3",
+  "NYE|Pacome Dadiet":"4",
+  "NYE|Jose Alvarado":"5",
+  "NYE|OG Anunoby":"8",
+  "NYE|Jalen Brunson":"11",
+  "NYE|Tyler Kolek":"13",
+  "NYE|Mikal Bridges":"25",
+  "NYE|Karl-Anthony Towns":"32",
+  "NYE|Landry Shamet":"44",
+  "NYE|Mohamed Diawara":"51",
+  "PHI|Tyrese Maxey":"0",
+  "PHI|Caleb Love":"2",
+  "PHI|Kentavious Caldwell-Pope":"3",
+  "PHI|Kyle Lowry":"7",
+  "PHI|Jaylen Brown":"7",
+  "PHI|Justin Edwards":"11",
+  "PHI|MarJon Beauchamp":"16",
+  "PHI|Rayan Rupert":"21",
+  "PHI|Joel Embiid":"21",
+  "PHI|Anfernee Simons":"22",
+  "PHI|LeBron James":"23",
+  "PHI|Tyrese Martin":"23",
+  "PHI|Dominick Barlow":"25",
+  "PHI|Adem Bona":"30",
+  "PHI|Dean Wade":"32",
+  "PHI|Jabari Walker":"33",
+  "PHI|Ariel Hukporti":"55",
+  "TOR|Gradey Dick":"1",
+  "TOR|Brandon Ingram":"3",
+  "TOR|Scottie Barnes":"4",
+  "TOR|Immanuel Quickley":"5",
+  "TOR|RJ Barrett":"9",
+  "TOR|Kyle Anderson":"12",
+  "TOR|Ja’Kobe Walter":"14",
+  "TOR|Jakob Poeltl":"19",
+  "TOR|Jamal Shead":"23",
+  "TOR|Chucky Hepburn":"24",
+  "TOR|Collin Murray-Boyles":"30",
+  "TOR|Trayce Jackson-Davis":"32",
+  "TOR|Trey Jemison III":"50",
+  "TOR|Alijah Martin":"55",
+  "TOR|Jamison Battle":"77"
+};
+
+
+// v0.1.45.10 — verified 2026/27 jersey-number audit, Central + Southeast.
+const PRODUCTION_2026_27_JERSEY_CENTRAL_SOUTHEAST={
+  "CHI|Josh Giddey":"3",
+  "CHI|Rob Dillingham":"7",
+  "CHI|Nic Claxton":"9",
+  "CHI|Leonard Miller":"11",
+  "CHI|Zach Collins":"12",
+  "CHI|Matas Buzelis":"14",
+  "CHI|Norman Powell":"24",
+  "CHI|Noa Essengue":"24",
+  "CHI|Jalen Smith":"25",
+  "CHI|Tre Jones":"30",
+  "CHI|Isaac Okoro":"35",
+  "CHI|Patrick Williams":"44",
+  "CLE|Craig Porter Jr.":"9",
+  "CLE|Jaylon Tyson":"20",
+  "CLE|Tristan Enaruna":"21",
+  "CLE|Tyrese Proctor":"24",
+  "CLE|Jarrett Allen":"31",
+  "CLE|Mario Hezonja":"33",
+  "CLE|Nae’Qwan Tomlin":"35",
+  "CLE|Donovan Mitchell":"45",
+  "DET|Jalen Duren":"0",
+  "DET|Cade Cunningham":"2",
+  "DET|Ronald Holland II":"5",
+  "DET|Paul Reed":"7",
+  "DET|Ausar Thompson":"9",
+  "DET|Isaiah Joe":"11",
+  "DET|Gary Harris":"11",
+  "DET|Taurean Prince":"12",
+  "DET|Elijah Harkless":"16",
+  "DET|John Collins":"20",
+  "DET|Daniss Jenkins":"24",
+  "DET|Kevin Huerter":"27",
+  "DET|Javonte Green":"31",
+  "DET|Duncan Robinson":"55",
+  "IND|Tyrese Haliburton":"0",
+  "IND|Obi Toppin":"1",
+  "IND|Andrew Nembhard":"2",
+  "IND|Jarace Walker":"5",
+  "IND|T.J. McConnell":"9",
+  "IND|Kelly Oubre Jr.":"10",
+  "IND|Johnny Furphy":"12",
+  "IND|Larry Nance Jr.":"22",
+  "IND|Aaron Nesmith":"23",
+  "IND|Kobe Brown":"24",
+  "IND|Ben Sheppard":"26",
+  "IND|Quenton Jackson":"29",
+  "IND|Jay Huff":"32",
+  "IND|Ivica Zubac":"40",
+  "IND|Pascal Siakam":"43",
+  "MIL|Kel’el Ware":"9",
+  "MIL|Tyler Herro":"11",
+  "MIL|Ryan Rollins":"13",
+  "MIL|Kyle Kuzma":"18",
+  "MIL|AJ Green":"20",
+  "MIL|Ousmane Dieng":"21",
+  "MIL|Jaime Jaquez Jr.":"24",
+  "MIL|Kasparas Jakucionis":"25",
+  "MIL|Pete Nance":"35",
+  "ATL|Jalen Johnson":"1",
+  "ATL|CJ McCollum":"3",
+  "ATL|Dyson Daniels":"5",
+  "ATL|Luguentz Dort":"5",
+  "ATL|Nickeil Alexander-Walker":"7",
+  "ATL|Buddy Hield":"8",
+  "ATL|Ryan Nembhard":"9",
+  "ATL|Asa Newell":"14",
+  "ATL|Onyeka Okongwu":"17",
+  "ATL|Mouhamed Gueye":"18",
+  "ATL|Aaron Wiggins":"21",
+  "ATL|Jalen Wilson":"22",
+  "ATL|Devin Carter":"22",
+  "ATL|Corey Kispert":"24",
+  "ATL|Jock Landale":"31",
+  "CHA|Royce O’Neale":"00",
+  "CHA|Dorian Finney-Smith":"2",
+  "CHA|Grant Williams":"2",
+  "CHA|Coby White":"3",
+  "CHA|Sion James":"4",
+  "CHA|Kon Knueppel":"7",
+  "CHA|Grayson Allen":"8",
+  "CHA|Dennis Schroder":"8",
+  "CHA|Naz Reid":"11",
+  "CHA|Ryan Kalkbrenner":"11",
+  "CHA|Moussa Diabate":"14",
+  "MIA|Simone Fontecchio":"0",
+  "MIA|Trevor Keels":"3",
+  "MIA|Giannis Antetokounmpo":"7",
+  "MIA|Dru Smith":"12",
+  "MIA|Bam Adebayo":"13",
+  "MIA|Andrew Wiggins":"22",
+  "MIA|Bobby Portis":"95",
+  "ORL|Anthony Black":"0",
+  "ORL|Jonathan Isaac":"1",
+  "ORL|Jevon Carter":"2",
+  "ORL|Desmond Bane":"3",
+  "ORL|Jalen Suggs":"4",
+  "ORL|Paolo Banchero":"5",
+  "ORL|Jamal Cain":"8",
+  "ORL|Nikola Vucevic":"9",
+  "ORL|Jase Richardson":"11",
+  "ORL|Colin Castleton":"14",
+  "ORL|Franz Wagner":"22",
+  "ORL|Tristan da Silva":"23",
+  "ORL|Wendell Carter Jr.":"34",
+  "WAS|Justin Champagnie":"9",
+  "WAS|Tre Johnson":"12",
+  "WAS|KyShawn George":"18",
+  "WAS|Khris Middleton":"20",
+  "WAS|Alex Sarr":"20",
+  "WAS|Anthony Davis":"23",
+  "WAS|Will Riley":"27"
+};
+
+// v0.1.45.11 — verified 2026/27 jersey-number audit, Western Conference.
+const PRODUCTION_2026_27_JERSEY_WEST={
+  "DEN|Christian Braun":"0",
+  "DEN|Julian Strawther":"3",
+  "DEN|Tyus Jones":"5",
+  "DEN|Bruce Brown":"11",
+  "DEN|DaRon Holmes II":"14",
+  "DEN|Nikola Jokic":"15",
+  "DEN|Spencer Jones":"21",
+  "DEN|Zeke Nnaji":"22",
+  "DEN|Cameron Johnson":"23",
+  "DEN|KJ Simpson":"25",
+  "DEN|Jamal Murray":"27",
+  "DEN|Aaron Gordon":"32",
+  "DEN|Marvin Bagley III":"35",
+  "MIN|Donte DiVincenzo":"0",
+  "MIN|LaMelo Ball":"1",
+  "MIN|Jaden McDaniels":"3",
+  "MIN|Terrence Shannon Jr.":"4",
+  "MIN|Anthony Edwards":"5",
+  "MIN|Jaylen Clark":"7",
+  "MIN|Bones Hyland":"8",
+  "MIN|Josh Green":"10",
+  "MIN|Ayo Dosunmu":"13",
+  "MIN|Joan Beringer":"19",
+  "MIN|Enrique Freeman":"25",
+  "MIN|Rudy Gobert":"27",
+  "OKC|Shai Gilgeous-Alexander":"2",
+  "OKC|Jared McCain":"3",
+  "OKC|Jaylin Williams":"6",
+  "OKC|Chet Holmgren":"7",
+  "OKC|Jalen Williams":"8",
+  "OKC|Alex Caruso":"9",
+  "OKC|Thomas Sorber":"12",
+  "POR|Damian Lillard":"0",
+  "POR|Scoot Henderson":"00",
+  "POR|Jrue Holiday":"5",
+  "POR|Deni Avdija":"8",
+  "POR|Micah Potter":"11",
+  "POR|Ja Morant":"12",
+  "POR|Branden Carlson":"15",
+  "UTA|Kyle Filipowski":"2",
+  "UTA|Keyonte George":"3",
+  "UTA|Cody Williams":"5",
+  "UTA|Isaiah Collier":"8",
+  "UTA|Svi Mykhailiuk":"10",
+  "UTA|Jaxson Hayes":"11",
+  "UTA|Ace Bailey":"19",
+  "UTA|Jaren Jackson Jr.":"20",
+  "UTA|Lauri Markkanen":"23",
+  "UTA|Brice Sensabaugh":"28",
+  "UTA|Jusuf Nurkic":"30",
+  "UTA|John Konchar":"55",
+  "GSB|Gary Payton II":"0",
+  "GSB|Brandin Podziemski":"2",
+  "GSB|Will Richard":"3",
+  "GSB|Moses Moody":"4",
+  "GSB|Kristaps Porzingis":"7",
+  "GSB|De’Anthony Melton":"8",
+  "GSB|Jimmy Butler":"10",
+  "GSB|Gui Santos":"15",
+  "GSB|LJ Cryer":"18",
+  "GSB|Al Horford":"20",
+  "GSB|Draymond Green":"23",
+  "GSB|Charles Bassey":"28",
+  "GSB|Stephen Curry":"30",
+  "GSB|Malevy Leons":"33",
+  "LAC|Bradley Beal":"0",
+  "LAC|Max Strus":"2",
+  "LAC|Kobe Sanders":"4",
+  "LAC|Derrick Jones Jr.":"5",
+  "LAC|Kris Dunn":"8",
+  "LAC|Darius Garland":"10",
+  "LAC|Brook Lopez":"11",
+  "LAC|Yanic Konan Niederhauser":"14",
+  "LAC|Jordan Miller":"22",
+  "LAC|Isaiah Jackson":"23",
+  "LAC|Jalen Pickett":"24",
+  "LAC|Rui Hachimura":"28",
+  "LAG|Jarred Vanderbilt":"2",
+  "LAG|Matisse Thybulle":"4",
+  "LAG|Dalton Knecht":"4",
+  "LAG|Quentin Grimes":"5",
+  "LAG|Jaden Hardy":"7",
+  "LAG|Bronny James":"9",
+  "LAG|Collin Sexton":"10",
+  "LAG|Ziaire Williams":"11",
+  "LAG|Jake LaRavia":"12",
+  "LAG|Walker Kessler":"14",
+  "LAG|Austin Reaves":"15",
+  "LAG|Sandro Mamukelashvili":"54",
+  "LAG|Kevon Looney":"55",
+  "LAG|Luka Doncic":"77",
+  "PHX|Miles Bridges":"0",
+  "PHX|Ryan Dunn":"0",
+  "PHX|Dillon Brooks":"3",
+  "PHX|Jalen Green":"4",
+  "PHX|Haywood Highsmith":"7",
+  "PHX|Luke Kennard":"10",
+  "PHX|Khaman Maluach":"10",
+  "PHX|Oso Ighodaro":"11",
+  "PHX|Collin Gillespie":"12",
+  "PHX|Mark Williams":"15",
+  "PHX|Devin Booker":"15",
+  "PHX|Jamaree Bouyea":"17",
+  "PHX|Rasheer Fleming":"20",
+  "PHX|Jordan Goodwin":"23",
+  "PHX|Pat Spencer":"61",
+  "SAC|Malik Monk":"0",
+  "SAC|Jonathan Mogbo":"2",
+  "SAC|Zach LaVine":"8",
+  "SAC|Precious Achiuwa":"9",
+  "SAC|Nique Clifford":"10",
+  "SAC|Domantas Sabonis":"11",
+  "SAC|Keegan Murray":"13",
+  "SAC|Adam Flagler":"14",
+  "SAC|De’Andre Hunter":"15",
+  "SAC|Daeqwon Plowden":"29",
+  "SAC|Dylan Cardwell":"32",
+  "SAC|Maxime Raynaud":"42",
+  "DAL|Max Christie":"0",
+  "DAL|Dereck Lively II":"2",
+  "DAL|Naji Marshall":"3",
+  "DAL|Marcus Sasser":"8",
+  "DAL|Zaccharie Risacher":"10",
+  "DAL|Kyrie Irving":"11",
+  "DAL|Daniel Gafford":"21",
+  "DAL|P.J. Washington":"25",
+  "DAL|Moussa Cisse":"30",
+  "DAL|Cooper Flagg":"32",
+  "DAL|Santi Aldama":"34",
+  "HOU|Amen Thompson":"1",
+  "HOU|Julian Phillips":"4",
+  "HOU|Jae’Sean Tate":"8",
+  "HOU|Jabari Smith Jr.":"10",
+  "HOU|Steven Adams":"12",
+  "HOU|Reed Sheppard":"15",
+  "HOU|Tari Eason":"17",
+  "HOU|Alperen Sengun":"28",
+  "HOU|Clint Capela":"30",
+  "HOU|Bogdan Bogdanovic":"31",
+  "HOU|Oscar Tshiebwe":"34",
+  "HOU|Marcus Smart":"36",
+  "MEM|Jaylen Wells":"0",
+  "MEM|Scotty Pippen Jr.":"1",
+  "MEM|Ty Jerome":"2",
+  "MEM|Walter Clayton Jr.":"4",
+  "MEM|D’Angelo Russell":"5",
+  "MEM|Jerami Grant":"9",
+  "MEM|Javon Small":"10",
+  "MEM|Zach Edey":"14",
+  "MEM|Olivier-Maxence Prosper":"18",
+  "MEM|Quinten Post":"21",
+  "MEM|Cedric Coward":"23",
+  "MEM|Cam Spencer":"24",
+  "MEM|Isaiah Stewart":"28",
+  "MEM|GG Jackson":"45",
+  "NOP|Jeremiah Fears":"0",
+  "NOP|Zion Williamson":"1",
+  "NOP|Herbert Jones":"2",
+  "NOP|Jordan Poole":"3",
+  "NOP|Dejounte Murray":"5",
+  "NOP|DeAndre Jordan":"6",
+  "NOP|Trendon Watford":"12",
+  "NOP|Karlo Matkovic":"17",
+  "NOP|Yves Missi":"21",
+  "NOP|Derik Queen":"22",
+  "NOP|Jordan Hawkins":"24",
+  "NOP|Trey Murphy III":"25",
+  "NOP|Saddiq Bey":"41",
+  "SAS|Jordan McLaughlin":"0",
+  "SAS|Victor Wembanyama":"1",
+  "SAS|Dylan Harper":"2",
+  "SAS|Keldon Johnson":"3",
+  "SAS|De’Aaron Fox":"4",
+  "SAS|Stephon Castle":"5",
+  "SAS|Luke Kornet":"7",
+  "SAS|Carter Bryant":"11",
+  "SAS|Tobias Harris":"23",
+  "SAS|Devin Vassell":"24",
+  "SAS|David Jones Garcia":"25",
+  "SAS|Julian Champagnie":"30",
+  "SAS|Harrison Barnes":"40"
+};
+
+// v0.1.45.12 — fallback preferences for launch identities without a verified current source number.
+// These are never mislabeled as source-verified.
+const PRODUCTION_2026_27_JERSEY_FALLBACK_PREFERENCES={"CHA|Brandon Miller":"24","CHA|Tidjane Salaun":"31","CHI|Nick Richards":"4","CLE|James Harden":"1","CLE|Evan Mobley":"4","CLE|Peyton Watson":"8","CLE|Sam Merrill":"5","CLE|Thomas Bryant":"3","CLE|Cam Whitmore":"7","DAL|Caleb Martin":"16","DAL|Jett Howard":"13","DEN|DeMar DeRozan":"10","DEN|Tim Hardaway Jr.":"10","HOU|Kevin Durant":"7","HOU|Fred VanVleet":"5","LAC|Brandon Ingram":"14","LAC|Gradey Dick":"1","MIA|Pelle Larsson":"9","MIA|Davion Mitchell":"45","MIA|Klay Thompson":"31","MIA|Myron Gardner":"12","MIA|Nikola Jovic":"5","MIA|Keshad Johnson":"16","MIA|Vladislav Goldin":"50","MIL|Kevin Porter Jr.":"7","MIL|Caris LeVert":"3","MIL|Myles Turner":"33","MIL|Gary Trent Jr.":"5","MIL|Jericho Sims":"00","MIN|Trey Lyles":"41","MIN|Rocco Zikarsky":"11","NOP|Bryce McGowens":"7","NOP|Christian Koloko":"35","NYE|Dillon Jones":"3","OKC|Isaiah Hartenstein":"55","OKC|Ajay Mitchell":"25","OKC|Cason Wallace":"22","OKC|Kenrich Williams":"34","OKC|Nikola Topic":"44","OKC|Brooks Barnhizer":"13","ORL|Goga Bitadze":"35","ORL|Noah Penda":"93","PHI|VJ Edgecombe":"77","POR|Donovan Clingan":"23","POR|Toumani Camara":"33","POR|Shaedon Sharpe":"17","POR|Robert Williams III":"35","POR|Vit Krejci":"27","POR|Jeremy Sochan":"10","POR|Sidy Cissoko":"91","POR|Yang Hansen":"16","TOR|Kawhi Leonard":"2","TOR|Kyle Lowry":"7","UTA|Josh Okogie":"12","UTA|Blake Hinson":"26","WAS|Trae Young":"11","WAS|Deandre Ayton":"5","WAS|Bilal Coulibaly":"0","WAS|Bub Carrington":"8","WAS|Tristan Vukcevic":"00","WAS|Jamir Watkins":"26","WAS|Tre Mann":"23"};
+function launchJerseyPreference(clubId,sourceName){
+  return normalizeJerseyNumber(PRODUCTION_2026_27_JERSEY_FALLBACK_PREFERENCES[`${clubId}|${sourceName}`]);
+}
+function normalizeJerseyNumber(v){
+  if(v===null||v===undefined||v==="")return null;
+  const s=String(v).trim();
+  if(!/^(?:00|[0-9]{1,2})$/.test(s))return null;
+  if(s!=="00"&&(Number(s)<0||Number(s)>99))return null;
+  return s;
+}
+function verifiedLaunchJersey(clubId,sourceName){
+  const key=`${clubId}|${sourceName}`;
+  return normalizeJerseyNumber(
+    PRODUCTION_2026_27_JERSEY_ATLANTIC[key] ??
+    PRODUCTION_2026_27_JERSEY_CENTRAL_SOUTHEAST[key] ??
+    PRODUCTION_2026_27_JERSEY_WEST[key]
+  );
+}
+function nextAvailableJerseyFromUsed(used,preferred=null){
+  const pref=normalizeJerseyNumber(preferred);
+  if(pref!==null&&!used.has(pref))return pref;
+  const pool=["0","00",...Array.from({length:99},(_,i)=>String(i+1))];
+  return pool.find(n=>!used.has(n))||null;
+}
+function ensureClubJerseyUniqueness(club){
+  if(!club?.roster?.length)return;
+  const ordered=[...club.roster].sort((a,b)=>
+    (+b.ovr||0)-(+a.ovr||0) ||
+    String(a.sourceTemplateName||a.name||a.id).localeCompare(String(b.sourceTemplateName||b.name||b.id))
+  );
+  const used=new Set();
+  for(const p of ordered){
+    const preferred=normalizeJerseyNumber(
+      p.preferredJerseyNumber ?? launchJerseyPreference(club.id,p.sourceTemplateName) ?? p.jerseyNumber
+    );
+    let n=preferred;
+    if(n===null||used.has(n)){
+      const requested=n;
+      n=nextAvailableJerseyFromUsed(used,null);
+      p.jerseyAutoAssigned=true;
+      p.jerseyConflictResolved=requested!==null;
+      p.jerseyConflictReason=requested!==null?"Higher OVR teammate has priority":null;
+      p.jerseyOriginalPreference=requested;
+    }else{
+      p.jerseyConflictResolved=false;
+      p.jerseyConflictReason=null;
+    }
+    if(n!==null){p.jerseyNumber=n;used.add(n);}
+  }
+}
+function applyVerifiedLaunchJerseys(G){
+  if(!G||G.season!==1)return;
+  for(const club of G.clubs||[]){
+    for(const p of club.roster||[]){
+      if(!p.sourceTemplateName)continue;
+      const verified=verifiedLaunchJersey(club.id,p.sourceTemplateName);
+      const fallback=launchJerseyPreference(club.id,p.sourceTemplateName);
+      if(verified!==null){
+        p.preferredJerseyNumber=verified;
+        p.jerseyNumber=verified;
+        p.jerseyNumberVerified=true;
+        p.jerseyNumberSource="NBA.com 2026/27 roster";
+        p.jerseyNumberAudit=PRODUCTION_2026_27_JERSEY_WEST[`${club.id}|${p.sourceTemplateName}`]!==undefined
+          ?"v0.1.45.11-WEST"
+          :PRODUCTION_2026_27_JERSEY_CENTRAL_SOUTHEAST[`${club.id}|${p.sourceTemplateName}`]!==undefined
+            ?"v0.1.45.10-CENTRAL-SOUTHEAST"
+            :"v0.1.45.9-ATLANTIC";
+      }else if(fallback!==null){
+        p.preferredJerseyNumber=fallback;
+        p.jerseyNumber=fallback;
+        p.jerseyNumberVerified=false;
+        p.jerseyNumberSource="Mini&Me launch fallback";
+        p.jerseyNumberAudit="v0.1.45.12-FALLBACK";
+      }
+    }
+    ensureClubJerseyUniqueness(club);
   }
 }
 function stableTemplateHash(s){
@@ -3021,7 +3492,7 @@ function mappedTargetMinutes(rank){
 }
 
 // v0.1.45.1 — official 2026 launch draft (NBA.com picks 1–60).
-const OFFICIAL_2026_DRAFT_RESULTS=[{"pick":1,"round":1,"draftedBy":"WAS","ownerClubId":"WAS","sourceName":"AJ Dybantsa","position":"SF"},{"pick":2,"round":1,"draftedBy":"UTA","ownerClubId":"UTA","sourceName":"Darryn Peterson","position":"PG"},{"pick":3,"round":1,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Cameron Boozer","position":"PF"},{"pick":4,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Caleb Wilson","position":"PF"},{"pick":5,"round":1,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Keaton Wagler","position":"PG"},{"pick":6,"round":1,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Mikel Brown Jr.","position":"PG"},{"pick":7,"round":1,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Darius Acuff Jr.","position":"PG"},{"pick":8,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Kingston Flemings","position":"PG"},{"pick":9,"round":1,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Morez Johnson Jr.","position":"PF"},{"pick":10,"round":1,"draftedBy":"MIL","ownerClubId":"MIL","sourceName":"Brayden Burries","position":"SG"},{"pick":11,"round":1,"draftedBy":"GSW","ownerClubId":"GSW","sourceName":"Yaxel Lendeborg","position":"PF"},{"pick":12,"round":1,"draftedBy":"OKC","ownerClubId":"OKC","sourceName":"Aday Mara","position":"C"},{"pick":13,"round":1,"draftedBy":"MIA","ownerClubId":"MIL","sourceName":"Nate Ament","position":"SF"},{"pick":14,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Hannes Steinbach","position":"PF"},{"pick":15,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Dailyn Swain","position":"SF"},{"pick":16,"round":1,"draftedBy":"MEM","ownerClubId":"OKC","sourceName":"Bennett Stirtz","position":"PG"},{"pick":17,"round":1,"draftedBy":"OKC","ownerClubId":"DET","sourceName":"Ebuka Okorie","position":"PG"},{"pick":18,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Christian Anderson","position":"PG"},{"pick":19,"round":1,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Allen Graves","position":"SF"},{"pick":20,"round":1,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Jayden Quaintance","position":"PF"},{"pick":21,"round":1,"draftedBy":"DET","ownerClubId":"MEM","sourceName":"Karim López","position":"SF"},{"pick":22,"round":1,"draftedBy":"PHI","ownerClubId":"PHI","sourceName":"Labaron Philon Jr.","position":"PG"},{"pick":23,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Zuby Ejiofor","position":"PF"},{"pick":24,"round":1,"draftedBy":"NYK","ownerClubId":"LAL","sourceName":"Cameron Carr","position":"SG"},{"pick":25,"round":1,"draftedBy":"LAL","ownerClubId":"DAL","sourceName":"Sergio De Larrea","position":"PG"},{"pick":26,"round":1,"draftedBy":"DEN","ownerClubId":"SAS","sourceName":"Tarris Reed Jr.","position":"C"},{"pick":27,"round":1,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Chris Cenac Jr.","position":"PF"},{"pick":28,"round":1,"draftedBy":"MIN","ownerClubId":"BKN","sourceName":"Joshua Jefferson","position":"PF"},{"pick":29,"round":1,"draftedBy":"CLE","ownerClubId":"SAC","sourceName":"Alex Karaban","position":"SF"},{"pick":30,"round":1,"draftedBy":"DAL","ownerClubId":"PHX","sourceName":"Koa Peat","position":"PF"},{"pick":31,"round":2,"draftedBy":"NYK","ownerClubId":"HOU","sourceName":"Bruce Thornton","position":"PG"},{"pick":32,"round":2,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Richie Saunders","position":"SG"},{"pick":33,"round":2,"draftedBy":"BKN","ownerClubId":"MIN","sourceName":"Isaiah Evans","position":"SG"},{"pick":34,"round":2,"draftedBy":"SAC","ownerClubId":"CLE","sourceName":"Meleek Thomas","position":"SG"},{"pick":35,"round":2,"draftedBy":"SAS","ownerClubId":"DEN","sourceName":"Trevon Brazile","position":"PF"},{"pick":36,"round":2,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Baba Miller","position":"PF"},{"pick":37,"round":2,"draftedBy":"OKC","ownerClubId":"MIA","sourceName":"Ryan Conwell","position":"SG"},{"pick":38,"round":2,"draftedBy":"CHI","ownerClubId":"IND","sourceName":"Braden Smith","position":"PG"},{"pick":39,"round":2,"draftedBy":"HOU","ownerClubId":"NYK","sourceName":"Jack Kayil","position":"PG"},{"pick":40,"round":2,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Dillon Mitchell","position":"SF"},{"pick":41,"round":2,"draftedBy":"MIA","ownerClubId":"OKC","sourceName":"Otega Oweh","position":"SG"},{"pick":42,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Ja’Kobi Gillespie","position":"PG"},{"pick":43,"round":2,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Tyler Bilodeau","position":"PF"},{"pick":44,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Maliq Brown","position":"PF"},{"pick":45,"round":2,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Emanuel Sharp","position":"SG"},{"pick":46,"round":2,"draftedBy":"ORL","ownerClubId":"WAS","sourceName":"Felix Okpara","position":"C"},{"pick":47,"round":2,"draftedBy":"PHX","ownerClubId":"NYK","sourceName":"Tyler Nickel","position":"SF"},{"pick":48,"round":2,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Tobi Lawal","position":"PF"},{"pick":49,"round":2,"draftedBy":"DEN","ownerClubId":"DEN","sourceName":"Bryce Hopkins","position":"PF"},{"pick":50,"round":2,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Jaden Bradley","position":"PG"},{"pick":51,"round":2,"draftedBy":"WAS","ownerClubId":"ORL","sourceName":"Izaiyah Nelson","position":"PF"},{"pick":52,"round":2,"draftedBy":"LAC","ownerClubId":"ATL","sourceName":"Henri Veesaar","position":"C"},{"pick":53,"round":2,"draftedBy":"HOU","ownerClubId":"DET","sourceName":"Ugonna Onyenso","position":"C"},{"pick":54,"round":2,"draftedBy":"GSW","ownerClubId":"GSW","sourceName":"Lajae Jones","position":"SF"},{"pick":55,"round":2,"draftedBy":"NYK","ownerClubId":"LAC","sourceName":"Nick Martinelli","position":"SF"},{"pick":56,"round":2,"draftedBy":"CHI","ownerClubId":"DAL","sourceName":"Vsevolod Ishchenko","position":"PF"},{"pick":57,"round":2,"draftedBy":"ATL","ownerClubId":"LAC","sourceName":"Narcisse Ngoy","position":"C"},{"pick":58,"round":2,"draftedBy":"NOP","ownerClubId":"NOP","sourceName":"Jaron Pierre Jr.","position":"SG"},{"pick":59,"round":2,"draftedBy":"MIN","ownerClubId":"MIN","sourceName":"Trey Kaufman-Renn","position":"PF"},{"pick":60,"round":2,"draftedBy":"WAS","ownerClubId":"MIL","sourceName":"Malique Lewis","position":"SF"}];
+const OFFICIAL_2026_DRAFT_RESULTS=[{"pick":1,"round":1,"draftedBy":"WAS","ownerClubId":"WAS","sourceName":"AJ Dybantsa","position":"SF","sourceDraftingCode":"WAS","sourceOwnerCode":"WAS"},{"pick":2,"round":1,"draftedBy":"UTA","ownerClubId":"UTA","sourceName":"Darryn Peterson","position":"PG","sourceDraftingCode":"UTA","sourceOwnerCode":"UTA"},{"pick":3,"round":1,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Cameron Boozer","position":"PF","sourceDraftingCode":"MEM","sourceOwnerCode":"MEM"},{"pick":4,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Caleb Wilson","position":"PF","sourceDraftingCode":"CHI","sourceOwnerCode":"CHI"},{"pick":5,"round":1,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Keaton Wagler","position":"PG","sourceDraftingCode":"LAC","sourceOwnerCode":"LAC"},{"pick":6,"round":1,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Mikel Brown Jr.","position":"PG","sourceDraftingCode":"BKN","sourceOwnerCode":"BKN"},{"pick":7,"round":1,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Darius Acuff Jr.","position":"PG","sourceDraftingCode":"SAC","sourceOwnerCode":"SAC"},{"pick":8,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Kingston Flemings","position":"PG","sourceDraftingCode":"ATL","sourceOwnerCode":"ATL"},{"pick":9,"round":1,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Morez Johnson Jr.","position":"PF","sourceDraftingCode":"DAL","sourceOwnerCode":"DAL"},{"pick":10,"round":1,"draftedBy":"MIL","ownerClubId":"MIL","sourceName":"Brayden Burries","position":"SG","sourceDraftingCode":"MIL","sourceOwnerCode":"MIL"},{"pick":11,"round":1,"draftedBy":"GSB","ownerClubId":"GSB","sourceName":"Yaxel Lendeborg","position":"PF","sourceDraftingCode":"GSW","sourceOwnerCode":"GSW"},{"pick":12,"round":1,"draftedBy":"OKC","ownerClubId":"OKC","sourceName":"Aday Mara","position":"C","sourceDraftingCode":"OKC","sourceOwnerCode":"OKC"},{"pick":13,"round":1,"draftedBy":"MIA","ownerClubId":"MIL","sourceName":"Nate Ament","position":"SF","sourceDraftingCode":"MIA","sourceOwnerCode":"MIL"},{"pick":14,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Hannes Steinbach","position":"PF","sourceDraftingCode":"CHA","sourceOwnerCode":"CHA"},{"pick":15,"round":1,"draftedBy":"CHI","ownerClubId":"CHI","sourceName":"Dailyn Swain","position":"SF","sourceDraftingCode":"CHI","sourceOwnerCode":"CHI"},{"pick":16,"round":1,"draftedBy":"MEM","ownerClubId":"OKC","sourceName":"Bennett Stirtz","position":"PG","sourceDraftingCode":"MEM","sourceOwnerCode":"OKC"},{"pick":17,"round":1,"draftedBy":"OKC","ownerClubId":"DET","sourceName":"Ebuka Okorie","position":"PG","sourceDraftingCode":"OKC","sourceOwnerCode":"DET"},{"pick":18,"round":1,"draftedBy":"CHA","ownerClubId":"CHA","sourceName":"Christian Anderson","position":"PG","sourceDraftingCode":"CHA","sourceOwnerCode":"CHA"},{"pick":19,"round":1,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Allen Graves","position":"SF","sourceDraftingCode":"TOR","sourceOwnerCode":"TOR"},{"pick":20,"round":1,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Jayden Quaintance","position":"PF","sourceDraftingCode":"SAS","sourceOwnerCode":"SAS"},{"pick":21,"round":1,"draftedBy":"DET","ownerClubId":"MEM","sourceName":"Karim López","position":"SF","sourceDraftingCode":"DET","sourceOwnerCode":"MEM"},{"pick":22,"round":1,"draftedBy":"PHI","ownerClubId":"PHI","sourceName":"Labaron Philon Jr.","position":"PG","sourceDraftingCode":"PHI","sourceOwnerCode":"PHI"},{"pick":23,"round":1,"draftedBy":"ATL","ownerClubId":"ATL","sourceName":"Zuby Ejiofor","position":"PF","sourceDraftingCode":"ATL","sourceOwnerCode":"ATL"},{"pick":24,"round":1,"draftedBy":"NYE","ownerClubId":"LAG","sourceName":"Cameron Carr","position":"SG","sourceDraftingCode":"NYK","sourceOwnerCode":"LAL"},{"pick":25,"round":1,"draftedBy":"LAG","ownerClubId":"DAL","sourceName":"Sergio De Larrea","position":"PG","sourceDraftingCode":"LAL","sourceOwnerCode":"DAL"},{"pick":26,"round":1,"draftedBy":"DEN","ownerClubId":"SAS","sourceName":"Tarris Reed Jr.","position":"C","sourceDraftingCode":"DEN","sourceOwnerCode":"SAS"},{"pick":27,"round":1,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Chris Cenac Jr.","position":"PF","sourceDraftingCode":"BOS","sourceOwnerCode":"BOS"},{"pick":28,"round":1,"draftedBy":"MIN","ownerClubId":"BKN","sourceName":"Joshua Jefferson","position":"PF","sourceDraftingCode":"MIN","sourceOwnerCode":"BKN"},{"pick":29,"round":1,"draftedBy":"CLE","ownerClubId":"SAC","sourceName":"Alex Karaban","position":"SF","sourceDraftingCode":"CLE","sourceOwnerCode":"SAC"},{"pick":30,"round":1,"draftedBy":"DAL","ownerClubId":"PHX","sourceName":"Koa Peat","position":"PF","sourceDraftingCode":"DAL","sourceOwnerCode":"PHX"},{"pick":31,"round":2,"draftedBy":"NYE","ownerClubId":"HOU","sourceName":"Bruce Thornton","position":"PG","sourceDraftingCode":"NYK","sourceOwnerCode":"HOU"},{"pick":32,"round":2,"draftedBy":"MEM","ownerClubId":"MEM","sourceName":"Richie Saunders","position":"SG","sourceDraftingCode":"MEM","sourceOwnerCode":"MEM"},{"pick":33,"round":2,"draftedBy":"BKN","ownerClubId":"MIN","sourceName":"Isaiah Evans","position":"SG","sourceDraftingCode":"BKN","sourceOwnerCode":"MIN"},{"pick":34,"round":2,"draftedBy":"SAC","ownerClubId":"CLE","sourceName":"Meleek Thomas","position":"SG","sourceDraftingCode":"SAC","sourceOwnerCode":"CLE"},{"pick":35,"round":2,"draftedBy":"SAS","ownerClubId":"DEN","sourceName":"Trevon Brazile","position":"PF","sourceDraftingCode":"SAS","sourceOwnerCode":"DEN"},{"pick":36,"round":2,"draftedBy":"LAC","ownerClubId":"LAC","sourceName":"Baba Miller","position":"PF","sourceDraftingCode":"LAC","sourceOwnerCode":"LAC"},{"pick":37,"round":2,"draftedBy":"OKC","ownerClubId":"MIA","sourceName":"Ryan Conwell","position":"SG","sourceDraftingCode":"OKC","sourceOwnerCode":"MIA"},{"pick":38,"round":2,"draftedBy":"CHI","ownerClubId":"IND","sourceName":"Braden Smith","position":"PG","sourceDraftingCode":"CHI","sourceOwnerCode":"IND"},{"pick":39,"round":2,"draftedBy":"HOU","ownerClubId":"NYE","sourceName":"Jack Kayil","position":"PG","sourceDraftingCode":"HOU","sourceOwnerCode":"NYK"},{"pick":40,"round":2,"draftedBy":"BOS","ownerClubId":"BOS","sourceName":"Dillon Mitchell","position":"SF","sourceDraftingCode":"BOS","sourceOwnerCode":"BOS"},{"pick":41,"round":2,"draftedBy":"MIA","ownerClubId":"OKC","sourceName":"Otega Oweh","position":"SG","sourceDraftingCode":"MIA","sourceOwnerCode":"OKC"},{"pick":42,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Ja’Kobi Gillespie","position":"PG","sourceDraftingCode":"SAS","sourceOwnerCode":"SAS"},{"pick":43,"round":2,"draftedBy":"BKN","ownerClubId":"BKN","sourceName":"Tyler Bilodeau","position":"PF","sourceDraftingCode":"BKN","sourceOwnerCode":"BKN"},{"pick":44,"round":2,"draftedBy":"SAS","ownerClubId":"SAS","sourceName":"Maliq Brown","position":"PF","sourceDraftingCode":"SAS","sourceOwnerCode":"SAS"},{"pick":45,"round":2,"draftedBy":"SAC","ownerClubId":"SAC","sourceName":"Emanuel Sharp","position":"SG","sourceDraftingCode":"SAC","sourceOwnerCode":"SAC"},{"pick":46,"round":2,"draftedBy":"ORL","ownerClubId":"WAS","sourceName":"Felix Okpara","position":"C","sourceDraftingCode":"ORL","sourceOwnerCode":"WAS"},{"pick":47,"round":2,"draftedBy":"PHX","ownerClubId":"NYE","sourceName":"Tyler Nickel","position":"SF","sourceDraftingCode":"PHX","sourceOwnerCode":"NYK"},{"pick":48,"round":2,"draftedBy":"DAL","ownerClubId":"DAL","sourceName":"Tobi Lawal","position":"PF","sourceDraftingCode":"DAL","sourceOwnerCode":"DAL"},{"pick":49,"round":2,"draftedBy":"DEN","ownerClubId":"DEN","sourceName":"Bryce Hopkins","position":"PF","sourceDraftingCode":"DEN","sourceOwnerCode":"DEN"},{"pick":50,"round":2,"draftedBy":"TOR","ownerClubId":"TOR","sourceName":"Jaden Bradley","position":"PG","sourceDraftingCode":"TOR","sourceOwnerCode":"TOR"},{"pick":51,"round":2,"draftedBy":"WAS","ownerClubId":"ORL","sourceName":"Izaiyah Nelson","position":"PF","sourceDraftingCode":"WAS","sourceOwnerCode":"ORL"},{"pick":52,"round":2,"draftedBy":"LAC","ownerClubId":"ATL","sourceName":"Henri Veesaar","position":"C","sourceDraftingCode":"LAC","sourceOwnerCode":"ATL"},{"pick":53,"round":2,"draftedBy":"HOU","ownerClubId":"DET","sourceName":"Ugonna Onyenso","position":"C","sourceDraftingCode":"HOU","sourceOwnerCode":"DET"},{"pick":54,"round":2,"draftedBy":"GSB","ownerClubId":"GSB","sourceName":"Lajae Jones","position":"SF","sourceDraftingCode":"GSW","sourceOwnerCode":"GSW"},{"pick":55,"round":2,"draftedBy":"NYE","ownerClubId":"LAC","sourceName":"Nick Martinelli","position":"SF","sourceDraftingCode":"NYK","sourceOwnerCode":"LAC"},{"pick":56,"round":2,"draftedBy":"CHI","ownerClubId":"DAL","sourceName":"Vsevolod Ishchenko","position":"PF","sourceDraftingCode":"CHI","sourceOwnerCode":"DAL"},{"pick":57,"round":2,"draftedBy":"ATL","ownerClubId":"LAC","sourceName":"Narcisse Ngoy","position":"C","sourceDraftingCode":"ATL","sourceOwnerCode":"LAC"},{"pick":58,"round":2,"draftedBy":"NOP","ownerClubId":"NOP","sourceName":"Jaron Pierre Jr.","position":"SG","sourceDraftingCode":"NOP","sourceOwnerCode":"NOP"},{"pick":59,"round":2,"draftedBy":"MIN","ownerClubId":"MIN","sourceName":"Trey Kaufman-Renn","position":"PF","sourceDraftingCode":"MIN","sourceOwnerCode":"MIN"},{"pick":60,"round":2,"draftedBy":"WAS","ownerClubId":"MIL","sourceName":"Malique Lewis","position":"SF","sourceDraftingCode":"WAS","sourceOwnerCode":"MIL"}];
 const OFFICIAL_2026_DRAFT_NAME_ALIASES={"Sergio De Larrea":"Sergio De Larrea","Emanuel Sharp":"Emanuel Sharp"};
 function normalizeSourcePlayerName(name){return String(name||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[’‘]/g,"'").replace(/\s+/g," ").trim().toLowerCase();}
 const OFFICIAL_2026_DRAFT_NAMES=new Set(OFFICIAL_2026_DRAFT_RESULTS.map(x=>normalizeSourcePlayerName(x.sourceName)));
@@ -3031,15 +3502,95 @@ function sourceTemplateFor2026Draft(name){
   return null;
 }
 function isOfficial2026DraftTemplate(t){return !!t&&OFFICIAL_2026_DRAFT_NAMES.has(normalizeSourcePlayerName(t.sourceName));}
-const VERIFIED_2026_DRAFT_AGES={"Chris Cenac Jr.":19,"Dillon Mitchell":22,"Mikel Brown Jr.":20,"Joshua Jefferson":22,"Jack Kayil":20,"Tyler Nickel":22,"Allen Graves":20,"Dailyn Swain":21,"Caleb Wilson":20,"Labaron Philon Jr.":20,"Meleek Thomas":20,"Ebuka Okorie":19,"Braden Smith":23,"Nate Ament":19,"Brayden Burries":20,"Malique Lewis":21,"AJ Dybantsa":19,"Kingston Flemings":19,"Henri Veesaar":22,"Zuby Ejiofor":22,"Christian Anderson":20,"Hannes Steinbach":20,"Ryan Conwell":22,"Izaiyah Nelson":22,"Felix Okpara":22,"Trevon Brazile":23,"Bryce Hopkins":24,"Trey Kaufman-Renn":24,"Isaiah Evans":20,"Otega Oweh":23,"Bennett Stirtz":22,"Aday Mara":21,"Darryn Peterson":19,"Yaxel Lendeborg":23,"Keaton Wagler":19,"Nick Martinelli":22,"Baba Miller":22,"Narcisse Ngoy":22,"Cameron Carr":21,"Koa Peat":19,"Darius Acuff Jr.":19,"Alex Karaban":23,"Emanuel Sharp":22,"Morez Johnson Jr.":20,"Sergio De Larrea":20,"Tobi Lawal":23,"Bruce Thornton":22,"Cameron Boozer":19,"Richie Saunders":24,"Karim López":19,"Jaron Pierre Jr.":24,"Ja’Kobi Gillespie":22,"Maliq Brown":22,"Jayden Quaintance":19,"Tarris Reed Jr.":23};
+
+// Complete 60-player official 2026 Draft bio overlay.
+// This is intentionally separate from OVR/POT so supplied 2K27 ratings remain authoritative.
+const OFFICIAL_2026_DRAFT_BIO={
+  "AJ Dybantsa":{age:19,heightCm:206,nationality:"USA",verified:true},
+  "Darryn Peterson":{age:19,heightCm:196,nationality:"USA",verified:true},
+  "Cameron Boozer":{age:19,heightCm:203,nationality:"USA",verified:true},
+  "Caleb Wilson":{age:20,heightCm:206,nationality:"USA",verified:true},
+  "Keaton Wagler":{age:19,heightCm:196,nationality:"USA",verified:true},
+  "Mikel Brown Jr.":{age:20,heightCm:196,nationality:"USA",verified:true},
+  "Darius Acuff Jr.":{age:19,heightCm:188,nationality:"USA",verified:true},
+  "Kingston Flemings":{age:19,heightCm:191,nationality:"USA",verified:true},
+  "Morez Johnson Jr.":{age:20,heightCm:206,nationality:"USA",verified:true},
+  "Brayden Burries":{age:20,heightCm:193,nationality:"USA",verified:true},
+  "Yaxel Lendeborg":{age:23,heightCm:206,nationality:"USA",verified:true},
+  "Aday Mara":{age:21,heightCm:221,nationality:"ESP",verified:true},
+  "Nate Ament":{age:19,heightCm:208,nationality:"USA",verified:true},
+  "Hannes Steinbach":{age:20,heightCm:208,nationality:"GER",verified:true},
+  "Dailyn Swain":{age:21,heightCm:201,nationality:"USA",verified:true},
+  "Bennett Stirtz":{age:22,heightCm:191,nationality:"USA",verified:true},
+  "Ebuka Okorie":{age:19,heightCm:185,nationality:"USA",verified:true},
+  "Christian Anderson":{age:20,heightCm:185,nationality:"USA",verified:true},
+  "Allen Graves":{age:20,heightCm:203,nationality:"USA",verified:true},
+  "Jayden Quaintance":{age:19,heightCm:206,nationality:"USA",verified:true},
+  "Karim López":{age:19,heightCm:203,nationality:"MEX",verified:true},
+  "Labaron Philon Jr.":{age:20,heightCm:191,nationality:"USA",verified:true},
+  "Zuby Ejiofor":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Cameron Carr":{age:21,heightCm:196,nationality:"USA",verified:true},
+  "Sergio De Larrea":{age:20,heightCm:198,nationality:"ESP",verified:true},
+  "Tarris Reed Jr.":{age:23,heightCm:208,nationality:"USA",verified:true},
+  "Chris Cenac Jr.":{age:19,heightCm:211,nationality:"USA",verified:true},
+  "Joshua Jefferson":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Alex Karaban":{age:23,heightCm:201,nationality:"USA",verified:true},
+  "Koa Peat":{age:19,heightCm:201,nationality:"USA",verified:true},
+  "Bruce Thornton":{age:22,heightCm:183,nationality:"USA",verified:true},
+  "Richie Saunders":{age:24,heightCm:196,nationality:"USA",verified:true},
+  "Isaiah Evans":{age:20,heightCm:198,nationality:"USA",verified:true},
+  "Meleek Thomas":{age:20,heightCm:191,nationality:"USA",verified:true},
+  "Trevon Brazile":{age:23,heightCm:208,nationality:"USA",verified:true},
+  "Baba Miller":{age:22,heightCm:211,nationality:"ESP",verified:true},
+  "Ryan Conwell":{age:22,heightCm:193,nationality:"USA",verified:true},
+  "Braden Smith":{age:23,heightCm:178,nationality:"USA",verified:true},
+  "Jack Kayil":{age:20,heightCm:196,nationality:"GER",verified:true},
+  "Dillon Mitchell":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Otega Oweh":{age:23,heightCm:196,nationality:"USA",verified:true},
+  "Ja’Kobi Gillespie":{age:22,heightCm:183,nationality:"USA",verified:true},
+  "Tyler Bilodeau":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Maliq Brown":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Emanuel Sharp":{age:22,heightCm:191,nationality:"USA",verified:true},
+  "Felix Okpara":{age:22,heightCm:208,nationality:"NGR",verified:true},
+  "Tyler Nickel":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Tobi Lawal":{age:23,heightCm:203,nationality:"GBR",verified:true},
+  "Bryce Hopkins":{age:24,heightCm:198,nationality:"USA",verified:true},
+  "Jaden Bradley":{age:22,heightCm:191,nationality:"USA",verified:true},
+  "Izaiyah Nelson":{age:22,heightCm:203,nationality:"USA",verified:true},
+  "Henri Veesaar":{age:22,heightCm:211,nationality:"EST",verified:true},
+  "Ugonna Onyenso":{age:21,heightCm:211,nationality:"NGR",verified:true},
+  "Lajae Jones":{age:22,heightCm:201,nationality:"USA",verified:true},
+  "Nick Martinelli":{age:22,heightCm:201,nationality:"USA",verified:true},
+  "Vsevolod Ishchenko":{age:21,heightCm:203,nationality:"RUS",verified:true},
+  "Narcisse Ngoy":{age:22,heightCm:213,nationality:"FRA",verified:true},
+  "Jaron Pierre Jr.":{age:24,heightCm:198,nationality:"USA",verified:true},
+  "Trey Kaufman-Renn":{age:24,heightCm:206,nationality:"USA",verified:true},
+  "Malique Lewis":{age:21,heightCm:203,nationality:"TTO",verified:true}
+};
+const VERIFIED_2026_DRAFT_AGES={"AJ Dybantsa":19,"Darryn Peterson":19,"Cameron Boozer":19,"Caleb Wilson":20,"Keaton Wagler":19,"Mikel Brown Jr.":20,"Darius Acuff Jr.":19,"Kingston Flemings":19,"Morez Johnson Jr.":20,"Brayden Burries":20,"Yaxel Lendeborg":23,"Aday Mara":21,"Nate Ament":19,"Hannes Steinbach":20,"Dailyn Swain":21,"Bennett Stirtz":22,"Ebuka Okorie":19,"Christian Anderson":20,"Allen Graves":20,"Jayden Quaintance":19,"Karim López":19,"Labaron Philon Jr.":20,"Zuby Ejiofor":22,"Cameron Carr":21,"Sergio De Larrea":20,"Tarris Reed Jr.":23,"Chris Cenac Jr.":19,"Joshua Jefferson":22,"Alex Karaban":23,"Koa Peat":19,"Bruce Thornton":22,"Richie Saunders":24,"Isaiah Evans":20,"Meleek Thomas":20,"Trevon Brazile":23,"Baba Miller":22,"Ryan Conwell":22,"Braden Smith":23,"Jack Kayil":20,"Dillon Mitchell":22,"Otega Oweh":23,"Ja’Kobi Gillespie":22,"Tyler Bilodeau":22,"Maliq Brown":22,"Emanuel Sharp":22,"Felix Okpara":22,"Tyler Nickel":22,"Tobi Lawal":23,"Bryce Hopkins":24,"Jaden Bradley":22,"Izaiyah Nelson":22,"Henri Veesaar":22,"Ugonna Onyenso":21,"Lajae Jones":22,"Nick Martinelli":22,"Vsevolod Ishchenko":21,"Narcisse Ngoy":22,"Jaron Pierre Jr.":24,"Trey Kaufman-Renn":24,"Malique Lewis":21};
 function official2026DraftAge(row){return Number.isFinite(+VERIFIED_2026_DRAFT_AGES[row.sourceName])?+VERIFIED_2026_DRAFT_AGES[row.sourceName]:19+(stableTemplateHash(row.sourceName)%4);}
+
+const VERIFIED_2026_DRAFT_PREFERRED_JERSEYS={"Chris Cenac Jr.":"12","Mikel Brown Jr.":"0","Joshua Jefferson":"9","Tyler Bilodeau":"34","Labaron Philon Jr.":"00","Allen Graves":"22"};
+function applyDraftJerseyPreference(p,row){
+  const preferred=normalizeJerseyNumber(VERIFIED_2026_DRAFT_PREFERRED_JERSEYS[row?.sourceName]);
+  if(preferred!==null)p.preferredJerseyNumber=preferred;
+  p.jerseyNumber=null;
+  return p;
+}
 function makeOfficial2026DraftProspect(row,G){
   const src=sourceTemplateFor2026Draft(row.sourceName);
   const t=src?{...src,isRookie:true,draftPick:row.pick}:{sourceName:row.sourceName,nationality:"USA",position:row.position,secondaryPosition:null,heightCm:null,sourceArchetype:"",ovr:null,badges:0,threePt:null,dunk:null,isRookie:true,draftPick:row.pick};
   if(!t.position)t.position=row.position;
   const est=launchRookieRating(t); if(!Number.isFinite(+t.ovr))t.ovr=est.ovr;
   const p=makeMappedPlayer(t,row.pick-1,null);
-  p.age=official2026DraftAge(row);p.experienceYears=0;p.draftYear=1;p.isProspect=true;p.entryPath="Draft Prospect";p.origin="2026 Draft";
+  const officialBio=OFFICIAL_2026_DRAFT_BIO[row.sourceName]||null;
+  p.age=officialBio?.age??official2026DraftAge(row);
+  if(officialBio?.heightCm)p.heightCm=officialBio.heightCm;
+  if(officialBio?.nationality)p.nationality=officialBio.nationality;
+  p.experienceYears=0;p.draftYear=1;p.isProspect=true;p.entryPath="Draft Prospect";p.origin="2026 Draft";
+  p.productionDraftBioVerified=!!officialBio;
+  p.productionDraftBioSource=officialBio?"NBA.com 2026 Draft Prospects / Draft Board":null;
+  applyDraftJerseyPreference(p,row);
   p.contractYearsLeft=0;p.contractStatus="Prospect";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
   p.official2026DraftPick=row.pick;p.official2026DraftedBy=row.draftedBy;p.official2026RightsOwner=row.ownerClubId;p.productionDraftSource="NBA.com 2026 Draft Results";
   if(!src){p.potential=est.potential;p.launchRookieRating={...est,draftPick:row.pick};}
@@ -3092,6 +3643,25 @@ function makeMappedPlayer(t,rank,teamId){
   p.name=fictionalizeProductionName(t.sourceName||p.name);
   p.rosterFoundationVersion=ROSTER_FOUNDATION_VERSION;
   p.rosterFoundationClubId=teamId;
+  const launchJersey=verifiedLaunchJersey(teamId,t.sourceName);
+  const fallbackJersey=launchJerseyPreference(teamId,t.sourceName);
+  if(launchJersey!==null){
+    p.jerseyNumber=launchJersey;
+    p.preferredJerseyNumber=launchJersey;
+    p.jerseyNumberVerified=true;
+    p.jerseyNumberSource="NBA.com 2026/27 roster";
+    p.jerseyNumberAudit=PRODUCTION_2026_27_JERSEY_WEST[`${teamId}|${t.sourceName}`]!==undefined
+      ?"v0.1.45.11-WEST"
+      :PRODUCTION_2026_27_JERSEY_CENTRAL_SOUTHEAST[`${teamId}|${t.sourceName}`]!==undefined
+        ?"v0.1.45.10-CENTRAL-SOUTHEAST"
+        :"v0.1.45.9-ATLANTIC";
+  }else if(fallbackJersey!==null){
+    p.jerseyNumber=fallbackJersey;
+    p.preferredJerseyNumber=fallbackJersey;
+    p.jerseyNumberVerified=false;
+    p.jerseyNumberSource="Mini&Me launch fallback";
+    p.jerseyNumberAudit="v0.1.45.12-FALLBACK";
+  }
   p.experienceYears=t.isRookie?0:Math.max(1,age-20);
   p.draftYear=t.isRookie?1:null;
   p.entryPath=t.isRookie?'Drafted':'Mapped Veteran';
@@ -7539,7 +8109,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.45.7 Southwest Division Age & Experience Audit",ENGINE_VERSION="E2.15-PROD3G";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.45.12 Jersey Number Consolidation & OVR Priority",ENGINE_VERSION="E2.15-PROD4E";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -12261,9 +12831,108 @@ function prepareRenderState(force=false){
   ensureCountryBasedPlayerNames();
   _renderPrepSignature=renderPrepSignature();
 }
+
+function productionLaunchCoverageAudit(G){
+  const officialNames=new Set(OFFICIAL_2026_DRAFT_RESULTS.map(r=>r.sourceName));
+  const verifiedBioNames=new Set([
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T2),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T3),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T4),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T5),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T6),
+    ...Object.keys(PRODUCTION_2026_27_VERIFIED_BIO_T7)
+  ]);
+  const launchTemplates=Object.entries(SEASON1_ROSTER_TEMPLATES).flatMap(([clubId,arr])=>arr.map(t=>({clubId,...t})));
+  const activeTemplates=launchTemplates.filter(t=>!officialNames.has(t.sourceName));
+  const unresolvedActive=activeTemplates.filter(t=>!verifiedBioNames.has(t.sourceName)).map(t=>({clubId:t.clubId,sourceName:t.sourceName}));
+  const duplicateTemplateNames=[...new Set(launchTemplates.map(t=>t.sourceName).filter((n,i,a)=>a.indexOf(n)!==i))];
+  const draftNames=OFFICIAL_2026_DRAFT_RESULTS.map(r=>r.sourceName);
+  const duplicateDraftNames=[...new Set(draftNames.filter((n,i,a)=>a.indexOf(n)!==i))];
+  const invalidOwnerIds=OFFICIAL_2026_DRAFT_RESULTS.filter(r=>!CLUB_IDENTITIES.some(c=>c.id===r.ownerClubId)).map(r=>({pick:r.pick,id:r.ownerClubId}));
+  const invalidDraftingIds=OFFICIAL_2026_DRAFT_RESULTS.filter(r=>!CLUB_IDENTITIES.some(c=>c.id===r.draftedBy)).map(r=>({pick:r.pick,id:r.draftedBy}));
+  const draftBioMissing=OFFICIAL_2026_DRAFT_RESULTS.filter(r=>!OFFICIAL_2026_DRAFT_BIO[r.sourceName]).map(r=>r.sourceName);
+  const report={
+    version:"v0.1.45.8",
+    launchTemplateCount:launchTemplates.length,
+    activeTemplateCount:activeTemplates.length,
+    verifiedActiveBioCount:activeTemplates.length-unresolvedActive.length,
+    unresolvedActive,
+    official2026DraftCount:OFFICIAL_2026_DRAFT_RESULTS.length,
+    verified2026DraftBioCount:OFFICIAL_2026_DRAFT_RESULTS.length-draftBioMissing.length,
+    draftBioMissing,
+    duplicateTemplateNames,
+    duplicateDraftNames,
+    invalidOwnerIds,
+    invalidDraftingIds,
+    verifiedLaunchJerseyCount:(G?.clubs||[]).flatMap(c=>c.roster||[]).filter(p=>p.jerseyNumberVerified).length,
+    verifiedJerseyByAudit:(G?.clubs||[]).flatMap(c=>c.roster||[]).filter(p=>p.jerseyNumberVerified).reduce((acc,p)=>{
+      const k=p.jerseyNumberAudit||"unknown";acc[k]=(acc[k]||0)+1;return acc;
+    },{}),
+    jerseyCollisions:(G?.clubs||[]).flatMap(c=>{
+      const seen=new Set(),dupes=[];
+      for(const p of c.roster||[]){const n=normalizeJerseyNumber(p.jerseyNumber);if(n!==null){if(seen.has(n))dupes.push({clubId:c.id,number:n});seen.add(n);}}
+      return dupes;
+    }),
+    passed:unresolvedActive.length===0&&OFFICIAL_2026_DRAFT_RESULTS.length===60&&draftBioMissing.length===0&&duplicateDraftNames.length===0&&invalidOwnerIds.length===0&&invalidDraftingIds.length===0
+  };
+  if(G)G.productionLaunchAudit=report;
+  return report;
+}
+function ensureProductionLaunchAudit(G){
+  if(!G)return;
+  if(!G.productionLaunchAudit||G.productionLaunchAudit.version!=="v0.1.45.8")productionLaunchCoverageAudit(G);
+}
+
+
+function productionJerseyCoverageAudit(G){
+  const officialNames=new Set(OFFICIAL_2026_DRAFT_RESULTS.map(r=>r.sourceName));
+  const launchTemplates=Object.entries(SEASON1_ROSTER_TEMPLATES)
+    .flatMap(([clubId,arr])=>arr.map(t=>({clubId,sourceName:t.sourceName})))
+    .filter(t=>!officialNames.has(t.sourceName));
+  const verified=launchTemplates.filter(t=>verifiedLaunchJersey(t.clubId,t.sourceName)!==null);
+  const unresolved=launchTemplates.filter(t=>verifiedLaunchJersey(t.clubId,t.sourceName)===null);
+  const sourceDuplicates=[];
+  for(const [clubId,arr] of Object.entries(SEASON1_ROSTER_TEMPLATES)){
+    const nums=new Map();
+    for(const t of arr){
+      if(officialNames.has(t.sourceName))continue;
+      const n=verifiedLaunchJersey(clubId,t.sourceName);
+      if(n===null)continue;
+      if(nums.has(n))sourceDuplicates.push({clubId,number:n,players:[nums.get(n),t.sourceName]});
+      else nums.set(n,t.sourceName);
+    }
+  }
+  const report={
+    version:"v0.1.45.12",
+    activeLaunchTemplateCount:launchTemplates.length,
+    verifiedJerseyCount:verified.length,
+    unresolvedJerseyCount:unresolved.length,
+    unresolved,
+    sourceDuplicateNumberGroups:sourceDuplicates,
+    coveragePct:launchTemplates.length?Math.round((verified.length/launchTemplates.length)*1000)/10:100,
+    fallbackPreferenceCount:launchTemplates.filter(t=>launchJerseyPreference(t.clubId,t.sourceName)!==null).length,
+    playableAssignedCount:(G?.clubs||[]).flatMap(c=>c.roster||[]).filter(p=>normalizeJerseyNumber(p.jerseyNumber)!==null).length,
+    playableCollisionCount:(G?.clubs||[]).reduce((sum,c)=>{
+      const nums=(c.roster||[]).map(p=>normalizeJerseyNumber(p.jerseyNumber)).filter(n=>n!==null);
+      return sum+(nums.length-new Set(nums).size);
+    },0),
+    conflictPolicy:"Higher OVR player keeps contested number; lower OVR player receives next available number"
+  };
+  if(G)G.productionJerseyAudit=report;
+  return report;
+}
+function ensureProductionJerseyAudit(G){
+  if(!G)return;
+  if(!G.productionJerseyAudit||G.productionJerseyAudit.version!=="v0.1.45.12")productionJerseyCoverageAudit(G);
+}
+
 function render(){
   ensureCareerBaselineMetadata(G);
   ensureVerifiedProductionBio(G);
+  ensureProductionLaunchAudit(G);
+  applyVerifiedLaunchJerseys(G);
+  ensureProductionJerseyAudit(G);
 prepareRenderState();status();action();$("#host").innerHTML=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home())+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind()}
 function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
