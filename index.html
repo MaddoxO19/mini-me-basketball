@@ -1322,7 +1322,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
    Ranking calculations use raw values with competition-style ties.
    Save/load integrity diagnostics remain non-visual and Developer-facing. */
 
-/* v0.1.19.0 — Procedural Mini Crests */
+/* v0.1.19.0 — Basketball Calendar & Injury Recovery */
 .playerBuildTag{color:var(--accent2);font-weight:850}
 .statIdentityNote{margin-top:8px;padding:8px 10px;border:1px solid #394554;background:#10161d;border-radius:9px;color:var(--muted);font-size:7px;line-height:1.4}
 
@@ -1782,7 +1782,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .draftTradeReturn b{display:block;font-size:10px}.draftTradeReturn small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.draftTradeReturn .btn{margin:0;width:auto}
 
 
-/* v0.1.46.4 — Procedural Mini Crests */
+/* v0.1.46.5 — Basketball Calendar & Injury Recovery */
 .injuryStatusHero,.injuryCentreHero{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:16px 18px;margin:8px 0 16px}
 .injuryStatusHero>div:first-child,.injuryCentreHero>div:first-child{min-width:0}
 .injuryStatusHero small,.injuryCentreHero .eyebrow{font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--accent2)}
@@ -1806,10 +1806,20 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .leagueInjuryReturn{grid-column:2;grid-row:1/3;max-width:122px}
   .injuryCentreHero{align-items:flex-start}
 }
+
+/* v0.1.46.5 — Basketball Calendar & Injury Recovery */
+.calendarLegend{display:flex;align-items:center;gap:5px;flex-wrap:wrap;color:var(--muted);font-size:8px;margin:8px 0 12px}
+.calTag{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:18px;border-radius:6px;padding:0 5px;font-size:7px;font-weight:950;letter-spacing:.45px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--text)}
+.calTag.sl{background:rgba(75,164,255,.13)}.calTag.pre{background:rgba(173,112,255,.13)}.calTag.reg{background:rgba(255,255,255,.08)}.calTag.cup{background:rgba(230,185,83,.16);color:var(--accent2)}.calTag.pi{background:rgba(255,139,74,.14)}.calTag.po{background:rgba(83,211,145,.13)}
+.scheduleMonthList{display:grid;gap:14px}.scheduleMonth{display:grid;gap:7px}.scheduleMonthHead{font-size:11px;font-weight:950;letter-spacing:1.2px;color:var(--accent2);padding:4px 2px;border-bottom:1px solid var(--line)}
+.scheduleDate{display:flex;align-items:center;gap:7px;min-width:94px}.scheduleDate>b{font-size:10px;white-space:nowrap}
+.scheduleGame.compact{grid-template-columns:minmax(94px,.8fr) minmax(0,2fr) minmax(56px,.6fr)}
+.injuryStatusHero>div:last-child strong{font-size:17px;white-space:nowrap}
+@media(max-width:620px){.scheduleGame.compact{grid-template-columns:84px minmax(0,1fr) 54px}.scheduleDate{min-width:0;display:grid;gap:3px}.scheduleDate .calTag{width:max-content}.scheduleDate>b{font-size:9px}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.4</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.5</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1872,9 +1882,9 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.46.4 — Procedural Mini Crests: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
+// v0.1.46.5 — Basketball Calendar & Injury Recovery: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
 // v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
-// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.4 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.5 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -2483,7 +2493,7 @@ function derivePlayerBuild(player) {
 }
 
 // Statistical identity shapes where production goes; OVR still determines how good the player is.
-// v0.1.46.4: the deep identity is engine-controlled and persists independently of user edits.
+// v0.1.46.5: the deep identity is engine-controlled and persists independently of user edits.
 const STAT_IDENTITY_RARITY_CAPS={Generational:2,Exceptional:8,"Elite Specialist":24};
 const STAT_IDENTITY_SEEDS={
   "Victor Wembanyama":{tier:"Generational",type:"Two-Way Unicorn",mods:{usage:1.25,assist:1.08,rebound:1.58,steal:1.28,block:4.00,defensiveImpact:1.34,threeRate:.02,volatility:1.10}},
@@ -5162,7 +5172,7 @@ function salaryMatchingCheck(G, A, B, aPlayers, bPlayers) {
 }
 
 
-// v0.1.46.4 — launch-roster integrity guard.
+// v0.1.46.5 — launch-roster integrity guard.
 // Every non-2026-draft source template must exist on its mapped Season 1 club.
 // This specifically protects LeBron James -> Lebron Haymes on Philadelphia,
 // while catching the same class of omission anywhere else.
@@ -5176,7 +5186,7 @@ function ensureLaunchRosterTemplateIntegrity(clubs){
       if(present.has(key))continue;
       const p=makeMappedPlayer(t,i,club.id);
       p.launchRosterIntegrityRepair=true;
-      p.launchRosterIntegrityRepairVersion="v0.1.46.4";
+      p.launchRosterIntegrityRepairVersion="v0.1.46.5";
       club.roster.push(p);
       present.add(key);
       repairs.push({clubId:club.id,sourceName:t.sourceName,playerName:p.name});
@@ -5196,7 +5206,7 @@ function launchRosterIntegrityAudit(clubs){
   const phi=(clubs||[]).find(c=>c.id==="PHI");
   const lebron=(phi?.roster||[]).find(p=>normalizeSourcePlayerName(p.sourceTemplateName)===normalizeSourcePlayerName("LeBron James"));
   return {
-    version:"v0.1.46.4",
+    version:"v0.1.46.5",
     missing,
     philadelphiaLeBronPresent:!!lebron,
     philadelphiaLeBronDisplayName:lebron?.name||null,
@@ -5217,7 +5227,7 @@ function makeCareer() {
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
   const freeAgents = [];
   const externalProfessionals = [];
-  // v0.1.46.4 — international professionals belong to an external
+  // v0.1.46.5 — international professionals belong to an external
   // professional market, not the NBA free-agent list. Their OVR can remain
   // strong because ability and NBA availability are now separate concepts.
   for (const nation of NATIONAL_TEAMS) {
@@ -5759,7 +5769,7 @@ function aiRosterFitSummary(club){
 }
 
 // ---------------------------------------------------------------------
-// PLAYER MARKET ARCHITECTURE — v0.1.46.4
+// PLAYER MARKET ARCHITECTURE — v0.1.46.5
 // Free Agent = immediately available to an NBA club.
 // External Professional = contracted outside the NBA ecosystem.
 // Developmental/G League = NBA-adjacent talent with bounded two-way OVR.
@@ -5799,7 +5809,7 @@ function ensurePlayerMarketState(G){
   }
   G.freeAgents=keep;
 
-  // v0.1.46.4 migration: older generated developmental players defaulted
+  // v0.1.46.5 migration: older generated developmental players defaulted
   // to zero/implicit service. Give only generated developmental identities
   // an explicit 0–4 year NBA service history and separate pro experience.
   const devPlayers=[
@@ -6686,7 +6696,7 @@ function ensureRosterCompliance(G, club, isUser=false) {
 
 
 function twoWayEligible(player) {
-  // v0.1.46.4 — ordinary two-way candidates are developmental players
+  // v0.1.46.5 — ordinary two-way candidates are developmental players
   // with no more than four seasons of NBA service. Professional experience
   // outside the NBA is tracked separately and does not consume NBA service.
   const exp=playerExperienceYears(player);
@@ -6754,54 +6764,164 @@ function injuryRisk(player, minutes=0, medicalLevel=1) {
   return base*medicalRiskMultiplier(medicalLevel);
 }
 
+function basketballSeasonStartYear(season){return gameYearForSeason(season);}
+function basketballDaySerial(year,month,day){return Math.floor(Date.UTC(year,month-1,day)/86400000);}
+function basketballDateFromSerial(serial){const d=new Date((+serial||0)*86400000);return{year:d.getUTCFullYear(),month:d.getUTCMonth()+1,day:d.getUTCDate()};}
+const BASKETBALL_MONTHS=["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function basketballDateLabel(serial,{year=false}={}){
+  const d=basketballDateFromSerial(serial);
+  return `${BASKETBALL_MONTHS[d.month]} ${d.day}${year?` · ${d.year}`:""}`;
+}
+function basketballMonthLabel(serial){
+  const d=basketballDateFromSerial(serial);
+  return `${BASKETBALL_MONTHS[d.month].toUpperCase()} ${d.year}`;
+}
+function calendarSerialForEvent(G,kind,slot=0){
+  const y=basketballSeasonStartYear(G.season);
+  const n=Math.max(0,+slot||0);
+  if(kind==="OFFSEASON")return basketballDaySerial(y,6,20);
+  if(kind==="DRAFT")return basketballDaySerial(y,6,25);
+  if(kind==="SUMMER")return basketballDaySerial(y,7,5)+Math.round(n*2.2);
+  if(kind==="SUMMER_FINALS")return basketballDaySerial(y,7,18)+Math.round(n*2);
+  if(kind==="PRESEASON_READY")return basketballDaySerial(y,9,28);
+  if(kind==="PRESEASON")return basketballDaySerial(y,10,2)+Math.round(n*4);
+  if(kind==="REGULAR")return basketballDaySerial(y,10,20)+Math.round(Math.max(0,n-1)*174/81);
+  if(kind==="ALL_STAR")return basketballDaySerial(y+1,2,15);
+  if(kind==="PLAY_IN")return basketballDaySerial(y+1,4,15)+Math.round(n*2);
+  if(kind==="PLAYOFFS")return basketballDaySerial(y+1,4,20)+Math.round(n*2);
+  if(kind==="FINALS")return basketballDaySerial(y+1,6,1)+Math.round(n*2);
+  return basketballDaySerial(y,6,20);
+}
+function calendarSerialForPhase(G){
+  const phase=G.phase||"OFFSEASON";
+  if(phase==="SUMMER_LEAGUE"||phase==="SUMMER_LEAGUE_COMPLETE")return calendarSerialForEvent(G,"SUMMER",G.summerLeagueLive?.roundIndex||0);
+  if(phase==="PRESEASON_READINESS")return calendarSerialForEvent(G,"PRESEASON_READY");
+  if(phase==="PRESEASON")return calendarSerialForEvent(G,"PRESEASON",(G.preseasonLive?.roundIndex||0)+1);
+  if(phase==="REGULAR_SEASON")return calendarSerialForEvent(G,"REGULAR",(G.regularSeasonLive?.roundIndex||0)+1);
+  if(phase==="PLAY_IN")return calendarSerialForEvent(G,"PLAY_IN",G.playInLive?.stage||0);
+  if(phase==="PLAYOFFS"){
+    const live=G.playoffsLive,round=live?.round||"R1";
+    const offsets={R1:0,SF:14,CF:28,FINALS:42};
+    return round==="FINALS"?calendarSerialForEvent(G,"FINALS",Math.max(0,(live?.games||[]).length%7)):calendarSerialForEvent(G,"PLAYOFFS",offsets[round]||0);
+  }
+  if(phase==="DRAFT_NIGHT")return calendarSerialForEvent(G,"DRAFT");
+  return calendarSerialForEvent(G,"OFFSEASON");
+}
+function ensureBasketballCalendar(G){
+  if(!G.calendar||G.calendar.version!=="CAL1"){
+    G.calendar={version:"CAL1",serial:calendarSerialForPhase(G),season:G.season};
+  }
+  if(!Number.isFinite(+G.calendar.serial))G.calendar.serial=calendarSerialForPhase(G);
+  return G.calendar;
+}
+function injuryRecoveryDaysFromLegacyGames(games){return Math.max(3,Math.round((+games||1)*2.15));}
+function injuryRecoveryStage(daysRemaining,totalDays=0){
+  const d=Math.max(0,+daysRemaining||0),t=Math.max(d,+totalDays||d||1),ratio=d/t;
+  if(d<=3)return"Day-to-day";
+  if(ratio<=0.28)return"Return conditioning";
+  if(ratio<=0.65)return"Rehabilitation";
+  return"Out";
+}
+function migratePlayerInjuryCalendar(G,p){
+  if(!p?.injured||!p.injury)return null;
+  const inj=p.injury;
+  const now=ensureBasketballCalendar(G).serial;
+  if(Number.isFinite(+inj.returnSerial)){
+    inj.recoveryDaysRemaining=Math.max(0,Math.ceil(+inj.returnSerial-now));
+    return inj;
+  }
+  const legacyGames=Math.max(1,+inj.gamesRemaining||+inj.gamesAtStart||+inj.originalGames||1);
+  const totalDays=injuryRecoveryDaysFromLegacyGames(Math.max(legacyGames,+inj.gamesAtStart||legacyGames));
+  let startSerial=now;
+  if((+inj.season||G.season)<G.season){
+    // Existing saves: an injury carried from the previous postseason began
+    // around that postseason, so the elapsed offseason now genuinely counts.
+    const priorY=basketballSeasonStartYear(+inj.season||G.season-1);
+    startSerial=basketballDaySerial(priorY+1,5,12);
+  }else if(G.phase==="PLAYOFFS"||G.phase==="CHAMPION"){
+    startSerial=calendarSerialForEvent(G,"PLAYOFFS",10);
+  }
+  inj.recoveryDaysAtStart=totalDays;
+  inj.injuryStartSerial=startSerial;
+  inj.returnSerial=startSerial+totalDays;
+  inj.recoveryDaysRemaining=Math.max(0,Math.ceil(inj.returnSerial-now));
+  inj.calendarMigrated=true;
+  return inj;
+}
+function clearRecoveredInjuries(G){
+  const now=ensureBasketballCalendar(G).serial;
+  let recovered=0;
+  for(const club of G.clubs||[])for(const p of [...(club.roster||[]),...(club.twoWayRoster||[])]){
+    if(!p?.injured||!p.injury)continue;
+    const inj=migratePlayerInjuryCalendar(G,p);
+    inj.recoveryDaysRemaining=Math.max(0,Math.ceil((+inj.returnSerial||now)-now));
+    if(inj.recoveryDaysRemaining<=0){
+      const hist=(p.injuryHistory||[]).slice().reverse().find(x=>x&&!x.returnSerial&&x.label===inj.label);
+      if(hist){hist.returnSerial=now;hist.returnDate=basketballDateLabel(now,{year:true});}
+      p.injured=false;p.injury=null;recovered++;
+      logEvent(G,`${p.name} (${club.name}) cleared to return from injury on ${basketballDateLabel(now,{year:true})}.`);
+    }
+  }
+  return recovered;
+}
+function advanceBasketballCalendarTo(G,targetSerial){
+  const cal=ensureBasketballCalendar(G),target=Math.max(+cal.serial||0,+targetSerial||0);
+  cal.serial=target;cal.season=G.season;
+  return clearRecoveredInjuries(G);
+}
+function syncBasketballCalendarForEvent(G,kind,slot=0){
+  return advanceBasketballCalendarTo(G,calendarSerialForEvent(G,kind,slot));
+}
 function createInjury(player, season, medicalLevel=1) {
-  const r=Math.random(); let games, label;
+  const r=Math.random();
+  let games,label;
   if(r<0.60){games=rand(1,4);label='Minor strain';}
   else if(r<0.88){games=rand(5,10);label='Moderate injury';}
   else if(r<0.98){games=rand(11,24);label='Significant injury';}
   else {games=rand(25,55);label='Major injury';}
   const originalGames=games;
   games=Math.max(1,Math.ceil(games*medicalRecoveryMultiplier(medicalLevel)));
-  player.injured=true;player.injury={label,gamesRemaining:games,gamesAtStart:games,originalGames,season,medicalLevel};player.injuryHistory=player.injuryHistory||[];player.injuryHistory.push({season,label,gamesMissed:games,originalGames,medicalLevel,age:player.age,ovr:player.ovr});player.injuryHistory=player.injuryHistory.slice(-20);return player.injury;
+  const G=CURRENT_GAME_STATE;
+  const now=G?ensureBasketballCalendar(G).serial:basketballDaySerial(gameYearForSeason(season||1),10,20);
+  const recoveryDays=injuryRecoveryDaysFromLegacyGames(games);
+  const returnSerial=now+recoveryDays;
+  player.injured=true;
+  player.injury={label,season,medicalLevel,injuryStartSerial:now,returnSerial,recoveryDaysAtStart:recoveryDays,recoveryDaysRemaining:recoveryDays,originalGames};
+  player.injuryHistory=player.injuryHistory||[];
+  player.injuryHistory.push({season,label,recoveryDays,injuryStartSerial:now,returnSerial,medicalLevel,age:player.age,ovr:player.ovr});
+  player.injuryHistory=player.injuryHistory.slice(-20);
+  return player.injury;
 }
-
 function injuryReturnEstimate(player){
-  if(!player?.injured||!player.injury)return{short:"Available",detail:"Available",games:0};
-  const n=Math.max(0,Math.ceil(+player.injury.gamesRemaining||0));
-  if(n<=1)return{short:"Could return next game",detail:"Day-to-day · could return next game",games:n};
-  if(n<=3)return{short:`~${n} games`,detail:`Estimated return in about ${n} games`,games:n};
-  if(n<=6)return{short:`~${n} games`,detail:`Estimated return in about ${n} games`,games:n};
-  if(n<=10)return{short:`~${n} games`,detail:`Estimated return in ${n} games`,games:n};
-  return{short:`~${n} games`,detail:`Estimated return in approximately ${n} games`,games:n};
+  if(!player?.injured||!player.injury)return{short:"Available",detail:"Available",days:0,stage:"Available",returnSerial:null};
+  const G=CURRENT_GAME_STATE;
+  if(G)migratePlayerInjuryCalendar(G,player);
+  const inj=player.injury;
+  const now=G?ensureBasketballCalendar(G).serial:(+inj.injuryStartSerial||0);
+  const days=Math.max(0,Math.ceil((+inj.returnSerial||now)-now));
+  const total=Math.max(days,+inj.recoveryDaysAtStart||days||1);
+  const stage=injuryRecoveryStage(days,total);
+  const returnText=inj.returnSerial?basketballDateLabel(inj.returnSerial,{year:false}):"TBD";
+  const short=days<=3?`Day-to-day · ${returnText}`:`${stage} · ${returnText}`;
+  return{short,detail:`Expected return ${returnText} · ${stage}`,days,stage,returnSerial:inj.returnSerial};
 }
 function currentInjuryGamesMissed(player){
-  if(!player?.injured||!player.injury)return 0;
-  const scheduled=Math.max(1,+player.injury.gamesAtStart||+player.injury.recoveryGames||+player.injury.originalGames||0);
-  const remaining=Math.max(0,+player.injury.gamesRemaining||0);
-  return Math.max(0,scheduled-remaining);
+  const hist=(player?.injuryHistory||[]).slice().reverse().find(x=>x&&x.label===player?.injury?.label);
+  return Math.max(0,+hist?.gamesMissedActual||0);
 }
 function leagueCurrentInjuries(G){
+  CURRENT_GAME_STATE=G;clearRecoveredInjuries(G);
   const rows=[];
-  for(const club of G.clubs||[]){
-    for(const p of [...(club.roster||[]),...(club.twoWayRoster||[])]){
-      if(!p?.injured||!p.injury)continue;
-      const est=injuryReturnEstimate(p);
-      rows.push({
-        player:p,club,
-        label:p.injury.label||"Injury",
-        remaining:est.games,
-        returnLabel:est.detail,
-        missed:currentInjuryGamesMissed(p),
-        severity:(+p.ovr||0)*2+Math.min(30,est.games)
-      });
-    }
+  for(const club of G.clubs||[])for(const p of [...(club.roster||[]),...(club.twoWayRoster||[])]){
+    if(!p?.injured||!p.injury)continue;
+    const est=injuryReturnEstimate(p);
+    rows.push({player:p,club,label:p.injury.label||"Injury",remaining:est.days,returnLabel:est.detail,stage:est.stage,returnSerial:est.returnSerial,severity:(+p.ovr||0)*2+Math.min(30,est.days/2)});
   }
   return rows.sort((a,b)=>b.severity-a.severity||b.remaining-a.remaining||b.player.ovr-a.player.ovr);
 }
 function progressInjuries(G) {
-  let recovered=0;
-  for(const club of G.clubs) for(const p of [...club.roster,...(club.twoWayRoster||[])]) if(p.injured&&p.injury){if(!Number.isFinite(+p.injury.gamesAtStart))p.injury.gamesAtStart=Math.max(+p.injury.gamesRemaining||1,+p.injury.originalGames||1);p.injury.gamesRemaining--;if(p.injury.gamesRemaining<=0){p.injured=false;p.injury=null;recovered++;logEvent(G,`${p.name} (${club.name}) cleared to return from injury.`);}}
-  return recovered;
+  // Compatibility wrapper. Recovery is now elapsed-calendar based, not game-count based.
+  return clearRecoveredInjuries(G);
 }
 
 function rosterDepthSnapshot(G, clubId) {
@@ -6826,6 +6946,7 @@ function retirementChance(player) {
   return Math.max(0,Math.min(1,chance*longevityFactor*qualityFactor*legacyFactor*roleFactor));
 }
 function runOffseason(G) {
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"OFFSEASON");
   if (G.nationalQualification?.complete && !G.nationalQualification.worldCupPlayed) {
     G.phase="WORLD_CUP";
     initializeWorldCupLive(G);
@@ -7604,7 +7725,7 @@ function advanceDraftOneControlledPick(G){
   }
 
   let best=null,bestScore=-Infinity;
-  // v0.1.46.4 — Season 1 historical assignment is attached to the
+  // v0.1.46.5 — Season 1 historical assignment is attached to the
   // pick slot, not to the original team and not to a global "diverged" flag.
   // Trading another pick therefore changes only ownership of that slot.
   // If the assigned prospect has already been taken by a deliberate GM
@@ -7849,6 +7970,7 @@ function summerLeagueCandidateRoster(G,club){
   // sensible mix. A newly converted two-way player remains Summer League
   // eligible because conversion changes contract type, not service history.
   return [...standard,...twoWay,...affiliate]
+    .filter(p=>!p.injured)
     .filter((p,i,a)=>p?.id&&a.findIndex(x=>x.id===p.id)===i)
     .sort((a,b)=>(b.ovr||0)-(a.ovr||0)||(b.potential||0)-(a.potential||0))
     .slice(0,12);
@@ -7871,6 +7993,7 @@ function syncSummerLeagueRosterForClub(G,clubId){
 }
 
 function initializeSummerLeagueLive(G) {
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"SUMMER",Math.max(0,G.summerLeagueLive?.roundIndex||0));
   if(G.summerLeagueLive?.season===G.season && !G.summerLeagueLive.complete) {
     // Keep live Summer League teams aligned with roster moves made after
     // the phase began, including new two-way signings/conversions.
@@ -8046,13 +8169,14 @@ function setupSummerLeagueFinalFour(G){
   };
   live.roundIndex=5;
   summerLeagueSnapshot(G);
-  logEvent(G,`Procedural Mini Crests set: #1 ${c(seeds[0].clubId)?.name} vs #4 ${c(seeds[3].clubId)?.name}; #2 ${c(seeds[1].clubId)?.name} vs #3 ${c(seeds[2].clubId)?.name}.`);
+  logEvent(G,`Basketball Calendar & Injury Recovery set: #1 ${c(seeds[0].clubId)?.name} vs #4 ${c(seeds[3].clubId)?.name}; #2 ${c(seeds[1].clubId)?.name} vs #3 ${c(seeds[2].clubId)?.name}.`);
   return live.championshipStage;
 }
 
 function advanceSummerLeagueFinalFour(G){
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"SUMMER_FINALS",G.summerLeagueLive?.championshipStage?.stage==="FINAL"?1:0);for(const club of G.clubs||[])syncSummerLeagueRosterForClub(G,club.id);
   const live=G.summerLeagueLive,stage=live?.championshipStage;
-  if(!live||!stage||stage.complete)return {ok:false,reason:"Procedural Mini Crests is not active"};
+  if(!live||!stage||stage.complete)return {ok:false,reason:"Basketball Calendar & Injury Recovery is not active"};
 
   if(stage.stage==="SEMIFINALS"){
     const rd=live.rounds[5],games=[];
@@ -8088,7 +8212,7 @@ function advanceSummerLeagueFinalFour(G){
     logEvent(G,`Summer League champion: ${c(final.winnerClubId)?.name||final.winnerClubId}.`);
     return {ok:true,round:"Final Four · Championship",games:[final],userGame:G.userClubGM?.clubId&&(h===G.userClubGM.clubId||a===G.userClubGM.clubId)?final:null,complete:true};
   }
-  return {ok:false,reason:"Unknown Procedural Mini Crests stage"};
+  return {ok:false,reason:"Unknown Basketball Calendar & Injury Recovery stage"};
 }
 
 function finalizeSummerLeagueLive(G){
@@ -8129,6 +8253,7 @@ function advanceSummerLeagueRound(G){
   }
 
   const rd=live.rounds[live.roundIndex];if(!rd)return {ok:false,reason:"No Summer League round"};
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"SUMMER",(live.roundIndex||0)+1);for(const club of G.clubs||[])syncSummerLeagueRosterForClub(G,club.id);
   const games=[];
   for(const [h,a] of rd.pairings){
     const g=simulateSummerGameLive(G,h,a,rd.round);live.games.push(g);games.push(g);
@@ -8150,6 +8275,7 @@ function continueFromSummerLeague(G){
   return {ok:true};
 }
 function beginPreseasonFromReadiness(G){
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PRESEASON_READY");
   if(G.phase!=="PRESEASON_READINESS")return {ok:false,reason:"Preseason readiness is not active"};
   G.phase="PRESEASON";
   const live=initializePreseasonLive(G);
@@ -8224,6 +8350,7 @@ function preseasonSnapshot(G){
 }
 
 function initializePreseasonLive(G){
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PRESEASON",Math.max(0,(G.preseasonLive?.roundIndex||0)+1));
   if(G.preseasonLive?.season===G.season&&!G.preseasonLive.complete)return G.preseasonLive;
   G.rosterCompliancePending=null;
   for(const club of G.clubs){const isUser=club.id===G.userClubGM?.clubId;if(!ensureRosterCompliance(G,club,isUser)){logEvent(G,`${club.name} roster compliance required: ${club.roster.length}/15 players.`);return null;}}
@@ -8234,8 +8361,8 @@ function initializePreseasonLive(G){
 
 function simulatePreseasonGameLive(G,homeId,awayId,round){
   const hc=G.clubs.find(c=>c.id===homeId),ac=G.clubs.find(c=>c.id===awayId),
-    hr=hc.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10),
-    ar=ac.roster.filter(p=>p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10);
+    hr=hc.roster.filter(p=>!p.injured&&p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10),
+    ar=ac.roster.filter(p=>!p.injured&&p.targetMinutes>0).sort((a,b)=>b.targetMinutes-a.targetMinutes).slice(0,10);
 
   const sim=(club,rot,opp,oppRot)=>{
     const raw=rot.map(p=>Math.max(8,p.targetMinutes+rand(-4,4))),
@@ -8278,6 +8405,7 @@ function simulatePreseasonGameLive(G,homeId,awayId,round){
 }
 
 function advancePreseasonRound(G){
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PRESEASON",(G.preseasonLive?.roundIndex||0)+1);
   if(G.phase!=="PRESEASON")return{ok:false,reason:"Preseason is not active"};const live=initializePreseasonLive(G);if(!live)return{ok:false,reason:"Roster compliance required"};const rd=live.rounds[live.roundIndex];if(!rd)return{ok:false,reason:"No preseason round"};
   const games=[];for(const[h,a]of rd.pairings){const g=simulatePreseasonGameLive(G,h,a,rd.round);live.games.push(g);games.push(g);if(G.userClubGM?.clubId&&(h===G.userClubGM.clubId||a===G.userClubGM.clubId))live.lastUserGameId=g.id;}live.roundIndex++;preseasonSnapshot(G);if(live.roundIndex>=3){live.complete=true;preseasonSnapshot(G);logEvent(G,`Preseason complete: ${live.games.length} games, rotations set and chemistry recorded.`);G.phase="REGULAR_SEASON";initializeRegularSeasonLive(G);}
   return{ok:true,round:rd.round,games,userGame:games.find(g=>G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete};
@@ -9040,9 +9168,9 @@ function advanceRegularSeasonRound(G) {
   if(live.complete) return {ok:false,reason:"Regular season is complete"};
   const roundData=live.rounds[live.roundIndex];
   if(!roundData) return {ok:false,reason:"No scheduled round"};
-  progressInjuries(G);
   const roundGames=[];
   const round=roundData.round;
+  syncBasketballCalendarForEvent(G,"REGULAR",round);
   let gamePairings=roundData.pairings.map(p=>({homeId:p[0],awayId:p[1],cupGroupId:p[2]||null,cupKnockout:null}));
   const knockout=cupKnockoutPairingsForRound(G,round);
   if(knockout){
@@ -9315,6 +9443,7 @@ function finalizePlayInLive(G){
 }
 
 function advancePlayInEvent(G){
+  CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PLAY_IN",G.playInLive?.stage||0);
   if(G.phase!=="PLAY_IN")return{ok:false,reason:"Play-In is not active"};
   const live=initializePlayInLive(G);
   const games=[];
@@ -9427,6 +9556,11 @@ function finalizePlayoffsLive(G){
 }
 
 function advancePlayoffEvent(G){
+  CURRENT_GAME_STATE=G;
+  const calLive=G.playoffsLive;
+  const calRound=calLive?.round||"R1",eventNo=(calLive?.games||[]).length;
+  if(calRound==="FINALS")syncBasketballCalendarForEvent(G,"FINALS",Math.floor(eventNo/1));
+  else syncBasketballCalendarForEvent(G,"PLAYOFFS",({R1:0,SF:14,CF:28}[calRound]||0)+Math.floor(eventNo/4));
   if(G.phase!=="PLAYOFFS")return{ok:false,reason:"Playoffs are not active"};
   const live=initializePlayoffsLive(G);
   // Select every active series in the current round; each event advances one game in each series.
@@ -9560,7 +9694,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.46.4 Procedural Mini Crests",ENGINE_VERSION="E2.18-PROD9D";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.46.5 Basketball Calendar & Injury Recovery",ENGINE_VERSION="E2.18-PROD9E";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10434,17 +10568,7 @@ function playerInjuryRows(p){
   return hist.map((x,i)=>{
     const current=i===0&&p.injured&&p.injury;
     const est=current?injuryReturnEstimate(p):null;
-    const games=current?currentInjuryGamesMissed(p):(x.gamesMissed||x.games||x.originalGames||"—");
-    return{
-      season:x.season||"—",
-      label:x.label||"Injury",
-      games,
-      age:x.age,
-      ovr:x.ovr,
-      current,
-      returnLabel:est?.detail||"",
-      remaining:est?.games||0
-    };
+    return{season:x.season||"—",label:x.label||"Injury",age:x.age,ovr:x.ovr,current,returnLabel:est?.detail||"",stage:est?.stage||"Recovered",returnSerial:current?est?.returnSerial:(x.returnSerial||null)};
   });
 }
 function clubNotablePlayers(club){
@@ -10521,7 +10645,7 @@ function playerProfile(){
     ${isFreeAgent?`<div class="profileCompactActions"><button id="profileNegotiateFA" class="btn primary">Negotiate Contract</button></div>`:""}
     <div class="sectionTitle">Transaction History</div><div class="profileTimeline">${playerTransactions(p.id).length?playerTransactions(p.id).map(t=>`<div class="timelineRow"><div class="season">S${t.season}</div><div><b>${t.type}</b><small>${t.from} → ${t.to} · ${t.detail}</small></div><div class="right">${t.type}</div></div>`).join(""):`<div class="empty">No recorded transactions.</div>`}</div>`;
   const gamesHealth=`
-    ${p.injured&&p.injury?`<div class="injuryStatusHero"><div><small>CURRENT INJURY</small><b>${p.injury.label||"Injured"}</b><span>${injuryReturnEstimate(p).detail}</span></div><div><strong>${Math.max(0,+p.injury.gamesRemaining||0)}</strong><small>GAMES EST.</small></div></div>`:""}
+    ${p.injured&&p.injury?`<div class="injuryStatusHero"><div><small>CURRENT INJURY</small><b>${p.injury.label||"Injured"}</b><span>${injuryReturnEstimate(p).detail}</span></div><div><strong>${basketballDateLabel(injuryReturnEstimate(p).returnSerial)}</strong><small>EXPECTED RETURN</small></div></div>`:""}
     <div class="sectionTitle">Recent Game Log</div><div class="profileTimeline">${playerRecentGames(p.id,10).length?playerRecentGames(p.id,10).map(g=>`<div class="timelineRow"><div class="season">${g.won?"W":"L"} ${g.score}</div><div><b>${g.isHome?"vs":"@"} ${g.opp}</b><small>${(()=>{
   const p=String(g.phase||"Game").toUpperCase();
   if(p==="REGULAR")return"regular";
@@ -10535,7 +10659,7 @@ function playerProfile(){
   if(p==="FINALS")return"playoffs · finals";
   return String(g.phase).replaceAll("_"," ").toLowerCase();
 })()} · ${g.line.pts||0} PTS · ${g.line.reb||0} REB · ${g.line.ast||0} AST</small></div><div class="right">${g.line.min||0} MIN</div></div>`).join(""):`<div class="empty">No recent games recorded for this player.</div>`}</div>
-    <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">S${x.season}</div><div><b>${x.label}</b><small>${x.current?`${x.games} games missed so far · ${x.returnLabel}`:`${x.games} games missed`}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?`OUT · ~${x.remaining}`:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
+    <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">S${x.season}</div><div><b>${x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
   return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${club?.name||"Free Agent"} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
     <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
     ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing Player Profile</b><span>Salary and contract terms remain unchanged. NBA experience is separate from contract type. Changing age will reset recorded career history after confirmation. Statistical identity is engine-controlled and is not upgraded by editing OVR, POT, position or archetype.</span></div>`:""}
@@ -10583,6 +10707,23 @@ function scheduleCompetition(g){
   if(tag.includes("playoff")||tag==="finals"||tag.includes("_r1")||tag.includes("_sf")||tag.includes("_cf"))return"Playoffs";
   return"League";
 }
+function scheduleEntrySerial(entry){
+  if(Number.isFinite(+entry?.game?.calendarSerial))return +entry.game.calendarSerial;
+  const comp=entry?.comp,round=+entry?.round||+entry?.game?.round||0;
+  if(comp==="Summer League")return calendarSerialForEvent(G,"SUMMER",Math.max(1,round));
+  if(comp==="Preseason")return calendarSerialForEvent(G,"PRESEASON",Math.max(1,round));
+  if(comp==="Play-In")return calendarSerialForEvent(G,"PLAY_IN",Math.max(0,round));
+  if(comp==="Playoffs"){
+    const tag=String(entry?.game?.phaseTag||"");
+    if(tag==="FINALS")return calendarSerialForEvent(G,"FINALS",Math.max(0,round-1));
+    const base=tag.includes("_SF")?14:tag.includes("_CF")?28:0;
+    return calendarSerialForEvent(G,"PLAYOFFS",base+Math.max(0,round-1)*2);
+  }
+  return calendarSerialForEvent(G,"REGULAR",Math.max(1,round));
+}
+function scheduleTag(comp){
+  return comp==="Summer League"?"SL":comp==="Preseason"?"PRE":comp==="NBA Cup"?"CUP":comp==="Play-In"?"PI":comp==="Playoffs"?"PO":"REG";
+}
 function clubScheduleEntries(){
   const club=me(),id=club?.id;if(!id)return[];
   const entries=[],season=G.season;
@@ -10590,39 +10731,43 @@ function clubScheduleEntries(){
     for(const g of(games||[])){
       if(g.homeClubId!==id&&g.awayClubId!==id)continue;
       const oppId=g.homeClubId===id?g.awayClubId:g.homeClubId,home=g.homeClubId===id,comp=scheduleCompetition(g);
-      entries.push({kind:"completed",game:g,comp,oppId,home,sort:base+(+g.round||0),label:g.round?`Game ${g.round}`:competitionGameLabel(g)});
+      const entry={kind:"completed",game:g,comp,oppId,home,sort:base+(+g.round||0),label:g.round?`Game ${g.round}`:competitionGameLabel(g),round:+g.round||0};
+      entry.calendarSerial=scheduleEntrySerial(entry);entries.push(entry);
     }
   };
-
-  // Active Schedule is intentionally CURRENT SEASON only.
-  // We trust existing live-state season markers, never untagged snapshots from a prior career year.
   if(G.summerLeagueLive?.season===season)pushGames(G.summerLeagueLive.games,0);
   if(G.preseasonLive?.season===season)pushGames(G.preseasonLive.games,100);
   if(G.regularSeasonLive?.season===season)pushGames(G.regularSeasonLive.games,1000);
   if(G.playInLive?.season===season)pushGames(G.playInLive.games,2000);
   if(G.playoffsLive?.season===season)pushGames(G.playoffsLive.games,3000);
-
   if(G.phase==="REGULAR_SEASON"&&G.regularSeasonLive?.season===season&&!G.regularSeasonLive.complete){
     for(let i=G.regularSeasonLive.roundIndex;i<G.regularSeasonLive.rounds.length;i++){
       const rd=G.regularSeasonLive.rounds[i],pair=rd.pairings.find(p=>p[0]===id||p[1]===id);
       if(!pair)continue;
       const oppId=pair[0]===id?pair[1]:pair[0],home=pair[0]===id,comp=pair[2]?"NBA Cup":"League";
-      entries.push({kind:"upcoming",comp,oppId,home,sort:1000+rd.round,label:`Game ${rd.round}`,round:rd.round});
+      const entry={kind:"upcoming",comp,oppId,home,sort:1000+rd.round,label:`Game ${rd.round}`,round:rd.round};
+      entry.calendarSerial=scheduleEntrySerial(entry);entries.push(entry);
     }
   }
-  return entries.sort((a,b)=>a.sort-b.sort);
+  return entries.sort((a,b)=>a.calendarSerial-b.calendarSerial||a.sort-b.sort);
 }
 function clubSchedule(){
   const all=clubScheduleEntries(),filter=ui.scheduleFilter||"all";
   const filtered=filter==="all"?all:all.filter(x=>x.comp===filter);
   const filters=[["Summer League","Summer"],["Preseason","Pre"],["NBA Cup","Cup"],["League","League"],["Play-In","Play-In"],["Playoffs","Playoffs"],["all","All"]];
-  return `<div class="squadSectionHead"><h3>Schedule</h3><small>Club calendar</small></div>
+  const grouped=[];
+  for(const e of filtered){
+    const month=basketballMonthLabel(e.calendarSerial);
+    let g=grouped[grouped.length-1];if(!g||g.month!==month){g={month,rows:[]};grouped.push(g)}g.rows.push(e);
+  }
+  return `<div class="squadSectionHead"><h3>Schedule</h3><small>Month-by-month basketball calendar</small></div>
     <div class="scheduleToolbar compactScheduleTabs squadScheduleTabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
-    <div class="scheduleList compactScheduleList">${filtered.length?filtered.map(e=>{
+    <div class="calendarLegend"><span class="calTag sl">SL</span>Summer <span class="calTag pre">PRE</span>Preseason <span class="calTag reg">REG</span>League <span class="calTag cup">CUP</span>Cup <span class="calTag pi">PI</span>Play-In <span class="calTag po">PO</span>Playoffs</div>
+    <div class="scheduleMonthList">${grouped.length?grouped.map(group=>`<section class="scheduleMonth"><div class="scheduleMonthHead">${group.month}</div><div class="scheduleList compactScheduleList">${group.rows.map(e=>{
       const opp=c(e.oppId),g=e.game,score=e.kind==="completed"?(e.home?`${g.homeScore}–${g.awayScore}`:`${g.awayScore}–${g.homeScore}`):"—";
-      const outcome=e.kind==="completed"?(g.winnerClubId===me().id?"W":"L"):"UPCOMING";
-      return `<div class="scheduleGame compact ${e.kind}" ${e.kind==="completed"?`data-schedulegame="${g.id}"`:""}><div class="scheduleComp"><b>${e.comp}</b><small>${e.label}</small></div><div class="scheduleMatch"><b>${e.home?"vs":"@"} ${opp?clubNameLink(opp):"Opponent"}</b><small>${e.home?"Home":"Away"}</small></div><div class="scheduleResult"><b>${score}</b><small>${outcome}</small></div></div>`;
-    }).join(""):`<div class="card empty">No ${filter==="all"?"club":filter} fixtures are recorded yet.</div>`}</div>`;
+      const outcome=e.kind==="completed"?(g.winnerClubId===me().id?"W":"L"):"UPCOMING",tag=scheduleTag(e.comp),cls=tag.toLowerCase();
+      return `<div class="scheduleGame compact ${e.kind}" ${e.kind==="completed"?`data-schedulegame="${g.id}"`:""}><div class="scheduleDate"><b>${basketballDateLabel(e.calendarSerial)}</b><span class="calTag ${cls}">${tag}</span></div><div class="scheduleMatch"><b>${e.home?"vs":"@"} ${opp?clubNameLink(opp):"Opponent"}</b><small>${e.comp} · ${e.home?"Home":"Away"}</small></div><div class="scheduleResult"><b>${score}</b><small>${outcome}</small></div></div>`;
+    }).join("")}</div></section>`).join(""):`<div class="card empty">No ${filter==="all"?"club":filter} fixtures are recorded yet.</div>`}</div>`;
 }
 function status(){
   let x=me();
@@ -11107,7 +11252,7 @@ function phaseStatusCopy(){
   if(G.phase==="DRAFT_NIGHT")return["Draft Night",G.draftState?.pendingUserPick?`Your club owns the current selection. The Draft Board is ready.`:"The two-round draft is underway. Open the Draft Board to follow your selections."];
   if(G.phase==="SUMMER_LEAGUE"){
     const st=G.summerLeagueLive?.championshipStage?.stage;
-    if(st==="SEMIFINALS")return["Procedural Mini Crests","The five-game table is complete. The top four teams now play the semifinals."];
+    if(st==="SEMIFINALS")return["Basketball Calendar & Injury Recovery","The five-game table is complete. The top four teams now play the semifinals."];
     if(st==="CHAMPIONSHIP")return["Summer League Championship","The semifinal winners meet for the Summer League title."];
     return["Summer League","Evaluate rookies, two-way players and development talent before the main roster returns."];
   }
@@ -14052,7 +14197,7 @@ function leagueInjuries(){
   const longTerm=rows.filter(x=>x.remaining>=11).length;
   return `<div class="injuryCentreHero"><div><div class="eyebrow">LEAGUE AVAILABILITY</div><h3>Injury Centre</h3><p>All currently unavailable NBA and two-way players. Return timelines are estimates based on remaining recovery.</p></div><strong>${rows.length}</strong></div>
     <div class="metrics injuryMetrics"><div class="metric"><b>${rows.length}</b><small>League Injuries</small></div><div class="metric"><b>${eliteCount}</b><small>85+ OVR Out</small></div><div class="metric"><b>${longTerm}</b><small>Long-Term</small></div><div class="metric"><b>${userCount}</b><small>Your Club</small></div></div>
-    <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label}</b><small>${x.missed} game${x.missed===1?"":"s"} missed so far</small></div><div class="leagueInjuryReturn"><b>${x.remaining<=1?"NEXT GAME?":`~${x.remaining} GAMES`}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
+    <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label}</b><small>${x.stage}</small></div><div class="leagueInjuryReturn"><b>${basketballDateLabel(x.returnSerial)}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
 }
 function leagueLegacy(){
   return leagueHistoricalRecordsHtml(G);
