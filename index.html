@@ -1840,10 +1840,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .gmOfferGrid b{display:block;font-size:13px}.gmOfferGrid small{display:block;color:var(--muted);font-size:7px;margin-top:3px}
 .gmOfferNote{border-top:1px solid var(--line);padding-top:10px;color:var(--muted);font-size:8px;line-height:1.45}
 @media(max-width:430px){.gmOfferGrid{grid-template-columns:1fr 1fr}.gmRecruitmentCard h3{font-size:18px}}
-.build span{display:inline-block;margin-top:3px;color:#7d8997}</style></head>
+.build span{display:inline-block;margin-top:3px;color:#7d8997}
+/* v0.1.47.4 — Draft Quick Mode */
+.draftControlActionsThree{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.draftControlActionsThree .btn{min-width:0;margin:0}
+@media(max-width:520px){.draftControlActionsThree{grid-template-columns:1fr 1fr}.draftControlActionsThree #openDraftTradeCenter{grid-column:1/-1}}
+</style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.3 Save/Load Restoration &amp; GM Header Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.4 Draft Quick Mode</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -7960,7 +7965,8 @@ function twoWayDevelopmentScore(player){
 
 function ensureDraftControl(G){
   const ds=G.draftState||initializeDraftState(G);
-  ds.control=ds.control||{started:false,paused:true};
+  ds.control=ds.control||{started:false,paused:true,mode:"live"};
+  if(!["live","quick"].includes(ds.control.mode))ds.control.mode="live";
   return ds.control;
 }
 function draftCurrentOwnership(G){
@@ -10081,7 +10087,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.47.3 Save/Load Restoration & GM Header Fix",ENGINE_VERSION="E2.25-PROD16C";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.47.4 Draft Quick Mode",ENGINE_VERSION="E2.25-PROD16D";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13988,12 +13994,12 @@ function draft(){
   }
   const ctl=ds&&!ds.complete?ensureDraftControl(G):null;
   const controlCard=ds&&!ds.complete?`<div class="draftControlCard">
-    <div class="draftControlStatus"><div><small>DRAFT CONTROL</small><b>${p&&currentOwner===clubId?"Your selection is on the clock":!ctl.started?"Draft paused before Pick #1":ctl.paused?"Draft paused":`${currentClub?.name||"League"} is on the clock`}</b><span>${!ctl.started?"Review the board or trade for a higher pick before starting.":ctl.paused&&!p?"Resume when you are ready.":"AI selections advance every 2 seconds."}</span></div><div id="draftCountdown" class="draftCountdown">${ctl.started&&!ctl.paused&&!p?"2s":"PAUSED"}</div></div>
-    <div class="draftControlActions">
-      ${!ctl.started?`<button id="startLiveDraft" class="btn primary">Start Draft</button>`:ctl.paused&&!p?`<button id="resumeLiveDraft" class="btn primary">Resume Draft</button>`:!p?`<button id="pauseLiveDraft" class="btn secondary">Pause Draft</button>`:""}
+    <div class="draftControlStatus"><div><small>DRAFT CONTROL</small><b>${p&&currentOwner===clubId?"Your selection is on the clock":!ctl.started?"Draft paused before Pick #1":ctl.paused?"Draft paused":`${currentClub?.name||"League"} is on the clock`}</b><span>${!ctl.started?"Review the board or trade for a higher pick before starting.":ctl.mode==="quick"&&!p?"Quick Draft will advance immediately to your next owned pick.":ctl.paused&&!p?"Resume when you are ready.":"AI selections advance every 2 seconds."}</span></div><div id="draftCountdown" class="draftCountdown">${ctl.mode==="quick"&&ctl.started&&!p?"QUICK":ctl.started&&!ctl.paused&&!p?"2s":"PAUSED"}</div></div>
+    <div class="draftControlActions draftControlActionsThree">
+      ${!ctl.started?`<button id="startLiveDraft" class="btn primary">Start Draft</button><button id="quickDraft" class="btn secondary">Quick Draft</button>`:ctl.mode==="quick"&&!p?`<button id="quickDraft" class="btn primary">Quick Draft</button>`:ctl.paused&&!p?`<button id="resumeLiveDraft" class="btn primary">Resume Draft</button><button id="quickDraft" class="btn secondary">Quick Draft</button>`:!p?`<button id="pauseLiveDraft" class="btn secondary">Pause Draft</button><button id="quickDraft" class="btn secondary">Quick Draft</button>`:""}
       <button id="openDraftTradeCenter" class="btn secondary">Trade Picks</button>
     </div>
-    <small class="draftControlHint">Any unconsumed current-season pick can be traded. Once a selection is made, that pick is locked.</small>
+    <small class="draftControlHint">Start Draft advances AI selections live every 2 seconds. Quick Draft jumps directly to each pick you own. Any unconsumed current-season pick can be traded until it is selected.</small>
   </div>`:"";
   let yourPicks=s.completedUserPicks?.length?`<div class="sectionTitle">Your Selections</div><div class="card">${s.completedUserPicks.map(x=>`<div class="draftSelection"><div><b>Pick #${x.pickNumber} · ${x.playerName}</b><small>${x.position} · OVR ${x.ovr} · POT ${x.potential}</small></div><strong>R${x.round}</strong></div>`).join("")}</div>`:"";
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
@@ -14095,9 +14101,23 @@ function pauseLiveDraft(){
 function startOrResumeLiveDraft(){
   if(!G.draftState||G.draftState.complete)return;
   reconcileDraftPendingOwnership();
-  const ctl=ensureDraftControl(G);ctl.started=true;
+  const ctl=ensureDraftControl(G);ctl.started=true;ctl.mode="live";
   if(G.draftState.pendingUserPick){ctl.paused=true;renderDraftWindow();return;}
   ctl.paused=false;save();renderDraftWindow();
+}
+async function quickDraftToNextUserPick(){
+  if(!G.draftState||G.draftState.complete)return;
+  stopDraftAutoTimer();
+  reconcileDraftPendingOwnership();
+  const ctl=ensureDraftControl(G);ctl.started=true;ctl.paused=false;ctl.mode="quick";
+  let guard=0;
+  while(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete&&!G.draftState.pendingUserPick&&guard++<70){
+    const r=advanceDraftOneControlledPick(G);
+    if(!r?.ok&&!r?.complete)break;
+  }
+  ctl.paused=!!G.draftState?.pendingUserPick||!!G.draftState?.complete;
+  await save();
+  renderDraftWindow();
 }
 function openDraftWindow(){
   if(G.phase!=="DRAFT_NIGHT" && !G.draftState){toast("Draft Night is not active");return}
@@ -14131,11 +14151,17 @@ function bindDraftWindow(){
   });
   $$("[data-pick]").forEach(b=>b.onclick=async()=>{
     const r=makeUserDraftSelection(G,b.dataset.pick);
-    if(r.ok){stopDraftAutoTimer();toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);await save();renderDraftWindow()}else toast(r.reason);
+    if(r.ok){
+      stopDraftAutoTimer();toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);
+      const ctl=ensureDraftControl(G);
+      if(ctl.mode==="quick"&&!G.draftState?.complete)await quickDraftToNextUserPick();
+      else{await save();renderDraftWindow();}
+    }else toast(r.reason);
   });
   if($("#startLiveDraft"))$("#startLiveDraft").onclick=startOrResumeLiveDraft;
   if($("#resumeLiveDraft"))$("#resumeLiveDraft").onclick=startOrResumeLiveDraft;
   if($("#pauseLiveDraft"))$("#pauseLiveDraft").onclick=pauseLiveDraft;
+  if($("#quickDraft"))$("#quickDraft").onclick=quickDraftToNextUserPick;
   if($("#openDraftTradeCenter"))$("#openDraftTradeCenter").onclick=()=>{
     if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){const ctl=ensureDraftControl(G);ctl.started=ctl.started||false;ctl.paused=true;}
     stopDraftAutoTimer();ui.page="team";ui.teamTab="trades";show("game");save();render();
@@ -14143,7 +14169,7 @@ function bindDraftWindow(){
   if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{stopDraftAutoTimer();ui.page="home";show("game");render();save()};
   if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){
     const ctl=ensureDraftControl(G);
-    if(ctl.started&&!ctl.paused&&!G.draftState.pendingUserPick)scheduleDraftAutoTimer();
+    if(ctl.mode==="live"&&ctl.started&&!ctl.paused&&!G.draftState.pendingUserPick)scheduleDraftAutoTimer();
   }
 }
 function playerExperienceYears(p){
