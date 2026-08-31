@@ -1848,7 +1848,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.4 Draft Quick Mode</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.5 Draft Asset Integrity Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -3830,7 +3830,7 @@ function ensureOfficial2026DraftClass(G){
   return prospects;
 }
 function seedOfficial2026DraftAssets(G){
-  if(G.production2026DraftAssetsSeeded)return;
+  if(G.production2026DraftAssetsSeeded){repairOfficial2026DraftAssetIntegrity(G);return;}
   G.draftPicks=(G.draftPicks||[]).filter(p=>p.year!==1);
   for(const row of OFFICIAL_2026_DRAFT_RESULTS)G.draftPicks.push({id:nextId("pick"),year:1,round:row.round,originalClubId:row.draftedBy,ownerClubId:row.ownerClubId,consumed:false,pickNumber:null,selectedPlayerId:null,tradeHistory:[],historicalPickNumber:row.pick,production2026:true});
   G.production2026DraftAssetsSeeded=true;G.production2026Draft={source:"NBA.com 2026 Draft Results",rightsSnapshot:"Reported draft-night trades",diverged:false};
@@ -3975,8 +3975,30 @@ function applyReference2027PickRights(G){
   }
 }
 const _draftHorizonMemo=new WeakMap();
+function repairOfficial2026DraftAssetIntegrity(G){
+  if(!G||!G.production2026DraftAssetsSeeded||!Array.isArray(G.draftPicks))return 0;
+  const officialIds=new Set(
+    (G.draftPicks||[])
+      .filter(p=>p.year===1&&p.production2026)
+      .map(p=>p.id)
+  );
+  const before=G.draftPicks.length;
+  G.draftPicks=G.draftPicks.filter(p=>
+    p.year!==1 ||
+    p.production2026 ||
+    p.consumed ||
+    p.selectedPlayerId
+  );
+  const removed=before-G.draftPicks.length;
+  if(removed){
+    _draftHorizonMemo.delete(G);
+    G.draftAssetIntegrityRepair={season:G.season,removedPhantomSeason1Picks:removed,officialAssets:officialIds.size};
+  }
+  return removed;
+}
 function ensureDraftPickHorizon(G, seasonsAhead = 5) {
   if (!Array.isArray(G.draftPicks)) G.draftPicks = [];
+  repairOfficial2026DraftAssetIntegrity(G);
   const endSeason=(G.season||1)+seasonsAhead;
   const memo=_draftHorizonMemo.get(G);
   // Asset ownership can change without changing the existence of the original
@@ -3984,6 +4006,9 @@ function ensureDraftPickHorizon(G, seasonsAhead = 5) {
   if(memo && memo.season===G.season && memo.endSeason>=endSeason && memo.count===G.draftPicks.length){applyReference2027PickRights(G);return G.draftPicks;}
   const existing=new Set(G.draftPicks.map(p=>`${p.year}|${p.round}|${p.originalClubId}`));
   for (let year = G.season; year <= endSeason; year++) {
+    // Season 1 uses the production 2026 Draft asset map. Trades mean some clubs
+    // legitimately do not have an "own" pick in a round, so never back-fill it.
+    if(year===1&&G.production2026DraftAssetsSeeded)continue;
     for (const club of G.clubs) {
       for (const round of [1, 2]) {
         const key=`${year}|${round}|${club.id}`;
@@ -4002,8 +4027,15 @@ function draftPickByOriginal(G, year, round, originalClubId) {
 
 function clubDraftAssets(G, clubId) {
   ensureDraftPickHorizon(G);
-  return (G.draftPicks || []).filter(p => !p.consumed && p.ownerClubId === clubId && p.year >= G.season)
-    .sort((a,b) => a.year-b.year || a.round-b.round || a.originalClubId.localeCompare(b.originalClubId));
+  let assets=(G.draftPicks || []).filter(p => !p.consumed && p.ownerClubId === clubId && p.year >= G.season);
+
+  // Once Draft Night exists, only current-season assets represented in the
+  // authoritative live queue may appear on the current Draft Assets screen.
+  if(G.draftState?.season===G.season&&Array.isArray(G.draftState.queue)){
+    const queuePickIds=new Set(G.draftState.queue.map(e=>e.pickId).filter(Boolean));
+    assets=assets.filter(p=>p.year!==G.season||queuePickIds.has(p.id));
+  }
+  return assets.sort((a,b) => a.year-b.year || a.round-b.round || a.originalClubId.localeCompare(b.originalClubId));
 }
 
 function expectedPickSlot(G, pickAsset) {
@@ -8122,6 +8154,16 @@ function setUserDraftMode(G, mode) {
   return true;
 }
 
+function currentDraftAssetIntegrity(G,clubId=G.userClubGM?.clubId){
+  if(!G?.draftState||G.draftState.season!==G.season||!clubId)return{passed:true,live:[],assets:[]};
+  const live=G.draftState.queue.filter((entry,idx)=>{
+    if(idx<G.draftState.index)return false;
+    const asset=entry.pickId?(G.draftPicks||[]).find(p=>p.id===entry.pickId):null;
+    return (asset?.ownerClubId||entry.originalClubId)===clubId;
+  }).map(e=>e.pickId).filter(Boolean).sort();
+  const assets=(G.draftPicks||[]).filter(p=>p.year===G.season&&!p.consumed&&p.ownerClubId===clubId&&G.draftState.queue.some(e=>e.pickId===p.id)).map(p=>p.id).sort();
+  return {passed:live.length===assets.length&&live.every((id,i)=>id===assets[i]),live,assets};
+}
 function draftBoardSnapshot(G, limit=60) {
   for(const p of (G.draftPool||[])) normalizeProspectPotential(p);
   const ds=G.draftState; const pending=ds?.pendingUserPick||null;
@@ -10087,7 +10129,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.47.4 Draft Quick Mode",ENGINE_VERSION="E2.25-PROD16D";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.47.5 Draft Asset Integrity Fix",ENGINE_VERSION="E2.25-PROD16E";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10454,6 +10496,7 @@ async function loadSlot(slot){
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
     repairVerifiedNationalityAssignments(G);
+    repairOfficial2026DraftAssetIntegrity(G);
     reportCareerIntegrity("load");
 
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
