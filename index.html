@@ -8744,7 +8744,13 @@ function playerUsageWeight(player) {
   const role = player.rotationRole || "Rotation";
   const roleBoost = role === "Primary Starter" ? 1.58 : role === "Starter" ? 1.16 : role === "Sixth Man" ? 1.08 : 0.90;
   const quality=Math.max(8,(player.ovr||70)-38);
-  const eliteBoost=1;
+  // Elite talent should pull a bigger share of a team's shots than mere
+  // starter status alone implies — without this, a 97 OVR star and an 83
+  // OVR starter on the same role tier get almost the same usage weight,
+  // and the league's real scoring ceiling collapses toward the middle of
+  // the pack. Concentrated above 84 OVR so it separates genuine stars
+  // without dragging the whole league's usage up.
+  const eliteBoost=1+Math.max(0,(player.ovr||70)-84)*0.027;
   const identity=playerStatIdentity(player);
   return Math.max(1, Math.pow(quality, 1.22) * roleBoost * identity.usage * eliteBoost);
 }
