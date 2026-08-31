@@ -1848,7 +1848,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.6 Summer League Eligibility Integrity Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.7 Summer League Award Integrity Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -8155,6 +8155,16 @@ function setUserDraftMode(G, mode) {
   return true;
 }
 
+function summerLeagueAwardAudit(G){
+  const key=`S${G.season}_SummerLeagueMVP`,mvpId=G?.awards?.[key];
+  const p=mvpId?allPlayers(G).find(x=>x.id===mvpId):null;
+  const badMvp=!!p&&!summerLeagueAwardEligible(G,p);
+  const badLeaders=(G?.summerLeague?.leaders||[]).filter(x=>{
+    const q=allPlayers(G).find(p=>p.id===x.playerId);
+    return q&&!summerLeagueAwardEligible(G,q);
+  });
+  return{passed:!badMvp&&!badLeaders.length,badMvp:badMvp?p?.name:null,badLeaders:badLeaders.map(x=>x.name)};
+}
 function summerLeagueEligibilityAudit(G,clubId=G.userClubGM?.clubId){
   const live=G?.summerLeagueLive,team=live?.teams?.find(t=>t.clubId===clubId);
   if(!live||!team)return{passed:true,ineligible:[],resolved:0};
@@ -8278,7 +8288,8 @@ function summerLeagueSnapshot(G) {
       ...(c.gLeagueRoster||[]).filter(p=>p.summerLeagueStats?.gp>0)
     ]),
     ...(live.invitees||[]).filter(p=>p.summerLeagueStats?.gp>0)
-  ].filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+  ].filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i)
+   .filter(p=>summerLeagueAwardEligible(G,p));
   const ranked=[...participants].sort((a,b)=>summerPerformanceScore(b.summerLeagueStats)-summerPerformanceScore(a.summerLeagueStats));
   G.summerLeague={games:live.games,standings,leaders:ranked.slice(0,15).map(p=>({
     playerId:p.id,name:p.name,position:p.position,gp:p.summerLeagueStats.gp,
@@ -8349,6 +8360,49 @@ function summerLeagueInvitee(G,club,index,usedNames){
     injured:false,
     injury:null
   };
+}
+function summerLeagueAwardEligible(G,p){
+  if(!p)return false;
+  if(p.temporarySummerLeaguePlayer||p.summerLeagueInvitee)return true;
+  return summerLeagueEligibleDevelopmentPlayer(G,p);
+}
+function repairSummerLeagueAwardIntegrity(G){
+  if(!G)return{repaired:false,eligible:0};
+  const pool=[
+    ...G.clubs.flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),
+    ...(G.freeAgents||[]),
+    ...(G.summerLeagueLive?.invitees||[])
+  ].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i);
+
+  const eligible=pool.filter(p=>p.summerLeagueStats?.gp>0&&summerLeagueAwardEligible(G,p));
+  const ineligible=pool.filter(p=>p.summerLeagueStats?.gp>0&&!summerLeagueAwardEligible(G,p));
+
+  // Preserve historical game box scores, but stale/ineligible participants may
+  // not influence current Summer League leaders or awards.
+  const ranked=[...eligible].sort((a,b)=>summerPerformanceScore(b.summerLeagueStats)-summerPerformanceScore(a.summerLeagueStats));
+  const awardKey=`S${G.season}_SummerLeagueMVP`;
+  const currentMvp=G.awards?.[awardKey];
+  if(!G.awards)G.awards={};
+  if(!currentMvp||!eligible.some(p=>p.id===currentMvp)){
+    G.awards[awardKey]=ranked[0]?.id||null;
+  }
+
+  if(G.summerLeague){
+    G.summerLeague.leaders=ranked.slice(0,15).map(p=>({
+      playerId:p.id,name:p.name,position:p.position,gp:p.summerLeagueStats.gp,
+      ppg:Math.round(p.summerLeagueStats.pts/p.summerLeagueStats.gp*10)/10,
+      rpg:Math.round(p.summerLeagueStats.reb/p.summerLeagueStats.gp*10)/10,
+      apg:Math.round(p.summerLeagueStats.ast/p.summerLeagueStats.gp*10)/10,
+      performanceScore:Math.round(summerPerformanceScore(p.summerLeagueStats)*10)/10
+    }));
+  }
+  G.summerLeagueAwardIntegrity={
+    season:G.season,
+    eligibleParticipants:eligible.length,
+    excludedIneligible:ineligible.map(p=>({id:p.id,name:p.name,experience:inferredNbaExperienceYears(G,p)})),
+    repairedMvp:G.awards[awardKey]||null
+  };
+  return{repaired:true,eligible:eligible.length,excluded:ineligible.length};
 }
 function summerLeagueCandidateRoster(G,club){
   ensurePersistentGLeague(club);
@@ -10163,7 +10217,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.47.6 Summer League Eligibility Integrity Fix",ENGINE_VERSION="E2.25-PROD16F";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.47.7 Summer League Award Integrity Fix",ENGINE_VERSION="E2.25-PROD16G";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10532,6 +10586,7 @@ async function loadSlot(slot){
     repairVerifiedNationalityAssignments(G);
     repairOfficial2026DraftAssetIntegrity(G);
     repairActiveSummerLeagueEligibility(G);
+    repairSummerLeagueAwardIntegrity(G);
     reportCareerIntegrity("load");
 
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
@@ -12314,13 +12369,14 @@ function draftHomeContext(){
   return `<div class="card homeStatus"><div class="homeStatusBody"><h3>Your Draft Position</h3><p>Review your assets, roster needs and scouting recommendations before making your next selection.</p></div><div class="draftMetrics"><div class="draftMetric"><b>${pickText}</b><small>Your Picks</small></div><div class="draftMetric"><b>${prospects.length}</b><small>Prospects Left</small></div><div class="draftMetric"><b>${avg}</b><small>Class OVR Est Avg</small></div><div class="draftMetric"><b>${top}</b><small>Top OVR Est</small></div><div class="draftMetric"><b>${next}</b><small>Next Pick</small></div></div>${draftScoutBriefHtml(prospects,nextNum)}${homeActionHtml()}</div>`;
 }
 function summerLeagueCompletionHtml(){
+  repairSummerLeagueAwardIntegrity(G);
   const x=me(),sl=G.summerLeague||summerLeagueSnapshot(G),standings=sl?.standings||[];
   const idx=standings.findIndex(s=>s.clubId===x.id),userStanding=idx>=0?standings[idx]:null;
   const champ=sl?.championship,champClub=champ?.championClubId?c(champ.championClubId):null;
   const runner=champ?.runnerUpClubId?c(champ.runnerUpClubId):null;
   const finalGame=champ?.finalGameId?(sl.games||[]).find(g=>g.id===champ.finalGameId):null;
 
-  const summerPlayers=allPlayers(G).filter(p=>p.summerLeagueStats?.gp>0);
+  const summerPlayers=allPlayers(G).filter(p=>p.summerLeagueStats?.gp>0&&summerLeagueAwardEligible(G,p));
   const rate=(p,k)=>p.summerLeagueStats.gp?(p.summerLeagueStats[k]||0)/p.summerLeagueStats.gp:0;
   const mvpId=G.awards[`S${G.season}_SummerLeagueMVP`],mvp=summerPlayers.find(p=>p.id===mvpId)||null;
   const ppg=[...summerPlayers].sort((a,b)=>rate(b,"pts")-rate(a,"pts"))[0]||null;
