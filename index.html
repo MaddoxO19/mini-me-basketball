@@ -380,6 +380,12 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .contractTable.compact table{min-width:0;width:100%;table-layout:fixed}
 .contractTable.compact th:nth-child(1){width:31%}.contractTable.compact th:nth-child(2){width:20%}.contractTable.compact th:nth-child(3){width:10%}.contractTable.compact th:nth-child(4){width:13%}.contractTable.compact th:nth-child(5){width:13%}.contractTable.compact th:nth-child(6){width:13%}
 .contractPlayerMeta{display:block;color:var(--muted);font-size:7px;line-height:1.35;margin-top:3px}
+.contractTerm{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0;line-height:1.05}
+.contractTermCurrent{display:block;font-weight:850;white-space:nowrap}
+.contractTermExt{display:block;color:var(--accent2);font-size:6.5px;font-weight:900;letter-spacing:.03em;white-space:nowrap}
+.contractTable.compact td:nth-child(3){overflow:hidden;vertical-align:middle;padding-right:4px}
+.contractTable.compact th:nth-child(3){padding-right:4px}
+
 .contractBadge{display:inline-block;margin-top:4px;padding:2px 5px;border:1px solid #6d5327;border-radius:999px;color:var(--accent2);font-size:6.5px;font-weight:900}
 .contractTypeBadge{display:inline-block;margin-top:4px;padding:2px 5px;border:1px solid #35414d;border-radius:999px;color:var(--muted);font-size:6.5px;font-weight:850}
 .contractActions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}.contractActions .pick{margin:0;padding:6px 8px}
@@ -1782,7 +1788,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .draftTradeReturn b{display:block;font-size:10px}.draftTradeReturn small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.draftTradeReturn .btn{margin:0;width:auto}
 
 
-/* v0.1.46.8 — Three-Point Identity Calibration */
+/* v0.1.46.9 — Three-Point Identity Calibration */
 .injuryStatusHero,.injuryCentreHero{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:16px 18px;margin:8px 0 16px}
 .injuryStatusHero>div:first-child,.injuryCentreHero>div:first-child{min-width:0}
 .injuryStatusHero small,.injuryCentreHero .eyebrow{font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--accent2)}
@@ -1807,7 +1813,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .injuryCentreHero{align-items:flex-start}
 }
 
-/* v0.1.46.8 — Three-Point Identity Calibration */
+/* v0.1.46.9 — Three-Point Identity Calibration */
 .calendarLegend{display:flex;align-items:center;gap:5px;flex-wrap:wrap;color:var(--muted);font-size:8px;margin:8px 0 12px}
 .calTag{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:18px;border-radius:6px;padding:0 5px;font-size:7px;font-weight:950;letter-spacing:.45px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--text)}
 .calTag.sl{background:rgba(75,164,255,.13)}.calTag.pre{background:rgba(173,112,255,.13)}.calTag.reg{background:rgba(255,255,255,.08)}.calTag.cup{background:rgba(230,185,83,.16);color:var(--accent2)}.calTag.pi{background:rgba(255,139,74,.14)}.calTag.po{background:rgba(83,211,145,.13)}
@@ -1819,7 +1825,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.8</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.9</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1882,9 +1888,9 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.46.8 — Three-Point Identity Calibration: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
+// v0.1.46.9 — Three-Point Identity Calibration: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
 // v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
-// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.8 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.9 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -2493,7 +2499,7 @@ function derivePlayerBuild(player) {
 }
 
 // Statistical identity shapes where production goes; OVR still determines how good the player is.
-// v0.1.46.8: the deep identity is engine-controlled and persists independently of user edits.
+// v0.1.46.9: the deep identity is engine-controlled and persists independently of user edits.
 const STAT_IDENTITY_RARITY_CAPS={Generational:2,Exceptional:8,"Elite Specialist":24};
 const STAT_IDENTITY_SEEDS={
   "Giannis Antetokounmpo":{tier:"Exceptional",type:"Slashing Playmaking Force",mods:{usage:1.18,assist:1.28,rebound:1.18,foulDraw:1.42,threeRate:-.20,threeAccuracy:-.075,defensiveImpact:1.18,volatility:.96}},
@@ -5203,7 +5209,7 @@ function salaryMatchingCheck(G, A, B, aPlayers, bPlayers) {
 }
 
 
-// v0.1.46.8 — launch-roster integrity guard.
+// v0.1.46.9 — launch-roster integrity guard.
 // Every non-2026-draft source template must exist on its mapped Season 1 club.
 // This specifically protects LeBron James -> Lebron Haymes on Philadelphia,
 // while catching the same class of omission anywhere else.
@@ -5217,7 +5223,7 @@ function ensureLaunchRosterTemplateIntegrity(clubs){
       if(present.has(key))continue;
       const p=makeMappedPlayer(t,i,club.id);
       p.launchRosterIntegrityRepair=true;
-      p.launchRosterIntegrityRepairVersion="v0.1.46.8";
+      p.launchRosterIntegrityRepairVersion="v0.1.46.9";
       club.roster.push(p);
       present.add(key);
       repairs.push({clubId:club.id,sourceName:t.sourceName,playerName:p.name});
@@ -5237,7 +5243,7 @@ function launchRosterIntegrityAudit(clubs){
   const phi=(clubs||[]).find(c=>c.id==="PHI");
   const lebron=(phi?.roster||[]).find(p=>normalizeSourcePlayerName(p.sourceTemplateName)===normalizeSourcePlayerName("LeBron James"));
   return {
-    version:"v0.1.46.8",
+    version:"v0.1.46.9",
     missing,
     philadelphiaLeBronPresent:!!lebron,
     philadelphiaLeBronDisplayName:lebron?.name||null,
@@ -5258,7 +5264,7 @@ function makeCareer() {
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
   const freeAgents = [];
   const externalProfessionals = [];
-  // v0.1.46.8 — international professionals belong to an external
+  // v0.1.46.9 — international professionals belong to an external
   // professional market, not the NBA free-agent list. Their OVR can remain
   // strong because ability and NBA availability are now separate concepts.
   for (const nation of NATIONAL_TEAMS) {
@@ -5800,7 +5806,7 @@ function aiRosterFitSummary(club){
 }
 
 // ---------------------------------------------------------------------
-// PLAYER MARKET ARCHITECTURE — v0.1.46.8
+// PLAYER MARKET ARCHITECTURE — v0.1.46.9
 // Free Agent = immediately available to an NBA club.
 // External Professional = contracted outside the NBA ecosystem.
 // Developmental/G League = NBA-adjacent talent with bounded two-way OVR.
@@ -5840,7 +5846,7 @@ function ensurePlayerMarketState(G){
   }
   G.freeAgents=keep;
 
-  // v0.1.46.8 migration: older generated developmental players defaulted
+  // v0.1.46.9 migration: older generated developmental players defaulted
   // to zero/implicit service. Give only generated developmental identities
   // an explicit 0–4 year NBA service history and separate pro experience.
   const devPlayers=[
@@ -6727,7 +6733,7 @@ function ensureRosterCompliance(G, club, isUser=false) {
 
 
 function twoWayEligible(player) {
-  // v0.1.46.8 — ordinary two-way candidates are developmental players
+  // v0.1.46.9 — ordinary two-way candidates are developmental players
   // with no more than four seasons of NBA service. Professional experience
   // outside the NBA is tracked separately and does not consume NBA service.
   const exp=playerExperienceYears(player);
@@ -6999,24 +7005,27 @@ function retirementChance(player) {
   const roleFactor=(player.rotationRole==="starter"||(+player.targetMinutes||0)>=28)?0.82:(+player.targetMinutes||0)<=8?1.12:1.0;
   return Math.max(0,Math.min(1,chance*longevityFactor*qualityFactor*legacyFactor*roleFactor));
 }
-function advanceNbaExperienceForSeason(G,p){
-  if(!p||G.season<=1)return false;
-  if(+p.lastExperienceRolloverSeason===+G.season)return false;
-  const current=Math.max(0,Number.isFinite(+p.experienceYears)?+p.experienceYears:0);
-  const draftedInCareer=Number.isFinite(+p.draftYear)&&+p.draftYear>=1&&+p.draftYear<=+G.season;
-  const derived=draftedInCareer?Math.max(0,(+G.season)-(+p.draftYear)):current+1;
-  p.experienceYears=Math.max(current+1,derived);
-  p.lastExperienceRolloverSeason=+G.season;
-  return true;
+function inferredNbaExperienceYears(G,p){
+  if(!p)return 0;
+  const stored=Number.isFinite(+p.experienceYears)?Math.max(0,+p.experienceYears):0;
+  let derived=0;
+  const activeSeason=Number.isFinite(+G?.season)?+G.season:1;
+  if(Number.isFinite(+p.draftYear))derived=Math.max(derived,activeSeason-(+p.draftYear));
+  if(Number.isFinite(+p.undraftedSeason))derived=Math.max(derived,activeSeason-(+p.undraftedSeason));
+  if(Array.isArray(p.seasonHistory))derived=Math.max(derived,p.seasonHistory.length);
+  return Math.max(stored,derived);
 }
-function repairCareerDraftExperience(G,p){
-  if(!p)return false;
-  if(!Number.isFinite(+p.draftYear)||+p.draftYear<1||+p.draftYear>+G.season)return false;
-  const expected=Math.max(0,(+G.season)-(+p.draftYear));
-  const current=Math.max(0,Number.isFinite(+p.experienceYears)?+p.experienceYears:0);
-  if(current>=expected)return false;
-  p.experienceYears=expected;
-  p.lastExperienceRolloverSeason=+G.season;
+function creditNbaExperienceForCompletedSeason(G,p,completedSeason){
+  if(!p||!Number.isFinite(+completedSeason)||completedSeason<1)return false;
+  const last=Number.isFinite(+p.nbaExperienceLastCreditedSeason)?+p.nbaExperienceLastCreditedSeason:null;
+  if(last!=null&&last>=completedSeason)return false;
+  const stored=Number.isFinite(+p.experienceYears)?Math.max(0,+p.experienceYears):0;
+  let completedService=stored+1;
+  if(Number.isFinite(+p.draftYear))completedService=Math.max(completedService,completedSeason-(+p.draftYear)+1);
+  if(Number.isFinite(+p.undraftedSeason))completedService=Math.max(completedService,completedSeason-(+p.undraftedSeason)+1);
+  if(Array.isArray(p.seasonHistory))completedService=Math.max(completedService,p.seasonHistory.length);
+  p.experienceYears=Math.max(0,completedService);
+  p.nbaExperienceLastCreditedSeason=completedSeason;
   return true;
 }
 function runOffseason(G) {
@@ -7043,7 +7052,7 @@ function runOffseason(G) {
         for (const k of Object.keys(emptyRegularStats())) p.careerStats[k]=(p.careerStats[k]||0)+(p.seasonStats[k]||0);
       }
       p.seasonStats=emptyRegularStats(); p.playoffStats=emptyRegularStats(); p.recentForm=[]; p.fatigue=0;
-      if (completedSeason) advanceNbaExperienceForSeason(G,p);
+      if(completedSeason)creditNbaExperienceForCompletedSeason(G,p,G.season-1);
       if (completedSeason) {
         if ((p.contractYearsLeft||0)===1 && club.id !== G.userClubGM?.clubId && aiExtensionDecision(club,p)) {
           const add=p.age<=29?rand(2,4):rand(1,2),extSalary=salaryForOvr(p.ovr,p.age); queuePendingExtension(p,add,extSalary,G.season-1); summary.extended++;
@@ -7069,7 +7078,7 @@ function runOffseason(G) {
     for(const p of club.gLeagueRoster){p.age++;progressPlayerTalent(p,talentEraModifier(G),78,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.injured=false;p.injury=null;}
     club.twoWayRoster=club.twoWayRoster||[];
     const keptTwo=[];
-    for(const p of club.twoWayRoster){if(completedSeason)advanceNbaExperienceForSeason(G,p);p.age++;p.injured=false;p.injury=null;progressPlayerTalent(p,talentEraModifier(G),82,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
+    for(const p of club.twoWayRoster){if(completedSeason)creditNbaExperienceForCompletedSeason(G,p,G.season-1);p.age++;p.injured=false;p.injury=null;progressPlayerTalent(p,talentEraModifier(G),82,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.contractYearsLeft=Math.max(0,(p.contractYearsLeft||1)-1);if(p.contractYearsLeft<=0){p.contractType='Unsigned';p.contractStatus='Free Agent';p.salaryM=0;G.freeAgents.push(p);}else keptTwo.push(p);}
     club.twoWayRoster=keptTwo;
   }
 
@@ -7801,7 +7810,7 @@ function advanceDraftOneControlledPick(G){
   }
 
   let best=null,bestScore=-Infinity;
-  // v0.1.46.8 — Season 1 historical assignment is attached to the
+  // v0.1.46.9 — Season 1 historical assignment is attached to the
   // pick slot, not to the original team and not to a global "diverged" flag.
   // Trading another pick therefore changes only ownership of that slot.
   // If the assigned prospect has already been taken by a deliberate GM
@@ -8028,19 +8037,22 @@ function summerLeagueSnapshot(G) {
   return G.summerLeague;
 }
 
+function summerLeagueEligibleDevelopmentPlayer(G,p){
+  if(!p||(+p.age||99)>26)return false;
+  const exp=inferredNbaExperienceYears(G,p);
+  const recentDraft=Number.isFinite(+p.draftYear)&&(+p.draftYear)>=G.season-1;
+  const recentUndrafted=Number.isFinite(+p.undraftedSeason)&&(+p.undraftedSeason)>=G.season-1;
+  return exp<=1 || recentDraft || recentUndrafted;
+}
 function summerLeagueEligibleStandardPlayer(G,p){
-  if(!p)return false;
-  const exp=playerExperienceYears(p);
-  const draftedThisOrLastSeason=Number.isFinite(+p.draftYear)&&(+p.draftYear===+G.season||+p.draftYear===+G.season-1);
-  const rookieOrSoph=exp<=1||draftedThisOrLastSeason;
-  return rookieOrSoph && (+p.age||99)<=26;
+  return summerLeagueEligibleDevelopmentPlayer(G,p);
 }
 
 function summerLeagueCandidateRoster(G,club){
   ensurePersistentGLeague(club);
   const standard=(club.roster||[]).filter(p=>summerLeagueEligibleStandardPlayer(G,p));
-  const twoWay=(club.twoWayRoster||[]);
-  const affiliate=(club.gLeagueRoster||[]);
+  const twoWay=(club.twoWayRoster||[]).filter(p=>summerLeagueEligibleDevelopmentPlayer(G,p));
+  const affiliate=(club.gLeagueRoster||[]).filter(p=>summerLeagueEligibleDevelopmentPlayer(G,p));
   // Prefer actual NBA-contracted/developmental talent by OVR, but keep a
   // sensible mix. A newly converted two-way player remains Summer League
   // eligible because conversion changes contract type, not service history.
@@ -9109,10 +9121,7 @@ function advanceNBACupFinalEvent(G){
 function allStarCandidateScore(p){return summerPerformanceScore(p.seasonStats)+(p.ovr||0)*0.12;}
 function risingStarsExperienceYears(p,gameState=null){
   if(!p)return 99;
-  if(Number.isFinite(+p.experienceYears))return Math.max(0,+p.experienceYears);
-  if(Number.isFinite(+p.draftYear))return Math.max(0,((gameState?.season)||1)-(+p.draftYear));
-  if(Array.isArray(p.seasonHistory)&&p.seasonHistory.length)return Math.max(0,p.seasonHistory.length-1);
-  return 99;
+  return inferredNbaExperienceYears(gameState||G||CURRENT_GAME_STATE,p);
 }
 function risingStarsEligible(p,gameState=null){
   const yrs=risingStarsExperienceYears(p,gameState);
@@ -9792,7 +9801,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.46.9 NBA Experience & Summer League Integrity Fix",ENGINE_VERSION="E2.22-PROD13";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.46.9.1 NBA Experience Progression Fix",ENGINE_VERSION="E2.21-PROD12A";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10027,10 +10036,6 @@ function validateCareerIntegrityState(state=G){
     if(p?.contractStatus==="External League"||p?.contractType==="International")issues.push(`External professional ${p.name||p.id} is incorrectly stored as an NBA free agent.`);
   }
   for(const club of state.clubs||[])for(const p of club.roster||[]){
-    if(Number.isFinite(+p.draftYear)&&+p.draftYear>=1&&+p.draftYear<=+state.season){
-      const expectedExp=Math.max(0,(+state.season)-(+p.draftYear));
-      if((+p.experienceYears||0)<expectedExp)issues.push(`${p.name||p.id} has stale NBA experience: ${+p.experienceYears||0}, expected at least ${expectedExp}.`);
-    }
     if((+p.contractYearsLeft||0)<=0)issues.push(`${p.name||p.id} is on ${club.name} with no contract years remaining.`);
     if(p.pendingExtension&&(+p.contractYearsLeft||0)<(+p.pendingExtension.years||0))issues.push(`${p.name||p.id} has extension years greater than total years remaining.`);
   }
@@ -10038,19 +10043,21 @@ function validateCareerIntegrityState(state=G){
     if((+p.contractYearsLeft||0)>0)issues.push(`Free agent ${p.name||p.id} still has ${p.contractYearsLeft} contract year(s).`);
     if((+p.salaryM||0)>0&&p.contractType!=="International"&&p.contractStatus!=="External League")issues.push(`Free agent ${p.name||p.id} retains active contract salary $${(+p.salaryM).toFixed(1)}M.`);
   }
+  for(const club of state.clubs||[])for(const p of [...(club.roster||[]),...(club.twoWayRoster||[])]){
+    const exp=inferredNbaExperienceYears(state,p);
+    if(Number.isFinite(+p.draftYear)&&(+p.draftYear)<state.season-1&&exp<2)issues.push(`${p.name||p.id} has stale NBA experience (${exp}) from Draft Season ${p.draftYear}.`);
+  }
   return issues;
 }
 function repairCareerIntegrityState(state=G){
   if(!state)return[];
   state.awards=state.awards||{};state.transactions=state.transactions||[];state.log=state.log||[];
   for(const club of state.clubs||[]){club.roster=club.roster||[];club.twoWayRoster=club.twoWayRoster||[];club.gLeagueRoster=club.gLeagueRoster||[];}
-  let experienceRepairs=0;
-  for(const club of state.clubs||[]){
-    for(const p of club.roster||[])if(repairCareerDraftExperience(state,p))experienceRepairs++;
-    for(const p of club.twoWayRoster||[])if(repairCareerDraftExperience(state,p))experienceRepairs++;
+  for(const club of state.clubs||[])for(const p of [...club.roster,...club.twoWayRoster,...club.gLeagueRoster]){
+    const inferred=inferredNbaExperienceYears(state,p);
+    if(inferred>(+p.experienceYears||0))p.experienceYears=inferred;
+    if(Number.isFinite(+p.draftYear)&&inferred>0&&p.entryPath==="Draft Prospect")p.entryPath="Drafted";
   }
-  for(const p of state.freeAgents||[])if(repairCareerDraftExperience(state,p))experienceRepairs++;
-  if(experienceRepairs&&state===G)console.info(`Repaired NBA experience for ${experienceRepairs} career-drafted player(s).`);
   for(const p of state.freeAgents||[]){
     if((+p.contractYearsLeft||0)<=0&&p.contractType!=="International"&&p.contractStatus!=="External League"){
       p.contractYearsLeft=0;p.salaryM=0;p.contractType="Unsigned";p.contractStatus="Free Agent";p.extensionEligible=false;p.pendingExtension=null;
@@ -13825,17 +13832,8 @@ function bindDraftWindow(){
 }
 function playerExperienceYears(p){
   if(!p)return 0;
-  const currentSeason=Number.isFinite(+G?.season)?+G.season:(Number.isFinite(+CURRENT_GAME_STATE?.season)?+CURRENT_GAME_STATE.season:1);
-  const stored=Number.isFinite(+p.experienceYears)?Math.max(0,+p.experienceYears):0;
-  if(Number.isFinite(+p.draftYear)&&+p.draftYear>=1&&+p.draftYear<=currentSeason){
-    return Math.max(stored,Math.max(0,currentSeason-(+p.draftYear)));
-  }
-  if(Number.isFinite(+p.experienceYears))return stored;
-  if(Number.isFinite(+p.draftYear)){
-    return Math.max(0,currentSeason-(+p.draftYear));
-  }
-  if(Array.isArray(p.seasonHistory)&&p.seasonHistory.length)return p.seasonHistory.length;
-  return 0;
+  const gameState=(typeof G!=="undefined"&&G)||CURRENT_GAME_STATE||{season:1};
+  return inferredNbaExperienceYears(gameState,p);
 }
 function playerExperienceLabel(p){
   const yrs=playerExperienceYears(p);
@@ -13956,7 +13954,9 @@ function contracts(){
       const contractTag=p.type!=="Standard"?`<span class="contractTypeBadge">${p.type}</span>`:"";
       const extensionTag=p.pendingExtension?`<span class="contractBadge">Extension Agreed</span>`:(p.extensionEligible?`<span class="contractBadge">Extension Eligible</span>`:"");
       const currentYears=p.pendingExtension?Math.max(0,p.yearsLeft-(+p.pendingExtension.years||0)):p.yearsLeft;
-      const termLabel=p.pendingExtension?`${currentYears} yr current + ${p.pendingExtension.years} yr ext`:`${p.yearsLeft} yr`;
+      const termLabel=p.pendingExtension
+        ?`<span class="contractTerm" title="${currentYears} year current term plus ${p.pendingExtension.years} year extension"><span class="contractTermCurrent">${currentYears} yr</span><span class="contractTermExt">+${p.pendingExtension.years} yr EXT</span></span>`
+        :`<span class="contractTerm"><span class="contractTermCurrent">${p.yearsLeft} yr</span></span>`;
       return `<tr><td class="pname"><b>${playerNameLink(live)}</b><span class="contractPlayerMeta">${p.positionLabel} · Age ${p.age} · OVR ${p.ovr}</span>${contractTag}${extensionTag}</td>
         <td><span class="band">${p.rotationRole}</span><small class="market">${slot.label}</small></td>
         <td>${termLabel}</td>
