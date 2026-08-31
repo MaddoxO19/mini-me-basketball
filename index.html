@@ -1832,6 +1832,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlNationHubHero .intlCommandMetrics{margin:0!important;border-top:1px solid rgba(224,168,70,.30);padding:10px}
 .intlNationHubHero .intlCommandMetrics>div{border-color:rgba(224,168,70,.22)}
 .intlPageTitle{margin-bottom:10px}
+
+/* v0.1.47.0 — GM career mobility */
+.gmRecruitmentCard{max-width:620px}
+.gmOfferGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+.gmOfferGrid>div{border:1px solid var(--line);background:var(--panel2);border-radius:11px;padding:10px;text-align:center;min-width:0}
+.gmOfferGrid b{display:block;font-size:13px}.gmOfferGrid small{display:block;color:var(--muted);font-size:7px;margin-top:3px}
+.gmOfferNote{border-top:1px solid var(--line);padding-top:10px;color:var(--muted);font-size:8px;line-height:1.45}
+@media(max-width:430px){.gmOfferGrid{grid-template-columns:1fr 1fr}.gmRecruitmentCard h3{font-size:18px}}
 </style></head>
 <body>
 <div class="app">
@@ -5602,6 +5610,19 @@ function pushChaseMaddonArticle(G,title,body,{importance=2,tag="",flash=false,la
 }
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
+  if(n.type==="gm_recruitment"&&n.offer){
+    const o=n.offer;
+    return `<div class="newsFlashOverlay"><div class="newsFlashCard gmRecruitmentCard">
+      <div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM CAREER OPPORTUNITY</b></div><button type="button" id="closeNewsFlash">×</button></div>
+      <h3>${n.headline}</h3><p>${n.body||""}</p>
+      <div class="gmOfferGrid">
+        <div><b>${o.record}</b><small>Last Record</small></div><div><b>${o.squadOvr}</b><small>Squad OVR</small></div>
+        <div><b>${o.draftAssets}</b><small>3-Year Picks</small></div><div><b>${o.expectation}</b><small>Board Brief</small></div>
+      </div>
+      <div class="gmOfferNote">Your GM reputation, career record and national-team role remain with you. Club facilities remain with each organisation.</div>
+      <div class="newsFlashActions"><button id="acceptGMOffer">Accept Role</button><button id="declineGMOffer">Decline</button></div>
+    </div></div>`;
+  }
   if(n.analyst==="Chase Maddon"){
     const board=Array.isArray(n.board)&&n.board.length
       ?`<div class="cnOddsBoard">${n.board.map((x,i)=>`<div><span>${i+1}</span><b>${x.name}</b><strong>${x.value}</strong></div>`).join("")}</div>`:"";
@@ -5684,6 +5705,88 @@ function recordGMCareerSeason(G){
   if(gm.careerW>=250)addGMMilestone(G,"250 Career Wins");
   if(gm.careerW>=500)addGMMilestone(G,"500 Career Wins");
   return entry;
+}
+
+function gmRecruitmentState(G){
+  G.gmRecruitment=G.gmRecruitment||{lastOfferSeason:0,lastMoveSeason:0,lastDeclinedSeason:0,pending:null,history:[]};
+  G.gmRecruitment.history=G.gmRecruitment.history||[];
+  return G.gmRecruitment;
+}
+function gmRecruitmentVacancyScore(G,club,rep){
+  const w=+club?.standings?.w||0,l=+club?.standings?.l||0;
+  const games=w+l,pct=games?w/games:.5,ovr=squadOvr(club);
+  const history=(G.leagueHistory||[]).slice(-3).map(x=>x.clubRecords?.[club.id]).filter(Boolean);
+  const recentWins=history.length?history.reduce((a,x)=>a+(+x.w||0),0)/history.length:w;
+  let score=(42-recentWins)*1.15+(0.50-pct)*28;
+  if(ovr>=86&&w<44)score+=6;              // expensive/strong roster underperforming
+  if(rep>=82&&w>=42&&w<=52)score+=4;      // prestigious change for elite GMs
+  if(rep<75&&w>44)score-=12;              // established contenders rarely chase mid-tier GMs
+  return score;
+}
+function gmRecruitmentOfferChance(G,entry){
+  const rep=gmCareerState(G).reputation;
+  if(rep<55)return 0;
+  let chance=0.10+(rep-55)*0.012;
+  if((+entry?.w||0)>=50)chance+=0.10;
+  if(["Conference Finals","NBA Finals","NBA Champion"].includes(entry?.finish))chance+=0.14;
+  if(entry?.champion)chance+=0.12;
+  return Math.max(0.10,Math.min(0.68,chance));
+}
+function generateGMRecruitmentOffer(G){
+  const gm=gmCareerState(G),rs=gmRecruitmentState(G),entry=gm.seasons?.[gm.seasons.length-1];
+  if(!entry||gm.reputation<55||rs.pending)return null;
+  if(rs.lastOfferSeason===G.season||((+rs.lastMoveSeason||0)>0&&G.season-rs.lastMoveSeason<2))return null;
+  if(Math.random()>gmRecruitmentOfferChance(G,entry))return null;
+
+  const currentId=G.userClubGM?.clubId;
+  const candidates=(G.clubs||[]).filter(c=>c.id!==currentId).map(c=>({
+    club:c,score:gmRecruitmentVacancyScore(G,c,gm.reputation)+Math.random()*5
+  })).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+  if(!candidates.length)return null;
+
+  const target=candidates[0].club;
+  const w=+target.standings?.w||0,l=+target.standings?.l||0;
+  const cap=clubCapPosition(G,target.id);
+  const assets=(G.draftPicks||[]).filter(p=>!p.consumed&&p.ownerClubId===target.id&&p.year>=G.season&&p.year<=G.season+2).length;
+  const expectation=boardExpectation(target);
+  const offer={
+    id:`GMOFFER_S${G.season}_${target.id}`,season:G.season,targetClubId:target.id,targetClubName:target.name,
+    previousClubId:currentId,previousClubName:clubById(G,currentId)?.name||"Current Club",
+    record:`${w}-${l}`,squadOvr:squadOvr(target),capRoomM:+(cap?.capRoomM||0).toFixed(1),draftAssets:assets,
+    expectation:expectation.title,reputation:+gm.reputation||0,status:"Pending"
+  };
+  rs.pending=offer;rs.lastOfferSeason=G.season;
+  const body=`${target.name} have identified ${G.gmName||"your GM"} as their preferred basketball-operations candidate after your recent work with ${offer.previousClubName}. The board is offering full roster control for the next stage of the franchise.`;
+  const article=pushNewsArticle(G,`${target.name} make formal approach for ${G.gmName||"GM"}`,body,"GM",3,offer.id,false);
+  article.clubId=target.id;
+  G.newsFlashPending={
+    type:"gm_recruitment",offerId:offer.id,headline:`${target.name} want to recruit you`,body,category:"COURTSIDE NETWORK",
+    season:G.season,offer:{...offer}
+  };
+  return offer;
+}
+function acceptGMRecruitmentOffer(G){
+  const rs=gmRecruitmentState(G),offer=rs.pending;
+  if(!offer)return{ok:false,reason:"No active GM offer"};
+  const target=clubById(G,offer.targetClubId);if(!target)return{ok:false,reason:"Offering club is unavailable"};
+  const old=clubById(G,G.userClubGM?.clubId);
+  // Persist current organisation facilities, then switch the GM job.
+  ensureFrontOfficeState(G);
+  appointClubGM(G,target.id);
+  ensureFrontOfficeState(G);
+  rs.lastMoveSeason=G.season;offer.status="Accepted";rs.history.push({...offer,decisionSeason:G.season});
+  rs.pending=null;G.newsFlashPending=null;
+  pushNewsArticle(G,`${G.gmName||"GM"} accepts ${target.name} role`,`${G.gmName||"The GM"} has left ${old?.name||offer.previousClubName} to take control of basketball operations at ${target.name}. The GM career record and reputation continue across clubs.`,"GM",3,`GMMOVE_S${G.season}_${target.id}`,false);
+  logEvent(G,`GM career move: ${old?.name||offer.previousClubName} -> ${target.name}.`);
+  return{ok:true,clubId:target.id,clubName:target.name};
+}
+function declineGMRecruitmentOffer(G){
+  const rs=gmRecruitmentState(G),offer=rs.pending;
+  if(!offer)return{ok:false,reason:"No active GM offer"};
+  offer.status="Declined";rs.history.push({...offer,decisionSeason:G.season});
+  rs.lastDeclinedSeason=G.season;rs.pending=null;G.newsFlashPending=null;
+  pushNewsArticle(G,`${G.gmName||"GM"} remains with ${offer.previousClubName}`,`${G.gmName||"The GM"} has declined the approach from ${offer.targetClubName} and will continue the current project with ${offer.previousClubName}.`,"GM",2,`GMDECLINE_S${G.season}_${offer.targetClubId}`,false);
+  return{ok:true};
 }
 function snapshotLeagueSeason(G){
   G.leagueHistory=G.leagueHistory||[];
@@ -7262,35 +7365,70 @@ function runDraftDayTrades(G, round1OriginalOrder) {
 }
 
 
-function ensureFrontOfficeState(G){
-  G.frontOffice=G.frontOffice||{
-    points:0,lastAwardSeason:0,
-    departments:{training:1,medical:1,coaching:1}
-  };
-  G.frontOffice.departments=G.frontOffice.departments||{training:1,medical:1,coaching:1};
-  for(const k of ["training","medical","coaching"])G.frontOffice.departments[k]=Math.max(1,Math.min(5,+G.frontOffice.departments[k]||1));
-  G.frontOffice.points=Math.max(0,+G.frontOffice.points||0);
-
-  // v0.1.39.0 migration: the old economy awarded one point per completed season.
-  // Credit one additional point for each season that the save confirms was
-  // already awarded, preserving the new two-points-per-season economy fairly
-  // for existing careers without estimating seasons the old system did not record.
-  if(!G.frontOffice.facilitiesRebalanceApplied){
-    const confirmedOldAwards=Math.max(0,+G.frontOffice.lastAwardSeason||0);
-    G.frontOffice.points+=confirmedOldAwards;
-    G.frontOffice.facilitiesRebalanceApplied=true;
-    G.frontOffice.rebalanceCatchupPoints=confirmedOldAwards;
+function blankFrontOfficeState(){
+  return {points:0,lastAwardSeason:0,departments:{training:1,medical:1,coaching:1}};
+}
+function ensureFrontOfficeRegistry(G){
+  G.frontOfficeByClub=G.frontOfficeByClub||{};
+  if(!G.frontOfficeByClubMigrationApplied){
+    const clubId=G?.userClubGM?.clubId||"USER";
+    if(G.frontOffice&&!G.frontOfficeByClub[clubId])G.frontOfficeByClub[clubId]=G.frontOffice;
+    G.frontOfficeByClubMigrationApplied=true;
   }
-  return G.frontOffice;
+  return G.frontOfficeByClub;
+}
+function ensureClubFrontOfficeState(G,clubId){
+  const registry=ensureFrontOfficeRegistry(G),id=clubId||G?.userClubGM?.clubId||"USER";
+  if(!registry[id])registry[id]=blankFrontOfficeState();
+  const fo=registry[id];
+  fo.departments=fo.departments||{training:1,medical:1,coaching:1};
+  for(const k of ["training","medical","coaching"])fo.departments[k]=Math.max(1,Math.min(5,+fo.departments[k]||1));
+  fo.points=Math.max(0,+fo.points||0);
+  fo.lastAwardSeason=Math.max(0,+fo.lastAwardSeason||0);
+
+  if(!fo.facilitiesRebalanceApplied){
+    const confirmedOldAwards=Math.max(0,+fo.lastAwardSeason||0);
+    fo.points+=confirmedOldAwards;
+    fo.facilitiesRebalanceApplied=true;
+    fo.rebalanceCatchupPoints=confirmedOldAwards;
+  }
+  if(!fo.facilitiesTenYearRebalanceApplied){
+    const gm=gmCareerState(G);
+    const successful=(gm.seasons||[]).filter(x=>
+      x.clubId===id &&
+      (+x.season||0)<=fo.lastAwardSeason &&
+      ((+x.w||0)>=50 || ["Conference Semifinals","Conference Finals","NBA Finals","NBA Champion"].includes(x.finish) || x.cupChampion)
+    ).length;
+    fo.points+=successful;
+    fo.facilitiesTenYearRebalanceApplied=true;
+    fo.tenYearCatchupPoints=successful;
+  }
+  return fo;
+}
+function ensureFrontOfficeState(G){
+  const fo=ensureClubFrontOfficeState(G,G?.userClubGM?.clubId||"USER");
+  G.frontOffice=fo; // legacy alias to the currently managed organisation
+  return fo;
 }
 function awardFrontOfficeSeasonPoint(G,completedSeason){
-  const fo=ensureFrontOfficeState(G);
-  if(!completedSeason)return fo;
+  if(!completedSeason)return ensureFrontOfficeState(G);
   const seasonJustCompleted=Math.max(1,(G.season||1)-1);
+  const gm=gmCareerState(G);
+  const result=(gm.seasons||[]).find(x=>x.season===seasonJustCompleted);
+  const clubId=result?.clubId||G.userClubGM?.clubId;
+  const fo=ensureClubFrontOfficeState(G,clubId);
   if((fo.lastAwardSeason||0)<seasonJustCompleted){
-    fo.points+=2;
+    const successBonus=result&&(
+      (+result.w||0)>=50 ||
+      ["Conference Semifinals","Conference Finals","NBA Finals","NBA Champion"].includes(result.finish) ||
+      result.cupChampion
+    )?1:0;
+    fo.points+=2+successBonus;
     fo.lastAwardSeason=seasonJustCompleted;
+    fo.lastSeasonAward={season:seasonJustCompleted,clubId,base:2,successBonus,total:2+successBonus};
   }
+  // Restore legacy alias to whichever organisation the GM currently manages.
+  G.frontOffice=ensureClubFrontOfficeState(G,G.userClubGM?.clubId||clubId);
   return fo;
 }
 function frontOfficeUpgradeCost(level){return Math.max(1,level);}
@@ -7308,7 +7446,8 @@ function frontOfficePointsInvested(fo){
 function frontOfficeProgressInfo(G){
   const fo=ensureFrontOfficeState(G),total=frontOfficeTotalUpgradeInvestment(),invested=frontOfficePointsInvested(fo);
   const remaining=Math.max(0,total-invested);
-  return {total,invested,remaining,seasonsAtCurrentRate:Math.ceil(Math.max(0,remaining-fo.points)/2)};
+  const needed=Math.max(0,remaining-fo.points);
+  return {total,invested,remaining,seasonsAtCurrentRate:Math.ceil(needed/2),seasonsAtSuccessfulRate:Math.ceil(needed/3)};
 }
 
 function frontOfficeLevelForClub(club,key,gameState=null){
@@ -9848,6 +9987,7 @@ function runChampion(G) {
   G.playoffs=null;
   G.season++;
   if(typeof resetNewsViewForNewSeason==="function")resetNewsViewForNewSeason();
+  generateGMRecruitmentOffer(G);
   G.draftState=null;
   if(G.worldCupLive?.complete) G.worldCupLive=null;
   ensureDraftPickHorizon(G);
@@ -9935,13 +10075,13 @@ function simSeasons(G, count) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, aiTeamDirection, rosterPositionNeed, aiRosterFitSummary, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
+  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, aiTeamDirection, rosterPositionNeed, aiRosterFitSummary, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, gmRecruitmentState, generateGMRecruitmentOffer, acceptGMRecruitmentOffer, declineGMRecruitmentOffer, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
 }
 
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.46.14 GM Header Cleanup",ENGINE_VERSION="E2.24-PROD15C";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.47.0 GM Career Mobility & Facilities Rebalance",ENGINE_VERSION="E2.25-PROD16";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13725,7 +13865,7 @@ function clubHub(){
 function gmBrief(){
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   let x=me(),gm=gmCareerState(G),expect=boardExpectation(x),rank=leaguePowerRank(x),ovr=squadOvr(x);
-  return `${header("GM Brief",`${x.name} · Basketball Operations`,false)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div>`;
+  return `${header("GM Brief",`${x.name} · Basketball Operations`,false)}<div class="briefHero"><div class="eyebrow">General Manager</div><h3>${G.gmName||"GM"} · ${gmReputationBand(gm.reputation)}</h3><p>Season ${G.season} · ${x.name}</p></div><div class="briefGrid"><div class="briefStat"><b>${ovr}</b><small>Squad OVR</small></div><div class="briefStat"><b>#${rank}</b><small>Power Rank</small></div><div class="briefStat"><b>${gm.reputation}</b><small>Reputation</small></div></div><div class="sectionTitle">GM Intelligence</div><div class="card"><div class="expectation"><small>BOARD EXPECTATION</small><b>${expect.title}</b><p>${expect.copy}</p></div><div class="expectation"><small>COURTSIDE NETWORK PROJECTION</small><b>${mediaExpectation(x)}</b><p>Current roster strength ranks ${rank}${rank===1?"st":rank===2?"nd":rank===3?"rd":"th"} across the league entering this phase.</p></div><div class="expectation"><small>ROSTER POSITION</small><b>${x.roster.length}/15 standard roster · ${(x.twoWayRoster||[]).length}/3 two-way</b><p>${G.settings.salaryCap?"Salary-cap rules are active.":"Salary-cap restrictions are disabled for this career."}</p></div></div>${gmRecruitmentState(G).pending?`<div class="sectionTitle">Career Opportunity</div><div class="card"><div class="more"><div><b>${gmRecruitmentState(G).pending.targetClubName}</b><small>Formal GM approach · ${gmRecruitmentState(G).pending.record} · ${gmRecruitmentState(G).pending.squadOvr} OVR</small></div><button id="reopenGMOffer" class="btn ghost">Review</button></div></div>`:""}`;
 }
 function gmProfile(){
   const club=me(),gm=gmCareerState(G),history=[...(G.seasonSummaries||[])].slice().reverse();
@@ -13738,6 +13878,7 @@ function gmProfile(){
     <div class="gmCareerMetrics"><div><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div><b>${winPct}${winPct!=="—"?"%":""}</b><small>Win Rate</small></div><div><b>${gm.playoffAppearances||0}</b><small>Playoffs</small></div><div><b>${seasons}</b><small>Seasons</small></div></div>
     <div class="sectionTitle">Career Honours</div><div class="card"><div class="more"><div><b>NBA Championships</b><small>GM career honours</small></div><b>${gm.championships||0}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>GM career honours</small></div><b>${gm.cupTitles||0}</b></div><div class="more"><div><b>National Honours</b><small>International career</small></div><b>${gm.nationalHonours||0}</b></div></div>
     <div class="sectionTitle">Career History</div><div class="card">${recent.length?recent.map(x=>`<div class="seasonHistoryRow"><b>Season ${x.season} · ${x.user?.clubName||club?.name||"Club"}</b><small>${x.user?.record||"—"} · ${x.user?.postseasonFinish||"Season complete"}${x.user?.champion?" · NBA Champion":""}${x.user?.cupChampion?" · NBA Cup":""}</small></div>`).join(""):`<div class="empty">Career history will build as seasons are completed.</div>`}</div>
+    <div class="sectionTitle">Club Appointments</div><div class="card">${(gm.jobs||[]).length?(gm.jobs||[]).slice().reverse().map(j=>`<div class="seasonHistoryRow"><b>${j.clubName}</b><small>Season ${j.startSeason}${j.endSeason==null?" – Present":` – Season ${Math.max(j.startSeason,j.endSeason-1)}`}</small></div>`).join(""):`<div class="empty">Your first club appointment is active.</div>`}</div>
     <div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div>
     <div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><button id="debugNow" class="btn ghost gmBuildDebug">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
@@ -14802,12 +14943,12 @@ function frontOfficePage(embedded=false){
     return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
   const progress=frontOfficeProgressInfo(G);
-  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn two development points after each completed season, then choose where to build the organisation. Training, Medical and Coaching each provide persistent on-court or player-development effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
-    <div class="foProgressCard"><div><small>ORGANISATIONAL BUILD</small><b>${progress.invested}/${progress.total} points invested</b><span>${progress.remaining===0?"All Front Office departments are fully developed.":`${progress.remaining} points remain to fully max Training, Medical and Coaching.`}</span></div><strong>${progress.remaining===0?"MAX":`~${progress.seasonsAtCurrentRate} SEASONS`}</strong></div>
+  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><h3>${fo.points} Development Point${fo.points===1?"":"s"} Available</h3><p>Earn two development points after each completed season, plus a third performance point after a 50-win season, Conference Semifinals-or-better run, or NBA Cup title. Training, Medical and Coaching provide persistent organisational effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+    <div class="foProgressCard"><div><small>ORGANISATIONAL BUILD</small><b>${progress.invested}/${progress.total} points invested</b><span>${progress.remaining===0?"All Front Office departments are fully developed.":`${progress.remaining} points remain to fully max Training, Medical and Coaching.`}</span></div><strong>${progress.remaining===0?"MAX":`~${progress.seasonsAtSuccessfulRate}–${progress.seasonsAtCurrentRate} SEASONS`}</strong></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
     <div class="foScoutCard"><div><small>SCOUTING OPERATES THROUGH EXPERIENCE</small><b>Level ${scout.level} · ${scout.name}</b><p>${scout.description}. Scouting improves organically by completing drafts and building organisational knowledge.</p></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>
-    <div class="foEconomyNote"><b>Development Economy</b><span>Each completed season now awards 2 Development Points. From Level 1, fully developing all three Front Office departments requires 30 points, or approximately 15 completed seasons before accounting for points already earned or invested.</span></div>`;
+    <div class="foEconomyNote"><b>Development Economy</b><span>Each completed season awards 2 Development Points, with a third performance point for a 50-win season, a Conference Semifinals-or-better run, or an NBA Cup title. A consistently successful GM can fully develop the organisation in roughly 8–10 seasons; average careers will take longer.</span></div>`;
   return embedded?content:header("Front Office","Long-term club infrastructure and department development")+content;
 }
 
@@ -15044,6 +15185,8 @@ function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
+  if($("#acceptGMOffer"))$("#acceptGMOffer").onclick=async()=>{const r=acceptGMRecruitmentOffer(G);if(!r.ok){toast(r.reason);return;}ui.page="home";ui.clubTab="current";await save();toast(`You are now GM of ${r.clubName}`);render()};
+  if($("#declineGMOffer"))$("#declineGMOffer").onclick=async()=>{declineGMRecruitmentOffer(G);await save();toast("GM offer declined");render()};
   $$("a[data-playerprofile]").forEach(a=>a.onclick=e=>openPlayerProfileDirect(a.dataset.playerprofile,e));
   $$("a[data-clubprofile]").forEach(a=>a.onclick=e=>openClubProfileDirect(a.dataset.clubprofile,e));
   $$("[data-scoutgroup]").forEach(b=>b.onclick=()=>{ui.scoutGroup=b.dataset.scoutgroup;render()});
@@ -15055,6 +15198,7 @@ function bind(){
   });
   $$("[data-factab]").forEach(b=>b.onclick=()=>{ui.page="facilities";ui.facilitiesTab=b.dataset.factab;render()});
   if($("#openGmProfile"))$("#openGmProfile").onclick=()=>{ui.page="gmProfile";render()};
+  if($("#reopenGMOffer"))$("#reopenGMOffer").onclick=()=>{const o=gmRecruitmentState(G).pending;if(!o)return;G.newsFlashPending={type:"gm_recruitment",offerId:o.id,headline:`${o.targetClubName} want to recruit you`,body:`${o.targetClubName} have made a formal approach for ${G.gmName||"your GM"} to lead basketball operations.`,category:"COURTSIDE NETWORK",season:G.season,offer:{...o}};render()};
   if($("#openFrontOffice"))$("#openFrontOffice").onclick=()=>{ui.page="facilities";ui.facilitiesTab="frontoffice";render()};
   if($("#frontOfficeBack"))$("#frontOfficeBack").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
   $$("[data-foupgrade]").forEach(b=>b.onclick=()=>{
