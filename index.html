@@ -1848,7 +1848,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.5 Draft Asset Integrity Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.6 Summer League Eligibility Integrity Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -7198,8 +7198,9 @@ function inferredNbaExperienceYears(G,p){
   // stored value, so never allow them to fall below launch service + elapsed seasons.
   const sourceName=p.sourceTemplateName||p.sourceName||null;
   const launchBio=verifiedProductionBioRecord(sourceName);
-  const isEstablishedLaunch=!!launchBio && !Number.isFinite(+p.draftYear) && !Number.isFinite(+p.undraftedSeason);
-  if(isEstablishedLaunch){
+  if(launchBio){
+    // Verified 2026/27 NBA service is authoritative for launch players.
+    // Historical draft metadata must never reset or bypass established service.
     derived=Math.max(derived,Math.max(0,+launchBio.experienceYears||0)+Math.max(0,activeSeason-1));
   }
   return Math.max(stored,derived);
@@ -8154,6 +8155,19 @@ function setUserDraftMode(G, mode) {
   return true;
 }
 
+function summerLeagueEligibilityAudit(G,clubId=G.userClubGM?.clubId){
+  const live=G?.summerLeagueLive,team=live?.teams?.find(t=>t.clubId===clubId);
+  if(!live||!team)return{passed:true,ineligible:[],resolved:0};
+  const pool=[
+    ...G.clubs.flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),
+    ...(G.freeAgents||[]),
+    ...(live.invitees||[])
+  ];
+  const roster=(team.playerIds||[]).map(id=>pool.find(p=>p.id===id)).filter(Boolean);
+  const ineligible=roster.filter(p=>!p.temporarySummerLeaguePlayer&&!summerLeagueEligibleDevelopmentPlayer(G,p))
+    .map(p=>({id:p.id,name:p.name,source:p.sourceTemplateName||null,experience:inferredNbaExperienceYears(G,p)}));
+  return{passed:ineligible.length===0&&roster.length>=10,resolved:roster.length,ineligible};
+}
 function currentDraftAssetIntegrity(G,clubId=G.userClubGM?.clubId){
   if(!G?.draftState||G.draftState.season!==G.season||!clubId)return{passed:true,live:[],assets:[]};
   const live=G.draftState.queue.filter((entry,idx)=>{
@@ -8280,10 +8294,16 @@ function summerLeagueEligibleDevelopmentPlayer(G,p){
   if(!p||(+p.age||99)>26)return false;
   const sourceName=p.sourceTemplateName||p.sourceName||null;
   const launchBio=verifiedProductionBioRecord(sourceName);
-  const establishedLaunch=!!launchBio && !Number.isFinite(+p.draftYear) && !Number.isFinite(+p.undraftedSeason);
-  if(establishedLaunch && (+launchBio.experienceYears||0)>1)return false;
+
+  // Launch-player service is authoritative. Established NBA players do not
+  // regain Summer League eligibility because of draftYear, origin or stale saves.
+  if(launchBio&&(+launchBio.experienceYears||0)>1)return false;
 
   const exp=inferredNbaExperienceYears(G,p);
+  if(exp>1)return false;
+
+  // Genuine current rookies/sophomores remain eligible. Recent draft/undrafted
+  // markers support procedural players whose stored service has not yet rolled.
   const recentDraft=Number.isFinite(+p.draftYear)&&(+p.draftYear)>=G.season-1;
   const recentUndrafted=Number.isFinite(+p.undraftedSeason)&&(+p.undraftedSeason)>=G.season-1;
   return exp<=1 || recentDraft || recentUndrafted;
@@ -8355,6 +8375,20 @@ function summerLeagueCandidateRoster(G,club){
     .slice(0,target);
 }
 
+function repairActiveSummerLeagueEligibility(G){
+  const live=G?.summerLeagueLive;
+  if(!live||live.complete||live.season!==G.season)return 0;
+  let changed=0;
+  for(const team of live.teams||[]){
+    const club=clubById(G,team.clubId);
+    if(!club)continue;
+    const before=(team.playerIds||[]).join("|");
+    syncSummerLeagueRosterForClub(G,team.clubId);
+    const after=(team.playerIds||[]).join("|");
+    if(before!==after)changed++;
+  }
+  return changed;
+}
 function syncSummerLeagueRosterForClub(G,clubId){
   const live=G?.summerLeagueLive;
   if(!live || live.complete || live.season!==G.season)return false;
@@ -10129,7 +10163,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.47.5 Draft Asset Integrity Fix",ENGINE_VERSION="E2.25-PROD16E";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.47.6 Summer League Eligibility Integrity Fix",ENGINE_VERSION="E2.25-PROD16F";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -10497,6 +10531,7 @@ async function loadSlot(slot){
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
     repairVerifiedNationalityAssignments(G);
     repairOfficial2026DraftAssetIntegrity(G);
+    repairActiveSummerLeagueEligibility(G);
     reportCareerIntegrity("load");
 
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
