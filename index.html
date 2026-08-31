@@ -1788,7 +1788,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .draftTradeReturn b{display:block;font-size:10px}.draftTradeReturn small{display:block;color:var(--muted);font-size:7px;margin-top:2px}.draftTradeReturn .btn{margin:0;width:auto}
 
 
-/* v0.1.46.12 — Three-Point Identity Calibration */
+/* v0.1.46.13 — Three-Point Identity Calibration */
 .injuryStatusHero,.injuryCentreHero{display:flex;align-items:center;justify-content:space-between;gap:14px;border:1px solid var(--line);background:var(--card);border-radius:18px;padding:16px 18px;margin:8px 0 16px}
 .injuryStatusHero>div:first-child,.injuryCentreHero>div:first-child{min-width:0}
 .injuryStatusHero small,.injuryCentreHero .eyebrow{font-size:10px;font-weight:900;letter-spacing:1.4px;color:var(--accent2)}
@@ -1813,7 +1813,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .injuryCentreHero{align-items:flex-start}
 }
 
-/* v0.1.46.12 — Three-Point Identity Calibration */
+/* v0.1.46.13 — Three-Point Identity Calibration */
 .calendarLegend{display:flex;align-items:center;gap:5px;flex-wrap:wrap;color:var(--muted);font-size:8px;margin:8px 0 12px}
 .calTag{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:18px;border-radius:6px;padding:0 5px;font-size:7px;font-weight:950;letter-spacing:.45px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--text)}
 .calTag.sl{background:rgba(75,164,255,.13)}.calTag.pre{background:rgba(173,112,255,.13)}.calTag.reg{background:rgba(255,255,255,.08)}.calTag.cup{background:rgba(230,185,83,.16);color:var(--accent2)}.calTag.pi{background:rgba(255,139,74,.14)}.calTag.po{background:rgba(83,211,145,.13)}
@@ -1823,10 +1823,19 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .injuryStatusHero>div:last-child strong{font-size:17px;white-space:nowrap}
 @media(max-width:620px){.scheduleGame.compact{grid-template-columns:84px minmax(0,1fr) 54px}.scheduleDate{min-width:0;display:grid;gap:3px}.scheduleDate .calTag{width:max-content}.scheduleDate>b{font-size:9px}}
 .homeMainMenuExit{margin:18px 0 10px;padding-bottom:4px}.homeMainMenuExit .btn{width:100%;min-height:52px}.gmBuildDebug{margin-top:12px;width:100%}
+
+
+/* v0.1.46.13 — Club & International header alignment */
+.clubPageTitle + .clubMainTabs,.intlPageTitle + .intlMainTabs{margin-top:0;margin-bottom:12px}
+.intlNationHubHero{border:1px solid rgba(224,168,70,.56);border-radius:18px;overflow:hidden;background:linear-gradient(180deg,rgba(224,168,70,.055),rgba(18,23,31,.16));margin-bottom:14px}
+.intlNationHubHero .intlCommandHero{border:0!important;border-radius:0!important;margin:0!important;background:transparent!important}
+.intlNationHubHero .intlCommandMetrics{margin:0!important;border-top:1px solid rgba(224,168,70,.30);padding:10px}
+.intlNationHubHero .intlCommandMetrics>div{border-color:rgba(224,168,70,.22)}
+.intlPageTitle{margin-bottom:10px}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.12</div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball v0.1.46.13</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1889,9 +1898,9 @@ const FIBA_INITIAL_RATINGS={
   SYR:{rank:74,zoneRank:12,pts:183.8},IND:{rank:75,zoneRank:13,pts:170.8},QAT:{rank:76,zoneRank:14,pts:169.3},GUM:{rank:77,zoneRank:15,pts:160.2},JAM:{rank:78,zoneRank:16,pts:157.7},UGA:{rank:79,zoneRank:13,pts:154.8},IRQ:{rank:81,zoneRank:17,pts:149.5},RWA:{rank:82,zoneRank:14,pts:148.1},LBY:{rank:89,zoneRank:15,pts:133.2},MAD:{rank:90,zoneRank:16,pts:126.8}
 };
 
-// v0.1.46.12 — Three-Point Identity Calibration: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
+// v0.1.46.13 — Three-Point Identity Calibration: Spotrac-priority verification, explicit unresolved free-agent/transition provenance, and 30-team payroll/cap QA.
 // v0.1.45.15.0 — Phase B contract import foundation: verified 2026/27 established-player salary schedules, provenance, payroll audit and Season 2 salary rollover.
-// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.12 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
+// v0.1.45.14.2 — family identity fix: LeBron James and Bronny James fictionalise consistently as LeBron Haymes and Bronny Haymes Jr., with father/son metadata retained.\n// v0.1.46.13 — launch-roster integrity hotfix: guarantees LeBron James/Lebron Haymes and every active source template survives new-career construction.\n// v0.1.45.14 — official 2026/27 cap foundation: cap, floor, tax, aprons and MLEs; player-contract import remains separate.\n// v0.1.45.13 — OVR/POT source verification: 2K27 provenance, 3 recovered rookie OVRs, POT-source clarification, runtime audit.\n// v0.1.45.12 — final jersey consolidation; OVR-priority conflict resolution + fallback assignment.\n// v0.1.45.11 — Western Conference verified jersey tranche + league-wide jersey coverage audit.\n// v0.1.45.10 — Central + Southeast verified jersey tranche; Atlantic framework retained.\n// v0.1.45.9 — jersey-number foundation + Atlantic verified tranche + collision-safe assignment.\n// v0.1.45.8 — launch-data consolidation: 100% active bio coverage, complete 60-player 2026 Draft bio overlay, canonical draft IDs, runtime coverage audit.\n// v0.1.45.7 — verified age/experience audit Tranche 6 (Dallas, Houston, Memphis, New Orleans, San Antonio); 30-team divisional audit complete.\n// v0.1.45.6 — verified age/experience audit Tranche 5 (Pacific); canonical 2026 draft-rights ID correction.\n// v0.1.45.5 — verified age/experience audit Tranche 4 (Denver, Minnesota, Oklahoma City, Portland, Utah).\n// v0.1.45.4 — verified age/experience audit Tranche 3 (Atlanta, Charlotte, Miami, Orlando, Washington).\n// v0.1.45.3 — verified age/experience audit Tranche 2 (Cleveland, Detroit, Indiana, Milwaukee).\n// v0.1.45.2 — verified age/experience audit Tranche 1 (Atlantic core + Chicago).\n// v0.1.45.1 — 2026 Draft restoration, launch-rights snapshot, and age guardrails.
 // v0.1.45.0 — 2026/27 career baseline expansion and provenance framework.
 // v0.1.44.0 — 2026/27 launch rookie calibration.
 // Retains v0.1.43.0 historical universe & active career baselines.
@@ -2500,7 +2509,7 @@ function derivePlayerBuild(player) {
 }
 
 // Statistical identity shapes where production goes; OVR still determines how good the player is.
-// v0.1.46.12: the deep identity is engine-controlled and persists independently of user edits.
+// v0.1.46.13: the deep identity is engine-controlled and persists independently of user edits.
 const STAT_IDENTITY_RARITY_CAPS={Generational:2,Exceptional:8,"Elite Specialist":24};
 const STAT_IDENTITY_SEEDS={
   "Giannis Antetokounmpo":{tier:"Exceptional",type:"Slashing Playmaking Force",mods:{usage:1.18,assist:1.28,rebound:1.18,foulDraw:1.42,threeRate:-.20,threeAccuracy:-.075,defensiveImpact:1.18,volatility:.96}},
@@ -5214,7 +5223,7 @@ function salaryMatchingCheck(G, A, B, aPlayers, bPlayers) {
 }
 
 
-// v0.1.46.12 — launch-roster integrity guard.
+// v0.1.46.13 — launch-roster integrity guard.
 // Every non-2026-draft source template must exist on its mapped Season 1 club.
 // This specifically protects LeBron James -> Lebron Haymes on Philadelphia,
 // while catching the same class of omission anywhere else.
@@ -5228,7 +5237,7 @@ function ensureLaunchRosterTemplateIntegrity(clubs){
       if(present.has(key))continue;
       const p=makeMappedPlayer(t,i,club.id);
       p.launchRosterIntegrityRepair=true;
-      p.launchRosterIntegrityRepairVersion="v0.1.46.12";
+      p.launchRosterIntegrityRepairVersion="v0.1.46.13";
       club.roster.push(p);
       present.add(key);
       repairs.push({clubId:club.id,sourceName:t.sourceName,playerName:p.name});
@@ -5248,7 +5257,7 @@ function launchRosterIntegrityAudit(clubs){
   const phi=(clubs||[]).find(c=>c.id==="PHI");
   const lebron=(phi?.roster||[]).find(p=>normalizeSourcePlayerName(p.sourceTemplateName)===normalizeSourcePlayerName("LeBron James"));
   return {
-    version:"v0.1.46.12",
+    version:"v0.1.46.13",
     missing,
     philadelphiaLeBronPresent:!!lebron,
     philadelphiaLeBronDisplayName:lebron?.name||null,
@@ -5269,7 +5278,7 @@ function makeCareer() {
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
   const freeAgents = [];
   const externalProfessionals = [];
-  // v0.1.46.12 — international professionals belong to an external
+  // v0.1.46.13 — international professionals belong to an external
   // professional market, not the NBA free-agent list. Their OVR can remain
   // strong because ability and NBA availability are now separate concepts.
   for (const nation of NATIONAL_TEAMS) {
@@ -5811,7 +5820,7 @@ function aiRosterFitSummary(club){
 }
 
 // ---------------------------------------------------------------------
-// PLAYER MARKET ARCHITECTURE — v0.1.46.12
+// PLAYER MARKET ARCHITECTURE — v0.1.46.13
 // Free Agent = immediately available to an NBA club.
 // External Professional = contracted outside the NBA ecosystem.
 // Developmental/G League = NBA-adjacent talent with bounded two-way OVR.
@@ -5851,7 +5860,7 @@ function ensurePlayerMarketState(G){
   }
   G.freeAgents=keep;
 
-  // v0.1.46.12 migration: older generated developmental players defaulted
+  // v0.1.46.13 migration: older generated developmental players defaulted
   // to zero/implicit service. Give only generated developmental identities
   // an explicit 0–4 year NBA service history and separate pro experience.
   const devPlayers=[
@@ -6763,7 +6772,7 @@ function ensureRosterCompliance(G, club, isUser=false) {
 
 
 function twoWayEligible(player) {
-  // v0.1.46.12 — ordinary two-way candidates are developmental players
+  // v0.1.46.13 — ordinary two-way candidates are developmental players
   // with no more than four seasons of NBA service. Professional experience
   // outside the NBA is tracked separately and does not consume NBA service.
   const exp=playerExperienceYears(player);
@@ -7850,7 +7859,7 @@ function advanceDraftOneControlledPick(G){
   }
 
   let best=null,bestScore=-Infinity;
-  // v0.1.46.12 — Season 1 historical assignment is attached to the
+  // v0.1.46.13 — Season 1 historical assignment is attached to the
   // pick slot, not to the original team and not to a global "diverged" flag.
   // Trading another pick therefore changes only ownership of that slot.
   // If the assigned prospect has already been taken by a deliberate GM
@@ -8747,7 +8756,7 @@ function playerUsageWeight(player) {
   const ovr=Math.max(50,Math.min(99,+player.ovr||70));
   const quality=Math.max(8,ovr-38);
 
-  // v0.1.46.12: elite OVR must create a meaningful usage separation. The old
+  // v0.1.46.13: elite OVR must create a meaningful usage separation. The old
   // variable existed but was hard-coded to 1, so it never affected possession
   // share. Keep the curve deliberately progressive rather than explosive so
   // 34 PPG remains an exceptional modern-season ceiling, not a normal result.
@@ -9932,7 +9941,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.46.12 Main Menu Exit & GM UI Cleanup",ENGINE_VERSION="E2.24-PROD15A";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.46.14 GM Header Cleanup",ENGINE_VERSION="E2.24-PROD15C";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13711,7 +13720,7 @@ function clubHub(){
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
     body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div><div class="sectionTitle">Current Season Leaders</div><div class="clubCurrentLeaderGrid">${leaderCard("Scoring Leader",scoring,"pts")}${leaderCard("Playmaking Leader",playmaker,"ast")}${leaderCard("Rebounding Leader",rebounder,"reb")}</div>`;
   }
-  return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>${body}`;
+  return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div><div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div>${body}`;
 }
 function gmBrief(){
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
@@ -14623,10 +14632,12 @@ function internationalOverview(n){
     [`#${wr||"—"}`,"World Rank"],[`#${rr||"—"}`,`${n.region} Rank`],[`${n.record.w}–${n.record.l}`,"National Record"],[rating?rating.toFixed(0):"—","Squad OVR"],
     [form.length?form.join(" "):"—","Recent Form"],[String(honours),"World Cup Medals"],[`${squadCount}/12`,"Current Squad"],[tier,"Federation Status"]
   ];
-  return `<div class="intlCommandHero streamlined">
-    <div class="intlCommandIdentity"><div class="intlCommandFlag">${nationalFlagMark(n.code,"heroFlag")}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
+  return `<div class="intlNationHubHero">
+    <div class="intlCommandHero streamlined">
+      <div class="intlCommandIdentity"><div class="intlCommandFlag">${nationalFlagMark(n.code,"heroFlag")}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
+    </div>
+    <div class="intlCommandMetrics eight">${metrics.map(x=>`<div><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")}</div>
   </div>
-  <div class="intlCommandMetrics eight">${metrics.map(x=>`<div><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")}</div>
   <div class="sectionTitle">Top Players</div>
   <div class="intlTopPlayers">${top.map((p,i)=>{const a=internationalPlayerAverages(p),ranks=(rankMap.get(p.id)||[]).filter(r=>r.rank<=5).sort((a,b)=>a.rank-b.rank).slice(0,2);return `<div class="intlTopPlayerCard"><div class="intlTopPlayerHead"><div><small>${i===0?"TOP PLAYER":i===1?"CORE PLAYER":"KEY PLAYER"}</small><b>${playerNameLink(p)}</b><span>${positionLabel(p)} · ${ensureInternationalAffiliation(p)}</span></div><strong>${p.ovr}<small>OVR</small></strong></div><div class="intlTopPlayerStats"><div><b>${a.gp?a.ppg.toFixed(1):"—"}</b><small>PPG</small></div><div><b>${a.gp?a.rpg.toFixed(1):"—"}</b><small>RPG</small></div><div><b>${a.gp?a.apg.toFixed(1):"—"}</b><small>APG</small></div></div><div class="intlTopPlayerRank">${ranks.length?ranks.map(r=>`#${r.rank} ${r.label}`).join(" · "):"International ranking builds with appearances"}</div></div>`}).join("")}</div>
   <div class="sectionTitle">Recent International Results</div>
@@ -14761,10 +14772,10 @@ function internationalWorldCup(){
 
 function international(){
   let code=G.userNationalGM?.nationCode;
-  if(!code){const options=G.nationalTeams.filter(n=>NATIONAL_GM_CONTROLLABLE.has(n.code)).sort((a,b)=>a.name.localeCompare(b.name));return `<div class="intlPageHead"><h2>International</h2><p>Take your career onto the international stage</p></div><div class="card"><div class="eyebrow">National Team Management</div><h3>Manage a Basketball Nation</h3><div class="smallcopy">National GM control is limited to established programs with enough player depth to support meaningful squad selection. Other nations remain active in FIBA qualification and the World Cup.</div><label>NATION</label><select id="nation">${options.map(n=>`<option value="${n.code}">${flagEmoji(n.code)} ${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`}
+  if(!code){const options=G.nationalTeams.filter(n=>NATIONAL_GM_CONTROLLABLE.has(n.code)).sort((a,b)=>a.name.localeCompare(b.name));return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · Take your career onto the international stage</p></div><div class="card"><div class="eyebrow">National Team Management</div><h3>Manage a Basketball Nation</h3><div class="smallcopy">National GM control is limited to established programs with enough player depth to support meaningful squad selection. Other nations remain active in FIBA qualification and the World Cup.</div><label>NATION</label><select id="nation">${options.map(n=>`<option value="${n.code}">${flagEmoji(n.code)} ${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`}
   ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["rankings","World Rankings"]],body;
   if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else body=internationalWorldCup();
-  return `<div class="intlPageHead"><h2>${nationalFlagMark(n.code,"headerFlag")} ${n.name}</h2><p>${n.region} · World #${nationalWorldRank(code)||"—"}</p></div><div class="tabs compactTabRow intlMainTabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+  return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · ${n.name} · World #${nationalWorldRank(code)||"—"}</p></div><div class="tabs compactTabRow intlMainTabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 
 
