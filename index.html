@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.70.1 International · Olympic Host System</title>
+<title>Mini&Me Basketball — v0.1.49.71.0 International · Olympic Live Tournament Flow</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1877,7 +1877,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.70.1 International · Olympic Host System</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.71.0 International · Olympic Live Tournament Flow</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1966,7 +1966,7 @@ function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]
 // Mini&Me results share the same honours, record books and career totals. Provenance
 // metadata exists only for integrity/audit and is not a separate basketball era.
 // ---------------------------------------------------------------------
-const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BQ2-2026.1";
+const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BR1-2026.1";
 const HISTORICAL_FRANCHISE_NOTABLES={"BOS":[{"name":"Bill Russel","pos":"C","legacy":"11\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Larry Byrd","pos":"SF/PF","legacy":"3\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"John Havlichek","pos":"SF/SG","legacy":"8\u00d7 Champion \u00b7 Finals MVP"}],"BKN":[{"name":"Jason Kydd","pos":"PG","legacy":"Franchise assist leader \u00b7 All-NBA"},{"name":"Buck Williams","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"All-Star scorer \u00b7 iconic wing"}],"NYE":[{"name":"Walt Frasier","pos":"PG","legacy":"2\u00d7 Champion \u00b7 7\u00d7 All-Star"},{"name":"Patrick Ewingg","pos":"C","legacy":"11\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Willis Reed","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP"}],"PHI":[{"name":"Julius Ervingg","pos":"SF","legacy":"Champion \u00b7 MVP"},{"name":"Allen Iversonn","pos":"PG/SG","legacy":"MVP \u00b7 4\u00d7 scoring champion"},{"name":"Moses Maloney","pos":"C","legacy":"Champion \u00b7 MVP"}],"TOR":[{"name":"Kyle Lowrie","pos":"PG","legacy":"Champion \u00b7 6\u00d7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"DeMar DeRozenn","pos":"SG/SF","legacy":"Franchise scoring great \u00b7 All-Star"}],"CHI":[{"name":"Michael Jordon","pos":"SG","legacy":"6\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Scottie Pippenn","pos":"SF","legacy":"6\u00d7 Champion \u00b7 elite defender"},{"name":"Derrick Rosee","pos":"PG","legacy":"MVP \u00b7 Rookie of the Year"}],"CLE":[{"name":"LeBron Haymes","pos":"SF/PF","legacy":"Champion \u00b7 franchise scoring great"},{"name":"Mark Pricee","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 elite shooter"},{"name":"Brad Daughertyy","pos":"C","legacy":"5\u00d7 All-Star \u00b7 franchise centre"}],"DET":[{"name":"Isiah Thomass","pos":"PG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Joe Dumarss","pos":"SG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Ben Wallacee","pos":"C","legacy":"Champion \u00b7 4\u00d7 DPOY"}],"IND":[{"name":"Reggie Millerr","pos":"SG","legacy":"Franchise scoring great \u00b7 elite shooter"},{"name":"Jermaine ONeall","pos":"PF/C","legacy":"6\u00d7 All-Star \u00b7 All-NBA"},{"name":"Mel Danielss","pos":"C","legacy":"ABA champion \u00b7 MVP"}],"MIL":[{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"Champion \u00b7 3\u00d7 MVP with club"},{"name":"Oscar Robertsen","pos":"PG","legacy":"Champion \u00b7 MVP calibre guard"},{"name":"Sidney Moncrieff","pos":"SG","legacy":"2\u00d7 DPOY \u00b7 5\u00d7 All-Star"}],"ATL":[{"name":"Dominique Wilkinss","pos":"SF","legacy":"Franchise scoring great \u00b7 9\u00d7 All-Star"},{"name":"Bob Pettitt","pos":"PF","legacy":"MVP \u00b7 franchise legend"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"2\u00d7 DPOY with club \u00b7 All-Star"}],"CHA":[{"name":"Kemba Walkerr","pos":"PG","legacy":"Franchise scoring great \u00b7 3\u00d7 All-Star"},{"name":"Larry Johnsonn","pos":"PF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"Muggsy Boguess","pos":"PG","legacy":"Franchise assist great \u00b7 iconic guard"}],"MIA":[{"name":"Dwyane Wadee","pos":"SG","legacy":"3\u00d7 Champion \u00b7 Finals MVP"},{"name":"Alonzo Mourningg","pos":"C","legacy":"Champion \u00b7 2\u00d7 DPOY"},{"name":"Tim Hardawayy","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"ORL":[{"name":"Shaquille ONeall","pos":"C","legacy":"Rookie of the Year \u00b7 Finals run"},{"name":"Penny Hardawayy","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 All-NBA"},{"name":"Dwight Howardd","pos":"C","legacy":"3\u00d7 DPOY \u00b7 Finals run"}],"WAS":[{"name":"Wes Unseld","pos":"C","legacy":"Champion \u00b7 MVP"},{"name":"Elvin Hayess","pos":"PF/C","legacy":"Champion \u00b7 franchise scoring great"},{"name":"John Walll","pos":"PG","legacy":"5\u00d7 All-Star \u00b7 franchise assist great"}],"DEN":[{"name":"Alex Englishh","pos":"SF","legacy":"Franchise scoring great \u00b7 8\u00d7 All-Star"},{"name":"David Thompsonn","pos":"SG/SF","legacy":"Hall-level scorer \u00b7 4\u00d7 All-Star"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"DPOY \u00b7 iconic playoff run"}],"MIN":[{"name":"Kevin Garnettt","pos":"PF","legacy":"MVP \u00b7 franchise scoring/rebounding great"},{"name":"Kevin Lovee","pos":"PF/C","legacy":"All-NBA \u00b7 rebounding great"},{"name":"Sam Casselll","pos":"PG","legacy":"All-Star \u00b7 conference finals leader"}],"OKC":[{"name":"Gary Paytonn","pos":"PG","legacy":"DPOY \u00b7 franchise guard legend"},{"name":"Shawn Kempp","pos":"PF","legacy":"6\u00d7 All-Star \u00b7 Finals run"},{"name":"Jack Sikmaa","pos":"C","legacy":"Champion \u00b7 7\u00d7 All-Star"}],"POR":[{"name":"Clyde Drexlerr","pos":"SG","legacy":"Franchise scoring great \u00b7 Finals runs"},{"name":"Bill Waltonn","pos":"C","legacy":"Champion \u00b7 Finals MVP"},{"name":"Terry Porterr","pos":"PG","legacy":"Franchise assist great \u00b7 Finals runs"}],"UTA":[{"name":"Karl Maloney","pos":"PF","legacy":"2\u00d7 MVP \u00b7 franchise scoring great"},{"name":"John Stockman","pos":"PG","legacy":"All-time assist/steal benchmark"},{"name":"Pete Maravichh","pos":"SG","legacy":"Elite scorer \u00b7 franchise icon"}],"GSB":[{"name":"Walt Chamberlain","pos":"C","legacy":"Historic scoring/rebounding peak"},{"name":"Rick Barryy","pos":"SF","legacy":"Champion \u00b7 Finals MVP"},{"name":"Chris Mullinn","pos":"SF","legacy":"5\u00d7 All-Star \u00b7 elite scorer"}],"LAC":[{"name":"Bob McAdooo","pos":"C","legacy":"MVP \u00b7 scoring champion"},{"name":"Blake Griffinn","pos":"PF","legacy":"Rookie of the Year \u00b7 6\u00d7 All-Star"},{"name":"Chris Pall","pos":"PG","legacy":"Franchise assist great \u00b7 All-NBA"}],"LAG":[{"name":"Magic Johnsonn","pos":"PG","legacy":"5\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"Kobe Brayant","pos":"SG","legacy":"5\u00d7 Champion \u00b7 MVP"},{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"5\u00d7 Champion with club \u00b7 3\u00d7 MVP"}],"PHX":[{"name":"Steve Nashh","pos":"PG","legacy":"2\u00d7 MVP \u00b7 elite playmaker"},{"name":"Charles Barkleyy","pos":"PF","legacy":"MVP \u00b7 Finals run"},{"name":"Kevin Johnsonn","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"SAC":[{"name":"Oscar Robertsen","pos":"PG","legacy":"MVP \u00b7 triple-double pioneer"},{"name":"Jerry Lucass","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Chris Webberr","pos":"PF","legacy":"All-NBA \u00b7 conference finals leader"}],"DAL":[{"name":"Dirk Nowitzkii","pos":"PF","legacy":"Champion \u00b7 MVP \u00b7 Finals MVP"},{"name":"Rolando Blackmann","pos":"SG","legacy":"4\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Mark Aguirree","pos":"SF","legacy":"3\u00d7 All-Star \u00b7 elite scorer"}],"HOU":[{"name":"Hakeem Olajawon","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP \u00b7 2\u00d7 DPOY"},{"name":"Moses Maloney","pos":"C","legacy":"2\u00d7 MVP with club \u00b7 rebounding great"},{"name":"Calvin Murphyy","pos":"PG/SG","legacy":"Franchise scoring great \u00b7 All-Star"}],"MEM":[{"name":"Marc Gasoll","pos":"C","legacy":"DPOY \u00b7 3\u00d7 All-Star"},{"name":"Zach Randolphh","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise rebounding great"},{"name":"Mike Conleyy","pos":"PG","legacy":"Franchise assist/steal great"}],"NOP":[{"name":"Chris Pall","pos":"PG","legacy":"Rookie of the Year \u00b7 elite playmaker"},{"name":"Anthony Daviss","pos":"PF/C","legacy":"All-NBA \u00b7 franchise scoring great"},{"name":"David Westt","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise scorer"}],"SAS":[{"name":"Tim Duncann","pos":"PF/C","legacy":"5\u00d7 Champion \u00b7 2\u00d7 MVP"},{"name":"David Robinsonn","pos":"C","legacy":"Champion \u00b7 MVP \u00b7 DPOY"},{"name":"George Gervinn","pos":"SG/SF","legacy":"4\u00d7 scoring champion \u00b7 franchise icon"}]};
 function historicalFranchiseNotables(clubId){
   return (HISTORICAL_FRANCHISE_NOTABLES[clubId]||[]).map((x,i)=>({
@@ -7647,6 +7647,7 @@ function makeCareer() {
     worldCupLive: null,
     worldCupHistory: [],
     olympicHistory: [],
+    olympicQualificationHistory: [],
     olympics: null,
     qualificationHistory: [],
     draftPool: [],
@@ -9232,18 +9233,36 @@ function ensureFutureOlympicHostAnnouncements(G){
   const currentYear=gameYearForSeason(G.season);
   for(let y=2036;y<=currentYear+8;y+=4)olympicHostForYear(G,y,true);
 }
-function olympicFieldFromWorldCup(G,year=olympicYearForSeason(G.season)){
-  const last=[...(G.worldCupHistory||[])].filter(w=>w?.status==="COMPLETE").sort((a,b)=>(b.season||0)-(a.season||0))[0];
-  const ranked=[...(G.nationalTeams||[])].sort((a,b)=>(nationalWorldRank(a.code)||999)-(nationalWorldRank(b.code)||999));
+function olympicQualificationPlan(G,year=olympicYearForSeason(G.season)){
   const host=olympicHostForYear(G,year,true);
-  const field=[];
-  if(host?.code&&nat(host.code))field.push(host.code);
-  if(last){
-    const ordered=[last.championCode,last.runnerUpCode,last.bronzeCode,last.fifthCode,last.seventhCode,...(last.qualifiedTeamCodes||[])];
-    for(const c of ordered)if(c&&!field.includes(c)&&field.length<8)field.push(c);
-  }
-  for(const n of ranked)if(!field.includes(n.code)&&field.length<12)field.push(n.code);
-  return field.slice(0,12);
+  const ranked=[...(G.nationalTeams||[])].sort((a,b)=>(nationalWorldRank(a.code)||999)-(nationalWorldRank(b.code)||999));
+  const last=[...(G.worldCupHistory||[])].filter(w=>w?.status==="COMPLETE"&&gameYearForSeason(w.season||0)<year).sort((a,b)=>(b.season||0)-(a.season||0))[0]||null;
+  const field=[],direct=[],qualifierWinners=[];
+  const add=(code,bucket)=>{if(code&&nat(code)&&!field.includes(code)){field.push(code);if(bucket)bucket.push(code);return true}return false};
+  add(host?.code,direct);
+
+  // Mini&Me Olympic qualification: seven direct places are awarded from the
+  // preceding World Cup / world-ranking order after the automatic host berth.
+  const worldCupOrder=last?[last.championCode,last.runnerUpCode,last.bronzeCode,last.fifthCode,last.seventhCode,...(last.qualifiedTeamCodes||[])]:[];
+  for(const code of worldCupOrder)if(field.length<8)add(code,direct);
+  for(const n of ranked)if(field.length<8)add(n.code,direct);
+
+  // The final four berths are modelled as Olympic Qualifying Tournament winners.
+  // We resolve them from the strongest remaining nations so the 12-team field
+  // remains compact and compatible with the existing international calendar.
+  const qualifierPool=ranked.map(n=>n.code).filter(c=>!field.includes(c));
+  for(const code of qualifierPool)if(field.length<12)add(code,qualifierWinners);
+
+  return {year,host,worldCupCycle:last?.cycle||null,directTeamCodes:direct,qualifierWinnerCodes:qualifierWinners,qualifiedTeamCodes:field.slice(0,12),resolved:true,
+    model:"MINIME_SIMPLIFIED_OQT",hostBerths:host?.code?1:0,directBerths:Math.max(0,direct.length-(host?.code&&direct.includes(host.code)?1:0)),qualifierBerths:qualifierWinners.length,
+    qualificationNote:"Mini&Me streamlined Olympic qualification model"};
+}
+function olympicFieldFromWorldCup(G,year=olympicYearForSeason(G.season)){
+  const plan=olympicQualificationPlan(G,year);
+  G.olympicQualificationHistory=G.olympicQualificationHistory||[];
+  const idx=G.olympicQualificationHistory.findIndex(x=>x.year===year);
+  if(idx>=0)G.olympicQualificationHistory[idx]=plan;else G.olympicQualificationHistory.push(plan);
+  return [...plan.qualifiedTeamCodes];
 }
 function olympicSeededGroups(G,field){
   const ranked=[...field].sort((a,b)=>(nationalWorldRank(a)||999)-(nationalWorldRank(b)||999));
@@ -9254,51 +9273,96 @@ function olympicSeededGroups(G,field){
 function initializeOlympics(G){
   const year=olympicYearForSeason(G.season);
   if(!isOlympicSeason(G.season))return null;
-  if(G.olympics?.year===year)return G.olympics;
+  if(G.olympicLive?.year===year&&!G.olympicLive.complete){G.phase="OLYMPICS";return G.olympicLive}
+  if(G.olympicHistory?.some(x=>x.year===year))return G.olympicHistory.find(x=>x.year===year);
   const host=olympicHostForYear(G,year,true);
-  const field=olympicFieldFromWorldCup(G,year);prepareNationalRosters(G,field);
-  const groups=olympicSeededGroups(G,field),groupState=Object.fromEntries(groups.map(gr=>[gr.id,Object.fromEntries(gr.teamCodes.map(c=>[c,{code:c,gp:0,w:0,l:0,pf:0,pa:0,points:0}]))]));
-  const tournamentStats={},games=[];
-  for(const gr of groups){
-    for(let r=0;r<3;r++)for(const [a,b] of roundRobinPairs(gr.teamCodes,r)){
-      const g=worldCupGame(G,a,b,"OLYMPIC_GROUP",tournamentStats,games);wcAddResult(groupState[gr.id],g);
-    }
-  }
-  const groupTables=Object.fromEntries(groups.map(gr=>[gr.id,wcTableSort(groupState[gr.id])]));
-  const direct=groups.flatMap(gr=>groupTables[gr.id].slice(0,2));
-  const thirds=groups.map(gr=>groupTables[gr.id][2]).sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)).slice(0,2);
-  const eight=[...direct,...thirds].sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)).map(x=>x.code);
-  const qfPairs=[[eight[0],eight[7]],[eight[3],eight[4]],[eight[1],eight[6]],[eight[2],eight[5]]];
-  const qfs=qfPairs.map(([a,b])=>worldCupGame(G,a,b,"OLYMPIC_QUARTERFINAL",tournamentStats,games));
-  const qfw=qfs.map(g=>g.winner);
-  const semis=[[qfw[0],qfw[1]],[qfw[2],qfw[3]]].map(([a,b])=>worldCupGame(G,a,b,"OLYMPIC_SEMIFINAL",tournamentStats,games));
-  const finalists=semis.map(g=>g.winner),semiLosers=semis.map(g=>g.winner===g.teamA?g.teamB:g.teamA);
-  const finalGame=worldCupGame(G,finalists[0],finalists[1],"OLYMPIC_FINAL",tournamentStats,games);
-  const bronzeGame=worldCupGame(G,semiLosers[0],semiLosers[1],"OLYMPIC_BRONZE",tournamentStats,games);
+  const field=olympicFieldFromWorldCup(G,year),qualification=(G.olympicQualificationHistory||[]).find(x=>x.year===year)||olympicQualificationPlan(G,year);
+  prepareNationalRosters(G,field);
+  const groups=olympicSeededGroups(G,field);
+  const groupState=Object.fromEntries(groups.map(gr=>[gr.id,Object.fromEntries(gr.teamCodes.map(c=>[c,{code:c,gp:0,w:0,l:0,pf:0,pa:0,points:0}]))]));
+  G.olympicLive={year,season:G.season,host,field,qualification,groups,groupState,groupTables:{},games:[],tournamentStats:{},
+    stage:"OLYMPIC_GROUP",eventIndex:0,qfPairs:[],qfWinners:[],semiWinners:[],semiLosers:[],complete:false,lastUserGameId:null};
+  G.olympics={year,season:G.season,host:host?`${host.city}, ${host.country}`:"Olympic Host",hostCode:host?.code||null,status:"LIVE",field,qualification,groups,games:G.olympicLive.games,stage:"OLYMPIC_GROUP"};
+  G.phase="OLYMPICS";
+  logEvent(G,`${year} Olympic Basketball opened in ${host?.city||"the host city"}.`);
+  return G.olympicLive;
+}
+function olympicStageLabel(stage){
+  return ({OLYMPIC_GROUP:"Group Stage",OLYMPIC_QUARTERFINAL:"Quarterfinal",OLYMPIC_SEMIFINAL:"Semifinal",OLYMPIC_MEDAL_GAMES:"Medal Games",OLYMPIC_FINAL:"Gold Medal Game",OLYMPIC_BRONZE:"Bronze Medal Game"})[stage]||String(stage||"Olympics").replaceAll("_"," ");
+}
+function olympicRecordGame(G,live,a,b,stage){
+  const tmp=[];const g=worldCupGame(G,a,b,stage,live.tournamentStats,tmp);g.competition="olympics";g.olympicYear=live.year;live.games.push(g);return g;
+}
+function olympicBuildQuarterfinals(live){
+  live.groupTables=Object.fromEntries(live.groups.map(gr=>[gr.id,wcTableSort(live.groupState[gr.id])]));
+  const direct=live.groups.flatMap(gr=>live.groupTables[gr.id].slice(0,2));
+  const thirds=live.groups.map(gr=>live.groupTables[gr.id][2]).filter(Boolean).sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf).slice(0,2);
+  const eight=[...direct,...thirds].sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf).map(x=>x.code);
+  live.qfPairs=[[eight[0],eight[7]],[eight[3],eight[4]],[eight[1],eight[6]],[eight[2],eight[5]]];
+  live.stage="OLYMPIC_QUARTERFINAL";live.eventIndex=0;
+}
+function finalizeOlympics(G,live=G.olympicLive){
+  if(!live||live.complete)return G.olympics;
+  const finalGame=[...live.games].reverse().find(g=>g.stage==="OLYMPIC_FINAL");
+  const bronzeGame=[...live.games].reverse().find(g=>g.stage==="OLYMPIC_BRONZE");
+  if(!finalGame||!bronzeGame)return null;
   const championCode=finalGame.winner,runnerUpCode=finalGame.winner===finalGame.teamA?finalGame.teamB:finalGame.teamA,bronzeCode=bronzeGame.winner;
   const lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
-  const rankedPlayers=Object.entries(tournamentStats).map(([id,st])=>({player:lookup.get(id),stats:st,score:summerPerformanceScore(st)})).filter(x=>x.player).sort((a,b)=>b.score-a.score);
+  const rankedPlayers=Object.entries(live.tournamentStats).map(([id,st])=>({player:lookup.get(id),stats:st,score:summerPerformanceScore(st)})).filter(x=>x.player).sort((a,b)=>b.score-a.score);
   const champ=nat(championCode),champIds=new Set(champ?.rosterPlayerIds||[]);
   const mvp=(rankedPlayers.filter(x=>champIds.has(x.player.id))[0]||rankedPlayers[0]||{}).player||null;
   const allTournament=rankedPlayers.slice(0,5).map(x=>x.player);
   for(const [code,award] of [[championCode,"Olympic Gold Medal"],[runnerUpCode,"Olympic Silver Medal"],[bronzeCode,"Olympic Bronze Medal"]]){
-    const team=nat(code);for(const id of team?.rosterPlayerIds||[]){const p=lookup.get(id);if(p)p.awardHistory.push({season:G.season,award,international:true,olympicYear:year})}
+    const team=nat(code);for(const id of team?.rosterPlayerIds||[]){const p=lookup.get(id);if(p)p.awardHistory.push({season:G.season,award,international:true,olympicYear:live.year})}
   }
-  if(mvp)mvp.awardHistory.push({season:G.season,award:"Olympic Tournament MVP",international:true,olympicYear:year});
-  for(const p of allTournament)p.awardHistory.push({season:G.season,award:"Olympic All-Tournament Team",international:true,olympicYear:year});
-  const result={year,season:G.season,host:host?`${host.city}, ${host.country}`:"Olympic Host",hostCode:host?.code||null,hostGenerated:!!host?.generated,status:"COMPLETE",field,groups,groupTables,games,championCode,runnerUpCode,bronzeCode,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats};
-  G.olympics=result;G.olympicHistory=G.olympicHistory||[];G.olympicHistory.push(result);
-  G.awards[`OLY${year}_Gold`]=championCode;G.awards[`OLY${year}_MVP`]=mvp?.id||null;
-  if(champ)champ.history.push({season:G.season,type:"Olympic Gold Medal",year});
-  logEvent(G,`${year} Olympic Basketball complete. Gold: ${nat(championCode)?.name||championCode}.`);
+  if(mvp)mvp.awardHistory.push({season:G.season,award:"Olympic Tournament MVP",international:true,olympicYear:live.year});
+  for(const p of allTournament)p.awardHistory.push({season:G.season,award:"Olympic All-Tournament Team",international:true,olympicYear:live.year});
+  const result={year:live.year,season:G.season,host:live.host?`${live.host.city}, ${live.host.country}`:"Olympic Host",hostCode:live.host?.code||null,hostGenerated:!!live.host?.generated,status:"COMPLETE",
+    field:live.field,qualification:live.qualification,groups:live.groups,groupTables:live.groupTables,games:live.games,championCode,runnerUpCode,bronzeCode,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats:live.tournamentStats};
+  live.complete=true;G.olympics=result;G.olympicHistory=G.olympicHistory||[];G.olympicHistory.push(result);
+  G.awards[`OLY${live.year}_Gold`]=championCode;G.awards[`OLY${live.year}_MVP`]=mvp?.id||null;
+  if(champ)champ.history.push({season:G.season,type:"Olympic Gold Medal",year:live.year});
+  logEvent(G,`${live.year} Olympic Basketball complete. Gold: ${nat(championCode)?.name||championCode}.`);
+  G.phase="OFFSEASON";
   return result;
+}
+function advanceOlympicEvent(G){
+  if(G.phase!=="OLYMPICS")return{ok:false,reason:"Olympics are not active"};
+  const live=G.olympicLive||initializeOlympics(G);if(!live||live.complete)return{ok:false,reason:"Olympic tournament is unavailable"};
+  const games=[];
+  if(live.stage==="OLYMPIC_GROUP"){
+    const r=live.eventIndex;
+    for(const gr of live.groups)for(const [a,b] of roundRobinPairs(gr.teamCodes,r)){const g=olympicRecordGame(G,live,a,b,"OLYMPIC_GROUP");games.push(g);wcAddResult(live.groupState[gr.id],g)}
+    live.eventIndex++;if(live.eventIndex>=3)olympicBuildQuarterfinals(live);
+  }else if(live.stage==="OLYMPIC_QUARTERFINAL"){
+    for(const [a,b] of live.qfPairs){const g=olympicRecordGame(G,live,a,b,"OLYMPIC_QUARTERFINAL");games.push(g);live.qfWinners.push(g.winner)}
+    live.stage="OLYMPIC_SEMIFINAL";
+  }else if(live.stage==="OLYMPIC_SEMIFINAL"){
+    const pairs=[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]];
+    for(const [a,b] of pairs){const g=olympicRecordGame(G,live,a,b,"OLYMPIC_SEMIFINAL");games.push(g);live.semiWinners.push(g.winner);live.semiLosers.push(g.winner===g.teamA?g.teamB:g.teamA)}
+    live.stage="OLYMPIC_MEDAL_GAMES";
+  }else if(live.stage==="OLYMPIC_MEDAL_GAMES"){
+    games.push(olympicRecordGame(G,live,live.semiLosers[0],live.semiLosers[1],"OLYMPIC_BRONZE"));
+    games.push(olympicRecordGame(G,live,live.semiWinners[0],live.semiWinners[1],"OLYMPIC_FINAL"));
+    finalizeOlympics(G,live);
+  }
+  if(!live.complete)G.olympics={year:live.year,season:live.season,host:live.host?`${live.host.city}, ${live.host.country}`:"Olympic Host",hostCode:live.host?.code||null,status:"LIVE",field:live.field,qualification:live.qualification,groups:live.groups,groupTables:live.groupTables,games:live.games,stage:live.stage};
+  const userGame=games.find(g=>G.userNationalGM?.nationCode&&(g.teamA===G.userNationalGM.nationCode||g.teamB===G.userNationalGM.nationCode))||null;
+  if(userGame)live.lastUserGameId=userGame.id;
+  return{ok:true,type:"OLYMPICS",stage:live.stage,games,userGame,complete:live.complete};
+}
+function olympicUserNextFixture(live=G.olympicLive){
+  const code=G.userNationalGM?.nationCode;if(!code||!live||live.complete)return null;
+  if(live.stage==="OLYMPIC_GROUP"){const gr=live.groups.find(g=>g.teamCodes.includes(code));if(!gr)return null;return roundRobinPairs(gr.teamCodes,live.eventIndex).map(([a,b])=>({a,b,stage:"OLYMPIC_GROUP"})).find(x=>x.a===code||x.b===code)||null}
+  const pairs=live.stage==="OLYMPIC_QUARTERFINAL"?live.qfPairs:live.stage==="OLYMPIC_SEMIFINAL"?[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]]:live.stage==="OLYMPIC_MEDAL_GAMES"?[[live.semiLosers[0],live.semiLosers[1]],[live.semiWinners[0],live.semiWinners[1]]]:[];
+  const p=pairs.find(([a,b])=>a===code||b===code);return p?{a:p[0],b:p[1],stage:live.stage}:null;
 }
 function ensureOlympicFoundation(G){
   if(!G)return;
   G.olympicHistory=G.olympicHistory||[];
+  G.olympicQualificationHistory=G.olympicQualificationHistory||[];
   G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
   ensureOlympicHostState(G);ensureFutureOlympicHostAnnouncements(G);
-  if(isOlympicSeason(G.season)&&!G.olympicHistory.some(x=>x.year===olympicYearForSeason(G.season)))initializeOlympics(G);
 }
 function resetWorldCupCycle(G) {
   const old=G.nationalQualification;
@@ -9871,7 +9935,10 @@ function runOffseason(G) {
     return;
   }
   if (G.nationalQualification?.worldCupPlayed) resetWorldCupCycle(G);
-  if(isOlympicSeason(G.season)&&!G.olympicHistory?.some(x=>x.year===olympicYearForSeason(G.season)))initializeOlympics(G);
+  if(isOlympicSeason(G.season)&&!G.olympicHistory?.some(x=>x.year===olympicYearForSeason(G.season))){
+    initializeOlympics(G);
+    return;
+  }
   const completedSeason = G.season > 1;
   recordTalentHealthSeason(G,'pre-offseason');
   awardFrontOfficeSeasonPoint(G,completedSeason);
@@ -12472,6 +12539,7 @@ function advanceCareerEvent(G,count=1){
     else if(G.inSeasonCup?.finalPending) r=advanceNBACupFinalEvent(G);
     else if(G.allStarLive && !G.allStarLive.complete) r=advanceAllStarEvent(G);
     else if(G.phase==="WORLD_CUP") r=advanceWorldCupEvent(G);
+    else if(G.phase==="OLYMPICS") r=advanceOlympicEvent(G);
     else if(G.phase==="SUMMER_LEAGUE") r=advanceSummerLeagueRound(G);
     else if(G.phase==="PRESEASON") r=advancePreseasonRound(G);
     else if(G.phase==="REGULAR_SEASON") r=advanceRegularSeasonRound(G);
@@ -12928,7 +12996,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.70.1 International · Olympic Host System",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.71.0 International · Olympic Live Tournament Flow",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13086,7 +13154,7 @@ function teamIdentityCompact(t,label=""){
 function phaseName(){
   if(G.phase==="SUMMER_LEAGUE"&&G.summerLeagueLive?.championshipStage?.stage==="SEMIFINALS")return"Summer League Final Four";
   if(G.phase==="SUMMER_LEAGUE"&&G.summerLeagueLive?.championshipStage?.stage==="CHAMPIONSHIP")return"Summer League Championship";
-  return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",CHAMPION:"Season Complete"})[G.phase]||G.phase}
+  return ({OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"World Cup",OLYMPICS:"Olympics",CHAMPION:"Season Complete"})[G.phase]||G.phase}
 let memorySlots={};
 function openSaveDB(){
   return new Promise((resolve,reject)=>{
@@ -13131,7 +13199,7 @@ async function migrateLegacySave(){
 function validateCareerIntegrityState(state=G){
   const issues=[];
   if(!state||typeof state!=="object")return["Career state is unavailable."];
-  const phases=new Set(["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","CHAMPION"]);
+  const phases=new Set(["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","OLYMPICS","CHAMPION"]);
   if(!phases.has(state.phase))issues.push(`Unknown career phase: ${state.phase}`);
   if(!Array.isArray(state.clubs)||state.clubs.length!==30)issues.push(`Expected 30 clubs; found ${state.clubs?.length??0}.`);
   const clubIds=new Set(),playerOwners=new Map();
@@ -13160,6 +13228,7 @@ function validateCareerIntegrityState(state=G){
     if(obj&&obj.season!=null&&obj.season!==state.season)issues.push(`${label} belongs to ${basketballSeasonLabel(obj.season)}, not active ${basketballSeasonLabel(state.season)}.`);
   }
   if(state.phase==="WORLD_CUP"&&state.worldCupLive?.complete)issues.push("World Cup is marked complete but career phase has not returned to club flow.");
+  if(state.phase==="OLYMPICS"&&state.olympicLive?.complete)issues.push("Olympics are marked complete but career phase has not returned to club flow.");
   for(const p of state.externalProfessionals||[]){
     if(!p?.id){issues.push("External professional without player id.");continue}
     const owner=playerOwners.get(p.id);
@@ -13309,6 +13378,7 @@ async function loadSlot(slot){
   applyVerifiedYoungPlayerPotentialAudit(G);
   applyHistoricalPlayerIdentityAudit(G);
   G.olympicHistory=G.olympicHistory||[];
+  G.olympicQualificationHistory=G.olympicQualificationHistory||[];
   G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
   ensureOlympicHostState(G);ensureFutureOlympicHostAnnouncements(G);
   repairSummerLeagueAwardIntegrity(G);
@@ -14149,7 +14219,8 @@ function gameById(id){
     G.playInLive?.games,G.playIn?.games,
     G.playoffsLive?.games,G.playoffs?.games,
     G.allStarLive?.games,G.allStar?.games,
-    G.worldCupLive?.games,G.worldCup?.games
+    G.worldCupLive?.games,G.worldCup?.games,
+    G.olympicLive?.games,G.olympics?.games
   ].filter(Boolean);
   for(const pool of pools){const g=pool.find(x=>x.id===id);if(g)return g;}
   return null;
@@ -14161,6 +14232,7 @@ function nationalCompetitionGameLabel(g){
   if(!g)return"FIBA";
   const comp=String(g.competition||g.competitionType||"").toLowerCase();
   if(comp.includes("qualification"))return "FIBA World Cup Qualification";
+  if(comp.includes("olympic")||G.olympicLive?.games?.some(x=>x.id===g.id)||G.olympics?.games?.some(x=>x.id===g.id))return `Olympic Basketball · ${olympicStageLabel(g.stage)}`;
   if(comp.includes("world_cup")||G.worldCupLive?.games?.some(x=>x.id===g.id)||G.worldCup?.games?.some(x=>x.id===g.id)){
     return `FIBA World Cup · ${worldCupStageLabel(g.stage)}`;
   }
@@ -14238,6 +14310,7 @@ function resultReturnModeForAdvance(phaseBefore,game){
   if(flow==="summer_league"&&G.phase==="SUMMER_LEAGUE_COMPLETE")return"summer_summary";
   if(flow==="preseason"&&G.phase!=="PRESEASON")return"preseason_complete";
   if(phaseBefore==="WORLD_CUP"||flow==="world_cup")return"world_cup";
+  if(phaseBefore==="OLYMPICS"||flow==="olympics")return"olympics";
   if((phaseBefore==="PLAY_IN"||phaseBefore==="PLAYOFFS")&&G.phase!==phaseBefore)return"postseason_transition";
   return null;
 }
@@ -14269,6 +14342,7 @@ function renderResultWindow(){
     ui.resultReturn==="preseason_complete"?"Continue to Regular Season":
     ui.resultReturn==="cup_final"?"Return to Regular Season":
     ui.resultReturn==="world_cup"?(G.phase==="WORLD_CUP"?"Next World Cup Game":"Continue Career"):
+    ui.resultReturn==="olympics"?(G.phase==="OLYMPICS"?"Next Olympic Game":"Continue Career"):
     ui.resultReturn==="postseason_transition"?(G.phase==="CHAMPION"?"View Season Review":G.phase==="PLAYOFFS"?"Continue to Playoffs":"Continue Postseason"):
     "Next Game";
   $("#resultWindowHost").innerHTML=`<div class="resultStandalone">${postseasonResultContextHtml(g)}${latestResultHtml(g).replace('<div class="sectionTitle">Latest Result</div>','')}<div class="resultNextWrap"><button id="resultWindowNext" class="primaryProgress">${resultButtonLabel}</button></div></div>`;
@@ -14284,7 +14358,7 @@ function renderResultWindow(){
       if(ui.resultReturn==="summer_summary"){closeResultToHome();save();return;}
       if(ui.resultReturn==="preseason_complete"){closeResultToHome();save();return;}
       if(ui.resultReturn==="cup_final"){closeResultToHome();save();return;}
-      if(ui.resultReturn==="world_cup"){ui.resultReturn=null;ui.resultGameId=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;}
+      if(ui.resultReturn==="world_cup"||ui.resultReturn==="olympics"){ui.resultReturn=null;ui.resultGameId=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;}
       if(ui.resultReturn==="postseason_transition"){closeResultToHome();save();return;}
 
       // Integrated mini-slate progression. Do not clear the current result id
@@ -14366,6 +14440,10 @@ function actionSpec(){
     const fx=worldCupUserNextFixture(G.worldCupLive||initializeWorldCupLive(G));
     return{main:fx?`Play ${worldCupStageLabel(fx.stage)}`:"Advance World Cup",type:"game"};
   }
+  if(G.phase==="OLYMPICS"){
+    const fx=olympicUserNextFixture(G.olympicLive);
+    return{main:fx?`Play Olympic ${olympicStageLabel(fx.stage)}`:`Advance Olympic ${olympicStageLabel(G.olympicLive?.stage)}`,type:"game"};
+  }
   if(["SUMMER_LEAGUE","PRESEASON"].includes(G.phase))return{main:"Sim Game",type:"game"};
   if(G.phase==="DRAFT_NIGHT")return{main:"Open Draft Board",type:"draft"};
   if(G.phase==="OFFSEASON")return{main:"Begin Offseason",type:"phase"};
@@ -14419,7 +14497,7 @@ function advanceFromUi(n){
   // Home does not contain separate Summer League/Preseason/Regular/Postseason
   // simulation paths anymore. A one-game action advances one career event,
   // extracts the user's game, and opens the universal result screen.
-  if(Math.max(1,Math.floor(+n||1))===1 && ["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP"].includes(G.phase)){
+  if(Math.max(1,Math.floor(+n||1))===1 && ["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","OLYMPICS"].includes(G.phase)){
     // Direct playoff qualifiers are observers while the league Play-In resolves.
     if(G.phase==="PLAY_IN"){
       const pst=userPostseasonState();
@@ -14603,6 +14681,7 @@ function phaseStatusCopy(){
   }
   if(G.phase==="PLAYOFFS")return["NBA Playoffs","Every game matters. Advance the series and pursue the championship."];
   if(G.phase==="WORLD_CUP")return["FIBA World Cup","Club play is paused while the international tournament takes centre stage."];
+  if(G.phase==="OLYMPICS")return[`${G.olympicLive?.year||olympicYearForSeason(G.season)} Olympic Basketball`,`${G.olympicLive?.host?.city||"The host city"} · ${olympicStageLabel(G.olympicLive?.stage)}. Club offseason progression is paused until the Olympic tournament is complete.`];
   if(G.phase==="CHAMPION")return["Season Complete",`${G.champion?.name||"The champion"} has been crowned. Career history and season honours are recorded.`];
   return[phaseName(),"Continue the current career phase."]
 }
@@ -16130,6 +16209,7 @@ function home(){
   if(worldCupRecap)return worldCupTournamentRecapHtml(worldCupRecap);
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
   if(G.phase==="WORLD_CUP")return worldCupHomeHtml();
+  if(G.phase==="OLYMPICS"){const live=G.olympicLive,fx=olympicUserNextFixture(live),code=G.userNationalGM?.nationCode,opp=fx?(fx.a===code?fx.b:fx.a):null;return `<div class="eventHero"><div class="eventHeroTop"><b>OLYMPIC BASKETBALL</b><small>${live?.year||""} · ${live?.host?.city||""}</small></div><div class="eventHeroBody"><h3>${olympicStageLabel(live?.stage)}</h3><p>${fx?`${nat(code)?.name||code} vs ${nat(opp)?.name||opp}`:"Advance the Olympic tournament to the next event."}</p></div></div>${homeActionHtml()}`;}
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
   if(G.phase==="PLAYOFFS"&&!G.playoffsLive){
     initializePlayoffsLive(G);
@@ -17852,11 +17932,16 @@ function internationalOlympics(n){
   const nextHost=olympicHostForYear(G,nextYear,true);
   const userCode=n.code;
   const medals=[...hist,...historical].filter(x=>[x.championCode,x.runnerUpCode,x.bronzeCode].includes(userCode)).length;
+  const qualification=(G.olympicQualificationHistory||[]).find(x=>x.year===nextYear)||olympicQualificationPlan(G,nextYear);
+  const qStatus=qualification.qualifiedTeamCodes.includes(userCode)?(qualification.host?.code===userCode?"Host · Qualified":qualification.directTeamCodes.includes(userCode)?"Direct Qualification":"Olympic Qualifier · Qualified"):"Not Currently Qualified";
+  const qNationList=codes=>codes.map(c=>nationalFlagLabel(c,nat(c)?.name||c,"historyFlag")).join("");
+  const qualificationHtml=`<div class="sectionTitle">${nextYear} Qualification</div><div class="card"><div class="more"><div><b>Automatic Host</b><small>Guaranteed Olympic berth</small></div><b>${qualification.host?nationalFlagLabel(qualification.host.code,nat(qualification.host.code)?.name||qualification.host.code,"historyFlag"):"—"}</b></div><div class="more"><div><b>World Cup / Ranking Path</b><small>${qualification.directBerths||0} additional direct berths</small></div><span>${qNationList(qualification.directTeamCodes.filter(c=>c!==qualification.host?.code))||"—"}</span></div><div class="more"><div><b>Olympic Qualifiers</b><small>${qualification.qualifierBerths||0} streamlined qualifier berths</small></div><span>${qNationList(qualification.qualifierWinnerCodes)||"—"}</span></div><div class="smallcopy">Mini&Me uses a streamlined qualification model so international play remains secondary to the club career. The qualification route and final 12-team field are stored permanently for each Olympic cycle.</div></div>`;
   const currentHtml=current?`<div class="card"><div class="eyebrow">${current.year} OLYMPIC BASKETBALL</div><h3>${current.host}</h3><div class="metrics"><div class="metric"><b>${nationalFlagLabel(current.championCode,nat(current.championCode)?.name||current.championCode)}</b><small>Gold</small></div><div class="metric"><b>${nationalFlagLabel(current.runnerUpCode,nat(current.runnerUpCode)?.name||current.runnerUpCode)}</b><small>Silver</small></div><div class="metric"><b>${nationalFlagLabel(current.bronzeCode,nat(current.bronzeCode)?.name||current.bronzeCode)}</b><small>Bronze</small></div></div></div>`:`<div class="card"><div class="eyebrow">OLYMPIC BASKETBALL</div><h3>${nextYear} · ${nextHost?`${nextHost.city}, ${nextHost.country}`:"Host TBA"}</h3><div class="smallcopy">12 nations compete in three groups of four. The top two in each group and the two best third-placed nations advance to the quarterfinals.</div></div>`;
   const rows=[...hist,...historical.filter(h=>!hist.some(x=>x.year===h.year))].sort((a,b)=>b.year-a.year);
-  return `${currentHtml}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more"><div><b>${medals}</b><small>${n.name} Olympic medals in recorded history</small></div><b>${nextYear}</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 the career universe selects and permanently stores future hosts eight years ahead.</div></div>
+  return `${currentHtml}${qualificationHtml}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more"><div><b>${medals}</b><small>${n.name} Olympic medals in recorded history</small></div><b>${nextYear}</b></div><div class="more"><div><b>${qStatus}</b><small>${nextYear} Olympic pathway</small></div><b>${qualification.qualifiedTeamCodes.length}/12</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically, seven places are resolved through the preceding World Cup/ranking pathway, and four places are recorded as Olympic Qualifier winners. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 the career universe selects and permanently stores future hosts eight years ahead.</div></div>
   <div class="sectionTitle">Olympic Hosts</div><div class="card">${Object.values(ensureOlympicHostState(G)).sort((a,b)=>a.year-b.year).filter(h=>h.year>=2028&&h.year<=nextYear+8).map(h=>`<div class="more"><div><b>${h.year} · ${h.city}</b><small>${h.country}${h.confirmed?" · Confirmed":" · Mini&Me future host"}</small></div><b>${nationalFlagLabel(h.code,nat(h.code)?.name||h.code,"historyFlag")}</b></div>`).join("")}</div>
-  <div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>`;
+  <div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>
+  ${hist.length?`<div class="sectionTitle">Career Olympic Cycles</div><div class="card">${hist.map(w=>{const result=w.championCode===userCode?"Gold Medal":w.runnerUpCode===userCode?"Silver Medal":w.bronzeCode===userCode?"Bronze Medal":(w.field||[]).includes(userCode)?"Tournament":"Did Not Qualify";return `<div class="more"><div><b>${w.year} · ${w.host||"Olympic Games"}</b><small>${n.name} · ${result}</small></div><b>${w.qualification?.host?.code===userCode?"HOST":w.qualification?.directTeamCodes?.includes(userCode)?"DIRECT":w.qualification?.qualifierWinnerCodes?.includes(userCode)?"OQT":"—"}</b></div>`}).join("")}</div>`:""}`;
 }
 function international(){
   let code=G.userNationalGM?.nationCode;
