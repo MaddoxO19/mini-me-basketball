@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.47.8 Readability & Touch Target Pass</title>
+<title>Mini&Me Basketball — v0.1.48.0 Player Identity & Event Selection Calibration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -319,6 +319,8 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .prospectTable tr.bestAvailable{background:#171b17}
 .prospectTable tr.gmBestFit{background:#201b12;box-shadow:inset 3px 0 0 var(--accent)}
 .prospectTable tr.gmStrongFit{background:#171b18}
+.prospectTable tr.scoutRecommended{background:#2a2112!important;box-shadow:inset 4px 0 0 var(--accent),inset 0 0 0 1px rgba(244,163,64,.34)}
+.scoutRecommendTag{display:inline-block;margin-left:6px;border:1px solid var(--accent);background:var(--accent);color:#17100a;border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;letter-spacing:.35px;text-transform:uppercase}
 .gmFitTag{display:inline-block;margin-left:6px;border:1px solid #755826;background:#211a10;color:var(--accent2);border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;letter-spacing:.35px;text-transform:uppercase}
 .draftPickCard.current{border-width:2px;box-shadow:0 0 0 1px rgba(232,181,81,.18) inset}
 .draftPickCard.current b,.draftPickCard.current span{color:var(--accent2)}
@@ -1867,10 +1869,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .draftControlActionsThree{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .draftControlActionsThree .btn{min-width:0;margin:0}
 @media(max-width:520px){.draftControlActionsThree{grid-template-columns:1fr 1fr}.draftControlActionsThree #openDraftTradeCenter{grid-column:1/-1}}
+
+/* v0.1.48.0 — Player Identity & Event Selection Calibration
+   All-Star contests now select by relevant shooting/dunk profiles; Draft Night
+   highlights the Scouting Department recommendation; elite source identities,
+   97-99 OVR impact floors and elite young-player POT floors are calibrated. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.47.8 Readability & Touch Target Pass</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.48.0 Player Identity & Event Selection Calibration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2390,6 +2397,18 @@ function normalizePlayerPotential(p){
   } else p.potential=Math.min(99,Math.max(o,+p.potential));
   return p;
 }
+function elitePotentialFloorForSource(p){
+  if(!p)return p;
+  const source=statisticalIdentitySourceName(p);
+  const floors={"Victor Wembanyama":99,"Cooper Flagg":97,"AJ Dybantsa":97};
+  const floor=floors[source];
+  if(Number.isFinite(+floor)){
+    p.potential=Math.max(+p.ovr||0,+p.potential||0,+floor);
+    p.productionPotentialSource="Mini&Me elite development calibration";
+    p.productionPotentialEstimated=true;
+  }
+  return p;
+}
 function allTalentPlayers(G){
   const out=[],seen=new Set();
   const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
@@ -2549,6 +2568,8 @@ const STAT_IDENTITY_RARITY_CAPS={Generational:2,Exceptional:8,"Elite Specialist"
 const STAT_IDENTITY_SEEDS={
   "Giannis Antetokounmpo":{tier:"Exceptional",type:"Slashing Playmaking Force",mods:{usage:1.18,assist:1.28,rebound:1.18,foulDraw:1.42,threeRate:-.20,threeAccuracy:-.075,defensiveImpact:1.18,volatility:.96}},
   "Victor Wembanyama":{tier:"Generational",type:"Two-Way Unicorn",mods:{usage:1.25,assist:1.08,rebound:1.58,steal:1.28,block:4.00,defensiveImpact:1.34,threeRate:.02,volatility:1.10}},
+  "Luka Doncic":{tier:"Generational",type:"Heliocentric Scoring Playmaker",mods:{usage:1.30,assist:1.62,rebound:1.12,foulDraw:1.28,threeRate:.035,threeAccuracy:.012,defensiveImpact:.96,volatility:1.16}},
+  "Luka Dončić":{tier:"Generational",type:"Heliocentric Scoring Playmaker",mods:{usage:1.30,assist:1.62,rebound:1.12,foulDraw:1.28,threeRate:.035,threeAccuracy:.012,defensiveImpact:.96,volatility:1.16}},
   "Nikola Jokic":{tier:"Exceptional",type:"Playmaking Center",mods:{usage:1.08,assist:1.88,rebound:1.18,steal:1.02,block:.88,defensiveImpact:1.02,volatility:.94}},
   "Stephen Curry":{tier:"Exceptional",type:"Perimeter Gravity",mods:{usage:1.15,assist:1.23,rebound:.83,steal:1.08,block:.55,threeRate:.10,defensiveImpact:.98,volatility:1.20}},
   "Walker Kessler":{tier:"Elite Specialist",type:"Rim Protector",mods:{usage:.84,rebound:1.32,block:2.80,defensiveImpact:1.25,volatility:.88}},
@@ -2617,8 +2638,18 @@ function ensureLeagueStatisticalIdentities(G){
   const counts={Generational:0,Exceptional:0,"Elite Specialist":0};
   const players=[...(G.clubs||[]).flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),...(G.freeAgents||[]),...(G.externalProfessionals||[]),(G.upcomingDraftClass?.prospects||[])].flat().filter(Boolean);
   const unique=players.filter((p,i,a)=>p.id&&a.findIndex(x=>x.id===p.id)===i);
-  // Known source identities get first call on rare slots.
-  for(const p of unique){const seed=STAT_IDENTITY_SEEDS[statisticalIdentitySourceName(p)];if(seed&&!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p,counts);else if(p.statisticalIdentity?.locked&&counts[p.statisticalIdentity.tier]!==undefined)counts[p.statisticalIdentity.tier]++;}
+  // Known source identities get first call on rare slots. Re-apply a source seed
+  // when its calibrated identity changes so older saves receive the new profile.
+  for(const p of unique){
+    elitePotentialFloorForSource(p);
+    const seed=STAT_IDENTITY_SEEDS[statisticalIdentitySourceName(p)];
+    if(seed){
+      if(!p.statisticalIdentity?.locked||p.statisticalIdentity.type!==seed.type){
+        p.statisticalIdentity=createEngineStatisticalIdentity(p,seed.tier,seed.type,seed.mods);
+      }
+      if(counts[seed.tier]!==undefined)counts[seed.tier]++;
+    }else if(p.statisticalIdentity?.locked&&counts[p.statisticalIdentity.tier]!==undefined)counts[p.statisticalIdentity.tier]++;
+  }
   for(const p of unique)if(!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p,counts);
   G.statisticalIdentityAudit={season:G.season,counts,caps:{...STAT_IDENTITY_RARITY_CAPS}};
 }
@@ -2627,6 +2658,17 @@ function playerStatIdentity(player) {
   const base=baseIdentityFromArchetype(player),mods=player?.statisticalIdentity?.mods||{};
   for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+mods[k]))base[k]*=+mods[k];}
   if(Number.isFinite(+mods.threeRate))base.threeRate+=+mods.threeRate;
+  if(Number.isFinite(+mods.threeAccuracy))base.threeAccuracy+=+mods.threeAccuracy;
+  const ovr=Math.max(50,Math.min(99,+player?.ovr||70));
+  if(ovr>=97){
+    const pos=player?.position||"SF",peak=ovr>=99;
+    base.usage=Math.max(base.usage,peak?1.18:1.10);
+    if(pos==="PG"){base.assist=Math.max(base.assist,peak?1.42:1.30);base.rebound=Math.max(base.rebound,1.03);}
+    else if(pos==="SG"){base.assist=Math.max(base.assist,peak?1.22:1.14);base.rebound=Math.max(base.rebound,peak?1.08:1.04);}
+    else if(pos==="SF"){base.assist=Math.max(base.assist,peak?1.20:1.12);base.rebound=Math.max(base.rebound,peak?1.14:1.08);}
+    else if(pos==="PF"){base.assist=Math.max(base.assist,peak?1.13:1.07);base.rebound=Math.max(base.rebound,peak?1.23:1.15);}
+    else if(pos==="C"){base.assist=Math.max(base.assist,peak?1.10:1.05);base.rebound=Math.max(base.rebound,peak?1.30:1.20);base.block=Math.max(base.block,peak?1.20:1.10);}
+  }
   return base;
 }
 function statisticalIdentityLabel(player){const s=player?.statisticalIdentity;return s?.tier&&s.tier!=="Standard"?`${s.tier} · ${s.type}`:(s?.type||player?.archetype||"Balanced");}
@@ -3842,7 +3884,7 @@ function makeOfficial2026DraftProspect(row,G){
   p.contractYearsLeft=0;p.contractStatus="Prospect";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
   p.official2026DraftPick=row.pick;p.official2026DraftedBy=row.draftedBy;p.official2026RightsOwner=row.ownerClubId;p.productionDraftSource="NBA.com 2026 Draft Results";
   if(!src&&!recovered){p.potential=est.potential;p.launchRookieRating={...est,draftPick:row.pick};}
-  enrichDraftProspect(p,G,row.pick-1);return normalizeProspectPotential(p);
+  enrichDraftProspect(p,G,row.pick-1);normalizeProspectPotential(p);elitePotentialFloorForSource(p);return p;
 }
 function ensureOfficial2026DraftClass(G){
   if(G.upcomingDraftClass?.season===1&&G.upcomingDraftClass?.productionClass==="2026_OFFICIAL"){ensureOriginalDraftBoardRanks(G,G.upcomingDraftClass.prospects);return G.upcomingDraftClass.prospects;}
@@ -3943,7 +3985,9 @@ function makeMappedPlayer(t,rank,teamId){
   applyVerifiedProductionBio(p,t.sourceName);
   if(p.preCareerBaseline&&!t.isRookie)p.salaryM=salaryForOvr(p.ovr,p.age);
   if(!t.isRookie)applyVerifiedLaunchContract(p,t.sourceName);
-  return normalizePlayerPotential(p);
+  normalizePlayerPotential(p);
+  elitePotentialFloorForSource(p);
+  return p;
 }
 function makeMappedClub(identity){
   const templates=[...(SEASON1_ROSTER_TEMPLATES[identity.id]||[])].filter(t=>!isOfficial2026DraftTemplate(t));
@@ -9049,9 +9093,13 @@ function buildRegularRotation(club) {
 
 function playerUsageWeight(player) {
   const role = player.rotationRole || "Rotation";
-  const roleBoost = role === "Primary Starter" ? 1.58 : role === "Starter" ? 1.16 : role === "Sixth Man" ? 1.08 : 0.90;
+  let roleBoost = role === "Primary Starter" ? 1.58 : role === "Starter" ? 1.16 : role === "Sixth Man" ? 1.08 : 0.90;
   const ovr=Math.max(50,Math.min(99,+player.ovr||70));
   const quality=Math.max(8,ovr-38);
+  // A 97-99 OVR player is always a major possession influence even if an old
+  // save still carries a stale rotation-role label after editing/development.
+  if(ovr>=99)roleBoost=Math.max(roleBoost,1.40);
+  else if(ovr>=97)roleBoost=Math.max(roleBoost,1.28);
 
   // v0.1.46.13: elite OVR must create a meaningful usage separation. The old
   // variable existed but was hard-coded to 1, so it never affected possession
@@ -9564,12 +9612,63 @@ function risingStarsEligible(p,gameState=null){
   const yrs=risingStarsExperienceYears(p,gameState);
   return yrs===0||yrs===1;
 }
+function allStarContestRepeatPenalty(p,kind,season){
+  const hist=(p?.allStarContestHistory||[]).filter(x=>x.kind===kind);
+  const last=hist.reduce((m,x)=>Math.max(m,+x.season||0),0);
+  if(last===season-1)return kind==="DUNK"?12:8;
+  if(last===season-2)return kind==="DUNK"?5:3;
+  return 0;
+}
+function recordAllStarContestSelection(p,kind,season){
+  if(!p)return;
+  p.allStarContestHistory=p.allStarContestHistory||[];
+  if(!p.allStarContestHistory.some(x=>x.kind===kind&&x.season===season))p.allStarContestHistory.push({kind,season});
+  p.allStarContestHistory=p.allStarContestHistory.slice(-8);
+}
+function threePointContestProfile(p,G){
+  const st=p?.seasonStats||{},gp=Math.max(1,+st.gp||0),att=+st.tpa||0,made=+st.tpm||0;
+  const pct=att>=35?made/att:null,volume=att/gp;
+  const source=Number.isFinite(+p?.sourceThreePt)?+p.sourceThreePt:null;
+  const text=`${p?.archetype||""} ${p?.sourceBuild||""}`.toLowerCase();
+  const shooter=/sharpshooter|3pt|sniper|stretch|perimeter|shot hunter/.test(text);
+  const rating=source??(shooter?84:74);
+  const qualified=(rating>=80)||(att>=70&&volume>=3.0&&(pct??0)>=.325)||(shooter&&rating>=76);
+  const repeat=allStarContestRepeatPenalty(p,"THREE_POINT",G.season);
+  const score=rating*.58+(pct==null?34:pct*100)*.27+Math.min(9,volume)*1.55+(shooter?4:0)-repeat;
+  return{qualified,score,rating,pct,volume};
+}
+function dunkContestProfile(p,G){
+  const source=Number.isFinite(+p?.sourceDunk)?+p.sourceDunk:null;
+  const text=`${p?.archetype||""} ${p?.sourceBuild||""}`.toLowerCase();
+  const dunker=/high flyer|high-fly|slasher|rim wrecker|rim rocker|lob threat|athletic|dunk|finisher|putback/.test(text);
+  const rating=source??(dunker?84:70);
+  const ageBonus=(+p?.age||30)<=23?5:(+p?.age||30)<=26?3:0;
+  const qualified=rating>=80||(dunker&&rating>=76);
+  const repeat=allStarContestRepeatPenalty(p,"DUNK",G.season);
+  const score=rating*.78+ageBonus+(dunker?7:0)+Math.max(0,(+p?.ovr||70)-80)*.10-repeat;
+  return{qualified,score,rating};
+}
+function selectThreePointContestants(G,eligible){
+  const ranked=eligible.map(x=>({x,prof:threePointContestProfile(x.p,G)})).sort((a,b)=>b.prof.score-a.prof.score);
+  const primary=ranked.filter(r=>r.prof.qualified),fallback=ranked.filter(r=>!r.prof.qualified);
+  return [...primary,...fallback].slice(0,8).map(r=>r.x.p);
+}
+function selectDunkContestants(G,eligible){
+  const ranked=eligible.map(x=>({x,prof:dunkContestProfile(x.p,G)})).sort((a,b)=>b.prof.score-a.prof.score);
+  const primary=ranked.filter(r=>r.prof.qualified),fallback=ranked.filter(r=>!r.prof.qualified&&r.prof.rating>=75);
+  return [...primary,...fallback].slice(0,8).map(r=>r.x.p);
+}
 function initializeAllStarLive(G){
   if(G.allStarLive?.season===G.season&&!G.allStarLive.complete&&G.allStarLive.format==='WEEKEND_V2'){
     const lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
     const risingIds=[...(G.allStarLive.teams?.RISING_A||[]),...(G.allStarLive.teams?.RISING_B||[])];
     const invalid=risingIds.some(id=>{const p=lookup.get(id);return !p||!risingStarsEligible(p,G)});
-    if(!invalid)return G.allStarLive;
+    if(!invalid){
+      const eligible=G.clubs.flatMap(c=>c.roster.map(p=>({p,club:c}))).filter(x=>x.p.seasonStats?.gp>=20);
+      if(!G.allStarLive.results?.threePoint){const entrants=selectThreePointContestants(G,eligible);G.allStarLive.threePointEntrants=entrants.map(p=>p.id);for(const p of entrants)recordAllStarContestSelection(p,"THREE_POINT",G.season);}
+      if(!G.allStarLive.results?.dunk){const entrants=selectDunkContestants(G,eligible);G.allStarLive.dunkEntrants=entrants.map(p=>p.id);for(const p of entrants)recordAllStarContestSelection(p,"DUNK",G.season);}
+      return G.allStarLive;
+    }
     // Rebuild only the weekend setup before the Rising Stars game is played.
     // Once Event 1 has a result, historical event data is left untouched.
     if(!G.allStarLive.results?.rising){
@@ -9586,8 +9685,10 @@ function initializeAllStarLive(G){
     .sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p))
     .slice(0,16)
     .map(x=>x.p);
-  const three=[...eligible].sort((a,b)=>((['PG','SG'].includes(b.p.position)?6:0)+allStarCandidateScore(b.p))-((['PG','SG'].includes(a.p.position)?6:0)+allStarCandidateScore(a.p))).slice(0,8).map(x=>x.p);
-  const dunk=[...eligible].sort((a,b)=>(((b.p.age<=25?7:0)+(['SG','SF','PF'].includes(b.p.position)?5:0)+(b.p.ovr||0))-((a.p.age<=25?7:0)+(['SG','SF','PF'].includes(a.p.position)?5:0)+(a.p.ovr||0)))).slice(0,8).map(x=>x.p);
+  const three=selectThreePointContestants(G,eligible);
+  const dunk=selectDunkContestants(G,eligible);
+  for(const p of three)recordAllStarContestSelection(p,"THREE_POINT",G.season);
+  for(const p of dunk)recordAllStarContestSelection(p,"DUNK",G.season);
   const unique=[...new Map(selected.map(p=>[p.id,p])).values()];for(const p of unique)addAward(G,p,'NBA All-Star');
   G.allStarLive={season:G.season,format:'WEEKEND_V2',stage:1,reviewStage:null,teams:{EAST:east.map(p=>p.id),WEST:west.map(p=>p.id),RISING_A:young.slice(0,8).map(p=>p.id),RISING_B:young.slice(8,16).map(p=>p.id)},threePointEntrants:three.map(p=>p.id),dunkEntrants:dunk.map(p=>p.id),games:[],results:{},complete:false,mvpPlayerId:null,lastGameId:null};
   G.allStar={season:G.season,playerIds:unique.map(p=>p.id),teams:G.allStarLive.teams,games:[],live:true};return G.allStarLive;
@@ -9601,7 +9702,15 @@ function simulateAllStarGame(G,aKey,bKey,label){
 }
 function simulateAllStarContest(G,kind){
   const live=G.allStarLive, ids=kind==='THREE_POINT'?live.threePointEntrants:live.dunkEntrants, lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
-  const scores=ids.map(id=>{const p=lookup.get(id);let base=(p?.ovr||70)+(kind==='THREE_POINT'&&['PG','SG'].includes(p?.position)?5:0)+(kind==='DUNK'&&p?.age<=25?5:0);return{playerId:id,name:p?.name||'Player',score:kind==='THREE_POINT'?Math.max(12,Math.min(30,Math.round(20+(base-80)*.18+rand(-5,5)))):Math.max(70,Math.min(100,Math.round(86+(base-80)*.28+rand(-9,9))))}}).sort((a,b)=>b.score-a.score);
+  const scores=ids.map(id=>{
+    const p=lookup.get(id);
+    if(kind==='THREE_POINT'){
+      const prof=threePointContestProfile(p,G);
+      return{playerId:id,name:p?.name||'Player',score:Math.max(12,Math.min(30,Math.round(18+(prof.score-70)*.20+rand(-4,4))))};
+    }
+    const prof=dunkContestProfile(p,G);
+    return{playerId:id,name:p?.name||'Player',score:Math.max(70,Math.min(100,Math.round(82+(prof.score-70)*.30+rand(-7,7))))};
+  }).sort((a,b)=>b.score-a.score);
   const result={kind,scores,winnerPlayerId:scores[0]?.playerId||null,winnerName:scores[0]?.name||'—',winningScore:scores[0]?.score||0};return result;
 }
 function advanceAllStarEvent(G){
@@ -10239,7 +10348,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.47.7 Summer League Award Integrity Fix",ENGINE_VERSION="E2.25-PROD16G";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.48.0 Player Identity & Event Selection Calibration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14167,7 +14276,9 @@ function draft(){
   let yourPicks=s.completedUserPicks?.length?`<div class="sectionTitle">Your Selections</div><div class="card">${s.completedUserPicks.map(x=>`<div class="draftSelection"><div><b>Pick #${x.pickNumber} · ${x.playerName}</b><small>${x.position} · OVR ${x.ovr} · POT ${x.potential}</small></div><strong>R${x.round}</strong></div>`).join("")}</div>`:"";
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
   const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
-  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>Season ${s.draftYear} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  const scoutPickNumber=p?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||1;
+  const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
+  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>Season ${s.draftYear} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag">Scout Recommends</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"assets";
   const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
