@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.68.1 Historical Records · Deduplication + Distinct Season Average Leaders</title>
+<title>Mini&Me Basketball — v0.1.49.68.4 Player Development · Young Player Potential Audit</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1877,7 +1877,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.68.1 Historical Records · Deduplication + Distinct Season Average Leaders</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.68.4 Player Development · Young Player Potential Audit</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1966,7 +1966,7 @@ function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]
 // Mini&Me results share the same honours, record books and career totals. Provenance
 // metadata exists only for integrity/audit and is not a separate basketball era.
 // ---------------------------------------------------------------------
-const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BO1-2026.1";
+const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BO4-2026.1";
 const HISTORICAL_FRANCHISE_NOTABLES={"BOS":[{"name":"Bill Russel","pos":"C","legacy":"11\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Larry Byrd","pos":"SF/PF","legacy":"3\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"John Havlichek","pos":"SF/SG","legacy":"8\u00d7 Champion \u00b7 Finals MVP"}],"BKN":[{"name":"Jason Kydd","pos":"PG","legacy":"Franchise assist leader \u00b7 All-NBA"},{"name":"Buck Williams","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"All-Star scorer \u00b7 iconic wing"}],"NYE":[{"name":"Walt Frasier","pos":"PG","legacy":"2\u00d7 Champion \u00b7 7\u00d7 All-Star"},{"name":"Patrick Ewingg","pos":"C","legacy":"11\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Willis Reed","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP"}],"PHI":[{"name":"Julius Ervingg","pos":"SF","legacy":"Champion \u00b7 MVP"},{"name":"Allen Iversonn","pos":"PG/SG","legacy":"MVP \u00b7 4\u00d7 scoring champion"},{"name":"Moses Maloney","pos":"C","legacy":"Champion \u00b7 MVP"}],"TOR":[{"name":"Kyle Lowrie","pos":"PG","legacy":"Champion \u00b7 6\u00d7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"DeMar DeRozenn","pos":"SG/SF","legacy":"Franchise scoring great \u00b7 All-Star"}],"CHI":[{"name":"Michael Jordon","pos":"SG","legacy":"6\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Scottie Pippenn","pos":"SF","legacy":"6\u00d7 Champion \u00b7 elite defender"},{"name":"Derrick Rosee","pos":"PG","legacy":"MVP \u00b7 Rookie of the Year"}],"CLE":[{"name":"LeBron Haymes","pos":"SF/PF","legacy":"Champion \u00b7 franchise scoring great"},{"name":"Mark Pricee","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 elite shooter"},{"name":"Brad Daughertyy","pos":"C","legacy":"5\u00d7 All-Star \u00b7 franchise centre"}],"DET":[{"name":"Isiah Thomass","pos":"PG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Joe Dumarss","pos":"SG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Ben Wallacee","pos":"C","legacy":"Champion \u00b7 4\u00d7 DPOY"}],"IND":[{"name":"Reggie Millerr","pos":"SG","legacy":"Franchise scoring great \u00b7 elite shooter"},{"name":"Jermaine ONeall","pos":"PF/C","legacy":"6\u00d7 All-Star \u00b7 All-NBA"},{"name":"Mel Danielss","pos":"C","legacy":"ABA champion \u00b7 MVP"}],"MIL":[{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"Champion \u00b7 3\u00d7 MVP with club"},{"name":"Oscar Robertsen","pos":"PG","legacy":"Champion \u00b7 MVP calibre guard"},{"name":"Sidney Moncrieff","pos":"SG","legacy":"2\u00d7 DPOY \u00b7 5\u00d7 All-Star"}],"ATL":[{"name":"Dominique Wilkinss","pos":"SF","legacy":"Franchise scoring great \u00b7 9\u00d7 All-Star"},{"name":"Bob Pettitt","pos":"PF","legacy":"MVP \u00b7 franchise legend"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"2\u00d7 DPOY with club \u00b7 All-Star"}],"CHA":[{"name":"Kemba Walkerr","pos":"PG","legacy":"Franchise scoring great \u00b7 3\u00d7 All-Star"},{"name":"Larry Johnsonn","pos":"PF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"Muggsy Boguess","pos":"PG","legacy":"Franchise assist great \u00b7 iconic guard"}],"MIA":[{"name":"Dwyane Wadee","pos":"SG","legacy":"3\u00d7 Champion \u00b7 Finals MVP"},{"name":"Alonzo Mourningg","pos":"C","legacy":"Champion \u00b7 2\u00d7 DPOY"},{"name":"Tim Hardawayy","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"ORL":[{"name":"Shaquille ONeall","pos":"C","legacy":"Rookie of the Year \u00b7 Finals run"},{"name":"Penny Hardawayy","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 All-NBA"},{"name":"Dwight Howardd","pos":"C","legacy":"3\u00d7 DPOY \u00b7 Finals run"}],"WAS":[{"name":"Wes Unseld","pos":"C","legacy":"Champion \u00b7 MVP"},{"name":"Elvin Hayess","pos":"PF/C","legacy":"Champion \u00b7 franchise scoring great"},{"name":"John Walll","pos":"PG","legacy":"5\u00d7 All-Star \u00b7 franchise assist great"}],"DEN":[{"name":"Alex Englishh","pos":"SF","legacy":"Franchise scoring great \u00b7 8\u00d7 All-Star"},{"name":"David Thompsonn","pos":"SG/SF","legacy":"Hall-level scorer \u00b7 4\u00d7 All-Star"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"DPOY \u00b7 iconic playoff run"}],"MIN":[{"name":"Kevin Garnettt","pos":"PF","legacy":"MVP \u00b7 franchise scoring/rebounding great"},{"name":"Kevin Lovee","pos":"PF/C","legacy":"All-NBA \u00b7 rebounding great"},{"name":"Sam Casselll","pos":"PG","legacy":"All-Star \u00b7 conference finals leader"}],"OKC":[{"name":"Gary Paytonn","pos":"PG","legacy":"DPOY \u00b7 franchise guard legend"},{"name":"Shawn Kempp","pos":"PF","legacy":"6\u00d7 All-Star \u00b7 Finals run"},{"name":"Jack Sikmaa","pos":"C","legacy":"Champion \u00b7 7\u00d7 All-Star"}],"POR":[{"name":"Clyde Drexlerr","pos":"SG","legacy":"Franchise scoring great \u00b7 Finals runs"},{"name":"Bill Waltonn","pos":"C","legacy":"Champion \u00b7 Finals MVP"},{"name":"Terry Porterr","pos":"PG","legacy":"Franchise assist great \u00b7 Finals runs"}],"UTA":[{"name":"Karl Maloney","pos":"PF","legacy":"2\u00d7 MVP \u00b7 franchise scoring great"},{"name":"John Stockman","pos":"PG","legacy":"All-time assist/steal benchmark"},{"name":"Pete Maravichh","pos":"SG","legacy":"Elite scorer \u00b7 franchise icon"}],"GSB":[{"name":"Walt Chamberlain","pos":"C","legacy":"Historic scoring/rebounding peak"},{"name":"Rick Barryy","pos":"SF","legacy":"Champion \u00b7 Finals MVP"},{"name":"Chris Mullinn","pos":"SF","legacy":"5\u00d7 All-Star \u00b7 elite scorer"}],"LAC":[{"name":"Bob McAdooo","pos":"C","legacy":"MVP \u00b7 scoring champion"},{"name":"Blake Griffinn","pos":"PF","legacy":"Rookie of the Year \u00b7 6\u00d7 All-Star"},{"name":"Chris Pall","pos":"PG","legacy":"Franchise assist great \u00b7 All-NBA"}],"LAG":[{"name":"Magic Johnsonn","pos":"PG","legacy":"5\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"Kobe Brayant","pos":"SG","legacy":"5\u00d7 Champion \u00b7 MVP"},{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"5\u00d7 Champion with club \u00b7 3\u00d7 MVP"}],"PHX":[{"name":"Steve Nashh","pos":"PG","legacy":"2\u00d7 MVP \u00b7 elite playmaker"},{"name":"Charles Barkleyy","pos":"PF","legacy":"MVP \u00b7 Finals run"},{"name":"Kevin Johnsonn","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"SAC":[{"name":"Oscar Robertsen","pos":"PG","legacy":"MVP \u00b7 triple-double pioneer"},{"name":"Jerry Lucass","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Chris Webberr","pos":"PF","legacy":"All-NBA \u00b7 conference finals leader"}],"DAL":[{"name":"Dirk Nowitzkii","pos":"PF","legacy":"Champion \u00b7 MVP \u00b7 Finals MVP"},{"name":"Rolando Blackmann","pos":"SG","legacy":"4\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Mark Aguirree","pos":"SF","legacy":"3\u00d7 All-Star \u00b7 elite scorer"}],"HOU":[{"name":"Hakeem Olajawon","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP \u00b7 2\u00d7 DPOY"},{"name":"Moses Maloney","pos":"C","legacy":"2\u00d7 MVP with club \u00b7 rebounding great"},{"name":"Calvin Murphyy","pos":"PG/SG","legacy":"Franchise scoring great \u00b7 All-Star"}],"MEM":[{"name":"Marc Gasoll","pos":"C","legacy":"DPOY \u00b7 3\u00d7 All-Star"},{"name":"Zach Randolphh","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise rebounding great"},{"name":"Mike Conleyy","pos":"PG","legacy":"Franchise assist/steal great"}],"NOP":[{"name":"Chris Pall","pos":"PG","legacy":"Rookie of the Year \u00b7 elite playmaker"},{"name":"Anthony Daviss","pos":"PF/C","legacy":"All-NBA \u00b7 franchise scoring great"},{"name":"David Westt","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise scorer"}],"SAS":[{"name":"Tim Duncann","pos":"PF/C","legacy":"5\u00d7 Champion \u00b7 2\u00d7 MVP"},{"name":"David Robinsonn","pos":"C","legacy":"Champion \u00b7 MVP \u00b7 DPOY"},{"name":"George Gervinn","pos":"SG/SF","legacy":"4\u00d7 scoring champion \u00b7 franchise icon"}]};
 function historicalFranchiseNotables(clubId){
   return (HISTORICAL_FRANCHISE_NOTABLES[clubId]||[]).map((x,i)=>({
@@ -4417,17 +4417,58 @@ function normalizePlayerPotential(p){
   } else p.potential=Math.min(99,Math.max(o,+p.potential));
   return p;
 }
+const VERIFIED_YOUNG_PLAYER_POTENTIAL_FLOORS_2026={
+  // Current NBA 2K27 potential-grade audit. Numeric floors translate the public
+  // letter-grade signal into Mini&Me's 0-99 development scale without forcing
+  // every player to reach the floor as an actual OVR.
+  "Victor Wembanyama":99,
+  "Anthony Edwards":96,
+  "Evan Mobley":96,
+  "Paolo Banchero":93,
+  "Chet Holmgren":93,
+  "Brandon Miller":93,
+  "Scottie Barnes":93,
+  "Cade Cunningham":93,
+  "Jalen Williams":93,
+  "Tyrese Maxey":93,
+  "Jaren Jackson Jr.":93,
+  "LaMelo Ball":93,
+  "Tyrese Haliburton":93,
+  "Zaccharie Risacher":89,
+  "Alex Sarr":89,
+  "Alexandre Sarr":89,
+  "Stephon Castle":89,
+  "Amen Thompson":89,
+  "Ausar Thompson":89,
+  "Jalen Johnson":89,
+  "Dyson Daniels":89,
+
+  // Existing Mini&Me elite prospect calibrations remain in force.
+  "Cooper Flagg":97,
+  "AJ Dybantsa":97
+};
 function elitePotentialFloorForSource(p){
   if(!p)return p;
   const source=statisticalIdentitySourceName(p);
-  const floors={"Victor Wembanyama":99,"Cooper Flagg":97,"AJ Dybantsa":97};
-  const floor=floors[source];
+  const floor=VERIFIED_YOUNG_PLAYER_POTENTIAL_FLOORS_2026[source];
   if(Number.isFinite(+floor)){
     p.potential=Math.max(+p.ovr||0,+p.potential||0,+floor);
-    p.productionPotentialSource="Mini&Me elite development calibration";
+    p.productionPotentialSource="2026 young-player potential audit · NBA 2K27 grade calibrated";
     p.productionPotentialEstimated=true;
+    p.productionPotentialAuditVersion="v0.1.49.68.4";
   }
   return p;
+}
+function applyVerifiedYoungPlayerPotentialAudit(G){
+  if(!G)return 0;
+  let changed=0;
+  for(const p of allTalentPlayers(G)){
+    const before=+p.potential||0;
+    elitePotentialFloorForSource(p);
+    if((+p.potential||0)!==before)changed++;
+  }
+  G.youngPlayerPotentialAudit={version:"v0.1.49.68.4",appliedSeason:G.season,changed};
+  return changed;
 }
 function allTalentPlayers(G){
   const out=[],seen=new Set();
@@ -4450,7 +4491,7 @@ function talentHealthScore(b,c){
   return Math.max(0,Math.round(100-penalties.reduce((a,x)=>a+x,0)));
 }
 function ensureTalentLifecycleState(G){
-  let repaired=0;for(const p of allTalentPlayers(G)){const before=p.potential;normalizePlayerPotential(p);if(before!==p.potential)repaired++}
+  let repaired=0;for(const p of allTalentPlayers(G)){const before=p.potential;normalizePlayerPotential(p);elitePotentialFloorForSource(p);if(before!==p.potential)repaired++}
   G.talentHealth=G.talentHealth||{};
   if(!G.talentHealth.baseline)G.talentHealth.baseline=talentSnapshot(G);
   G.talentHealth.current=talentSnapshot(G);
@@ -9187,9 +9228,19 @@ function aiExtensionDecision(club,p) {
   const direction=aiTeamDirection(club);
   const fit=needAwareScore(club,p,{excludePlayerId:p.id,direction});
   const demand=extensionDemand(p,2),market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):demand.annualM;
-  const costPenalty=Math.max(0,(demand.annualM/Math.max(1,market))-1)*7;
-  const threshold=direction==="CONTEND"?77:direction==="DEVELOP"?74:76;
-  return (fit-costPenalty)>=threshold || ((fit-costPenalty)>=threshold-3 && Math.random()<0.28);
+  const costPenalty=Math.max(0,(demand.annualM/Math.max(1,market))-1)*6;
+  const score=fit-costPenalty,ovr=+p.ovr||0,pot=+p.potential||ovr,age=+p.age||0;
+
+  // Core-quality and young upside players are retained far more consistently.
+  // This prevents the first offseason from flooding the market with 76–80 OVR
+  // players who a real club would normally extend or re-sign.
+  if(age<=27 && (ovr>=74 || pot>=80))return true;
+  if(ovr>=80)return true;
+  if(ovr>=77 && age<=32)return Math.random()<0.92;
+  if(ovr>=75 && age<=34)return Math.random()<0.78;
+
+  const threshold=direction==="CONTEND"?75:direction==="DEVELOP"?72:74;
+  return score>=threshold || (score>=threshold-3 && Math.random()<0.48);
 }
 function ensureRosterCompliance(G, club, isUser=false) {
   const max=club.regularRosterLimit||15, min=12;
@@ -9215,6 +9266,28 @@ function ensureRosterCompliance(G, club, isUser=false) {
     if(!best)break;
     if(!signFreeAgent(G,club.id,best.id,direction==="DEVELOP"?rand(2,4):rand(1,3))){failedTargets++;G.freeAgents.push(G.freeAgents.splice(G.freeAgents.indexOf(best),1)[0]);}
     else failedTargets=0;
+  }
+  if(!isUser && club.roster.length===15 && G.freeAgents?.length){
+    let upgrades=0;
+    while(upgrades<2){
+      const direction=aiTeamDirection(club);
+      const ranked=[...club.roster].sort((a,b)=>needAwareScore(club,a,{excludePlayerId:a.id,direction})-needAwareScore(club,b,{excludePlayerId:b.id,direction}));
+      const worst=ranked[0];if(!worst)break;
+      const worstScore=needAwareScore(club,worst,{excludePlayerId:worst.id,direction});
+      let best=null,bestScore=-Infinity;
+      for(const p of G.freeAgents){
+        if((+p.ovr||0)<75)continue;
+        const demand=freeAgentDemand(p),cap=clubCapPosition(G,club.id);
+        if(!(cap.capRoom>=demand.annualM || demand.annualM<=3.5))continue;
+        const sc=needAwareScore(club,p,{direction});
+        if(sc>bestScore){bestScore=sc;best=p;}
+      }
+      if(!best || bestScore<worstScore+4 || (+best.ovr||0)<(+worst.ovr||0)+2)break;
+      const worstId=worst.id;
+      if(!releasePlayer(G,club.id,worstId))break;
+      if(!signFreeAgent(G,club.id,best.id,direction==="DEVELOP"?rand(2,4):rand(1,3)))break;
+      upgrades++;
+    }
   }
   recalcClubCap(club); return club.roster.length>=min && club.roster.length<=max;
 }
@@ -9478,19 +9551,25 @@ function rosterDepthSnapshot(G, clubId) {
 }
 
 function retirementChance(player) {
+  // Contract continuity rule: a player who has committed to a multi-year NBA deal
+  // should not randomly walk away mid-contract. Normal retirement is evaluated when
+  // the remaining guaranteed term has expired. Extreme age (44+) may still override.
+  const yearsLeft=Math.max(0,+player.contractYearsLeft||0);
+  if(yearsLeft>0 && (+player.age||0)<44)return 0;
+
   // Career Legacy retirement model. Age remains the main driver, but productive stars
   // and historically significant players receive a meaningful longevity buffer.
   const ageBase={
-    33:0.003,34:0.008,35:0.025,36:0.065,
-    37:0.15,38:0.30,39:0.52,40:0.72,41:0.88,42:0.97,43:1.0
+    33:0.002,34:0.006,35:0.018,36:0.045,
+    37:0.10,38:0.22,39:0.40,40:0.60,41:0.78,42:0.90,43:0.97,44:1.0
   };
-  let chance=player.age<33?0:(ageBase[player.age]??(player.age>43?1:0));
+  let chance=player.age<33?0:(ageBase[player.age]??(player.age>44?1:0));
   const longevity=player.longevity??60;
   const longevityFactor=1.18-(longevity/100)*0.52;
   const ovr=+player.ovr||0;
-  const qualityFactor=ovr>=92?0.28:ovr>=88?0.38:ovr>=84?0.52:ovr>=80?0.68:ovr>=74?0.86:ovr<64?1.22:1.0;
-  const legacyFactor=(player.legacyTracked||player.preCareerBaseline||player.awardHistory?.some(a=>a.historicalSeed))?0.72:1.0;
-  const roleFactor=(player.rotationRole==="starter"||(+player.targetMinutes||0)>=28)?0.82:(+player.targetMinutes||0)<=8?1.12:1.0;
+  const qualityFactor=ovr>=92?0.22:ovr>=88?0.32:ovr>=84?0.46:ovr>=80?0.62:ovr>=74?0.82:ovr<64?1.22:1.0;
+  const legacyFactor=(player.legacyTracked||player.preCareerBaseline||player.awardHistory?.some(a=>a.historicalSeed))?0.68:1.0;
+  const roleFactor=(player.rotationRole==="starter"||(+player.targetMinutes||0)>=28)?0.78:(+player.targetMinutes||0)<=8?1.12:1.0;
   return Math.max(0,Math.min(1,chance*longevityFactor*qualityFactor*legacyFactor*roleFactor));
 }
 function inferredNbaExperienceYears(G,p){
@@ -12591,7 +12670,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.68.1 Historical Records · Deduplication + Distinct Season Average Leaders",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.68.4 Player Development · Young Player Potential Audit",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -12969,6 +13048,7 @@ async function loadSlot(slot){
     repairActiveSummerLeagueEligibility(G);
     repairActivePlayerHistoryCoverage(G);
   applyVerifiedActiveCareerBaselineExpansion(G);
+  applyVerifiedYoungPlayerPotentialAudit(G);
   repairSummerLeagueAwardIntegrity(G);
     reportCareerIntegrity("load");
 
@@ -14847,7 +14927,7 @@ function allStarWinnerCode(){
     || null;
 }
 function allStarTeamName(key){return({EAST:'Eastern Conference',WEST:'Western Conference',RISING_A:'Rising Stars A',RISING_B:'Rising Stars B'})[key]||key||'—'}
-function allStarStageName(stage){return({1:'Rising Stars Game',2:'3-Point Contest',3:'Dunk Contest',4:'NBA All-Star Game'})[stage]||'All-Star Weekend'}
+function allStarStageName(stage){return({1:'Sophomores v Rookies',2:'3-Point Contest',3:'Dunk Contest',4:'NBA All-Star Game'})[stage]||'All-Star Weekend'}
 function allStarPlayerName(id){return allPlayers(G).find(p=>p.id===id)?.name||'—'}
 function allStarGameSummary(game){if(!game)return'';const h=game.homeClubId.replace('AS_',''),a=game.awayClubId.replace('AS_',''),winner=game.winnerClubId.replace('AS_',''),lines=[...(game.boxScore?.home||[]),...(game.boxScore?.away||[])],leader=[...lines].sort((x,y)=>y.pts-x.pts)[0];return `<div class="allStarResult"><div class="allStarResultRow"><b>${allStarTeamName(h)}</b><span>${game.homeScore}</span></div><div class="allStarResultRow"><b>${allStarTeamName(a)}</b><span>${game.awayScore}</span></div><div class="allStarResultRow"><b>Winner</b><span>${allStarTeamName(winner)}</span></div>${leader?`<div class="allStarResultRow"><b>Game Leader</b><span>${leader.name} · ${leader.pts} PTS</span></div>`:''}</div>`}
 function allStarGameById(id){
@@ -14878,7 +14958,7 @@ function allStarReviewHtml(live){
   const stage=live.reviewStage;
   if(stage===1){
     const g=allStarGameById(live.results?.rising?.gameId);
-    return `<div class="asReviewHead"><div class="eyebrow">EVENT 1 RESULT</div><h2>Rising Stars Final</h2><p>Review the full game result before advancing to the 3-Point Contest.</p></div>${allStarGameRecap(g)}`;
+    return `<div class="asReviewHead"><div class="eyebrow">EVENT 1 RESULT</div><h2>Sophomores v Rookies Final</h2><p>Review the full game result before advancing to the 3-Point Contest.</p></div>${allStarGameRecap(g)}`;
   }
   if(stage===2)return `<div class="asReviewHead"><div class="eyebrow">EVENT 2 RESULT</div><h2>3-Point Contest Results</h2><p>Final standings from all eight shooters.</p></div>${allStarContestRecap(live.results?.threePoint,"THREE_POINT")}`;
   if(stage===3)return `<div class="asReviewHead"><div class="eyebrow">EVENT 3 RESULT</div><h2>Dunk Contest Results</h2><p>Final scores from all eight contestants.</p></div>${allStarContestRecap(live.results?.dunk,"DUNK")}`;
@@ -14890,13 +14970,34 @@ function allStarReviewHtml(live){
 }
 function continueAllStarWeekend(G){return continueAllStarWeekendCore(G)}
 function allStarProgressHtml(live){
-  const events=[['Rising Stars',1],['3-Point',2],['Dunk',3],['All-Star Game',4]];
+  const events=[['Sophomores v Rookies',1],['3-Point',2],['Dunk',3],['All-Star Game',4]];
   return `<div class="asProgress">${events.map(([n,i])=>{const done=i<live.stage||live.complete||live.reviewStage===i;const active=(live.stage===i&&!live.complete&&!live.reviewStage);return `<div class="asStep ${active?"active":""} ${done?"done":""}"><span>${done?"✓":i}</span><b>${n}</b></div>`}).join("")}</div>`;
 }
-function allStarCompletedRows(live){let out='';if(live.results?.rising){const g=gameById(live.results.rising.gameId);out+=`<div class="seasonAwardRow"><small>Rising Stars</small><b>${allStarTeamName(live.results.rising.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}if(live.results?.threePoint)out+=`<div class="seasonAwardRow"><small>3-Point Champion</small><b>${live.results.threePoint.winnerName} · ${live.results.threePoint.winningScore} pts</b></div>`;if(live.results?.dunk)out+=`<div class="seasonAwardRow"><small>Dunk Champion</small><b>${live.results.dunk.winnerName} · ${live.results.dunk.winningScore}</b></div>`;if(live.results?.allStarGame){const g=gameById(live.results.allStarGame.gameId);out+=`<div class="seasonAwardRow"><small>All-Star Game</small><b>${allStarTeamName(live.results.allStarGame.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}return out?`<div class="sectionTitle">Weekend Results</div><div class="seasonAwardsList">${out}</div>`:''}
+function allStarCompletedRows(live){let out='';if(live.results?.rising){const g=gameById(live.results.rising.gameId);out+=`<div class="seasonAwardRow"><small>Sophomores v Rookies</small><b>${allStarTeamName(live.results.rising.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}if(live.results?.threePoint)out+=`<div class="seasonAwardRow"><small>3-Point Champion</small><b>${live.results.threePoint.winnerName} · ${live.results.threePoint.winningScore} pts</b></div>`;if(live.results?.dunk)out+=`<div class="seasonAwardRow"><small>Dunk Champion</small><b>${live.results.dunk.winnerName} · ${live.results.dunk.winningScore}</b></div>`;if(live.results?.allStarGame){const g=gameById(live.results.allStarGame.gameId);out+=`<div class="seasonAwardRow"><small>All-Star Game</small><b>${allStarTeamName(live.results.allStarGame.winner)} won${g?` · ${g.homeScore}–${g.awayScore}`:''}</b></div>`}return out?`<div class="sectionTitle">Weekend Results</div><div class="seasonAwardsList">${out}</div>`:''}
 function allStarHomeHtml(){
   const live=G.allStarLive||initializeAllStarLive(G);
   return `<div class="allStarHero asHomeCard"><div class="allStarHeroTop"><b>NBA All-Star Weekend</b><small>${live.reviewStage?`Event ${live.reviewStage} Result`:`Event ${Math.min(live.stage,4)} of 4`}</small></div><div class="allStarBody"><h3>${live.reviewStage?`${allStarStageName(live.reviewStage)} Result`:allStarStageName(live.stage)}</h3><p>${live.reviewStage?"A result is ready to review before the weekend advances.":"Regular-season play is paused. Complete each showcase event in sequence before league play resumes."}</p>${allStarProgressHtml(live)}${allStarCompletedRows(live)}<div class="allStarAction"><button id="openAllStarHome" class="primaryProgress">${live.reviewStage?"Review Event Result":"Continue All-Star Weekend"}</button></div></div></div>`;
+}
+function deferAllStarSave(){
+  const run=()=>{try{const p=save();if(p&&typeof p.catch==="function")p.catch(e=>console.warn("Deferred All-Star save failed",e));}catch(e){console.warn("Deferred All-Star save failed",e)}};
+  if(typeof requestIdleCallback==="function")requestIdleCallback(run,{timeout:1200});
+  else setTimeout(run,180);
+}
+function allStarButtonBusy(button,label="Processing…"){
+  if(!button)return;
+  button.disabled=true;
+  button.setAttribute("aria-busy","true");
+  button.textContent=label;
+}
+function runAllStarUiAction(button,action,label="Processing…"){
+  allStarButtonBusy(button,label);
+  requestAnimationFrame(()=>setTimeout(()=>{
+    let result;
+    try{result=action()}catch(e){console.error("All-Star action failed",e);toast(e.message||"All-Star event could not advance.");renderAllStarWindow();return;}
+    if(!result?.ok){toast(result?.reason||"All-Star event could not advance.");renderAllStarWindow();return;}
+    renderAllStarWindow();
+    deferAllStarSave();
+  },0));
 }
 function openAllStarWindow(){if(!G.allStarLive)initializeAllStarLive(G);show('allStarWindow');renderAllStarWindow()}
 function renderAllStarWindow(){
@@ -14924,7 +15025,7 @@ function renderAllStarWindow(){
     </div>`;
   }else{
     host.innerHTML=`<div class="asWindow">
-      <div class="asEventHeader"><div><div class="eyebrow">NBA ALL-STAR WEEKEND</div><h2>${allStarStageName(live.stage)}</h2><p>${live.stage===1?"The league's top rookies and sophomores open the weekend.":live.stage===2?"Elite perimeter shooters compete for the 3-point crown.":live.stage===3?"The league's most athletic finishers compete for the dunk title.":"The Eastern and Western Conference stars close the weekend."}</p></div><div class="asEventCount">EVENT ${live.stage} / 4</div></div>
+      <div class="asEventHeader"><div><div class="eyebrow">NBA ALL-STAR WEEKEND</div><h2>${allStarStageName(live.stage)}</h2><p>${live.stage===1?"The league’s top sophomores and rookies open the weekend.":live.stage===2?"Elite perimeter shooters compete for the 3-point crown.":live.stage===3?"The league's most athletic finishers compete for the dunk title.":"The Eastern and Western Conference stars close the weekend."}</p></div><div class="asEventCount">EVENT ${live.stage} / 4</div></div>
       ${allStarProgressHtml(live)}
       ${allStarEventIntro(live)}
       ${allStarCompletedRows(live)}
@@ -14932,26 +15033,23 @@ function renderAllStarWindow(){
     </div>`;
   }
 
-  $("#playNextAllStar")?.addEventListener("click",async()=>{
-    const result=advanceAllStarEvent(G);
-    await save();
-    if(!result?.ok){toast(result?.reason||"All-Star event could not advance.");return;}
-    renderAllStarWindow();
+  $("#playNextAllStar")?.addEventListener("click",e=>{
+    runAllStarUiAction(e.currentTarget,()=>advanceAllStarEvent(G),"Playing event…");
   });
 
-  $("#continueAllStarReview")?.addEventListener("click",async()=>{
-    const result=continueAllStarWeekend(G);
-    await save();
-    if(!result?.ok){toast(result?.reason||"All-Star Weekend could not advance.");return;}
-    renderAllStarWindow();
+  $("#continueAllStarReview")?.addEventListener("click",e=>{
+    runAllStarUiAction(e.currentTarget,()=>continueAllStarWeekend(G),"Advancing…");
   });
 
-  $("#resumeRegularSeason")?.addEventListener("click",async()=>{
-    G.allStarLive=null;
-    await save();
-    show("game");
-    ui.page="home";
-    render();
+  $("#resumeRegularSeason")?.addEventListener("click",e=>{
+    allStarButtonBusy(e.currentTarget,"Returning…");
+    requestAnimationFrame(()=>setTimeout(()=>{
+      G.allStarLive=null;
+      show("game");
+      ui.page="home";
+      render();
+      deferAllStarSave();
+    },0));
   });
 }
 function fibaNationName(code){return nat(code)?.name||code||'—'}
