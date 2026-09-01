@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.74.6 Career · Cumulative Award Display Fix</title>
+<title>Mini&Me Basketball — v0.1.49.74.7 Career · Universal Cumulative Award Integration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1894,7 +1894,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.6 Career · Cumulative Award Display Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.7 Career · Universal Cumulative Award Integration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13209,7 +13209,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.74.6 Career · Cumulative Award Display Fix",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.7 Career · Universal Cumulative Award Integration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14057,51 +14057,68 @@ function displayAwardName(name){
     AllNBAFirst:"All-NBA First Team",AllNBASecond:"All-NBA Second Team",AllNBAThird:"All-NBA Third Team",
     AllDefensiveFirst:"All-Defensive First Team",AllDefensiveSecond:"All-Defensive Second Team",
     "All-Summer First Team":"All-Summer League First Team","All-Summer Second Team":"All-Summer League Second Team",
-    SixthMan:"Sixth Man of the Year","Sixth Man":"Sixth Man of the Year"
+    SixthMan:"Sixth Man of the Year","Sixth Man":"Sixth Man of the Year",
+    Champion:"NBA Champion","NBA Champion":"NBA Champion"
   };
   return map[n]||n.replace(/^AllNBA First$/i,"All-NBA First Team").replace(/^AllNBA Second$/i,"All-NBA Second Team").replace(/^AllNBA Third$/i,"All-NBA Third Team");
 }
 function careerAwardFamily(name){
-  return displayAwardName(String(name||"").replace(/^\d+×\s*/,""))
-    .replace(/^NBA\s+/,"").replace(/[-\s]/g,"").toLowerCase();
+  const raw=displayAwardName(String(name||"").replace(/^\d+×\s*/,""));
+  const compact=raw.replace(/^NBA\s+/,"").replace(/[-\s]/g,"").toLowerCase();
+  if(compact==="champion"||compact==="nbachampion")return"nbachampion";
+  return compact;
 }
 function careerAwardCount(a){
   if(Number.isFinite(+a?.count)&&+a.count>0)return +a.count;
   const m=String(a?.award||"").match(/^(\d+)×\s*/);return m?Math.max(1,+m[1]||1):1;
 }
+const CUMULATIVE_CAREER_AWARD_FAMILIES=new Set([
+  "nbachampion","mostvaluableplayer","defensiveplayeroftheyear","rookieoftheyear",
+  "sixthmanoftheyear","nbaallstar","nbaallnba","nbaalldefensive","nbaallrookie",
+  "scoringchampion","assistchampion","reboundingchampion","blockschampion","stealschampion"
+]);
+function isCumulativeCareerAwardFamily(family){
+  return CUMULATIVE_CAREER_AWARD_FAMILIES.has(String(family||""));
+}
 function integratedCareerAwardRows(p){
-  const awards=p?.awardHistory||[],historical=new Map(),seasonal=[];
+  const awards=p?.awardHistory||[],totals=new Map(),seasonal=[];
   for(const a of awards){
     const display=displayAwardName(a.award),family=careerAwardFamily(display),count=careerAwardCount(a);
-    if(a.historicalSeed){
-      const x=historical.get(family)||{family,name:display.replace(/^\d+×\s*/,""),count:0,international:!!a.international};
-      x.count+=count;x.international=x.international||!!a.international;historical.set(family,x);
+    const row={...a,displayName:display,family,count};
+    if(!family)continue;
+
+    // International/cycle-specific honours remain discrete unless they are
+    // deliberately modelled as a cumulative family elsewhere.
+    const cumulative=!a.international&&!a.cycle&&isCumulativeCareerAwardFamily(family);
+    if(cumulative){
+      const x=totals.get(family)||{
+        family,
+        name:display.replace(/^\d+×\s*/,""),
+        total:0,
+        historicalCount:0,
+        miniCount:0,
+        seasons:[]
+      };
+      x.total+=count;
+      if(a.historicalSeed)x.historicalCount+=count;
+      else{
+        x.miniCount+=count;
+        if(a.season!=null)x.seasons.push(a.season);
+      }
+      totals.set(family,x);
     }else{
-      seasonal.push({...a,displayName:display,family,count});
+      seasonal.push(row);
     }
   }
-  const miniCounts=new Map();
-  for(const a of seasonal){
-    if(a.international||a.cycle)continue;
-    miniCounts.set(a.family,(miniCounts.get(a.family)||0)+a.count);
-  }
-  const summary=[...historical.values()].map(x=>{
-    const mini=miniCounts.get(x.family)||0,total=x.count+mini;
-    return {...x,mini,total,label:total>1?`${total}× ${x.name}`:x.name};
-  });
-  // If a Mini&Me award has no historical baseline, its season row is sufficient.
-  // If it extends a historical baseline, retain the specific Mini&Me season beneath the updated career total.
-  const integratedFamilies=new Set(summary.map(x=>x.family));
-  const rows=[
+
+  const summary=[...totals.values()]
+    .map(x=>({...x,label:x.total>1?`${x.total}× ${x.name}`:x.name}))
+    .sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name));
+
+  return [
     ...summary.map(x=>({kind:"summary",...x})),
-    // Once a Mini&Me award has been absorbed into an integrated career total,
-    // do not repeat that same award as another Honours row. The season-specific
-    // achievement remains preserved in awardHistory/career timeline data.
-    ...seasonal
-      .filter(a=>!integratedFamilies.has(a.family))
-      .map(a=>({kind:"season",...a,extendsHistorical:false}))
+    ...seasonal.map(a=>({kind:"season",...a,extendsHistorical:false}))
   ];
-  return rows;
 }
 function playerDraftClubName(p){
   const club=clubById(G,p.historicalDraftClubId||p.draftedByClubId);
