@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.74.3 History · Record Identity Cleanup</title>
+<title>Mini&Me Basketball — v0.1.49.74.5 Career · Award Integration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1894,7 +1894,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.3 History · Record Identity Cleanup</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.5 Career · Award Integration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13209,7 +13209,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.74.3 History · Record Identity Cleanup",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.5 Career · Award Integration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13694,10 +13694,35 @@ const NATIONAL_FLAG_ISO={
   AUS:"AU",GUM:"GU",NZL:"NZ",PHI:"PH",TPE:"TW",CHN:"CN",JPN:"JP",KOR:"KR",IRI:"IR",IRQ:"IQ",JOR:"JO",SYR:"SY",IND:"IN",QAT:"QA",LBN:"LB",KSA:"SA",
   CMR:"CM",CPV:"CV",LBY:"LY",SSD:"SS",CIV:"CI",COD:"CD",SEN:"SN",RWA:"RW",NGA:"NG",NGR:"NG",MLI:"ML",UGA:"UG",ANG:"AO",GUI:"GN",TUN:"TN",EGY:"EG",MAD:"MG",RUS:"RU",HAI:"HT"
 };
+// Player data can legitimately contain either Mini&Me/FIBA nation codes or full
+// country names. Resolve both through one canonical ISO flag layer so roster,
+// profile, draft and international screens cannot fall back to a white flag merely
+// because the nationality field uses a human-readable country name.
+const NATIONALITY_NAME_ISO={
+  "united states":"US","usa":"US","australia":"AU","austria":"AT","bahamas":"BS",
+  "benin":"BJ","bosnia and herzegovina":"BA","bosnia":"BA","brazil":"BR","cameroon":"CM",
+  "canada":"CA","china":"CN","congo":"CD","dr congo":"CD","democratic republic of the congo":"CD",
+  "croatia":"HR","dominican republic":"DO","finland":"FI","france":"FR","georgia":"GE",
+  "germany":"DE","greece":"GR","guinea":"GN","israel":"IL","italy":"IT","jamaica":"JM",
+  "japan":"JP","latvia":"LV","lithuania":"LT","mali":"ML","montenegro":"ME",
+  "netherlands":"NL","new zealand":"NZ","nigeria":"NG","portugal":"PT","russia":"RU",
+  "senegal":"SN","serbia":"RS","slovenia":"SI","south sudan":"SS","sweden":"SE",
+  "switzerland":"CH","turkey":"TR","türkiye":"TR","ukraine":"UA","united kingdom":"GB",
+  "vanuatu":"VU"
+};
+function normalizeNationalityFlagIso(code){
+  const raw=String(code||"").trim();
+  if(!raw)return"";
+  const mapped=NATIONAL_FLAG_ISO[raw.toUpperCase()];
+  if(mapped)return mapped;
+  if(raw.length===2)return raw.toUpperCase();
+  const key=raw.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  return NATIONALITY_NAME_ISO[key]||"";
+}
 function flagEmoji(code){
-  const iso=NATIONAL_FLAG_ISO[code]||code;
+  const iso=normalizeNationalityFlagIso(code);
   if(!iso||iso.length!==2)return"🏳";
-  return [...iso.toUpperCase()].map(ch=>String.fromCodePoint(127397+ch.charCodeAt(0))).join("");
+  return [...iso].map(ch=>String.fromCodePoint(127397+ch.charCodeAt(0))).join("");
 }
 function nationalFlagMark(code,cls=""){
   return `<span class="nationalFlagMark ${cls}" role="img" aria-label="${nationName(code)} flag">${flagEmoji(code)}</span>`;
@@ -13707,7 +13732,11 @@ function nationalFlagLabel(code,name=null,cls=""){
   return `<span class="nationalFlagLabel ${cls}">${nationalFlagMark(code,"small")}<span>${label}</span></span>`;
 }
 const EXTRA_NATION_NAMES={RUS:"Russia",HAI:"Haiti"};
-function nationName(code){return NATIONAL_TEAMS.find(n=>n.code===code)?.name||EXTRA_NATION_NAMES[code]||code||"International"}
+function nationName(code){
+  const raw=String(code||"").trim();
+  if(!raw)return"International";
+  return NATIONAL_TEAMS.find(n=>n.code===raw)?.name||EXTRA_NATION_NAMES[raw]||raw;
+}
 function nationDisplay(code){return `${flagEmoji(code)} ${nationName(code)}`}
 function validArchetypesForPosition(pos){return ARCHETYPES_BY_POSITION[pos]||[]}
 function resetPlayerHistoryAfterAgeEdit(p){
@@ -14027,9 +14056,47 @@ function displayAwardName(name){
   const map={
     AllNBAFirst:"All-NBA First Team",AllNBASecond:"All-NBA Second Team",AllNBAThird:"All-NBA Third Team",
     AllDefensiveFirst:"All-Defensive First Team",AllDefensiveSecond:"All-Defensive Second Team",
-    "All-Summer First Team":"All-Summer League First Team","All-Summer Second Team":"All-Summer League Second Team"
+    "All-Summer First Team":"All-Summer League First Team","All-Summer Second Team":"All-Summer League Second Team",
+    SixthMan:"Sixth Man of the Year","Sixth Man":"Sixth Man of the Year"
   };
   return map[n]||n.replace(/^AllNBA First$/i,"All-NBA First Team").replace(/^AllNBA Second$/i,"All-NBA Second Team").replace(/^AllNBA Third$/i,"All-NBA Third Team");
+}
+function careerAwardFamily(name){
+  return displayAwardName(String(name||"").replace(/^\d+×\s*/,""))
+    .replace(/^NBA\s+/,"").replace(/[-\s]/g,"").toLowerCase();
+}
+function careerAwardCount(a){
+  if(Number.isFinite(+a?.count)&&+a.count>0)return +a.count;
+  const m=String(a?.award||"").match(/^(\d+)×\s*/);return m?Math.max(1,+m[1]||1):1;
+}
+function integratedCareerAwardRows(p){
+  const awards=p?.awardHistory||[],historical=new Map(),seasonal=[];
+  for(const a of awards){
+    const display=displayAwardName(a.award),family=careerAwardFamily(display),count=careerAwardCount(a);
+    if(a.historicalSeed){
+      const x=historical.get(family)||{family,name:display.replace(/^\d+×\s*/,""),count:0,international:!!a.international};
+      x.count+=count;x.international=x.international||!!a.international;historical.set(family,x);
+    }else{
+      seasonal.push({...a,displayName:display,family,count});
+    }
+  }
+  const miniCounts=new Map();
+  for(const a of seasonal){
+    if(a.international||a.cycle)continue;
+    miniCounts.set(a.family,(miniCounts.get(a.family)||0)+a.count);
+  }
+  const summary=[...historical.values()].map(x=>{
+    const mini=miniCounts.get(x.family)||0,total=x.count+mini;
+    return {...x,mini,total,label:total>1?`${total}× ${x.name}`:x.name};
+  });
+  // If a Mini&Me award has no historical baseline, its season row is sufficient.
+  // If it extends a historical baseline, retain the specific Mini&Me season beneath the updated career total.
+  const integratedFamilies=new Set(summary.map(x=>x.family));
+  const rows=[
+    ...summary.map(x=>({kind:"summary",...x})),
+    ...seasonal.map(a=>({kind:"season",...a,extendsHistorical:integratedFamilies.has(a.family)}))
+  ];
+  return rows;
 }
 function playerDraftClubName(p){
   const club=clubById(G,p.historicalDraftClubId||p.draftedByClubId);
@@ -14303,7 +14370,16 @@ function playerProfile(){
     ${p.retired?`<div class="retirementBanner"><div><small>CAREER COMPLETE</small><b>Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} · Age ${p.retirementAge||p.age}</b><span>Last affiliation: ${p.retiredFromClubName||"Free Agency"}</span></div></div>`:""}
     <div class="sectionTitle">All-Time League Standing</div><div class="careerRankGrid">${allTimeRanks.length?allTimeRanks.slice(0,6).map(r=>`<div class="careerRankCard"><small>${r.label}</small><b>#${r.rank}</b><span>${Math.round(+r.value||0).toLocaleString()}</span></div>`).join(""):`<div class="profilePanel" style="grid-column:1/-1"><div class="empty">All-time rankings will appear as career history builds.</div></div>`}</div>
     <div class="sectionTitle">Career Peak</div>${peak?`<div class="careerPeakCard"><div><small>SEASON ${peak.season}</small><b>${peak.clubName||clubById(G,peak.clubId)?.name||"Club"}</b><span>${peak.ppg.toFixed(1)} PPG · ${peak.rpg.toFixed(1)} RPG · ${peak.apg.toFixed(1)} APG</span></div><strong>OVR ${peak.ovr??"—"}</strong></div>`:`<div class="profilePanel"><div class="empty">Career peak will populate from Mini&Me season records as the career continues.</div></div>`}
-    <div class="sectionTitle">Career Timeline</div><div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${awards.length?awards.slice(0,24).map(a=>`<div class="historyItem"><div class="season">${a.historicalSeed?"Career":`${basketballSeasonLabel(a.season)}`}</div><div><b>${displayAwardName(a.award)}</b><small>${a.cycle?`World Cup ${a.cycle}`:(a.international?`${nationDisplay(p.nationality)} · International Honour`:(a.clubId?`${clubById(G,a.clubId)?.name||a.clubId} · Career Honour`:"Career Honour"))}</small></div><div class="right">Award</div></div>`).join(""):`<div class="empty">No recorded honours yet.</div>`}</div>
+    <div class="sectionTitle">Career Timeline</div><div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${(()=>{
+      const rows=integratedCareerAwardRows(p);
+      if(!rows.length)return `<div class="empty">No recorded honours yet.</div>`;
+      return rows.slice(0,28).map(a=>{
+        if(a.kind==="summary"){
+          return `<div class="historyItem"><div class="season">Career</div><div><b>${a.label}</b><small>${a.international?`${nationDisplay(p.nationality)} · International Honour`:"Career Honour"}</small></div><div class="right">Award</div></div>`;
+        }
+        return `<div class="historyItem"><div class="season">${basketballSeasonLabel(a.season)}</div><div><b>${a.displayName}</b><small>${a.cycle?`World Cup ${a.cycle}`:(a.international?`${nationDisplay(p.nationality)} · International Honour`:(a.extendsHistorical?"Mini&Me Honour":(a.clubId?`${clubById(G,a.clubId)?.name||a.clubId} · Career Honour`:"Career Honour")))}</small></div><div class="right">Award</div></div>`;
+      }).join("");
+    })()}</div>
     <div class="sectionTitle">International Career</div><div class="profilePanel internationalCareerPanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>`;
   const contract=`
     <div class="profilePanel"><h4>Current Contract Overview</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Salary</small><b>$${(+p.salaryM||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Market Range</small><b>$${(+market||0).toFixed(1)}M</b></div><div class="profileDataRow"><small>Years Remaining</small><b>${p.contractYearsLeft??"N/A"}</b></div>${p.pendingExtension?`<div class="profileDataRow"><small>Extension Agreed</small><b>${p.pendingExtension.years} yr · $${(+p.pendingExtension.annualM||0).toFixed(1)}M/yr from next season</b></div>`:""}<div class="profileDataRow"><small>Contract Type</small><b>${p.contractType||"Standard"}</b></div><div class="profileDataRow"><small>Status</small><b>${p.contractStatus||"Under Contract"}</b></div><div class="profileDataRow"><small>Role</small><b>${p.rotationRole||"Depth"}</b></div></div></div>
