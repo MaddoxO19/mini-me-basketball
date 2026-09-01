@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.73.1 UI · Global Header Offset Fix</title>
+<title>Mini&Me Basketball — v0.1.49.74.0 Franchise · Identity & Logo Refresh</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1886,7 +1886,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.73.1 UI · Global Header Offset Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.0 Franchise · Identity & Logo Refresh</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -1930,7 +1930,7 @@ function canPlayPosition(player,pos){
 function positionLabel(player){
   return player?.secondaryPosition ? `${player.position}/${player.secondaryPosition}` : (player?.position||"—");
 }
-const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#55B68A"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#D8D8D8"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#E68B4F"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#6D97D4"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#D96464"},{"id":"CHI","name":"Chicago Rams","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#E85D64"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#D7A758"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#6F9ED6"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#E2C65B"},{"id":"MIL","name":"Milwaukee Lakefront","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#78B884"},{"id":"ATL","name":"Atlanta Firebirds","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E26A4A"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#6DC7D4"},{"id":"MIA","name":"Miami Waves","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#E56F85"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#68A9DB"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#788DAF"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#E0B95F"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#74B6A1"},{"id":"OKC","name":"Oklahoma City Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#6FB6DD"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#D36C6C"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#8EBB6D"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#E8BD55"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#6D9AD6"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#E6B953"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#E58D4F"},{"id":"SAC","name":"Sacramento Royals","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#9A7FC1"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#5F9ED4"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#DE6262"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#7D9FCB"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#D3B35C"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C6CCD2"}];
+const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#007A33"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#111111"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#006BB6"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#006BB6"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#CE1141"},{"id":"CHI","name":"Chicago Stockyards","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#CE1141"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#860038"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#C8102E"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#002D62"},{"id":"MIL","name":"Milwaukee Antlers","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#00471B"},{"id":"ATL","name":"Atlanta Firebirds","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E03A3E"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#1D1160"},{"id":"MIA","name":"Miami Mirage","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#98002E"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#0077C0"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#002B5C"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#0E2240"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#0C2340"},{"id":"OKC","name":"Oklahoma City Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#007AC1"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#E03A3E"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#002B5C"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#1D428A"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#C8102E"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#552583"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#1D1160"},{"id":"SAC","name":"Sacramento Regents","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#5A2D81"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#00538C"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#CE1141"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#5D76A9"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#0C2340"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C4CED4"}];
 
 // v0.1.42.0 — Production launch data foundation.
 // The career begins from a recognisable 2026/27 basketball universe, then evolves entirely inside the save.
@@ -13052,7 +13052,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.73.1 UI · Global Header Offset Fix",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.0 Franchise · Identity & Logo Refresh",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13117,6 +13117,10 @@ const CLUB_CREST_FRAME_BY_ID={
 // invisible noise instead of depth. Fixed by testing the intent
 // directly against real display size, not just checking the SVG output.
 const CREST_EMBLEMS = {
+  stockyards: (t)=>`<path d="M23 34 H77 L70 43 H60 L65 72 H56 L50 57 L44 72 H35 L40 43 H30 Z" fill="${t}"/><path d="M28 30 L40 39 M72 30 L60 39" fill="none" stroke="${t}" stroke-width="5" stroke-linecap="round"/><circle cx="50" cy="48" r="7" fill="${t}" opacity=".5"/>`,
+  antlers: (t)=>`<path d="M47 72 V48 C39 46 34 40 31 32 M53 72 V48 C61 46 66 40 69 32" fill="none" stroke="${t}" stroke-width="5" stroke-linecap="round"/><path d="M39 48 L29 43 M36 41 L27 34 M61 48 L71 43 M64 41 L73 34 M47 57 L39 53 M53 57 L61 53" fill="none" stroke="${t}" stroke-width="4" stroke-linecap="round"/><path d="M43 70 Q50 77 57 70" fill="none" stroke="${t}" stroke-width="4" stroke-linecap="round"/>`,
+  mirage: (t)=>`<circle cx="50" cy="35" r="12" fill="${t}"/><path d="M20 58 Q31 48 42 58 T64 58 T84 58" fill="none" stroke="${t}" stroke-width="5" stroke-linecap="round"/><path d="M25 70 Q35 62 45 70 T65 70 T80 70" fill="none" stroke="${t}" stroke-width="3.5" opacity=".7" stroke-linecap="round"/><path d="M50 17 V12 M31 26 L26 22 M69 26 L74 22" stroke="${t}" stroke-width="3.5" stroke-linecap="round"/>`,
+  regentCrown: (t)=>`<path d="M21 62 L27 34 L40 48 L50 24 L60 48 L73 34 L79 62 Z" fill="${t}"/><path d="M25 68 H75" stroke="${t}" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="37" r="3" fill="${t}" opacity=".55"/><circle cx="34" cy="47" r="2.5" fill="${t}" opacity=".55"/><circle cx="66" cy="47" r="2.5" fill="${t}" opacity=".55"/>`,
   oak: (t)=>`<rect x="46" y="56" width="8" height="18" fill="${t}"/><rect x="48" y="56" width="2" height="18" fill="${t}" opacity="0.4"/><circle cx="50" cy="44" r="17" fill="${t}"/><circle cx="44" cy="38" r="7" fill="${t}" opacity="0.5"/>`,
   bridge: (t)=>`<path d="M30 70 V36 Q30 26 38 26 Q46 26 46 36 V70 Z" fill="${t}"/><path d="M54 70 V36 Q54 26 62 26 Q70 26 70 36 V70 Z" fill="${t}"/><path d="M33 66 V38 Q33 30 38 29" fill="none" stroke="${t}" stroke-width="1.4" opacity="0.5"/><path d="M57 66 V38 Q57 30 62 29" fill="none" stroke="${t}" stroke-width="1.4" opacity="0.5"/><rect x="18" y="66" width="64" height="7" fill="${t}"/><rect x="18" y="66" width="64" height="2" fill="${t}" opacity="0.4"/><path d="M40 40 Q50 52 60 40 M34 52 Q50 62 66 52" fill="none" stroke="${t}" stroke-width="1.4" opacity="0.55"/>`,
   spire: (t)=>`<path d="M36 74 V52 H42 V44 H46 V32 H54 V44 H58 V52 H64 V74 Z M47 24 V32 H53 V24 Z" fill="${t}"/><rect x="48" y="36" width="4" height="34" fill="${t}" opacity="0.4"/><g fill="${t}" opacity="0.5"><circle cx="41" cy="58" r="1"/><circle cx="59" cy="58" r="1"/><circle cx="41" cy="64" r="1"/><circle cx="59" cy="64" r="1"/></g>`,
@@ -13154,26 +13158,40 @@ const EMBLEM_KEYS = Object.keys(CREST_EMBLEMS);
 // is where the actual design thinking lives.
 const CLUB_EMBLEM_BY_ID = {
   BOS:"oak", BKN:"bridge", NYE:"spire", PHI:"crucible", TOR:"northstar",
-  CHI:"wings", CLE:"anvil", DET:"gear", IND:"checkeredFlag", MIL:"wheatSheaf",
-  ATL:"phoenixFlame", CHA:"crown", MIA:"waves", ORL:"castle", WAS:"capitolDome",
+  CHI:"stockyards", CLE:"anvil", DET:"gear", IND:"checkeredFlag", MIL:"antlers",
+  ATL:"phoenixFlame", CHA:"crown", MIA:"mirage", ORL:"castle", WAS:"capitolDome",
   DEN:"mountainRange", MIN:"snowflake", OKC:"bolt", POR:"pineTree", UTA:"summitFlag",
-  GSB:"gateTower", LAC:"sunset", LAG:"sunburst", PHX:"flame", SAC:"fleurRoyal",
+  GSB:"gateTower", LAC:"sunset", LAG:"sunburst", PHX:"flame", SAC:"regentCrown",
   DAL:"loneStar", HOU:"orbit", MEM:"musicNote", NOP:"mardiGrasMask", SAS:"spur",
+};
+
+
+// v0.1.49.74.0 — Franchise identity refresh.
+// NBA-city-inspired colour families with original Mini&Me names and marks.
+const CLUB_BRAND_PALETTES={
+BOS:{secondary:"#BA9653",trim:"#FFFFFF"},BKN:{secondary:"#FFFFFF",trim:"#A7A9AC"},NYE:{secondary:"#F58426",trim:"#BEC0C2"},PHI:{secondary:"#ED174C",trim:"#FFFFFF"},TOR:{secondary:"#000000",trim:"#A1A1A4"},
+CHI:{secondary:"#000000",trim:"#FFFFFF"},CLE:{secondary:"#FDBB30",trim:"#041E42"},DET:{secondary:"#1D42BA",trim:"#FFFFFF"},IND:{secondary:"#FDBB30",trim:"#BEC0C2"},MIL:{secondary:"#EEE1C6",trim:"#0077C0"},
+ATL:{secondary:"#C1D32F",trim:"#26282A"},CHA:{secondary:"#00788C",trim:"#A1A1A4"},MIA:{secondary:"#F9A01B",trim:"#000000"},ORL:{secondary:"#C4CED4",trim:"#000000"},WAS:{secondary:"#E31837",trim:"#C4CED4"},
+DEN:{secondary:"#FEC524",trim:"#8B2131"},MIN:{secondary:"#78BE20",trim:"#236192"},OKC:{secondary:"#EF3B24",trim:"#FDBB30"},POR:{secondary:"#000000",trim:"#FFFFFF"},UTA:{secondary:"#F9A01B",trim:"#6CC24A"},
+GSB:{secondary:"#FFC72C",trim:"#FFFFFF"},LAC:{secondary:"#1D428A",trim:"#FFFFFF"},LAG:{secondary:"#FDB927",trim:"#FFFFFF"},PHX:{secondary:"#E56020",trim:"#F9AD1B"},SAC:{secondary:"#63727A",trim:"#FFFFFF"},
+DAL:{secondary:"#002B5E",trim:"#B8C4CA"},HOU:{secondary:"#000000",trim:"#C4CED4"},MEM:{secondary:"#12173F",trim:"#F5B112"},NOP:{secondary:"#C8102E",trim:"#85714D"},SAS:{secondary:"#000000",trim:"#FFFFFF"}
 };
 
 let __crestGradSeq=0;
 function crestSVG(team){
+  const brand=CLUB_BRAND_PALETTES[team?.id]||{};
   const base=team?.color||"#e6b953";
-  const field=shadeColor(base,-12), panelShade=shadeColor(field,-25);
+  const secondary=brand.secondary||shadeColor(base,34),trim=brand.trim||"#FFFFFF";
+  const field=shadeColor(base,-8),panelShade=shadeColor(field,-20);
   const mark=team?.mark||(team?.id||team?.name||"—").slice(0,3).toUpperCase();
   const seed=team?.id||mark;
   const emblemKey=CLUB_EMBLEM_BY_ID[team?.id]||EMBLEM_KEYS[hashStr(seed+"|emblem")%EMBLEM_KEYS.length];
-  const emblemTone=contrastOn(field);
-  const gold="#c9a856",goldEdge="#8a6f34",cream="#efe1b8";
+  const emblemTone=relLuminance(field)<0.34?"#FFFFFF":contrastOn(field);
+  const gold=secondary,goldEdge=shadeColor(secondary,-22),cream=trim;
   const frameKey=CLUB_CREST_FRAME_BY_ID[team?.id]||"shield";
   const f=CREST_FRAMES[frameKey]||CREST_FRAMES.shield;
   const isBall=frameKey==="basketball";
-  const accent=shadeColor(base,26);
+  const accent=secondary;
   const id=String(team?.id||mark).replace(/[^A-Za-z0-9_-]/g,"");
   const seams=isBall?`
     <path d="M50 10 V107 M13 50 H87" fill="none" stroke="${cream}" stroke-width="1.25" opacity=".28"/>
@@ -13182,7 +13200,7 @@ function crestSVG(team){
     <defs><linearGradient id="crest_${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${accent}"/><stop offset="1" stop-color="${field}"/></linearGradient></defs>
     <path d="${f.outer}" fill="url(#crest_${id})" stroke="${goldEdge}" stroke-width="4"/>
     <path d="${f.inner}" fill="none" stroke="${cream}" stroke-width="1" opacity=".72"/>
-    <path d="${f.inner}" fill="${panelShade}" opacity=".18"/>
+    <path d="${f.inner}" fill="${panelShade}" opacity=".28"/><path d="M18 78 Q50 91 82 78" fill="none" stroke="${secondary}" stroke-width="2.4" opacity=".72"/>
     ${seams}
     <g transform="translate(0,-4) scale(1,.88) translate(0,4)">${CREST_EMBLEMS[emblemKey](emblemTone,field)}</g>
     <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="${gold}" stroke="${goldEdge}" stroke-width="1.3"/>
@@ -18199,9 +18217,11 @@ function ensureCanonicalTeamNames(G){
   if(!G)return;
   const aliases={
     "Atlanta Firebirds":"Atlanta Firebirds",
-    "Chicago Rams":"Chicago Rams",
-    "Milwaukee North":"Milwaukee Lakefront",
-    "Oklahoma City Thunder":"Oklahoma City Storm"
+    "Chicago Rams":"Chicago Stockyards","Chicago Stockyards":"Chicago Stockyards",
+    "Milwaukee North":"Milwaukee Antlers","Milwaukee Lakefront":"Milwaukee Antlers","Milwaukee Antlers":"Milwaukee Antlers",
+    "Miami Waves":"Miami Mirage","Miami Mirage":"Miami Mirage",
+    "Oklahoma City Thunder":"Oklahoma City Storm",
+    "Sacramento Royals":"Sacramento Regents","Sacramento Regents":"Sacramento Regents"
   };
   for(const club of (G.clubs||[])){
     if(aliases[club.name])club.name=aliases[club.name];
