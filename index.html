@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.74.5 Career · Award Integration</title>
+<title>Mini&Me Basketball — v0.1.49.74.6 Career · Cumulative Award Display Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1894,7 +1894,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.5 Career · Award Integration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.6 Career · Cumulative Award Display Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13209,7 +13209,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.74.5 Career · Award Integration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.6 Career · Cumulative Award Display Fix",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14094,7 +14094,12 @@ function integratedCareerAwardRows(p){
   const integratedFamilies=new Set(summary.map(x=>x.family));
   const rows=[
     ...summary.map(x=>({kind:"summary",...x})),
-    ...seasonal.map(a=>({kind:"season",...a,extendsHistorical:integratedFamilies.has(a.family)}))
+    // Once a Mini&Me award has been absorbed into an integrated career total,
+    // do not repeat that same award as another Honours row. The season-specific
+    // achievement remains preserved in awardHistory/career timeline data.
+    ...seasonal
+      .filter(a=>!integratedFamilies.has(a.family))
+      .map(a=>({kind:"season",...a,extendsHistorical:false}))
   ];
   return rows;
 }
@@ -14377,7 +14382,7 @@ function playerProfile(){
         if(a.kind==="summary"){
           return `<div class="historyItem"><div class="season">Career</div><div><b>${a.label}</b><small>${a.international?`${nationDisplay(p.nationality)} · International Honour`:"Career Honour"}</small></div><div class="right">Award</div></div>`;
         }
-        return `<div class="historyItem"><div class="season">${basketballSeasonLabel(a.season)}</div><div><b>${a.displayName}</b><small>${a.cycle?`World Cup ${a.cycle}`:(a.international?`${nationDisplay(p.nationality)} · International Honour`:(a.extendsHistorical?"Mini&Me Honour":(a.clubId?`${clubById(G,a.clubId)?.name||a.clubId} · Career Honour`:"Career Honour")))}</small></div><div class="right">Award</div></div>`;
+        return `<div class="historyItem"><div class="season">${basketballSeasonLabel(a.season)}</div><div><b>${a.displayName}</b><small>${a.cycle?`World Cup ${a.cycle}`:(a.international?`${nationDisplay(p.nationality)} · International Honour`:(a.clubId?`${clubById(G,a.clubId)?.name||a.clubId} · Career Honour`:"Career Honour"))}</small></div><div class="right">Award</div></div>`;
       }).join("");
     })()}</div>
     <div class="sectionTitle">International Career</div><div class="profilePanel internationalCareerPanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>`;
