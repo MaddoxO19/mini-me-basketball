@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.74.0 Franchise · Identity & Logo Refresh</title>
+<title>Mini&Me Basketball — v0.1.49.74.1 Players · Generational Builds</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1883,10 +1883,12 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    All-Star contests now select by relevant shooting/dunk profiles; Draft Night
    highlights the Scouting Department recommendation; elite source identities,
    97-99 OVR impact floors and elite young-player POT floors are calibrated. */
+
+.generationalChip{border-color:#a66d22!important;background:linear-gradient(135deg,#2b1c0b,#151922)!important;color:#ffc66d!important;box-shadow:inset 0 0 0 1px rgba(255,190,92,.08)}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.0 Franchise · Identity & Logo Refresh</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.1 Players · Generational Builds</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4775,6 +4777,69 @@ function derivePlayerBuild(player) {
   return player.position==="PG"?"Lead Guard":player.position==="SG"?"Scoring Guard":player.position==="SF"?"Two-Way Wing":player.position==="PF"?"Versatile Forward":player.position==="C"?"Interior Big":"Basketball Player";
 }
 
+
+// v0.1.49.74.1 — Generational Builds.
+// 97+ OVR is the eligibility threshold. One active build describes HOW the
+// player is generational; it supplements rather than replaces archetype/build.
+const GENERATIONAL_BUILD_DEFS={
+  "Unicorn":{positions:["PF","C"],mods:{usage:1.12,assist:1.12,rebound:1.18,block:1.55,defensiveImpact:1.20,threeAccuracy:.030},shootFloor:82},
+  "Offensive Engine":{positions:["PG","SG","SF","PF"],mods:{usage:1.22,assist:1.42,rebound:1.08,foulDraw:1.12,threeAccuracy:.025,volatility:1.08},shootFloor:84},
+  "Two-Way Apex":{positions:["SG","SF","PF"],mods:{usage:1.15,steal:1.30,block:1.16,defensiveImpact:1.24,threeAccuracy:.055},shootFloor:84},
+  "Point Forward":{positions:["SF","PF"],mods:{usage:1.10,assist:1.48,rebound:1.14,defensiveImpact:1.08,threeAccuracy:.020},shootFloor:80},
+  "Three-Level Maestro":{positions:["PG","SG","SF"],mods:{usage:1.20,assist:1.15,foulDraw:1.10,threeAccuracy:.060,volatility:1.08},shootFloor:86},
+  "Gravity Shooter":{positions:["PG","SG","SF"],mods:{usage:1.17,assist:1.10,threeRate:.055,threeAccuracy:.085,volatility:1.12},shootFloor:90},
+  "Paint Dominator":{positions:["PF","C"],mods:{usage:1.18,rebound:1.24,foulDraw:1.24,block:1.08,defensiveImpact:1.08,threeRate:-.10},shootFloor:68},
+  "Defensive Anchor":{positions:["PF","C"],mods:{usage:1.02,rebound:1.28,block:1.70,steal:1.08,defensiveImpact:1.32,threeRate:-.035},shootFloor:70},
+  "Athletic Phenomenon":{positions:["SG","SF","PF","C"],mods:{usage:1.18,rebound:1.15,steal:1.14,block:1.16,foulDraw:1.24,defensiveImpact:1.10,threeAccuracy:.010,volatility:1.10},shootFloor:76},
+  "Complete Superstar":{positions:["PG","SG","SF","PF","C"],mods:{usage:1.15,assist:1.16,rebound:1.14,steal:1.14,block:1.12,foulDraw:1.10,defensiveImpact:1.12,threeAccuracy:.040},shootFloor:82}
+};
+function generationalSourceBuild(player){
+  const source=statisticalIdentitySourceName(player);
+  if(source==="Victor Wembanyama")return"Unicorn";
+  if(source==="Luka Doncic"||source==="Luka Dončić")return"Offensive Engine";
+  if(source==="Stephen Curry")return"Gravity Shooter";
+  if(source==="Nikola Jokic")return"Offensive Engine";
+  if(source==="Giannis Antetokounmpo")return"Athletic Phenomenon";
+  return null;
+}
+function deriveGenerationalBuild(player){
+  if(!player||(+player.ovr||0)<97)return null;
+  const seeded=generationalSourceBuild(player);if(seeded)return seeded;
+  const pos=player.position||"SF",arch=player.archetype||"",h=+player.heightCm||0;
+  if((pos==="PF"||pos==="C")&&h>=216&&["Stretch Five","Stretch Four","Rim Protector"].includes(arch))return"Unicorn";
+  if(["Floor General","Combo Guard"].includes(arch)&&["PG","SG"].includes(pos))return arch==="Floor General"?"Offensive Engine":"Three-Level Maestro";
+  if(arch==="Sharpshooter"&&["PG","SG","SF"].includes(pos))return"Gravity Shooter";
+  if(arch==="3-and-D Guard"||arch==="3-and-D Wing")return"Two-Way Apex";
+  if(arch==="Playmaking Forward"&&["SF","PF"].includes(pos))return"Point Forward";
+  if(arch==="Slasher"&&["SG","SF","PF"].includes(pos))return"Athletic Phenomenon";
+  if(arch==="Traditional Big")return"Paint Dominator";
+  if(arch==="Rim Protector")return"Defensive Anchor";
+  if(["Stretch Four","Stretch Five"].includes(arch))return pos==="C"&&h>=213?"Unicorn":"Complete Superstar";
+  return"Complete Superstar";
+}
+function syncGenerationalBuild(player,season=null){
+  if(!player)return null;
+  const next=deriveGenerationalBuild(player),prev=player.generationalBuild||null;
+  if(next!==prev){
+    player.generationalBuild=next;
+    player.generationalBuildHistory=Array.isArray(player.generationalBuildHistory)?player.generationalBuildHistory:[];
+    if(next&&!player.generationalBuildHistory.some(x=>x?.build===next&&x?.ovr===player.ovr)){
+      player.generationalBuildHistory.push({build:next,ovr:+player.ovr||0,season:season??null,age:+player.age||null});
+      player.generationalBuildHistory=player.generationalBuildHistory.slice(-8);
+    }
+  }
+  return next;
+}
+function generationalBuildDefinition(player){
+  const key=syncGenerationalBuild(player);return key?GENERATIONAL_BUILD_DEFS[key]||null:null;
+}
+function generationalBuildLabel(player){
+  const key=syncGenerationalBuild(player);return key?`Generational · ${key}`:"";
+}
+function generationalShootRatingFloor(player){
+  const def=generationalBuildDefinition(player);return def?.shootFloor||0;
+}
+
 // Statistical identity shapes where production goes; OVR still determines how good the player is.
 // v0.1.46.13: the deep identity is engine-controlled and persists independently of user edits.
 const STAT_IDENTITY_RARITY_CAPS={Generational:2,Exceptional:8,"Elite Specialist":24};
@@ -4864,7 +4929,8 @@ function ensureLeagueStatisticalIdentities(G){
     }else if(p.statisticalIdentity?.locked&&counts[p.statisticalIdentity.tier]!==undefined)counts[p.statisticalIdentity.tier]++;
   }
   for(const p of unique)if(!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p,counts);
-  G.statisticalIdentityAudit={season:G.season,counts,caps:{...STAT_IDENTITY_RARITY_CAPS}};
+  for(const p of unique)syncGenerationalBuild(p,G.season);
+  G.statisticalIdentityAudit={season:G.season,counts,caps:{...STAT_IDENTITY_RARITY_CAPS},generational:unique.filter(p=>p.generationalBuild).length};
 }
 function playerStatIdentity(player) {
   if(!player?.statisticalIdentity?.locked)assignEngineStatisticalIdentity(player);
@@ -4872,6 +4938,10 @@ function playerStatIdentity(player) {
   for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+mods[k]))base[k]*=+mods[k];}
   if(Number.isFinite(+mods.threeRate))base.threeRate+=+mods.threeRate;
   if(Number.isFinite(+mods.threeAccuracy))base.threeAccuracy+=+mods.threeAccuracy;
+  const gen=generationalBuildDefinition(player),genMods=gen?.mods||{};
+  for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+genMods[k]))base[k]*=+genMods[k];}
+  if(Number.isFinite(+genMods.threeRate))base.threeRate+=+genMods.threeRate;
+  if(Number.isFinite(+genMods.threeAccuracy))base.threeAccuracy+=+genMods.threeAccuracy;
   const ovr=Math.max(50,Math.min(99,+player?.ovr||70));
   if(ovr>=97){
     const pos=player?.position||"SF",peak=ovr>=99;
@@ -4952,6 +5022,7 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     nationalDepthRank: null,
   };
   player.playerBuild = derivePlayerBuild(player);
+  syncGenerationalBuild(player);
   player.salaryM = isProspect ? Math.round((2.0 + Math.max(0, player.ovr - 67) * 0.16) * 10) / 10 : salaryForOvr(player.ovr, player.age);
   player.extensionEligible = player.contractYearsLeft === 1;
   return player;
@@ -12047,7 +12118,8 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       const fatigueAdj = fatigue * 0.00055;
       let pct;
       if (isThree) {
-        const shootRating=Number.isFinite(+p.sourceThreePt)?+p.sourceThreePt:(62+(p.ovr-60)*0.62);
+        const rawShootRating=Number.isFinite(+p.sourceThreePt)?+p.sourceThreePt:(62+(p.ovr-60)*0.62);
+        const shootRating=Math.max(rawShootRating,generationalShootRatingFloor(p));
         const shootArchBonus=["Sharpshooter","Stretch Four","Stretch Five","3-and-D Guard","3-and-D Wing"].includes(p.archetype)?0.020:0;
         pct = 0.285 + (shootRating-60)*0.0030 + shootArchBonus + (playerStatIdentity(p).threeAccuracy||0);
         pct -= (defQ-70)*0.0007 + (defImpact-1)*0.035;
@@ -13052,7 +13124,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.74.0 Franchise · Identity & Logo Refresh",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.1 Players · Generational Builds",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14148,8 +14220,8 @@ function playerProfile(){
 })()} · ${g.line.pts||0} PTS · ${g.line.reb||0} REB · ${g.line.ast||0} AST</small></div><div class="right">${g.line.min||0} MIN</div></div>`).join(""):`<div class="empty">No recent games recorded for this player.</div>`}</div>
     <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
   return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${club?.name||"Free Agent"} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
-    <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
-    ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. NBA experience is separate from contract type. Changing age will reset recorded career history after confirmation. Statistical identity is engine-controlled and is not upgraded by editing OVR, POT, position or archetype.</span></div>`:""}
+    <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
+    ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. NBA experience is separate from contract type. Changing age will reset recorded career history after confirmation. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; it deactivates below 97 OVR.</span></div>`:""}
     <div class="profileTabs profileTabs4"><button data-playerprofiletab="overview" class="${tab==="overview"?"active":""}">Overview</button><button data-playerprofiletab="career" class="${tab==="career"?"active":""}">Career</button><button data-playerprofiletab="contract" class="${tab==="contract"?"active":""}">Contract</button><button data-playerprofiletab="gameshealth" class="${tab==="gameshealth"?"active":""}">Games & Health</button></div>
     ${tab==="career"?career:tab==="contract"?contract:tab==="gameshealth"?gamesHealth:overview}`;
 }
