@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.74.7 Career · Universal Cumulative Award Integration</title>
+<title>Mini&Me Basketball — v0.1.49.74.9 Career · Honours Presentation Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1894,7 +1894,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.7 Career · Universal Cumulative Award Integration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.74.9 Career · Honours Presentation Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13209,7 +13209,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.74.7 Career · Universal Cumulative Award Integration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.74.9 Career · Honours Presentation Fix",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14058,67 +14058,96 @@ function displayAwardName(name){
     AllDefensiveFirst:"All-Defensive First Team",AllDefensiveSecond:"All-Defensive Second Team",
     "All-Summer First Team":"All-Summer League First Team","All-Summer Second Team":"All-Summer League Second Team",
     SixthMan:"Sixth Man of the Year","Sixth Man":"Sixth Man of the Year",
-    Champion:"NBA Champion","NBA Champion":"NBA Champion"
+    Champion:"NBA Champion","NBA Champion":"NBA Champion",
+    DPOY:"Defensive Player of the Year",ROY:"Rookie of the Year",MIP:"Most Improved Player",
+    AllStar:"NBA All-Star","All-Star":"NBA All-Star"
   };
   return map[n]||n.replace(/^AllNBA First$/i,"All-NBA First Team").replace(/^AllNBA Second$/i,"All-NBA Second Team").replace(/^AllNBA Third$/i,"All-NBA Third Team");
 }
 function careerAwardFamily(name){
-  const raw=displayAwardName(String(name||"").replace(/^\d+×\s*/,""));
-  const compact=raw.replace(/^NBA\s+/,"").replace(/[-\s]/g,"").toLowerCase();
-  if(compact==="champion"||compact==="nbachampion")return"nbachampion";
-  return compact;
+  const raw=displayAwardName(String(name||"").replace(/^\d+×\s*/,"")).trim();
+  const low=raw.toLowerCase();
+  if(/^all-nba(\s+(first|second|third)\s+team)?$/.test(low)||/^nba all-nba$/.test(low))return"allnba";
+  if(/^all-defensive(\s+(first|second)\s+team|\s+team)?$/.test(low)||/^nba all-defensive$/.test(low))return"alldefensive";
+  if(/^all-rookie(\s+team)?$/.test(low)||/^nba all-rookie$/.test(low))return"allrookie";
+  if(low==="nba all-star"||low==="all-star")return"allstar";
+  if(low==="nba champion"||low==="champion")return"nbachampion";
+  if(low==="mvp"||low==="most valuable player")return"mvp";
+  if(low==="defensive player of the year")return"dpoy";
+  if(low==="rookie of the year")return"roy";
+  if(low==="sixth man of the year")return"sixthman";
+  if(low==="most improved player")return"mip";
+  if(low==="scoring champion")return"scoringchampion";
+  if(low==="assist champion"||low==="assist leader")return"assistchampion";
+  if(low==="rebounding champion"||low==="rebounding leader")return"reboundingchampion";
+  if(low==="blocks champion"||low==="blocks leader")return"blockschampion";
+  if(low==="steals champion"||low==="steals leader")return"stealschampion";
+  if(low==="fiba world cup gold medal"||low==="world cup champion")return"worldcupgold";
+  if(low==="fiba world cup mvp"||low==="world cup mvp")return"worldcupmvp";
+  if(low==="olympic gold medal")return"olympicgold";
+  return low.replace(/[^a-z0-9]/g,"");
 }
 function careerAwardCount(a){
   if(Number.isFinite(+a?.count)&&+a.count>0)return +a.count;
   const m=String(a?.award||"").match(/^(\d+)×\s*/);return m?Math.max(1,+m[1]||1):1;
 }
+function careerAwardFamilyLabel(family,fallback=""){
+  const labels={
+    allnba:"All-NBA",alldefensive:"All-Defensive Team",allrookie:"All-Rookie Team",allstar:"NBA All-Star",
+    nbachampion:"NBA Champion",mvp:"MVP",dpoy:"Defensive Player of the Year",roy:"Rookie of the Year",
+    sixthman:"Sixth Man of the Year",mip:"Most Improved Player",scoringchampion:"Scoring Champion",
+    assistchampion:"Assist Champion",reboundingchampion:"Rebounding Champion",blockschampion:"Blocks Champion",
+    stealschampion:"Steals Champion",worldcupgold:"FIBA World Cup Gold Medal",worldcupmvp:"FIBA World Cup MVP",
+    olympicgold:"Olympic Gold Medal"
+  };
+  return labels[family]||displayAwardName(String(fallback||"").replace(/^\d+×\s*/,""));
+}
+function careerAwardSeasonDetail(entry){
+  const parts=[];
+  if(entry?.olympicYear)parts.push(String(entry.olympicYear));
+  else if(Number.isFinite(+entry?.cycle)&&+entry.cycle>=1900)parts.push(String(entry.cycle));
+  else if(entry?.season>0)parts.push(basketballSeasonLabel(entry.season));
+  return parts[0]||"";
+}
 const CUMULATIVE_CAREER_AWARD_FAMILIES=new Set([
-  "nbachampion","mostvaluableplayer","defensiveplayeroftheyear","rookieoftheyear",
-  "sixthmanoftheyear","nbaallstar","nbaallnba","nbaalldefensive","nbaallrookie",
-  "scoringchampion","assistchampion","reboundingchampion","blockschampion","stealschampion"
+  "nbachampion","mvp","dpoy","roy","sixthman","mip","allstar","allnba","alldefensive","allrookie",
+  "scoringchampion","assistchampion","reboundingchampion","blockschampion","stealschampion",
+  "worldcupgold","worldcupmvp","olympicgold"
 ]);
 function isCumulativeCareerAwardFamily(family){
   return CUMULATIVE_CAREER_AWARD_FAMILIES.has(String(family||""));
 }
 function integratedCareerAwardRows(p){
-  const awards=p?.awardHistory||[],totals=new Map(),seasonal=[];
+  const awards=p?.awardHistory||[],groups=new Map();
   for(const a of awards){
     const display=displayAwardName(a.award),family=careerAwardFamily(display),count=careerAwardCount(a);
-    const row={...a,displayName:display,family,count};
     if(!family)continue;
-
-    // International/cycle-specific honours remain discrete unless they are
-    // deliberately modelled as a cumulative family elsewhere.
-    const cumulative=!a.international&&!a.cycle&&isCumulativeCareerAwardFamily(family);
-    if(cumulative){
-      const x=totals.get(family)||{
-        family,
-        name:display.replace(/^\d+×\s*/,""),
-        total:0,
-        historicalCount:0,
-        miniCount:0,
-        seasons:[]
-      };
-      x.total+=count;
-      if(a.historicalSeed)x.historicalCount+=count;
-      else{
-        x.miniCount+=count;
-        if(a.season!=null)x.seasons.push(a.season);
-      }
-      totals.set(family,x);
-    }else{
-      seasonal.push(row);
-    }
+    const key=family;
+    const x=groups.get(key)||{
+      family:key,name:careerAwardFamilyLabel(key,display),total:0,
+      historicalCount:0,miniCount:0,international:false,seasons:[],details:[]
+    };
+    x.total+=count;
+    x.international=x.international||!!a.international||key.startsWith("worldcup")||key.startsWith("olympic");
+    if(a.historicalSeed)x.historicalCount+=count;
+    else x.miniCount+=count;
+    const detail=careerAwardSeasonDetail(a);
+    if(!a.historicalSeed&&detail&&!x.seasons.includes(detail))x.seasons.push(detail);
+    x.details.push(a);
+    groups.set(key,x);
   }
-
-  const summary=[...totals.values()]
-    .map(x=>({...x,label:x.total>1?`${x.total}× ${x.name}`:x.name}))
-    .sort((a,b)=>b.total-a.total||a.name.localeCompare(b.name));
-
-  return [
-    ...summary.map(x=>({kind:"summary",...x})),
-    ...seasonal.map(a=>({kind:"season",...a,extendsHistorical:false}))
-  ];
+  return [...groups.values()]
+    .map(x=>({
+      kind:"summary",
+      ...x,
+      label:x.total>1?`${x.total}× ${x.name}`:x.name,
+      detail:x.seasons.length?x.seasons.join(", "):""
+    }))
+    .sort((a,b)=>{
+      const ai=a.international?1:0,bi=b.international?1:0;
+      if(ai!==bi)return ai-bi;
+      return b.total-a.total||a.name.localeCompare(b.name);
+    });
 }
 function playerDraftClubName(p){
   const club=clubById(G,p.historicalDraftClubId||p.draftedByClubId);
@@ -14396,10 +14425,9 @@ function playerProfile(){
       const rows=integratedCareerAwardRows(p);
       if(!rows.length)return `<div class="empty">No recorded honours yet.</div>`;
       return rows.slice(0,28).map(a=>{
-        if(a.kind==="summary"){
-          return `<div class="historyItem"><div class="season">Career</div><div><b>${a.label}</b><small>${a.international?`${nationDisplay(p.nationality)} · International Honour`:"Career Honour"}</small></div><div class="right">Award</div></div>`;
-        }
-        return `<div class="historyItem"><div class="season">${basketballSeasonLabel(a.season)}</div><div><b>${a.displayName}</b><small>${a.cycle?`World Cup ${a.cycle}`:(a.international?`${nationDisplay(p.nationality)} · International Honour`:(a.clubId?`${clubById(G,a.clubId)?.name||a.clubId} · Career Honour`:"Career Honour"))}</small></div><div class="right">Award</div></div>`;
+        const base=a.international?`${nationDisplay(p.nationality)} · International Honour`:"Career Honour";
+        const meta=a.detail?`${base} · ${a.detail}`:base;
+        return `<div class="historyItem"><div class="season">Career</div><div><b>${a.label}</b><small>${meta}</small></div><div class="right">Award</div></div>`;
       }).join("");
     })()}</div>
     <div class="sectionTitle">International Career</div><div class="profilePanel internationalCareerPanel"><div class="profilePanelBody"><div class="profileDataRow"><small>National Team</small><b>${nationDisplay(p.nationality)}</b></div><div class="profileDataRow"><small>Program Status</small><b>${intl.team?`World #${nationalWorldRank(p.nationality)||"—"}`:"—"}</b></div><div class="profileDataRow"><small>Major International Honours</small><b>${intl.nationalAwards}</b></div></div></div>`;
@@ -18304,8 +18332,23 @@ function worldCupCompletedGroupArchiveHtml(wc,userCode){
 }
 function internationalWorldCup(){
   const userCode=G.userNationalGM?.nationCode,live=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:null,history=(G.worldCupHistory||[]).slice().reverse(),last=history[0]||null,q=G.nationalQualification;
-  if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup group draw is created when the 32-team field is confirmed. Until qualification is complete there are no official Mini&Me World Cup groups to display. Once the tournament opens, this tab will retain every first-round and second-round group table throughout the event and in the completed World Cup archive.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
-  if(live){const stage=intlWorldCupStageLabel(live.stage),userInField=(live.field||[]).includes(userCode),year=gameYearForSeason(G.season),reviewStage=intlWorldCupReviewStage(live),reviewLabel=reviewStage==="FINALS"?"Finals":intlWorldCupStageLabel(reviewStage);let groupHtml="";if(reviewStage==="FIRST_GROUP_STAGE"){const gr=(live.groups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.groupState?.[gr.id]||{}),userCode)}else if(reviewStage==="SECOND_GROUP_STAGE"){const gr=(live.secondGroups||[]).find(g=>g.teamCodes.includes(userCode));if(gr)groupHtml=intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.secondState?.[gr.id]||{}),userCode)}return `<div class="intlWcHero live neutral"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${stage}</h2><p>${(live.games||[]).length} games completed · ${(live.field||[]).length} nations entered</p></div><div class="intlWcBadge live">LIVE</div></div><div class="intlWcProgress"><div><b>${stage}</b><small>Tournament Stage</small></div><div><b>${userInField?"ACTIVE":"OUT"}</b><small>${nat(userCode)?.name||"Your Nation"}</small></div><div><b>${(live.games||[]).length}</b><small>Games Played</small></div></div><div class="sectionTitle wcNavTitle">Tournament Navigation</div>${intlWorldCupStageNavHtml(live,reviewStage)}${groupHtml?`<div class="sectionTitle">Your World Cup Group</div>${groupHtml}`:""}<div class="sectionTitle">All First-Round Groups</div>${worldCupAllFirstRoundGroupsHtml(live,userCode)}${(live.secondGroups||[]).length?`<div class="sectionTitle">All Second-Round Groups</div>${worldCupAllSecondRoundGroupsHtml(live,userCode)}`:""}<div class="sectionTitle">${reviewLabel}</div>${intlWorldCupStageContentHtml(live,reviewStage,userCode)}` }
+  if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup group draw is created when the 32-team field is confirmed. Until qualification is complete there are no official Mini&Me World Cup groups to display. Once the tournament opens, each navigation tab shows only that tournament phase, while completed World Cups retain the full archive.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
+  if(live){
+    const stage=intlWorldCupStageLabel(live.stage),userInField=(live.field||[]).includes(userCode),year=gameYearForSeason(G.season),reviewStage=intlWorldCupReviewStage(live),reviewLabel=reviewStage==="FINALS"?"Finals":intlWorldCupStageLabel(reviewStage);
+    let stageBody="";
+    if(reviewStage==="FIRST_GROUP_STAGE"){
+      const gr=(live.groups||[]).find(g=>g.teamCodes.includes(userCode));
+      const userGroup=gr?`<div class="sectionTitle">Your World Cup Group</div>${intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.groupState?.[gr.id]||{}),userCode)}`:"";
+      stageBody=`${userGroup}<div class="sectionTitle">All First-Round Groups</div>${worldCupAllFirstRoundGroupsHtml(live,userCode)}`;
+    }else if(reviewStage==="SECOND_GROUP_STAGE"){
+      const gr=(live.secondGroups||[]).find(g=>g.teamCodes.includes(userCode));
+      const userGroup=gr?`<div class="sectionTitle">Your World Cup Group</div>${intlWorldCupTableHtml(gr.label||gr.id,wcTableSort(live.secondState?.[gr.id]||{}),userCode)}`:"";
+      stageBody=`${userGroup}<div class="sectionTitle">All Second-Round Groups</div>${worldCupAllSecondRoundGroupsHtml(live,userCode)}`;
+    }else{
+      stageBody=`<div class="sectionTitle">${reviewLabel}</div>${intlWorldCupStageContentHtml(live,reviewStage,userCode)}`;
+    }
+    return `<div class="intlWcHero live neutral"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${stage}</h2><p>${(live.games||[]).length} games completed · ${(live.field||[]).length} nations entered</p></div><div class="intlWcBadge live">LIVE</div></div><div class="intlWcProgress"><div><b>${stage}</b><small>Tournament Stage</small></div><div><b>${userInField?"ACTIVE":"OUT"}</b><small>${nat(userCode)?.name||"Your Nation"}</small></div><div><b>${(live.games||[]).length}</b><small>Games Played</small></div></div><div class="sectionTitle wcNavTitle">Tournament Navigation</div>${intlWorldCupStageNavHtml(live,reviewStage)}${stageBody}`;
+  }
   const champ=nat(last.championCode),runner=nat(last.runnerUpCode),bronze=nat(last.bronzeCode),mvp=playerByAnyId(last.mvpPlayerId),final=(last.games||[]).slice().reverse().find(g=>g.stage==="FINAL"),year=gameYearForSeason(last.season),userFinish=last.championCode===userCode?"CHAMPION":last.runnerUpCode===userCode?"RUNNER-UP":last.bronzeCode===userCode?"BRONZE":(last.qualifiedTeamCodes||[]).includes(userCode)?"QUALIFIED":"DID NOT QUALIFY",wcLeaders=worldCupAwardLeaders(last);
   return `<div class="intlWcCompleteHead"><div><div class="eyebrow">${year} FIBA WORLD CUP</div><h2>${year} FIBA World Cup</h2><p>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"championFlag")} · Champions</p></div><span>${userFinish}</span></div>
     <div class="intlWcSummary"><div><small>CHAMPION</small><b>${nationalFlagLabel(last.championCode,champ?.name||last.championCode,"medalFlag")}</b></div><div><small>RUNNER-UP</small><b>${nationalFlagLabel(last.runnerUpCode,runner?.name||last.runnerUpCode,"medalFlag")}</b></div><div><small>BRONZE</small><b>${nationalFlagLabel(last.bronzeCode,bronze?.name||last.bronzeCode,"medalFlag")}</b></div><div><small>FINAL</small><b>${final?`${nat(final.teamA)?.name||final.teamA} ${final.scoreA}–${final.scoreB} ${nat(final.teamB)?.name||final.teamB}`:"Final recorded"}</b></div></div>
