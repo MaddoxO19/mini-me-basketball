@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.75.0 Contracts · Extension Term Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.75.1 Engine · Assist Minutes Calibration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1894,7 +1894,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.0 Contracts · Extension Term Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.1 Engine · Assist Minutes Calibration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -12128,6 +12128,17 @@ function playoffHomeTeamForGame(series){
   const higherId=higherIsA?series.teamAId:series.teamBId,lowerId=higherIsA?series.teamBId:series.teamAId;
   return [1,2,5,7].includes((series.gameNo||0)+1)?higherId:lowerId;
 }
+// v0.1.49.75.1 — playmaking opportunity must scale with court time.
+// Archetypes can raise assist RATE, but low-minute players cannot receive
+// starter-level assist opportunities simply because they are Floor Generals.
+function assistOpportunityByMinutes(minutes){
+  const m=Math.max(0,Math.min(48,+minutes||0));
+  if(m<=0)return 0;
+  // ~7 MPG = 0.35 opportunity, 18 MPG = 0.64, 30 MPG = 1.00.
+  // Heavy-minute stars can receive a modest additional opportunity bump.
+  return Math.max(0.16,Math.min(1.16,0.16+0.84*Math.pow(m/30,0.88)));
+}
+
 function simulatePossessionGame(clubA, clubB, options = {}) {
   if(options.gameState)ensureLeagueStatisticalIdentities(options.gameState);
   else {for(const p of [...(clubA?.roster||[]),...(clubB?.roster||[])])if(!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p);}
@@ -12242,7 +12253,8 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
             const pos=x.player.position==="PG"?4.8:x.player.position==="SG"?1.75:x.player.position==="SF"?1.05:0.65;
             const arch=x.player.archetype==="Floor General"?4.5:x.player.archetype==="Playmaking Forward"?3.2:x.player.archetype==="Combo Guard"?1.0:0;
             const quality=Math.max(0,(x.player.ovr-72)*0.075);
-            return (0.35+pos+arch+quality) * playerStatIdentity(x.player).assist * pulseFor(x.player).assist;
+            const minutesOpportunity=assistOpportunityByMinutes(x.line.min);
+            return (0.35+pos+arch+quality) * minutesOpportunity * playerStatIdentity(x.player).assist * pulseFor(x.player).assist;
           }).line.ast++;
         }
       } else {
@@ -12268,6 +12280,17 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
 
   playSide(linesA, linesB, pace, qA, clubA, clubB);
   playSide(linesB, linesA, pace, qB, clubB, clubA);
+
+  // Guardrail for extreme low-minute assist outliers. A short bench stint can
+  // still produce a brilliant passing game, but cannot routinely generate
+  // full-game assist totals. The cap rises quickly and is effectively irrelevant
+  // for normal starter minutes.
+  for(const x of [...linesA,...linesB]){
+    const m=Math.max(0,+x.line.min||0);
+    const ceiling=Math.max(2,Math.floor(2+m*0.48));
+    if(x.line.ast>ceiling)x.line.ast=ceiling;
+  }
+
   let scoreA = qA.reduce((a,b)=>a+b,0), scoreB = qB.reduce((a,b)=>a+b,0);
   let overtime = 0;
   const otA=[], otB=[];
@@ -13227,7 +13250,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.75.0 Contracts · Extension Term Integrity",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.75.1 Engine · Assist Minutes Calibration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
