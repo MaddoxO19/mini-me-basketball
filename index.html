@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.2 Club · All-Time Record Alignment</title>
+<title>Mini&Me Basketball — v0.1.49.76.3 Club · All-Time Inline Metrics</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1913,6 +1913,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.76.0 — Consolidated Design Review pass: navigation consistency, contracts/schedule/draft/trade/FA QoL, career-settings clarity, club-history integrity and tab typography. */
 /* v0.1.49.76.1 — Franchise Legacy Notable Players: protected historical icons, tiered club legends, and significance-weighted GM-era careers. */
 /* v0.1.49.76.2 — Club All-Time record rows normalized for consistent right-aligned value/unit layout. */
+/* v0.1.49.76.3 — Record leaderboard metrics forced to a single-line value + unit treatment (e.g. 34.8 PPG). */
 .olympicRecentPlacings .metric{padding:9px 7px}
 .olympicRecentPlacings .metric b{font-size:11px;font-weight:700;line-height:1.25}
 .olympicRecentPlacings .metric .nationalFlagLabel{gap:5px;justify-content:center}
@@ -1968,10 +1969,29 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   display:block!important;
 }
 
+
+/* v0.1.49.76.3 — Keep Club/League record values and units on one line */
+.recordLeaderRow{
+  grid-template-columns:42px minmax(0,1fr) auto!important;
+  column-gap:10px!important;
+  align-items:center!important;
+}
+.recordLeaderRow > strong{
+  min-width:88px!important;
+  justify-self:end!important;
+  text-align:right!important;
+  white-space:nowrap!important;
+  line-height:1.2!important;
+}
+.recordLeaderRow > strong .recordUnit{
+  display:inline!important;
+  margin-left:4px!important;
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.2 Club · All-Time Record Alignment</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.3 Club · All-Time Inline Metrics</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13456,7 +13476,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.2 Club · All-Time Record Alignment",ENGINE_VERSION="E2.26-PROD25";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.3 Club · All-Time Inline Metrics",ENGINE_VERSION="E2.26-PROD26";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
