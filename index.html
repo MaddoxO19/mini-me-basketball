@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.3 Club · All-Time Inline Metrics</title>
+<title>Mini&Me Basketball — v0.1.49.76.4 Summer League · Next Game Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1988,10 +1988,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   margin-left:4px!important;
 }
 
+
+/* v0.1.49.76.4 — Summer League Next Game integrity:
+   Summer/Preseason result return bypasses transient button locks and clears stale result state before the next fixture. */
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.3 Club · All-Time Inline Metrics</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.4 Summer League · Next Game Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13476,7 +13480,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.3 Club · All-Time Inline Metrics",ENGINE_VERSION="E2.26-PROD26";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.4 Summer League · Next Game Integrity",ENGINE_VERSION="E2.26-PROD27";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -15008,7 +15012,12 @@ function resultReturnModeForAdvance(phaseBefore,game){
   return null;
 }
 function closeResultToHome(){
-  ui.resultGameId=null;ui.resultReturn=null;ui.page="home";show("game");render();
+  ui.resultGameId=null;
+  ui.resultReturn=null;
+  ui.page="home";
+  show("game");
+  save();
+  render();
 }
 function advanceResultSequence(game){
   const flow=resultFlowType(game);
@@ -15043,32 +15052,51 @@ function renderResultWindow(){
   $$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;renderResultWindow()});
   const nextBtn=$("#resultWindowNext");
   nextBtn.onclick=()=>{
+    const flow=resultFlowType(g);
+
+    // v0.1.49.76.4 — Summer League/Preseason result review must always have a
+    // one-tap escape back to the authoritative Home state. Do this before any
+    // transient busy/disabled lock so an interrupted render cannot strand the
+    // user on an inert "Next Game" button.
+    if(flow==="summer_league"||flow==="preseason"){
+      try{
+        ui.resultGameId=null;
+        ui.resultReturn=null;
+        ui.page="home";
+        show("game");
+        save();
+        render();
+      }catch(err){
+        console.error("Mini-slate result return error",err);
+        // Restore the result and leave the control live for another tap.
+        ui.resultGameId=g.id;
+        show("resultWindow");
+        renderResultWindow();
+        toast(err?.message||"Unable to return to the next game");
+      }
+      return;
+    }
+
     if(nextBtn.dataset.busy==="1")return;
     nextBtn.dataset.busy="1";nextBtn.disabled=true;
     try{
       if(historicalSeries){ui.resultReturn=null;ui.resultGameId=null;ui.page="league";ui.leagueTab="post";show("game");render();return;}
       if(ui.resultReturn==="schedule"){ui.resultReturn=null;ui.resultGameId=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;}
-      if(ui.resultReturn==="summer_summary"){closeResultToHome();save();return;}
-      if(ui.resultReturn==="preseason_complete"){closeResultToHome();save();return;}
+      if(ui.resultReturn==="summer_summary"){closeResultToHome();return;}
+      if(ui.resultReturn==="preseason_complete"){closeResultToHome();return;}
       if(ui.resultReturn==="cup_final"){
         ui.resultReturn=null;ui.resultGameId=null;
         ui.page="league";ui.leagueTab="cup";
         show("game");save();render();return;
       }
       if(ui.resultReturn==="world_cup"||ui.resultReturn==="olympics"){ui.resultReturn=null;ui.resultGameId=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;}
-      if(ui.resultReturn==="postseason_transition"){closeResultToHome();save();return;}
+      if(ui.resultReturn==="postseason_transition"){closeResultToHome();return;}
 
-      // Integrated mini-slate progression. Do not clear the current result id
-      // until the next event has successfully been simulated and rendered.
       if(advanceResultSequence(g))return;
-
-      // Regular season, NBA Cup group/knockout, Play-In and Playoffs return to
-      // Home, where the same central career controller determines the next event.
       closeResultToHome();
     }catch(err){
       console.error("Result flow integration error",err);
       toast(err?.message||"Unable to advance to the next game");
-      // Keep the current result visible and re-arm the button for a retry.
       ui.resultGameId=g.id;
     }finally{
       const liveBtn=$("#resultWindowNext");
@@ -15195,6 +15223,10 @@ function advanceFromUi(n){
   // simulation paths anymore. A one-game action advances one career event,
   // extracts the user's game, and opens the universal result screen.
   if(Math.max(1,Math.floor(+n||1))===1 && ["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","OLYMPICS"].includes(G.phase)){
+    if(G.phase==="SUMMER_LEAGUE"){
+      ui.resultGameId=null;
+      ui.resultReturn=null;
+    }
     // Direct playoff qualifiers are observers while the league Play-In resolves.
     if(G.phase==="PLAY_IN"){
       const pst=userPostseasonState();
