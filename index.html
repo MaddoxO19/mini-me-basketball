@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.1 Club · Franchise Legacy Notable Players</title>
+<title>Mini&Me Basketball — v0.1.49.76.2 Club · All-Time Record Alignment</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1912,6 +1912,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.75.11 — Unicorn build calibration: reduced compound scoring, playmaking and rebounding amplification while preserving elite rim protection/defensive impact. OVR/POT unchanged. */
 /* v0.1.49.76.0 — Consolidated Design Review pass: navigation consistency, contracts/schedule/draft/trade/FA QoL, career-settings clarity, club-history integrity and tab typography. */
 /* v0.1.49.76.1 — Franchise Legacy Notable Players: protected historical icons, tiered club legends, and significance-weighted GM-era careers. */
+/* v0.1.49.76.2 — Club All-Time record rows normalized for consistent right-aligned value/unit layout. */
 .olympicRecentPlacings .metric{padding:9px 7px}
 .olympicRecentPlacings .metric b{font-size:11px;font-weight:700;line-height:1.25}
 .olympicRecentPlacings .metric .nationalFlagLabel{gap:5px;justify-content:center}
@@ -1946,10 +1947,31 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.76.1 — Franchise Legacy Notable Players */
 .clubLegendRow small{line-height:1.35}
 
+
+/* v0.1.49.76.2 — Club All-Time record alignment */
+.clubLegendRow,
+.clubRecordRow{
+  grid-template-columns:42px minmax(0,1fr) minmax(78px,auto)!important;
+  align-items:center!important;
+  column-gap:10px!important;
+}
+.clubLegendRow > strong,
+.clubRecordRow > strong{
+  min-width:78px!important;
+  justify-self:end!important;
+  text-align:right!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+}
+.clubLegendRow > strong .recordUnit,
+.clubRecordRow > strong .recordUnit{
+  display:block!important;
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.1 Club · Franchise Legacy Notable Players</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.2 Club · All-Time Record Alignment</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13434,7 +13456,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.1 Club · Franchise Legacy Notable Players",ENGINE_VERSION="E2.26-PROD24";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.2 Club · All-Time Record Alignment",ENGINE_VERSION="E2.26-PROD25";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17445,7 +17467,7 @@ function teamPerformance(){
   const scoring=[...rows].sort((a,b)=>b.ppg-a.ppg)[0],playmaker=[...rows].sort((a,b)=>b.apg-a.apg)[0],rebounder=[...rows].sort((a,b)=>b.rpg-a.rpg)[0];
   return `<div class="performanceHero compactPerformanceHero"><div><div class="eyebrow">Team Performance</div><h3>${club.name} Production</h3><p>${gp?`${gp} regular-season games played.`:"Season statistics will populate once regular-season games are played."}</p></div><strong>${gp}<small>GP</small></strong></div>
     <div class="teamProductionGrid compactNine">${teamCards.map(([label,val,key])=>`<div><small>${label}</small><b>${["fg","three","ft"].includes(key)?pct(val):fmt(val)}</b><span>${gp?`#${(["off","def","net"].includes(key)?leagueTeamResultMetricRank(club.id,key):leagueTeamMetricRank(club.id,key))||"—"} NBA`:"—"}</span></div>`).join("")}</div>
-    <div class="performanceInsightStrip enlarged"><div><small>SCORING LEADER</small><b>${scoring?.p.name||"—"}</b><strong>${fmt(scoring?.ppg||0)} PPG</strong></div><div><small>TOP PLAYMAKER</small><b>${playmaker?.p.name||"—"}</b><strong>${fmt(playmaker?.apg||0)} APG</strong></div><div><small>TOP REBOUNDER</small><b>${rebounder?.p.name||"—"}</b><strong>${fmt(rebounder?.rpg||0)} RPG</strong></div></div>
+    <div class="performanceInsightStrip enlarged"><div><small>SCORING LEADER</small><b>${scoring?.p.name||"—"}</b><strong>${fmt(scoring?.ppg||0)}<span class="recordUnit">PPG</span></strong></div><div><small>TOP PLAYMAKER</small><b>${playmaker?.p.name||"—"}</b><strong>${fmt(playmaker?.apg||0)}<span class="recordUnit">APG</span></strong></div><div><small>TOP REBOUNDER</small><b>${rebounder?.p.name||"—"}</b><strong>${fmt(rebounder?.rpg||0)}<span class="recordUnit">RPG</span></strong></div></div>
     <div class="performanceToolbar expandedFilters"><span>Sort roster by</span><div>${sortButton("mpg","MPG")}${sortButton("ppg","PPG")}${sortButton("rpg","RPG")}${sortButton("apg","APG")}${sortButton("spg","SPG")}${sortButton("bpg","BPG")}</div></div>
     <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>PLAYER</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${rows.map(r=>`<tr><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${r.p.rotationRole||"Depth"} · ${r.p.ovr} OVR</small></div><span class="${r.tone}">${r.label}</span></div></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join("")}</tbody></table></div>
     <div class="performanceLegend"><span><i class="high"></i>High Impact</span><span><i class="productive"></i>Productive</span><span><i class="expected"></i>Expected</span><span><i class="low"></i>Underperforming</span></div>`;
