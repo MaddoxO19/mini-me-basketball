@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.75.11 Player Identity · Unicorn Build Calibration</title>
+<title>Mini&Me Basketball — v0.1.49.76.0 UI/UX · Design Review QoL Pass</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1910,14 +1910,41 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.75.9 — Olympics current-cycle presentation. Completed tournament tables/results are not replayed in the Olympics tab; the latest medal placings remain concise until the next cycle takes over. */
 /* v0.1.49.75.10 — Olympic medal-card typography aligned with qualification-country scale. */
 /* v0.1.49.75.11 — Unicorn build calibration: reduced compound scoring, playmaking and rebounding amplification while preserving elite rim protection/defensive impact. OVR/POT unchanged. */
+/* v0.1.49.76.0 — Consolidated Design Review pass: navigation consistency, contracts/schedule/draft/trade/FA QoL, career-settings clarity, club-history integrity and tab typography. */
 .olympicRecentPlacings .metric{padding:9px 7px}
 .olympicRecentPlacings .metric b{font-size:11px;font-weight:700;line-height:1.25}
 .olympicRecentPlacings .metric .nationalFlagLabel{gap:5px;justify-content:center}
 .olympicRecentPlacings .metric small{font-size:10px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:5px;letter-spacing:0}
+
+/* v0.1.49.76.0 — Design Review QoL Pass */
+.saveSlotIdentity h3{font-size:15px!important;margin:4px 0 2px}.saveSlotIdentity p{font-size:11px!important;margin:0}.saveLoadPrimary{font-size:12px!important;font-weight:950!important}
+.teamTabs.compactTabRow{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:6px!important;overflow:visible!important}
+.teamTabs.compactTabRow button{width:100%!important;min-width:0!important;min-height:44px!important;padding:8px 5px!important;font-size:9px!important}
+.contractEconomyHead b,.constructionRow b,.constructionRow strong,.constructionRow span,.cbaToolGrid .cbaTool small,.cbaToolGrid .cbaTool b,.cbaToolGrid .cbaTool span{font-size:10px!important}
+.contractEconomyHead small{font-size:10px!important}
+.capOffNote{display:none!important}
+.squadScheduleTabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.draftPlanningTabs button{min-height:44px}
+.faFilters.positionsOnly .faFilterRow{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.faFilters.positionsOnly .faFilterRow button{min-height:44px}
+.tradeNeedStrip{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tradeNeedStrip small{color:var(--accent2)!important}
+.postStageTabs{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;overflow:visible!important}
+.postStageTabs button{width:100%!important;min-width:0!important;min-height:44px!important;padding:7px 3px!important;font-size:9px!important}
+.facilityTabs,.facilitiesTabs,.frontOfficeTabs{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px!important}
+.facilityTabs button,.facilitiesTabs button,.frontOfficeTabs button{width:100%!important;min-height:44px!important}
+.rosterSummaryGrid .metric,.squadRosterMetrics .metric,.rosterStatusGrid .metric{border-color:#72572c!important}
+.cupChampionHero h2,.cupWinnerHero h2,.cupChampionCard h2{font-size:16px!important}
+.cupChampionHero b,.cupWinnerHero b,.cupChampionCard b{font-size:11px!important}
+@media(max-width:520px){
+ .teamTabs.compactTabRow{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ .postStageTabs button{font-size:8px!important}
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.11 Player Identity · Unicorn Build Calibration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.0 UI/UX · Design Review QoL Pass</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -2074,7 +2101,7 @@ function combinedFranchiseTitleYears(club,archive){
     const champId=a.championClubId||a.nbaChampionClubId||a.championId||a.champion?.id;
     const champName=a.championName||a.nbaChampionName||a.champion?.name;
     if(champId||champName)return champId===club.id||champName===club.name;
-    return a.nbaChampion===true&&(a.clubId===club.id||a.teamId===club.id||a.userClubId===club.id||G.userClubId===club.id);
+    return (a.champion===true||a.nbaChampion===true)&&(a.clubId===club.id||a.teamId===club.id||a.userClubId===club.id||G.userClubId===club.id||a.champion===true);
   }).map(a=>franchiseTitleYearLabel(a.season));
   return [...new Set([...legacy,...career].filter(Boolean))].sort((a,b)=>(parseInt(a,10)||0)-(parseInt(b,10)||0));
 }
@@ -9624,7 +9651,7 @@ function olympicUpcomingUserFixtures(live=G.olympicLive){
 }
 function olympicUpcomingFixturesHtml(live=G.olympicLive){
   const fixtures=olympicUpcomingUserFixtures(live);
-  const rows=fixtures.length?fixtures.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label}</span><b class="fixtureOpponent">${nationalFlagLabel(x.code,x.opponent,"compact")}</b><strong class="fixtureVenue">Neutral</strong></div>`).join(""):`<div class="fixtureNone"><span>No further fixture is currently scheduled for your nation.</span></div>`;
+  const rows=fixtures.length?fixtures.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label==="Economy"?"Market":x.label}</span><b class="fixtureOpponent">${nationalFlagLabel(x.code,x.opponent,"compact")}</b><strong class="fixtureVenue">Neutral</strong></div>`).join(""):`<div class="fixtureNone"><span>No further fixture is currently scheduled for your nation.</span></div>`;
   return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Olympic schedule</small></div><div class="fixtureSection"><div class="fixtureLabel"><b>Olympics</b><small>Next ${Math.max(1,fixtures.length)}</small></div><div class="fixtureRows">${rows}</div></div></div>`;
 }
 function olympicHomeHtml(){
@@ -13402,7 +13429,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.75.11 Player Identity · Unicorn Build Calibration",ENGINE_VERSION="E2.26-PROD22";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.0 UI/UX · Design Review QoL Pass",ENGINE_VERSION="E2.26-PROD23";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -13861,7 +13888,7 @@ async function renderSaveManager(mode){
     const slot=idx+1;
     if(!rec)return `<div class="saveSlot empty"><div class="saveSlotNo">Save Slot ${slot}</div><h3>Empty Slot</h3><p>${mode==="new"?"Start a new GM career here.":"No career has been created in this slot."}</p>${mode==="new"?`<div class="saveActions"><button class="saveCreate" data-newslot="${slot}">Create Career</button></div>`:""}</div>`;
     const m=rec.meta||{};
-    return `<div class="saveSlot"><div class="saveSlotTop"><div><div class="saveSlotNo">Save Slot ${slot}</div><h3>${m.gmName||"GM"} · ${m.clubName||"Career"}</h3><p>${basketballSeasonLabel(m.season||1)} · ${savePhaseDisplay(m.phase)}</p></div></div><div class="saveActions three">${mode==="load"?`<button class="saveLoad" data-loadslot="${slot}">Load</button>`:`<button class="saveReplace" data-newslot="${slot}" data-replace="1">Replace</button>`}<button class="saveDelete" data-deleteslot="${slot}">Delete</button></div></div>`;
+    return `<div class="saveSlot"><div class="saveSlotTop"><div class="saveSlotIdentity"><div class="saveSlotNo">SAVE SLOT ${slot}</div><h3>${m.gmName||"GM"} · ${m.clubName||"Career"}</h3><p>${basketballSeasonLabel(m.season||1)} · ${savePhaseDisplay(m.phase)}</p></div></div><div class="saveActions three">${mode==="load"?`<button class="saveLoad saveLoadPrimary" data-loadslot="${slot}">LOAD CAREER</button>`:`<button class="saveReplace" data-newslot="${slot}" data-replace="1">Replace</button>`}<button class="saveDelete" data-deleteslot="${slot}">Delete</button></div></div>`;
   }).join("");
   $$("[data-loadslot]").forEach(b=>b.onclick=()=>loadSlot(+b.dataset.loadslot));
   $$("[data-newslot]").forEach(b=>b.onclick=()=>beginNewCareerInSlot(+b.dataset.newslot,b.dataset.replace==="1"));
@@ -14663,7 +14690,7 @@ function playerProfile(){
   if(p==="FINALS")return"playoffs · finals";
   return String(g.phase).replaceAll("_"," ").toLowerCase();
 })()} · ${g.line.pts||0} PTS · ${g.line.reb||0} REB · ${g.line.ast||0} AST</small></div><div class="right">${g.line.min||0} MIN</div></div>`).join(""):`<div class="empty">No recent games recorded for this player.</div>`}</div>
-    <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
+    <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
   return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${club?.name||"Free Agent"} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
     <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
     ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. NBA experience is separate from contract type. Changing age will reset recorded career history after confirmation. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; it deactivates below 97 OVR.</span></div>`:""}
@@ -14757,8 +14784,9 @@ function clubScheduleEntries(){
 }
 function clubSchedule(){
   const all=clubScheduleEntries(),filter=ui.scheduleFilter||"all";
-  const filtered=filter==="all"?all:all.filter(x=>x.comp===filter);
-  const filters=[["Summer League","Summer"],["Preseason","Pre"],["NBA Cup","Cup"],["League","League"],["Play-In","Play-In"],["Playoffs","Playoffs"],["all","All"]];
+  const scheduleGroupFor=comp=>["Summer League","Preseason"].includes(comp)?"preseason":["NBA Cup","League"].includes(comp)?"regular":["Play-In","Playoffs"].includes(comp)?"postseason":"other";
+  const filtered=filter==="all"?all:all.filter(x=>scheduleGroupFor(x.comp)===filter);
+  const filters=[["preseason","Preseason"],["regular","Regular"],["postseason","Postseason"],["all","All"]];
   const grouped=[];
   for(const e of filtered){
     const month=basketballMonthLabel(e.calendarSerial);
@@ -15495,7 +15523,7 @@ function nextInternationalFixture(){
 function upcomingFixturesHtml(){
   if(G.phase!=="REGULAR_SEASON")return"";
   const league=futureLeagueFixtures(3),cup=nextCupFixture(),intl=nextInternationalFixture();
-  const rows=(items)=>items.length?items.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":"Home"}</strong></div>`).join(""):`<div class="fixtureNone"><span>None scheduled</span></div>`;
+  const rows=(items)=>items.length?items.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label==="Economy"?"Market":x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":"Home"}</strong></div>`).join(""):`<div class="fixtureNone"><span>None scheduled</span></div>`;
   return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Club & national schedule</small></div><div class="fixtureSection"><div class="fixtureLabel"><b>League</b><small>Next 3</small></div><div class="fixtureRows">${rows(league)}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>NBA Cup</b><small>Next</small></div><div class="fixtureRows">${rows(cup?[cup]:[])}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>FIBA</b><small>Next</small></div><div class="fixtureRows">${rows(intl?[intl]:[])}</div></div></div>`;
 }
 function teamResultMetricValue(club,key){
@@ -16164,8 +16192,8 @@ function ensureSeasonSummary(){
 
 function seasonSummaryHtml(){
   const s=ensureSeasonSummary(),u=s.user;
-  const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
-  const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label}</small><b>${x.name}</b></div>`).join("");
+  const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
+  const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.name}</b></div>`).join("");
   return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>Mini&Me Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are NBA Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
     <div class="seasonSummarySection">Champions & Events</div><div class="seasonHonourGrid">${competitionHtml}</div>
     <div class="seasonSummarySection">Season Awards</div><div class="seasonAwardsList">${awardHtml||`<div class="seasonHistoryRow"><small>No season awards recorded.</small></div>`}</div>
@@ -17406,7 +17434,7 @@ function teamPerformance(){
 }
 
 function team(){
-  let tabs=[["squad","Squad"],["performance","Performance"],["contracts","Contracts & Cap"],["schedule","Schedule"],["draft","Draft"],["trades","Trades"],["freeagency","Free Agency"]];
+  let tabs=[["squad","Squad"],["schedule","Schedule"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"],["trades","Trades"]];
   let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?draft():ui.teamTab==="trades"?trades():freeagency();
   return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
@@ -17542,7 +17570,7 @@ function clubHub(){
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
     body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div><div class="sectionTitle">Current Season Leaders</div><div class="clubCurrentLeaderGrid">${leaderCard("Scoring Leader",scoring,"pts")}${leaderCard("Playmaking Leader",playmaker,"ast")}${leaderCard("Rebounding Leader",rebounder,"reb")}</div>`;
   }
-  return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div><div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div>${body}`;
+  return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>${ui.clubTab==="current"?`<div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div>`:""}${body}`;
 }
 function gmBrief(){
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
@@ -17561,7 +17589,7 @@ function gmProfile(){
     <div class="sectionTitle">Career Honours</div><div class="card"><div class="more"><div><b>NBA Championships</b><small>GM career honours</small></div><b>${gm.championships||0}</b></div><div class="more"><div><b>NBA Cup Titles</b><small>GM career honours</small></div><b>${gm.cupTitles||0}</b></div><div class="more"><div><b>National Honours</b><small>International career</small></div><b>${gm.nationalHonours||0}</b></div></div>
     <div class="sectionTitle">Career History</div><div class="card">${recent.length?recent.map(x=>`<div class="seasonHistoryRow"><b>${basketballSeasonLabel(x.season)} · ${x.user?.clubName||club?.name||"Club"}</b><small>${x.user?.record||"—"} · ${x.user?.postseasonFinish||"Season complete"}${x.user?.champion?" · NBA Champion":""}${x.user?.cupChampion?" · NBA Cup":""}</small></div>`).join(""):`<div class="empty">Career history will build as seasons are completed.</div>`}</div>
     <div class="sectionTitle">Club Appointments</div><div class="card">${(gm.jobs||[]).length?(gm.jobs||[]).slice().reverse().map(j=>`<div class="seasonHistoryRow"><b>${j.clubName}</b><small>${basketballSeasonLabel(j.startSeason)}${j.endSeason==null?" – Present":` – ${basketballSeasonLabel(Math.max(j.startSeason,j.endSeason-1))}`}</small></div>`).join(""):`<div class="empty">Your first club appointment is active.</div>`}</div>
-    <div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div>
+    <div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div>
     <div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><button id="debugNow" class="btn ghost gmBuildDebug">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
 
@@ -17683,8 +17711,8 @@ function draft(){
   const scoutPickNumber=p?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||1;
   const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
   let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag">Scout Recommends</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
-  const mode=ui.draftPlanningTab||"assets";
-  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
+  const mode=ui.draftPlanningTab||"class";
+  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
 }
 function freeagency(){
@@ -17704,10 +17732,10 @@ function freeagency(){
       <div class="faOfferActions modern"><button id="submitFaOffer" class="btn primary">Make Offer</button><button id="resetFaAsk" class="pick matchAsk">Match Asking Price</button></div>
       ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${fb.message}</small>${fb.competing?`<small style="display:block;margin-top:4px">Strongest competing offer: ${fb.competing.years} yr · $${(+fb.competing.annualM).toFixed(1)}M from ${c(fb.competing.clubId)?.name||"another club"}.</small>`:""}</div>`:""}</div>`;
   }
-  const bandTabs=[["all","All"],["starter","Starter+"],["rotation","Rotation"],["depth","Depth"],["minimum","Minimum"]],posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]],countBand=k=>allPlayersMarket.filter(p=>k==="all"||roleClass(p)===k).length;
+  const bandTabs=[["all","All"]],posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]],countBand=k=>allPlayersMarket.length;
   return `<div class="metrics faTopMetrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric">${signedMoneyBadge(cap.capSpaceM)}<small>Cap Room</small></div><div class="metric"><b>${rosterCount}/15</b><small>Roster · ${twoWayCount}/${twoWayLimit} Two-Way</small></div></div>
   ${negotiate}
-  <div class="faFilters compactFaFilters"><div class="faFilterRow">${bandTabs.map(([k,label])=>`<button data-faband="${k}" class="${bandFilter===k?"active":""}">${label}<small>${countBand(k)}</small></button>`).join("")}</div><div class="faFilterRow">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}">${label}</button>`).join("")}</div></div>
+  <div class="faFilters compactFaFilters positionsOnly"><div class="faFilterRow">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}">${label}</button>`).join("")}</div></div>
   <div class="faMarketSummary"><div class="sectionTitle" style="margin:0">Available Free Agents</div><small>${players.length} shown</small></div>
   ${players.length?`<div class="table freeAgentTable"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>ASKING</th><th></th></tr></thead><tbody>${players.map(p=>`<tr><td class="pname"><b>${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(playerByAnyId(p.id)?.nationality)} · Age ${p.age}${p.lastSeason?` · Last ${(p.lastSeason.stats.pts/Math.max(1,p.lastSeason.stats.gp)).toFixed(1)} PPG`:""}</small></td><td>${p.position}</td><td><b>${p.ovr}</b></td><td><b>$${p.demandAnnualM.toFixed(1)}M</b></td><td><button class="pick" data-negotiatefa="${p.id}">Negotiate</button></td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No free agents match these filters.</div>`}`;
 }
@@ -17715,7 +17743,7 @@ function tradePartners(){return G.clubs.filter(x=>x.id!==me().id)}
 
 function tradeNeedStrip(club){
   const needs=tradeClubNeedProfile(club).slice(0,3);
-  return `<div class="tradeNeedStrip">${needs.map((n,i)=>`<div class="${i===0?"priority":""}"><small>${i===0?"TOP NEED":"ROSTER NEED"}</small><b>${n.group}</b><span>${n.issue}</span></div>`).join("")}</div>`;
+  return `<div class="tradeNeedStrip">${needs.map((n,i)=>`<div class="${i===0?"priority":""}"><small>"NEED"</small><b>${n.group}</b><span>${n.issue}</span></div>`).join("")}</div>`;
 }
 function tradeSelectionPills(totals){
   const parts=[
@@ -17981,18 +18009,18 @@ function contracts(){
         <td><span class="band">${p.rotationRole}</span><small class="market">${slot.label}</small></td>
         <td>${termLabel}</td>
         <td><b>$${(+p.salaryM).toFixed(1)}M</b><small class="market">${slot.range}</small></td>
-        <td><b>$${(+p.marketSalaryM).toFixed(1)}M</b><small class="contractValue ${statusClass}">${p.valueStatus}</small></td>
+        <td><b>$${(+p.marketSalaryM).toFixed(1)}M</b></td>
         <td><div class="contractActions">${p.extensionEligible?`<button class="pick" data-negotiateext="${p.playerId}">Negotiate</button>`:""}<button class="pick" data-waive="${p.playerId}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></td></tr>`;
     }).join("")}</tbody></table></div>`;
   };
 
-  return `<div class="contractEconomy compactConstruction"><div class="contractEconomyHead"><b>Roster Construction Plan</b><small>Current salary-slot mix against recommended roster-building ranges.</small></div>
-    <div class="constructionRows"><div class="constructionRow head"><span>ROLE</span><span>CURRENT</span><span>TARGET</span></div>${salaryPlan.recommended.map(x=>`<div class="constructionRow"><div><b>${x.label}</b><small>${x.note}</small></div><strong>${salaryPlan.slots[x.key]||0}</strong><span>${x.target}</span></div>`).join("")}</div>
+  return `<div class="contractEconomy compactConstruction"><div class="contractEconomyHead"><b>Recommended Roster Plan</b><small>Current salaries against the recommended roster build.</small></div>
+    <div class="constructionRows"><div class="constructionRow head"><span>ROLE</span><span>CURRENT</span><span>TARGET</span></div>${salaryPlan.recommended.map(x=>`<div class="constructionRow"><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.note}</small></div><strong>${salaryPlan.slots[x.key]||0}</strong><span>${x.target}</span></div>`).join("")}</div>
   </div>
-  <div class="cbaToolGrid">${tools.map(x=>`<div class="cbaTool"><small>${x.label}</small><b>${x.value}</b><span>${x.note}</span></div>`).join("")}</div>
-  <div class="capOffNote">${capNote}</div>
+  <div class="cbaToolGrid">${tools.map(x=>`<div class="cbaTool"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.value}</b><span>${x.note}</span></div>`).join("")}</div>
+  
   ${negotiation}
-  <div class="sectionTitle">Cap Sheet</div>${groups.map(tableFor).join("")}${twoWayContractsHtml()}`;
+  <div class="sectionTitle">Squad Cap</div>${groups.map(tableFor).join("")}${twoWayContractsHtml()}`;
 }
 /* legacy duplicate freeagency renderer removed in v0.1.2.3 */
 function tradeGroupForPlayer(p){
@@ -18357,7 +18385,7 @@ function leagueInjuries(){
   const longTerm=rows.filter(x=>x.remaining>=11).length;
   return `<div class="injuryCentreHero"><div><div class="eyebrow">LEAGUE AVAILABILITY</div><h3>Injury Centre</h3><p>All currently unavailable NBA and two-way players. Return timelines are estimates based on remaining recovery.</p></div><strong>${rows.length}</strong></div>
     <div class="metrics injuryMetrics"><div class="metric"><b>${rows.length}</b><small>League Injuries</small></div><div class="metric"><b>${eliteCount}</b><small>85+ OVR Out</small></div><div class="metric"><b>${longTerm}</b><small>Long-Term</small></div><div class="metric"><b>${userCount}</b><small>Your Club</small></div></div>
-    <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label}</b><small>${x.stage}</small></div><div class="leagueInjuryReturn"><b>${basketballDateLabel(x.returnSerial)}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
+    <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.stage}</small></div><div class="leagueInjuryReturn"><b>${basketballDateLabel(x.returnSerial)}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
 }
 function leagueLegacy(){
   return leagueHistoricalRecordsHtml(G);
@@ -18569,7 +18597,7 @@ function intlWorldCupReviewStage(live){
 }
 function intlWorldCupStageNavHtml(live,selected){
   const max=intlWorldCupProgressIndex(live?.stage);
-  return `<div class="intlWcStageNav">${intlWorldCupNavStages().map((x,i)=>`<button type="button" data-wcstage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label}</button>`).join("")}</div>`;
+  return `<div class="intlWcStageNav">${intlWorldCupNavStages().map((x,i)=>`<button type="button" data-wcstage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label==="Economy"?"Market":x.label}</button>`).join("")}</div>`;
 }
 function intlWorldCupCompletedGamesForStage(live,stage){
   const games=live?.games||[];
@@ -18682,7 +18710,7 @@ function intlOlympicReviewStage(live){
 }
 function intlOlympicStageNavHtml(live,selected){
   const max=intlOlympicProgressIndex(live?.stage);
-  return `<div class="intlWcStageNav">${intlOlympicNavStages().map((x,i)=>`<button type="button" data-olystage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label}</button>`).join("")}</div>`;
+  return `<div class="intlWcStageNav">${intlOlympicNavStages().map((x,i)=>`<button type="button" data-olystage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label==="Economy"?"Market":x.label}</button>`).join("")}</div>`;
 }
 function intlOlympicCompletedGamesForStage(source,stage){
   const games=source?.games||[];
@@ -18821,7 +18849,7 @@ function scoutingPage(embedded=false){
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>${basketballSeasonLabel(s.season)} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
-  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>Career rule</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>Career rule</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>2026/27 fictionalised 2K27 launch universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
+  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>NBA Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>NBA Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>2026/27 fictionalised 2K27 launch universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button><button id="menuNow" class="btn ghost">Return to Main Menu</button><button id="debugNow" class="btn ghost">${ui.debug?"Hide":"Show"} Developer Mode</button></div><div class="debug ${ui.debug?"show":""}"><div class="card"><pre>${(G.log||[]).slice(-70).join("\n")}</pre></div></div>`;
 }
 let _renderPrepSignature="";
 function renderPrepSignature(){
@@ -19263,7 +19291,7 @@ if($("#applyCounterBtn"))$("#applyCounterBtn").onclick=()=>{
   ui.tradeEval=ui.tradeCounter.evaluation||evaluateTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks});
   ui.tradeCounter=null;render();
 };
-if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;if(G.season===1){G.production2026Draft=G.production2026Draft||{};G.production2026Draft.diverged=true;G.production2026Draft.divergedAtPick=G.draftState.index+1;}reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
+if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{if(!confirm("Execute this trade? This transaction will be applied immediately."))return;let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;if(G.season===1){G.production2026Draft=G.production2026Draft||{};G.production2026Draft.diverged=true;G.production2026Draft.divergedAtPick=G.draftState.index+1;}reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;ui.tradeView="builder"}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
 $$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.natSelected.indexOf(id);if(b.checked){if(ui.natSelected.length>=12){toast("Squad is already full (12)");b.checked=false;return}ui.natSelected.push(id)}else if(i>=0)ui.natSelected.splice(i,1);render()});
 if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode,team=G.nationalTeams.find(t=>t.code===code);let roster=selectNationalRoster(G,code).slice(0,12);ui.natSelected=roster.map(p=>p.id);if(team){team.nationalSquadMode="auto";team.selectedSquadPlayerIds=[...ui.natSelected];team.rosterPlayerIds=[...ui.natSelected];team.currentDepthChart=buildNationalDepthChart(roster)}toast("Automatic national squad selection enabled");save();render()};
 if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
