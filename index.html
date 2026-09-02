@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.75.1 Engine · Assist Minutes Calibration</title>
+<title>Mini&Me Basketball — v0.1.49.75.2 NBA Cup · Final Recap Flow</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1891,10 +1891,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .championshipHistoryRow>div{min-width:0;flex:1}
 .championshipHistoryRow small{white-space:normal!important;overflow-wrap:anywhere;line-height:1.45}
 .clubLegendRow strong{white-space:normal;line-height:1.35;text-align:right}
+
+/* v0.1.49.75.2 — NBA Cup Final recap flow */
+.cupRecapContinue{margin-top:14px}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.1 Engine · Assist Minutes Calibration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.2 NBA Cup · Final Recap Flow</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13250,7 +13253,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.75.1 Engine · Assist Minutes Calibration",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.75.2 NBA Cup · Final Recap Flow",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14793,7 +14796,7 @@ function renderResultWindow(){
     ui.resultReturn==="schedule"?"Back to Schedule":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
     ui.resultReturn==="preseason_complete"?"Continue to Regular Season":
-    ui.resultReturn==="cup_final"?"Return to Regular Season":
+    ui.resultReturn==="cup_final"?"View NBA Cup Recap":
     ui.resultReturn==="world_cup"?(G.phase==="WORLD_CUP"?"Next World Cup Game":"Continue Career"):
     ui.resultReturn==="olympics"?(G.phase==="OLYMPICS"?"Next Olympic Game":"Continue Career"):
     ui.resultReturn==="postseason_transition"?(G.phase==="CHAMPION"?"View Season Review":G.phase==="PLAYOFFS"?"Continue to Playoffs":"Continue Postseason"):
@@ -14810,7 +14813,11 @@ function renderResultWindow(){
       if(ui.resultReturn==="schedule"){ui.resultReturn=null;ui.resultGameId=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;}
       if(ui.resultReturn==="summer_summary"){closeResultToHome();save();return;}
       if(ui.resultReturn==="preseason_complete"){closeResultToHome();save();return;}
-      if(ui.resultReturn==="cup_final"){closeResultToHome();save();return;}
+      if(ui.resultReturn==="cup_final"){
+        ui.resultReturn=null;ui.resultGameId=null;
+        ui.page="league";ui.leagueTab="cup";
+        show("game");save();render();return;
+      }
       if(ui.resultReturn==="world_cup"||ui.resultReturn==="olympics"){ui.resultReturn=null;ui.resultGameId=null;ui.fibaBoxSide="teamA";ui.page="home";show("game");render();return;}
       if(ui.resultReturn==="postseason_transition"){closeResultToHome();save();return;}
 
@@ -14970,7 +14977,11 @@ function advanceFromUi(n){
       return;
     }
     if(!r?.ok){toast(r?.reason||"Unable to advance career");return;}
-    const userGame=extractUserGameFromAdvance(r);
+    let userGame=extractUserGameFromAdvance(r);
+    if(!userGame&&G.inSeasonCup?.complete&&G.inSeasonCup?.final?.gameId){
+      const cupFinal=gameById(G.inSeasonCup.final.gameId),userId=G.userClubGM?.clubId;
+      if(cupFinal&&(cupFinal.homeClubId===userId||cupFinal.awayClubId===userId))userGame=cupFinal;
+    }
     if(userGame&&!isNationalResultGame(userGame))repairLegacyGameBox(userGame);
     save();
     if(userGame){openResultWindow(userGame,resultReturnModeForAdvance(phaseBefore,userGame));return;}
@@ -18046,7 +18057,8 @@ function nbaCupPage(){
     return `<div class="cupChampionBanner">${teamMark(winner,"cupChampionCrest")}<div><small>NBA CUP CHAMPION</small><b>${winner?.name||"Champion"}</b><span>${runner?`Defeated ${runner.name}${final?` · ${final.homeScore}–${final.awayScore}`:""}`:"Tournament complete."}</span></div></div>${eventSummaryCard({label:"NBA Cup · Final Summary",title:`${winner?.name||"Champion"} win the NBA Cup`,subtitle:runner?`${runner.name} finished runner-up.`:"Tournament complete.",metrics:[{label:"Champion",value:winner?.mark||"—"},{label:"Final",value:final?`${final.homeScore}–${final.awayScore}`:"—"},{label:"Cup MVP",value:mvp?.name||"—"}]})}
       <div class="sectionTitle">Knockout Results</div><div class="cupStageCard"><h4>Quarterfinals</h4>${(cup.quarterfinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
       <div class="cupStageCard" style="margin-top:9px"><h4>Semifinals</h4>${(cup.semifinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
-      <div class="cupStageCard" style="margin-top:9px"><h4>Championship</h4>${cupTieHtml(cup.final,"NBA Cup Final")}</div>`;
+      <div class="cupStageCard" style="margin-top:9px"><h4>Championship</h4>${cupTieHtml(cup.final,"NBA Cup Final")}</div>
+      <div class="resultNextWrap cupRecapContinue"><button id="cupRecapContinue" class="primaryProgress">Continue Regular Season</button></div>`;
   }
   let groupOrder=[...(cup.groups||[])].sort((a,b)=>{
     const ca=a.conference==="East"?0:1,cb=b.conference==="East"?0:1;
@@ -18819,6 +18831,9 @@ function bind(){
   });
   $$("[data-factab]").forEach(b=>b.onclick=()=>{ui.page="facilities";ui.facilitiesTab=b.dataset.factab;render()});
   if($("#openGmProfile"))$("#openGmProfile").onclick=()=>{ui.page="gmProfile";render()};
+  if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
+    ui.page="home";ui.leagueTab="standings";show("game");save();render();
+  };
   if($("#reopenGMOffer"))$("#reopenGMOffer").onclick=()=>{const o=gmRecruitmentState(G).pending;if(!o)return;G.newsFlashPending={type:"gm_recruitment",offerId:o.id,headline:`${o.targetClubName} want to recruit you`,body:`${o.targetClubName} have made a formal approach for ${G.gmName||"your GM"} to lead basketball operations.`,category:"COURTSIDE NETWORK",season:G.season,offer:{...o}};render()};
   if($("#openFrontOffice"))$("#openFrontOffice").onclick=()=>{ui.page="facilities";ui.facilitiesTab="frontoffice";render()};
   if($("#frontOfficeBack"))$("#frontOfficeBack").onclick=()=>{ui.page="facilities";ui.facilitiesTab="overview";render()};
