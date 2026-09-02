@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.75.9 Intl · Olympics Current Cycle</title>
+<title>Mini&Me Basketball — v0.1.49.75.10 Intl · Olympics Medal Typography</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1908,11 +1908,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .cupRecapContinue{margin-top:14px}
 
 /* v0.1.49.75.9 — Olympics current-cycle presentation. Completed tournament tables/results are not replayed in the Olympics tab; the latest medal placings remain concise until the next cycle takes over. */
-.olympicRecentPlacings .metric small{font-size:11px;font-weight:800;color:var(--text);line-height:1.25;margin-top:5px;letter-spacing:.01em}
+/* v0.1.49.75.10 — Olympic medal-card typography aligned with qualification-country scale. */
+.olympicRecentPlacings .metric{padding:9px 7px}
+.olympicRecentPlacings .metric b{font-size:11px;font-weight:700;line-height:1.25}
+.olympicRecentPlacings .metric .nationalFlagLabel{gap:5px;justify-content:center}
+.olympicRecentPlacings .metric small{font-size:10px;font-weight:600;color:var(--muted);line-height:1.25;margin-top:5px;letter-spacing:0}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.9 Intl · Olympics Current Cycle</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.10 Intl · Olympics Medal Typography</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -12947,7 +12951,7 @@ function defensiveAwardScore(G,p,minGp=50){
   return rateStat(s,"stl")*3.0+rateStat(s,"blk")*2.8+rateStat(s,"reb")*.30+rateStat(s,"plusMinus")*.11+teamDef*.38+bigBonus;
 }
 
-// v0.1.49.75.9 — Olympics current-cycle presentation; awards media voting retained; live projections use games actually played.
+// v0.1.49.75.10 — Olympic medal typography refinement; current-cycle Olympics presentation and awards media voting retained.
 function awardProjectionEligibility(round){
   const r=Math.max(0,+round||0);
   if(r>=70)return 35;
@@ -13397,7 +13401,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.75.9 Intl · Olympics Current Cycle",ENGINE_VERSION="E2.26-PROD20";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.75.10 Intl · Olympics Medal Typography",ENGINE_VERSION="E2.26-PROD21";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
