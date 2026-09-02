@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.75.6 League · Awards Race Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.75.7 League · Media Awards Voting</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1760,6 +1760,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsFlashHead button{width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);font-size:18px}
 .newsFlashCard h3{font-size:20px;margin:15px 0 8px}.newsFlashCard p{font-size:11px;line-height:1.55;color:var(--muted);margin:0}
 .newsFlashActions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}.newsFlashActions button{min-height:44px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:800}.newsFlashActions button:first-child{background:var(--accent2);color:#111;border-color:var(--accent2)}
+/* v0.1.49.75.7 — official media award voting presentation */
+.awardVoteCard{width:min(760px,100%);max-height:min(86vh,780px);overflow:auto;padding:0;background:#101720;border:1px solid rgba(240,176,76,.72)}
+.awardVoteTop{padding:16px 16px 12px;background:linear-gradient(180deg,rgba(240,176,76,.16),rgba(240,176,76,.03));border-bottom:1px solid var(--line)}
+.awardVoteTop .newsFlashHead{margin-bottom:10px}.awardVoteKicker{font-size:9px;font-weight:900;letter-spacing:.12em;color:var(--accent2)}
+.awardVoteTop h3{font-size:21px;line-height:1.12;margin:5px 0 2px}.awardVoteTop p{font-size:10px;line-height:1.45;color:var(--muted);margin:5px 0 0}
+.awardVoteWinner{padding:14px 16px;border-bottom:1px solid var(--line);display:grid;gap:4px}.awardVoteWinner small{font-size:9px;color:var(--accent2);font-weight:900;letter-spacing:.08em}.awardVoteWinner b{font-size:16px}.awardVoteWinner span{font-size:10px;color:var(--muted);line-height:1.45}
+.awardVoteTableWrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 10px}.awardVoteTable{width:100%;min-width:590px;border-collapse:collapse}.awardVoteTable th,.awardVoteTable td{padding:9px 7px;border-bottom:1px solid #293340;text-align:center;font-size:9px;white-space:nowrap}.awardVoteTable th{font-size:8px;color:var(--accent2);letter-spacing:.05em;text-transform:uppercase}.awardVoteTable th:first-child,.awardVoteTable td:first-child{text-align:left;min-width:190px}.awardVoteTable td:first-child b{display:block;font-size:10px;color:var(--text)}.awardVoteTable td:first-child small{display:block;font-size:8px;color:var(--muted);margin-top:2px}.awardVoteTable tr.winner td{background:rgba(240,176,76,.08)}.awardVoteTable td:last-child,.awardVoteTable th:last-child{font-weight:900;color:var(--accent2)}
+.awardVoteFoot{padding:12px 16px 16px}.awardVoteFoot .newsFlashActions{margin-top:10px}.awardVoteProgress{font-size:9px;color:var(--muted);text-align:right}
+@media(max-width:520px){.awardVoteCard{max-height:88vh}.awardVoteTop h3{font-size:18px}.awardVoteWinner b{font-size:14px}.awardVoteTable{min-width:540px}.awardVoteTable th,.awardVoteTable td{padding:8px 6px}}
 
 
 /* v0.1.36.0 — Courtside Network broadcast identity */
@@ -1900,7 +1909,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.6 League · Awards Race Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.75.7 League · Media Awards Voting</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -8310,8 +8319,25 @@ function pushChaseMaddonArticle(G,title,body,{importance=2,tag="",flash=false,la
   if(flash)queueNewsFlash(G,article);
   return article;
 }
+function awardVotingPopupHtml(n){
+  const keys=n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],idx=clampAward(+n.index||0,0,Math.max(0,keys.length-1)),key=keys[idx];
+  const vote=G.awardVoting?.[`S${n.season}_${key}`];if(!vote)return"";
+  const winner=awardPlayerById(G,vote.winnerId),club=winner?clubForPlayer(G,winner):null,s=winner?.seasonStats,gp=Math.max(1,+s?.gp||1);
+  const statLine=winner&&s?(key==="DPOY"?`${(s.reb/gp).toFixed(1)} RPG · ${(s.stl/gp).toFixed(1)} SPG · ${(s.blk/gp).toFixed(1)} BPG`:`${(s.pts/gp).toFixed(1)} PPG · ${(s.reb/gp).toFixed(1)} RPG · ${(s.ast/gp).toFixed(1)} APG`):"";
+  const rows=(vote.results||[]).map((r,i)=>{const p=awardPlayerById(G,r.playerId),cl=p?clubForPlayer(G,p):null;return `<tr class="${i===0?"winner":""}"><td><b>${p?.name||"Player"}</b><small>${cl?.name||""}</small></td><td>${r.first}</td><td>${r.second}</td><td>${r.third}</td><td>${r.fourth}</td><td>${r.fifth}</td><td>${r.points}</td></tr>`;}).join("");
+  const last=idx>=keys.length-1;
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard">
+    <div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>OFFICIAL AWARDS BALLOT</b></div><button type="button" id="closeAwardResults">×</button></div>
+      <div class="awardVoteKicker">${basketballSeasonLabel(n.season)} MINI&amp;ME BASKETBALL</div><h3>${awardVoteLabel(key)} Voting Results</h3>
+      <p>The award is determined by a panel of basketball writers and broadcasters considering individual performance, team success and overall impact on the game.</p></div>
+    <div class="awardVoteWinner"><small>${awardVoteLabel(key).toUpperCase()}</small><b>${winner?.name||"—"}${club?` · ${club.name}`:""}</b><span>${statLine}</span></div>
+    <div class="awardVoteTableWrap"><table class="awardVoteTable"><thead><tr><th>Player, Team</th><th>1st<br>10 pts</th><th>2nd<br>7 pts</th><th>3rd<br>5 pts</th><th>4th<br>3 pts</th><th>5th<br>1 pt</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table></div>
+    <div class="awardVoteFoot"><div class="awardVoteProgress">Award ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="awardResultsNext">${last?"Continue":"Next Award"}</button><button id="openAwardResultsNews">Open News</button></div></div>
+  </div></div>`;
+}
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
+  if(n.type==="award_results")return awardVotingPopupHtml(n);
   if(n.type==="gm_recruitment"&&n.offer){
     const o=n.offer;
     return `<div class="newsFlashOverlay"><div class="newsFlashCard gmRecruitmentCard">
@@ -12888,24 +12914,37 @@ function runRegularSeason(G) {
 function rateStat(stats, key) { return stats && stats.gp ? (stats[key] || 0) / stats.gp : 0; }
 function clubForPlayer(G, p) { return G.clubs.find(c => c.roster.includes(p)); }
 function winPct(club) { const g=(club?.standings.w||0)+(club?.standings.l||0); return g ? club.standings.w/g : 0; }
-function awardCandidateScore(G, p) {
-  const s=p.seasonStats, club=clubForPlayer(G,p);
-  if (!s || s.gp < 50) return -Infinity;
-  const efficiency = s.fga ? (s.pts / Math.max(1, 2 * (s.fga + 0.44*s.fta))) : 0;
-  return rateStat(s,"pts") + rateStat(s,"reb")*0.62 + rateStat(s,"ast")*0.82 + rateStat(s,"stl")*1.55 + rateStat(s,"blk")*1.35
-    - rateStat(s,"tov")*0.72 + winPct(club)*8 + efficiency*7 + rateStat(s,"plusMinus")*0.10;
+function clampAward(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+function awardCandidateScore(G,p,minGp=50){
+  const s=p?.seasonStats,club=clubForPlayer(G,p);
+  if(!s||(+s.gp||0)<minGp)return -Infinity;
+  const ppg=rateStat(s,"pts"),rpg=rateStat(s,"reb"),apg=rateStat(s,"ast"),spg=rateStat(s,"stl"),bpg=rateStat(s,"blk"),tov=rateStat(s,"tov");
+  const ts=s.fga?(s.pts/Math.max(1,2*(s.fga+.44*s.fta))):.50;
+  // Individual performance drives the award. Team success is deliberately contextual,
+  // allowing exceptional seasons on lower-seeded teams to remain genuine MVP seasons.
+  const production=ppg+rpg*.58+apg*.82+spg*1.55+bpg*1.40-tov*.68;
+  const efficiency=clampAward((ts-.52)*15,-1.3,3.2);
+  const impact=clampAward(rateStat(s,"plusMinus")*.08,-1.2,1.8);
+  const teamContext=clampAward((winPct(club)-.50)*6,-1.2,1.5);
+  let exceptional=0;
+  if(ppg>=30)exceptional+=Math.min(2.2,(ppg-29)*.22);
+  if(apg>=10)exceptional+=Math.min(1.5,(apg-9.5)*.30);
+  if(rpg>=10)exceptional+=Math.min(1.2,(rpg-9.5)*.18);
+  if(ppg>=25&&apg>=9&&rpg>=8)exceptional+=1.1;
+  if(ts>=.62&&ppg>=27)exceptional+=.9;
+  return production+efficiency+impact+teamContext+exceptional;
 }
-function defensiveAwardScore(G,p) {
-  const s=p.seasonStats, club=clubForPlayer(G,p); if (!s || s.gp<50) return -Infinity;
+function defensiveAwardScore(G,p,minGp=50){
+  const s=p?.seasonStats,club=clubForPlayer(G,p);if(!s||(+s.gp||0)<minGp)return-Infinity;
   const teamGp=club?(+club.standings?.w||0)+(+club.standings?.l||0):0;
   const teamPaPerGame=teamGp?(+club.standings?.pa||0)/teamGp:113;
-  const teamDef = club ? Math.max(-5, Math.min(5, 113 - teamPaPerGame)) : 0;
-  const bigBonus = (p.position==="C"||p.position==="PF") ? rateStat(s,"blk")*0.35 : rateStat(s,"stl")*0.30;
-  return rateStat(s,"stl")*3.0 + rateStat(s,"blk")*2.7 + rateStat(s,"reb")*0.30 + rateStat(s,"plusMinus")*0.12 + teamDef*0.65 + bigBonus;
+  const teamDef=club?clampAward(113-teamPaPerGame,-4,4):0;
+  const bigBonus=(p.position==="C"||p.position==="PF")?rateStat(s,"blk")*.35:rateStat(s,"stl")*.30;
+  // Team defence matters, but individual defensive production and impact remain primary.
+  return rateStat(s,"stl")*3.0+rateStat(s,"blk")*2.8+rateStat(s,"reb")*.30+rateStat(s,"plusMinus")*.11+teamDef*.38+bigBonus;
 }
 
-// v0.1.49.75.6 — live award projections use the games actually played.
-// Final season awards retain the stricter eligibility thresholds above.
+// v0.1.49.75.7 — awards use media-panel style voting; live projections use games actually played.
 function awardProjectionEligibility(round){
   const r=Math.max(0,+round||0);
   if(r>=70)return 35;
@@ -12913,27 +12952,21 @@ function awardProjectionEligibility(round){
   return 20;
 }
 function awardProjectionScore(G,p,round){
-  const s=p?.seasonStats,club=clubForPlayer(G,p),minGp=awardProjectionEligibility(round);
-  if(!s||(+s.gp||0)<minGp)return -Infinity;
-  const efficiency=s.fga?(s.pts/Math.max(1,2*(s.fga+0.44*s.fta))):0;
+  const s=p?.seasonStats,minGp=awardProjectionEligibility(round);
+  if(!s||(+s.gp||0)<minGp)return-Infinity;
   const sample=Math.min(1,(+s.gp||0)/Math.max(minGp,55));
-  const base=rateStat(s,"pts")+rateStat(s,"reb")*.62+rateStat(s,"ast")*.82+rateStat(s,"stl")*1.55+rateStat(s,"blk")*1.35-rateStat(s,"tov")*.72;
-  const context=winPct(club)*8+efficiency*7+rateStat(s,"plusMinus")*.10;
-  return base*(.82+.18*sample)+context;
+  const base=awardCandidateScore(G,p,minGp);
+  return Number.isFinite(base)?base*(.86+.14*sample):-Infinity;
 }
 function defensiveProjectionScore(G,p,round){
-  const s=p?.seasonStats,club=clubForPlayer(G,p),minGp=awardProjectionEligibility(round);
-  if(!s||(+s.gp||0)<minGp)return -Infinity;
-  const teamGp=club?(+club.standings?.w||0)+(+club.standings?.l||0):0;
-  const teamPaPerGame=teamGp?(+club.standings?.pa||0)/teamGp:113;
-  const teamDef=club?Math.max(-5,Math.min(5,113-teamPaPerGame)):0;
-  const bigBonus=(p.position==="C"||p.position==="PF")?rateStat(s,"blk")*.35:rateStat(s,"stl")*.30;
+  const s=p?.seasonStats,minGp=awardProjectionEligibility(round);
+  if(!s||(+s.gp||0)<minGp)return-Infinity;
   const sample=Math.min(1,(+s.gp||0)/Math.max(minGp,55));
-  const base=rateStat(s,"stl")*3+rateStat(s,"blk")*2.7+rateStat(s,"reb")*.30+rateStat(s,"plusMinus")*.12+teamDef*.65+bigBonus;
-  return base*(.88+.12*sample);
+  const base=defensiveAwardScore(G,p,minGp);
+  return Number.isFinite(base)?base*(.90+.10*sample):-Infinity;
 }
 function awardRaceComparator(scoreFn,round){
-  return (a,b)=>{
+  return(a,b)=>{
     const bs=scoreFn(G,b.p,round),as=scoreFn(G,a.p,round);
     if(bs!==as)return bs-as;
     const bPts=rateStat(b.p.seasonStats,"pts"),aPts=rateStat(a.p.seasonStats,"pts");
@@ -12943,40 +12976,88 @@ function awardRaceComparator(scoreFn,round){
     return String(a.p.name||"").localeCompare(String(b.p.name||""));
   };
 }
-
-function addAward(G,p,award) { if (!p) return; p.awardHistory=p.awardHistory||[]; p.awardHistory.push({season:G.season,award}); }
-function settleSeasonAwards(G) {
-  G.awards=G.awards||{};
+function awardVoteHash(str){let h=2166136261>>>0;for(const ch of String(str)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)>>>0;}return h>>>0;}
+function awardVoteUnit(seed){return (awardVoteHash(seed)%1000003)/1000003;}
+function awardVoteNoise(seed){return (awardVoteUnit(seed+"a")+awardVoteUnit(seed+"b")+awardVoteUnit(seed+"c")-1.5);}
+function generateAwardVoting(G,awardKey,candidates,scoreFn,{voters=100,noise=3.4}={}){
+  const scored=(candidates||[]).map(p=>({p,score:scoreFn(p)})).filter(x=>Number.isFinite(x.score)).sort((a,b)=>b.score-a.score).slice(0,12);
+  const tally=new Map(scored.map(x=>[x.p.id,{playerId:x.p.id,first:0,second:0,third:0,fourth:0,fifth:0,points:0,baseScore:x.score}]));
+  const pointValues=[10,7,5,3,1],fields=["first","second","third","fourth","fifth"];
+  for(let voter=0;voter<voters;voter++){
+    const ballot=scored.map((x,idx)=>({p:x.p,value:x.score+awardVoteNoise(`${G.season}|${awardKey}|${voter}|${x.p.id}|${idx}`)*noise})).sort((a,b)=>b.value-a.value).slice(0,5);
+    ballot.forEach((x,i)=>{const t=tally.get(x.p.id);if(!t)return;t[fields[i]]++;t.points+=pointValues[i];});
+  }
+  const results=[...tally.values()].filter(x=>x.points>0).sort((a,b)=>b.points-a.points||b.first-a.first||b.second-a.second||b.third-a.third||String(a.playerId).localeCompare(String(b.playerId)));
+  return{season:G.season,awardKey,voters,results,winnerId:results[0]?.playerId||null};
+}
+function mipAwardCandidates(players){
+  return players.filter(p=>p.seasonStats?.gp>=40&&p.seasonHistory?.length).map(p=>{
+    const prev=p.seasonHistory[p.seasonHistory.length-1]?.stats;
+    const prevScore=prev?.gp?(prev.pts/prev.gp)+(prev.reb/prev.gp)*.55+(prev.ast/prev.gp)*.70:0;
+    const cur=(p.seasonStats.pts/p.seasonStats.gp)+(p.seasonStats.reb/p.seasonStats.gp)*.55+(p.seasonStats.ast/p.seasonStats.gp)*.70;
+    const efficiency=p.seasonStats.fga?p.seasonStats.pts/Math.max(1,2*(p.seasonStats.fga+.44*p.seasonStats.fta)):.5;
+    return{p,score:(cur-prevScore)+Math.max(0,efficiency-.54)*3};
+  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+}
+function awardPlayerById(G,id){return G?.clubs?.flatMap(c=>c.roster||[]).find(p=>p.id===id)||null;}
+function awardVoteLabel(key){return({MVP:"Most Valuable Player",ROY:"Rookie of the Year",DPOY:"Defensive Player of the Year",SixthMan:"Sixth Man of the Year",MIP:"Most Improved Player"})[key]||key;}
+function awardVoteShortLabel(key){return({MVP:"MVP",ROY:"Rookie of the Year",DPOY:"Defensive Player",SixthMan:"Sixth Man",MIP:"Most Improved"})[key]||key;}
+function awardWinnerArticleBody(G,key,vote){
+  const p=awardPlayerById(G,vote?.winnerId),club=p?clubForPlayer(G,p):null,s=p?.seasonStats,gp=Math.max(1,+s?.gp||1);
+  if(!p||!s)return `${awardVoteLabel(key)} voting is complete.`;
+  const stat=key==="DPOY"?`${(s.reb/gp).toFixed(1)} RPG, ${(s.stl/gp).toFixed(1)} SPG and ${(s.blk/gp).toFixed(1)} BPG`:`${(s.pts/gp).toFixed(1)} PPG, ${(s.reb/gp).toFixed(1)} RPG and ${(s.ast/gp).toFixed(1)} APG`;
+  return `${p.name} of ${club?.name||"his club"} has won ${awardVoteLabel(key)} after a season of ${stat}. The official media ballot placed ${p.name} first with ${vote.results?.[0]?.points||0} total points.`;
+}
+function publishMajorAwardNews(G,votes){
+  for(const key of ["MVP","ROY","DPOY","SixthMan","MIP"]){
+    const v=votes[key];if(!v?.winnerId)continue;
+    const p=awardPlayerById(G,v.winnerId);if(!p)continue;
+    pushNewsArticle(G,`${p.name} wins ${awardVoteLabel(key)}`,awardWinnerArticleBody(G,key,v),"Awards",3,`S${G.season}_AWARD_${key}`,false);
+  }
+}
+function queueMajorAwardResults(G){
+  const seasonKey=`S${G.season}`;
+  G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};
+  if(G.awardVotingPresentationSeen[seasonKey]||G.newsFlashPending)return;
+  G.newsFlashPending={type:"award_results",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
+}
+function addAward(G,p,award){if(!p)return;p.awardHistory=p.awardHistory||[];p.awardHistory.push({season:G.season,award});}
+function settleSeasonAwards(G){
+  G.awards=G.awards||{};G.awardVoting=G.awardVoting||{};
   if(G.seasonAwards?.season===G.season&&G.awards[`S${G.season}_MVP`])return G.seasonAwards;
   const players=G.clubs.flatMap(c=>c.roster).filter(p=>p.seasonStats?.gp>0);
-  const ranked=[...players].sort((a,b)=>awardCandidateScore(G,b)-awardCandidateScore(G,a));
-  const mvp=ranked[0]||null;
-  const dpoy=[...players].sort((a,b)=>defensiveAwardScore(G,b)-defensiveAwardScore(G,a))[0]||null;
-  const rookies=players.filter(p=>p.draftYear===G.season && p.seasonStats.gp>=30).sort((a,b)=>awardCandidateScore(G,b)-awardCandidateScore(G,a));
-  const roy=rookies[0]||null;
-  const sixth=players.filter(p=>p.rotationRole==="Sixth Man" && p.seasonStats.gp>=40).sort((a,b)=>awardCandidateScore(G,b)-awardCandidateScore(G,a))[0]||null;
-  const mipPool=players.filter(p=>p.seasonStats.gp>=40 && p.seasonHistory?.length).map(p=>{
-    const prev=p.seasonHistory[p.seasonHistory.length-1]?.stats; const prevScore=prev?.gp ? (prev.pts/prev.gp)+(prev.reb/prev.gp)*0.55+(prev.ast/prev.gp)*0.7 : 0;
-    const cur=(p.seasonStats.pts/p.seasonStats.gp)+(p.seasonStats.reb/p.seasonStats.gp)*0.55+(p.seasonStats.ast/p.seasonStats.gp)*0.7;
-    return {p,delta:cur-prevScore};
-  }).sort((a,b)=>b.delta-a.delta);
-  const mip=mipPool[0]?.p||null;
-  const allNba1=ranked.slice(0,5), allNba2=ranked.slice(5,10), allNba3=ranked.slice(10,15);
-  const defRank=[...players].sort((a,b)=>defensiveAwardScore(G,b)-defensiveAwardScore(G,a));
-  const allDef1=defRank.slice(0,5), allDef2=defRank.slice(5,10);
+  const eligible=players.filter(p=>p.seasonStats.gp>=50);
+  const rookies=players.filter(p=>p.draftYear===G.season&&p.seasonStats.gp>=30);
+  const sixthPool=players.filter(p=>p.rotationRole==="Sixth Man"&&p.seasonStats.gp>=40);
+  const mipPool=mipAwardCandidates(players);
+  const votes={
+    MVP:generateAwardVoting(G,"MVP",eligible,p=>awardCandidateScore(G,p,50),{noise:3.5}),
+    DPOY:generateAwardVoting(G,"DPOY",eligible,p=>defensiveAwardScore(G,p,50),{noise:2.7}),
+    ROY:generateAwardVoting(G,"ROY",rookies,p=>awardCandidateScore(G,p,30),{noise:3.3}),
+    SixthMan:generateAwardVoting(G,"SixthMan",sixthPool,p=>awardCandidateScore(G,p,40),{noise:3.2}),
+    MIP:generateAwardVoting(G,"MIP",mipPool.map(x=>x.p),p=>mipPool.find(x=>x.p===p)?.score??-Infinity,{noise:1.7})
+  };
+  for(const [key,v] of Object.entries(votes))G.awardVoting[`S${G.season}_${key}`]=v;
+  const mvp=awardPlayerById(G,votes.MVP.winnerId)||null,dpoy=awardPlayerById(G,votes.DPOY.winnerId)||null,roy=awardPlayerById(G,votes.ROY.winnerId)||null;
+  const sixth=awardPlayerById(G,votes.SixthMan.winnerId)||null,mip=awardPlayerById(G,votes.MIP.winnerId)||null;
+  const ranked=[...eligible].sort((a,b)=>awardCandidateScore(G,b,50)-awardCandidateScore(G,a,50));
+  const allNba1=ranked.slice(0,5),allNba2=ranked.slice(5,10),allNba3=ranked.slice(10,15);
+  const defRank=[...eligible].sort((a,b)=>defensiveAwardScore(G,b,50)-defensiveAwardScore(G,a,50));
+  const allDef1=defRank.slice(0,5),allDef2=defRank.slice(5,10);
   const keys={MVP:mvp,DPOY:dpoy,ROY:roy,SixthMan:sixth,MIP:mip};
-  for (const [award,p] of Object.entries(keys)) { G.awards[`S${G.season}_${award}`]=p?.id||null; addAward(G,p,award); }
-  for (const [name,team] of [["AllNBAFirst",allNba1],["AllNBASecond",allNba2],["AllNBAThird",allNba3],["AllDefensiveFirst",allDef1],["AllDefensiveSecond",allDef2]]) {
-    G.awards[`S${G.season}_${name}`]=team.map(p=>p.id); for (const p of team) addAward(G,p,name);
+  for(const[award,p]of Object.entries(keys)){G.awards[`S${G.season}_${award}`]=p?.id||null;addAward(G,p,award);}
+  for(const[name,team]of [["AllNBAFirst",allNba1],["AllNBASecond",allNba2],["AllNBAThird",allNba3],["AllDefensiveFirst",allDef1],["AllDefensiveSecond",allDef2]]){
+    G.awards[`S${G.season}_${name}`]=team.map(p=>p.id);for(const p of team)addAward(G,p,name);
   }
   const scoring=[...players].sort((a,b)=>rateStat(b.seasonStats,"pts")-rateStat(a.seasonStats,"pts"))[0]||null;
   const reb=[...players].sort((a,b)=>rateStat(b.seasonStats,"reb")-rateStat(a.seasonStats,"reb"))[0]||null;
   const ast=[...players].sort((a,b)=>rateStat(b.seasonStats,"ast")-rateStat(a.seasonStats,"ast"))[0]||null;
-  G.awards[`S${G.season}_ScoringChampion`]=scoring?.id||null; G.awards[`S${G.season}_ReboundingLeader`]=reb?.id||null; G.awards[`S${G.season}_AssistLeader`]=ast?.id||null;
-  addAward(G,scoring,"Scoring Champion"); addAward(G,reb,"Rebounding Leader"); addAward(G,ast,"Assist Leader");
+  G.awards[`S${G.season}_ScoringChampion`]=scoring?.id||null;G.awards[`S${G.season}_ReboundingLeader`]=reb?.id||null;G.awards[`S${G.season}_AssistLeader`]=ast?.id||null;
+  addAward(G,scoring,"Scoring Champion");addAward(G,reb,"Rebounding Leader");addAward(G,ast,"Assist Leader");
   G.seasonAwards={season:G.season,mvp:mvp?.id||null,dpoy:dpoy?.id||null,roy:roy?.id||null,sixthMan:sixth?.id||null,mip:mip?.id||null,
     allNbaFirst:allNba1.map(p=>p.id),allNbaSecond:allNba2.map(p=>p.id),allNbaThird:allNba3.map(p=>p.id),allDefensiveFirst:allDef1.map(p=>p.id),allDefensiveSecond:allDef2.map(p=>p.id)};
-  logEvent(G, `${basketballSeasonLabel(G.season)} awards settled from recorded performance. MVP: ${mvp?.name||"n/a"}; DPOY: ${dpoy?.name||"n/a"}; ROY: ${roy?.name||"n/a"}.`);
+  publishMajorAwardNews(G,votes);queueMajorAwardResults(G);
+  logEvent(G,`${basketballSeasonLabel(G.season)} media awards settled. MVP: ${mvp?.name||"n/a"}; DPOY: ${dpoy?.name||"n/a"}; ROY: ${roy?.name||"n/a"}.`);
   return G.seasonAwards;
 }
 
@@ -13313,7 +13394,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.75.6 League · Awards Race Integrity",ENGINE_VERSION="E2.26-PROD17";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.75.7 League · Media Awards Voting",ENGINE_VERSION="E2.26-PROD18";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18169,7 +18250,7 @@ function awardRace(){
   };
   const race=(title,list,type="off")=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${x.p.position}${x.p.secondaryPosition?`/${x.p.secondaryPosition}`:""} · ${clubNameLink(x.club)}</small><small>${statLine(x,type)}</small></div></div>`).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
 
-  return `<div class="card awardsRaceIntro"><div class="eyebrow">${basketballSeasonLabel(G.season)}</div><h3>Awards Race</h3><div class="smallcopy">Projected award leaders based on recorded season performance. Current projection threshold: ${minGp} GP. Final awards use season-end eligibility.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player",dpoy,"def")}</div>`;
+  return `<div class="card awardsRaceIntro"><div class="eyebrow">${basketballSeasonLabel(G.season)}</div><h3>Awards Race</h3><div class="smallcopy">Media award watch based on recorded season performance. Current projection threshold: ${minGp} GP. Final honours are decided from the official season-end ballot.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player of the Year",dpoy,"def")}</div>`;
 }
 function cupStageName(stage){
   return ({GROUP_PLAY:"Group Play",QUARTERFINALS:"Quarterfinals",SEMIFINALS:"Semifinals",CHAMPIONSHIP:"Championship",COMPLETE:"Complete"})[stage]||String(stage||"Group Play").replaceAll("_"," ");
@@ -18956,6 +19037,9 @@ function render(){
   }
 prepareRenderState();status();action();const pageHtml=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmBrief():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+(ui.page==="home"?homeMainMenuExitHtml():"")+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
 function bind(){
+  if($("#awardResultsNext"))$("#awardResultsNext").onclick=()=>{const n=G.newsFlashPending;if(!n||n.type!=="award_results")return;const keys=n.awardKeys||[];if((+n.index||0)<keys.length-1){n.index=(+n.index||0)+1;}else{G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;G.newsFlashPending=null;}save();render()};
+  if($("#closeAwardResults"))$("#closeAwardResults").onclick=()=>{const n=G.newsFlashPending;if(n?.type==="award_results"){G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}G.newsFlashPending=null;save();render()};
+  if($("#openAwardResultsNews"))$("#openAwardResultsNews").onclick=()=>{const n=G.newsFlashPending;if(n?.type==="award_results"){G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}G.newsFlashPending=null;ui.page="news";save();render()};
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
