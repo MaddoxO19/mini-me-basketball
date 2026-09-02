@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.0 UI/UX · Design Review QoL Pass</title>
+<title>Mini&Me Basketball — v0.1.49.76.1 Club · Franchise Legacy Notable Players</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1911,6 +1911,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.75.10 — Olympic medal-card typography aligned with qualification-country scale. */
 /* v0.1.49.75.11 — Unicorn build calibration: reduced compound scoring, playmaking and rebounding amplification while preserving elite rim protection/defensive impact. OVR/POT unchanged. */
 /* v0.1.49.76.0 — Consolidated Design Review pass: navigation consistency, contracts/schedule/draft/trade/FA QoL, career-settings clarity, club-history integrity and tab typography. */
+/* v0.1.49.76.1 — Franchise Legacy Notable Players: protected historical icons, tiered club legends, and significance-weighted GM-era careers. */
 .olympicRecentPlacings .metric{padding:9px 7px}
 .olympicRecentPlacings .metric b{font-size:11px;font-weight:700;line-height:1.25}
 .olympicRecentPlacings .metric .nationalFlagLabel{gap:5px;justify-content:center}
@@ -1941,10 +1942,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .postStageTabs button{font-size:8px!important}
 }
 
+
+/* v0.1.49.76.1 — Franchise Legacy Notable Players */
+.clubLegendRow small{line-height:1.35}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.0 UI/UX · Design Review QoL Pass</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.1 Club · Franchise Legacy Notable Players</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13429,7 +13434,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.0 UI/UX · Design Review QoL Pass",ENGINE_VERSION="E2.26-PROD23";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.1 Club · Franchise Legacy Notable Players",ENGINE_VERSION="E2.26-PROD24";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14563,13 +14568,21 @@ function clubNotablePlayers(club){
   const unique=[...new Map([...(club.roster||[]),...historic].map(p=>[p.id,p])).values()];
   const seasonAtClub=(p,season)=>clubForPlayer(G,p)?.id===club.id&&season===G.season||(p.seasonHistory||[]).some(h=>h.season===season&&(h.clubId===club.id||h.clubName===club.name));
   return unique.map(p=>{
-    const honours=(p.awardHistory||[]).filter(a=>seasonAtClub(p,a.season)).length;
+    const awardRows=(p.awardHistory||[]).filter(a=>seasonAtClub(p,a.season));
+    const honours=awardRows.length;
     const ident=normalizedHistoricalPlayerIdentity({sourcePlayerName:p.sourceTemplateName||null,playerName:p.name,playerId:p.id});
     const ranks=(rankingMap.get(ident)?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
     const rankScore=ranks.reduce((sum,r)=>sum+Math.max(0,26-r.rank)*2,0);
     const seasons=(p.seasonHistory||[]).filter(h=>h.clubId===club.id||h.clubName===club.name).length+(clubForPlayer(G,p)?.id===club.id?1:0);
-    return{p,honours,ranks,score:honours*22+rankScore+seasons*2+(p.ovr||0)*.15};
-  }).sort((a,b)=>b.score-a.score).slice(0,8);
+    const top1=ranks.filter(r=>r.rank===1).length,top3=ranks.filter(r=>r.rank<=3).length;
+    const major=awardRows.filter(a=>/MVP|Most Valuable|Finals MVP|Defensive Player|Rookie of the Year|All-NBA|All League/i.test(String(a.name||a.award||a.title||""))).length;
+    const championships=awardRows.filter(a=>/Champion|Championship|NBA Title|Finals Winner/i.test(String(a.name||a.award||a.title||""))).length;
+    const score=honours*14+major*18+championships*24+rankScore+top1*28+top3*8+seasons*3+(p.ovr||0)*.08;
+    let legacyTier=0,legacyLabel="Notable Player";
+    if(honours>=24||major>=5||championships>=2||(top1>=2&&honours>=10)){legacyTier=2;legacyLabel="Franchise Icon";}
+    else if(honours>=9||major>=2||championships>=1||top1>=1||top3>=3){legacyTier=1;legacyLabel="Club Legend";}
+    return{p,honours,ranks,score,legacyTier,legacyLabel};
+  }).sort((a,b)=>b.legacyTier-a.legacyTier||b.score-a.score).slice(0,12);
 }
 function clubHistoricalNotableStatus(row){
   const p=historicalRecordProfilePlayer(G,row);
@@ -14588,15 +14601,20 @@ function clubHistoricalNotableRows(club){
     const first=String(h.name||"").split(/\s+/)[0]?.toLowerCase();
     const match=[...rankings.entries()].find(([id,x])=>String(x.playerName||"").split(/\s+/)[0]?.toLowerCase()===first);
     const ranks=(match?.[1]?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
-    rows.push({kind:"history",name:h.name,playerName:h.name,sourcePlayerName:match?.[1]?.sourcePlayerName||h.name,pos:h.pos,legacy:h.legacy,ranks,score:120+ranks.reduce((s,r)=>s+Math.max(0,26-r.rank),0)});
+    const rankScore=ranks.reduce((s,r)=>s+Math.max(0,26-r.rank)*2,0);
+    // Curated historical anchors are franchise icons by definition. Their place can be
+    // overtaken by a truly generational GM-era career, but not by ordinary accumulated honours.
+    rows.push({kind:"history",name:h.name,playerName:h.name,sourcePlayerName:match?.[1]?.sourcePlayerName||h.name,pos:h.pos,legacy:h.legacy,ranks,legacyTier:3,legacyLabel:"Franchise Icon",score:700+rankScore});
     if(match)used.add(match[0]);
   }
   for(const [ident,x] of rankings.entries()){
     if(used.has(ident)||!x.historical)continue;
     const ranks=(x.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);if(!ranks.length)continue;
-    rows.push({kind:"history",name:x.playerName,playerName:x.playerName,sourcePlayerName:x.sourcePlayerName||x.playerName,pos:"Franchise history",legacy:"Franchise leader",ranks,score:ranks.reduce((s,r)=>s+Math.max(0,26-r.rank)*2,0)});
+    const top1=ranks.filter(r=>r.rank===1).length;
+    const score=ranks.reduce((s,r)=>s+Math.max(0,26-r.rank)*2,0)+top1*24;
+    rows.push({kind:"history",name:x.playerName,playerName:x.playerName,sourcePlayerName:x.sourcePlayerName||x.playerName,pos:"Franchise history",legacy:"Franchise leader",ranks,legacyTier:1,legacyLabel:"Club Legend",score});
   }
-  return rows.sort((a,b)=>b.score-a.score);
+  return rows.sort((a,b)=>b.legacyTier-a.legacyTier||b.score-a.score);
 }
 function clubRecordSummary(club){
   const hist=clubSeasonArchive(club);
@@ -17562,10 +17580,10 @@ function clubHub(){
   }else if(ui.clubTab==="honours"){
     const legends=clubNotablePlayers(club);
     const historicalRows=clubHistoricalNotableRows(club);
-    const activeRows=legends.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score}));
-    const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.score||0)-(a.score||0)).slice(0,8);
+    const activeRows=legends.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
+    const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
     const titleYears=combinedFranchiseTitleYears(club,archive);
-    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No championships recorded"}</small></div><b>${honours.nba} Total</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Seasons completed since your GM career began</small></div><b>${archive.length}</b></div><div class="more"><div><b>GM-Era Record</b><small>Regular-season record during your career</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best GM-Era Season</b><small>${cr.best?`${basketballSeasonLabel(cr.best.season)}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
+    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No championships recorded"}</small></div><b>${honours.nba} Total</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Seasons completed since your GM career began</small></div><b>${archive.length}</b></div><div class="more"><div><b>GM-Era Record</b><small>Regular-season record during your career</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best GM-Era Season</b><small>${cr.best?`${basketballSeasonLabel(cr.best.season)}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"Franchise Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
   }else{
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
     body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div><div class="sectionTitle">Current Season Leaders</div><div class="clubCurrentLeaderGrid">${leaderCard("Scoring Leader",scoring,"pts")}${leaderCard("Playmaking Leader",playmaker,"ast")}${leaderCard("Rebounding Leader",rebounder,"reb")}</div>`;
