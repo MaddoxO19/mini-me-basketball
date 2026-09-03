@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.77.0 League · History Archive</title>
+<title>Mini&Me Basketball — v0.1.49.77.1 League · Award History & Records Cache</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2349,10 +2349,22 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 }
 
 /* v0.1.49.77.0 — Statistical history remains in Records; League History now contains League Winners, NBA Cup Winners and Award Winners. */
+
+/* v0.1.49.77.1 — canonical award-history view + cached League Records snapshot */
+.historyArchiveRow strong{
+  display:block;
+  font-size:11px;
+  font-weight:850;
+  color:var(--text);
+  line-height:1.3;
+  margin-top:2px;
+}
+
+/* v0.1.49.77.1 — Award Winners reads player awardHistory; League Records snapshot is cached by season/game signature for immediate tab access. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.0 League · History Archive</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.1 League · Award History & Records Cache</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13837,7 +13849,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.0 League · History Archive",ENGINE_VERSION="E2.26-PROD33";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.1 League · Award History & Records Cache",ENGINE_VERSION="E2.26-PROD34";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17939,7 +17951,26 @@ function clubSeasonLeaderTablesHtml(G,club){
   ];
   return `<div class="recordBookIntro"><div class="eyebrow">Current Season</div><h3>${basketballSeasonLabel(G.season)} Club Leaders</h3><p>Detailed statistical leaders for ${club.name}. Overview provides the quick record snapshot.</p></div><div class="leaderGrid">${cats.map(([title,rows,value])=>`<div class="leaderCard"><h4>${title}</h4>${rows.slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)}</small></div><b class="leaderValue">${value(p)}</b></div>`).join("")}</div>`).join("")}</div>`;
 }
+
+function leagueRecordSnapshotSignature(G){
+  const pools=[G.regularSeasonLive?.games||[],G.regularSeason?.games||[]];
+  let count=0,last="";
+  for(const pool of pools)for(const g of pool||[]){
+    if(!g?.id||!g.boxScore)continue;
+    count++;
+    last=String(g.id);
+  }
+  return `${G.season}:${count}:${last}`;
+}
+function invalidateLeagueRecordSnapshotCache(){
+  if(G)G._leagueRecordSnapshotCache=null;
+}
+
 function leagueCurrentSeasonRecordSnapshot(G){
+  const sig=leagueRecordSnapshotSignature(G);
+  if(G._leagueRecordSnapshotCache?.signature===sig&&G._leagueRecordSnapshotCache?.data){
+    return G._leagueRecordSnapshotCache.data;
+  }
   const sg={},tg={},seen=new Set(),games=[...(G.regularSeasonLive?.games||[]),...(G.regularSeason?.games||[])];
   const save=(bucket,key,value,meta)=>{if(value==null||!isFinite(+value))return;if(!bucket[key]||+value>+bucket[key].value)bucket[key]={key,value:+value,season:G.season,...meta}};
   for(const game of games){
@@ -17957,7 +17988,9 @@ function leagueCurrentSeasonRecordSnapshot(G){
       }
     }
   }
-  return{singleGame:sg,teamGame:tg};
+  const data={singleGame:sg,teamGame:tg};
+  G._leagueRecordSnapshotCache={signature:sig,data};
+  return data;
 }
 function leagueRecordsOverviewHtml(){
   const x=leagueCurrentSeasonRecordSnapshot(G),sg=x.singleGame||{},tg=x.teamGame||{},l=G.regularSeason?.leaders;
@@ -18912,29 +18945,49 @@ function leagueLegacy(){
     return {season:h.season,winnerName,runnerName};
   }).filter(x=>x.winnerName&&x.winnerName!=="—");
 
-  const awardNames=[
-    ["MVP","MVP"],
-    ["Rookie of the Year","ROY"],
-    ["Defensive Player of the Year","DPOY"],
-    ["Sixth Man of the Year","6MOY"],
-    ["Most Improved Player","MIP"]
+  const canonicalAwards=[
+    ["Most Valuable Player",/^(MVP|Most Valuable Player)$/i],
+    ["Rookie of the Year",/^(ROY|Rookie of the Year)$/i],
+    ["Defensive Player of the Year",/^(DPOY|Defensive Player of the Year)$/i],
+    ["Sixth Man of the Year",/^(6MOY|Sixth Man of the Year)$/i],
+    ["Most Improved Player",/^(MIP|Most Improved Player)$/i]
   ];
   const awardRows=[];
-  for(const h of history){
-    const awards=h.awards||h.seasonAwards||{};
-    for(const [label,key] of awardNames){
-      let a=awards?.[key]||awards?.[label]||h?.[key]||null;
-      if(!a)continue;
-      if(typeof a==="string"){
-        awardRows.push({season:h.season,label,name:a,clubName:""});
-        continue;
-      }
-      const pid=a.playerId||a.id||null,p=pid?playerByAnyId(pid):null;
-      const name=a.playerName||a.name||p?.name||"—";
-      const clubName=a.clubName||clubById(G,a.clubId||p?.clubId)?.name||"";
-      if(name&&name!=="—")awardRows.push({season:h.season,label,name,clubName});
+  const seenAwards=new Set();
+
+  // Canonical source: player awardHistory. This is where the game already records
+  // completed-season award outcomes, so History reads the same source of truth.
+  for(const p of [...allPlayers(G),...retiredPlayerPool(G)]){
+    for(const a of p.awardHistory||[]){
+      const raw=String(a?.name||a?.award||a?.title||"").trim();
+      const match=canonicalAwards.find(([,rx])=>rx.test(raw));
+      if(!match)continue;
+      const season=+a.season||+a.year||0;if(!season)continue;
+      const key=`${season}:${match[0]}:${p.id}`;if(seenAwards.has(key))continue;seenAwards.add(key);
+      const clubId=a.clubId||a.teamId||null;
+      const clubName=a.clubName||clubById(G,clubId)?.name||((p.seasonHistory||[]).find(h=>+h.season===season)?.clubName)||"";
+      awardRows.push({season,label:match[0],name:p.name,clubName});
     }
   }
+
+  // Fallback only for older migrated saves that may have stored season award rows
+  // in leagueHistory before player awardHistory was fully populated.
+  for(const h of history){
+    const awards=h.awards||h.seasonAwards||{};
+    for(const [label,rx] of canonicalAwards){
+      const candidates=Object.entries(awards||{}).filter(([k])=>rx.test(k));
+      for(const [,a] of candidates){
+        if(!a)continue;
+        const pid=typeof a==="object"?(a.playerId||a.id):null,p=pid?playerByAnyId(pid):null;
+        const name=typeof a==="string"?a:(a.playerName||a.name||p?.name||"");
+        if(!name)continue;
+        const key=`${h.season}:${label}:${pid||name}`;if(seenAwards.has(key))continue;seenAwards.add(key);
+        const clubName=typeof a==="object"?(a.clubName||clubById(G,a.clubId||p?.clubId)?.name||""):"";
+        awardRows.push({season:h.season,label,name,clubName});
+      }
+    }
+  }
+  awardRows.sort((a,b)=>(+b.season||0)-(+a.season||0)||a.label.localeCompare(b.label));
 
   const tabs=`<div class="leagueHistoryArchiveTabs globalLevel2Tabs">
     <button data-leaguehistory="leaguewinners" class="${ui.leagueHistoryTab==="leaguewinners"?"active":""}">League Winners</button>
@@ -18949,7 +19002,7 @@ function leagueLegacy(){
 
   if(ui.leagueHistoryTab==="awards"){
     return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>Past Award Winners</h3><p>Major individual award winners from completed seasons.</p></div>
-      <div class="historyArchiveList">${awardRows.length?awardRows.map(x=>`<div class="historyArchiveRow"><div class="season">${seasonLabel(x.season)}</div><div><b>${x.label} · ${x.name}</b>${x.clubName?`<small>${x.clubName}</small>`:""}</div></div>`).join(""):`<div class="card empty">Award winners will appear after completed seasons.</div>`}</div>`;
+      <div class="historyArchiveList">${awardRows.length?awardRows.map(x=>`<div class="historyArchiveRow"><div class="season">${seasonLabel(x.season)}</div><div><b>${x.label}</b><strong>${x.name}</strong>${x.clubName?`<small>${x.clubName}</small>`:""}</div></div>`).join(""):`<div class="card empty">No completed-season award history is available in this save.</div>`}</div>`;
   }
 
   return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>League Winners</h3><p>NBA champions from each completed season.</p></div>
