@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.77.2 Intl · Olympics Overview Stage</title>
+<title>Mini&Me Basketball — v0.1.49.77.3 Basketball World · Global Player Ecosystem</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2365,10 +2365,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.2 — Olympics Overview + stage separation */
 .olympicStageNav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;overflow:visible!important}.olympicStageNav button{min-width:0!important;width:100%!important;min-height:44px!important;padding:7px 3px!important;font-size:9px!important;white-space:normal!important}@media(max-width:430px){.olympicStageNav button{font-size:8px!important}}
 /* v0.1.49.77.2 — Olympic Program, Qualification, Hosts and Medal History now appear only in Overview during a live Games. */
+
+/* v0.1.49.77.3 — Basketball World long-form league labels */
+.playerIdentityPanel .profileDataRow b{max-width:68%;text-align:right;line-height:1.25}
+@media(max-width:430px){.playerIdentityPanel .profileDataRow b{max-width:64%;font-size:10px}}
+
+/* v0.1.49.77.3 — Global Player Ecosystem: 14 major external domestic leagues, local-domestic fallback, NBA/G League/overseas movement and external national-player editing. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.2 Intl · Olympics Overview Stage</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.3 Basketball World · Global Player Ecosystem</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -4867,11 +4873,46 @@ const NATIONAL_GM_CONTROLLABLE = new Set([
   "USA","CAN","AUS","ESP","FRA","SRB","GER","LTU","GRE","SLO","LAT","ITA",
   "BRA","ARG","PUR","DOM","NZL","JPN","CHN","TUR","CRO","FIN","SSD","NGR"
 ]);
+// v0.1.49.77.3 — Basketball World / Global Player Ecosystem.
+// This is a coverage set, not a ranking. EuroLeague is intentionally excluded:
+// it is a cross-border competition rather than the domestic-league layer modelled here.
+const GLOBAL_PRO_LEAGUES=[
+  "Liga ACB (Spain)",
+  "Turkish BSL",
+  "Greek Basket League",
+  "Italian LBA",
+  "French LNB",
+  "Chinese CBA",
+  "Australian NBL",
+  "German BBL",
+  "Israeli Basketball Premier League",
+  "VTB United League",
+  "Serbian KLS",
+  "Lithuanian LKL",
+  "Argentine Liga Nacional",
+  "Philippine PBA"
+];
+const HOME_PRO_LEAGUE_BY_NATION={
+  ESP:"Liga ACB (Spain)",
+  TUR:"Turkish BSL",
+  GRE:"Greek Basket League",
+  ITA:"Italian LBA",
+  FRA:"French LNB",
+  CHN:"Chinese CBA",
+  AUS:"Australian NBL",
+  GER:"German BBL",
+  ISR:"Israeli Basketball Premier League",
+  RUS:"VTB United League",
+  SRB:"Serbian KLS",
+  LTU:"Lithuanian LKL",
+  ARG:"Argentine Liga Nacional",
+  PHI:"Philippine PBA"
+};
 const EXTERNAL_LEAGUE_BY_REGION={
-  Europe:["EuroLeague","EuroCup","Spanish ACB","Turkish BSL","French LNB Pro A","German BBL","Italian LBA","Greek Basket League","Adriatic League"],
-  Americas:["G League","Brazil NBB","Argentina Liga Nacional","Puerto Rico BSN","Mexico LNBP","Liga Sudamericana"],
-  AsiaOceania:["NBL Australia","Japan B.League","Korea KBL","China CBA","Philippines PBA","New Zealand NBL","West Asia Super League"],
-  Africa:["Basketball Africa League","Egyptian Super League","Tunisia Pro A","Angola Unitel Basket","Morocco Division Excellence","Europe"]
+  Europe:["Liga ACB (Spain)","Turkish BSL","Greek Basket League","Italian LBA","French LNB","German BBL","Israeli Basketball Premier League","VTB United League","Serbian KLS","Lithuanian LKL"],
+  Americas:["Argentine Liga Nacional","Liga ACB (Spain)","French LNB","Italian LBA"],
+  AsiaOceania:["Australian NBL","Chinese CBA","Philippine PBA","Liga ACB (Spain)","French LNB"],
+  Africa:["French LNB","Liga ACB (Spain)","Italian LBA","German BBL"]
 };
 
 // International player distribution. Tier influences the strength of the
@@ -8245,7 +8286,7 @@ function makeCareer() {
     for (let i=0;i<10;i++) {
       const base = nation.tier===1 ? rand(70,84) : nation.tier===2 ? rand(67,79) : nation.tier===3 ? rand(64,75) : rand(60,71);
       const p=makePlayer({age:rand(20,34),ovr:base,nationality:nation.code,origin:"International Pro"});
-      const affiliation=externalAffiliationForNation(nation,`${nation.code}|launch|${i}|${p.id}`);
+      const affiliation=externalLeagueForPlayer(p,nation,`${nation.code}|launch|${i}|${p.id}`,false);
       p.experienceYears=0;
       p.professionalExperienceYears=Math.max(1,p.age-rand(18,21));
       p.serviceHistorySource="External professional career";
@@ -8254,10 +8295,8 @@ function makeCareer() {
       p.contractType="International";
       p.salaryM=0;
       p.extensionEligible=false;
-      p.externalClub=affiliation;
-      p.externalLeague=affiliation;
+      applyExternalProfessionalStatus(p,affiliation,rand(1,3),"Launch international professional");
       p.entryPath="International Pro";
-      p.nbaAvailability="External Contract";
       externalProfessionals.push(p);
     }
   }
@@ -8273,7 +8312,8 @@ function makeCareer() {
     clubs,
     freeAgents,
     externalProfessionals,
-    playerMarketVersion:"PM1",
+    playerMarketVersion:"PM2",
+    basketballWorldVersion:"BW1",
     nationalTeams: NATIONAL_TEAMS.map(n => {const init=FIBA_INITIAL_RATINGS[n.code]||{rank:null,zoneRank:null,pts:Math.max(100,520-(n.tier-1)*120)};return ({ ...n, rosterPlayerIds: [], record:{w:0,l:0}, games:[], history:[], currentDepthChart:[], selectedSquadPlayerIds:[], nationalSquadMode:"auto", rankingPoints:init.pts, initialWorldRank:init.rank, initialZoneRank:init.zoneRank, rankingEngineVersion:FIBA_RANKING_ENGINE_VERSION, rankingSource:FIBA_RANKING_SOURCE, rankingLedger:[] })}),
     userNationalGM: { nationCode: null, appointedSeason: null },
     userClubGM: { clubId: null, appointedSeason: null },
@@ -9115,7 +9155,7 @@ function aiRosterFitSummary(club){
 // External Professional = contracted outside the NBA ecosystem.
 // Developmental/G League = NBA-adjacent talent with bounded two-way OVR.
 // ---------------------------------------------------------------------
-const PLAYER_MARKET_VERSION="PM1";
+const PLAYER_MARKET_VERSION="PM2";
 
 function ensurePlayerMarketState(G){
   if(!G)return null;
@@ -9149,6 +9189,26 @@ function ensurePlayerMarketState(G){
     }
   }
   G.freeAgents=keep;
+
+  // v0.1.49.77.3 migration: normalize the external universe onto the new
+  // 14-league domestic coverage model. Old EuroLeague/EuroCup/Adriatic and
+  // generic regional labels are reassigned without changing player ability.
+  const supportedWorldLeagues=new Set([...GLOBAL_PRO_LEAGUES,"G League"]);
+  for(const p of G.externalProfessionals){
+    if(!p)continue;
+    const nation=(G.nationalTeams||[]).find(n=>n.code===p.nationality)||{code:p.nationality,name:p.nationality||"International",region:"Europe",tier:4};
+    const current=p.externalLeague||p.externalClub||"";
+    const local=String(current).endsWith(" Domestic League");
+    if(!supportedWorldLeagues.has(current)&&!local){
+      const replacement=externalLeagueForPlayer(p,nation,`${p.id||p.name}|PM2`,false);
+      applyExternalProfessionalStatus(p,replacement,p.contractYearsLeft||rand(1,3),"PM2 league migration");
+    }else{
+      p.externalLeague=current||externalLeagueForPlayer(p,nation,p.id||p.name,false);
+      p.externalClub=p.externalLeague;
+      p.professionalStatus=p.externalLeague==="G League"?"G League":"International Professional";
+    }
+  }
+  G.basketballWorldVersion="BW1";
 
   // v0.1.46.13 migration: older generated developmental players defaulted
   // to zero/implicit service. Give only generated developmental identities
@@ -9518,29 +9578,149 @@ function runQualificationGame(G,aCode,bCode,windowId,groupId,games) {
   updateQualificationStanding(G,b,game.scoreB,game.scoreA,game.winner===b.code);
 }
 function stableStringHash(value){let h=2166136261;for(const ch of String(value||"")){h^=ch.charCodeAt(0);h=Math.imul(h,16777619)}return Math.abs(h>>>0)}
+
+function localDomesticLeagueLabel(nation){
+  const name=nation?.name||"Home Nation";
+  return `${name} Domestic League`;
+}
+function weightedStableChoice(options,seed=""){
+  const rows=(options||[]).filter(x=>x&&x.value&&(+x.weight||0)>0);
+  if(!rows.length)return null;
+  const total=rows.reduce((s,x)=>s+(+x.weight||0),0);
+  let roll=(stableStringHash(seed)%100000)/100000*total;
+  for(const row of rows){roll-=+row.weight||0;if(roll<0)return row.value}
+  return rows[rows.length-1].value;
+}
+function weightedRandomChoice(options){
+  const rows=(options||[]).filter(x=>x&&x.value&&(+x.weight||0)>0);
+  if(!rows.length)return null;
+  const total=rows.reduce((s,x)=>s+(+x.weight||0),0);
+  let roll=Math.random()*total;
+  for(const row of rows){roll-=+row.weight||0;if(roll<0)return row.value}
+  return rows[rows.length-1].value;
+}
+function externalLeagueOptionsForPlayer(player,nation){
+  const code=nation?.code||player?.nationality||"";
+  const region=nation?.region||"Europe";
+  const ovr=+player?.ovr||68;
+  const tier=+nation?.tier||4;
+  const home=HOME_PRO_LEAGUE_BY_NATION[code]||null;
+  const local=localDomesticLeagueLabel(nation);
+  const rows=[];
+
+  // Home-based basketball remains the normal pathway for nations with a
+  // major domestic league, particularly Australia, China and the Philippines.
+  if(home){
+    let homeWeight=36;
+    if(code==="CHN")homeWeight=68;
+    else if(code==="PHI")homeWeight=72;
+    else if(code==="AUS")homeWeight=58;
+    else if(["ESP","TUR","FRA","ITA","GER","GRE","SRB","LTU","ISR","ARG"].includes(code))homeWeight=44;
+    rows.push({value:home,weight:homeWeight});
+  }
+
+  // New Zealand is strongly connected to the Australian NBL but still has
+  // a meaningful lower-tier home pathway.
+  if(code==="NZL"){
+    rows.push({value:"Australian NBL",weight:48},{value:local,weight:28});
+  }
+
+  // USA external depth is NBA-adjacent first. G League is not one of the
+  // international 14, but remains a valid development location.
+  if(code==="USA"){
+    return [{value:"G League",weight:86},{value:"Australian NBL",weight:4},{value:"Chinese CBA",weight:5},{value:"Philippine PBA",weight:2},{value:"Liga ACB (Spain)",weight:3}];
+  }
+
+  // European players can move freely across the major European domestic leagues.
+  // Stronger players receive more cross-border opportunities.
+  const regional=EXTERNAL_LEAGUE_BY_REGION[region]||[];
+  const crossBorderWeight=ovr>=76?7:ovr>=70?4:2;
+  for(const league of regional){
+    if(league===home)continue;
+    rows.push({value:league,weight:crossBorderWeight});
+  }
+
+  // NBA-experienced veterans have a realistic late-career route to the
+  // NBL, CBA and PBA regardless of nationality.
+  const nbaExp=playerExperienceYears(player);
+  if(nbaExp>0){
+    rows.push(
+      {value:"Australian NBL",weight:ovr>=70?7:4},
+      {value:"Chinese CBA",weight:ovr>=68?8:5},
+      {value:"Philippine PBA",weight:ovr>=66?5:3}
+    );
+  }
+
+  // Minnow and non-covered nations should predominantly retain players
+  // in a local domestic environment rather than parking them in free agency.
+  if(!home && code!=="NZL"){
+    const localWeight=tier>=4?58:tier===3?42:24;
+    rows.push({value:local,weight:localWeight});
+  }else if(home){
+    rows.push({value:local,weight:tier>=3?8:3});
+  }
+
+  return rows;
+}
+function externalLeagueForPlayer(player,nation,seed="",randomize=false){
+  const options=externalLeagueOptionsForPlayer(player,nation);
+  return (randomize?weightedRandomChoice(options):weightedStableChoice(options,`${nation?.code||player?.nationality||"INT"}|${seed}|${player?.ovr||0}|${player?.age||0}`)) ||
+    localDomesticLeagueLabel(nation);
+}
 function externalAffiliationForNation(nation,seed=""){
-  const region=nation?.region||"Europe",opts=EXTERNAL_LEAGUE_BY_REGION[region]||["International Pro League"];
-  if(nation?.code==="USA")return"G League";
-  if(nation?.code==="AUS")return (stableStringHash(seed||nation.code)%5===0)?"Europe":"NBL Australia";
-  if(nation?.code==="NZL")return (stableStringHash(seed||nation.code)%3===0)?"NBL Australia":"New Zealand NBL";
-  return opts[stableStringHash(`${nation?.code||region}|${seed}`)%opts.length];
+  const proxy={nationality:nation?.code||"",ovr:nation?.tier===1?76:nation?.tier===2?72:nation?.tier===3?68:64,age:25,experienceYears:0};
+  return externalLeagueForPlayer(proxy,nation,seed,false);
+}
+function applyExternalProfessionalStatus(player,league,years=null,reason="International professional contract"){
+  if(!player)return player;
+  const nation=nat(player.nationality)||{code:player.nationality,name:player.nationality||"International",region:"Europe",tier:4};
+  const destination=league||externalLeagueForPlayer(player,nation,player.id||player.name,true);
+  player.externalLeague=destination;
+  player.externalClub=destination;
+  player.contractType=destination==="G League"?"G League":"International";
+  player.contractStatus=destination==="G League"?"Developmental":"External League";
+  player.contractYearsLeft=Math.max(1,years==null?rand(1,3):+years||1);
+  player.salaryM=0;
+  player.extensionEligible=false;
+  player.pendingExtension=null;
+  player.nbaAvailability=destination==="G League"?"Developmental":"External Contract";
+  player.professionalStatus=destination==="G League"?"G League":"International Professional";
+  player.worldCareerReason=reason;
+  return player;
 }
 function ensureInternationalAffiliation(p){
   if(!p)return"International Pro";
-  const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id));
-  if(club)return club.name;
-  if(p.externalClub)return p.externalClub;
+  const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
+  if(club){
+    if((club.gLeagueRoster||[]).some(x=>x.id===p.id))return"G League";
+    return club.name;
+  }
+  if((G?.freeAgents||[]).some(x=>x.id===p.id))return"Free Agent";
+  if(p.externalClub||p.externalLeague)return p.externalClub||p.externalLeague;
   if(p.origin==="G League"||p.contractType==="G League")return"G League";
   const isWorldPlayer=p.origin==="International Pro"||p.contractType==="International"||p.contractStatus==="External League";
   if(isWorldPlayer){
-    const nation=nat(p.nationality)||{code:p.nationality,region:"Europe"};
-    const affiliation=externalAffiliationForNation(nation,p.id||p.name);
-    p.externalClub=affiliation;p.externalLeague=affiliation;
-    if(p.contractStatus==="Free Agent"||!p.contractStatus)p.contractStatus="External League";
-    if(!p.contractType||p.contractType==="Unsigned")p.contractType="International";
+    const nation=nat(p.nationality)||{code:p.nationality,name:p.nationality||"International",region:"Europe",tier:4};
+    const affiliation=externalLeagueForPlayer(p,nation,p.id||p.name,false);
+    applyExternalProfessionalStatus(p,affiliation,p.contractYearsLeft||rand(1,3),"Basketball world affiliation");
     return affiliation;
   }
   return"Free Agent";
+}
+function playerBasketballLocation(p){
+  if(!p)return{club:"—",league:"—",status:"—"};
+  const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
+  if(club){
+    if((club.gLeagueRoster||[]).some(x=>x.id===p.id))return{club:"G League Affiliate",league:"G League",status:"Developmental"};
+    if((club.twoWayRoster||[]).some(x=>x.id===p.id))return{club:club.name,league:"NBA / G League",status:"Two-Way"};
+    return{club:club.name,league:"NBA",status:p.contractStatus||"Under Contract"};
+  }
+  if((G?.externalProfessionals||[]).some(x=>x.id===p.id)){
+    return{club:p.externalClub||p.externalLeague||"International Professional",league:p.externalLeague||p.externalClub||"International",status:p.professionalStatus||"International Professional"};
+  }
+  if((G?.freeAgents||[]).some(x=>x.id===p.id))return{club:"Free Agent",league:"Free Agency",status:"Available"};
+  if(p.retired)return{club:p.retiredFromClubName||"Career Complete",league:"Retired",status:"Retired"};
+  return{club:playerAffiliation(p),league:p.externalLeague||"—",status:p.contractStatus||"—"};
 }
 function playerAffiliation(p){return p?.retired?`Retired · ${p.retiredFromClubName||"Career Complete"}`:ensureInternationalAffiliation(p)}
 function gameYearForSeason(season){return 2025+(Number(season)||1)}
@@ -9577,11 +9757,11 @@ function ensureNationalDepth(G, nationCode, minHealthy=12) {
   let guard=0;
   while(healthy.length<target && guard<40){
     const base=nation.tier===1?rand(69,82):nation.tier===2?rand(66,78):nation.tier===3?rand(62,74):rand(60,70);
-    const affiliation=externalAffiliationForNation(nation,`${nationCode}|${healthy.length}|${G.season}`);
     const p=makePlayer({age:rand(19,32),ovr:base,nationality:nationCode,origin:"International Pro"});
+    const affiliation=externalLeagueForPlayer(p,nation,`${nationCode}|${healthy.length}|${G.season}`,false);
     p.experienceYears=0;p.professionalExperienceYears=Math.max(1,p.age-rand(18,21));p.serviceHistorySource="External professional career";
-    p.contractYearsLeft=rand(1,3);p.contractStatus="External League";p.contractType="International";p.salaryM=0;
-    p.externalClub=affiliation;p.externalLeague=affiliation;p.entryPath="International Pro";p.nbaAvailability="External Contract";
+    applyExternalProfessionalStatus(p,affiliation,rand(1,3),"National-team depth professional");
+    p.entryPath="International Pro";
     G.externalProfessionals=G.externalProfessionals||[];
     G.externalProfessionals.push(p);healthy.push(p);guard++;
   }
@@ -10660,6 +10840,104 @@ function creditNbaExperienceForCompletedSeason(G,p,completedSeason){
   p.nbaExperienceLastCreditedSeason=completedSeason;
   return true;
 }
+
+// ---------------------------------------------------------------------
+// BASKETBALL WORLD LIFECYCLE — v0.1.49.77.3
+// External leagues remain lightweight: no schedules/standings are simulated.
+// Players retain persistent career locations, develop/decline, move leagues,
+// pursue NBA opportunities, and eventually retire.
+// ---------------------------------------------------------------------
+function externalNbaOpportunityChance(p){
+  const ovr=+p.ovr||0,age=+p.age||25,nbaExp=playerExperienceYears(p);
+  if(age>=36||ovr<72)return 0;
+  let chance=ovr>=84?.42:ovr>=80?.28:ovr>=77?.16:ovr>=74?.08:.03;
+  if(age<=25)chance+=.06;
+  if(nbaExp>0)chance+=.08;
+  if(age>=32)chance*=.55;
+  return Math.max(0,Math.min(.55,chance));
+}
+function internationalEmploymentChance(p){
+  const ovr=+p.ovr||0,age=+p.age||25,nbaExp=playerExperienceYears(p);
+  if(ovr<55)return .18;
+  let chance=ovr>=80?.48:ovr>=75?.62:ovr>=70?.76:ovr>=65?.86:ovr>=60?.74:.42;
+  if(age>=31&&nbaExp>0)chance+=.08;
+  if(age>=35)chance-=.10;
+  return Math.max(.08,Math.min(.94,chance));
+}
+function worldDestinationForPlayer(p,reason="career move"){
+  const nation=nat(p.nationality)||{code:p.nationality,name:p.nationality||"International",region:"Europe",tier:4};
+  const league=externalLeagueForPlayer(p,nation,`${p.id||p.name}|${G.season}|${reason}|${Math.random()}`,true);
+  return league||localDomesticLeagueLabel(nation);
+}
+function advanceExternalProfessionalWorld(G,summary=null){
+  G.externalProfessionals=Array.isArray(G.externalProfessionals)?G.externalProfessionals:[];
+  const survivors=[],nbaReturn=[];
+  let retired=0,moved=0,nbaChance=0;
+  for(const p of G.externalProfessionals){
+    if(!p)continue;
+    p.age=(+p.age||24)+1;
+    p.fatigue=0;p.recentForm=[];p.injured=false;p.injury=null;
+    p.professionalExperienceYears=Math.max(1,(+p.professionalExperienceYears||0)+1);
+    progressPlayerTalent(p,talentEraModifier(G),88,{trainingLevel:1,season:G.season-1});
+    if(Math.random()<retirementChance(p)){
+      archiveRetiredPlayer(G,p,null);
+      p.retiredFromClubName=p.externalLeague||p.externalClub||"International Basketball";
+      logEvent(G,`${p.name} (${p.retiredFromClubName}) retires at age ${p.age} (OVR ${p.ovr}).`);
+      retired++;continue;
+    }
+    p.contractYearsLeft=Math.max(0,(+p.contractYearsLeft||1)-1);
+    const expired=p.contractYearsLeft<=0;
+    if(expired&&Math.random()<externalNbaOpportunityChance(p)){
+      p.contractType="Unsigned";p.contractStatus="Free Agent";p.contractYearsLeft=0;p.salaryM=0;
+      p.nbaAvailability="Available";p.professionalStatus="NBA Free Agent";
+      p.worldAgeProcessedSeason=G.season;
+      p.externalLeague=null;p.externalClub=null;
+      nbaReturn.push(p);nbaChance++;
+      G.transactions.push({type:"world_nba_market",season:G.season,playerId:p.id,from:"International Basketball",to:"NBA Free Agency"});
+      continue;
+    }
+    if(expired||Math.random()<.12){
+      const prior=p.externalLeague||p.externalClub||"International Basketball";
+      let next=worldDestinationForPlayer(p,"external move");
+      for(let tries=0;tries<3&&next===prior;tries++)next=worldDestinationForPlayer(p,"external move retry");
+      applyExternalProfessionalStatus(p,next,rand(1,3),"External league movement");
+      if(next!==prior){
+        moved++;
+        G.transactions.push({type:"world_move",season:G.season,playerId:p.id,from:prior,to:next});
+      }
+    }else{
+      applyExternalProfessionalStatus(p,p.externalLeague||p.externalClub,p.contractYearsLeft,"Continuing external contract");
+    }
+    survivors.push(p);
+  }
+  G.externalProfessionals=survivors;
+  for(const p of nbaReturn)if(!G.freeAgents.some(x=>x.id===p.id))G.freeAgents.push(p);
+  if(summary){summary.externalRetired=(summary.externalRetired||0)+retired;summary.externalMoves=(summary.externalMoves||0)+moved;summary.externalToNba=(summary.externalToNba||0)+nbaChance}
+  return{retired,moved,nbaChance};
+}
+function settleUnsignedPlayersIntoWorld(G){
+  G.freeAgents=Array.isArray(G.freeAgents)?G.freeAgents:[];
+  G.externalProfessionals=Array.isArray(G.externalProfessionals)?G.externalProfessionals:[];
+  const keep=[],moved=[];
+  const protectedTop=new Set([...G.freeAgents].sort((a,b)=>(+b.ovr||0)-(+a.ovr||0)).slice(0,28).map(p=>p.id));
+  for(const p of G.freeAgents){
+    if(!p||p.retired){if(p)keep.push(p);continue}
+    const ovr=+p.ovr||0;
+    // Preserve a useful NBA free-agent market, especially the best available
+    // players, while established surplus talent finds professional work abroad.
+    const canMove=ovr>=60&&!protectedTop.has(p.id)&&p.contractType!=="Rookie Scale";
+    if(canMove&&Math.random()<internationalEmploymentChance(p)){
+      const destination=worldDestinationForPlayer(p,"NBA free agent overseas");
+      applyExternalProfessionalStatus(p,destination,rand(1,3),"NBA free agent signed overseas");
+      G.externalProfessionals.push(p);moved.push(p);
+      G.transactions.push({type:"world_signing",season:G.season,playerId:p.id,from:"NBA Free Agency",to:destination});
+    }else keep.push(p);
+  }
+  G.freeAgents=keep;
+  if(moved.length)logEvent(G,`${moved.length} unsigned players accepted professional opportunities outside the NBA ecosystem.`);
+  return moved;
+}
+
 function runOffseason(G) {
   CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"OFFSEASON");
   const rankingYear=gameYearForSeason(G.season);
@@ -10720,17 +10998,23 @@ function runOffseason(G) {
     club.twoWayRoster=keptTwo;
   }
 
+  advanceExternalProfessionalWorld(G,summary);
+
   const faSurvivors=[];
   for (const p of G.freeAgents) {
-    p.age++; p.fatigue=0; p.recentForm=[];
-    if (Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,null); logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
-    progressPlayerTalent(p,talentEraModifier(G),99,{trainingLevel:1,season:G.season-1}); p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
+    const worldAged=p.worldAgeProcessedSeason===G.season;
+    if(!worldAged)p.age++;
+    p.fatigue=0; p.recentForm=[];
+    if (!worldAged&&Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,null); logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
+    if(!worldAged)progressPlayerTalent(p,talentEraModifier(G),99,{trainingLevel:1,season:G.season-1});
+    delete p.worldAgeProcessedSeason;
+    p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
   }
   G.freeAgents=faSurvivors;
   ensureTwoWayDevelopmentPool(G,42);
   recordTalentHealthSeason(G,'post-offseason');
   G.rosterCompliancePending=null; G.offseasonSummary=summary;
-  logEvent(G, `Offseason contracts processed: ${summary.expired} expired, ${summary.extended} AI extensions, ${summary.retired+summary.freeAgentRetired} retirements. Clubs may carry up to 20 until preseason roster compliance.`);
+  logEvent(G, `Offseason contracts processed: ${summary.expired} expired, ${summary.extended} AI extensions, ${summary.retired+summary.freeAgentRetired+(summary.externalRetired||0)} retirements, ${summary.externalMoves||0} external-league moves and ${summary.externalToNba||0} international players entering NBA free agency. Clubs may carry up to 20 until preseason roster compliance.`);
   G.phase="DRAFT_NIGHT";
   initializeDraftState(G); // Draft board and owned picks are visible immediately on entering Draft Night.
 }
@@ -12218,6 +12502,7 @@ function beginPreseasonFromReadiness(G){
     G.phase="PRESEASON_READINESS";
     return {ok:false,reason:"Roster compliance required before preseason can begin"};
   }
+  settleUnsignedPlayersIntoWorld(G);
   logEvent(G,"Preseason schedule opened.");
   return {ok:true};
 }
@@ -13853,7 +14138,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.2 Intl · Olympics Overview Stage",ENGINE_VERSION="E2.26-PROD35";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.3 Basketball World · Global Player Ecosystem",ENGINE_VERSION="E2.26-PROD36";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14546,7 +14831,7 @@ function archiveRetiredPlayer(G,p,club=null){
 function playerByAnyId(id){
   if(!id)return null;
   const key=String(id);
-  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[]),...retiredPlayerPool(G)].find(p=>String(p.id)===key)||null;
+  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[]),...(G.externalProfessionals||[]),...retiredPlayerPool(G)].find(p=>String(p.id)===key)||null;
 }
 
 
@@ -14967,6 +15252,9 @@ function playerTransactions(playerId){
       if(t.type==="sign")out.push({season:t.season,type:"Signing",from:"Free Agency",to:club?.name||"Club",detail:`${t.years||1} yr · $${(+t.salaryM||0).toFixed(1)}M`});
       else if(t.type==="waive")out.push({season:t.season,type:"Waived",from:club?.name||"Club",to:"Free Agency",detail:"Contract ended"});
       else if(t.type==="extension")out.push({season:t.season,type:"Extension",from:club?.name||"Club",to:club?.name||"Club",detail:`${t.years||"—"} yr · $${(+t.salaryM||0).toFixed(1)}M`});
+      else if(t.type==="world_signing")out.push({season:t.season,type:"International Signing",from:t.from||"Free Agency",to:t.to||"International Basketball",detail:"Professional contract"});
+      else if(t.type==="world_move")out.push({season:t.season,type:"International Move",from:t.from||"International Basketball",to:t.to||"International Basketball",detail:"League move"});
+      else if(t.type==="world_nba_market")out.push({season:t.season,type:"NBA Opportunity",from:t.from||"International Basketball",to:t.to||"NBA Free Agency",detail:"Entered NBA market"});
     }
   }
   const p=playerByAnyId(playerId);
@@ -15081,7 +15369,7 @@ function playerProfile(){
   const nationOptions=editing?NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join(""):"";
   const secOptions=editing?`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`:"";
   const archOptions=editing?validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join(""):"";
-  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p);
+  const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p),worldLoc=playerBasketballLocation(p);
   const draftLabel=playerDraftLabel(p),draftSeason=p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
   const historicalClubTimeline=playerHistoricalClubTimeline2026(p);
   const futureTimeline=history.map(h=>{const st=h.stats||{};return `<div class="timelineRow"><div class="season">${h.season?basketballSeasonLabel(h.season):"—"}</div><div><b>${h.clubName||clubById(G,h.clubId)?.name||"Club"}</b><small>${st.gp||0} GP · ${perGame(st,"pts")} PPG · ${perGame(st,"reb")} RPG · ${perGame(st,"ast")} APG · OVR ${h.ovr??"—"}</small></div><div class="right">${h.role||""}</div></div>`}).join("");
@@ -15090,7 +15378,7 @@ function playerProfile(){
   const overview=`
     <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${p.potential??"—"}</b>`}<small>Potential</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>NBA Experience</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
-    <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):playerAffiliation(p)}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div></div></div></div>
+    <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div></div></div></div>
     <div class="sectionTitle">Development Outlook</div>${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel"><div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div><div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${Number(d.avgMin||0).toFixed(1)}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}</div>`})()}`;
   const career=`
     <div class="sectionTitle">Draft & Career Identity</div><div class="draftIdentity compact3"><div><b>${draftSeason}</b><small>Draft Class</small></div><div><b>${draftDetail}</b><small>Entry</small></div><div><b>${teams.length}</b><small>NBA Clubs</small></div></div>
@@ -19791,6 +20079,10 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
     p.nationality=$("#epNation").value;
     if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){
       p.name=generatedCountryName(p);p.generatedNameCountry=p.nationality;
+    }
+    if(p.nationality!==oldNation&&(G.externalProfessionals||[]).some(x=>x.id===p.id)){
+      const newNation=nat(p.nationality)||{code:p.nationality,name:p.nationality||"International",region:"Europe",tier:4};
+      applyExternalProfessionalStatus(p,externalLeagueForPlayer(p,newNation,`${p.id}|nationality-edit|${G.season}`,false),p.contractYearsLeft||1,"Nationality edit");
     }
     p.position=$("#epPos").value;
     p.secondaryPosition=$("#epPos2").value||null;
