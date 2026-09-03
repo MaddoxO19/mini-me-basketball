@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5 GM · History, Game Data & Global Exit</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2475,6 +2475,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 @media(max-width:520px){.awardHistoryTypeTabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.awardHistoryTypeTabs button{font-size:10px;min-height:44px}.awardHistoryByTypeRow{grid-template-columns:90px minmax(0,1fr);gap:12px;padding:14px}.awardHistoryByTypeRow .season{font-size:14px}.awardHistoryByTypeRow .recipient strong{font-size:15px}.awardHistoryByTypeRow .recipient small{font-size:12px}}
 
 
+/* v0.1.49.77.5.5.2 — Global Exit is intentionally subordinate to News / GM Profile. */
+.globalTabs{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(64px,.48fr)!important}
+.globalTabs .globalExitTab{min-width:64px!important;padding-left:8px!important;padding-right:8px!important;background:#0d1219!important;border-color:#222b36!important;color:#707986!important;opacity:.72}
+.globalTabs .globalExitTab:hover,.globalTabs .globalExitTab:focus-visible{opacity:.9;color:#9aa3ae!important;border-color:#36414f!important;background:#111821!important}
+.globalTabs .globalExitTab:active{opacity:1}
+@media(max-width:430px){.globalTabs{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(58px,.46fr)!important}.globalTabs .globalExitTab{min-width:58px!important;font-size:9px!important}}
+
 /* v0.1.49.77.5.5 — GM Profile production IA */
 .globalExitTab{display:flex;align-items:center;justify-content:center}
 .gmHistorySubTabs{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px}
@@ -2483,10 +2490,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .gmProfileSave{margin-top:14px}.gmProfileSave .btn{width:100%}
 .gameConfigCard .more:last-child{border-bottom:0}
 @media(max-width:430px){.globalTabs button{font-size:9px}.gmProfileSubTabs button{font-size:9px}.gmHistorySubTabs button{font-size:9px}}
+
+/* v0.1.49.77.5.5.3 Home upcoming-fixtures cleanup */
+.unifiedFixtureSection{grid-template-columns:1fr!important}
+.unifiedFixtureSection .fixtureRows{grid-column:1/-1}
+.unifiedFixtureSection .fixtureRound{display:flex;flex-direction:column;gap:2px}
+.unifiedFixtureSection .fixtureRound small{font-size:8px;line-height:1;color:var(--accent2);font-weight:900;letter-spacing:.7px;text-transform:uppercase}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.1 Club · Season Labels &amp; iOS Polish</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -14252,7 +14265,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5 GM · History, Game Data & Global Exit",ENGINE_VERSION="E2.26-PROD44";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup",ENGINE_VERSION="E2.26-PROD47";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -16456,21 +16469,27 @@ function nextCupFixture(){
   if(future)return{label:"Group Play",opponent:future.opponent,venue:future.venue};
   return null;
 }
-function nextInternationalFixture(){
-  const live=G.internationalWindowLive,code=G.userNationalGM?.nationCode;if(!live||live.complete||!code)return null;
-  for(let i=live.matchdayIndex||0;i<(live.matchdays||[]).length;i++){
+function nextInternationalFixtures(limit=3){
+  const live=G.internationalWindowLive,code=G.userNationalGM?.nationCode;if(!live||live.complete||!code)return[];
+  const out=[];
+  for(let i=live.matchdayIndex||0;i<(live.matchdays||[]).length&&out.length<limit;i++){
     const fixture=(live.matchdays[i]||[]).find(x=>x.a===code||x.b===code);
     if(!fixture)continue;
     const opp=fixture.a===code?fixture.b:fixture.a;
-    return{label:`${gameYearForSeason(G.season)} Qual. · MD ${i+1}`,opponent:fibaNationName(opp),venue:fixture.a===code?"vs":"@"};
+    out.push({competition:"Nation",label:`${gameYearForSeason(G.season)} Qual. · MD ${i+1}`,opponent:fibaNationName(opp),venue:fixture.a===code?"vs":"@",sortKey:-100+i});
   }
-  return null;
+  return out;
 }
+function nextInternationalFixture(){return nextInternationalFixtures(1)[0]||null;}
 function upcomingFixturesHtml(){
   if(G.phase!=="REGULAR_SEASON")return"";
-  const league=futureLeagueFixtures(3),cup=nextCupFixture(),intl=nextInternationalFixture();
-  const rows=(items)=>items.length?items.map(x=>`<div class="fixtureRow"><span class="fixtureRound">${x.label==="Economy"?"Market":x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":"Home"}</strong></div>`).join(""):`<div class="fixtureNone"><span>None scheduled</span></div>`;
-  return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Club & national schedule</small></div><div class="fixtureSection"><div class="fixtureLabel"><b>League</b><small>Next 3</small></div><div class="fixtureRows">${rows(league)}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>NBA Cup</b><small>Next</small></div><div class="fixtureRows">${rows(cup?[cup]:[])}</div></div><div class="fixtureSection"><div class="fixtureLabel"><b>FIBA</b><small>Next</small></div><div class="fixtureRows">${rows(intl?[intl]:[])}</div></div></div>`;
+  const nation=nextInternationalFixtures(3);
+  const club=futureLeagueFixtures(6).map(x=>({...x,competition:x.cupGroupId?"NBA Cup":"League",sortKey:+x.round||999}));
+  const fixtures=[...nation,...club].slice(0,3);
+  if(!fixtures.length)return"";
+  const rows=fixtures.map(x=>`<div class="fixtureRow"><span class="fixtureRound"><small>${x.competition}</small>${x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":x.competition==="Nation"?"National":"Home"}</strong></div>`).join("");
+  const scope=G.userNationalGM?.nationCode?"Next 3 · club & nation":"Next 3 · club schedule";
+  return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>${scope}</small></div><div class="fixtureSection unifiedFixtureSection"><div class="fixtureRows">${rows}</div></div></div>`;
 }
 function teamResultMetricValue(club,key){
   const gp=Math.max(0,(club?.standings?.w||0)+(club?.standings?.l||0));
@@ -16657,7 +16676,7 @@ function gameHub(f){
   const competition=f.competition==="NBA Cup"?"NBA Cup":phaseName();
   const roundLabel=f.cupStage||f.displayRound||(typeof f.round==="number"?`Game ${f.round}`:f.round||"");
     const cupLiveLabel=f.eventType==="NBA_CUP_FINAL"?"FINAL":(f.competition==="NBA Cup"?"KNOCKOUT":"NEXT GAME");
-  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${cupLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small class="conferenceRank">${awayContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(a):""}</div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small class="conferenceRank">${homeContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(h):""}</div></div>${fixtureH2HHtml(f)}<div class="broadcastContext"><div>${recordBadge(xr.w,xr.l)}<small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${cupLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small class="conferenceRank">${awayContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(a):""}</div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small class="conferenceRank">${homeContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(h):""}</div></div><div class="broadcastContext"><div>${recordBadge(xr.w,xr.l)}<small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
   return card+upcomingFixturesHtml();
 }
 function scoutingRosterAssessment(){
