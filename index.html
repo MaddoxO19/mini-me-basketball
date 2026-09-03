@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.4 League · Award History by Type</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.4.1 League · Sixth Man History Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2461,7 +2461,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .recordsVisualSystem .recordCard b,.recordsVisualSystem .clubSeasonLeader b{font-size:11px!important}
 }
 
-/* v0.1.49.77.5.4 — League Award History grouped by award type. */
+/* v0.1.49.77.5.4.1 — League Award History Sixth Man alias/save-compatibility fix. */
 .awardHistoryTypeTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
 .awardHistoryTypeTabs button{min-height:46px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.02em;padding:8px 6px}
 .awardHistoryTypeTabs button.active{border-color:rgba(249,166,58,.58);background:linear-gradient(180deg,rgba(249,166,58,.12),rgba(249,166,58,.06));color:#ffd18a}
@@ -14243,7 +14243,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.4 League · Award History by Type",ENGINE_VERSION="E2.26-PROD42";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.4.1 League · Sixth Man History Fix",ENGINE_VERSION="E2.26-PROD43";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -19453,7 +19453,7 @@ function leagueLegacy(){
     ["Most Valuable Player",/^(MVP|Most Valuable Player)$/i],
     ["Rookie of the Year",/^(ROY|Rookie of the Year)$/i],
     ["Defensive Player of the Year",/^(DPOY|Defensive Player of the Year)$/i],
-    ["Sixth Man of the Year",/^(6MOY|Sixth Man of the Year)$/i],
+    ["Sixth Man of the Year",/^(6MOY|SixthMan|Sixth Man|Sixth Man of the Year)$/i],
     ["Most Improved Player",/^(MIP|Most Improved Player)$/i]
   ];
   const awardRows=[];
