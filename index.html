@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.77.1 League · Award History & Records Cache</title>
+<title>Mini&Me Basketball — v0.1.49.77.2 Intl · Olympics Overview Stage</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2361,10 +2361,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 }
 
 /* v0.1.49.77.1 — Award Winners reads player awardHistory; League Records snapshot is cached by season/game signature for immediate tab access. */
+
+/* v0.1.49.77.2 — Olympics Overview + stage separation */
+.olympicStageNav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:5px!important;overflow:visible!important}.olympicStageNav button{min-width:0!important;width:100%!important;min-height:44px!important;padding:7px 3px!important;font-size:9px!important;white-space:normal!important}@media(max-width:430px){.olympicStageNav button{font-size:8px!important}}
+/* v0.1.49.77.2 — Olympic Program, Qualification, Hosts and Medal History now appear only in Overview during a live Games. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.1 League · Award History & Records Cache</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.2 Intl · Olympics Overview Stage</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13849,7 +13853,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.1 League · Award History & Records Cache",ENGINE_VERSION="E2.26-PROD34";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.2 Intl · Olympics Overview Stage",ENGINE_VERSION="E2.26-PROD35";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -19309,6 +19313,7 @@ function internationalWorldCup(){
 
 function intlOlympicNavStages(){
   return[
+    {key:"OLYMPIC_OVERVIEW",label:"Overview"},
     {key:"OLYMPIC_GROUP",label:"Group Stage"},
     {key:"OLYMPIC_QUARTERFINAL",label:"Quarterfinals"},
     {key:"OLYMPIC_SEMIFINAL",label:"Semifinals"},
@@ -19320,15 +19325,19 @@ function intlOlympicProgressIndex(stage){
   return map[stage]??0;
 }
 function intlOlympicReviewStage(live){
-  const max=intlOlympicProgressIndex(live?.stage);
   const requested=ui.olyReviewStage;
+  if(requested==="OLYMPIC_OVERVIEW")return requested;
+  const max=intlOlympicProgressIndex(live?.stage);
   const idx=intlOlympicNavStages().findIndex(x=>x.key===requested);
-  if(idx>=0&&idx<=max)return requested;
-  return intlOlympicNavStages()[max]?.key||"OLYMPIC_GROUP";
+  if(idx>=1&&idx<=max+1)return requested;
+  return "OLYMPIC_OVERVIEW";
 }
 function intlOlympicStageNavHtml(live,selected){
   const max=intlOlympicProgressIndex(live?.stage);
-  return `<div class="intlWcStageNav">${intlOlympicNavStages().map((x,i)=>`<button type="button" data-olystage="${x.key}" class="${selected===x.key?"selected":""} ${i===max?"current":""}" ${i>max?"disabled":""}>${x.label==="Economy"?"Market":x.label}</button>`).join("")}</div>`;
+  return `<div class="intlWcStageNav olympicStageNav">${intlOlympicNavStages().map((x,i)=>{
+    const tournamentIndex=i-1,enabled=x.key==="OLYMPIC_OVERVIEW"||tournamentIndex<=max,current=tournamentIndex===max&&x.key!=="OLYMPIC_OVERVIEW";
+    return `<button type="button" data-olystage="${x.key}" class="${selected===x.key?"selected":""} ${current?"current":""}" ${enabled?"":"disabled"}>${x.label}</button>`;
+  }).join("")}</div>`;
 }
 function intlOlympicCompletedGamesForStage(source,stage){
   const games=source?.games||[];
@@ -19392,16 +19401,14 @@ function internationalOlympics(n){
   const qStatus=qualification.qualifiedTeamCodes.includes(userCode)?(qualification.host?.code===userCode?"Host · Qualified":qualification.directTeamCodes.includes(userCode)?"Direct Qualification":"Olympic Qualifier · Qualified"):"Not Currently Qualified";
   const qNationList=codes=>codes.map(c=>nationalFlagLabel(c,nat(c)?.name||c,"historyFlag")).join("");
   const qualificationHtml=`<div class="sectionTitle">${nextYear} Qualification</div><div class="card"><div class="more"><div><b>Automatic Host</b><small>Guaranteed Olympic berth</small></div><b>${qualification.host?nationalFlagLabel(qualification.host.code,nat(qualification.host.code)?.name||qualification.host.code,"historyFlag"):"—"}</b></div><div class="more"><div><b>World Cup / Ranking Path</b><small>${qualification.directBerths||0} additional direct berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.directTeamCodes.filter(c=>c!==qualification.host?.code))||"—"}</span></div><div class="more"><div><b>Olympic Qualifiers</b><small>${qualification.qualifierBerths||0} streamlined qualifier berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.qualifierWinnerCodes)||"—"}</span></div><div class="smallcopy">Mini&Me uses a streamlined qualification model so international play remains secondary to the club career. World Cup performance and world ranking determine the qualification pathway into the active Olympic cycle.</div></div>`;
-  const olympicReviewStage=live?intlOlympicReviewStage(live):null;
-  const liveTournamentHtml=live?`<div class="card"><div class="eyebrow">${live.year} OLYMPIC BASKETBALL</div><h3>${live.host?`${live.host.city}, ${live.host.country}`:"Olympic Games"} · ${olympicStageLabel(live.stage)}</h3><div class="smallcopy">${(live.games||[]).length} tournament games completed · ${(live.field||[]).length} nations entered</div></div><div class="sectionTitle wcNavTitle">Tournament Navigation</div>${intlOlympicStageNavHtml(live,olympicReviewStage)}<div class="sectionTitle">${olympicStageLabel(olympicReviewStage)}</div>${intlOlympicStageContentHtml(live,olympicReviewStage,userCode)}`:"";
-  // The Olympics tab is a current-cycle view. Once a new Games begins, the
-  // previous completed tournament presentation is replaced by the live cycle.
-  // Completed medal winners remain available in the compact medal history below.
-  const currentHtml=!live&&current?`<div class="card olympicRecentPlacings"><div class="eyebrow">${current.year} OLYMPIC BASKETBALL</div><h3>${current.host}</h3><div class="metrics"><div class="metric"><b>${nationalFlagLabel(current.championCode,nat(current.championCode)?.name||current.championCode)}</b><small>Gold</small></div><div class="metric"><b>${nationalFlagLabel(current.runnerUpCode,nat(current.runnerUpCode)?.name||current.runnerUpCode)}</b><small>Silver</small></div><div class="metric"><b>${nationalFlagLabel(current.bronzeCode,nat(current.bronzeCode)?.name||current.bronzeCode)}</b><small>Bronze</small></div></div></div>`:!live?`<div class="card"><div class="eyebrow">OLYMPIC BASKETBALL</div><h3>${nextYear} · ${nextHost?`${nextHost.city}, ${nextHost.country}`:"Host TBA"}</h3><div class="smallcopy">12 nations compete in three groups of four. The top two in each group and the two best third-placed nations advance to the quarterfinals.</div></div>`:"";
   const rows=[...hist,...historical.filter(h=>!hist.some(x=>x.year===h.year))].sort((a,b)=>b.year-a.year);
-  return `${liveTournamentHtml}${currentHtml}${qualificationHtml}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more"><div><b>${medals}</b><small>${n.name} Olympic medals in recorded history</small></div><b>${nextYear}</b></div><div class="more"><div><b>${qStatus}</b><small>${nextYear} Olympic pathway</small></div><b>${qualification.qualifiedTeamCodes.length}/12</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically, seven places are resolved through the preceding World Cup/ranking pathway, and four places are recorded as Olympic Qualifier winners. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 the career universe selects and permanently stores future hosts eight years ahead.</div></div>
-  <div class="sectionTitle">Olympic Hosts</div><div class="card">${Object.values(ensureOlympicHostState(G)).sort((a,b)=>a.year-b.year).filter(h=>h.year>=2028&&h.year<=nextYear+8).map(h=>`<div class="more"><div><b>${h.year} · ${h.city}</b><small>${h.country}${h.confirmed?" · Confirmed":" · Mini&Me future host"}</small></div><b>${nationalFlagLabel(h.code,nat(h.code)?.name||h.code,"historyFlag")}</b></div>`).join("")}</div>
-  <div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>`;
+  const overviewHtml=`${!live&&current?`<div class="card olympicRecentPlacings"><div class="eyebrow">${current.year} OLYMPIC BASKETBALL</div><h3>${current.host}</h3><div class="metrics"><div class="metric"><b>${nationalFlagLabel(current.championCode,nat(current.championCode)?.name||current.championCode)}</b><small>Gold</small></div><div class="metric"><b>${nationalFlagLabel(current.runnerUpCode,nat(current.runnerUpCode)?.name||current.runnerUpCode)}</b><small>Silver</small></div><div class="metric"><b>${nationalFlagLabel(current.bronzeCode,nat(current.bronzeCode)?.name||current.bronzeCode)}</b><small>Bronze</small></div></div></div>`:""}${!live&&!current?`<div class="card"><div class="eyebrow">OLYMPIC BASKETBALL</div><h3>${nextYear} · ${nextHost?`${nextHost.city}, ${nextHost.country}`:"Host TBA"}</h3><div class="smallcopy">12 nations compete in three groups of four. The top two in each group and the two best third-placed nations advance to the quarterfinals.</div></div>`:""}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more"><div><b>${medals}</b><small>${n.name} Olympic medals in recorded history</small></div><b>${nextYear}</b></div><div class="more"><div><b>${qStatus}</b><small>${nextYear} Olympic pathway</small></div><b>${qualification.qualifiedTeamCodes.length}/12</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically, seven places are resolved through the preceding World Cup/ranking pathway, and four places are recorded as Olympic Qualifier winners. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 the career universe selects and permanently stores future hosts eight years ahead.</div></div>${qualificationHtml}<div class="sectionTitle">Olympic Hosts</div><div class="card">${Object.values(ensureOlympicHostState(G)).sort((a,b)=>a.year-b.year).filter(h=>h.year>=2028&&h.year<=nextYear+8).map(h=>`<div class="more"><div><b>${h.year} · ${h.city}</b><small>${h.country}${h.confirmed?" · Confirmed":" · Mini&Me future host"}</small></div><b>${nationalFlagLabel(h.code,nat(h.code)?.name||h.code,"historyFlag")}</b></div>`).join("")}</div><div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>`;
+  if(!live)return overviewHtml;
+  const olympicReviewStage=intlOlympicReviewStage(live);
+  const liveHead=`<div class="card"><div class="eyebrow">${live.year} OLYMPIC BASKETBALL</div><h3>${live.host?`${live.host.city}, ${live.host.country}`:"Olympic Games"} · ${olympicStageLabel(live.stage)}</h3><div class="smallcopy">${(live.games||[]).length} tournament games completed · ${(live.field||[]).length} nations entered</div></div>`;
+  const nav=`<div class="sectionTitle wcNavTitle">Tournament Navigation</div>${intlOlympicStageNavHtml(live,olympicReviewStage)}`;
+  if(olympicReviewStage==="OLYMPIC_OVERVIEW")return `${liveHead}${nav}${overviewHtml}`;
+  return `${liveHead}${nav}<div class="sectionTitle">${olympicStageLabel(olympicReviewStage)}</div>${intlOlympicStageContentHtml(live,olympicReviewStage,userCode)}`;
 }
 function international(){
   let code=G.userNationalGM?.nationCode;
