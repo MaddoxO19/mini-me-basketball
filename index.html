@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.3 Club + League · Records Visual Parity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.4 League · Award History by Type</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2460,6 +2460,20 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .recordsVisualSystem .recordCard strong,.recordsVisualSystem .clubSeasonLeader strong{font-size:18px!important}
  .recordsVisualSystem .recordCard b,.recordsVisualSystem .clubSeasonLeader b{font-size:11px!important}
 }
+
+/* v0.1.49.77.5.4 — League Award History grouped by award type. */
+.awardHistoryTypeTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:12px 0}
+.awardHistoryTypeTabs button{min-height:46px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--muted);font-size:11px;font-weight:900;letter-spacing:.02em;padding:8px 6px}
+.awardHistoryTypeTabs button.active{border-color:rgba(249,166,58,.58);background:linear-gradient(180deg,rgba(249,166,58,.12),rgba(249,166,58,.06));color:#ffd18a}
+.awardHistoryIntro{margin-top:12px}
+.awardHistoryByTypeList{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.awardHistoryByTypeRow{display:grid;grid-template-columns:112px minmax(0,1fr);align-items:center;gap:18px;border:1px solid var(--line);background:var(--panel2);border-radius:14px;padding:15px 16px}
+.awardHistoryByTypeRow .season{color:#ffd18a;font-size:15px;font-weight:900;letter-spacing:.02em}
+.awardHistoryByTypeRow .recipient{min-width:0}
+.awardHistoryByTypeRow .recipient strong{display:block;color:var(--text);font-size:16px;line-height:1.25;font-weight:900}
+.awardHistoryByTypeRow .recipient small{display:block;margin-top:4px;color:var(--muted);font-size:13px;line-height:1.25}
+@media(max-width:520px){.awardHistoryTypeTabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.awardHistoryTypeTabs button{font-size:10px;min-height:44px}.awardHistoryByTypeRow{grid-template-columns:90px minmax(0,1fr);gap:12px;padding:14px}.awardHistoryByTypeRow .season{font-size:14px}.awardHistoryByTypeRow .recipient strong{font-size:15px}.awardHistoryByTypeRow .recipient small{font-size:12px}}
+
 </style></head>
 <body>
 <div class="app">
@@ -14229,9 +14243,9 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.3 Club + League · Records Visual Parity",ENGINE_VERSION="E2.26-PROD41";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.4 League · Award History by Type",ENGINE_VERSION="E2.26-PROD42";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
@@ -19491,8 +19505,14 @@ function leagueLegacy(){
   }
 
   if(ui.leagueHistoryTab==="awards"){
-    return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>Past Award Winners</h3><p>Major individual award winners from completed seasons.</p></div>
-      <div class="historyArchiveList">${awardRows.length?awardRows.map(x=>`<div class="historyArchiveRow"><div class="season">${seasonLabel(x.season)}</div><div><b>${x.label}</b><strong>${x.name}</strong>${x.clubName?`<small>${x.clubName}</small>`:""}</div></div>`).join(""):`<div class="card empty">No completed-season award history is available in this save.</div>`}</div>`;
+    const awardTypes=canonicalAwards.map(([label])=>label);
+    if(!awardTypes.includes(ui.leagueAwardHistoryType))ui.leagueAwardHistoryType=awardTypes[0];
+    const selected=ui.leagueAwardHistoryType;
+    const shortLabels={"Most Valuable Player":"MVP","Defensive Player of the Year":"DPOY","Rookie of the Year":"ROY","Most Improved Player":"MIP","Sixth Man of the Year":"Sixth Man"};
+    const selectedRows=awardRows.filter(x=>x.label===selected).sort((a,b)=>(+b.season||0)-(+a.season||0));
+    const typeTabs=`<div class="awardHistoryTypeTabs">${awardTypes.map(label=>`<button data-awardhistory="${label}" class="${selected===label?"active":""}">${shortLabels[label]||label}</button>`).join("")}</div>`;
+    const rows=selectedRows.length?`<div class="awardHistoryByTypeList">${selectedRows.map(x=>`<div class="awardHistoryByTypeRow"><div class="season">${seasonLabel(x.season)}</div><div class="recipient"><strong>${x.name}</strong>${x.clubName?`<small>${x.clubName}</small>`:""}</div></div>`).join("")}</div>`:`<div class="card empty">No completed-season ${selected} history is available in this save.</div>`;
+    return `${tabs}${typeTabs}<div class="recordBookIntro compactArchiveIntro awardHistoryIntro"><div class="eyebrow">Award History</div><h3>${selected}</h3><p>Season-by-season winners across the Mini&Me Basketball career universe.</p></div>${rows}`;
   }
 
   return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>League Winners</h3><p>NBA champions from each completed season.</p></div>
@@ -20341,7 +20361,7 @@ if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;ui.newsSeason=G.season;ui.newsHistoryMode=false;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
+$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
   $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
   $$("[data-olystage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.olyReviewStage=b.dataset.olystage;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#menuNow"))$("#menuNow").onclick=()=>{save();show("landing")};if($("#homeMainMenuExit"))$("#homeMainMenuExit").onclick=async()=>{await save();show("landing")};if($("#debugNow"))$("#debugNow").onclick=()=>{ui.debug=!ui.debug;render()};
