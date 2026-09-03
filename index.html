@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.77.4 Global · Name Diversity & Game Data</title>
+<title>Mini&Me Basketball — v0.1.49.77.5 Club · Records IA & Typography</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2372,6 +2372,21 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 /* v0.1.49.77.3 — Global Player Ecosystem: 14 major external domestic leagues, local-domestic fallback, NBA/G League/overseas movement and external national-player editing. */
 
+
+/* v0.1.49.77.5 — Club Records IA & typography parity */
+.clubSeasonLeader span{
+  display:block!important;
+  color:var(--muted)!important;
+  font-size:9px!important;
+  line-height:1.35!important;
+  margin-top:3px!important;
+}
+@media(max-width:560px){
+  .clubSeasonLeader{padding:9px!important;min-height:0!important;}
+  .clubSeasonLeader strong{font-size:16px!important;}
+  .clubSeasonLeader b{font-size:10px!important;}
+}
+
 /* v0.1.49.77.4 — GM Profile consolidation + Game Data manifest */
 .gmProfileSubTabs{grid-template-columns:repeat(3,minmax(0,1fr));margin-bottom:12px}
 .gameDataHero{padding:13px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:12px;background:linear-gradient(135deg,#151d26,#10161d)}
@@ -2381,7 +2396,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.4 Global · Name Diversity &amp; Game Data</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5 Club · Records IA &amp; Typography</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -8774,7 +8789,7 @@ function leagueHistoricalRecordsHtml(G){
 function clubHistoricalRecordsHtml(G,club){
   ingestCurrentSeasonRecordBackfill(G);
   const x=clubHistoricalSnapshot(G,club.id),sg=x.singleGame||{},tg=x.teamGame||{};
-  return `<div class="recordCategory"><div class="recordCategoryHead"><b>Club Single-Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points,"",0,G)}${recordCard("Assists",sg.assists,"",0,G)}${recordCard("Rebounds",sg.rebounds,"",0,G)}${recordCard("Steals",sg.steals,"",0,G)}${recordCard("Blocks",sg.blocks,"",0,G)}${recordCard("3-Pointers",sg.threes,"",0,G)}${recordCard("Team Score",tg.teamScore)}${recordCard("Win Margin",tg.winMargin)}</div></div>
+  return `<div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>Franchise Record Book</h3><p>Permanent ${club.name} records across your career universe, including single-game, season and franchise career marks.</p></div><div class="recordCategory"><div class="recordCategoryHead"><b>Club Single-Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points,"",0,G)}${recordCard("Assists",sg.assists,"",0,G)}${recordCard("Rebounds",sg.rebounds,"",0,G)}${recordCard("Steals",sg.steals,"",0,G)}${recordCard("Blocks",sg.blocks,"",0,G)}${recordCard("3-Pointers",sg.threes,"",0,G)}${recordCard("Team Score",tg.teamScore)}${recordCard("Win Margin",tg.winMargin)}</div></div>
   ${recordLeaderList("Best Club Scoring Seasons",x.seasonRates.ppg," PPG",1,G)}${recordLeaderList("Best Club Assist Seasons",x.seasonRates.apg," APG",1,G)}${recordLeaderList("Best Club Rebound Seasons",x.seasonRates.rpg," RPG",1,G)}
   ${recordLeaderList("Franchise Career Points",x.career.points,"",0,G)}${recordLeaderList("Franchise Career Assists",x.career.assists,"",0,G)}${recordLeaderList("Franchise Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("Franchise Career Steals",x.career.steals,"",0,G)}${recordLeaderList("Franchise Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("Franchise Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("Franchise Games Played",x.career.games,"",0,G)}`;
 }
@@ -14147,7 +14162,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.4 Global · Name Diversity & Game Data",ENGINE_VERSION="E2.26-PROD37";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5 Club · Records IA & Typography",ENGINE_VERSION="E2.26-PROD38";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18307,9 +18322,7 @@ function clubCurrentRecordsHtml(G,club){
     ["PPG",rateLeader("pts"),p=>perGame(p.seasonStats,"pts")],["RPG",rateLeader("reb"),p=>perGame(p.seasonStats,"reb")],["APG",rateLeader("ast"),p=>perGame(p.seasonStats,"ast")],["SPG",rateLeader("stl"),p=>perGame(p.seasonStats,"stl")],
     ["BPG",rateLeader("blk"),p=>perGame(p.seasonStats,"blk")],["FG%",pctLeader("fgm","fga",2),p=>pctText(p,"fgm","fga")],["3PT%",pctLeader("tpm","tpa",1),p=>pctText(p,"tpm","tpa")],["FT%",pctLeader("ftm","fta",.75),p=>pctText(p,"ftm","fta")]
   ];
-  const leaders=leaderCards.map(([lab,p,value])=>`<div class="clubSeasonLeader"><small>${lab}</small><strong>${p?value(p):"—"}</strong><b>${p?playerNameLink(p):"No qualifier"}</b></div>`).join("");
-  return `<div class="recordBookIntro"><div class="eyebrow">Current Season</div><h3>Season ${G.season} Club Records</h3><p>Current-season leaders and record marks for ${club.name}. Permanent franchise records remain available under All-Time.</p></div>
-    <div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${leaders}</div>
+  return `<div class="recordBookIntro"><div class="eyebrow">Club Records</div><h3>Season ${G.season} Club Records</h3><p>Current record marks for ${club.name}. Player leader tables are available under Club Leaders, with permanent franchise records under All-Time.</p></div>
     <div class="sectionTitle">Current Record Marks</div><div class="recordGrid">${recordCard("Points",sg.points,"",0,G)}${recordCard("Assists",sg.assists,"",0,G)}${recordCard("Rebounds",sg.rebounds,"",0,G)}${recordCard("Steals",sg.steals,"",0,G)}${recordCard("Blocks",sg.blocks,"",0,G)}${recordCard("3-Pointers",sg.threes,"",0,G)}${recordCard("FG% · 10+ FGA",sg.fgPct,"%",1)}${recordCard("Team Score",tg.teamScore)}${recordCard("Win Margin",tg.winMargin)}</div>`;
 }
 
@@ -18329,7 +18342,8 @@ function clubSeasonLeaderTablesHtml(G,club){
     ["Three Point %",pct("tpm","tpa",1),p=>`${((+p.seasonStats.tpm||0)/Math.max(1,+p.seasonStats.tpa||0)*100).toFixed(1)}%`],
     ["Free Throw %",pct("ftm","fta",.75),p=>`${((+p.seasonStats.ftm||0)/Math.max(1,+p.seasonStats.fta||0)*100).toFixed(1)}%`]
   ];
-  return `<div class="recordBookIntro"><div class="eyebrow">Current Season</div><h3>${basketballSeasonLabel(G.season)} Club Leaders</h3><p>Detailed statistical leaders for ${club.name}. Overview provides the quick record snapshot.</p></div><div class="leaderGrid">${cats.map(([title,rows,value])=>`<div class="leaderCard"><h4>${title}</h4>${rows.slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)}</small></div><b class="leaderValue">${value(p)}</b></div>`).join("")}</div>`).join("")}</div>`;
+  const quick=cats.map(([title,rows,value])=>{const p=rows[0]||null;const lab=title==="Points"?"PPG":title==="Rebounds"?"RPG":title==="Assists"?"APG":title==="Steals"?"SPG":title==="Blocks"?"BPG":title==="Field Goal %"?"FG%":title==="Three Point %"?"3PT%":"FT%";return `<div class="clubSeasonLeader"><small>${lab}</small><strong>${p?value(p):"—"}</strong><b>${p?playerNameLink(p):"No qualifier"}</b><span>${p?`${positionLabel(p)} · ${p.rotationRole||"Depth"} · ${p.ovr} OVR`:"No qualifying player"}</span></div>`}).join("");
+  return `<div class="recordBookIntro"><div class="eyebrow">Club Leaders</div><h3>${basketballSeasonLabel(G.season)} Club Leaders</h3><p>Current-season statistical leaders for ${club.name}, followed by the full top-five leader tables.</p></div><div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${quick}</div><div class="sectionTitle">Leader Tables</div><div class="leaderGrid">${cats.map(([title,rows,value])=>`<div class="leaderCard"><h4>${title}</h4>${rows.slice(0,5).map((p,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)}</small></div><b class="leaderValue">${value(p)}</b></div>`).join("")}</div>`).join("")}</div>`;
 }
 
 function leagueRecordSnapshotSignature(G){
@@ -18466,10 +18480,10 @@ function clubHub(){
   const scoring=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"pts")-+perGame(a.seasonStats,"pts"))[0]||null;
   const playmaker=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"ast")-+perGame(a.seasonStats,"ast"))[0]||null;
   const rebounder=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"reb")-+perGame(a.seasonStats,"reb"))[0]||null;
-  const tabs=[["current","Current"],["records","Records"],["history","History"],["honours","Honours"]];
+  const tabs=[["current","Overview"],["records","Records"],["history","History"],["honours","Honours"]];
   let body="";
   if(ui.clubTab==="records"){
-    body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubrecord="overview" class="${ui.clubRecordMode==="overview"?"active":""}">Overview</button><button data-clubrecord="current" class="${ui.clubRecordMode==="current"?"active":""}">Current Season</button><button data-clubrecord="alltime" class="${ui.clubRecordMode==="alltime"?"active":""}">All-Time</button></div>${ui.clubRecordMode==="alltime"?clubHistoricalRecordsHtml(G,club):ui.clubRecordMode==="current"?clubSeasonLeaderTablesHtml(G,club):clubCurrentRecordsHtml(G,club)}`;
+    body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubrecord="overview" class="${ui.clubRecordMode==="overview"?"active":""}">Club Records</button><button data-clubrecord="current" class="${ui.clubRecordMode==="current"?"active":""}">Club Leaders</button><button data-clubrecord="alltime" class="${ui.clubRecordMode==="alltime"?"active":""}">All-Time</button></div>${ui.clubRecordMode==="alltime"?clubHistoricalRecordsHtml(G,club):ui.clubRecordMode==="current"?clubSeasonLeaderTablesHtml(G,club):clubCurrentRecordsHtml(G,club)}`;
   }else if(ui.clubTab==="history"){
     body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubhistory="franchise" class="${ui.clubHistoryMode==="franchise"?"active":""}">Franchise</button><button data-clubhistory="h2h" class="${ui.clubHistoryMode==="h2h"?"active":""}">Head-to-Head</button></div>${ui.clubHistoryMode==="h2h"?h2hRecordsHtml(G,club):`<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">Franchise Archive</div><h3>Season History</h3><p>Every completed season remains part of the club's permanent career history.</p></div><div class="profileTimeline clubHistoryClean">${archive.length?archive.map(h=>{const extras=[h.cup?"NBA Cup Winner":"",h.best?"Best Record":""].filter(Boolean).join(" · ");return `<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.finish||"Season Complete"}</b>${extras?`<small>${extras}</small>`:""}</div></div>`}).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`}</div>`}`;
   }else if(ui.clubTab==="honours"){
@@ -18481,7 +18495,7 @@ function clubHub(){
     body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No championships recorded"}</small></div><b>${honours.nba} Total</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Seasons completed since your GM career began</small></div><b>${archive.length}</b></div><div class="more"><div><b>GM-Era Record</b><small>Regular-season record during your career</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best GM-Era Season</b><small>${cr.best?`${basketballSeasonLabel(cr.best.season)}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"Franchise Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
   }else{
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
-    body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div><div class="sectionTitle">Current Season Leaders</div><div class="clubCurrentLeaderGrid">${leaderCard("Scoring Leader",scoring,"pts")}${leaderCard("Playmaking Leader",playmaker,"ast")}${leaderCard("Rebounding Leader",rebounder,"reb")}</div>`;
+    body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div>`;
   }
   return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="clubMainTabs">${tabs.map(x=>`<button data-clubtab="${x[0]}" class="${ui.clubTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>${ui.clubTab==="current"?`<div class="clubHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">${club.conference} · ${club.division}</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.style||"Balanced"} basketball</p></div></div><div class="clubHubMetrics"><div><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div><div><b>${honours.nba}</b><small>NBA Titles</small></div></div></div>`:""}${body}`;
 }
