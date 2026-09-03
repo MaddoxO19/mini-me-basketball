@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.4 Summer League · Next Game Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.76.5 Squad · Navigation Hierarchy</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1992,10 +1992,101 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.76.4 — Summer League Next Game integrity:
    Summer/Preseason result return bypasses transient button locks and clears stale result state before the next fixture. */
 
+
+/* v0.1.49.76.5 — Squad navigation hierarchy
+   L1 mirrors Club main tabs. L2 remains touch-friendly but visually subordinate. */
+:root{
+  --mm-l1-tab-height:44px;
+  --mm-l1-tab-font:9px;
+  --mm-l1-tab-radius:10px;
+  --mm-l2-tab-height:40px;
+  --mm-l2-tab-font:9px;
+  --mm-l2-tab-radius:9px;
+}
+
+/* Level 1: Squad / Schedule / Performance / Draft / Contracts / Free Agents / Trades.
+   Match the established Club Current / Records / History / Honours treatment. */
+.squadLevel1Tabs{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;
+  margin:0 0 10px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.squadLevel1Tabs button{
+  width:100%!important;
+  min-width:0!important;
+  min-height:var(--mm-l1-tab-height)!important;
+  margin:0!important;
+  padding:8px 5px!important;
+  border:1px solid var(--line)!important;
+  border-radius:var(--mm-l1-tab-radius)!important;
+  background:var(--panel2)!important;
+  color:var(--muted)!important;
+  font-size:var(--mm-l1-tab-font)!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+  text-align:center!important;
+}
+.squadLevel1Tabs button.active{
+  background:var(--accent)!important;
+  border-color:var(--accent)!important;
+  color:#17100a!important;
+}
+
+/* Level 2: contextual tabs inside a selected Squad function.
+   Deliberately use an outlined/accent treatment rather than the solid L1 gold fill. */
+.squadLevel2Tabs{
+  gap:5px!important;
+  margin:7px 0 10px!important;
+}
+.squadLevel2Tabs button{
+  min-height:var(--mm-l2-tab-height)!important;
+  margin:0!important;
+  padding:7px 5px!important;
+  border:1px solid #364252!important;
+  border-radius:var(--mm-l2-tab-radius)!important;
+  background:#101720!important;
+  color:var(--muted)!important;
+  font-size:var(--mm-l2-tab-font)!important;
+  font-weight:850!important;
+  line-height:1.1!important;
+  box-shadow:none!important;
+}
+.squadLevel2Tabs button.active{
+  background:rgba(244,163,64,.08)!important;
+  border-color:#8a642f!important;
+  color:var(--accent2)!important;
+}
+
+/* Preserve the appropriate number of columns for each L2 group. */
+.squadScheduleTabs.squadLevel2Tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+.draftPlanningTabs.squadLevel2Tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.tradeModeTabs.squadLevel2Tabs{
+  display:grid!important;
+  grid-template-columns:repeat(3,minmax(0,1fr))!important;
+  overflow:visible!important;
+}
+
+/* Club L1 remains the reference standard and shares the same explicit height. */
+.clubMainTabs button{
+  min-height:var(--mm-l1-tab-height)!important;
+  font-size:var(--mm-l1-tab-font)!important;
+}
+
+@media(max-width:430px){
+  .squadLevel1Tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .squadLevel1Tabs button{padding-left:3px!important;padding-right:3px!important}
+}
+
+
+/* v0.1.49.76.5 — Squad L1 tabs aligned to Club navigation standard; Squad L2 tabs given a consistent subordinate visual hierarchy. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.4 Summer League · Next Game Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.5 Squad · Navigation Hierarchy</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13480,7 +13571,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.4 Summer League · Next Game Integrity",ENGINE_VERSION="E2.26-PROD27";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.5 Squad · Navigation Hierarchy",ENGINE_VERSION="E2.26-PROD28";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14857,7 +14948,7 @@ function clubSchedule(){
     let g=grouped[grouped.length-1];if(!g||g.month!==month){g={month,rows:[]};grouped.push(g)}g.rows.push(e);
   }
   return `<div class="squadSectionHead"><h3>Schedule</h3><small>Month-by-month basketball calendar</small></div>
-    <div class="scheduleToolbar compactScheduleTabs squadScheduleTabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
+    <div class="scheduleToolbar compactScheduleTabs squadScheduleTabs squadLevel2Tabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
     <div class="calendarLegend"><span class="calTag sl">SL</span>Summer <span class="calTag pre">PRE</span>Preseason <span class="calTag reg">REG</span>League <span class="calTag cup">CUP</span>Cup <span class="calTag pi">PI</span>Play-In <span class="calTag po">PO</span>Playoffs</div>
     <div class="scheduleMonthList">${grouped.length?grouped.map(group=>`<section class="scheduleMonth"><div class="scheduleMonthHead">${group.month}</div><div class="scheduleList compactScheduleList">${group.rows.map(e=>{
       const opp=c(e.oppId),g=e.game,score=e.kind==="completed"?(e.home?`${g.homeScore}–${g.awayScore}`:`${g.awayScore}–${g.homeScore}`):"—";
@@ -17528,7 +17619,7 @@ function teamPerformance(){
 function team(){
   let tabs=[["squad","Squad"],["schedule","Schedule"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"],["trades","Trades"]];
   let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?draft():ui.teamTab==="trades"?trades():freeagency();
-  return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+  return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow squadLevel1Tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 
 function clubCurrentSeasonRecordSnapshot(G,club){
@@ -17804,7 +17895,7 @@ function draft(){
   const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
   let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag">Scout Recommends</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"class";
-  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
+  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
 }
 function freeagency(){
@@ -18231,7 +18322,7 @@ function trades(){
   if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;
   ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};
   const partner=c(ui.tradePartner),view=ui.tradeView||"builder";
-  const tabs=`<div class="tradeModeTabs modern"><button data-tradeview="builder" class="${view==="builder"?"active":""}">Builder</button><button data-tradeview="finder" class="${view==="finder"?"active":""}">Finder</button><button data-tradeview="history" class="${view==="history"?"active":""}">History</button></div>`;
+  const tabs=`<div class="tradeModeTabs modern squadLevel2Tabs"><button data-tradeview="builder" class="${view==="builder"?"active":""}">Builder</button><button data-tradeview="finder" class="${view==="finder"?"active":""}">Finder</button><button data-tradeview="history" class="${view==="history"?"active":""}">History</button></div>`;
 
   if(view==="finder"){
     const profile=tradeClubNeedProfile(me()),targetGroup=ui.tradeFinderGroup==="Auto"?(profile[0]?.group||"Guard"):ui.tradeFinderGroup;
