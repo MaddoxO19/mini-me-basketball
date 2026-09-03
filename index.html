@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2499,7 +2499,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5159,6 +5159,7 @@ const FIBA_REGION_RULES = {
   Africa: { code:"AF", firstRoundWindows:3, secondRoundWindows:2, secondRoundGroupLabels:["E","F"], qualifiers:5 },
 };
 const WORLD_CUP_CYCLE_SEASONS = 4;
+const FIBA_QUALIFICATION_FORMAT_VERSION = "WCQ2-CARRYOVER10";
 
 function freshQualificationState(cycle=1, activeFromSeason=1) {
   return {
@@ -5168,6 +5169,7 @@ function freshQualificationState(cycle=1, activeFromSeason=1) {
     secondRoundGroups:[],
     standings:Object.fromEntries(NATIONAL_TEAMS.map(n=>[n.code,{code:n.code,region:n.region,gp:0,w:0,l:0,pf:0,pa:0,points:0}])),
     advancedTeamCodes:[], eliminatedTeamCodes:[], qualifiedTeamCodes:[], hostCode:"QAT",
+    qualificationFormatVersion:FIBA_QUALIFICATION_FORMAT_VERSION,
     complete:false, worldCupPlayed:false, windows:[],
   };
 }
@@ -9639,6 +9641,49 @@ function updateQualificationStanding(G, team, scoreFor, scoreAgainst, won) {
   st.gp++; st.pf+=scoreFor; st.pa+=scoreAgainst;
   if (won) { st.w++; st.points+=2; } else { st.l++; st.points+=1; }
 }
+// v0.1.49.77.5.5.4 — World Cup qualifier second-round carryover integrity.
+// Six-team second-round tables carry only first-round results earned against
+// the other two advancing nations from the same source group. Results against
+// the eliminated fourth nation are discarded. Each advancing nation therefore
+// enters the second round on 4 GP, then plays the three new opponents home and
+// away (6 more games) for a correct 10-game completed table.
+function rebuildSecondRoundCarryoverStandings(G,q){
+  const advanced=new Set(q.advancedTeamCodes||[]);
+  if(!advanced.size)return;
+
+  // Reset only advancing nations. Eliminated teams retain their completed
+  // first-round record for historical/reference purposes.
+  for(const code of advanced){
+    const nation=G.nationalTeams.find(n=>n.code===code);
+    q.standings[code]={code,region:nation?.region||q.standings?.[code]?.region||"",gp:0,w:0,l:0,pf:0,pa:0,points:0};
+  }
+
+  // National-team game arrays contain the qualification results already played.
+  // Deduplicate them by game id because each result is referenced by both teams.
+  const firstIds=new Set((q.firstRoundGroups||[]).map(g=>g.id));
+  const cyclePrefix=`Q${q.cycle}_`;
+  const seen=new Set(),games=[];
+  for(const team of G.nationalTeams||[]){
+    for(const game of team.games||[]){
+      if(!game?.id||seen.has(game.id))continue;
+      if(!String(game.windowId||"").startsWith(cyclePrefix))continue;
+      if(!firstIds.has(game.groupId))continue;
+      seen.add(game.id);games.push(game);
+    }
+  }
+
+  for(const game of games){
+    if(!advanced.has(game.teamA)||!advanced.has(game.teamB))continue;
+    const a=q.standings[game.teamA],b=q.standings[game.teamB];
+    if(!a||!b)continue;
+    a.gp++;a.pf+=+game.scoreA||0;a.pa+=+game.scoreB||0;
+    b.gp++;b.pf+=+game.scoreB||0;b.pa+=+game.scoreA||0;
+    if(game.winner===game.teamA){a.w++;a.points+=2;b.l++;b.points+=1;}
+    else{b.w++;b.points+=2;a.l++;a.points+=1;}
+  }
+  q.qualificationFormatVersion=FIBA_QUALIFICATION_FORMAT_VERSION;
+}
+
 function makeSecondRoundGroups(G) {
   const q=G.nationalQualification;
   const second=[]; const advanced=[]; const eliminated=[];
@@ -9661,7 +9706,9 @@ function makeSecondRoundGroups(G) {
       second.push({id:`${rules.code}-${label}`,region,label:`Group ${label}`,teamCodes:[...left.adv,...right.adv],sourceGroupIds:[left.group.id,right.group.id],sourceSides:[...left.adv].map(c=>({code:c,side:"L"})).concat(right.adv.map(c=>({code:c,side:"R"})))});
     }
   }
-  q.secondRoundGroups=second; q.groups=second; q.advancedTeamCodes=[...new Set(advanced)]; q.eliminatedTeamCodes=[...new Set(eliminated)]; q.round="SECOND_ROUND";
+  q.secondRoundGroups=second; q.groups=second; q.advancedTeamCodes=[...new Set(advanced)]; q.eliminatedTeamCodes=[...new Set(eliminated)];
+  rebuildSecondRoundCarryoverStandings(G,q);
+  q.round="SECOND_ROUND";
 }
 function crossGroupMatchdayPairs(group, matchday) {
   const left=group.sourceSides.filter(x=>x.side==="L").map(x=>x.code);
@@ -14265,7 +14312,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.3 Home · Upcoming Fixtures Cleanup",ENGINE_VERSION="E2.26-PROD47";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix",ENGINE_VERSION="E2.26-PROD48";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
