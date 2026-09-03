@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5 Squad + Intl · Overview Polish</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.1 Squad · Overview Visual Consistency</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2499,6 +2499,11 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 /* v0.1.49.77.5.5.5 — Squad + International overview polish */
 .squadOverviewIntro{margin-top:0!important}
+/* v0.1.49.77.5.5.5.1 — Squad overview now uses the same franchise hero visual system as Club Overview. */
+.squadHubHero{margin-top:0!important;margin-bottom:14px!important}
+.squadHubHero .clubHubHeroMain{border-bottom:1px solid var(--line)}
+.squadHubHero .clubHubMetrics{border-top:0}
+
 .squadOverviewMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:11px}
 .squadOverviewMetrics>div{border:1px solid rgba(241,168,77,.28);background:rgba(241,168,77,.035);border-radius:10px;padding:9px 6px;text-align:center;min-width:0}
 .squadOverviewMetrics b{display:block;font-size:14px;line-height:1.1;color:var(--text);font-weight:950}
@@ -2516,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5 Squad + Intl · Overview Polish</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.1 Squad · Overview Visual Consistency</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -14330,7 +14335,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5 Squad + Intl · Overview Polish",ENGINE_VERSION="E2.26-PROD49";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.1 Squad · Overview Visual Consistency",ENGINE_VERSION="E2.26-PROD50";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -19091,7 +19096,7 @@ function squad(){
   for(const pos of POSITIONS)chart[pos].sort((a,b)=>score(b)-score(a));
   const row=(item,i)=>{const p=item.player,depth=item.depth,inj=p.injured?`<span class="rosterAlert">${(()=>{const ret=injuryReturnEstimate(p).short;return /^out\b/i.test(ret)?ret:`OUT · ${ret}`})()}</span>`:"";return `<div class="depthPlayerRow"><span class="depthOrder">${i+1}</span><div class="depthPlayerMain"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${positionLabel(p)} · Age ${p.age}${inj?` · ${inj}`:""}</small></div><div class="depthOvr"><b>${p.ovr}</b><small>${ovrBand(p.ovr)}</small></div><div class="depthMin"><b>${depth.mins||0}</b><small>MIN</small></div></div>`};
   const injuredCount=d.nba.filter(p=>p.injured).length;
-  return `<div class="recordBookIntro squadOverviewIntro"><div class="eyebrow">Squad Overview</div><h3>${club.name} Roster</h3><p>Current senior roster availability and squad strength.</p><div class="squadOverviewMetrics"><div><b>${d.nba.length}/15</b><small>Active Roster</small></div><div><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div><b>${injuredCount}</b><small>Injured</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div></div></div>
+  return `<div class="clubHubHero squadHubHero"><div class="clubHubHeroMain"><div class="clubHubCrest">${crestSVG(club)}</div><div><div class="eyebrow">Squad Overview</div><h2>${club.name} Roster</h2><p>Basketball Operations · Senior roster</p></div></div><div class="clubHubMetrics"><div><b>${d.nba.length}/15</b><small>Active Roster</small></div><div><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div><b>${injuredCount}</b><small>Injured</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div></div></div>
     <div class="squadSectionHead"><h3>Depth Chart</h3><small>Primary assignment by position</small></div>
     <div class="depthChart">${POSITIONS.map(pos=>`<section class="depthPosition"><div class="depthPositionHead"><b>${pos}</b><small>${chart[pos].length} player${chart[pos].length===1?"":"s"}</small></div>${chart[pos].length?chart[pos].map(row).join(""):`<div class="depthEmpty">No assigned ${pos}</div>`}</section>`).join("")}</div>`;
 }
