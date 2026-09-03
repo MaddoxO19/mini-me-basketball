@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Mini&Me Basketball — v0.1.49.76.5 Squad · Navigation Hierarchy</title>
+<title>Mini&Me Basketball — v0.1.49.76.6 UI/UX · Global Navigation Hierarchy</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2083,10 +2083,97 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 
 /* v0.1.49.76.5 — Squad L1 tabs aligned to Club navigation standard; Squad L2 tabs given a consistent subordinate visual hierarchy. */
+
+/* v0.1.49.76.6 — Global navigation hierarchy
+   Extend the Squad/Club standard across League, International and Facilities. */
+
+.globalLevel1Tabs{
+  display:grid!important;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  gap:5px!important;
+  margin:0 0 10px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.globalLevel1Tabs button{
+  width:100%!important;
+  min-width:0!important;
+  min-height:var(--mm-l1-tab-height)!important;
+  margin:0!important;
+  padding:8px 5px!important;
+  border:1px solid var(--line)!important;
+  border-radius:var(--mm-l1-tab-radius)!important;
+  background:var(--panel2)!important;
+  color:var(--muted)!important;
+  font-size:var(--mm-l1-tab-font)!important;
+  font-weight:900!important;
+  line-height:1.15!important;
+  white-space:normal!important;
+  text-align:center!important;
+}
+.globalLevel1Tabs button.active{
+  background:var(--accent)!important;
+  border-color:var(--accent)!important;
+  color:#17100a!important;
+}
+
+.globalLevel2Tabs{
+  display:grid!important;
+  gap:5px!important;
+  margin:7px 0 10px!important;
+  overflow:visible!important;
+}
+.globalLevel2Tabs button{
+  width:100%!important;
+  min-width:0!important;
+  min-height:var(--mm-l2-tab-height)!important;
+  margin:0!important;
+  padding:7px 5px!important;
+  border:1px solid #364252!important;
+  border-radius:var(--mm-l2-tab-radius)!important;
+  background:#101720!important;
+  color:var(--muted)!important;
+  font-size:var(--mm-l2-tab-font)!important;
+  font-weight:850!important;
+  line-height:1.1!important;
+  box-shadow:none!important;
+}
+.globalLevel2Tabs button.active{
+  background:rgba(244,163,64,.08)!important;
+  border-color:#8a642f!important;
+  color:var(--accent2)!important;
+}
+
+/* Common Level 2 column patterns */
+.clubRecordTabs.globalLevel2Tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.leagueStandingsTabs.globalLevel2Tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+.postStageTabs.globalLevel2Tabs{grid-template-columns:repeat(5,minmax(0,1fr))!important}
+.worldCupTabs.globalLevel2Tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.intlSubTabs.globalLevel2Tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.frontOfficeTabs.globalLevel2Tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+/* Facilities has only two L1 tabs: let them share the same visual dimensions without stretching typography. */
+.facilityTabs.globalLevel1Tabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+/* International and League have more L1 entries; wrap cleanly while preserving the same tab geometry. */
+.intlTabs.globalLevel1Tabs,
+.leagueTabs.globalLevel1Tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+
+/* Club remains the visual reference standard. */
+.clubTabs.globalLevel1Tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+
+@media(max-width:430px){
+  .globalLevel1Tabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+  .globalLevel1Tabs button{padding-left:3px!important;padding-right:3px!important}
+  .postStageTabs.globalLevel2Tabs button{font-size:8px!important}
+}
+
+
+/* v0.1.49.76.6 — Global L1/L2 navigation hierarchy applied across Club, League, International and Facilities using the Squad/Club design standard. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.5 Squad · Navigation Hierarchy</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.76.6 UI/UX · Global Navigation Hierarchy</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13571,7 +13658,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.76.5 Squad · Navigation Hierarchy",ENGINE_VERSION="E2.26-PROD28";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.76.6 UI/UX · Global Navigation Hierarchy",ENGINE_VERSION="E2.26-PROD29";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",teamTab:"squad",clubTab:"current",clubRecordMode:"current",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueHistoryTab:"game",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17739,7 +17826,7 @@ function clubHub(){
   const tabs=[["current","Current"],["records","Records"],["history","History"],["honours","Honours"]];
   let body="";
   if(ui.clubTab==="records"){
-    body=`<div class="clubRecordTabs"><button data-clubrecord="current" class="${ui.clubRecordMode==="current"?"active":""}">Current Season</button><button data-clubrecord="alltime" class="${ui.clubRecordMode==="alltime"?"active":""}">All-Time</button><button data-clubrecord="h2h" class="${ui.clubRecordMode==="h2h"?"active":""}">H2H</button></div>${ui.clubRecordMode==="h2h"?h2hRecordsHtml(G,club):ui.clubRecordMode==="alltime"?clubHistoricalRecordsHtml(G,club):clubCurrentRecordsHtml(G,club)}`;
+    body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubrecord="current" class="${ui.clubRecordMode==="current"?"active":""}">Current Season</button><button data-clubrecord="alltime" class="${ui.clubRecordMode==="alltime"?"active":""}">All-Time</button><button data-clubrecord="h2h" class="${ui.clubRecordMode==="h2h"?"active":""}">H2H</button></div>${ui.clubRecordMode==="h2h"?h2hRecordsHtml(G,club):ui.clubRecordMode==="alltime"?clubHistoricalRecordsHtml(G,club):clubCurrentRecordsHtml(G,club)}`;
   }else if(ui.clubTab==="history"){
     body=`<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">Franchise Archive</div><h3>Season History</h3><p>Every completed season remains part of the club's permanent career history.</p></div><div class="profileTimeline clubHistoryClean">${archive.length?archive.map(h=>{const extras=[h.cup?"NBA Cup Winner":"",h.best?"Best Record":""].filter(Boolean).join(" · ");return `<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.finish||"Season Complete"}</b>${extras?`<small>${extras}</small>`:""}</div></div>`}).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`}</div>`;
   }else if(ui.clubTab==="honours"){
@@ -18556,7 +18643,7 @@ function postseasonPage(){
   const currentStage=G.phase==="PLAY_IN"?"Play-In":G.phase==="PLAYOFFS"?postseasonRoundLabel(currentPo?.round||"R1"):G.phase==="CHAMPION"?"Season Complete":"Postseason";
   const statusText=st.alive?(st.qualified?`#${st.seed} seed secured`:"Active"):"Eliminated";
   const summary=(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"||G.phase==="CHAMPION")?eventSummaryCard({label:"NBA Postseason",title:G.phase==="CHAMPION"?`${G.champion?.name||"Champion"} are NBA Champions`:st.alive?`${me().name} · ${statusText}`:`${me().name} eliminated`,subtitle:st.alive?(st.qualified?`Your Play-In is complete. The league is finalising the remaining postseason field.`:`Follow your series game by game or review the full bracket below.`):`Your postseason ended in ${st.eliminatedStage||"the postseason"}. The remaining bracket can still be followed by round.`,metrics:[{label:"Your Seed",value:st.seed?`#${st.seed}`:"—"},{label:"Your Status",value:statusText},{label:"Current Stage",value:currentStage}]}):"";
-  const nav=`<div class="postStageTabs">${tabs.map(([k,l])=>`<button data-poststage="${k}" class="${ui.postseasonStage===k?"active":""}">${l}</button>`).join("")}</div>`;
+  const nav=`<div class="postStageTabs globalLevel2Tabs">${tabs.map(([k,l])=>`<button data-poststage="${k}" class="${ui.postseasonStage===k?"active":""}">${l}</button>`).join("")}</div>`;
   return summary+nav+(ui.postseasonStage==="playin"?playInHistory():playoffStageHistory(ui.postseasonStage));
 }
 
