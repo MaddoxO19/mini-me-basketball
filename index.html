@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5 Squad + Intl · Overview Polish</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2496,10 +2496,27 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .unifiedFixtureSection .fixtureRows{grid-column:1/-1}
 .unifiedFixtureSection .fixtureRound{display:flex;flex-direction:column;gap:2px}
 .unifiedFixtureSection .fixtureRound small{font-size:8px;line-height:1;color:var(--accent2);font-weight:900;letter-spacing:.7px;text-transform:uppercase}
+
+/* v0.1.49.77.5.5.5 — Squad + International overview polish */
+.squadOverviewIntro{margin-top:0!important}
+.squadOverviewMetrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:11px}
+.squadOverviewMetrics>div{border:1px solid rgba(241,168,77,.28);background:rgba(241,168,77,.035);border-radius:10px;padding:9px 6px;text-align:center;min-width:0}
+.squadOverviewMetrics b{display:block;font-size:14px;line-height:1.1;color:var(--text);font-weight:950}
+.squadOverviewMetrics small{display:block;margin-top:4px;font-size:9px;line-height:1.2;color:var(--muted);font-weight:800}
+.intlTopPlayers.intlTopPlayersStacked{display:grid!important;grid-template-columns:1fr!important;gap:8px!important}
+.intlTopPlayersStacked .intlTopPlayerCard{padding:11px 12px!important;border-radius:12px!important}
+.intlTopPlayersStacked .intlTopPlayerHead{align-items:flex-start!important;gap:10px!important}
+.intlTopPlayersStacked .intlTopPlayerHead b{font-size:12px!important;margin:3px 0!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+.intlTopPlayersStacked .intlTopPlayerHead span{font-size:9px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3!important}
+.intlTopPlayersStacked .intlTopPlayerHead strong{font-size:15px!important;line-height:1!important;min-width:38px!important}
+.intlTopPlayersStacked .intlTopPlayerStats{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;margin-top:9px!important;padding-top:8px!important}
+.intlTopPlayersStacked .intlTopPlayerStats b{font-size:11px!important}
+.intlTopPlayersStacked .intlTopPlayerRank{font-size:9px!important;margin-top:7px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3!important}
+@media(max-width:430px){.squadOverviewMetrics{grid-template-columns:repeat(2,minmax(0,1fr))}.intlTopPlayers.intlTopPlayersStacked{grid-template-columns:1fr!important}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5 Squad + Intl · Overview Polish</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -9641,6 +9658,7 @@ function updateQualificationStanding(G, team, scoreFor, scoreAgainst, won) {
   st.gp++; st.pf+=scoreFor; st.pa+=scoreAgainst;
   if (won) { st.w++; st.points+=2; } else { st.l++; st.points+=1; }
 }
+// v0.1.49.77.5.5.5 — Squad and International overview polish.
 // v0.1.49.77.5.5.4 — World Cup qualifier second-round carryover integrity.
 // Six-team second-round tables carry only first-round results earned against
 // the other two advancing nations from the same source group. Results against
@@ -14312,7 +14330,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.4 Intl · Qualification Carryover Fix",ENGINE_VERSION="E2.26-PROD48";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5 Squad + Intl · Overview Polish",ENGINE_VERSION="E2.26-PROD49";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -15689,7 +15707,7 @@ function clubProfile(){
   const seasons=archive.length?archive.map(h=>`<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.champion?"NBA Champion":h.cup?"NBA Cup Winner":h.best?"Best Record":"Season"}</b><small>${h.champion||h.cup||h.best?[h.champion?"NBA Title":"",h.cup?"Cup":"",h.best?"Best Record":""].filter(Boolean).join(" · "):"Archived result"}</small></div><div class="finish">${h.finish}</div></div>`).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`;
   return `<div class="profilePageHead compact"><div><h2>Team Profile</h2><p>${club.conference}ern Conference · ${club.division}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close team profile">×</button></div></div>
     <div class="profileHero"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge teamProfileCrest">${crestSVG(club)}</div><div class="profileHeroText"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.conference}ern Conference · ${club.division} Division</p><div class="identityLine"><span class="identityChip">#${rank>0?rank:"—"} ${club.conference}</span><span class="identityChip">${r.w||0}–${r.l||0}</span><span class="identityChip">${roster.length} Players</span></div></div>${club.id===me()?.id?`<button id="editTeamIdentityBtn" class="heroEditBtn" aria-label="Edit team">✎</button>`:""}</div></div>
-    ${club.id===me()?.id?`<div class="teamProfileTopActions"><button id="clubScheduleBtn" class="btn primary">View Schedule</button></div>`:""}
+    ${club.id===me()?.id?`<div class="teamProfileTopActions"><button id="clubScheduleBtn" class="btn primary">View Fixtures</button></div>`:""}
     <div class="profileMetricGrid"><div class="profileMetric2"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric2"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric2"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric2"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
 
     <div class="sectionTitle">Club Honours</div><div class="teamHonourGrid compact3"><div class="teamHonour"><b>${honours.nba}</b><small>NBA Championships</small></div><div class="teamHonour"><b>${honours.cup}</b><small>NBA Cups</small></div><div class="teamHonour"><b>${honours.best}</b><small>Best Records</small></div></div>
@@ -15770,7 +15788,7 @@ function clubSchedule(){
     const month=basketballMonthLabel(e.calendarSerial);
     let g=grouped[grouped.length-1];if(!g||g.month!==month){g={month,rows:[]};grouped.push(g)}g.rows.push(e);
   }
-  return `<div class="squadSectionHead"><h3>Schedule</h3><small>Month-by-month basketball calendar</small></div>
+  return `<div class="squadSectionHead"><h3>Fixtures</h3><small>Month-by-month basketball calendar</small></div>
     <div class="scheduleToolbar compactScheduleTabs squadScheduleTabs squadLevel2Tabs">${filters.map(([k,l])=>`<button data-schedulefilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
     <div class="calendarLegend"><span class="calTag sl">SL</span>Summer <span class="calTag pre">PRE</span>Preseason <span class="calTag reg">REG</span>League <span class="calTag cup">CUP</span>Cup <span class="calTag pi">PI</span>Play-In <span class="calTag po">PO</span>Playoffs</div>
     <div class="scheduleMonthList">${grouped.length?grouped.map(group=>`<section class="scheduleMonth"><div class="scheduleMonthHead">${group.month}</div><div class="scheduleList compactScheduleList">${group.rows.map(e=>{
@@ -15953,7 +15971,7 @@ function renderResultWindow(){
   $("#resultWindowTitle").textContent=ps?`${ps.stage==="FINALS"?"NBA Finals":postseasonRoundLabel(String(ps.stage||"").split("_").pop())} · Game ${(ps.games||[]).indexOf(g.id)+1}`:competitionGameLabel(g);
   const historicalSeries=ui.resultReturn==="series"&&!!ps;
   const resultButtonLabel=historicalSeries?"Back to Series":
-    ui.resultReturn==="schedule"?"Back to Schedule":
+    ui.resultReturn==="schedule"?"Back to Fixtures":
     ui.resultReturn==="summer_summary"?"View Summer League Summary":
     ui.resultReturn==="preseason_complete"?"Continue to Regular Season":
     ui.resultReturn==="cup_final"?"View NBA Cup Recap":
@@ -18446,7 +18464,7 @@ function teamPerformance(){
 }
 
 function team(){
-  let tabs=[["squad","Squad"],["schedule","Schedule"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"],["trades","Trades"]];
+  let tabs=[["squad","Squad"],["schedule","Fixtures"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"],["trades","Trades"]];
   let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?draft():ui.teamTab==="trades"?trades():freeagency();
   return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow squadLevel1Tabs">${tabs.map(x=>`<button data-teamtab="${x[0]}" class="${ui.teamTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
@@ -19072,7 +19090,8 @@ function squad(){
   for(const item of [...players].filter(x=>!used.has(x.player.id)).sort((a,b)=>score(b)-score(a))){const opts=[item.player.position,item.player.secondaryPosition].filter(Boolean);opts.sort((a,b)=>(chart[a]?.length||0)-(chart[b]?.length||0));const pos=opts[0]||item.player.position;chart[pos]=(chart[pos]||[]);chart[pos].push(item);used.add(item.player.id)}
   for(const pos of POSITIONS)chart[pos].sort((a,b)=>score(b)-score(a));
   const row=(item,i)=>{const p=item.player,depth=item.depth,inj=p.injured?`<span class="rosterAlert">${(()=>{const ret=injuryReturnEstimate(p).short;return /^out\b/i.test(ret)?ret:`OUT · ${ret}`})()}</span>`:"";return `<div class="depthPlayerRow"><span class="depthOrder">${i+1}</span><div class="depthPlayerMain"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${positionLabel(p)} · Age ${p.age}${inj?` · ${inj}`:""}</small></div><div class="depthOvr"><b>${p.ovr}</b><small>${ovrBand(p.ovr)}</small></div><div class="depthMin"><b>${depth.mins||0}</b><small>MIN</small></div></div>`};
-  return `<div class="metrics squadRosterMetrics"><div class="metric"><b>${d.nba.length}/15</b><small>NBA Roster</small></div><div class="metric"><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div class="metric"><b>${d.nba.filter(p=>p.injured).length}</b><small>Injured</small></div></div>
+  const injuredCount=d.nba.filter(p=>p.injured).length;
+  return `<div class="recordBookIntro squadOverviewIntro"><div class="eyebrow">Squad Overview</div><h3>${club.name} Roster</h3><p>Current senior roster availability and squad strength.</p><div class="squadOverviewMetrics"><div><b>${d.nba.length}/15</b><small>Active Roster</small></div><div><b>${d.twoWay.length}/${twLimit}</b><small>Two-Way</small></div><div><b>${injuredCount}</b><small>Injured</small></div><div><b>${squadOvr(club)}</b><small>Squad OVR</small></div></div></div>
     <div class="squadSectionHead"><h3>Depth Chart</h3><small>Primary assignment by position</small></div>
     <div class="depthChart">${POSITIONS.map(pos=>`<section class="depthPosition"><div class="depthPositionHead"><b>${pos}</b><small>${chart[pos].length} player${chart[pos].length===1?"":"s"}</small></div>${chart[pos].length?chart[pos].map(row).join(""):`<div class="depthEmpty">No assigned ${pos}</div>`}</section>`).join("")}</div>`;
 }
@@ -19716,7 +19735,7 @@ function nationalDepthChartHtml(selected){
 
 function internationalOverview(n){
   const wr=nationalWorldRank(n.code),rr=nationalRegionalRank(n.code),form=nationalRecentForm(n),rating=internationalProgramRating(n),top=internationalTopPlayers(n,3),rankMap=internationalPlayerRanks(n);
-  const campaign=internationalCampaignStatus(n),recent=(n.games||[]).slice().reverse().slice(0,3),squadCount=n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length;
+  const campaign=internationalCampaignStatus(n),squadCount=n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length;
   const honours=(G.worldCupHistory||[]).filter(w=>[w.championCode,w.runnerUpCode,w.bronzeCode].includes(n.code)).length;
   const olympicMedals=[...(G.olympicHistory||[]),...(G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS)].filter(w=>[w.championCode,w.runnerUpCode,w.bronzeCode].includes(n.code)).length;
   const tier=n.tier===1?"Elite":n.tier===2?"Established":"Developing";
@@ -19731,9 +19750,7 @@ function internationalOverview(n){
     <div class="intlCommandMetrics eight">${metrics.map(x=>`<div><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")}</div>
   </div>
   <div class="sectionTitle">Top Players</div>
-  <div class="intlTopPlayers">${top.map((p,i)=>{const a=internationalPlayerAverages(p),ranks=(rankMap.get(p.id)||[]).filter(r=>r.rank<=5).sort((a,b)=>a.rank-b.rank).slice(0,2);return `<div class="intlTopPlayerCard"><div class="intlTopPlayerHead"><div><small>${i===0?"TOP PLAYER":i===1?"CORE PLAYER":"KEY PLAYER"}</small><b>${playerNameLink(p)}</b><span>${positionLabel(p)} · ${ensureInternationalAffiliation(p)}</span></div><strong>${p.ovr}<small>OVR</small></strong></div><div class="intlTopPlayerStats"><div><b>${a.gp?a.ppg.toFixed(1):"—"}</b><small>PPG</small></div><div><b>${a.gp?a.rpg.toFixed(1):"—"}</b><small>RPG</small></div><div><b>${a.gp?a.apg.toFixed(1):"—"}</b><small>APG</small></div></div><div class="intlTopPlayerRank">${ranks.length?ranks.map(r=>`#${r.rank} ${r.label}`).join(" · "):"International ranking builds with appearances"}</div></div>`}).join("")}</div>
-  <div class="sectionTitle">Recent International Results</div>
-  <div class="intlRecentResults">${recent.length?recent.map(g=>{const home=g.teamA===n.code,opp=home?g.teamB:g.teamA,us=home?g.scoreA:g.scoreB,them=home?g.scoreB:g.scoreA;return `<div class="intlRecentRow" data-intlresult="${g.id||g.gameId||""}"><div><b>${g.winner===n.code?"W":"L"} · ${home?"vs":"@"} ${nat(opp)?.name||opp}</b><small>${g.stage?intlWorldCupStageLabel(g.stage):`${gameYearForSeason(g.season||G.season)} World Cup Qualification`}</small></div><strong>${us}–${them}</strong></div>`}).join(""):`<div class="card empty">No international results recorded yet.</div>`}</div>`;
+  <div class="intlTopPlayers intlTopPlayersStacked">${top.map((p,i)=>{const a=internationalPlayerAverages(p),ranks=(rankMap.get(p.id)||[]).filter(r=>r.rank<=5).sort((a,b)=>a.rank-b.rank).slice(0,2);return `<div class="intlTopPlayerCard intlTopPlayerRow"><div class="intlTopPlayerHead"><div><small>${i===0?"TOP PLAYER":i===1?"CORE PLAYER":"KEY PLAYER"}</small><b>${playerNameLink(p)}</b><span>${positionLabel(p)} · ${ensureInternationalAffiliation(p)}</span></div><strong>${p.ovr}<small>OVR</small></strong></div><div class="intlTopPlayerStats"><div><b>${a.gp?a.ppg.toFixed(1):"—"}</b><small>PPG</small></div><div><b>${a.gp?a.rpg.toFixed(1):"—"}</b><small>RPG</small></div><div><b>${a.gp?a.apg.toFixed(1):"—"}</b><small>APG</small></div></div><div class="intlTopPlayerRank">${ranks.length?ranks.map(r=>`#${r.rank} ${r.label}`).join(" · "):"International ranking builds with appearances"}</div></div>`}).join("")}</div>`;
 }
 function internationalSquad(n,code){
   ensureNationalDepth(G,code,24);
