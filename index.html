@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.4 League · Honours Level 1</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2521,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.4 League · Honours Level 1</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -14379,7 +14379,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.4 League · Honours Level 1",ENGINE_VERSION="E2.26-PROD53";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance",ENGINE_VERSION="E2.26-PROD54";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18590,6 +18590,7 @@ function team(){
 
 function clubCurrentSeasonRecordSnapshot(G,club){
   const sg={},tg={},seen=new Set(),games=[...(G.regularSeasonLive?.games||[]),...(G.regularSeason?.games||[])];
+  const playerIndex=new Map(allPlayers(G).map(p=>[String(p.id),p]));
   const save=(bucket,key,value,meta)=>{if(value==null||!isFinite(+value))return;if(!bucket[key]||+value>+bucket[key].value)bucket[key]={key,value:+value,season:G.season,...meta}};
   for(const game of games){
     if(!game?.id||seen.has(game.id)||!game.boxScore||!historicalRecordOfficialGame(game))continue;seen.add(game.id);
@@ -18669,7 +18670,7 @@ function leagueCurrentSeasonRecordSnapshot(G){
       const teamMeta={clubId,clubName:club?.name||clubId,opponentClubId:oppId,opponentName:opp?.name||oppId,gameId:game.id,round:game.round||null};
       save(tg,"teamScore",score,teamMeta);if(score>oppScore)save(tg,"winMargin",score-oppScore,teamMeta);
       for(const line of lines){
-        const pl=allPlayers(G).find(x=>x.id===line.playerId),meta={...teamMeta,playerId:line.playerId,playerName:line.name||pl?.name||"Player"};
+        const pl=playerIndex.get(String(line.playerId)),meta={...teamMeta,playerId:line.playerId,playerName:line.name||pl?.name||"Player"};
         for(const [key,field] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"]])save(sg,key,+line[field]||0,meta);
         const fga=+line.fga||0,fgm=+line.fgm||0;if(fga>=10)save(sg,"fgPct",100*fgm/fga,{...meta,attempts:fga,makes:fgm});
       }
@@ -19747,6 +19748,7 @@ function leagueLegacy(){
 }
 
 function leagueHonours(){
+  const history=(G.leagueHistory||[]).slice();
 
   // Deliberately reuses Club Honours' exact CSS classes (clubHonourHero,
   // clubLegendList, clubLegendRow, etc.) rather than new league-specific
