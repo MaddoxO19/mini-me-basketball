@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2521,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -13538,11 +13538,41 @@ function advanceNBACupFinalEvent(G){
 function allStarCandidateScore(p){return summerPerformanceScore(p.seasonStats)+(p.ovr||0)*0.12;}
 function risingStarsExperienceYears(p,gameState=null){
   if(!p)return 99;
-  return inferredNbaExperienceYears(gameState||G||CURRENT_GAME_STATE,p);
+  const state=gameState||G||CURRENT_GAME_STATE,activeSeason=Number.isFinite(+state?.season)?+state.season:1;
+  // Draft/undrafted entry season is authoritative for procedural players.
+  // Their seasonHistory can include non-NBA/development records and must not
+  // incorrectly age a genuine rookie or sophomore out of Rising Stars.
+  const sourceName=p.sourceTemplateName||p.sourceName||null;
+  const launchBio=verifiedProductionBioRecord(sourceName);
+  if(!launchBio){
+    if(Number.isFinite(+p.draftYear))return Math.max(0,activeSeason-(+p.draftYear));
+    if(Number.isFinite(+p.undraftedSeason))return Math.max(0,activeSeason-(+p.undraftedSeason));
+  }
+  return inferredNbaExperienceYears(state,p);
 }
 function risingStarsEligible(p,gameState=null){
   const yrs=risingStarsExperienceYears(p,gameState);
   return yrs===0||yrs===1;
+}
+function risingStarsCandidatePool(G){
+  const seen=new Set(),all=[];
+  for(const club of G.clubs||[])for(const p of [...(club.roster||[]),...(club.twoWayRoster||[])]){
+    if(!p?.id||seen.has(p.id)||!risingStarsEligible(p,G))continue;
+    seen.add(p.id);all.push({p,club});
+  }
+  const ranked=all.sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p));
+  // Preserve the 20-game performance qualification whenever it can fill both
+  // teams. If injuries/limited roles leave fewer than 16, fill only from other
+  // genuine first/second-year NBA players; never use an older player.
+  const qualified=ranked.filter(x=>(+x.p.seasonStats?.gp||0)>=20);
+  if(qualified.length>=16)return qualified;
+  const qids=new Set(qualified.map(x=>x.p.id));
+  return [...qualified,...ranked.filter(x=>!qids.has(x.p.id)&&(+x.p.seasonStats?.gp||0)>0)];
+}
+function risingStarsTeamsValid(G,teams){
+  const lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
+  const a=teams?.RISING_A||[],b=teams?.RISING_B||[],ids=[...a,...b];
+  return a.length===8&&b.length===8&&new Set(ids).size===16&&ids.every(id=>{const p=lookup.get(id);return !!p&&risingStarsEligible(p,G)});
 }
 function allStarContestRepeatPenalty(p,kind,season){
   const hist=(p?.allStarContestHistory||[]).filter(x=>x.kind===kind);
@@ -13592,10 +13622,8 @@ function selectDunkContestants(G,eligible){
 }
 function initializeAllStarLive(G){
   if(G.allStarLive?.season===G.season&&!G.allStarLive.complete&&G.allStarLive.format==='WEEKEND_V2'){
-    const lookup=new Map(allPlayers(G).map(p=>[p.id,p]));
-    const risingIds=[...(G.allStarLive.teams?.RISING_A||[]),...(G.allStarLive.teams?.RISING_B||[])];
-    const invalid=risingIds.some(id=>{const p=lookup.get(id);return !p||!risingStarsEligible(p,G)});
-    if(!invalid){
+    const risingValid=risingStarsTeamsValid(G,G.allStarLive.teams);
+    if(risingValid){
       const eligible=G.clubs.flatMap(c=>c.roster.map(p=>({p,club:c}))).filter(x=>x.p.seasonStats?.gp>=20);
       if(!G.allStarLive.results?.threePoint){const entrants=selectThreePointContestants(G,eligible);G.allStarLive.threePointEntrants=entrants.map(p=>p.id);for(const p of entrants)recordAllStarContestSelection(p,"THREE_POINT",G.season);}
       if(!G.allStarLive.results?.dunk){const entrants=selectDunkContestants(G,eligible);G.allStarLive.dunkEntrants=entrants.map(p=>p.id);for(const p of entrants)recordAllStarContestSelection(p,"DUNK",G.season);}
@@ -13612,11 +13640,7 @@ function initializeAllStarLive(G){
   const east=eligible.filter(x=>x.club.conference==='East').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
   const west=eligible.filter(x=>x.club.conference==='West').sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p)).slice(0,12).map(x=>x.p);
   const selected=[...east,...west];
-  const young=[...eligible]
-    .filter(x=>risingStarsEligible(x.p,G))
-    .sort((a,b)=>allStarCandidateScore(b.p)-allStarCandidateScore(a.p))
-    .slice(0,16)
-    .map(x=>x.p);
+  const young=risingStarsCandidatePool(G).slice(0,16).map(x=>x.p);
   const three=selectThreePointContestants(G,eligible);
   const dunk=selectDunkContestants(G,eligible);
   for(const p of three)recordAllStarContestSelection(p,"THREE_POINT",G.season);
@@ -13627,6 +13651,8 @@ function initializeAllStarLive(G){
 }
 function simulateAllStarGame(G,aKey,bKey,label){
   const live=G.allStarLive,lookup=new Map(allPlayers(G).map(p=>[p.id,p])),ra=(live.teams[aKey]||[]).map(id=>lookup.get(id)).filter(Boolean),rb=(live.teams[bKey]||[]).map(id=>lookup.get(id)).filter(Boolean);
+  if(label==="RISING_STARS"&&(ra.length!==8||rb.length!==8))throw new Error(`Rising Stars integrity guard: expected 8 eligible players per team, resolved ${ra.length} and ${rb.length}.`);
+  if(!ra.length||!rb.length)throw new Error(`All-Star integrity guard: ${aKey}/${bKey} cannot simulate with an empty roster.`);
   const simTeam=(roster)=>{const raw=roster.map((p,i)=>Math.max(4,9-i*.55+rand(-1,1))),scale=60/Math.max(1,raw.reduce((a,b)=>a+b,0)),mins=raw.map(m=>Math.max(3,Math.round(m*scale)));if(mins.length)mins[0]+=60-mins.reduce((a,b)=>a+b,0);const lines=roster.map((p,i)=>({player:p,line:summerPlayerGameLine(p,mins[i])}));const rating=roster.reduce((s,p)=>s+p.ovr,0)/Math.max(1,roster.length),target=Math.max(90,Math.min(145,Math.round(116+(rating-80)*.8+rand(-10,10))));const score=adjustSummerTeamToTarget(lines,target);return{lines,score}};
   let a=simTeam(ra),b=simTeam(rb);if(a.score===b.score){const hero=weightedPick(a.lines,x=>Math.max(1,(x.line.min||1)*(x.player.ovr||60)));hero.line.fta=(hero.line.fta||0)+1;hero.line.ftm=(hero.line.ftm||0)+1;hero.line.pts=summerLinePoints(hero.line);a.score++;}
   const margin=a.score-b.score,pmA=summerPlusMinus(a.lines,margin),pmB=summerPlusMinus(b.lines,-margin),box=(sim,pms)=>sim.lines.map(({player,line},i)=>({playerId:player.id,name:player.name,position:player.position,secondaryPosition:player.secondaryPosition||null,...line,pts:summerLinePoints(line),plusMinus:pms[i]||0})),ga=box(a,pmA),gb=box(b,pmB),winner=a.score>b.score?aKey:bKey;
@@ -13650,6 +13676,12 @@ function advanceAllStarEvent(G){
   if(live.reviewStage)return{ok:false,reason:"Review the current All-Star result before continuing."};
 
   if(live.stage===1){
+    if(!risingStarsTeamsValid(G,live.teams)){
+      G.allStarLive=null;G.allStar=null;
+      const rebuilt=initializeAllStarLive(G);
+      if(!risingStarsTeamsValid(G,rebuilt.teams))return{ok:false,reason:"Rising Stars requires 16 genuine first- or second-year NBA players. The event was stopped rather than simulating an invalid roster."};
+      return advanceAllStarEvent(G);
+    }
     game=simulateAllStarGame(G,"RISING_A","RISING_B","RISING_STARS");
     live.results.rising={gameId:game.id,winner:game.winnerClubId.replace("AS_","")};
     live.reviewStage=1;
@@ -14379,7 +14411,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.5 League · Honours Fix & Records Performance",ENGINE_VERSION="E2.26-PROD54";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix",ENGINE_VERSION="E2.26-PROD55";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
