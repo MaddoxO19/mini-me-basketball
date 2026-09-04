@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.2 Home · NBA Cup Knockout Fixtures</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2521,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.2 Home · NBA Cup Knockout Fixtures</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5181,17 +5181,60 @@ const FIBA_REGION_RULES = {
   Africa: { code:"AF", firstRoundWindows:3, secondRoundWindows:2, secondRoundGroupLabels:["E","F"], qualifiers:5 },
 };
 const WORLD_CUP_CYCLE_SEASONS = 4;
-const FIBA_QUALIFICATION_FORMAT_VERSION = "WCQ2-CARRYOVER10";
+const FIBA_QUALIFICATION_FORMAT_VERSION = "WCQ3-DYNAMICDRAW-CARRYOVER10";
+const FIBA_QUALIFICATION_DRAW_VERSION = "WCQ-DRAW2";
+
+// v0.1.49.77.5.5.5.3 — Dynamic World Cup qualification draw.
+// The launch cycle preserves the authored 2027 groups. Every later cycle is
+// redrawn inside each FIBA region using four deterministic strength pots, so
+// long careers do not repeat the same opponents while groups remain balanced.
+function qualificationDrawHash(seed){
+  let h=2166136261;
+  for(const ch of String(seed)){h^=ch.charCodeAt(0);h=Math.imul(h,16777619);}
+  return h>>>0;
+}
+function qualificationSeedScore(team,cycle){
+  // Tier is the primary seeding signal. Weight only provides a small stable
+  // ordering cue inside a tier; the cycle hash rotates otherwise equal nations.
+  const tier=Math.max(1,+team?.tier||3);
+  const weight=Math.max(0,+team?.weight||0);
+  const jitter=(qualificationDrawHash(`${cycle}|${team?.region}|${team?.code}|seed`)%10000)/10000;
+  return (5-tier)*100 + Math.min(20,weight)*0.35 + jitter;
+}
+function qualificationFirstRoundDraw(cycle=1){
+  if((+cycle||1)<=1) return FIBA_FIRST_ROUND_GROUPS.map(g=>({...g,teamCodes:[...g.teamCodes],drawVersion:"AUTHORED-2027"}));
+  const drawn=[];
+  for(const region of ["Europe","Americas","AsiaOceania","Africa"]){
+    const templates=FIBA_FIRST_ROUND_GROUPS.filter(g=>g.region===region);
+    const groupCount=templates.length;
+    const groupSize=templates[0]?.teamCodes?.length||4;
+    const teams=NATIONAL_TEAMS.filter(n=>n.region===region).slice()
+      .sort((a,b)=>qualificationSeedScore(b,cycle)-qualificationSeedScore(a,cycle));
+    const groups=templates.map(t=>({...t,teamCodes:[],drawVersion:FIBA_QUALIFICATION_DRAW_VERSION,drawCycle:cycle}));
+    for(let pot=0;pot<groupSize;pot++){
+      const slice=teams.slice(pot*groupCount,(pot+1)*groupCount);
+      slice.sort((a,b)=>qualificationDrawHash(`${cycle}|${region}|pot${pot}|${a.code}`)-qualificationDrawHash(`${cycle}|${region}|pot${pot}|${b.code}`));
+      // Rotate each pot differently by cycle so neighbouring teams do not
+      // repeatedly fall into the same group across four-year cycles.
+      const offset=(cycle+pot*2)%Math.max(1,groupCount);
+      for(let i=0;i<slice.length;i++) groups[(i+offset)%groupCount].teamCodes.push(slice[i].code);
+    }
+    drawn.push(...groups);
+  }
+  return drawn;
+}
 
 function freshQualificationState(cycle=1, activeFromSeason=1) {
+  const firstRoundGroups=qualificationFirstRoundDraw(cycle);
   return {
     cycle, activeFromSeason, window:0, round:"FIRST_ROUND",
-    groups:FIBA_FIRST_ROUND_GROUPS.map(g=>({...g,teamCodes:[...g.teamCodes]})),
-    firstRoundGroups:FIBA_FIRST_ROUND_GROUPS.map(g=>({...g,teamCodes:[...g.teamCodes]})),
+    groups:firstRoundGroups.map(g=>({...g,teamCodes:[...g.teamCodes]})),
+    firstRoundGroups:firstRoundGroups.map(g=>({...g,teamCodes:[...g.teamCodes]})),
     secondRoundGroups:[],
     standings:Object.fromEntries(NATIONAL_TEAMS.map(n=>[n.code,{code:n.code,region:n.region,gp:0,w:0,l:0,pf:0,pa:0,points:0}])),
     advancedTeamCodes:[], eliminatedTeamCodes:[], qualifiedTeamCodes:[], hostCode:"QAT",
     qualificationFormatVersion:FIBA_QUALIFICATION_FORMAT_VERSION,
+    qualificationDrawVersion:(+cycle||1)<=1?"AUTHORED-2027":FIBA_QUALIFICATION_DRAW_VERSION,
     complete:false, worldCupPlayed:false, windows:[],
   };
 }
@@ -14335,7 +14378,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.2 Home · NBA Cup Knockout Fixtures",ENGINE_VERSION="E2.26-PROD51";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw",ENGINE_VERSION="E2.26-PROD52";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
