@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.4 League · Honours Level 1</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2521,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.4 League · Honours Level 1</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -5185,6 +5185,7 @@ const FIBA_QUALIFICATION_FORMAT_VERSION = "WCQ3-DYNAMICDRAW-CARRYOVER10";
 const FIBA_QUALIFICATION_DRAW_VERSION = "WCQ-DRAW2";
 
 // v0.1.49.77.5.5.5.3 — Dynamic World Cup qualification draw.
+// v0.1.49.77.5.5.5.4 — League Honours promoted to its own Level 1 tab beside History.
 // The launch cycle preserves the authored 2027 groups. Every later cycle is
 // redrawn inside each FIBA region using four deterministic strength pots, so
 // long careers do not repeat the same opponents while groups remain balanced.
@@ -14378,7 +14379,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.3 Intl · Dynamic Qualification Draw",ENGINE_VERSION="E2.26-PROD52";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.4 League · Honours Level 1",ENGINE_VERSION="E2.26-PROD53";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -19650,7 +19651,7 @@ function leagueInjuries(){
     <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.stage}</small></div><div class="leagueInjuryReturn"><b>${basketballDateLabel(x.returnSerial)}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
 }
 function leagueLegacy(){
-  const allowed=new Set(["leaguewinners","cupwinners","awards","honours"]);
+  const allowed=new Set(["leaguewinners","cupwinners","awards"]);
   if(!allowed.has(ui.leagueHistoryTab))ui.leagueHistoryTab="leaguewinners";
 
   const history=(G.leagueHistory||[]).slice().sort((a,b)=>(+b.season||0)-(+a.season||0));
@@ -19722,23 +19723,8 @@ function leagueLegacy(){
     <button data-leaguehistory="leaguewinners" class="${ui.leagueHistoryTab==="leaguewinners"?"active":""}">League Winners</button>
     <button data-leaguehistory="cupwinners" class="${ui.leagueHistoryTab==="cupwinners"?"active":""}">NBA Cup Winners</button>
     <button data-leaguehistory="awards" class="${ui.leagueHistoryTab==="awards"?"active":""}">Award Winners</button>
-    <button data-leaguehistory="honours" class="${ui.leagueHistoryTab==="honours"?"active":""}">Honours</button>
   </div>`;
 
-  if(ui.leagueHistoryTab==="honours"){
-    // Deliberately reuses Club Honours' exact CSS classes (clubHonourHero,
-    // clubLegendList, clubLegendRow, etc.) rather than new league-specific
-    // ones, so this renders visually identical to the Club Honours tab —
-    // same spacing, same card shapes, same typography, by construction
-    // rather than by trying to separately keep two stylesheets in sync.
-    const notable=leagueNotablePlayers();
-    const historicalRows=leagueHistoricalNotableRows();
-    const activeRows=notable.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
-    const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
-    const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
-    const leagueIconCount=notable.filter(x=>x.legacyTier>=2).length;
-    return `${tabs}<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
-  }
 
   if(ui.leagueHistoryTab==="cupwinners"){
     return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>NBA Cup Winners</h3><p>Completed NBA Cup champions across your career.</p></div>
@@ -19759,10 +19745,27 @@ function leagueLegacy(){
   return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>League Winners</h3><p>NBA champions from each completed season.</p></div>
     <div class="historyArchiveList">${leagueWinnerRows.length?leagueWinnerRows.map(x=>`<div class="historyArchiveRow"><div class="season">${seasonLabel(x.season)}</div><div><b>${x.champName}</b><small>NBA Champion${x.runnerName?` · defeated ${x.runnerName}`:""}${x.finals?` · ${x.finals}`:""}</small></div></div>`).join(""):`<div class="card empty">League champions will appear after completed seasons.</div>`}</div>`;
 }
+
+function leagueHonours(){
+
+  // Deliberately reuses Club Honours' exact CSS classes (clubHonourHero,
+  // clubLegendList, clubLegendRow, etc.) rather than new league-specific
+  // ones, so this renders visually identical to the Club Honours tab —
+  // same spacing, same card shapes, same typography, by construction
+  // rather than by trying to separately keep two stylesheets in sync.
+  const notable=leagueNotablePlayers();
+  const historicalRows=leagueHistoricalNotableRows();
+  const activeRows=notable.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
+  const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
+  const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
+  const leagueIconCount=notable.filter(x=>x.legacyTier>=2).length;
+    return `<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
+    
+}
 function league(){
-  const tabs=[["standings","Standings"],["cup","NBA Cup"],["leaders","Records"],["injuries","Injuries"],["awards","Awards"],["post","Postseason"],["legacy","History"]];
-  let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="leaders"?leagueRecordsPage():ui.leagueTab==="injuries"?leagueInjuries():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():postseasonPage();
-  return `<div class="leaguePageHead"><h2>League</h2><p>Standings, competitions, records, injuries and awards</p></div><div class="tabs compactTabRow globalLevel1Tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
+  const tabs=[["standings","Standings"],["cup","NBA Cup"],["leaders","Records"],["injuries","Injuries"],["awards","Awards"],["post","Postseason"],["legacy","History"],["honours","Honours"]];
+  let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="leaders"?leagueRecordsPage():ui.leagueTab==="injuries"?leagueInjuries():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():ui.leagueTab==="honours"?leagueHonours():postseasonPage();
+  return `<div class="leaguePageHead"><h2>League</h2><p>Standings, competitions, records, history and honours</p></div><div class="tabs compactTabRow globalLevel1Tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 function nationalRecentForm(team,limit=5){
   return (team.games||[]).slice(-limit).reverse().map(g=>g.winner===team.code?"W":"L");
