@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.12 Stability · Club H2H Navigation Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2532,10 +2532,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    The prior undefined playerIndex raised a ReferenceError during render,
    leaving League selected on Records and causing subsequent League re-entry
    to fail because every render retriggered the same exception. */
+/* v0.1.49.77.5.5.5.12 — Club H2H navigation integrity
+   H2H now resolves its career index once per render instead of repeatedly
+   rebuilding/checking it for every opponent. Serialized or stale cache objects
+   are rejected unless the cached index is a real Map. Club current-record
+   scanning also uses its prebuilt player lookup rather than repeated full-pool
+   searches. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.12 Stability · Club H2H Navigation Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -14485,7 +14491,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix",ENGINE_VERSION="E2.26-PROD60";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.12 Stability · Club H2H Navigation Fix",ENGINE_VERSION="E2.26-PROD61";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18748,7 +18754,7 @@ function clubCurrentSeasonRecordSnapshot(G,club){
     const opp=clubById(G,side.oppId),teamMeta={clubId:club.id,clubName:club.name,opponentClubId:side.oppId,opponentName:opp?.name||side.oppId,gameId:game.id,round:game.round||null};
     save(tg,"teamScore",side.score,teamMeta);if(side.score>side.oppScore)save(tg,"winMargin",side.score-side.oppScore,teamMeta);
     for(const line of side.lines){
-      const pl=allPlayers(G).find(x=>x.id===line.playerId),meta={...teamMeta,playerId:line.playerId,playerName:line.name||pl?.name||"Player"};
+      const pl=playerIndex.get(String(line.playerId)),meta={...teamMeta,playerId:line.playerId,playerName:line.name||pl?.name||"Player"};
       for(const [key,field] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"]])save(sg,key,+line[field]||0,meta);
       const fga=+line.fga||0,fgm=+line.fgm||0;if(fga>=10)save(sg,"fgPct",100*fgm/fga,{...meta,attempts:fga,makes:fgm});
     }
@@ -18892,7 +18898,8 @@ function h2hCacheSignature(G){
 }
 function h2hCareerIndex(G){
   const sig=h2hCacheSignature(G);
-  if(G?._h2hCareerIndexCache?.signature===sig)return G._h2hCareerIndexCache.index;
+  const cached=G?._h2hCareerIndexCache;
+  if(cached?.signature===sig&&cached.index instanceof Map)return cached.index;
   const index=new Map(),blank=()=>({gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}});
   const add=(clubId,opponentId,pf,pa,comp)=>{
     const key=`${clubId}|${opponentId}`,r=index.get(key)||blank();
@@ -18913,7 +18920,8 @@ function h2hRecordBetween(G,clubId,opponentId){
   return r||{gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}};
 }
 function h2hRecordsHtml(G,club){
-  const opponents=(G.clubs||[]).filter(x=>x.id!==club.id).map(opp=>({opp,rec:h2hRecordBetween(G,club.id,opp.id)})).sort((a,b)=>a.opp.name.localeCompare(b.opp.name));
+  const index=h2hCareerIndex(G),blank=()=>({gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}});
+  const opponents=(G.clubs||[]).filter(x=>x.id!==club.id).map(opp=>({opp,rec:index.get(`${club.id}|${opp.id}`)||blank()})).sort((a,b)=>a.opp.name.localeCompare(b.opp.name));
   const selected=ui.h2hOpponentId&&opponents.find(x=>String(x.opp.id)===String(ui.h2hOpponentId));
   if(selected){
     const {opp,rec}=selected,comps=["Regular Season","NBA Cup","Play-In","Playoffs"];
@@ -18931,6 +18939,7 @@ function fixtureH2HHtml(f){
 
 function clubHub(){
   const club=me();if(!club)return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="card empty">No user club is active.</div>`;
+  if(ui.clubHistoryMode==="h2h"&&ui.h2hOpponentId&&!(G.clubs||[]).some(x=>String(x.id)===String(ui.h2hOpponentId)))ui.h2hOpponentId=null;
   const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0,diff:0},confRows=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff),rank=confRows.findIndex(x=>x.clubId===club.id)+1;
   const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr),payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0),archive=clubSeasonArchive(club),honours=clubHonourTotals(club);
   const scoring=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"pts")-+perGame(a.seasonStats,"pts"))[0]||null;
