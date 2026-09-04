@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2527,10 +2527,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .seasonTransitionStatus{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:11px}.seasonTransitionStatus b{font-size:11px}.seasonTransitionStatus span{font-size:10px;color:var(--accent2);font-weight:900}
 .seasonTransitionTasks{margin-top:17px;border-top:1px solid var(--line);padding-top:10px}.seasonTransitionTask{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:9px;color:var(--muted)}.seasonTransitionTask.active{color:var(--text)}.seasonTransitionTask.done{color:#88c79d}.seasonTransitionTask strong{font-weight:900;color:inherit}
 @media(max-width:430px){.seasonTransitionCard{padding:20px 17px}.seasonTransitionCard h2{font-size:22px}}
+/* v0.1.49.77.5.5.5.11 — League Records navigation integrity
+   Restores the missing per-snapshot player lookup used by League > Records.
+   The prior undefined playerIndex raised a ReferenceError during render,
+   leaving League selected on Records and causing subsequent League re-entry
+   to fail because every render retriggered the same exception. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -14480,7 +14485,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute",ENGINE_VERSION="E2.26-PROD59";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.11 Stability · League Records Navigation Fix",ENGINE_VERSION="E2.26-PROD60";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18803,6 +18808,7 @@ function leagueCurrentSeasonRecordSnapshot(G){
   if(G._leagueRecordSnapshotCache?.signature===sig&&G._leagueRecordSnapshotCache?.data){
     return G._leagueRecordSnapshotCache.data;
   }
+  const playerIndex=new Map(allPlayers(G).map(p=>[String(p.id),p]));
   const sg={},tg={},seen=new Set(),games=[...(G.regularSeasonLive?.games||[]),...(G.regularSeason?.games||[])];
   const save=(bucket,key,value,meta)=>{if(value==null||!isFinite(+value))return;if(!bucket[key]||+value>+bucket[key].value)bucket[key]={key,value:+value,season:G.season,...meta}};
   for(const game of games){
