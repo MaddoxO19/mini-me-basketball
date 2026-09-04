@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2518,11 +2518,21 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlTopPlayersStacked .intlTopPlayerStats b{font-size:11px!important}
 .intlTopPlayersStacked .intlTopPlayerRank{font-size:9px!important;margin-top:7px!important;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.3!important}
 @media(max-width:430px){.squadOverviewMetrics{grid-template-columns:repeat(2,minmax(0,1fr))}.intlTopPlayers.intlTopPlayersStacked{grid-template-columns:1fr!important}}
+
+/* v0.1.49.77.5.5.5.10 — real season-transition preparation window */
+.seasonTransitionWrap{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:calc(28px + env(safe-area-inset-top)) 22px calc(28px + env(safe-area-inset-bottom));background:linear-gradient(180deg,#090c11,#0d1219 55%,#090c11)}
+.seasonTransitionCard{width:min(100%,430px);border:1px solid #66502c;background:linear-gradient(145deg,rgba(241,168,77,.07),#121720);border-radius:20px;padding:22px 20px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.seasonTransitionCard .eyebrow{margin-bottom:7px}.seasonTransitionCard h2{margin:0;font-size:25px;line-height:1.1}.seasonTransitionCard p{margin:8px 0 18px;color:var(--muted);font-size:11px;line-height:1.5}
+.seasonTransitionProgress{height:7px;background:#242d38;border-radius:999px;overflow:hidden;border:1px solid #303b47}.seasonTransitionProgress>i{display:block;width:4%;height:100%;background:var(--accent);border-radius:999px;transition:width .22s ease}
+.seasonTransitionStatus{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:11px}.seasonTransitionStatus b{font-size:11px}.seasonTransitionStatus span{font-size:10px;color:var(--accent2);font-weight:900}
+.seasonTransitionTasks{margin-top:17px;border-top:1px solid var(--line);padding-top:10px}.seasonTransitionTask{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:9px;color:var(--muted)}.seasonTransitionTask.active{color:var(--text)}.seasonTransitionTask.done{color:#88c79d}.seasonTransitionTask strong{font-weight:900;color:inherit}
+@media(max-width:430px){.seasonTransitionCard{padding:20px 17px}.seasonTransitionCard h2{font-size:22px}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
+<section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
 <div id="s1" class="card"><h3>Who are you?</h3><div class="smallcopy">Your GM name is carried through the club dashboard, career history and future international appointments.</div><label>GM NAME</label><input id="gmName" type="text" maxlength="28" value="" placeholder="Enter GM name"><button id="next1" class="btn primary" style="margin-top:14px">Choose Team</button></div>
@@ -8831,20 +8841,29 @@ function mergeSeasonTopFiveDistinct(stored,current){
   }
   return [...map.values()].sort((a,b)=>(+b.value||0)-(+a.value||0)).slice(0,5);
 }
+function historicalRecordSnapshotSignature(G){
+  if(!G)return"";
+  const liveGames=(G.regularSeasonLive?.games||G.regularSeason?.games||[]).length;
+  const postGames=(G.playoffsLive?.games||G.playoffs?.games||[]).length+(G.playInLive?.games||G.playIn?.games||[]).length;
+  const players=allPlayers(G),retired=retiredPlayerPool(G);
+  let gp=0;for(const p of players)gp+=+(p.seasonStats?.gp||0);
+  return [G.season||0,G.phase||"",(G.leagueHistory||[]).length,liveGames,postGames,players.length,retired.length,gp].join("|");
+}
 function historicalRecordSnapshot(G){
-  const hr=ensureHistoricalRecords(G),players=[...allPlayers(G),...retiredPlayerPool(G)];
+  const sig=historicalRecordSnapshotSignature(G);
+  if(G?._historicalRecordSnapshotCache?.signature===sig)return G._historicalRecordSnapshotCache.data;
+  const hr=ensureHistoricalRecords(G),players=[...allPlayers(G),...retiredPlayerPool(G)],playerMap=new Map(players.map(p=>[String(p.id),p]));
   const career={};for(const [label,key] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"],["games","gp"]]){
-    const active=players.map(p=>({playerId:p.id,sourcePlayerName:p.sourceTemplateName||null,playerName:p.name,clubId:clubForPlayer(G,p)?.id||null,clubName:clubForPlayer(G,p)?.name||"—",value:currentCareerTotal(p,key),activePlayerId:p.id,historical:false}));
+    const active=players.map(p=>{const club=clubForPlayer(G,p);return{playerId:p.id,sourcePlayerName:p.sourceTemplateName||null,playerName:p.name,clubId:club?.id||null,clubName:club?.name||"—",value:currentCareerTotal(p,key),activePlayerId:p.id,historical:false}});
     career[label]=mergeCareerTopFive(HISTORICAL_LEGACY_BASELINE.career?.[label]||[],active);
   }
   const seasonRates={};for(const [label,key] of [["ppg","pts"],["rpg","reb"],["apg","ast"],["spg","stl"],["bpg","blk"]]){
-    const activeSeasons=allSeasonRateEntries(G,key,20).map(r=>{
-      const p=players.find(x=>String(x.id)===String(r.playerId));
-      return {...r,sourcePlayerName:p?.sourceTemplateName||null,historical:false};
-    });
+    const activeSeasons=allSeasonRateEntries(G,key,20).map(r=>({...r,sourcePlayerName:playerMap.get(String(r.playerId))?.sourceTemplateName||null,historical:false}));
     seasonRates[label]=mergeSeasonTopFiveDistinct(HISTORICAL_LEGACY_BASELINE.seasonRates?.[label]||[],activeSeasons);
   }
-  return{...hr,legacy:HISTORICAL_LEGACY_BASELINE,career,seasonRates};
+  const data={...hr,legacy:HISTORICAL_LEGACY_BASELINE,career,seasonRates};
+  if(G)G._historicalRecordSnapshotCache={signature:sig,data};
+  return data;
 }
 function clubHistoricalSnapshot(G,clubId){
   const bucket=clubHistoricalBucket(G,clubId),players=[...allPlayers(G),...retiredPlayerPool(G)],career={};
@@ -9646,17 +9665,27 @@ function simulateNationalGame(G, teamA, teamB, windowId, groupId=null, competiti
   const ra=teamA.rosterPlayerIds.map(id=>lookup.get(id)).filter(Boolean);
   const rb=teamB.rosterPlayerIds.map(id=>lookup.get(id)).filter(Boolean);
 
-  // OVR-versus-OVR is the primary competitive signal.
+  // v0.1.49.77.5.5.5.8 — international competitive-gap calibration.
+  // International basketball has a much wider quality distribution than the NBA.
+  // Preserve close elite-v-elite games, but progressively amplify genuine roster
+  // mismatches so minnows cannot routinely score at elite-club efficiency.
   const qualityA=nationalRosterQuality(ra),qualityB=nationalRosterQuality(rb);
-  const rosterEdge=Math.max(-0.030,Math.min(0.030,(qualityA-qualityB)*0.00225));
+  const qualityGap=qualityA-qualityB;
+  const absGap=Math.abs(qualityGap);
+  const gapSign=qualityGap===0?0:(qualityGap>0?1:-1);
+  const baseRosterEdge=qualityGap*0.00255;
+  const disparityEdge=gapSign*Math.max(0,absGap-5)*0.00215;
+  const rosterEdge=Math.max(-0.078,Math.min(0.078,baseRosterEdge+disparityEdge));
 
-  // Program pedigree/ranking is a small contextual tiebreaker only.
-  const programEdge=Math.max(-0.0045,Math.min(0.0045,nationalProgramContext(teamA)-nationalProgramContext(teamB)));
+  // Program pedigree/ranking remains secondary. It can separate otherwise similar
+  // rosters, but cannot manufacture strength that is absent from the selected squad.
+  const programEdge=Math.max(-0.006,Math.min(0.006,nationalProgramContext(teamA)-nationalProgramContext(teamB)));
 
   // Qualification fixtures give the listed home side a very small contextual
-  // advantage. World Cup games are neutral.
-  const homeEdge=competitionTag==="world_cup"?0:0.0025;
-  const nationalStrengthEdge=Math.max(-0.034,Math.min(0.034,rosterEdge+programEdge+homeEdge));
+  // advantage. World Cup and Olympic games are neutral-site competitions.
+  const neutralMajor=competitionTag==="world_cup"||competitionTag==="olympics";
+  const homeEdge=neutralMajor?0:0.0025;
+  const nationalStrengthEdge=Math.max(-0.082,Math.min(0.082,rosterEdge+programEdge+homeEdge));
 
   // Keep team chemistry in a narrow band. Country tier must not create a hidden
   // 20-30 point chemistry advantage that overwhelms the selected roster.
@@ -9670,7 +9699,7 @@ function simulateNationalGame(G, teamA, teamB, windowId, groupId=null, competiti
 
   const aWon=sim.winnerClubId===fakeA.id; const winner=aWon?teamA:teamB;
   winner.record.w++; (aWon?teamB:teamA).record.l++;
-  const result={id:nextId("intl"),windowId,groupId,teamA:teamA.code,teamB:teamB.code,scoreA:sim.homeScore,scoreB:sim.awayScore,winner:winner.code,quarters:sim.quarters,boxScore:{teamA:sim.boxScore.home,teamB:sim.boxScore.away},strengthAudit:{qualityA:+qualityA.toFixed(2),qualityB:+qualityB.toFixed(2),rosterEdge:+rosterEdge.toFixed(4),programEdge:+programEdge.toFixed(4),homeEdge:+homeEdge.toFixed(4),totalEdge:+nationalStrengthEdge.toFixed(4)}};
+  const result={id:nextId("intl"),windowId,groupId,teamA:teamA.code,teamB:teamB.code,scoreA:sim.homeScore,scoreB:sim.awayScore,winner:winner.code,quarters:sim.quarters,boxScore:{teamA:sim.boxScore.home,teamB:sim.boxScore.away},strengthAudit:{qualityA:+qualityA.toFixed(2),qualityB:+qualityB.toFixed(2),qualityGap:+qualityGap.toFixed(2),rosterEdge:+rosterEdge.toFixed(4),programEdge:+programEdge.toFixed(4),homeEdge:+homeEdge.toFixed(4),totalEdge:+nationalStrengthEdge.toFixed(4),calibration:"INTL-GAP-2"}};
   const rankingCalc=applyFibaRankingResult(G,teamA,teamB,result,{competitionTag,stage:groupId,homeTeamCode:competitionTag==="world_cup"?null:teamA.code});
   result.ranking={engine:FIBA_RANKING_ENGINE_VERSION,teamAGain:+(aWon?rankingCalc.winnerGain:rankingCalc.loserGain).toFixed(2),teamBGain:+(aWon?rankingCalc.loserGain:rankingCalc.winnerGain).toFixed(2)};
   for (const line of result.boxScore.teamA) {
@@ -14450,11 +14479,46 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management",ENGINE_VERSION="E2.26-PROD56";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
+const BUILD_ID="v0.1.49.77.5.5.5.10 Stability · Season Transition Precompute",ENGINE_VERSION="E2.26-PROD59";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
+function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
+function transitionYield(){return new Promise(resolve=>setTimeout(resolve,0))}
+function setSeasonTransitionUi(index,total,label,taskRows){
+  const pct=Math.max(0,Math.min(100,Math.round((index/Math.max(1,total))*100)));
+  const bar=$("#seasonTransitionBar"),status=$("#seasonTransitionStatus"),percent=$("#seasonTransitionPercent"),rows=$("#seasonTransitionTasks");
+  if(bar)bar.style.width=`${Math.max(4,pct)}%`;if(status)status.textContent=label||"Preparing season";if(percent)percent.textContent=`${pct}%`;
+  if(rows)rows.innerHTML=taskRows.map((x,i)=>`<div class="seasonTransitionTask ${i<index?"done":i===index?"active":""}"><span>${x}</span><strong>${i<index?"Ready":i===index?"Working":"Queued"}</strong></div>`).join("");
+}
+async function precomputeSeasonTransitionData(){
+  const labels=["Finalising season archive","Indexing head-to-head history","Preparing league records","Preparing league honours","Preparing franchise records","Checking roster ecosystem"];
+  const tasks=[
+    ()=>{ if(typeof historicalRecordSnapshot==="function")historicalRecordSnapshot(G); },
+    ()=>{ if(typeof h2hCareerIndex==="function")h2hCareerIndex(G); },
+    ()=>{ if(typeof leagueCurrentSeasonRecordSnapshot==="function")leagueCurrentSeasonRecordSnapshot(G); },
+    ()=>{ if(typeof leagueHonours==="function")leagueHonours(); },
+    ()=>{ if(typeof clubHistoricalSnapshot==="function"&&G.userClubGM?.clubId)clubHistoricalSnapshot(G,G.userClubGM.clubId); },
+    ()=>{ if(typeof ensureAITwoWayRosters==="function")ensureAITwoWayRosters(G); if(typeof ensureDraftPickHorizon==="function")ensureDraftPickHorizon(G); }
+  ];
+  for(let i=0;i<tasks.length;i++){
+    setSeasonTransitionUi(i,tasks.length,labels[i],labels);await nextPaint();
+    try{tasks[i]();}catch(err){console.warn("Season transition preparation task failed",labels[i],err)}
+    await transitionYield();
+  }
+  setSeasonTransitionUi(tasks.length,tasks.length,"Season ready",labels);await nextPaint();
+}
+async function runSeasonTransitionWindow(){
+  const started=performance.now();
+  const title=$("#seasonTransitionTitle");if(title)title.textContent=`Preparing ${basketballSeasonLabel(G.season)}`;
+  setSeasonTransitionUi(0,6,"Initialising",["Finalising season archive","Indexing head-to-head history","Preparing league records","Preparing league honours","Preparing franchise records","Checking roster ecosystem"]);
+  await nextPaint();
+  await precomputeSeasonTransitionData();
+  const minimumMs=3000,elapsed=performance.now()-started;
+  if(elapsed<minimumMs)await new Promise(resolve=>setTimeout(resolve,minimumMs-elapsed));
+}
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
 function c(id){return G?.clubs?.find(x=>x.id===id)}function me(){return c(G?.userClubGM?.clubId)}function nat(id){return G?.nationalTeams?.find(x=>x.code===id)}
 function hashStr(s){let h=0;for(let i=0;i<String(s).length;i++)h=(h*31+String(s).charCodeAt(i))|0;return Math.abs(h)}
@@ -17421,14 +17485,23 @@ function seasonSummaryHtml(){
     <div class="seasonStartAction"><button id="startNewSeason" class="primaryProgress">Start New Season</button></div></div>`;
 }
 
-function startNewSeason(){
+async function startNewSeason(){
   if(G.phase!=="CHAMPION"){toast("Season is not complete");return}
-  ensureSeasonSummary();
-  recordGMCareerSeason(G);
-  snapshotLeagueSeason(G);
-  advance(G);
-  ui.page="home";ui.leagueTab="standings";ui.postseasonStage="playin";ui.resultGameId=null;ui.postUpdate=null;
-  save();render();
+  const btn=$("#startNewSeason");if(btn){btn.disabled=true;btn.textContent="Preparing Next Season…"}
+  try{
+    ensureSeasonSummary();
+    recordGMCareerSeason(G);
+    snapshotLeagueSeason(G);
+    advance(G);
+    ui.page="home";ui.leagueTab="standings";ui.postseasonStage="playin";ui.resultGameId=null;ui.postUpdate=null;
+    show("seasonTransition");
+    await runSeasonTransitionWindow();
+    await Promise.resolve(save());
+    show("game");render();
+  }catch(err){
+    console.error("Season transition error",err);
+    show("game");ui.page="home";render();toast(err?.message||"Unable to prepare the new season");
+  }
 }
 function advancePostseasonObserver(){
   if(G.phase==="PLAYOFFS"){repairPlayoffSaveState();save()}
@@ -18806,17 +18879,32 @@ function h2hCareerGames(G){
   }
   return games;
 }
-function h2hRecordBetween(G,clubId,opponentId){
-  const rows=h2hCareerGames(G).filter(g=>(g.homeClubId===clubId&&g.awayClubId===opponentId)||(g.awayClubId===clubId&&g.homeClubId===opponentId));
-  const result={gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}};
-  for(const g of rows){
-    const home=g.homeClubId===clubId,pf=home?+g.homeScore:+g.awayScore,pa=home?+g.awayScore:+g.homeScore,comp=g.competition||h2hGameCompetition(g);
-    result.gp++;result.pf+=pf;result.pa+=pa;if(pf>pa)result.w++;else result.l++;
-    const x=result.byCompetition[comp]||(result.byCompetition[comp]={gp:0,w:0,l:0});
-    x.gp++;if(pf>pa)x.w++;else x.l++;
+function h2hCacheSignature(G){
+  const current=currentCompetitiveClubGames(G).length;
+  let historical=0;for(const h of G.leagueHistory||[])historical+=(h.h2hGames||[]).length;
+  return [G.season||0,(G.leagueHistory||[]).length,historical,current].join("|");
+}
+function h2hCareerIndex(G){
+  const sig=h2hCacheSignature(G);
+  if(G?._h2hCareerIndexCache?.signature===sig)return G._h2hCareerIndexCache.index;
+  const index=new Map(),blank=()=>({gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}});
+  const add=(clubId,opponentId,pf,pa,comp)=>{
+    const key=`${clubId}|${opponentId}`,r=index.get(key)||blank();
+    r.gp++;r.pf+=pf;r.pa+=pa;if(pf>pa)r.w++;else r.l++;
+    const x=r.byCompetition[comp]||(r.byCompetition[comp]={gp:0,w:0,l:0});x.gp++;if(pf>pa)x.w++;else x.l++;
+    index.set(key,r);
+  };
+  for(const g of h2hCareerGames(G)){
+    const comp=g.competition||h2hGameCompetition(g),hs=+g.homeScore,as=+g.awayScore;
+    add(g.homeClubId,g.awayClubId,hs,as,comp);add(g.awayClubId,g.homeClubId,as,hs,comp);
   }
-  result.diff=result.pf-result.pa;result.pct=result.gp?result.w/result.gp:0;
-  return result;
+  for(const r of index.values()){r.diff=r.pf-r.pa;r.pct=r.gp?r.w/r.gp:0;}
+  if(G)G._h2hCareerIndexCache={signature:sig,index};
+  return index;
+}
+function h2hRecordBetween(G,clubId,opponentId){
+  const r=h2hCareerIndex(G).get(`${clubId}|${opponentId}`);
+  return r||{gp:0,w:0,l:0,pf:0,pa:0,diff:0,pct:0,byCompetition:{}};
 }
 function h2hRecordsHtml(G,club){
   const opponents=(G.clubs||[]).filter(x=>x.id!==club.id).map(opp=>({opp,rec:h2hRecordBetween(G,club.id,opp.id)})).sort((a,b)=>a.opp.name.localeCompare(b.opp.name));
@@ -18838,7 +18926,7 @@ function fixtureH2HHtml(f){
 function clubHub(){
   const club=me();if(!club)return `<div class="clubPageTitle"><h2>Club</h2><p>Franchise Hub</p></div><div class="card empty">No user club is active.</div>`;
   const rows=standingsRows(),r=rows.find(x=>x.clubId===club.id)||{w:0,l:0,diff:0},confRows=rows.filter(x=>x.conference===club.conference).sort((a,b)=>b.w-a.w||b.diff-a.diff),rank=confRows.findIndex(x=>x.clubId===club.id)+1;
-  const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr),payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0),archive=clubSeasonArchive(club),honours=clubHonourTotals(club),cr=clubRecordSummary(club);
+  const roster=[...(club.roster||[])].sort((a,b)=>b.ovr-a.ovr),payroll=roster.reduce((s,p)=>s+(+p.salaryM||0),0),archive=clubSeasonArchive(club),honours=clubHonourTotals(club);
   const scoring=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"pts")-+perGame(a.seasonStats,"pts"))[0]||null;
   const playmaker=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"ast")-+perGame(a.seasonStats,"ast"))[0]||null;
   const rebounder=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"reb")-+perGame(a.seasonStats,"reb"))[0]||null;
@@ -18849,6 +18937,7 @@ function clubHub(){
   }else if(ui.clubTab==="history"){
     body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubhistory="franchise" class="${ui.clubHistoryMode==="franchise"?"active":""}">Franchise</button><button data-clubhistory="h2h" class="${ui.clubHistoryMode==="h2h"?"active":""}">Head-to-Head</button></div>${ui.clubHistoryMode==="h2h"?h2hRecordsHtml(G,club):`<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">Franchise Archive</div><h3>Season History</h3><p>Every completed season remains part of the club's permanent career history.</p></div><div class="profileTimeline clubHistoryClean">${archive.length?archive.map(h=>{const extras=[h.cup?"NBA Cup Winner":"",h.best?"Best Record":""].filter(Boolean).join(" · ");return `<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.finish||"Season Complete"}</b>${extras?`<small>${extras}</small>`:""}</div></div>`}).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`}</div>`}`;
   }else if(ui.clubTab==="honours"){
+    const cr=clubRecordSummary(club);
     const legends=clubNotablePlayers(club);
     const historicalRows=clubHistoricalNotableRows(club);
     const activeRows=legends.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
@@ -19819,6 +19908,8 @@ function leagueLegacy(){
 }
 
 function leagueHonours(){
+  const sig=`${historicalRecordSnapshotSignature(G)}|${(G.leagueHistory||[]).length}|${(G.retiredPlayers||[]).length}`;
+  if(G?._leagueHonoursHtmlCache?.signature===sig)return G._leagueHonoursHtmlCache.html;
   const history=(G.leagueHistory||[]).slice();
 
   // Deliberately reuses Club Honours' exact CSS classes (clubHonourHero,
@@ -19832,7 +19923,9 @@ function leagueHonours(){
   const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
   const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
   const leagueIconCount=notable.filter(x=>x.legacyTier>=2).length;
-    return `<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
+    const html=`<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
+    if(G)G._leagueHonoursHtmlCache={signature:sig,html};
+    return html;
     
 }
 function league(){
