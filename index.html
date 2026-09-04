@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2521,7 +2521,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
@@ -10764,6 +10764,7 @@ function ensureRosterCompliance(G, club, isUser=false) {
       upgrades++;
     }
   }
+  if(!isUser)manageAITwoWayRoster(G,club);
   recalcClubCap(club); return club.roster.length>=min && club.roster.length<=max;
 }
 
@@ -10794,6 +10795,43 @@ function assignTwoWayContract(G, clubId, playerId) {
   G.transactions.push({type:'two_way_sign',season:G.season,clubId,playerId});
   if(G.phase==="SUMMER_LEAGUE")syncSummerLeagueRosterForClub(G,clubId);
   return {ok:true,player};
+}
+
+// v0.1.49.77.5.5.5.7 — AI clubs actively manage their three two-way slots.
+// The user-controlled club remains fully manual. Candidates must pass the
+// existing two-way eligibility rules and are drawn only from free agency or
+// the club's own developmental affiliate, preventing duplicate ownership.
+function manageAITwoWayRoster(G, club) {
+  if(!G||!club||club.id===G.userClubGM?.clubId)return 0;
+  club.twoWayRoster=club.twoWayRoster||[];
+  const limit=club.twoWayLimit||3;
+  let signed=0,guard=0;
+  while(club.twoWayRoster.length<limit&&guard++<12){
+    const candidates=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])]
+      .filter(p=>p&&twoWayEligible(p));
+    if(!candidates.length)break;
+    candidates.sort((a,b)=>twoWayDevelopmentScore(b)-twoWayDevelopmentScore(a));
+    let completed=false;
+    for(const p of candidates){
+      const result=assignTwoWayContract(G,club.id,p.id);
+      if(result?.ok){signed++;completed=true;break;}
+    }
+    if(!completed)break;
+  }
+  return signed;
+}
+function ensureAITwoWayRosters(G,{force=false}={}){
+  if(!G)return 0;
+  const season=+G.season||1;
+  // A season marker makes this safe to call from save-load/render preparation,
+  // while force is used at formal roster-compliance checkpoints.
+  if(!force&&G.aiTwoWayManagementSeason===season)return 0;
+  ensureTwoWayDevelopmentPool(G,42);
+  let signed=0;
+  for(const club of (G.clubs||[]))signed+=manageAITwoWayRoster(G,club);
+  G.aiTwoWayManagementSeason=season;
+  if(signed)logEvent(G,`AI roster management filled ${signed} two-way contract slot${signed===1?"":"s"} across the league.`);
+  return signed;
 }
 
 function convertTwoWayToStandard(G, clubId, playerId) {
@@ -11253,6 +11291,7 @@ function runOffseason(G) {
   }
   G.freeAgents=faSurvivors;
   ensureTwoWayDevelopmentPool(G,42);
+  ensureAITwoWayRosters(G,{force:true});
   recordTalentHealthSeason(G,'post-offseason');
   G.rosterCompliancePending=null; G.offseasonSummary=summary;
   logEvent(G, `Offseason contracts processed: ${summary.expired} expired, ${summary.extended} AI extensions, ${summary.retired+summary.freeAgentRetired+(summary.externalRetired||0)} retirements, ${summary.externalMoves||0} external-league moves and ${summary.externalToNba||0} international players entering NBA free agency. Clubs may carry up to 20 until preseason roster compliance.`);
@@ -14411,7 +14450,7 @@ if (typeof module !== "undefined") {
 </script>
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
-const BUILD_ID="v0.1.49.77.5.5.5.6 All-Star · Rising Stars Integrity Fix",ENGINE_VERSION="E2.26-PROD55";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.7 Rosters · AI Two-Way Management",ENGINE_VERSION="E2.26-PROD56";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20294,6 +20333,7 @@ function prepareRenderState(force=false){
   if(!force&&sig===_renderPrepSignature)return;
   ensureTalentLifecycleState(G);
   ensureTwoWayDevelopmentPool(G,42);
+  ensureAITwoWayRosters(G);
   ensureLeagueStatisticalIdentities(G);
   ensureCountryBasedPlayerNames();
   _renderPrepSignature=renderPrepSignature();
