@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.29 Writers' Top 50 Canonical Award Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.30 Embedded Team Crest Integration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -14803,7 +14803,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.29 Writers’ Top 50 Canonical Award Integrity",ENGINE_VERSION="E2.26-PROD78";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.30 Embedded Team Crest Integration",ENGINE_VERSION="E2.26-PROD80";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14963,8 +14963,335 @@ const CLUB_EMBLEM_BY_ID = {
 };
 
 
+const EMBEDDED_TEAM_CRESTS = {
+  ATL: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_ATL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fa5458"/><stop offset="1" stop-color="#d42e32"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_ATL)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#bb1519" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 18 C36 34 30 48 38 60 C44 72 56 72 62 60 C70 48 64 34 50 18 Z" fill="#f6f2e8"/><path d="M50 27 C41 39 37 49 43 58 C47 65 53 65 57 58 C63 49 59 39 50 27 Z" fill="#f6f2e8" opacity="0.55"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">ATL</text>
+  </svg>`,
+  BKN: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_BKN" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1a1a"/><stop offset="1" stop-color="#000000"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_BKN)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#000000" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M30 70 V36 Q30 26 38 26 Q46 26 46 36 V70 Z" fill="#f6f2e8"/><path d="M54 70 V36 Q54 26 62 26 Q70 26 70 36 V70 Z" fill="#f6f2e8"/><path d="M33 66 V38 Q33 30 38 29" fill="none" stroke="#f6f2e8" stroke-width="1.4" opacity="0.5"/><path d="M57 66 V38 Q57 30 62 29" fill="none" stroke="#f6f2e8" stroke-width="1.4" opacity="0.5"/><rect x="18" y="66" width="64" height="7" fill="#f6f2e8"/><rect x="18" y="66" width="64" height="2" fill="#f6f2e8" opacity="0.4"/><path d="M40 40 Q50 52 60 40 M34 52 Q50 62 66 52" fill="none" stroke="#f6f2e8" stroke-width="1.4" opacity="0.55"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">BKN</text>
+  </svg>`,
+  BOS: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_BOS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a944d"/><stop offset="1" stop-color="#006e27"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_BOS)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#00550e" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><rect x="46" y="56" width="8" height="18" fill="#f6f2e8"/><rect x="48" y="56" width="2" height="18" fill="#f6f2e8" opacity="0.4"/><circle cx="50" cy="44" r="17" fill="#f6f2e8"/><circle cx="44" cy="38" r="7" fill="#f6f2e8" opacity="0.5"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">BOS</text>
+  </svg>`,
+  CHA: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_CHA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#372b7a"/><stop offset="1" stop-color="#110554"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_CHA)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#00003b" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M20 64 L26 32 L40 50 L50 26 L60 50 L74 32 L80 64 Z" fill="#f6f2e8"/><rect x="20" y="64" width="60" height="6" fill="#f6f2e8" opacity="0.4"/><circle cx="50" cy="38" r="2.2" fill="#f6f2e8" opacity="0.6"/><circle cx="32" cy="42" r="1.8" fill="#f6f2e8" opacity="0.6"/><circle cx="68" cy="42" r="1.8" fill="#f6f2e8" opacity="0.6"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">CHA</text>
+  </svg>`,
+  CHI: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_CHI" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e82b5b"/><stop offset="1" stop-color="#c20535"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_CHI)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#a9001c" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 54 C36 50 24 54 16 40 M50 54 C64 50 76 54 84 40" fill="none" stroke="#f6f2e8" stroke-width="6" stroke-linecap="round"/><path d="M50 54 C40 52 32 56 26 48 M50 54 C60 52 68 56 74 48" fill="none" stroke="#f6f2e8" stroke-width="3" opacity="0.5" stroke-linecap="round"/><polygon points="50,46 55,54 50,62 45,54" fill="#f6f2e8"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">CHI</text>
+  </svg>`,
+  CLE: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_CLE" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a01a52"/><stop offset="1" stop-color="#7a002c"/></linearGradient></defs>
+    <path d="M50 4 L88 24 L88 78 L50 114 L12 78 L12 24 Z" fill="url(#crest_CLE)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="#610013" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M24 58 H76 L68 68 H32 Z M40 46 H60 L64 58 H36 Z M46 28 H54 V46 H46 Z" fill="#f6f2e8"/><rect x="24" y="58" width="52" height="2.5" fill="#f6f2e8" opacity="0.4"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">CLE</text>
+  </svg>`,
+  DAL: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_DAL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a6da6"/><stop offset="1" stop-color="#004780"/></linearGradient></defs>
+    <path d="M50 4 L88 24 L88 78 L50 114 L12 78 L12 24 Z" fill="url(#crest_DAL)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="#002e67" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><polygon points="50,20 59,44 84,44 63,58 71,82 50,68 29,82 37,58 16,44 41,44" fill="none" stroke="#f6f2e8" stroke-width="5" stroke-linejoin="round"/><polygon points="50,34 55,46 68,46 58,53 62,66 50,58 38,66 42,53 32,46 45,46" fill="#f6f2e8" opacity="0.35"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">DAL</text>
+  </svg>`,
+  DEN: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_DEN" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#283c5a"/><stop offset="1" stop-color="#021634"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_DEN)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#00001b" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M16 68 L32 36 L44 52 L56 24 L70 50 L84 68 Z" fill="#f6f2e8"/><path d="M32 36 L36 42 L28 42 Z M56 24 L60 30 L52 30 Z" fill="#f6f2e8" opacity="0.45"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">DEN</text>
+  </svg>`,
+  DET: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_DET" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e22a48"/><stop offset="1" stop-color="#bc0422"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_DET)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#a30009" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><circle cx="50" cy="50" r="13" fill="none" stroke="#f6f2e8" stroke-width="6"/><circle cx="50" cy="50" r="9" fill="none" stroke="#f6f2e8" stroke-width="1.2" opacity="0.5"/><circle cx="50" cy="50" r="5" fill="#f6f2e8"/><g fill="#f6f2e8"><rect x="45" y="20" width="10" height="12"/><rect x="45" y="68" width="10" height="12"/><rect x="20" y="45" width="12" height="10"/><rect x="68" y="45" width="12" height="10"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">DET</text>
+  </svg>`,
+  GSB: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_GSB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#375ca4"/><stop offset="1" stop-color="#11367e"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_GSB)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#001d65" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M30 72 V34 L36 24 L42 34 V72 Z" fill="#f6f2e8"/><path d="M58 72 V34 L64 24 L70 34 V72 Z" fill="#f6f2e8"/><rect x="16" y="68" width="68" height="6" fill="#f6f2e8"/><path d="M33 68 V36 M61 68 V36" stroke="#f6f2e8" stroke-width="1.2" opacity="0.4"/><path d="M42 38 Q50 50 58 38" fill="none" stroke="#f6f2e8" stroke-width="1.4" opacity="0.5"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">GSB</text>
+  </svg>`,
+  HOU: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_HOU" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e82b5b"/><stop offset="1" stop-color="#c20535"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_HOU)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#a9001c" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><circle cx="50" cy="50" r="8" fill="#f6f2e8"/><circle cx="50" cy="50" r="4" fill="#f6f2e8" opacity="0.6"/><ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#f6f2e8" stroke-width="3.6" transform="rotate(25 50 50)"/><ellipse cx="50" cy="50" rx="30" ry="12" fill="none" stroke="#f6f2e8" stroke-width="3.6" transform="rotate(-25 50 50)"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">HOU</text>
+  </svg>`,
+  IND: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_IND" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a477c"/><stop offset="1" stop-color="#002156"/></linearGradient></defs>
+    <path d="M50 5 C75 5 92 23 92 50 C92 80 74 104 50 114 C26 104 8 80 8 50 C8 23 25 5 50 5 Z" fill="url(#crest_IND)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C72 10 87 26 87 50 C87 76 71 98 50 107 C29 98 13 76 13 50 C13 26 28 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C72 10 87 26 87 50 C87 76 71 98 50 107 C29 98 13 76 13 50 C13 26 28 10 50 10 Z" fill="#00083d" opacity=".18"/>
+    
+    <path d="M50 10 V107 M13 50 H87" fill="none" stroke="#efe1b8" stroke-width="1.25" opacity=".28"/>
+    <path d="M23 24 Q50 43 77 24 M23 78 Q50 60 77 78" fill="none" stroke="#efe1b8" stroke-width="1.25" opacity=".28"/>
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><rect x="28" y="22" width="4" height="54" fill="#f6f2e8"/><rect x="29" y="22" width="1" height="54" fill="#f6f2e8" opacity="0.4"/><g fill="#f6f2e8"><rect x="32" y="24" width="12" height="10"/><rect x="56" y="24" width="12" height="10" opacity="0.7"/><rect x="44" y="34" width="12" height="10" opacity="0.7"/><rect x="32" y="44" width="12" height="10"/><rect x="56" y="44" width="12" height="10" opacity="0.7"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">IND</text>
+  </svg>`,
+  LAC: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_LAC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e22a48"/><stop offset="1" stop-color="#bc0422"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_LAC)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#a30009" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 30 A20 20 0 0 1 70 50 H30 A20 20 0 0 1 50 30 Z" fill="#f6f2e8"/><rect x="22" y="56" width="56" height="6" fill="#f6f2e8"/><path d="M50 24 V30 M26 50 H32 M68 50 H74" stroke="#f6f2e8" stroke-width="1.6" opacity="0.5" stroke-linecap="round"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">LAC</text>
+  </svg>`,
+  LAG: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_LAG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd341"/><stop offset="1" stop-color="#f1ad1b"/></linearGradient></defs>
+    <path d="M50 5 C75 5 92 23 92 50 C92 80 74 104 50 114 C26 104 8 80 8 50 C8 23 25 5 50 5 Z" fill="url(#crest_LAG)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C72 10 87 26 87 50 C87 76 71 98 50 107 C29 98 13 76 13 50 C13 26 28 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C72 10 87 26 87 50 C87 76 71 98 50 107 C29 98 13 76 13 50 C13 26 28 10 50 10 Z" fill="#d89402" opacity=".18"/>
+    
+    <path d="M50 10 V107 M13 50 H87" fill="none" stroke="#efe1b8" stroke-width="1.25" opacity=".28"/>
+    <path d="M23 24 Q50 43 77 24 M23 78 Q50 60 77 78" fill="none" stroke="#efe1b8" stroke-width="1.25" opacity=".28"/>
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><circle cx="50" cy="50" r="12" fill="#f6f2e8"/><circle cx="50" cy="50" r="7" fill="#f6f2e8" opacity="0.5"/><g stroke="#f6f2e8" stroke-width="5" stroke-linecap="round"><path d="M50 26 V16 M50 74 V84 M26 50 H16 M74 50 H84 M33 33 L26 26 M67 33 L74 26 M33 67 L26 74 M67 67 L74 74"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">LAG</text>
+  </svg>`,
+  MEM: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_MEM" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7790c3"/><stop offset="1" stop-color="#516a9d"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_MEM)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#385184" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><circle cx="38" cy="66" r="9" fill="#f6f2e8"/><circle cx="38" cy="66" r="4" fill="#f6f2e8" opacity="0.5"/><rect x="45" y="22" width="4" height="42" fill="#f6f2e8"/><rect x="45.5" y="22" width="1" height="42" fill="#f6f2e8" opacity="0.4"/><path d="M49 22 Q68 28 65 46 Q60 38 49 38 Z" fill="#f6f2e8"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">MEM</text>
+  </svg>`,
+  MIA: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_MIA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b21a48"/><stop offset="1" stop-color="#8c0022"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_MIA)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#730009" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><circle cx="50" cy="38" r="14" fill="#f6f2e8"/><path d="M20 62 Q30 54 40 62 T60 62 T80 62" fill="none" stroke="#f6f2e8" stroke-width="4" stroke-linecap="round"/><path d="M22 72 Q32 66 42 72 T62 72 T82 72" fill="none" stroke="#f6f2e8" stroke-width="3" opacity="0.5" stroke-linecap="round"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">MIA</text>
+  </svg>`,
+  MIL: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_MIL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a6135"/><stop offset="1" stop-color="#003b0f"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_MIL)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#002200" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 70 V40 M50 50 L38 34 M50 44 L36 30 M38 34 L30 28 M36 30 L28 22 M50 50 L62 34 M50 44 L64 30 M62 34 L70 28 M64 30 L72 22" fill="none" stroke="#f6f2e8" stroke-width="4.5" stroke-linecap="round"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">MIL</text>
+  </svg>`,
+  MIN: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_MIN" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#263d5a"/><stop offset="1" stop-color="#001734"/></linearGradient></defs>
+    <path d="M50 4 L88 24 L88 78 L50 114 L12 78 L12 24 Z" fill="url(#crest_MIN)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="#00001b" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><g stroke="#f6f2e8" stroke-width="4.5" stroke-linecap="round"><path d="M50 22 V78 M26 36 L74 64 M26 64 L74 36"/></g><g fill="#f6f2e8"><circle cx="50" cy="22" r="4"/><circle cx="50" cy="78" r="4"/><circle cx="26" cy="36" r="4"/><circle cx="74" cy="64" r="4"/><circle cx="26" cy="64" r="4"/><circle cx="74" cy="36" r="4"/></g><g stroke="#f6f2e8" stroke-width="1.6" opacity="0.5" stroke-linecap="round"><path d="M50 38 L45 34 M50 38 L55 34 M50 62 L45 66 M50 62 L55 66"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">MIN</text>
+  </svg>`,
+  NOP: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_NOP" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#263d5a"/><stop offset="1" stop-color="#001734"/></linearGradient></defs>
+    <path d="M50 3 L91 38 L82 84 L50 115 L18 84 L9 38 Z" fill="url(#crest_NOP)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="#00001b" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M18 42 Q28 26 46 32 Q50 26 54 32 Q72 26 82 42 Q76 58 58 52 Q50 62 42 52 Q24 58 18 42 Z" fill="#f6f2e8"/><circle cx="36" cy="42" r="5.5" fill="#001734"/><circle cx="64" cy="42" r="5.5" fill="#001734"/><path d="M28 34 Q36 28 44 32 M56 32 Q64 28 72 34" fill="none" stroke="#f6f2e8" stroke-width="1.5" opacity="0.6"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">NOP</text>
+  </svg>`,
+  NYE: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_NYE" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a85d0"/><stop offset="1" stop-color="#005faa"/></linearGradient></defs>
+    <path d="M50 3 L91 38 L82 84 L50 115 L18 84 L9 38 Z" fill="url(#crest_NYE)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="#004691" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M36 74 V52 H42 V44 H46 V32 H54 V44 H58 V52 H64 V74 Z M47 24 V32 H53 V24 Z" fill="#f6f2e8"/><rect x="48" y="36" width="4" height="34" fill="#f6f2e8" opacity="0.4"/><g fill="#f6f2e8" opacity="0.5"><circle cx="41" cy="58" r="1"/><circle cx="59" cy="58" r="1"/><circle cx="41" cy="64" r="1"/><circle cx="59" cy="64" r="1"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">NYE</text>
+  </svg>`,
+  OKC: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_OKC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a94db"/><stop offset="1" stop-color="#006eb5"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_OKC)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#00559c" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M58 18 L30 54 H45 L40 82 L72 42 H56 Z" fill="#f6f2e8"/><path d="M55 24 L36 50 H46 L43 70 L64 44 H53 Z" fill="#f6f2e8" opacity="0.4"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">OKC</text>
+  </svg>`,
+  ORL: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_ORL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a91da"/><stop offset="1" stop-color="#006bb4"/></linearGradient></defs>
+    <path d="M50 4 L88 24 L88 78 L50 114 L12 78 L12 24 Z" fill="url(#crest_ORL)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="#00529b" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M20 68 V48 H28 V40 H36 V48 H44 V32 H56 V48 H64 V40 H72 V48 H80 V68 Z" fill="#f6f2e8"/><rect x="20" y="48" width="60" height="2" fill="#f6f2e8" opacity="0.4"/><rect x="48" y="56" width="4" height="6" fill="#f6f2e8" opacity="0.5"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">ORL</text>
+  </svg>`,
+  PHI: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_PHI" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a85d0"/><stop offset="1" stop-color="#005faa"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_PHI)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#004691" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 23 C43 31 39 38 40 45 C40.5 49 44 52 48 53 C45 50 44 46 46 43 C47 49 51 52 50 57 C56 55 60 50 60 44 C60 39 57 35 54 33 C55 37 53 39 51 38 C53 32 54 27 50 23 Z" fill="#d9791f"/><path d="M50 29 C46 34 44 39 45 44 C45.5 47 47.5 49 50 50 C48.5 47 48.5 44 50 42 C51 46 53 48 52.5 52 C56.5 50.5 59 47 59 43.5 C59 40 57 37 55 35.5 C55.5 38 54 39.5 52.5 38.5 C53.5 34 53 31.5 50 29 Z" fill="#ffcf6b"/><path d="M31 59 Q31 54 36 53 L64 53 Q69 54 69 59 L67 69 Q50 74 33 69 Z" fill="#5c6b7a"/><path d="M33 57 Q33 54 37 53.5 L63 53.5 Q67 54 67 57 L65.5 64 Q50 68 34.5 64 Z" fill="#8b99a7"/><rect x="26" y="54" width="6" height="3.5" rx="1.5" fill="#5c6b7a"/><rect x="68" y="54" width="6" height="3.5" rx="1.5" fill="#5c6b7a"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">PHI</text>
+  </svg>`,
+  PHX: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_PHX" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a3a"/><stop offset="1" stop-color="#d95414"/></linearGradient></defs>
+    <path d="M50 3 L91 38 L82 84 L50 115 L18 84 L9 38 Z" fill="url(#crest_PHX)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L85 40 L77 80 L50 107 L23 80 L15 40 Z" fill="#c03b00" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 18 C38 32 33 44 40 56 C45 66 55 66 60 56 C67 44 62 32 50 18 Z" fill="#f6f2e8"/><path d="M50 28 C43 37 40 45 44 53 C47 59 53 59 56 53 C60 45 57 37 50 28 Z" fill="#f6f2e8" opacity="0.55"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">PHX</text>
+  </svg>`,
+  POR: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_POR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fa5458"/><stop offset="1" stop-color="#d42e32"/></linearGradient></defs>
+    <path d="M50 4 L90 16 V58 C90 86 72 104 50 114 C28 104 10 86 10 58 V16 Z" fill="url(#crest_POR)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 8 L86 19 V58 C86 83 70 99.5 50 109 C30 99.5 14 83 14 58 V19 Z" fill="#bb1519" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 18 L64 40 H55 L67 58 H57 L69 78 H31 L43 58 H33 L45 40 H36 Z" fill="#f6f2e8"/><path d="M50 18 L58 32 H50 Z M50 40 L60 52 H50 Z M50 58 L61 70 H50 Z" fill="#f6f2e8" opacity="0.35"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">POR</text>
+  </svg>`,
+  SAC: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_SAC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#74479b"/><stop offset="1" stop-color="#4e2175"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_SAC)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#35085c" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 22 C42 30 42 40 50 46 C58 40 58 30 50 22 Z M50 46 V66 M36 26 C30 34 33 42 41 44 C38 36 40 30 36 26 Z M64 26 C70 34 67 42 59 44 C62 36 60 30 64 26 Z M40 58 H60 L54 68 H46 Z" fill="#f6f2e8"/><path d="M50 28 C46 33 46 38 50 41 C54 38 54 33 50 28 Z" fill="#f6f2e8" opacity="0.4"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">SAC</text>
+  </svg>`,
+  SAS: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_SAS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dee8ee"/><stop offset="1" stop-color="#b8c2c8"/></linearGradient></defs>
+    <path d="M20 9 H80 L91 25 V68 C91 88 73 104 50 114 C27 104 9 88 9 68 V25 Z" fill="url(#crest_SAS)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M23 14 H77 L86 28 V67 C86 84 70 98 50 108 C30 98 14 84 14 67 V28 Z" fill="#9fa9af" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M38 58 Q26 58 26 46 Q26 36 38 36" fill="none" stroke="#161310" stroke-width="5" stroke-linecap="round"/><circle cx="58" cy="47" r="10" fill="none" stroke="#161310" stroke-width="4.5"/><circle cx="58" cy="47" r="5.5" fill="none" stroke="#161310" stroke-width="1.2" opacity="0.5"/><g stroke="#161310" stroke-width="3.6" stroke-linecap="round"><path d="M58 37 V32 M58 62 V57 M69 47 H74 M43 47 H48"/></g></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">SAS</text>
+  </svg>`,
+  TOR: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_TOR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e82b5b"/><stop offset="1" stop-color="#c20535"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_TOR)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#a9001c" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><polygon points="50,20 57,40 78,40 61,52 67,72 50,60 33,72 39,52 22,40 43,40" fill="#f6f2e8"/><polygon points="50,32 54,44 66,44 56,51 60,63 50,56 40,63 44,51 34,44 46,44" fill="#f6f2e8" opacity="0.4"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">TOR</text>
+  </svg>`,
+  UTA: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_UTA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a4576"/><stop offset="1" stop-color="#001f50"/></linearGradient></defs>
+    <path d="M50 4 L88 24 L88 78 L50 114 L12 78 L12 24 Z" fill="url(#crest_UTA)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 9 L83 27 L83 75 L50 107 L17 75 L17 27 Z" fill="#000637" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><path d="M50 22 L76 72 H24 Z" fill="#f6f2e8"/><path d="M50 22 L60 40 H42 Z" fill="#f6f2e8" opacity="0.45"/><path d="M50 22 L76 72 H50 Z" fill="#f6f2e8" opacity="0.15"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">UTA</text>
+  </svg>`,
+  WAS: `<svg viewBox="0 0 100 118" width="100%" height="100%">
+    <defs><linearGradient id="crest_WAS" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a4576"/><stop offset="1" stop-color="#001f50"/></linearGradient></defs>
+    <path d="M50 5 C76 5 93 23 93 50 C93 80 75 103 50 113 C25 103 7 80 7 50 C7 23 24 5 50 5 Z" fill="url(#crest_WAS)" stroke="#8a6f34" stroke-width="4"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="none" stroke="#efe1b8" stroke-width="1" opacity=".72"/>
+    <path d="M50 10 C73 10 88 26 88 50 C88 76 72 97 50 106 C28 97 12 76 12 50 C12 26 27 10 50 10 Z" fill="#000637" opacity=".18"/>
+    
+    <g transform="translate(0,-4) scale(1,.88) translate(0,4)"><rect x="30" y="60" width="40" height="10" fill="#f6f2e8"/><rect x="36" y="42" width="28" height="18" fill="#f6f2e8"/><path d="M34 42 A16 16 0 0 1 66 42 Z" fill="#f6f2e8"/><rect x="47" y="20" width="6" height="14" fill="#f6f2e8"/><path d="M40 42 A10 10 0 0 1 60 42" fill="none" stroke="#f6f2e8" stroke-width="1" opacity="0.5"/><rect x="38" y="44" width="2.5" height="16" fill="#f6f2e8" opacity="0.4"/><rect x="59.5" y="44" width="2.5" height="16" fill="#f6f2e8" opacity="0.4"/></g>
+    <path d="M19 76 Q29 83 50 83 Q71 83 81 76 L79 94 Q67 102 50 109 Q33 102 21 94 Z" fill="#c9a856" stroke="#8a6f34" stroke-width="1.3"/>
+    <text x="50" y="97" text-anchor="middle" font-size="11.5" font-weight="950" letter-spacing=".35" fill="#161310" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">WAS</text>
+  </svg>`
+};
+
+function normalizeEmbeddedCrestSVGMarkup(svgMarkup, team){
+  if(!svgMarkup)return "";
+  const label=String(team?.name||team?.mark||team?.id||"Team").replace(/"/g,"&quot;");
+  return String(svgMarkup).replace(/<svg([^>]*)>/i,(m,attrs)=>{
+    let clean=String(attrs||"")
+      .replace(/\swidth="[^"]*"/i,"")
+      .replace(/\sheight="[^"]*"/i,"")
+      .replace(/\srole="[^"]*"/i,"")
+      .replace(/\saria-label="[^"]*"/i,"")
+      .trim();
+    return `<svg ${clean} width="100%" height="100%" role="img" aria-label="${label} crest">`.replace(/<svg\s+>/,'<svg ');
+  });
+}
+
 let __crestGradSeq=0;
 function crestSVG(team){
+  const key=String(team?.id||team?.mark||"").toUpperCase();
+  const embedded=EMBEDDED_TEAM_CRESTS[key];
+  if(embedded)return normalizeEmbeddedCrestSVGMarkup(embedded, team);
+  return generatedCrestSVG(team);
+}
+function generatedCrestSVG(team){
   const base=team?.color||"#e6b953";
   const field=shadeColor(base,-12), panelShade=shadeColor(field,-25);
   const mark=team?.mark||(team?.id||team?.name||"—").slice(0,3).toUpperCase();
