@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.19 UI · International Flag Presentation</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2586,10 +2586,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   box-shadow:none!important;
 }
 
+/* v0.1.49.77.5.5.5.20 — Player longevity age-curve calibration
+   Ages 34–36 are now late-prime rather than automatic decline. Strong performers
+   can hold level and exceptional players retain a small chance of improvement.
+   Genuine age decline begins at 37 and strengthens after 38. Potential is no longer
+   automatically pulled down from age 30; that age-based potential compression now
+   begins at 37. Contract/salary age-risk reductions are intentionally unchanged. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.19 UI · International Flag Presentation</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -5588,14 +5594,31 @@ function progressPlayerTalent(p,eraMod=0,developmentCap=99,ctx={}){
   }else if(age<=31){
     delta=rand(-1,0);
     if(score>=72&&gap>0&&Math.random()<0.18)delta=1;
-  }else if(age<=33)delta=rand(-2,0);
-  else if(age<=35)delta=rand(-3,0);
-  else delta=rand(-4,-1);
+  }else if(age<=33){
+    delta=rand(-1,0);
+    if(score>=76&&gap>0&&Math.random()<0.14)delta=1;
+  }else if(age<=36){
+    // Late-prime plateau. Mid-30s players can hold elite level if performance supports it.
+    delta=rand(-1,0);
+    if(score>=82){
+      if(gap>0&&Math.random()<0.10)delta=1;
+      else if(Math.random()<0.72)delta=0;
+    }else if(score>=68&&delta<0&&Math.random()<0.48){
+      delta=0;
+    }
+  }else if(age<=38){
+    // Genuine age decline begins from 37, but exceptional performance can still soften it.
+    delta=rand(-3,0);
+    if(score>=82&&delta<0&&Math.random()<0.35)delta=Math.min(0,delta+1);
+  }else{
+    delta=rand(-4,-1);
+    if(score>=84&&Math.random()<0.22)delta=Math.min(-1,delta+1);
+  }
 
   if(delta>0)delta=Math.min(delta,gap);
   p.ovr=Math.max(50,Math.min(developmentCap,ovr+delta));
   if(p.ovr>p.potential)p.potential=p.ovr;
-  if(age>=30&&p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
+  if(age>=37&&p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
 
   p.lastDevelopment={
     season:ctx.season??null,fromOvr:ovr,toOvr:p.ovr,delta:p.ovr-ovr,
@@ -14581,7 +14604,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.19 UI · International Flag Presentation",ENGINE_VERSION="E2.26-PROD68";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration",ENGINE_VERSION="E2.26-PROD69";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
