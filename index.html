@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.16 UI · Playoff Courtside Cleanup</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2559,10 +2559,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .courtsideUnified.internationalCourtside .broadcastSide .fibaNationMark,
 .courtsideUnified.internationalCourtside .broadcastSide .heroFlag{margin-inline:auto}
 
+/* v0.1.49.77.5.5.5.16 — Playoff Courtside cleanup
+   Removes duplicated "Game X of 7" information from the top-right status and
+   removes the explanatory "first team to four" copy. The top-right status now
+   shows HOME or AWAY for the user's next playoff fixture, while game number,
+   series score and round remain in the dedicated context row. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.16 UI · Playoff Courtside Cleanup</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -14554,7 +14559,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency",ENGINE_VERSION="E2.26-PROD64";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.16 UI · Playoff Courtside Cleanup",ENGINE_VERSION="E2.26-PROD65";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17846,9 +17851,11 @@ function postseasonUserHome(){
     }
 
     const status=ctx.userWins===ctx.oppWins?`Series tied ${ctx.userWins}–${ctx.oppWins}`:ctx.userWins>ctx.oppWins?`${x.name} lead ${ctx.userWins}–${ctx.oppWins}`:`${opp?.name||"Opponent"} lead ${ctx.oppWins}–${ctx.userWins}`;
+    const nextHomeId=playoffHomeTeamForGame(st.series);
+    const venueLabel=String(nextHomeId)===String(x.id)?"HOME":"AWAY";
     return courtsideNextGameCard({
       brand:`${ctx.conf==="NBA"?"NBA FINALS":`${ctx.conf.toUpperCase()}ERN CONFERENCE`} · COURTSIDE NETWORK`,
-      live:`GAME ${ctx.nextGame} OF 7`,meta:`${ctx.stage} · ${status} · First team to four wins advances`,
+      live:venueLabel,meta:`${ctx.stage} · ${status}`,
       leftMark:teamMark(x),leftName:x.name,leftSub:`#${ctx.userSeed||"—"} seed`,
       rightMark:opp?teamMark(opp):"",rightName:opp?.name||"Opponent",rightSub:`#${ctx.oppSeed||"—"} seed`,
       context:[{value:`Game ${ctx.nextGame}`,label:"Of 7"},{value:`${ctx.userWins}–${ctx.oppWins}`,label:"Series"},{value:ctx.stage,label:"Round"}],
