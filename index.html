@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1498,6 +1498,11 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .clubLegendList{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}.clubLegendRow{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(125px,.9fr);gap:8px;align-items:center;padding:10px 11px;border-top:1px solid var(--line)}.clubLegendRow:first-child{border-top:0}.clubLegendRow>span{font-size:10px;color:var(--accent2);font-weight:950;text-align:center}.clubLegendRow b{font-size:10px}.clubLegendRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.clubLegendRow>strong{text-align:right;font-size:9px;line-height:1.35;color:var(--accent2);font-weight:900}
 @media(max-width:430px){.clubPageTitle{margin-bottom:8px}.compactClubCurrent{grid-template-columns:repeat(2,minmax(0,1fr))!important}.clubCurrentLeaderGrid{gap:5px}.clubCurrentLeader{padding:8px 5px}.clubCurrentLeader small{font-size:9px}.clubCurrentLeader b{font-size:9px}.clubCurrentLeader strong{font-size:10px}.clubSeasonLeadersEight{grid-template-columns:repeat(2,minmax(0,1fr))}.clubHistoryClean .teamSeasonRow{grid-template-columns:42px 72px minmax(0,1fr)!important;padding:9px 10px}.clubLegendRow{grid-template-columns:20px minmax(0,1fr);gap:6px}.clubLegendRow>strong{grid-column:2;text-align:left;font-size:9px;margin-top:1px}}
 
+/* v0.1.49.77.5.5.5.21 — Club History mobile season-label fit */
+.clubHistoryClean .teamSeasonRow{grid-template-columns:68px 80px minmax(0,1fr)!important;gap:10px!important}
+.clubHistoryClean .teamSeasonRow .season{white-space:nowrap!important;word-break:normal!important;overflow-wrap:normal!important}
+@media(max-width:430px){.clubHistoryClean .teamSeasonRow{grid-template-columns:64px 72px minmax(0,1fr)!important;gap:8px!important;padding:9px 10px!important}.clubHistoryClean .teamSeasonRow .season{font-size:10px!important}}
+
 
 /* v0.1.26.0 — League UI/UX refinement */
 /* v0.1.27.1 — International UI refinement */
@@ -2595,7 +2600,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -11606,6 +11611,14 @@ function ensureClubFrontOfficeState(G,clubId){
     fo.facilitiesTenYearRebalanceApplied=true;
     fo.tenYearCatchupPoints=successful;
   }
+  // A fully developed organisation has no remaining use for development currency.
+  // Clear legacy surplus and keep the state club-specific through frontOfficeByClub.
+  const fullyDeveloped=["training","medical","coaching"].every(k=>(+fo.departments?.[k]||1)>=5);
+  if(fullyDeveloped&&fo.points!==0){
+    fo.clearedMaxSurplus=(+fo.clearedMaxSurplus||0)+fo.points;
+    fo.points=0;
+  }
+  fo.fullyDeveloped=fullyDeveloped;
   return fo;
 }
 function ensureFrontOfficeState(G){
@@ -11626,9 +11639,13 @@ function awardFrontOfficeSeasonPoint(G,completedSeason){
       ["Conference Semifinals","Conference Finals","NBA Finals","NBA Champion"].includes(result.finish) ||
       result.cupChampion
     )?1:0;
-    fo.points+=2+successBonus;
+    const fullyDeveloped=["training","medical","coaching"].every(k=>(+fo.departments?.[k]||1)>=5);
+    const award=fullyDeveloped?0:2+successBonus;
+    if(award)fo.points+=award;
+    else fo.points=0;
+    fo.fullyDeveloped=fullyDeveloped;
     fo.lastAwardSeason=seasonJustCompleted;
-    fo.lastSeasonAward={season:seasonJustCompleted,clubId,base:2,successBonus,total:2+successBonus};
+    fo.lastSeasonAward={season:seasonJustCompleted,clubId,base:fullyDeveloped?0:2,successBonus:fullyDeveloped?0:successBonus,total:award,maxed:fullyDeveloped};
   }
   // Restore legacy alias to whichever organisation the GM currently manages.
   G.frontOffice=ensureClubFrontOfficeState(G,G.userClubGM?.clubId||clubId);
@@ -11650,7 +11667,10 @@ function frontOfficeProgressInfo(G){
   const fo=ensureFrontOfficeState(G),total=frontOfficeTotalUpgradeInvestment(),invested=frontOfficePointsInvested(fo);
   const remaining=Math.max(0,total-invested);
   const needed=Math.max(0,remaining-fo.points);
-  return {total,invested,remaining,seasonsAtCurrentRate:Math.ceil(needed/2),seasonsAtSuccessfulRate:Math.ceil(needed/3)};
+  const maxed=remaining===0;
+  if(maxed&&fo.points!==0)fo.points=0;
+  fo.fullyDeveloped=maxed;
+  return {total,invested,remaining,maxed,seasonsAtCurrentRate:Math.ceil(needed/2),seasonsAtSuccessfulRate:Math.ceil(needed/3)};
 }
 
 function frontOfficeLevelForClub(club,key,gameState=null){
@@ -14604,7 +14624,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.20 Players · Longevity Age Curve Calibration",ENGINE_VERSION="E2.26-PROD69";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup",ENGINE_VERSION="E2.26-PROD70";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -14842,18 +14862,39 @@ async function readSlot(slot){
   try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw);memorySlots[slot]=rec;return rec}}catch(e){}
   return memorySlots[slot]||null;
 }
+async function readAllSlots(){
+  const records=Array(MAX_SAVES).fill(null);
+  try{
+    const db=await openSaveDB();
+    const found=await new Promise((res,rej)=>{
+      const tx=db.transaction(SAVE_STORE,"readonly"),store=tx.objectStore(SAVE_STORE),out=[];
+      const q=store.getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error);
+    });
+    db.close();
+    for(const rec of found){if(rec&&rec.slot>=1&&rec.slot<=MAX_SAVES){records[rec.slot-1]=rec;memorySlots[rec.slot]=rec}}
+  }catch(e){}
+  for(let slot=1;slot<=MAX_SAVES;slot++){
+    if(records[slot-1])continue;
+    try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw);records[slot-1]=rec;memorySlots[slot]=rec;continue}}catch(e){}
+    if(memorySlots[slot])records[slot-1]=memorySlots[slot];
+  }
+  return records;
+}
+
 async function removeSlot(slot){
   delete memorySlots[slot];
   try{const db=await openSaveDB();await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).delete(slot);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});db.close()}catch(e){}
   try{localStorage.removeItem(`MMB_SAVE_SLOT_${slot}`)}catch(e){}
 }
-async function migrateLegacySave(){
-  const existing=await readSlot(1);if(existing)return;
+async function migrateLegacySave(preloaded=null){
+  const existing=preloaded?.[0]||await readSlot(1);if(existing)return preloaded;
   try{
     const old=localStorage.getItem(LEGACY_SAVE_KEY);if(!old)return;
     const state=JSON.parse(old),club=state.clubs?.find(c=>c.id===state.userClubGM?.clubId);
     await writeSlot(1,old,{gmName:state.gmName||"GM",clubName:club?.name||"Unknown Club",season:state.season||1,phase:state.phase||"Career",createdAt:Date.now()});
+    if(preloaded)preloaded[0]=memorySlots[1]||await readSlot(1);
   }catch(e){}
+  return preloaded;
 }
 function validateCareerIntegrityState(state=G){
   const issues=[];
@@ -15027,6 +15068,7 @@ function saveMeta(){
 async function save(silent=true){
   if(!G||!activeSlot)return false;
   reportCareerIntegrity("pre-save");
+  G.runtimeMeta=G.runtimeMeta||{};G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
   const ok=await writeSlot(activeSlot,JSON.stringify(G),saveMeta());
   if(!silent)toast(ok?`Career saved · Slot ${activeSlot}`:"Career active · save storage unavailable");
@@ -15044,24 +15086,41 @@ function repairVerifiedNationalityAssignments(state){
   }
   return fixed;
 }
-function syncCounter(){if(!G)return;let m=1;const walk=v=>{if(!v)return;if(typeof v==="string"){let z=v.match(/_(\d+)$/);if(z)m=Math.max(m,+z[1]+1)}else if(Array.isArray(v))v.forEach(walk);else if(typeof v==="object")Object.values(v).forEach(walk)};walk(G);if(typeof _idCounter!=="undefined")_idCounter=Math.max(_idCounter,m)}
+function syncCounter(){
+  if(!G)return;
+  const persisted=+G.runtimeMeta?.nextIdCounter||0;
+  if(persisted>0){if(typeof _idCounter!=="undefined")_idCounter=Math.max(_idCounter,persisted);return}
+  // Legacy saves do not carry the counter, so scan once and persist the result on the next normal save.
+  let m=1;const walk=v=>{if(!v)return;if(typeof v==="string"){let z=v.match(/_(\d+)$/);if(z)m=Math.max(m,+z[1]+1)}else if(Array.isArray(v))v.forEach(walk);else if(typeof v==="object")Object.values(v).forEach(walk)};walk(G);
+  if(typeof _idCounter!=="undefined")_idCounter=Math.max(_idCounter,m);
+  G.runtimeMeta=G.runtimeMeta||{};G.runtimeMeta.nextIdCounter=Math.max(m,typeof _idCounter!=="undefined"?_idCounter:m);
+}
 async function loadSlot(slot){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
-    repairVerifiedNationalityAssignments(G);
-    repairOfficial2026DraftAssetIntegrity(G);
-    repairActiveSummerLeagueEligibility(G);
-    repairActivePlayerHistoryCoverage(G);
-  applyVerifiedActiveCareerBaselineExpansion(G);
-  applyVerifiedYoungPlayerPotentialAudit(G);
-  applyHistoricalPlayerIdentityAudit(G);
-  G.olympicHistory=G.olympicHistory||[];
-  G.olympicQualificationHistory=G.olympicQualificationHistory||[];
-  G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
-  ensureOlympicHostState(G);ensureFutureOlympicHostAnnouncements(G);
-  repairSummerLeagueAwardIntegrity(G);
-    reportCareerIntegrity("load");
+    const loadMaintenanceVersion="LOAD-PROD70-1";
+    G.runtimeMeta=G.runtimeMeta||{};
+    if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
+      repairVerifiedNationalityAssignments(G);
+      repairOfficial2026DraftAssetIntegrity(G);
+      repairActiveSummerLeagueEligibility(G);
+      repairActivePlayerHistoryCoverage(G);
+      applyVerifiedActiveCareerBaselineExpansion(G);
+      applyVerifiedYoungPlayerPotentialAudit(G);
+      applyHistoricalPlayerIdentityAudit(G);
+      G.olympicHistory=G.olympicHistory||[];
+      G.olympicQualificationHistory=G.olympicQualificationHistory||[];
+      G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
+      ensureOlympicHostState(G);ensureFutureOlympicHostAnnouncements(G);
+      repairSummerLeagueAwardIntegrity(G);
+      reportCareerIntegrity("load-maintenance");
+      G.runtimeMeta.loadMaintenanceVersion=loadMaintenanceVersion;
+    }else{
+      // Normal repeat loads avoid the expensive whole-career repair suite.
+      const issues=validateCareerIntegrityState(G);
+      if(issues.length)console.warn(`[Mini&Me QA · load] ${issues.length} integrity issue(s)`,issues);
+    }
 
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
     if(G.phase==="PLAY_IN"&&!G.playInLive&&!G.playIn){
@@ -15077,7 +15136,8 @@ async function loadSlot(slot){
       render();
       toast("Career recovered. Home view was reset.");
     }
-    save();
+    // Do not immediately stringify and rewrite a mature save just for opening it.
+    // The normal gameplay save path persists maintenance markers and the ID counter.
     toast(`Loaded Slot ${slot}`);
   }catch(e){
     console.error("Career load failed",e);
@@ -15088,11 +15148,14 @@ function savePhaseDisplay(phase){
   const map={CHAMPION:"Season Complete",OFFSEASON:"Offseason",DRAFT_NIGHT:"Draft Night",SUMMER_LEAGUE:"Summer League",SUMMER_LEAGUE_COMPLETE:"Summer League Complete",PRESEASON_READINESS:"Preseason Readiness",PRESEASON:"Preseason",REGULAR_SEASON:"Regular Season",PLAY_IN:"Play-In",PLAYOFFS:"Playoffs",WORLD_CUP:"FIBA World Cup"};
   return map[phase]||String(phase||"Career").replaceAll("_"," ").toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
 }
-async function renderSaveManager(mode){
-  saveMode=mode;await migrateLegacySave();
+let _saveManagerOpenToken=0;
+async function renderSaveManager(mode,token=0){
+  saveMode=mode;
+  const records=await readAllSlots();
+  await migrateLegacySave(records);
+  if(token&&token!==_saveManagerOpenToken)return;
   $("#saveModeLabel").textContent=mode==="new"?"New Career":"Load Career";
   $("#saveModeTitle").textContent=mode==="new"?"Choose a Save Slot":"Choose a Career";
-  const records=[];for(let i=1;i<=MAX_SAVES;i++)records.push(await readSlot(i));
   $("#saveSlotList").innerHTML=records.map((rec,idx)=>{
     const slot=idx+1;
     if(!rec)return `<div class="saveSlot empty"><div class="saveSlotNo">Save Slot ${slot}</div><h3>Empty Slot</h3><p>${mode==="new"?"Start a new GM career here.":"No career has been created in this slot."}</p>${mode==="new"?`<div class="saveActions"><button class="saveCreate" data-newslot="${slot}">Create Career</button></div>`:""}</div>`;
@@ -15103,7 +15166,11 @@ async function renderSaveManager(mode){
   $$("[data-newslot]").forEach(b=>b.onclick=()=>beginNewCareerInSlot(+b.dataset.newslot,b.dataset.replace==="1"));
   $$("[data-deleteslot]").forEach(b=>b.onclick=async()=>{const slot=+b.dataset.deleteslot;if(confirm(`Delete Save Slot ${slot}? This cannot be undone.`)){await removeSlot(slot);renderSaveManager(saveMode)}});
 }
-async function openSaveManager(mode){show("saveManager");await renderSaveManager(mode)}
+async function openSaveManager(mode){
+  const token=++_saveManagerOpenToken;
+  show("saveManager");
+  await renderSaveManager(mode,token);
+}
 async function beginNewCareerInSlot(slot,replace=false){
   if(replace&&!confirm(`Replace Save Slot ${slot} with a new career? The existing career will be deleted.`))return;
   if(replace)await removeSlot(slot);
@@ -16186,7 +16253,10 @@ function clubSchedule(){
 function status(){
   let x=me();
   $("#statusClub").textContent=x?`${x.name} · ${basketballSeasonLabel(G.season)}`:`${basketballSeasonLabel(G.season)}`;
-  $("#phaseBadge").textContent=G.internationalWindowLive&&!G.internationalWindowLive.complete?`${gameYearForSeason(G.season)} QUALIFICATION`:phaseName();
+  const phaseBadge=$("#phaseBadge");
+  phaseBadge.textContent=G.internationalWindowLive&&!G.internationalWindowLive.complete?`${gameYearForSeason(G.season)} QUALIFICATION`:phaseName();
+  // Preseason Readiness already has a full page-level heading; avoid repeating it in the fixed header.
+  phaseBadge.style.display=G.phase==="PRESEASON_READINESS"&&!G.internationalWindowLive?"none":"";
   const dateEl=$("#statusDate");
   if(dateEl)dateEl.textContent=basketballMonthLabel(ensureBasketballCalendar(G).serial);
 }
@@ -19606,8 +19676,9 @@ function contracts(){
     return `<div class="contractGroupTitle"><b>${group}</b><span>${rows.length} player${rows.length===1?"":"s"}</span></div><div class="table contractTable compact"><table><thead><tr><th>PLAYER</th><th>ROLE / SLOT</th><th>TERM</th><th>SALARY</th><th>MARKET</th><th></th></tr></thead><tbody>${rows.map(p=>{
       const live=playerByAnyId(p.playerId),statusClass=p.valueStatus==="Above Market"?"above":p.valueStatus==="Value Contract"?"value":"market";
       const slot=rosterSalarySlot(live||p,+p.salaryM);
-      const contractTag=p.type!=="Standard"?`<span class="contractTypeBadge">${p.type}</span>`:"";
-      const extensionTag=p.pendingExtension?`<span class="contractBadge">Extension Agreed</span>`:(p.extensionEligible?`<span class="contractBadge">Extension Eligible</span>`:"");
+      // Contract type/status badges were redundant with Role / Slot, Term and the available action.
+      const contractTag="";
+      const extensionTag="";
       const currentYears=p.yearsLeft;
       const termLabel=p.pendingExtension
         ?`<span class="contractTerm" title="${currentYears} year current term followed by ${p.pendingExtension.years} year extension"><span class="contractTermCurrent">${currentYears} yr</span><span class="contractTermExt">+${p.pendingExtension.years} yr EXT</span></span>`
@@ -20540,7 +20611,7 @@ function frontOfficePage(embedded=false){
     return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
   const progress=frontOfficeProgressInfo(G);
-  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><p>Earn two development points after each completed season, plus a third performance point after a 50-win season, Conference Semifinals-or-better run, or NBA Cup title. Training, Medical and Coaching provide persistent organisational effects.</p></div><div class="scoutLevelBadge"><b>${fo.points}</b><small>AVAILABLE</small></div></div>
+  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><p>${progress.maxed?"This organisation is fully developed. No further development points will accumulate while Training, Medical and Coaching remain at maximum level.":"Earn two development points after each completed season, plus a third performance point after a 50-win season, Conference Semifinals-or-better run, or NBA Cup title. Training, Medical and Coaching provide persistent organisational effects."}</p></div><div class="scoutLevelBadge"><b>${progress.maxed?"MAX":fo.points}</b><small>${progress.maxed?"FULLY DEVELOPED":"AVAILABLE"}</small></div></div>
     <div class="foProgressCard"><div><small>ORGANISATIONAL BUILD</small><b>${progress.invested}/${progress.total} points invested</b><span>${progress.remaining===0?"All Front Office departments are fully developed.":`${progress.remaining} points remain to fully max Training, Medical and Coaching.`}</span></div><strong>${progress.remaining===0?"MAX":`~${progress.seasonsAtSuccessfulRate}–${progress.seasonsAtCurrentRate} SEASONS`}</strong></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
@@ -20829,7 +20900,9 @@ function bind(){
     const fo=ensureFrontOfficeState(G),k=b.dataset.foupgrade,level=fo.departments[k]||1,cost=frontOfficeUpgradeCost(level);
     if(level>=5){toast("Department is already at maximum level");return}
     if(fo.points<cost){toast("Not enough development points");return}
-    fo.points-=cost;fo.departments[k]=level+1;save();toast(`${frontOfficeDepartmentInfo(k,level+1).name} upgraded to Level ${level+1}`);render();
+    fo.points-=cost;fo.departments[k]=level+1;
+    if(["training","medical","coaching"].every(key=>(+fo.departments?.[key]||1)>=5)){fo.points=0;fo.fullyDeveloped=true}
+    save();toast(`${frontOfficeDepartmentInfo(k,level+1).name} upgraded to Level ${level+1}`);render();
   });
   if($("#profileBack"))$("#profileBack").onclick=()=>returnFromProfile();
   if($("#profileClose"))$("#profileClose").onclick=()=>returnFromProfile();
@@ -21039,6 +21112,6 @@ function refreshLandingSaveCount(){
 }
 refreshLandingSaveCount();
 
-$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>show("landing");$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
+$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>{_saveManagerOpenToken++;show("landing")};$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
 drawTeams();
 </script></body></html>
