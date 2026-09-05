@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.22 International Records & Program Overview</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -47,7 +47,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .statusIdentity{min-width:0}
 .statusClub{font-size:12px;font-weight:850;color:#e9edf2;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .statusPhase{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
-.phaseBadge{flex:none;border:1px solid #6a4d26;background:#241b10;color:var(--accent2);border-radius:999px;padding:6px 9px;font-size:10px;font-weight:950;letter-spacing:.7px;text-transform:uppercase}
+.phaseBadge{display:none!important;flex:none;border:1px solid #6a4d26;background:#241b10;color:var(--accent2);border-radius:999px;padding:6px 9px;font-size:10px;font-weight:950;letter-spacing:.7px;text-transform:uppercase}
 .statusDate{font-size:9px;font-weight:850;color:var(--muted);letter-spacing:.65px;text-transform:uppercase;padding-right:4px;white-space:nowrap}
 .globalTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:9px}
 .globalTabs button{border:1px solid var(--line);background:#111821;color:var(--muted);border-radius:10px;padding:7px 9px;font-size:10px;font-weight:900}
@@ -2597,10 +2597,42 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    Genuine age decline begins at 37 and strengthens after 38. Potential is no longer
    automatically pulled down from age 30; that age-based potential compression now
    begins at 37. Contract/salary age-risk reductions are intentionally unchanged. */
+
+/* v0.1.49.77.5.5.5.21.1 — Home Header & Courtside Venue Fix
+   Removes the redundant global phase pill from the fixed Home header.
+   Courtside Network now uses HOME / AWAY / NEUTRAL venue context from the GM perspective. */
+
+
+
+/* v0.1.49.77.5.5.5.22 — International Records & Program Overview */
+.intlProgramSnapshot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.intlSnapshotCard{border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:11px;min-width:0}
+.intlSnapshotCard small{display:block;color:var(--accent2);font-size:9px;font-weight:950;letter-spacing:.5px;text-transform:uppercase}
+.intlSnapshotCard b{display:block;font-size:11px;margin-top:4px;line-height:1.25;overflow-wrap:anywhere}
+.intlSnapshotCard span{display:block;color:var(--muted);font-size:9px;line-height:1.4;margin-top:3px}
+.intlSnapshotAction{grid-column:1/-1}
+.intlSnapshotAction button{width:100%;margin:0!important;min-height:40px!important;padding:8px 11px!important;font-size:10px!important}
+.intlRecordTabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:10px 0}
+.intlRecordTabs button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:10px;padding:9px 5px;font-size:9px;font-weight:900;min-width:0}
+.intlRecordTabs button.active{background:var(--accent);border-color:var(--accent);color:#17100a}
+.intlRecordHero{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.065),var(--panel));border-radius:14px;padding:13px;margin-bottom:10px}
+.intlRecordHero h3{margin:3px 0 4px;font-size:17px}.intlRecordHero p{margin:0;color:var(--muted);font-size:9px;line-height:1.45}
+.intlRecordGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.intlRecordCard{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px;min-width:0}
+.intlRecordCard>small{display:block;font-size:9px;color:var(--accent2);font-weight:950;text-transform:uppercase;letter-spacing:.45px}
+.intlRecordCard>strong{display:block;font-size:18px;margin:3px 0;color:var(--text)}
+.intlRecordCard>b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.intlRecordCard>span{display:block;font-size:9px;color:var(--muted);margin-top:3px;line-height:1.35}
+.intlRecordLeaderList{border:1px solid var(--line);background:var(--panel);border-radius:12px;overflow:hidden}
+.intlRecordLeaderRow{display:grid;grid-template-columns:25px minmax(0,1fr) 58px;gap:8px;align-items:center;padding:9px 10px;border-top:1px solid var(--line)}
+.intlRecordLeaderRow:first-child{border-top:0}.intlRecordLeaderRow>span{font-size:9px;color:var(--muted);font-weight:950;text-align:center}.intlRecordLeaderRow b{font-size:10px}.intlRecordLeaderRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.intlRecordLeaderRow strong{text-align:right;font-size:11px;color:var(--accent2)}
+.intlTeamRecordGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+@media(max-width:560px){.intlProgramSnapshot,.intlRecordGrid,.intlTeamRecordGrid{grid-template-columns:1fr 1fr}.intlRecordCard{padding:9px}.intlRecordCard>strong{font-size:16px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.22 International Records & Program Overview</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -9822,7 +9854,7 @@ function simulateNationalGame(G, teamA, teamB, windowId, groupId=null, competiti
 
   const aWon=sim.winnerClubId===fakeA.id; const winner=aWon?teamA:teamB;
   winner.record.w++; (aWon?teamB:teamA).record.l++;
-  const result={id:nextId("intl"),windowId,groupId,teamA:teamA.code,teamB:teamB.code,scoreA:sim.homeScore,scoreB:sim.awayScore,winner:winner.code,quarters:sim.quarters,boxScore:{teamA:sim.boxScore.home,teamB:sim.boxScore.away},strengthAudit:{qualityA:+qualityA.toFixed(2),qualityB:+qualityB.toFixed(2),qualityGap:+qualityGap.toFixed(2),rosterEdge:+rosterEdge.toFixed(4),programEdge:+programEdge.toFixed(4),homeEdge:+homeEdge.toFixed(4),totalEdge:+nationalStrengthEdge.toFixed(4),calibration:"INTL-GAP-2"}};
+  const result={id:nextId("intl"),season:G.season,competition:competitionTag,stage:groupId,windowId,groupId,teamA:teamA.code,teamB:teamB.code,scoreA:sim.homeScore,scoreB:sim.awayScore,winner:winner.code,quarters:sim.quarters,boxScore:{teamA:sim.boxScore.home,teamB:sim.boxScore.away},strengthAudit:{qualityA:+qualityA.toFixed(2),qualityB:+qualityB.toFixed(2),qualityGap:+qualityGap.toFixed(2),rosterEdge:+rosterEdge.toFixed(4),programEdge:+programEdge.toFixed(4),homeEdge:+homeEdge.toFixed(4),totalEdge:+nationalStrengthEdge.toFixed(4),calibration:"INTL-GAP-2"}};
   const rankingCalc=applyFibaRankingResult(G,teamA,teamB,result,{competitionTag,stage:groupId,homeTeamCode:competitionTag==="world_cup"?null:teamA.code});
   result.ranking={engine:FIBA_RANKING_ENGINE_VERSION,teamAGain:+(aWon?rankingCalc.winnerGain:rankingCalc.loserGain).toFixed(2),teamBGain:+(aWon?rankingCalc.loserGain:rankingCalc.winnerGain).toFixed(2)};
   for (const line of result.boxScore.teamA) {
@@ -10661,7 +10693,7 @@ function olympicHomeHtml(){
   const A=nat(fx.a),B=nat(fx.b),user=nat(code),record=olympicNationRecord(live,code);
   const aRank=nationalWorldRank(fx.a),bRank=nationalWorldRank(fx.b),userOvr=olympicNationOvr(code);
   const card=courtsideNextGameCard({
-    brand:"OLYMPIC BASKETBALL · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${live.year} Olympics · ${olympicStageLabel(fx.stage)}`,
+    brand:"OLYMPIC BASKETBALL · COURTSIDE NETWORK",live:"NEUTRAL",meta:`${live.year} Olympics · ${olympicStageLabel(fx.stage)}`,
     leftMark:nationalFlagMark(fx.a,"heroFlag"),leftName:A?.name||fx.a,leftSub:`World #${aRank||"—"}`,
     rightMark:nationalFlagMark(fx.b,"heroFlag"),rightName:B?.name||fx.b,rightSub:`World #${bRank||"—"}`,
     context:[{value:`${record.w}–${record.l}`,label:"Your Record"},{value:userOvr||"—",label:"Squad OVR"},{value:`#${nationalWorldRank(code)||"—"}`,label:"World Rank"}],
@@ -14624,9 +14656,9 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.21 Stability, Front Office & UI Cleanup",ENGINE_VERSION="E2.26-PROD70";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.22 International Records & Program Overview",ENGINE_VERSION="E2.26-PROD72";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -17179,7 +17211,7 @@ function worldCupHomeHtml(){
   const aRec=worldCupNationRecord(live,next.a),bRec=worldCupNationRecord(live,next.b);
   const eventNo=(live.stage==="FIRST_GROUP_STAGE"||live.stage==="SECOND_GROUP_STAGE")?`Matchday ${(live.eventIndex||0)+1}`:stage;
   return courtsideNextGameCard({
-    brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${stage} · ${eventNo}`,
+    brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEUTRAL",meta:`${stage} · ${eventNo}`,
     leftMark:nationalFlagMark(next.a,"heroFlag"),leftName:a?.name||next.a,leftSub:`World #${nationalWorldRank(next.a)||"—"} · ${aRec.w}–${aRec.l}`,
     rightMark:nationalFlagMark(next.b,"heroFlag"),rightName:b?.name||next.b,rightSub:`World #${nationalWorldRank(next.b)||"—"} · ${bRec.w}–${bRec.l}`,
     context:[{value:nation?.name||code||"—",label:"Your Nation"},{value:`${record.w}–${record.l}`,label:"World Cup Record"},{value:stage,label:"Stage"}],
@@ -17212,8 +17244,8 @@ function gameHub(f){
   const homeContext=G.phase==="REGULAR_SEASON"?conferenceStandingRank(h):`${phaseRecord(h).w}–${phaseRecord(h).l}`;
   const competition=f.competition==="NBA Cup"?"NBA Cup":phaseName();
   const roundLabel=f.cupStage||f.displayRound||(typeof f.round==="number"?`Game ${f.round}`:f.round||"");
-    const cupLiveLabel=f.eventType==="NBA_CUP_FINAL"?"FINAL":(f.competition==="NBA Cup"?"KNOCKOUT":"NEXT GAME");
-  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${cupLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small class="conferenceRank">${awayContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(a):""}</div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small class="conferenceRank">${homeContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(h):""}</div></div><div class="broadcastContext"><div>${recordBadge(xr.w,xr.l)}<small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
+  const venueLiveLabel=(f.neutralSite===true||f.eventType==="NBA_CUP_FINAL"||G.phase==="SUMMER_LEAGUE")?"NEUTRAL":(String(f.homeClubId)===String(x.id)?"HOME":"AWAY");
+  const card=`<div class="card broadcast ${f.competition==="NBA Cup"?"cupBroadcast":""}"><div class="broadcastTop"><div class="broadcastBrand">${f.competition==="NBA Cup"?"NBA CUP · COURTSIDE NETWORK":"COURTSIDE NETWORK"}</div><div class="broadcastLive">${venueLiveLabel}</div></div><div class="broadcastMeta">${competition} · ${roundLabel}</div><div class="broadcastTeams"><div class="broadcastSide">${teamMark(a)}<b>${a.name}</b><small class="conferenceRank">${awayContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(a):""}</div><div class="broadcastVs">@</div><div class="broadcastSide">${teamMark(h)}<b>${h.name}</b><small class="conferenceRank">${homeContext}</small>${G.phase==="REGULAR_SEASON"?matchupStatRanks(h):""}</div></div><div class="broadcastContext"><div>${recordBadge(xr.w,xr.l)}<small>Your Record</small></div><div><b>${squadOvr(x)}</b><small>Squad OVR</small></div><div><b>${x.division}</b><small>Division</small></div></div>${spec?homeActionHtml():""}</div>`;
   return card+upcomingFixturesHtml();
 }
 function scoutingRosterAssessment(){
@@ -17550,7 +17582,7 @@ function fibaHomeHtml(){
   if(!fixture)return `<div class="allStarHero"><div class="allStarHeroTop"><b>${gameYearForSeason(G.season)} World Cup Qualification</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>International Matchday ${md}</h3><p>Your nation has no fixture on this matchday. Advance the window and follow the other qualification results.</p><div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`;
   const a=fixture.a,b=fixture.b;
   return courtsideNextGameCard({
-    brand:"FIBA QUALIFICATION · COURTSIDE NETWORK",live:"NEXT GAME",
+    brand:"FIBA QUALIFICATION · COURTSIDE NETWORK",live:(a===code?"HOME":"AWAY"),
     meta:`${gameYearForSeason(G.season)} World Cup Qualification · Matchday ${md} of ${total}`,
     leftMark:nationalFlagMark(a,"heroFlag"),leftName:fibaNationName(a),leftSub:`World #${nationalWorldRank(a)||"—"}`,
     rightMark:nationalFlagMark(b,"heroFlag"),rightName:fibaNationName(b),rightSub:`World #${nationalWorldRank(b)||"—"}`,
@@ -17951,7 +17983,7 @@ function postseasonUserHome(){
       return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} · Play-In matchup preparing</h3><p>The league is finalising the next Play-In opponent. Open Postseason for the complete bracket.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
     }
     return courtsideNextGameCard({
-      brand:"NBA PLAY-IN · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${label} · ${outcome}`,
+      brand:"NBA PLAY-IN · COURTSIDE NETWORK",live:(userIsA?"HOME":"AWAY"),meta:`${label} · ${outcome}`,
       leftMark:teamMark(x),leftName:x.name,leftSub:`#${userSeed} · ${x.conference} Conference`,
       rightMark:teamMark(opp),rightName:opp.name,rightSub:`#${oppSeed} · ${opp.conference} Conference`,
       context:[{value:`#${userSeed}`,label:"Your Seed"},{value:label,label:"Play-In Stage"},{value:"Win",label:"Advance"}],
@@ -20292,24 +20324,119 @@ function nationalDepthChartHtml(selected){
 }
 
 function internationalOverview(n){
-  const wr=nationalWorldRank(n.code),rr=nationalRegionalRank(n.code),form=nationalRecentForm(n),rating=internationalProgramRating(n),top=internationalTopPlayers(n,3),rankMap=internationalPlayerRanks(n);
+  const wr=nationalWorldRank(n.code),rr=nationalRegionalRank(n.code),form=nationalRecentForm(n),rating=internationalProgramRating(n);
   const campaign=internationalCampaignStatus(n),squadCount=n.selectedSquadPlayerIds.length||n.rosterPlayerIds.length;
-  const honours=(G.worldCupHistory||[]).filter(w=>[w.championCode,w.runnerUpCode,w.bronzeCode].includes(n.code)).length;
+  const wcMedals=(G.worldCupHistory||[]).filter(w=>[w.championCode,w.runnerUpCode,w.bronzeCode].includes(n.code)).length;
   const olympicMedals=[...(G.olympicHistory||[]),...(G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS)].filter(w=>[w.championCode,w.runnerUpCode,w.bronzeCode].includes(n.code)).length;
   const tier=n.tier===1?"Elite":n.tier===2?"Established":"Developing";
+  const qpos=intlQualificationPosition(n.code),next=nationalNextFixture(n.code),nextOpp=next?nat(next.opp):null;
+  const wcTitles=(G.worldCupHistory||[]).filter(w=>w.championCode===n.code).length;
+  const olyGolds=[...(G.olympicHistory||[]),...(G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS)].filter(w=>w.championCode===n.code).length;
   const metrics=[
     [`#${wr||"—"}`,"World Rank"],[`#${rr||"—"}`,`${n.region} Rank`],[`${n.record.w}–${n.record.l}`,"National Record"],[rating?rating.toFixed(0):"—","Squad OVR"],
-    [form.length?form.join(" "):"—","Recent Form"],[`${honours} WC · ${olympicMedals} OLY`,"Major Medals"],[`${squadCount}/12`,"Current Squad"],[tier,"Federation Status"]
+    [form.length?form.join(" "):"—","Recent Form"],[`${wcMedals} WC · ${olympicMedals} OLY`,"Major Medals"],[`${squadCount}/12`,"Current Squad"],[tier,"Federation Status"]
   ];
+  const qualText=qpos?`${qpos.group?.label||qpos.group?.id||"Group"} · ${ordinal(qpos.position)}`:nationalQualificationStatus(n.code);
+  const nextText=next?`${next.home?"vs":"@"} ${nextOpp?.name||next.opp}`:"No fixture scheduled";
+  const nextSub=next?.label||"Awaiting next international window";
+  const legacyText=wcTitles||olyGolds?`${wcTitles} World Cup · ${olyGolds} Olympic gold`:(wcMedals||olympicMedals?`${wcMedals+olympicMedals} major medal${wcMedals+olympicMedals===1?"":"s"}`:"Building first major medal");
   return `<div class="intlNationHubHero">
     <div class="intlCommandHero streamlined">
       <div class="intlCommandIdentity"><div class="intlCommandFlag">${nationalFlagMark(n.code,"heroFlag")}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
     </div>
     <div class="intlCommandMetrics eight">${metrics.map(x=>`<div><b>${x[0]}</b><small>${x[1]}</small></div>`).join("")}</div>
   </div>
-  <div class="sectionTitle">Top Players</div>
-  <div class="intlTopPlayers intlTopPlayersStacked">${top.map((p,i)=>{const a=internationalPlayerAverages(p),ranks=(rankMap.get(p.id)||[]).filter(r=>r.rank<=5).sort((a,b)=>a.rank-b.rank).slice(0,2);return `<div class="intlTopPlayerCard intlTopPlayerRow"><div class="intlTopPlayerHead"><div><small>${i===0?"TOP PLAYER":i===1?"CORE PLAYER":"KEY PLAYER"}</small><b>${playerNameLink(p)}</b><span>${positionLabel(p)} · ${ensureInternationalAffiliation(p)}</span></div><strong>${p.ovr}<small>OVR</small></strong></div><div class="intlTopPlayerStats"><div><b>${a.gp?a.ppg.toFixed(1):"—"}</b><small>PPG</small></div><div><b>${a.gp?a.rpg.toFixed(1):"—"}</b><small>RPG</small></div><div><b>${a.gp?a.apg.toFixed(1):"—"}</b><small>APG</small></div></div><div class="intlTopPlayerRank">${ranks.length?ranks.map(r=>`#${r.rank} ${r.label}`).join(" · "):"International ranking builds with appearances"}</div></div>`}).join("")}</div>`;
+  <div class="sectionTitle">Program Snapshot</div>
+  <div class="intlProgramSnapshot">
+    <div class="intlSnapshotCard"><small>Current Campaign</small><b>${campaign}</b><span>${form.length?`Recent form ${form.join(" · ")}`:"The next results will build the current form line."}</span></div>
+    <div class="intlSnapshotCard"><small>Qualification Position</small><b>${qualText}</b><span>${qpos?.row?`${qpos.row.w||0}–${qpos.row.l||0} · ${qpos.row.points||0} points`:"Current qualification pathway"}</span></div>
+    <div class="intlSnapshotCard"><small>Next International Game</small><b>${nextText}</b><span>${nextSub}</span></div>
+    <div class="intlSnapshotCard"><small>Program Legacy</small><b>${legacyText}</b><span>${wcMedals} World Cup medal${wcMedals===1?"":"s"} · ${olympicMedals} Olympic medal${olympicMedals===1?"":"s"}</span></div>
+    <div class="intlSnapshotAction"><button data-intltabgo="records" class="btn secondary">Open National Records</button></div>
+  </div>`;
 }
+
+function internationalRecordPlayerPool(n){
+  const out=[],seen=new Set(),add=p=>{if(p?.id&&p.nationality===n.code&&!seen.has(String(p.id))){seen.add(String(p.id));out.push(p)}};
+  for(const p of allPlayers(G))add(p);
+  for(const p of retiredPlayerPool(G))add(p);
+  return out.filter(p=>(+p.internationalStats?.gp||0)>0);
+}
+function internationalCareerLeaders(n,key,limit=5,{average=false,minGp=1}={}){
+  return internationalRecordPlayerPool(n).filter(p=>(+p.internationalStats?.gp||0)>=minGp).map(p=>{
+    const st=p.internationalStats||{},gp=+st.gp||0,value=average?(+st[key]||0)/Math.max(1,gp):(+st[key]||0);
+    return{p,gp,value};
+  }).sort((a,b)=>b.value-a.value||b.gp-a.gp||String(a.p.name).localeCompare(String(b.p.name))).slice(0,limit);
+}
+function internationalRecordGames(n){
+  const seen=new Set(),games=[];
+  for(const g of n.games||[]){const key=String(g.id||`${g.teamA}|${g.teamB}|${g.scoreA}|${g.scoreB}|${g.windowId||""}`);if(!seen.has(key)){seen.add(key);games.push(g)}}
+  return games;
+}
+function internationalSingleGameRecords(n){
+  const defs=[['pts','Points'],['reb','Rebounds'],['ast','Assists'],['stl','Steals'],['blk','Blocks'],['tpm','3PT Made']];
+  const best=Object.fromEntries(defs.map(([k])=>[k,null]));
+  for(const g of internationalRecordGames(n)){
+    const side=g.teamA===n.code?'teamA':g.teamB===n.code?'teamB':null;if(!side)continue;
+    const opp=g.teamA===n.code?g.teamB:g.teamA;
+    for(const line of g.boxScore?.[side]||[]){
+      for(const [key] of defs){const value=+line[key]||0,cur=best[key];if(!cur||value>cur.value)best[key]={key,value,line,g,opp}}
+    }
+  }
+  return defs.map(([key,label])=>({label,...best[key]}));
+}
+function internationalLongestWinStreak(n){
+  let best=0,run=0;for(const g of internationalRecordGames(n)){if(g.winner===n.code){run++;best=Math.max(best,run)}else run=0}return best;
+}
+function internationalTeamRecords(n){
+  const games=internationalRecordGames(n);let biggestWin=null,biggestLoss=null,highScore=null,lowAllowed=null;
+  for(const g of games){const isA=g.teamA===n.code;if(!isA&&g.teamB!==n.code)continue;const pf=+(isA?g.scoreA:g.scoreB)||0,pa=+(isA?g.scoreB:g.scoreA)||0,opp=isA?g.teamB:g.teamA,margin=pf-pa,entry={g,pf,pa,opp,margin};
+    if(margin>0&&(!biggestWin||margin>biggestWin.margin))biggestWin=entry;
+    if(margin<0&&(!biggestLoss||margin<biggestLoss.margin))biggestLoss=entry;
+    if(!highScore||pf>highScore.pf)highScore=entry;
+    if(!lowAllowed||pa<lowAllowed.pa)lowAllowed=entry;
+  }
+  return{games,biggestWin,biggestLoss,highScore,lowAllowed,streak:internationalLongestWinStreak(n)};
+}
+function internationalBestFinish(n){
+  const wc=(G.worldCupHistory||[]).filter(x=>[x.championCode,x.runnerUpCode,x.bronzeCode].includes(n.code));
+  const oly=[...(G.olympicHistory||[]),...(G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS)].filter(x=>[x.championCode,x.runnerUpCode,x.bronzeCode].includes(n.code));
+  const finish=(arr)=>arr.some(x=>x.championCode===n.code)?'Champion':arr.some(x=>x.runnerUpCode===n.code)?'Runner-up':arr.some(x=>x.bronzeCode===n.code)?'Bronze':'—';
+  return{wc:finish(wc),oly:finish(oly),wcMedals:wc.length,olyMedals:oly.length};
+}
+function intlRecordLeaderList(title,rows,formatter){
+  return `<div class="sectionTitle">${title}</div><div class="intlRecordLeaderList">${rows.length?rows.map((x,i)=>`<div class="intlRecordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.gp} international game${x.gp===1?'':'s'}</small></div><strong>${formatter(x)}</strong></div>`).join(''):`<div class="empty">No international record data yet.</div>`}</div>`;
+}
+function internationalRecordsPage(n){
+  const mode=ui.intlRecordMode||'career';
+  const tabs=`<div class="intlRecordTabs"><button data-intlrecord="career" class="${mode==='career'?'active':''}">Career</button><button data-intlrecord="single" class="${mode==='single'?'active':''}">Single Game</button><button data-intlrecord="team" class="${mode==='team'?'active':''}">Team</button></div>`;
+  const hero=`<div class="intlRecordHero"><div class="eyebrow">${n.name.toUpperCase()} · RECORD BOOK</div><h3>National Program Records</h3><p>Calculated from the program's authoritative international player statistics and recorded national-team game results. Records evolve automatically with the career.</p></div>`;
+  let body='';
+  if(mode==='career'){
+    body=intlRecordLeaderList('International Appearances',internationalCareerLeaders(n,'gp',5),x=>`${x.gp}`)+
+      intlRecordLeaderList('Career Points',internationalCareerLeaders(n,'pts',5),x=>`${Math.round(x.value)}`)+
+      intlRecordLeaderList('Career Rebounds',internationalCareerLeaders(n,'reb',5),x=>`${Math.round(x.value)}`)+
+      intlRecordLeaderList('Career Assists',internationalCareerLeaders(n,'ast',5),x=>`${Math.round(x.value)}`)+
+      intlRecordLeaderList('Career Steals',internationalCareerLeaders(n,'stl',5),x=>`${Math.round(x.value)}`)+
+      intlRecordLeaderList('Career Blocks',internationalCareerLeaders(n,'blk',5),x=>`${Math.round(x.value)}`)+
+      intlRecordLeaderList('Scoring Average · Min 5 Games',internationalCareerLeaders(n,'pts',5,{average:true,minGp:5}),x=>`${x.value.toFixed(1)} PPG`);
+  }else if(mode==='single'){
+    const rows=internationalSingleGameRecords(n);
+    body=`<div class="sectionTitle">Single-Game Player Records</div><div class="intlRecordGrid">${rows.map(r=>r.value!=null?`<div class="intlRecordCard"><small>${r.label}</small><strong>${r.value}</strong><b>${r.line?.name||playerByAnyId(r.line?.playerId)?.name||'Unknown Player'}</b><span>vs ${nat(r.opp)?.name||r.opp}${r.g?.season?` · ${gameYearForSeason(r.g.season)}`:''}</span></div>`:`<div class="intlRecordCard"><small>${r.label}</small><strong>—</strong><b>No record yet</b><span>Recorded international games will populate this category.</span></div>`).join('')}</div>`;
+  }else{
+    const tr=internationalTeamRecords(n),finish=internationalBestFinish(n),fmt=e=>e?`${e.pf}–${e.pa} vs ${nat(e.opp)?.name||e.opp}`:'—';
+    body=`<div class="sectionTitle">Team Game Records</div><div class="intlTeamRecordGrid">
+      <div class="intlRecordCard"><small>Largest Win</small><strong>${tr.biggestWin?`+${tr.biggestWin.margin}`:'—'}</strong><b>${fmt(tr.biggestWin)}</b><span>Biggest winning margin</span></div>
+      <div class="intlRecordCard"><small>Largest Defeat</small><strong>${tr.biggestLoss?tr.biggestLoss.margin:'—'}</strong><b>${fmt(tr.biggestLoss)}</b><span>Largest losing margin</span></div>
+      <div class="intlRecordCard"><small>Highest Score</small><strong>${tr.highScore?.pf??'—'}</strong><b>${fmt(tr.highScore)}</b><span>Most points by ${n.name}</span></div>
+      <div class="intlRecordCard"><small>Lowest Points Allowed</small><strong>${tr.lowAllowed?.pa??'—'}</strong><b>${fmt(tr.lowAllowed)}</b><span>Fewest opponent points conceded</span></div>
+      <div class="intlRecordCard"><small>Longest Win Streak</small><strong>${tr.streak||'—'}</strong><b>${tr.streak?`${tr.streak} consecutive wins`:'No streak yet'}</b><span>Across recorded international games</span></div>
+      <div class="intlRecordCard"><small>Program Games</small><strong>${tr.games.length}</strong><b>${n.record.w}–${n.record.l} current career record</b><span>Recorded national-team games in this save</span></div>
+    </div><div class="sectionTitle">Major Tournament Best</div><div class="intlRecordGrid"><div class="intlRecordCard"><small>World Cup Best</small><strong>${finish.wc}</strong><b>${finish.wcMedals} medal${finish.wcMedals===1?'':'s'}</b><span>Best recorded World Cup finish</span></div><div class="intlRecordCard"><small>Olympic Best</small><strong>${finish.oly}</strong><b>${finish.olyMedals} medal${finish.olyMedals===1?'':'s'}</b><span>Historical seed plus career Olympic results</span></div></div>`;
+  }
+  return hero+tabs+body;
+}
+
 function internationalSquad(n,code){
   ensureNationalDepth(G,code,24);
   let cands=nationalCandidates(G,code).slice(0,36);cands.forEach(p=>ensureInternationalAffiliation(p));
@@ -20582,8 +20709,8 @@ function internationalOlympics(n){
 function international(){
   let code=G.userNationalGM?.nationCode;
   if(!code){const options=G.nationalTeams.filter(n=>NATIONAL_GM_CONTROLLABLE.has(n.code)).sort((a,b)=>a.name.localeCompare(b.name));return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · Take your career onto the international stage</p></div><div class="card"><div class="eyebrow">National Team Management</div><h3>Manage a Basketball Nation</h3><div class="smallcopy">National GM control is limited to established programs with enough player depth to support meaningful squad selection. Other nations remain active in FIBA qualification and the World Cup.</div><label>NATION</label><select id="nation">${options.map(n=>`<option value="${n.code}">${flagEmoji(n.code)} ${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`}
-  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["olympics","Olympics"],["rankings","World Rankings"]],body;
-  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="olympics")body=internationalOlympics(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else body=internationalWorldCup();
+  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["olympics","Olympics"],["rankings","World Rankings"],["records","Records"]],body;
+  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="olympics")body=internationalOlympics(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else if(ui.intlTab==="records")body=internationalRecordsPage(n);else body=internationalWorldCup();
   return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · ${n.name} · World #${nationalWorldRank(code)||"—"}</p></div><div class="tabs compactTabRow intlMainTabs globalLevel1Tabs">${tabs.map(x=>`<button data-intltab="${x[0]}" class="${ui.intlTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
 
@@ -21027,7 +21154,7 @@ if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;ui.newsSeason=G.season;ui.newsHistoryMode=false;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});
+$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});$$("[data-intlrecord]").forEach(b=>b.onclick=()=>{ui.intlRecordMode=b.dataset.intlrecord;render()});
   $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
   $$("[data-olystage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.olyReviewStage=b.dataset.olystage;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#globalExit"))$("#globalExit").onclick=async()=>{await save();ui.page="home";show("landing")};
