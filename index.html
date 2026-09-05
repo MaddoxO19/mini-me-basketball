@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.30 Embedded Team Crest Integration</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.31 Honours Milestones & Combined Scoring Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2650,10 +2650,20 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlTeamRecordGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
 @media(max-width:560px){.intlProgramSnapshot,.intlRecordGrid,.intlTeamRecordGrid{grid-template-columns:1fr 1fr}.intlRecordCard{padding:9px}.intlRecordCard>strong{font-size:16px}}
 
+
+/* v0.1.49.77.5.5.5.31 — objective League Honours milestones */
+.honoursMilestoneIntro{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.07),var(--panel));border-radius:16px;padding:14px;margin-bottom:14px}
+.honoursMilestoneIntro h3{margin:3px 0 6px;font-size:18px}.honoursMilestoneIntro p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}.honoursMilestoneIntro strong{color:var(--accent2)}
+.honoursMilestoneHero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:15px}.honoursMilestoneHero>div{border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:10px;text-align:center}.honoursMilestoneHero b{display:block;font-size:18px;color:var(--accent2)}.honoursMilestoneHero small{display:block;color:var(--muted);font-size:8px;margin-top:2px;text-transform:uppercase;letter-spacing:.45px}
+.honoursBenchmarkSection{margin:14px 0 8px}.honoursBenchmarkSection h3{margin:0 0 8px;font-size:16px}
+.honoursBenchmarkList{display:grid;gap:8px}.honoursBenchmarkCard{border:1px solid var(--line);background:var(--panel);border-radius:14px;overflow:hidden}.honoursBenchmarkTop{padding:11px 12px;border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.honoursBenchmarkTop small{display:block;color:var(--accent2);font-weight:900;font-size:8px;letter-spacing:.5px;text-transform:uppercase}.honoursBenchmarkTop b{display:block;font-size:13px;margin-top:2px}.honoursBenchmarkMark{text-align:right}.honoursBenchmarkMark strong{display:block;font-size:20px;color:var(--accent2)}.honoursBenchmarkMark span{display:block;color:var(--muted);font-size:8px}
+.honoursBenchmarkCompare{padding:10px 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}.honoursBenchmarkCompare b{display:block;font-size:11px}.honoursBenchmarkCompare small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.honoursBenchmarkStatus{font-size:8px;font-weight:950;letter-spacing:.45px;text-transform:uppercase;border:1px solid var(--line);border-radius:999px;padding:5px 8px;white-space:nowrap}.honoursBenchmarkStatus.broken{color:var(--good);border-color:rgba(87,206,144,.4)}.honoursBenchmarkStatus.matched{color:var(--accent2);border-color:#66502c}.honoursBenchmarkStatus.chasing{color:var(--muted)}
+@media(max-width:560px){.honoursMilestoneHero{grid-template-columns:repeat(3,minmax(0,1fr))}.honoursBenchmarkTop{grid-template-columns:minmax(0,1fr) 76px}.honoursBenchmarkCompare{grid-template-columns:minmax(0,1fr) auto}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.29 Writers’ Top 50 Canonical Award Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.31 Honours Milestones & Combined Scoring Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -2822,8 +2832,9 @@ function historicalFranchiseCoverage(){
 }
 
 // Verified career-to-date baselines for the most historically significant active launch players.
-// Totals are regular-season figures through 2025/26. Other launch players retain game-generated
-// history until their verified production baseline is added in a later data pass.
+// Source stat blocks are regular-season figures through 2025/26. Because Mini&Me stores career scoring
+// in one combined bucket, verified historical playoff points are added separately by
+// HISTORICAL_PLAYOFF_SCORING_ADJUSTMENTS so career PTS comparisons remain like-for-like.
 const ACTIVE_CAREER_BASELINES={
   "LeBron James":{age:41,experienceYears:23,legacyAliasId:"LEG_LEBRON",stats:{gp:1622,gs:1620,min:61030,fgm:15961,fga:31502,tpm:2636,tpa:7565,ftm:8882,fta:12051,reb:12095,ast:12016,stl:2417,blk:1185,tov:5650,pf:2862,pts:43440},championships:[2012,2013,2016,2020],awards:["4× MVP","4× Finals MVP","21× All-NBA","22× All-Star","Rookie of the Year"]},
   "Stephen Curry":{age:38,experienceYears:17,legacyAliasId:"LEG_CURRY",stats:{gp:1069,gs:1061,min:36304,fgm:9022,fga:19155,tpm:4248,tpa:10073,ftm:4236,fta:4645,reb:4973,ast:6743,stl:1602,blk:282,tov:3308,pf:2385,pts:26528},championships:[2015,2017,2018,2022],awards:["2× MVP","Finals MVP","NBA 75th Anniversary Team"]},
@@ -8909,11 +8920,26 @@ const HISTORICAL_LEGACY_BASELINE={
   },
   career:{
     points:[
-      {playerId:"LEG_LEBRON",sourcePlayerName:"LeBron James",playerName:"LeBron Haymes",clubName:"League legacy",value:43440,historical:true},
-      {playerId:"LEG_KAREEM",playerName:"Kareem Abdul-Jaffar",clubName:"League legacy",value:38387,historical:true},
-      {playerId:"LEG_MALONE",playerName:"Karl Maloney",clubName:"League legacy",value:36928,historical:true},
-      {playerId:"LEG_KOBE",playerName:"Kobe Brayant",clubName:"League legacy",value:33643,historical:true},
-      {playerId:"LEG_DURANT",sourcePlayerName:"Kevin Durant",playerName:"Kevin Durrant",clubName:"League legacy",value:32597,historical:true}
+      {playerId:"LEG_LEBRON",sourcePlayerName:"LeBron James",playerName:"LeBron Haymes",clubName:"League legacy",value:51961,historical:true},
+      {playerId:"LEG_KAREEM",playerName:"Kareem Abdul-Jaffar",clubName:"League legacy",value:44149,historical:true},
+      {playerId:"LEG_MALONE",playerName:"Karl Maloney",clubName:"League legacy",value:41689,historical:true},
+      {playerId:"LEG_KOBE",playerName:"Kobe Brayant",clubName:"League legacy",value:39283,historical:true},
+      {playerId:"LEG_JORDAN_PTS",playerName:"Michael Jordon",clubName:"League legacy",value:38279,historical:true},
+      {playerId:"LEG_DURANT",sourcePlayerName:"Kevin Durant",playerName:"Kevin Durrant",clubName:"League legacy",value:37605,historical:true},
+      {playerId:"LEG_DIRK_PTS",playerName:"Dirk Nowitzkii",clubName:"League legacy",value:35223,historical:true},
+      {playerId:"LEG_WILT_PTS",playerName:"Walt Chamberlain",clubName:"League legacy",value:35026,historical:true},
+      {playerId:"LEG_SHAQ_PTS",playerName:"Shaq O'Neil",clubName:"League legacy",value:33846,historical:true},
+      {playerId:"LEG_HARDEN",sourcePlayerName:"James Harden",playerName:"James Pardon",clubName:"League legacy",value:33579,historical:true},
+      {playerId:"LEG_DUNCAN_PTS",playerName:"Tim Duncann",clubName:"League legacy",value:31668,historical:true},
+      {playerId:"LEG_HAKEEM_PTS",playerName:"Hakeem Olajawon",clubName:"League legacy",value:30701,historical:true},
+      {playerId:"LEG_CURRY_PTS",sourcePlayerName:"Stephen Curry",playerName:"Stephen Corry",clubName:"League legacy",value:30675,historical:true},
+      {playerId:"LEG_WESTBROOK_PTS",sourcePlayerName:"Russell Westbrook",playerName:"Russell Westbrooke",clubName:"League legacy",value:30211,historical:true},
+      {playerId:"LEG_CARMELO_PTS",playerName:"Carmelo Anthonie",clubName:"League legacy",value:30203,historical:true},
+      {playerId:"LEG_HAVLICEK_PTS",playerName:"John Havlichek",clubName:"League legacy",value:30171,historical:true},
+      {playerId:"LEG_WEST_PTS",playerName:"Jerry Weste",clubName:"League legacy",value:29649,historical:true},
+      {playerId:"LEG_PIERCE_PTS",playerName:"Paul Pearce",clubName:"League legacy",value:29577,historical:true},
+      {playerId:"LEG_HAYES_PTS",playerName:"Elvin Hayess",clubName:"League legacy",value:29507,historical:true},
+      {playerId:"LEG_MOSES_PTS",playerName:"Moses Maloney",clubName:"League legacy",value:29486,historical:true}
     ],
     rebounds:[
       {playerId:"LEG_WILT",playerName:"Walt Chamberlain",clubName:"League legacy",value:23924,historical:true},
@@ -9066,7 +9092,21 @@ function ingestHistoricalGameRecords(G,game){
   }
   return game;
 }
-function currentCareerTotal(p,key){return +(p?.careerStats?.[key]||0)+ +(p?.seasonStats?.[key]||0)}
+const HISTORICAL_PLAYOFF_SCORING_ADJUSTMENTS={
+  "LeBron James":8521,
+  "Kevin Durant":5008,
+  "James Harden":4240,
+  "Stephen Curry":4147,
+  "Russell Westbrook":3035
+};
+function historicalCombinedScoringAdjustment(p){
+  const source=String(p?.sourceTemplateName||p?.sourceName||"").trim();
+  return +(HISTORICAL_PLAYOFF_SCORING_ADJUSTMENTS[source]||0);
+}
+function currentCareerTotal(p,key){
+  const base=+(p?.careerStats?.[key]||0)+ +(p?.seasonStats?.[key]||0);
+  return key==="pts"?base+historicalCombinedScoringAdjustment(p):base;
+}
 function allSeasonRateEntries(G,key,minGp=20){
   const out=[],seen=new Set();
   const addHistory=(p,fallbackClub=null)=>{
@@ -14803,7 +14843,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.30 Embedded Team Crest Integration",ENGINE_VERSION="E2.26-PROD80";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.31 Honours Milestones & Combined Scoring Integrity",ENGINE_VERSION="E2.26-PROD81";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20874,20 +20914,82 @@ function writersRowEvidence(x){
   if(x.live?.evidence)return x.live.evidence;
   return `75th Anniversary cohort · seed #${x.seed?.seedRank||"—"}`;
 }
+const LEAGUE_HONOURS_BENCHMARKS={
+  teamTitles:{label:"Most Championships · Franchise",holder:"Boston Heritage legacy",value:18,note:"Historical benchmark"},
+  teamConsecutive:{label:"Most Consecutive Championships · Franchise",holder:"Boston Heritage legacy",value:8,note:"1959–1966 historical benchmark"},
+  teamCups:{label:"Most NBA Cups · Franchise",holder:"Historical three-way tie",value:1,note:"A second Cup establishes a new benchmark"},
+  playerTitles:{label:"Most Championships · Player",holder:"Bill Russel",value:11,note:"Historical player benchmark"},
+  playerConsecutive:{label:"Most Consecutive Championships · Player",holder:"Bill Russel",value:8,note:"Historical player benchmark"},
+  mvps:{label:"Most MVP Awards",holder:"Kareem Abdul-Jaffar",value:6,note:"Historical player benchmark"},
+  finalsMvps:{label:"Most Finals MVP Awards",holder:"Michael Jordon",value:6,note:"Historical player benchmark"},
+  dpoys:{label:"Most Defensive Player of the Year Awards",holder:"Historical three-way tie",value:4,note:"Historical player benchmark"}
+};
+function honoursAwardSeason(row){const n=+(row?.season??row?.year);return Number.isFinite(n)?n:null}
+function honoursCareerAwardCount(p,bucket){
+  const seen=new Set();
+  for(const a of p?.awardHistory||[]){
+    if(canonicalLeagueHonourBucket(a)!==bucket)continue;
+    const s=honoursAwardSeason(a),key=s==null?`${bucket}|${leagueAwardName(a)}`:`${bucket}|${s}`;
+    seen.add(key);
+  }
+  return seen.size;
+}
+function honoursChampionshipSeasons(p){
+  const out=new Set();
+  for(const a of p?.awardHistory||[]){if(isNbaChampionshipHonourName(leagueAwardName(a))){const s=honoursAwardSeason(a);if(s!=null)out.add(s)}}
+  return [...out].sort((a,b)=>a-b);
+}
+function longestNumericRun(values){
+  let best=0,run=0,prev=null;
+  for(const n of [...new Set(values)].sort((a,b)=>a-b)){run=(prev!=null&&n===prev+1)?run+1:1;best=Math.max(best,run);prev=n}
+  return best;
+}
+function leagueHonoursCurrentRecords(){
+  const history=[...(G.leagueHistory||[])].sort((a,b)=>(+a.season||0)-(+b.season||0));
+  const clubs=G.clubs||[];
+  let teamTitles={value:0,name:"No career champion yet"},teamCups={value:0,name:"No career Cup champion yet"};
+  for(const club of clubs){
+    const titles=history.filter(h=>(h.championClubId||h.nbaChampionClubId||h.championId)===club.id).length;
+    const cups=history.filter(h=>(h.cupChampionClubId||h.nbaCupChampionClubId||h.inSeasonCup?.winnerClubId)===club.id).length;
+    if(titles>teamTitles.value)teamTitles={value:titles,name:club.name};
+    if(cups>teamCups.value)teamCups={value:cups,name:club.name};
+  }
+  let bestTeamRun={value:0,name:"No consecutive title run yet"},runId=null,run=0;
+  for(const h of history){const id=h.championClubId||h.nbaChampionClubId||h.championId||null;if(id&&id===runId)run++;else{runId=id;run=id?1:0}if(run>bestTeamRun.value)bestTeamRun={value:run,name:clubById(G,id)?.name||id||"—"}}
+  const players=[...new Map([...allPlayers(G),...retiredPlayerPool(G)].filter(Boolean).map(p=>[String(p.id),p])).values()];
+  const record=(getter)=>{let best={value:0,name:"No career-era holder yet"};for(const p of players){const v=+getter(p)||0;if(v>best.value)best={value:v,name:p.name}}return best};
+  return{
+    teamTitles,teamConsecutive:bestTeamRun,teamCups,
+    playerTitles:record(p=>honoursChampionshipSeasons(p).length),
+    playerConsecutive:record(p=>longestNumericRun(honoursChampionshipSeasons(p))),
+    mvps:record(p=>honoursCareerAwardCount(p,"mvp")),
+    finalsMvps:record(p=>honoursCareerAwardCount(p,"finals mvp")),
+    dpoys:record(p=>honoursCareerAwardCount(p,"dpoy"))
+  };
+}
+function honoursMilestoneStatus(current,benchmark){
+  if(current>benchmark)return{label:"Record Broken",cls:"broken"};
+  if(current===benchmark&&current>0)return{label:"Record Matched",cls:"matched"};
+  return{label:current?`${benchmark-current} to match`:"Standing",cls:"chasing"};
+}
+function honoursBenchmarkCard(key,current){
+  const b=LEAGUE_HONOURS_BENCHMARKS[key],s=honoursMilestoneStatus(+current.value||0,b.value);
+  return `<div class="honoursBenchmarkCard"><div class="honoursBenchmarkTop"><div><small>Historical Mark to Beat</small><b>${b.label}</b><span style="display:block;color:var(--muted);font-size:9px;margin-top:3px">${b.holder} · ${b.note}</span></div><div class="honoursBenchmarkMark"><strong>${b.value}</strong><span>BENCHMARK</span></div></div><div class="honoursBenchmarkCompare"><div><b>${current.name}</b><small>Mini&Me career-universe record · ${(+current.value||0).toLocaleString("en-US")}</small></div><span class="honoursBenchmarkStatus ${s.cls}">${s.label}</span></div></div>`;
+}
 function leagueHonours(){
   const awardSig=[...allPlayers(G),...retiredPlayerPool(G)].reduce((n,p)=>n+(p?.awardHistory?.length||0),0);
-  const sig=`writers27|${historicalRecordSnapshotSignature(G)}|${(G.leagueHistory||[]).length}|${(G.retiredPlayers||[]).length}|${G.season}|${awardSig}`;
+  const sig=`milestones31|${(G.leagueHistory||[]).length}|${G.season}|${awardSig}`;
   if(G?._leagueHonoursHtmlCache?.signature===sig)return G._leagueHonoursHtmlCache.html;
-  const history=(G.leagueHistory||[]).slice();
-  const rows=writersTop50Rows();
-  const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
-  const careerEra=rows.filter(x=>x.kind==="career").length;
-  const html=`<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${careerEra}</b><small>Career-Era Entries</small></div></div>
-    <div class="writersIntro"><div class="eyebrow">MINI&ME BASKETBALL WRITERS</div><h3>Writers’ Top 50</h3><p>A living all-time ballot. The 2026 foundation is seeded from the <strong>75th Anniversary cohort</strong>; players from the career universe rise through the Legacy Index. Major NBA achievement, championships, longevity, peak dominance and all-time statistical standing matter. Summer League and other developmental honours do not.</p></div>
-    <div class="writersTop50">${rows.map((x,i)=>`<div class="writersRow"><div class="writersRank">${i+1}</div><div class="writersMain"><b>${writersRowName(x)}</b><small>${writersRowMeta(x)}</small><small class="writersEvidence">${writersRowEvidence(x)}</small></div><div class="writersIndex"><b>${Math.round(x.score).toLocaleString("en-US")}</b><small>Legacy Index</small></div></div>`).join("")}</div>`;
+  const current=leagueHonoursCurrentRecords();
+  const keys=Object.keys(LEAGUE_HONOURS_BENCHMARKS),broken=keys.filter(k=>current[k].value>LEAGUE_HONOURS_BENCHMARKS[k].value).length,matched=keys.filter(k=>current[k].value===LEAGUE_HONOURS_BENCHMARKS[k].value&&current[k].value>0).length;
+  const html=`<div class="honoursMilestoneIntro"><div class="eyebrow">LEAGUE HONOURS</div><h3>Honours & Milestones</h3><p>Objective historical marks for the Mini&Me basketball universe to chase. <strong>Records</strong> tracks statistical leaderboards; this page tracks major team and player achievements. When the career universe matches or passes a benchmark, the card updates automatically.</p></div>
+    <div class="honoursMilestoneHero"><div><b>${keys.length}</b><small>Benchmarks</small></div><div><b>${broken}</b><small>Records Broken</small></div><div><b>${matched}</b><small>Records Matched</small></div></div>
+    <div class="honoursBenchmarkSection"><h3>Team Benchmarks</h3><div class="honoursBenchmarkList">${["teamTitles","teamConsecutive","teamCups"].map(k=>honoursBenchmarkCard(k,current[k])).join("")}</div></div>
+    <div class="honoursBenchmarkSection"><h3>Player Benchmarks</h3><div class="honoursBenchmarkList">${["playerTitles","playerConsecutive","mvps","finalsMvps","dpoys"].map(k=>honoursBenchmarkCard(k,current[k])).join("")}</div></div>`;
   if(G)G._leagueHonoursHtmlCache={signature:sig,html};
   return html;
 }
+
 function league(){
   const tabs=[["standings","Standings"],["cup","NBA Cup"],["post","Postseason"],["injuries","Injuries"],["awards","Awards"],["leaders","Records"],["legacy","History"],["honours","Honours"]];
   let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="leaders"?leagueRecordsPage():ui.leagueTab==="injuries"?leagueInjuries():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():ui.leagueTab==="honours"?leagueHonours():postseasonPage();
