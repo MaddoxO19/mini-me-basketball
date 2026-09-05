@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.13 Records · Historical Identity Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2546,10 +2546,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    The same protection applies across PTS, REB, AST, STL, BLK, 3PM, GP and season
    average leaderboards. Single-game benchmark cards also evolve when a simulated
    game exceeds the historical mark. */
+/* v0.1.49.77.5.5.5.14 — Game loop responsiveness
+   ensureLeagueStatisticalIdentities is now signature-guarded using season plus
+   relevant player-pool counts. Repeated simulations on the same league day no
+   longer rescan the entire player universe once per game, while genuine pool
+   changes (new players, FA movement, two-way/G-League changes, draft changes,
+   season rollover) invalidate the cache and run the full reconciliation. */
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.13 Records · Historical Identity Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -5719,7 +5725,37 @@ function assignEngineStatisticalIdentity(player,counts=null){
   if(counts&&counts[tier]!==undefined)counts[tier]++;
   return player.statisticalIdentity;
 }
-function ensureLeagueStatisticalIdentities(G){
+
+function leagueStatisticalIdentitySignature(G){
+  if(!G)return "0";
+  let clubRoster=0,twoWay=0,gLeague=0;
+  for(const club of (G.clubs||[])){
+    clubRoster+=(club.roster||[]).length;
+    twoWay+=(club.twoWayRoster||[]).length;
+    gLeague+=(club.gLeagueRoster||[]).length;
+  }
+  const free=(G.freeAgents||[]).length;
+  const external=(G.externalPros||G.externalPlayers||G.internationalPros||[]).length;
+  const draft=(G.draftProspects||G.draftClass||[]).length;
+  return [
+    +G.season||0,
+    clubRoster,
+    twoWay,
+    gLeague,
+    free,
+    external,
+    draft
+  ].join(":");
+}
+function ensureLeagueStatisticalIdentities(G,{force=false}={}){
+  if(!G)return 0;
+  const sig=leagueStatisticalIdentitySignature(G);
+  if(!force&&G._leagueStatisticalIdentityCache?.signature===sig)return 0;
+  const result=_ensureLeagueStatisticalIdentitiesFull(G);
+  G._leagueStatisticalIdentityCache={signature:sig};
+  return result;
+}
+function _ensureLeagueStatisticalIdentitiesFull(G){
   if(!G)return;
   const counts={Generational:0,Exceptional:0,"Elite Specialist":0};
   const players=[...(G.clubs||[]).flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),...(G.freeAgents||[]),...(G.externalProfessionals||[]),(G.upcomingDraftClass?.prospects||[])].flat().filter(Boolean);
@@ -14505,7 +14541,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.13 Records · Historical Identity Integrity",ENGINE_VERSION="E2.26-PROD62";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness",ENGINE_VERSION="E2.26-PROD63";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
