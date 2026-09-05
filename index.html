@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.18 Fixtures · NBA Cup Schedule Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.19 UI · International Flag Presentation</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2575,10 +2575,21 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    use the same chronological fixture stream. Future Cup knockouts are no longer
    forced to the top of Home before nearer league games. NBA Cup bracket cards
    also show "Upcoming" only once, with an em dash for an unplayed score. */
+
+/* v0.1.49.77.5.5.5.19 — International Courtside flag consistency
+   Qualification and World Cup matchup cards now use the same standalone flag
+   treatment as Olympics, removing the accent-colour rounded tile behind flags. */
+.courtsideUnified.internationalCourtside .broadcastSide .nationalFlagMark.heroFlag{
+  margin:0 auto 10px!important;
+  background:transparent!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.18 Fixtures · NBA Cup Schedule Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.19 UI · International Flag Presentation</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -14570,7 +14581,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.18 Fixtures · NBA Cup Schedule Integrity",ENGINE_VERSION="E2.26-PROD67";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.19 UI · International Flag Presentation",ENGINE_VERSION="E2.26-PROD68";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17076,8 +17087,8 @@ function worldCupHomeHtml(){
   const eventNo=(live.stage==="FIRST_GROUP_STAGE"||live.stage==="SECOND_GROUP_STAGE")?`Matchday ${(live.eventIndex||0)+1}`:stage;
   return courtsideNextGameCard({
     brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${stage} · ${eventNo}`,
-    leftMark:fibaNationMark(next.a),leftName:a?.name||next.a,leftSub:`World #${nationalWorldRank(next.a)||"—"} · ${aRec.w}–${aRec.l}`,
-    rightMark:fibaNationMark(next.b),rightName:b?.name||next.b,rightSub:`World #${nationalWorldRank(next.b)||"—"} · ${bRec.w}–${bRec.l}`,
+    leftMark:nationalFlagMark(next.a,"heroFlag"),leftName:a?.name||next.a,leftSub:`World #${nationalWorldRank(next.a)||"—"} · ${aRec.w}–${aRec.l}`,
+    rightMark:nationalFlagMark(next.b,"heroFlag"),rightName:b?.name||next.b,rightSub:`World #${nationalWorldRank(next.b)||"—"} · ${bRec.w}–${bRec.l}`,
     context:[{value:nation?.name||code||"—",label:"Your Nation"},{value:`${record.w}–${record.l}`,label:"World Cup Record"},{value:stage,label:"Stage"}],
     actionHtml:`<button id="homeMainAction" class="primaryProgress">Play ${stage==="First Group Stage"||stage==="Second Group Stage"?"World Cup Game":stage.replace(/s$/,"")}</button>`,
     extraClass:"internationalCourtside"
@@ -17448,8 +17459,8 @@ function fibaHomeHtml(){
   return courtsideNextGameCard({
     brand:"FIBA QUALIFICATION · COURTSIDE NETWORK",live:"NEXT GAME",
     meta:`${gameYearForSeason(G.season)} World Cup Qualification · Matchday ${md} of ${total}`,
-    leftMark:fibaNationMark(a),leftName:fibaNationName(a),leftSub:`World #${nationalWorldRank(a)||"—"}`,
-    rightMark:fibaNationMark(b),rightName:fibaNationName(b),rightSub:`World #${nationalWorldRank(b)||"—"}`,
+    leftMark:nationalFlagMark(a,"heroFlag"),leftName:fibaNationName(a),leftSub:`World #${nationalWorldRank(a)||"—"}`,
+    rightMark:nationalFlagMark(b,"heroFlag"),rightName:fibaNationName(b),rightSub:`World #${nationalWorldRank(b)||"—"}`,
     context:[{value:fibaNationName(code),label:"Your Nation"},{value:`#${nationalWorldRank(code)||"—"}`,label:"World Rank"},{value:`${md}/${total}`,label:"Window"}],
     actionHtml:`<div class="postHomeActions"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div>`,
     extraClass:"internationalCourtside"
