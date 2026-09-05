@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.25 League Honours Integrity & Navigation</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.26 All-Time Legends Integrity & Summer League Repair</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -8951,6 +8951,37 @@ const HISTORICAL_LEGACY_BASELINE={
   },
   honours:{playerChampionships:[{playerName:"Bill Russel",value:11},{playerName:"Sam Jonez",value:10},{playerName:"John Havlichek",value:8}],consecutiveTitles:{playerName:"Bill Russel",value:8,label:"Eight straight championships"},threePeats:[{playerName:"Michael Jordon",value:2,label:"Two career three-peats"},{playerName:"Kobe Brayant",value:1,label:"2000–02 style three-peat benchmark"}]}
 };
+
+// v0.1.49.77.5.5.5.26 — authoritative league-legend resume baseline.
+// These are league-wide pre-2026 legacy anchors, kept separate from franchise
+// notables and from the live career awardHistory.  The values below are limited
+// to major NBA resume markers that are deliberately used by the legend model.
+const HISTORICAL_LEGEND_RESUMES=[
+  {playerName:"Michael Jordon",sourcePlayerName:"Michael Jordan",pos:"SG",championships:6,mvps:5,finalsMvps:6,allNbaFirst:10,dpoys:1,scoringTitles:10},
+  {playerName:"Kareem Abdul-Jaffar",sourcePlayerName:"Kareem Abdul-Jabbar",pos:"C",championships:6,mvps:6,finalsMvps:2,allNbaFirst:10,scoringTitles:2},
+  {playerName:"Bill Russel",sourcePlayerName:"Bill Russell",pos:"C",championships:11,mvps:5,finalsMvps:0,allNbaFirst:3},
+  {playerName:"Magic Johnsonn",sourcePlayerName:"Magic Johnson",pos:"PG",championships:5,mvps:3,finalsMvps:3,allNbaFirst:9},
+  {playerName:"Larry Byrd",sourcePlayerName:"Larry Bird",pos:"SF/PF",championships:3,mvps:3,finalsMvps:2,allNbaFirst:9},
+  {playerName:"Tim Duncann",sourcePlayerName:"Tim Duncan",pos:"PF/C",championships:5,mvps:2,finalsMvps:3,allNba:15},
+  {playerName:"Walt Chamberlain",sourcePlayerName:"Wilt Chamberlain",pos:"C",championships:2,mvps:4,finalsMvps:1,allNbaFirst:7,scoringTitles:7},
+  {playerName:"Kobe Brayant",sourcePlayerName:"Kobe Bryant",pos:"SG",championships:5,mvps:1,finalsMvps:2},
+  {playerName:"Hakeem Olajawon",sourcePlayerName:"Hakeem Olajuwon",pos:"C",championships:2,mvps:1,finalsMvps:2,dpoys:2}
+];
+function historicalLegendResumeText(r){
+  const bits=[];
+  if(r.championships)bits.push(`${r.championships}× Champion`);
+  if(r.mvps)bits.push(`${r.mvps}× MVP`);
+  if(r.finalsMvps)bits.push(`${r.finalsMvps}× Finals MVP`);
+  if(r.dpoys)bits.push(`${r.dpoys}× DPOY`);
+  if(r.allNbaFirst)bits.push(`${r.allNbaFirst}× All-NBA 1st`);
+  else if(r.allNba)bits.push(`${r.allNba}× All-NBA`);
+  if(r.scoringTitles)bits.push(`${r.scoringTitles}× Scoring Champ`);
+  return bits.join(" · ");
+}
+function historicalLegendResumeScore(r){
+  return (+r.championships||0)*52+(+r.mvps||0)*92+(+r.finalsMvps||0)*76+
+    (+r.dpoys||0)*58+(+r.allNbaFirst||0)*17+(+r.allNba||0)*13+(+r.scoringTitles||0)*18;
+}
 function makeHistoricalRecordState(){
   return {version:4,league:{singleGame:{...HISTORICAL_LEGACY_BASELINE.singleGame},singleGameTop5:JSON.parse(JSON.stringify(HISTORICAL_SINGLE_GAME_TOP5_2026)),teamGame:{},seasonRates:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE.seasonRates)),career:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE.career))},legacy:JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE)),clubs:{},processedGameIds:{}};
 }
@@ -12699,6 +12730,29 @@ function repairSummerLeagueAwardIntegrity(G){
   };
   return{repaired:true,eligible:eligible.length,excluded:ineligible.length};
 }
+function repairHistoricalSummerLeagueAwards(G){
+  if(!G)return{removed:0,players:0};
+  const pool=[...allPlayers(G),...retiredPlayerPool(G)].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i);
+  let removed=0,players=0;
+  for(const p of pool){
+    if(!Array.isArray(p.awardHistory)||!p.awardHistory.length)continue;
+    const before=p.awardHistory.length;
+    const draftYear=Number.isFinite(+p.draftYear)?+p.draftYear:null;
+    p.awardHistory=p.awardHistory.filter(a=>{
+      const name=String(a?.name||a?.award||a?.title||"");
+      if(!/Summer League|All-Summer/i.test(name))return true;
+      const season=+a.season;
+      // Permanent NBA players are Summer League-development eligible only in
+      // their rookie/sophomore window.  A stale award outside that window is
+      // a legacy data error and can be removed safely from awardHistory.
+      if(draftYear!==null&&Number.isFinite(season)&&season>draftYear+1)return false;
+      return true;
+    });
+    const delta=before-p.awardHistory.length;if(delta){removed+=delta;players++;}
+  }
+  G.summerLeagueHistoricalAwardRepair={version:"SL-AWARDS-2",removed,players,season:G.season};
+  return{removed,players};
+}
 function summerLeagueCandidateRoster(G,club){
   ensurePersistentGLeague(club);
   const standard=(club.roster||[]).filter(p=>summerLeagueEligibleStandardPlayer(G,p));
@@ -13000,11 +13054,13 @@ function advanceSummerLeagueFinalFour(G){
 function finalizeSummerLeagueLive(G){
   const live=G.summerLeagueLive;if(!live||live.complete)return;
   live.complete=true; summerLeagueSnapshot(G);
-  const participants=G.clubs.flatMap(c=>[
-    ...c.roster.filter(p=>p.summerLeagueStats?.gp>0),
-    ...(c.twoWayRoster||[]).filter(p=>p.summerLeagueStats?.gp>0),
-    ...(c.gLeagueRoster||[]).filter(p=>p.summerLeagueStats?.gp>0)
-  ]).filter((p,i,a)=>a.findIndex(x=>x.id===p.id)===i);
+  const liveParticipantIds=new Set((live.teams||[]).flatMap(t=>t.playerIds||[]));
+  const liveParticipantPool=[
+    ...G.clubs.flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),
+    ...(G.freeAgents||[]),
+    ...(live.invitees||[])
+  ].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i);
+  const participants=liveParticipantPool.filter(p=>liveParticipantIds.has(p.id)&&p.summerLeagueStats?.gp>0&&summerLeagueAwardEligible(G,p));
   const ranked=[...participants].sort((a,b)=>summerPerformanceScore(b.summerLeagueStats)-summerPerformanceScore(a.summerLeagueStats));
   const mvp=ranked[0]||null,first=[];
   for(const pos of POSITIONS){const p=ranked.find(x=>canPlayPosition(x,pos)&&!first.includes(x));if(p)first.push(p);}
@@ -14738,7 +14794,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.25 League Honours Integrity & Navigation",ENGINE_VERSION="E2.26-PROD75";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.26 All-Time Legends Integrity & Summer League Repair",ENGINE_VERSION="E2.26-PROD76";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -15213,7 +15269,7 @@ async function loadSlot(slot){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
-    const loadMaintenanceVersion="LOAD-PROD70-1";
+    const loadMaintenanceVersion="LOAD-PROD76-1";
     G.runtimeMeta=G.runtimeMeta||{};
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       repairVerifiedNationalityAssignments(G);
@@ -15228,6 +15284,7 @@ async function loadSlot(slot){
       G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
       ensureOlympicHostState(G);ensureFutureOlympicHostAnnouncements(G);
       repairSummerLeagueAwardIntegrity(G);
+      repairHistoricalSummerLeagueAwards(G);
       reportCareerIntegrity("load-maintenance");
       G.runtimeMeta.loadMaintenanceVersion=loadMaintenanceVersion;
     }else{
@@ -16106,47 +16163,84 @@ function leagueHistoricalRankings(){
   });
   return map;
 }
+function leagueHonourWeight(row){
+  const n=String(row?.name||row?.award||row?.title||"").trim();
+  if(!n)return 0;
+  // Developmental honours remain visible on player profiles but do not create
+  // league legends.  This prevents Summer League accumulation from outweighing
+  // NBA-level careers.
+  if(/Summer League|All-Summer/i.test(n))return 0;
+  if(/NBA Cup|Cup Champion|Cup MVP/i.test(n))return /MVP/i.test(n)?12:6;
+  if(/Finals MVP/i.test(n))return 76;
+  if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(n))return 92;
+  if(/Defensive Player|DPOY/i.test(n))return 58;
+  if(/All-NBA First|All League First/i.test(n))return 40;
+  if(/All-NBA Second|All League Second/i.test(n))return 30;
+  if(/All-NBA Third|All League Third/i.test(n))return 22;
+  if(/All-NBA|All League/i.test(n))return 26;
+  if(/Champion|Championship|NBA Title|Finals Winner/i.test(n))return 28;
+  if(/Scoring (Champion|Title)|Scoring Champ/i.test(n))return 24;
+  if(/Rookie of the Year/i.test(n))return 28;
+  if(/All-Defensive/i.test(n))return 18;
+  if(/All-Star MVP/i.test(n))return 18;
+  if(/All-Star/i.test(n))return 10;
+  if(/Sixth Man|Most Improved/i.test(n))return 12;
+  return 4;
+}
+function leagueHonourBreakdown(rows){
+  const clean=(rows||[]).filter(a=>leagueHonourWeight(a)>0);
+  const developmental=(rows||[]).filter(a=>/Summer League|All-Summer/i.test(String(a?.name||a?.award||a?.title||""))).length;
+  const championships=clean.filter(a=>/Champion|Championship|NBA Title|Finals Winner/i.test(String(a?.name||a?.award||a?.title||""))&&!/NBA Cup|Cup Champion/i.test(String(a?.name||a?.award||a?.title||""))).length;
+  const major=clean.filter(a=>/Finals MVP|(^|\b)(NBA )?MVP\b|Most Valuable Player|Defensive Player|DPOY|All-NBA|All League/i.test(String(a?.name||a?.award||a?.title||""))).length;
+  const weight=clean.reduce((sum,a)=>sum+leagueHonourWeight(a),0);
+  return{clean,developmental,championships,major,weight};
+}
 function leagueNotablePlayers(){
   const rankingMap=leagueHistoricalRankings();
   const historic=[...allPlayers(G),...retiredPlayerPool(G)];
   const unique=[...new Map(historic.map(p=>[p.id,p])).values()];
   return unique.map(p=>{
-    const awardRows=p.awardHistory||[];
-    const honours=awardRows.length;
+    const awardRows=p.awardHistory||[],hb=leagueHonourBreakdown(awardRows),honours=hb.clean.length;
     const ident=normalizedHistoricalPlayerIdentity({sourcePlayerName:p.sourceTemplateName||p.sourceName||null,playerName:p.name,playerId:p.id});
     const ranks=(rankingMap.get(ident)?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
     const rankScore=ranks.reduce((sum,r)=>sum+Math.max(0,26-r.rank)*2,0);
     const seasons=(p.seasonHistory||[]).length+(p.retired?0:1);
     const top1=ranks.filter(r=>r.rank===1).length,top3=ranks.filter(r=>r.rank<=3).length;
-    const major=awardRows.filter(a=>/MVP|Most Valuable|Finals MVP|Defensive Player|Rookie of the Year|All-NBA|All League/i.test(String(a.name||a.award||a.title||""))).length;
-    const championships=awardRows.filter(a=>/Champion|Championship|NBA Title|Finals Winner/i.test(String(a.name||a.award||a.title||""))).length;
-    const score=honours*14+major*18+championships*24+rankScore+top1*28+top3*8+seasons*3+(p.ovr||0)*.08;
+    const score=hb.weight+rankScore+top1*36+top3*11+seasons*2+(p.ovr||0)*.05;
     let legacyTier=0,legacyLabel="Notable Player";
-    if(honours>=24||major>=5||championships>=2||(top1>=2&&honours>=10)){legacyTier=2;legacyLabel="League Icon";}
-    else if(honours>=9||major>=2||championships>=1||top1>=1||top3>=3){legacyTier=1;legacyLabel="League Legend";}
-    return{p,honours,ranks,score,legacyTier,legacyLabel};
-  }).sort((a,b)=>b.legacyTier-a.legacyTier||b.score-a.score).slice(0,12);
+    // Championships matter, but supporting-role rings alone cannot make a player
+    // a League Icon.  Icon status needs major individual recognition or an elite
+    // statistical footprint as well.
+    if(hb.weight>=520||hb.major>=5||(hb.major>=2&&hb.championships>=3)||top1>=2||(top1>=1&&top3>=2)){
+      legacyTier=2;legacyLabel="League Icon";
+    }else if(hb.weight>=170||hb.major>=1||hb.championships>=3||top1>=1||top3>=3){
+      legacyTier=1;legacyLabel="League Legend";
+    }
+    return{p,honours,developmentalHonours:hb.developmental,ranks,score,legacyTier,legacyLabel};
+  }).filter(x=>x.legacyTier>0).sort((a,b)=>b.legacyTier-a.legacyTier||b.score-a.score).slice(0,18);
 }
 function leagueHistoricalNotableRows(){
-  const rankings=leagueHistoricalRankings();
-  const rows=[];
-  // League Honours is deliberately derived from league-wide statistical history only.
-  // Franchise-curated notables belong in Club Honours and are no longer auto-promoted
-  // into the league-wide legend list. This also removes the old first-name matching
-  // path that could incorrectly attach one historical player's ranks to another player
-  // who happened to share the same first name.
+  const rankings=leagueHistoricalRankings(),rows=[],used=new Set();
+  // Seed the true all-time greats from an explicit league-wide résumé baseline.
+  // Statistical ranks are additive context, not the sole qualification gate.
+  for(const r of HISTORICAL_LEGEND_RESUMES){
+    const ident=normalizedHistoricalPlayerIdentity({sourcePlayerName:r.sourcePlayerName,playerName:r.playerName});
+    const rankItem=rankings.get(ident);
+    const ranks=(rankItem?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
+    const rankScore=ranks.reduce((sum,x)=>sum+Math.max(0,31-x.rank)*2.25,0)+ranks.filter(x=>x.rank===1).length*42+ranks.filter(x=>x.rank<=3).length*18;
+    const resumeScore=historicalLegendResumeScore(r);
+    rows.push({kind:"history",name:r.playerName,playerName:r.playerName,sourcePlayerName:r.sourcePlayerName,pos:r.pos||"League history",legacy:historicalLegendResumeText(r),ranks,legacyTier:2,legacyLabel:"League Icon",score:resumeScore+rankScore,resume:r});
+    used.add(ident);
+  }
+  // Preserve stat-defined historical legends not already covered by the résumé
+  // baseline, but demand a genuinely elite all-time statistical footprint.
   for(const [ident,x] of rankings.entries()){
-    if(!x.historical)continue;
+    if(used.has(ident)||!x.historical)continue;
     const ranks=(x.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);if(!ranks.length)continue;
-    const top1=ranks.filter(r=>r.rank===1).length;
-    const top3=ranks.filter(r=>r.rank<=3).length;
-    const top5=ranks.filter(r=>r.rank<=5).length;
-    const top10=ranks.filter(r=>r.rank<=10).length;
+    const top1=ranks.filter(r=>r.rank===1).length,top3=ranks.filter(r=>r.rank<=3).length,top5=ranks.filter(r=>r.rank<=5).length,top10=ranks.filter(r=>r.rank<=10).length;
     const bestRank=Math.min(...ranks.map(r=>r.rank));
-    // A league-wide historical legend needs a genuinely elite all-time footprint.
-    // One fringe top-25 placement is not enough to enter the All-Time Legends panel.
-    if(!(bestRank<=5||top10>=2))continue;
-    const rankScore=ranks.reduce((s,r)=>s+Math.max(0,31-r.rank)*2.25,0)+top1*42+top3*18+top5*8;
+    if(!(bestRank<=3||top5>=2||top10>=3))continue;
+    const rankScore=ranks.reduce((sum,r)=>sum+Math.max(0,31-r.rank)*2.25,0)+top1*42+top3*18+top5*8;
     let legacyTier=1,legacyLabel="League Legend";
     if(top1>=2||(top1>=1&&top3>=2)){legacyTier=2;legacyLabel="League Icon";}
     rows.push({kind:"history",name:x.playerName,playerName:x.playerName,sourcePlayerName:x.sourcePlayerName||x.playerName,pos:"League history",legacy:"All-time statistical leader",ranks,legacyTier,legacyLabel,score:rankScore});
@@ -17463,6 +17557,7 @@ function draftHomeContext(){
 }
 function summerLeagueCompletionHtml(){
   repairSummerLeagueAwardIntegrity(G);
+  repairHistoricalSummerLeagueAwards(G);
   const x=me(),sl=G.summerLeague||summerLeagueSnapshot(G),standings=sl?.standings||[];
   const idx=standings.findIndex(s=>s.clubId===x.id),userStanding=idx>=0?standings[idx]:null;
   const champ=sl?.championship,champClub=champ?.championClubId?c(champ.championClubId):null;
@@ -19316,7 +19411,7 @@ function clubHub(){
     const activeRows=legends.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
     const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
     const titleYears=combinedFranchiseTitleYears(club,archive);
-    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No championships recorded"}</small></div><b>${honours.nba} Total</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Seasons completed since your GM career began</small></div><b>${archive.length}</b></div><div class="more"><div><b>GM-Era Record</b><small>Regular-season record during your career</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best GM-Era Season</b><small>${cr.best?`${basketballSeasonLabel(cr.best.season)}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"Franchise Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
+    body=`<div class="clubHonourHero"><div><b>${honours.nba}</b><small>NBA Championships</small></div><div><b>${honours.cup}</b><small>NBA Cup Titles</small></div><div><b>${honours.best}</b><small>Best Records</small></div></div><div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No championships recorded"}</small></div><b>${honours.nba} Total</b></div></div><div class="sectionTitle">Franchise Milestones</div><div class="card"><div class="more"><div><b>Completed Seasons</b><small>Seasons completed since your GM career began</small></div><b>${archive.length}</b></div><div class="more"><div><b>GM-Era Record</b><small>Regular-season record during your career</small></div><b>${cr.w}–${cr.l}</b></div><div class="more"><div><b>Best GM-Era Season</b><small>${cr.best?`${basketballSeasonLabel(cr.best.season)}`:"No completed season yet"}</small></div><b>${cr.best?.record||"—"}</b></div></div><div class="sectionTitle">Notable Players</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"Franchise Icon"}</small></div><strong>${x.resume?x.legacy:(x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy)}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} club honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No notable-player history yet.</div>`}</div>`;
   }else{
     const leaderCard=(label,p,key)=>`<div class="clubCurrentLeader"><small>${label}</small><b>${p?playerNameLink(p):"—"}</b><strong>${p?`${perGame(p.seasonStats,key)} ${key==="pts"?"PPG":key==="ast"?"APG":"RPG"}`:"No games"}</strong></div>`;
     body=`<div class="clubCurrentGrid compactClubCurrent"><div class="clubCurrentCard"><small>Identity</small><b>${club.style||"Balanced"}</b><span>${club.division} Division</span></div><div class="clubCurrentCard"><small>Roster</small><b>${roster.length} + ${(club.twoWayRoster||[]).length} TW</b><span>$${payroll.toFixed(1)}M payroll</span></div><div class="clubCurrentCard"><small>Standing</small><b>#${rank>0?rank:"—"} ${club.conference}</b><span>${r.w||0}–${r.l||0} · ${r.diff>0?"+":""}${Math.round(r.diff||0)} diff</span></div><div class="clubCurrentCard"><small>Strength</small><b>${squadOvr(club)} OVR</b><span>${roster[0]?`${roster[0].name} · ${roster[0].ovr}`:"Roster developing"}</span></div></div>`;
@@ -20297,7 +20392,7 @@ function leagueHonours(){
   const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
   const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
   const leagueIconCount=notableRows.filter(x=>(x.legacyTier||0)>=2).length;
-    const html=`<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
+    const html=`<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} major/supporting honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
     if(G)G._leagueHonoursHtmlCache={signature:sig,html};
     return html;
     
