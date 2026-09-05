@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.24 Save Manager & International UI Polish</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.25 League Honours Integrity & Navigation</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -14738,7 +14738,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.24 Save Manager & International UI Polish",ENGINE_VERSION="E2.26-PROD74";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.25 League Honours Integrity & Navigation",ENGINE_VERSION="E2.26-PROD75";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -16129,28 +16129,27 @@ function leagueNotablePlayers(){
 }
 function leagueHistoricalNotableRows(){
   const rankings=leagueHistoricalRankings();
-  const curated=(G.clubs||[]).flatMap(club=>historicalFranchiseNotables(club.id).map(h=>({...h,clubId:club.id,clubName:club.name})));
-  const rows=[],used=new Set(),seenCurated=new Set();
-  for(const h of curated){
-    // A curated legend can be tagged notable for more than one club — dedupe
-    // by name here, since Club's original version never had to (it only
-    // ever queries one club at a time).
-    const dedupeKey=String(h.name||"").toLowerCase();
-    if(seenCurated.has(dedupeKey))continue;
-    seenCurated.add(dedupeKey);
-    const first=String(h.name||"").split(/\s+/)[0]?.toLowerCase();
-    const match=[...rankings.entries()].find(([id,x])=>String(x.playerName||"").split(/\s+/)[0]?.toLowerCase()===first);
-    const ranks=(match?.[1]?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
-    const rankScore=ranks.reduce((s,r)=>s+Math.max(0,26-r.rank)*2,0);
-    rows.push({kind:"history",name:h.name,playerName:h.name,sourcePlayerName:match?.[1]?.sourcePlayerName||h.name,pos:h.pos,legacy:h.legacy,clubName:h.clubName,ranks,legacyTier:3,legacyLabel:"League Icon",score:700+rankScore});
-    if(match)used.add(match[0]);
-  }
+  const rows=[];
+  // League Honours is deliberately derived from league-wide statistical history only.
+  // Franchise-curated notables belong in Club Honours and are no longer auto-promoted
+  // into the league-wide legend list. This also removes the old first-name matching
+  // path that could incorrectly attach one historical player's ranks to another player
+  // who happened to share the same first name.
   for(const [ident,x] of rankings.entries()){
-    if(used.has(ident)||!x.historical)continue;
+    if(!x.historical)continue;
     const ranks=(x.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);if(!ranks.length)continue;
     const top1=ranks.filter(r=>r.rank===1).length;
-    const score=ranks.reduce((s,r)=>s+Math.max(0,26-r.rank)*2,0)+top1*24;
-    rows.push({kind:"history",name:x.playerName,playerName:x.playerName,sourcePlayerName:x.sourcePlayerName||x.playerName,pos:"League history",legacy:"All-time leader",ranks,legacyTier:1,legacyLabel:"League Legend",score});
+    const top3=ranks.filter(r=>r.rank<=3).length;
+    const top5=ranks.filter(r=>r.rank<=5).length;
+    const top10=ranks.filter(r=>r.rank<=10).length;
+    const bestRank=Math.min(...ranks.map(r=>r.rank));
+    // A league-wide historical legend needs a genuinely elite all-time footprint.
+    // One fringe top-25 placement is not enough to enter the All-Time Legends panel.
+    if(!(bestRank<=5||top10>=2))continue;
+    const rankScore=ranks.reduce((s,r)=>s+Math.max(0,31-r.rank)*2.25,0)+top1*42+top3*18+top5*8;
+    let legacyTier=1,legacyLabel="League Legend";
+    if(top1>=2||(top1>=1&&top3>=2)){legacyTier=2;legacyLabel="League Icon";}
+    rows.push({kind:"history",name:x.playerName,playerName:x.playerName,sourcePlayerName:x.sourcePlayerName||x.playerName,pos:"League history",legacy:"All-time statistical leader",ranks,legacyTier,legacyLabel,score:rankScore});
   }
   return rows.sort((a,b)=>b.legacyTier-a.legacyTier||b.score-a.score);
 }
@@ -20297,14 +20296,14 @@ function leagueHonours(){
   const activeRows=notable.map(x=>({kind:"active",p:x.p,honours:x.honours,ranks:x.ranks,score:x.score,legacyTier:x.legacyTier>=2?3:x.legacyTier,legacyLabel:x.legacyLabel}));
   const notableRows=[...historicalRows,...activeRows].sort((a,b)=>(b.legacyTier||0)-(a.legacyTier||0)||(b.score||0)-(a.score||0)).slice(0,8);
   const distinctChampions=new Set(history.map(h=>h.championClubId||h.championId||h.nbaChampionClubId).filter(Boolean)).size;
-  const leagueIconCount=notable.filter(x=>x.legacyTier>=2).length;
+  const leagueIconCount=notableRows.filter(x=>(x.legacyTier||0)>=2).length;
     const html=`<div class="clubHonourHero"><div><b>${history.length}</b><small>Seasons Completed</small></div><div><b>${distinctChampions}</b><small>Different Champions</small></div><div><b>${leagueIconCount}</b><small>League Icons</small></div></div><div class="sectionTitle">All-Time Legends</div><div class="clubLegendList">${notableRows.length?notableRows.map((x,i)=>x.kind==="history"?`<div class="clubLegendRow"><span>${i+1}</span><div><b>${clubHistoricalNotableName(x)}</b><small>${clubHistoricalNotableStatus(x)} · ${x.legacyLabel||"League Icon"}</small></div><strong>${x.ranks?.length?x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · "):x.legacy}</strong></div>`:`<div class="clubLegendRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.honours} career honour${x.honours===1?"":"s"} · ${x.legacyLabel||"Notable Player"}</small></div><strong>${x.ranks.slice(0,3).map(r=>`#${r.rank} ${r.label}`).join(" · ")||`OVR ${x.p.ovr}`}</strong></div>`).join(""):`<div class="empty">No league-wide notable-player history yet.</div>`}</div>`;
     if(G)G._leagueHonoursHtmlCache={signature:sig,html};
     return html;
     
 }
 function league(){
-  const tabs=[["standings","Standings"],["cup","NBA Cup"],["leaders","Records"],["injuries","Injuries"],["awards","Awards"],["post","Postseason"],["legacy","History"],["honours","Honours"]];
+  const tabs=[["standings","Standings"],["cup","NBA Cup"],["post","Postseason"],["injuries","Injuries"],["awards","Awards"],["leaders","Records"],["legacy","History"],["honours","Honours"]];
   let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="leaders"?leagueRecordsPage():ui.leagueTab==="injuries"?leagueInjuries():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():ui.leagueTab==="honours"?leagueHonours():postseasonPage();
   return `<div class="leaguePageHead"><h2>League</h2><p>Standings, competitions, records, history and honours</p></div><div class="tabs compactTabRow globalLevel1Tabs">${tabs.map(x=>`<button data-leaguetab="${x[0]}" class="${ui.leagueTab===x[0]?"active":""}">${x[1]}</button>`).join("")}</div>`+body;
 }
