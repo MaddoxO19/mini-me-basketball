@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.28 Writers' Top 50 Championship Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.29 Writers' Top 50 Canonical Award Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2653,7 +2653,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.28 Writers’ Top 50 Championship Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.29 Writers’ Top 50 Canonical Award Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -14803,7 +14803,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.28 Writers’ Top 50 Championship Integrity",ENGINE_VERSION="E2.26-PROD78";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.29 Writers’ Top 50 Canonical Award Integrity",ENGINE_VERSION="E2.26-PROD78";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -16172,14 +16172,49 @@ function leagueHistoricalRankings(){
   });
   return map;
 }
+// v0.1.49.77.5.5.5.29 — canonical award classification for Writers' Top 50 integrity.
+// League championships are intentionally strict: a scoring title, NBA Cup title,
+// international title or Summer League title must never be interpreted as an NBA ring.
+function leagueAwardName(row){return String(row?.name||row?.award||row?.title||"").trim();}
+function isDevelopmentalHonourName(n){return /Summer League|All-Summer/i.test(String(n||""));}
+function isNbaCupHonourName(n){return /NBA Cup|Cup Champion|Cup MVP/i.test(String(n||""));}
+function isScoringTitleHonourName(n){return /Scoring (Champion|Title)|Scoring Champ/i.test(String(n||""));}
+function isInternationalHonourName(n){return /World Cup|Olympic|FIBA|All-World Cup|All-Olympic/i.test(String(n||""));}
+function isNbaChampionshipHonourName(n){
+  n=String(n||"").trim();
+  if(!n||isDevelopmentalHonourName(n)||isNbaCupHonourName(n)||isScoringTitleHonourName(n)||isInternationalHonourName(n))return false;
+  return /^(?:NBA\s+)?Champion(?:ship)?(?:\s+Winner)?$/i.test(n)||/^(?:NBA\s+)?Title$/i.test(n)||/^Finals Winner$/i.test(n);
+}
+function canonicalLeagueHonourBucket(row){
+  const raw=leagueAwardName(row);
+  if(!raw)return"";
+  if(isDevelopmentalHonourName(raw))return"developmental";
+  if(isNbaCupHonourName(raw))return /MVP/i.test(raw)?"nba cup mvp":"nba cup champion";
+  if(isScoringTitleHonourName(raw))return"scoring champion";
+  if(isInternationalHonourName(raw))return raw.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+  if(isNbaChampionshipHonourName(raw))return"nba championship";
+  if(/Finals MVP/i.test(raw))return"finals mvp";
+  if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(raw))return"mvp";
+  if(/Defensive Player|DPOY/i.test(raw))return"dpoy";
+  if(/All-NBA First|All League First/i.test(raw))return"all nba first";
+  if(/All-NBA Second|All League Second/i.test(raw))return"all nba second";
+  if(/All-NBA Third|All League Third/i.test(raw))return"all nba third";
+  if(/All-NBA|All League/i.test(raw))return"all nba";
+  if(/Rookie of the Year/i.test(raw))return"roy";
+  if(/All-Defensive/i.test(raw))return"all defensive";
+  if(/All-Star MVP/i.test(raw))return"all star mvp";
+  if(/All-Star/i.test(raw))return"all star";
+  if(/Sixth Man/i.test(raw))return"sixth man";
+  if(/Most Improved/i.test(raw))return"most improved";
+  return raw.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+}
 function leagueHonourWeight(row){
-  const n=String(row?.name||row?.award||row?.title||"").trim();
+  const n=leagueAwardName(row);
   if(!n)return 0;
-  // Developmental honours remain visible on player profiles but do not create
-  // league legends.  This prevents Summer League accumulation from outweighing
-  // NBA-level careers.
-  if(/Summer League|All-Summer/i.test(n))return 0;
-  if(/NBA Cup|Cup Champion|Cup MVP/i.test(n))return /MVP/i.test(n)?12:6;
+  if(isDevelopmentalHonourName(n))return 0;
+  if(isNbaCupHonourName(n))return /MVP/i.test(n)?12:6;
+  if(isScoringTitleHonourName(n))return 24;
+  if(isNbaChampionshipHonourName(n))return 28;
   if(/Finals MVP/i.test(n))return 76;
   if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(n))return 92;
   if(/Defensive Player|DPOY/i.test(n))return 58;
@@ -16187,41 +16222,30 @@ function leagueHonourWeight(row){
   if(/All-NBA Second|All League Second/i.test(n))return 30;
   if(/All-NBA Third|All League Third/i.test(n))return 22;
   if(/All-NBA|All League/i.test(n))return 26;
-  if(/Champion|Championship|NBA Title|Finals Winner/i.test(n))return 28;
-  if(/Scoring (Champion|Title)|Scoring Champ/i.test(n))return 24;
   if(/Rookie of the Year/i.test(n))return 28;
   if(/All-Defensive/i.test(n))return 18;
   if(/All-Star MVP/i.test(n))return 18;
   if(/All-Star/i.test(n))return 10;
   if(/Sixth Man|Most Improved/i.test(n))return 12;
+  // International honours can remain part of the career profile without being
+  // mistaken for NBA championships. Their existing low supporting weight is retained.
   return 4;
 }
 function leagueHonourBreakdown(rows){
   const source=rows||[];
-  const developmental=source.filter(a=>/Summer League|All-Summer/i.test(String(a?.name||a?.award||a?.title||""))).length;
-  // Award history can contain duplicate semantic entries for the same season
-  // (for example both "NBA Champion" and a championship history write).
-  // Collapse those before any legacy scoring so one title season is one title.
+  const developmental=source.filter(a=>isDevelopmentalHonourName(leagueAwardName(a))).length;
   const seen=new Set(),clean=[];
   for(const a of source){
     if(leagueHonourWeight(a)<=0)continue;
-    const raw=String(a?.name||a?.award||a?.title||"").trim();
     const season=String(a?.season??a?.year??"");
-    let bucket=raw.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-    if(/Champion|Championship|NBA Title|Finals Winner/i.test(raw)&&!/NBA Cup|Cup Champion/i.test(raw))bucket="nba championship";
-    else if(/Finals MVP/i.test(raw))bucket="finals mvp";
-    else if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(raw))bucket="mvp";
-    else if(/Defensive Player|DPOY/i.test(raw))bucket="dpoy";
-    else if(/All-NBA First|All League First/i.test(raw))bucket="all nba first";
-    else if(/All-NBA Second|All League Second/i.test(raw))bucket="all nba second";
-    else if(/All-NBA Third|All League Third/i.test(raw))bucket="all nba third";
+    const bucket=canonicalLeagueHonourBucket(a);
     const key=`${season}|${bucket}`;
     if(seen.has(key))continue;
     seen.add(key);clean.push(a);
   }
-  const championshipSeasons=new Set(clean.filter(a=>/Champion|Championship|NBA Title|Finals Winner/i.test(String(a?.name||a?.award||a?.title||""))&&!/NBA Cup|Cup Champion/i.test(String(a?.name||a?.award||a?.title||""))).map(a=>String(a?.season??a?.year??"unknown")));
+  const championshipSeasons=new Set(clean.filter(a=>isNbaChampionshipHonourName(leagueAwardName(a))).map(a=>String(a?.season??a?.year??"unknown")));
   const championships=championshipSeasons.size;
-  const major=clean.filter(a=>/Finals MVP|(^|\b)(NBA )?MVP\b|Most Valuable Player|Defensive Player|DPOY|All-NBA|All League/i.test(String(a?.name||a?.award||a?.title||""))).length;
+  const major=clean.filter(a=>/Finals MVP|(^|\b)(NBA )?MVP\b|Most Valuable Player|Defensive Player|DPOY|All-NBA|All League/i.test(leagueAwardName(a))).length;
   const weight=clean.reduce((sum,a)=>sum+leagueHonourWeight(a),0);
   return{clean,developmental,championships,major,weight};
 }
