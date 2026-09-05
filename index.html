@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2552,10 +2552,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    longer rescan the entire player universe once per game, while genuine pool
    changes (new players, FA movement, two-way/G-League changes, draft changes,
    season rollover) invalidate the cache and run the full reconciliation. */
+
+/* v0.1.49.77.5.5.5.15 — unified Courtside next-game presentation */
+.courtsideUnified .postHomeActions{padding:0;margin-top:16px;display:grid;gap:10px}
+.courtsideUnified .postHomeActions .btn{width:100%}
+.courtsideUnified.internationalCourtside .broadcastSide .fibaNationMark,
+.courtsideUnified.internationalCourtside .broadcastSide .heroFlag{margin-inline:auto}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Choose a Save</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -10598,7 +10605,13 @@ function olympicHomeHtml(){
   }
   const A=nat(fx.a),B=nat(fx.b),user=nat(code),record=olympicNationRecord(live,code);
   const aRank=nationalWorldRank(fx.a),bRank=nationalWorldRank(fx.b),userOvr=olympicNationOvr(code);
-  const card=`<div class="card broadcast olympicBroadcast"><div class="broadcastTop"><div class="broadcastBrand">OLYMPIC BASKETBALL · COURTSIDE NETWORK</div><div class="broadcastLive">NEXT GAME</div></div><div class="broadcastMeta">${live.year} Olympics · ${olympicStageLabel(fx.stage)}</div><div class="broadcastTeams"><div class="broadcastSide">${nationalFlagMark(fx.a,"heroFlag")}<b>${A?.name||fx.a}</b><small class="conferenceRank">World #${aRank||"—"}</small></div><div class="broadcastVs">VS</div><div class="broadcastSide">${nationalFlagMark(fx.b,"heroFlag")}<b>${B?.name||fx.b}</b><small class="conferenceRank">World #${bRank||"—"}</small></div></div><div class="broadcastContext"><div><b>${record.w}–${record.l}</b><small>Your Record</small></div><div><b>${userOvr||"—"}</b><small>Squad OVR</small></div><div><b>#${nationalWorldRank(code)||"—"}</b><small>World Rank</small></div></div>${homeActionHtml()}</div>`;
+  const card=courtsideNextGameCard({
+    brand:"OLYMPIC BASKETBALL · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${live.year} Olympics · ${olympicStageLabel(fx.stage)}`,
+    leftMark:nationalFlagMark(fx.a,"heroFlag"),leftName:A?.name||fx.a,leftSub:`World #${aRank||"—"}`,
+    rightMark:nationalFlagMark(fx.b,"heroFlag"),rightName:B?.name||fx.b,rightSub:`World #${bRank||"—"}`,
+    context:[{value:`${record.w}–${record.l}`,label:"Your Record"},{value:userOvr||"—",label:"Squad OVR"},{value:`#${nationalWorldRank(code)||"—"}`,label:"World Rank"}],
+    actionHtml:homeActionHtml(),extraClass:"olympicBroadcast internationalCourtside"
+  });
   return `<div class="olympicHomeWrap">${card}${olympicUpcomingFixturesHtml(live)}</div>`;
 }
 function ensureOlympicFoundation(G){
@@ -14541,7 +14554,7 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.14 Performance · Game Loop Responsiveness",ENGINE_VERSION="E2.26-PROD63";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.15 UI · Courtside Next Game Consistency",ENGINE_VERSION="E2.26-PROD64";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17032,22 +17045,33 @@ function worldCupHomeHtml(){
   const a=fibaNationByCode(next.a),b=fibaNationByCode(next.b);
   const aRec=worldCupNationRecord(live,next.a),bRec=worldCupNationRecord(live,next.b);
   const eventNo=(live.stage==="FIRST_GROUP_STAGE"||live.stage==="SECOND_GROUP_STAGE")?`Matchday ${(live.eventIndex||0)+1}`:stage;
-  return `<div class="wcHomeCard">
-    <div class="wcHomeTop"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>${stage}</h2><p>${eventNo}</p></div><span>NEXT GAME</span></div>
-    <div class="wcHomeTeams">
-      <div class="wcNationSide">${fibaNationMark(next.a)}<b>${a?.name||next.a}</b><small class="wcNationRank">World #${nationalWorldRank(next.a)||"—"}</small><small>${aRec.w}–${aRec.l} tournament</small></div>
-      <div class="wcHomeVs">VS</div>
-      <div class="wcNationSide">${fibaNationMark(next.b)}<b>${b?.name||next.b}</b><small class="wcNationRank">World #${nationalWorldRank(next.b)||"—"}</small><small>${bRec.w}–${bRec.l} tournament</small></div>
-    </div>
-    <div class="wcHomeContext">
-      <div><b>${nation?.name||code||"—"}</b><small>Your Nation</small></div>
-      <div><b>${record.w}–${record.l}</b><small>World Cup Record</small></div>
-      <div><b>${live.games?.length||0}</b><small>Tournament Games Played</small></div>
-    </div>
-    <button id="homeMainAction" class="primaryProgress">Play ${stage==="First Group Stage"||stage==="Second Group Stage"?"World Cup Game":stage.replace(/s$/,"")}</button>
-  </div>${worldCupUpcomingFixturesHtml(live)}`;
+  return courtsideNextGameCard({
+    brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${stage} · ${eventNo}`,
+    leftMark:fibaNationMark(next.a),leftName:a?.name||next.a,leftSub:`World #${nationalWorldRank(next.a)||"—"} · ${aRec.w}–${aRec.l}`,
+    rightMark:fibaNationMark(next.b),rightName:b?.name||next.b,rightSub:`World #${nationalWorldRank(next.b)||"—"} · ${bRec.w}–${bRec.l}`,
+    context:[{value:nation?.name||code||"—",label:"Your Nation"},{value:`${record.w}–${record.l}`,label:"World Cup Record"},{value:stage,label:"Stage"}],
+    actionHtml:`<button id="homeMainAction" class="primaryProgress">Play ${stage==="First Group Stage"||stage==="Second Group Stage"?"World Cup Game":stage.replace(/s$/,"")}</button>`,
+    extraClass:"internationalCourtside"
+  })+worldCupUpcomingFixturesHtml(live);
 }
 
+
+function courtsideNextGameCard({
+  brand="COURTSIDE NETWORK",live="NEXT GAME",meta="",leftMark="",leftName="",leftSub="",
+  rightMark="",rightName="",rightSub="",versus="VS",context=[],actionHtml="",extraClass=""
+}={}){
+  return `<div class="card broadcast courtsideUnified ${extraClass}">
+    <div class="broadcastTop"><div class="broadcastBrand">${brand}</div><div class="broadcastLive">${live}</div></div>
+    ${meta?`<div class="broadcastMeta">${meta}</div>`:""}
+    <div class="broadcastTeams">
+      <div class="broadcastSide">${leftMark||""}<b>${leftName||"—"}</b>${leftSub?`<small class="conferenceRank">${leftSub}</small>`:""}</div>
+      <div class="broadcastVs">${versus}</div>
+      <div class="broadcastSide">${rightMark||""}<b>${rightName||"—"}</b>${rightSub?`<small class="conferenceRank">${rightSub}</small>`:""}</div>
+    </div>
+    ${context?.length?`<div class="broadcastContext">${context.slice(0,3).map(x=>`<div><b>${x.value??"—"}</b><small>${x.label||""}</small></div>`).join("")}</div>`:""}
+    ${actionHtml||""}
+  </div>`;
+}
 function gameHub(f){
   let x=me(),h=c(f.homeClubId),a=c(f.awayClubId),spec=actionSpec();
   const xr=phaseRecord(x);
@@ -17386,7 +17410,22 @@ function renderAllStarWindow(){
   });
 }
 function fibaNationName(code){return nat(code)?.name||code||'—'}
-function fibaHomeHtml(){const live=G.internationalWindowLive;if(!live||live.complete)return'';const md=(live.matchdayIndex||0)+1,total=live.matchdays?.length||1,code=G.userNationalGM?.nationCode,fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));return `<div class="allStarHero"><div class="allStarHeroTop"><b>${gameYearForSeason(G.season)} World Cup Qualification</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>World Cup Qualification</h3><p>Club play is paused while the international window is active.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your National Team</div><div class="allStarTeams"><b>${nationalFlagLabel(fixture.a,fibaNationName(fixture.a))}</b><span>vs</span><b>${nationalFlagLabel(fixture.b,fibaNationName(fixture.b))}</b></div></div>`:`<div class="card"><h3>International Matchday ${md}</h3><div class="smallcopy">Your nation has no fixture on this matchday. You can advance the window and follow the other qualification results.</div></div>`}<div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`}
+function fibaHomeHtml(){
+  const live=G.internationalWindowLive;if(!live||live.complete)return"";
+  const md=(live.matchdayIndex||0)+1,total=live.matchdays?.length||1,code=G.userNationalGM?.nationCode;
+  const fixture=(live.matchdays?.[live.matchdayIndex]||[]).find(x=>code&&(x.a===code||x.b===code));
+  if(!fixture)return `<div class="allStarHero"><div class="allStarHeroTop"><b>${gameYearForSeason(G.season)} World Cup Qualification</b><small>Matchday ${md} of ${total}</small></div><div class="allStarBody"><h3>International Matchday ${md}</h3><p>Your nation has no fixture on this matchday. Advance the window and follow the other qualification results.</p><div class="allStarAction"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div></div></div>`;
+  const a=fixture.a,b=fixture.b;
+  return courtsideNextGameCard({
+    brand:"FIBA QUALIFICATION · COURTSIDE NETWORK",live:"NEXT GAME",
+    meta:`${gameYearForSeason(G.season)} World Cup Qualification · Matchday ${md} of ${total}`,
+    leftMark:fibaNationMark(a),leftName:fibaNationName(a),leftSub:`World #${nationalWorldRank(a)||"—"}`,
+    rightMark:fibaNationMark(b),rightName:fibaNationName(b),rightSub:`World #${nationalWorldRank(b)||"—"}`,
+    context:[{value:fibaNationName(code),label:"Your Nation"},{value:`#${nationalWorldRank(code)||"—"}`,label:"World Rank"},{value:`${md}/${total}`,label:"Window"}],
+    actionHtml:`<div class="postHomeActions"><button id="openFibaHome" class="primaryProgress">Open FIBA Matchday</button></div>`,
+    extraClass:"internationalCourtside"
+  });
+}
 function openFibaWindow(){show('fibaWindow');renderFibaWindow()}
 
 function fibaNationByCode(code){return(G.nationalTeams||[]).find(n=>n.code===code)||null}
@@ -17778,7 +17817,14 @@ function postseasonUserHome(){
     if(!e||!opp){
       return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} · Play-In matchup preparing</h3><p>The league is finalising the next Play-In opponent. Open Postseason for the complete bracket.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
     }
-    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp.name}</h3><p>${outcome}</p><div class="postMatchup"><div class="postMatchupTeam"><b>#${userSeed} ${x.name}</b><small>${x.conference} Conference · Your Team</small></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${oppSeed} ${opp.name}</b><small>${opp.conference} Conference</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Play Play-In Game</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    return courtsideNextGameCard({
+      brand:"NBA PLAY-IN · COURTSIDE NETWORK",live:"NEXT GAME",meta:`${label} · ${outcome}`,
+      leftMark:teamMark(x),leftName:x.name,leftSub:`#${userSeed} · ${x.conference} Conference`,
+      rightMark:teamMark(opp),rightName:opp.name,rightSub:`#${oppSeed} · ${opp.conference} Conference`,
+      context:[{value:`#${userSeed}`,label:"Your Seed"},{value:label,label:"Play-In Stage"},{value:"Win",label:"Advance"}],
+      actionHtml:`<div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Play Play-In Game</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div>`,
+      extraClass:"postseasonCourtside"
+    });
   }
   if(G.phase==="PLAYOFFS"&&st.series){
     const s=st.series,ctx=playoffSeriesContext(s),opp=c(ctx.oppId);
@@ -17800,7 +17846,15 @@ function postseasonUserHome(){
     }
 
     const status=ctx.userWins===ctx.oppWins?`Series tied ${ctx.userWins}–${ctx.oppWins}`:ctx.userWins>ctx.oppWins?`${x.name} lead ${ctx.userWins}–${ctx.oppWins}`:`${opp?.name||"Opponent"} lead ${ctx.oppWins}–${ctx.userWins}`;
-    return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>${ctx.conf==="NBA"?"NBA Finals":`${ctx.conf}ern Conference · ${ctx.stage}`}</b><span>Game ${ctx.nextGame} of 7</span></div><div class="postseasonHomeBody"><h3>${x.name} vs ${opp?.name||"Opponent"}</h3><p>${status}. First team to four wins advances.</p><div class="postMatchup playoffMatchupClean"><div class="postMatchupTeam"><b>#${ctx.userSeed||"—"} ${x.name}</b></div><div class="postMatchupVs">VS</div><div class="postMatchupTeam"><b>#${ctx.oppSeed||"—"} ${opp?.name||"Opponent"}</b></div></div><div class="postSeriesStatus"><div class="postSeriesStat"><b>Game ${ctx.nextGame}</b><small>Of 7</small></div><div class="postSeriesStat"><b>${ctx.userWins}–${ctx.oppWins}</b><small>Series</small></div><div class="postSeriesStat"><b>${ctx.stage}</b><small>Round</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress playoffSimAction">Play Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+    return courtsideNextGameCard({
+      brand:`${ctx.conf==="NBA"?"NBA FINALS":`${ctx.conf.toUpperCase()}ERN CONFERENCE`} · COURTSIDE NETWORK`,
+      live:`GAME ${ctx.nextGame} OF 7`,meta:`${ctx.stage} · ${status} · First team to four wins advances`,
+      leftMark:teamMark(x),leftName:x.name,leftSub:`#${ctx.userSeed||"—"} seed`,
+      rightMark:opp?teamMark(opp):"",rightName:opp?.name||"Opponent",rightSub:`#${ctx.oppSeed||"—"} seed`,
+      context:[{value:`Game ${ctx.nextGame}`,label:"Of 7"},{value:`${ctx.userWins}–${ctx.oppWins}`,label:"Series"},{value:ctx.stage,label:"Round"}],
+      actionHtml:`<div class="postHomeActions"><button id="homeMainAction" class="primaryProgress playoffSimAction">Play Game ${ctx.nextGame}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div>`,
+      extraClass:"postseasonCourtside"
+    });
   }
   return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Postseason</b><span>${st.stage||"Postseason"}</span></div><div class="postseasonHomeBody"><h3>${x.name} remain alive</h3><p>The next postseason matchup is being prepared.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Postseason</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
 }
