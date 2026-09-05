@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.22 International Records & Program Overview</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.23 Elite Legacy Efficiency Retention</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -5654,6 +5654,7 @@ function progressPlayerTalent(p,eraMod=0,developmentCap=99,ctx={}){
 
   if(delta>0)delta=Math.min(delta,gap);
   p.ovr=Math.max(50,Math.min(developmentCap,ovr+delta));
+  p.peakOvr=Math.max(+p.peakOvr||0,ovr,p.ovr);
   if(p.ovr>p.potential)p.potential=p.ovr;
   if(age>=37&&p.potential>p.ovr+2)p.potential=Math.max(p.ovr,p.potential-1);
 
@@ -5745,7 +5746,60 @@ function generationalBuildLabel(player){
   const key=syncGenerationalBuild(player);return key?`Generational · ${key}`:"";
 }
 function generationalShootRatingFloor(player){
-  const def=generationalBuildDefinition(player);return def?.shootFloor||0;
+  const def=generationalBuildDefinition(player);
+  if(def?.shootFloor)return def.shootFloor;
+  const legacy=eliteLegacyProfile(player);
+  if(!legacy?.definition?.shootFloor)return 0;
+  // Retain part of the former generational shooting floor instead of dropping it
+  // instantly when current OVR falls below 97. The floor fades with age and
+  // current decline rather than remaining a permanent prime-age guarantee.
+  const currentFallback=62+(Math.max(50,Math.min(99,+player?.ovr||70))-60)*0.62;
+  return currentFallback+(legacy.definition.shootFloor-currentFallback)*legacy.retention;
+}
+function playerRecordedPeakOvr(player){
+  if(!player)return 0;
+  const values=[+player.ovr||0,+player.peakOvr||0,+player.lastDevelopment?.fromOvr||0,+player.lastDevelopment?.toOvr||0];
+  for(const rec of player.seasonHistory||[])values.push(+rec?.ovr||0,+rec?.peakOvr||0);
+  for(const rec of player.generationalBuildHistory||[])values.push(+rec?.ovr||0);
+  return Math.max(...values,0);
+}
+function eliteLegacyRetentionForAge(age){
+  age=+age||24;
+  if(age<=36)return 0.72;
+  if(age===37)return 0.58;
+  if(age===38)return 0.45;
+  if(age===39)return 0.33;
+  if(age===40)return 0.23;
+  if(age===41)return 0.15;
+  return 0.08;
+}
+function eliteLegacyProfile(player){
+  if(!player||(+player.ovr||0)>=97)return null;
+  const peak=playerRecordedPeakOvr(player);
+  if(peak<97)return null;
+  const hist=(player.generationalBuildHistory||[]).filter(x=>x?.build&&(+x.ovr||0)>=97);
+  let build=hist.slice().sort((a,b)=>(+b.ovr||0)-(+a.ovr||0))[0]?.build||null;
+  if(!build){
+    // Compatibility path for older saves that reached 97+ before build history
+    // existed: derive the same build from the player's persistent archetype.
+    build=deriveGenerationalBuild({...player,ovr:97,generationalBuild:null});
+  }
+  const definition=build?GENERATIONAL_BUILD_DEFS[build]||null:null;
+  if(!definition)return null;
+  const ageRetention=eliteLegacyRetentionForAge(player.age);
+  const peakStrength=Math.max(.45,Math.min(1,(peak-95)/4)); // 97=.50, 99=1.00
+  const current=Math.max(50,+player.ovr||70);
+  const declineStrength=Math.max(.35,Math.min(1,(current-82)/15));
+  const retention=Math.max(0,Math.min(.72,ageRetention*peakStrength*declineStrength));
+  return retention>0?{build,definition,peakOvr:peak,retention}:null;
+}
+function eliteLegacyEfficiency(player){
+  const legacy=eliteLegacyProfile(player);
+  if(!legacy)return{two:0,ft:0};
+  // Craft and touch fade more slowly than athleticism. These are deliberately
+  // modest because retained generational three-point accuracy is already
+  // handled through playerStatIdentity below.
+  return{two:.018*legacy.retention,ft:.014*legacy.retention};
 }
 
 // Statistical identity shapes where production goes; OVR still determines how good the player is.
@@ -5880,6 +5934,17 @@ function playerStatIdentity(player) {
   for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+genMods[k]))base[k]*=+genMods[k];}
   if(Number.isFinite(+genMods.threeRate))base.threeRate+=+genMods.threeRate;
   if(Number.isFinite(+genMods.threeAccuracy))base.threeAccuracy+=+genMods.threeAccuracy;
+  const legacy=!gen?eliteLegacyProfile(player):null,legacyMods=legacy?.definition?.mods||{},lr=legacy?.retention||0;
+  if(legacy){
+    // Preserve a fading portion of learned offensive craft for former 97-99 OVR
+    // players. Physical/defensive generational bonuses are intentionally not
+    // retained here, so aging still has meaningful consequences.
+    for(const k of ["usage","assist","foulDraw"]){
+      if(Number.isFinite(+legacyMods[k]))base[k]*=1+((+legacyMods[k])-1)*lr;
+    }
+    if(Number.isFinite(+legacyMods.threeRate))base.threeRate+=(+legacyMods.threeRate)*lr;
+    if(Number.isFinite(+legacyMods.threeAccuracy))base.threeAccuracy+=(+legacyMods.threeAccuracy)*lr;
+  }
   const ovr=Math.max(50,Math.min(99,+player?.ovr||70));
   if(ovr>=97){
     const pos=player?.position||"SF",peak=ovr>=99;
@@ -5931,6 +5996,7 @@ function makePlayer({ age = rand(19, 34), draftYear = null, position = null, ovr
     origin: origin || (isProspect ? pick(PROSPECT_ORIGINS) : "NBA"),
     age,
     ovr: resolvedOvr,
+    peakOvr: resolvedOvr,
     potential: initialPotentialFor(age, resolvedOvr, isProspect),
     longevity: rand(35, 90),
     contractYearsLeft: rand(1, 4),
@@ -12936,7 +13002,7 @@ function finalizeSummerLeagueLive(G){
   const contracted=participants.filter(p=>p.draftYear===G.season||p.draftYear===G.season-1);
   const vals=contracted.map(p=>summerPerformanceScore(p.summerLeagueStats)).filter(Number.isFinite).sort((a,b)=>a-b);
   const lo=vals.length?vals[Math.floor(vals.length*.2)]:0,hi=vals.length?vals[Math.floor(vals.length*.75)]:0,development=[];
-  for(const p of contracted){const perf=summerPerformanceScore(p.summerLeagueStats);let n=perf>=hi?1:perf<=lo?-1:0;if(perf>=hi&&p.potential>=85&&Math.random()<.35)n=2;if(p.ovr>=p.potential&&n>0)n=Math.min(n,1);p.ovr=Math.max(35,Math.min(99,p.ovr+n));development.push({playerId:p.id,nudge:n,performanceScore:Math.round(perf*10)/10});}
+  for(const p of contracted){const perf=summerPerformanceScore(p.summerLeagueStats);let n=perf>=hi?1:perf<=lo?-1:0;if(perf>=hi&&p.potential>=85&&Math.random()<.35)n=2;if(p.ovr>=p.potential&&n>0)n=Math.min(n,1);p.ovr=Math.max(35,Math.min(99,p.ovr+n));p.peakOvr=Math.max(+p.peakOvr||0,p.ovr);development.push({playerId:p.id,nudge:n,performanceScore:Math.round(perf*10)/10});}
   Object.assign(G.summerLeague,{mvpPlayerId:mvp?.id||null,allSummerFirstTeam:first.map(p=>p.id),allSummerSecondTeam:second.map(p=>p.id),development,complete:true});
   G.awards[`S${G.season}_SummerLeagueMVP`]=mvp?.id||null;G.awards[`S${G.season}_AllSummerFirstTeam`]=first.map(p=>p.id);G.awards[`S${G.season}_AllSummerSecondTeam`]=second.map(p=>p.id);
   summerLeagueSnapshot(G);
@@ -13493,7 +13559,8 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
         const isThreeFoul = Math.random() < shotProfile(p) * 0.08;
         const attempts = isThreeFoul ? 3 : 2;
         shooter.line.fta += attempts;
-        const ftPct = Math.max(0.58, Math.min(0.92, 0.70 + (p.ovr-60)*0.0032 + (["Sharpshooter","Floor General"].includes(p.archetype) ? 0.035 : 0)));
+        const legacyEff=eliteLegacyEfficiency(p);
+        const ftPct = Math.max(0.58, Math.min(0.92, 0.70 + (p.ovr-60)*0.0032 + (["Sharpshooter","Floor General"].includes(p.archetype) ? 0.035 : 0) + legacyEff.ft));
         let made = 0;
         for (let i=0;i<attempts;i++) if (Math.random() < ftPct) made++;
         shooter.line.ftm += made; shooter.line.pts += made; quarterScores[q] += made;
@@ -13513,7 +13580,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
         pct = 0.285 + (shootRating-60)*0.0030 + shootArchBonus + (playerStatIdentity(p).threeAccuracy||0);
         pct -= (defQ-70)*0.0007 + (defImpact-1)*0.035;
       } else {
-        pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0);
+        pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0) + eliteLegacyEfficiency(p).two;
         pct -= (defQ-70)*0.0008 + (defImpact-1)*0.042;
       }
       pct = Math.max(isThree ? 0.235 : 0.375, Math.min(isThree ? 0.475 : 0.695, pct + chemAdj - fatigueAdj + pulseFor(p).efficiency + strengthAdj + homeAdj));
@@ -14656,7 +14723,10 @@ if (typeof module !== "undefined") {
 <script>
 // v0.1.29.0 — engine-review integration: modern 3PA profile + release QA gate.
 // v0.1.49.77.5.5.5.10 — Season transition precompute: three-second preparation window with real long-career cache warming.
-const BUILD_ID="v0.1.49.77.5.5.5.22 International Records & Program Overview",ENGINE_VERSION="E2.26-PROD72";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
+// generational offensive craft after dropping below 97, avoiding an abrupt
+// statistical-efficiency cliff while still allowing genuine age decline.
+const BUILD_ID="v0.1.49.77.5.5.5.23 Elite Legacy Efficiency Retention",ENGINE_VERSION="E2.26-PROD73";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20352,7 +20422,6 @@ function internationalOverview(n){
     <div class="intlSnapshotCard"><small>Qualification Position</small><b>${qualText}</b><span>${qpos?.row?`${qpos.row.w||0}–${qpos.row.l||0} · ${qpos.row.points||0} points`:"Current qualification pathway"}</span></div>
     <div class="intlSnapshotCard"><small>Next International Game</small><b>${nextText}</b><span>${nextSub}</span></div>
     <div class="intlSnapshotCard"><small>Program Legacy</small><b>${legacyText}</b><span>${wcMedals} World Cup medal${wcMedals===1?"":"s"} · ${olympicMedals} Olympic medal${olympicMedals===1?"":"s"}</span></div>
-    <div class="intlSnapshotAction"><button data-intltabgo="records" class="btn secondary">Open National Records</button></div>
   </div>`;
 }
 
@@ -20413,12 +20482,12 @@ function internationalRecordsPage(n){
   const hero=`<div class="intlRecordHero"><div class="eyebrow">${n.name.toUpperCase()} · RECORD BOOK</div><h3>National Program Records</h3><p>Calculated from the program's authoritative international player statistics and recorded national-team game results. Records evolve automatically with the career.</p></div>`;
   let body='';
   if(mode==='career'){
-    body=intlRecordLeaderList('International Appearances',internationalCareerLeaders(n,'gp',5),x=>`${x.gp}`)+
-      intlRecordLeaderList('Career Points',internationalCareerLeaders(n,'pts',5),x=>`${Math.round(x.value)}`)+
-      intlRecordLeaderList('Career Rebounds',internationalCareerLeaders(n,'reb',5),x=>`${Math.round(x.value)}`)+
-      intlRecordLeaderList('Career Assists',internationalCareerLeaders(n,'ast',5),x=>`${Math.round(x.value)}`)+
-      intlRecordLeaderList('Career Steals',internationalCareerLeaders(n,'stl',5),x=>`${Math.round(x.value)}`)+
-      intlRecordLeaderList('Career Blocks',internationalCareerLeaders(n,'blk',5),x=>`${Math.round(x.value)}`)+
+    body=intlRecordLeaderList('International Appearances',internationalCareerLeaders(n,'gp',5),x=>Math.round(x.gp).toLocaleString('en-US'))+
+      intlRecordLeaderList('Career Points',internationalCareerLeaders(n,'pts',5),x=>Math.round(x.value).toLocaleString('en-US'))+
+      intlRecordLeaderList('Career Rebounds',internationalCareerLeaders(n,'reb',5),x=>Math.round(x.value).toLocaleString('en-US'))+
+      intlRecordLeaderList('Career Assists',internationalCareerLeaders(n,'ast',5),x=>Math.round(x.value).toLocaleString('en-US'))+
+      intlRecordLeaderList('Career Steals',internationalCareerLeaders(n,'stl',5),x=>Math.round(x.value).toLocaleString('en-US'))+
+      intlRecordLeaderList('Career Blocks',internationalCareerLeaders(n,'blk',5),x=>Math.round(x.value).toLocaleString('en-US'))+
       intlRecordLeaderList('Scoring Average · Min 5 Games',internationalCareerLeaders(n,'pts',5,{average:true,minGp:5}),x=>`${x.value.toFixed(1)} PPG`);
   }else if(mode==='single'){
     const rows=internationalSingleGameRecords(n);
@@ -20431,7 +20500,7 @@ function internationalRecordsPage(n){
       <div class="intlRecordCard"><small>Highest Score</small><strong>${tr.highScore?.pf??'—'}</strong><b>${fmt(tr.highScore)}</b><span>Most points by ${n.name}</span></div>
       <div class="intlRecordCard"><small>Lowest Points Allowed</small><strong>${tr.lowAllowed?.pa??'—'}</strong><b>${fmt(tr.lowAllowed)}</b><span>Fewest opponent points conceded</span></div>
       <div class="intlRecordCard"><small>Longest Win Streak</small><strong>${tr.streak||'—'}</strong><b>${tr.streak?`${tr.streak} consecutive wins`:'No streak yet'}</b><span>Across recorded international games</span></div>
-      <div class="intlRecordCard"><small>Program Games</small><strong>${tr.games.length}</strong><b>${n.record.w}–${n.record.l} current career record</b><span>Recorded national-team games in this save</span></div>
+      <div class="intlRecordCard"><small>Program Games</small><strong>${Math.round(tr.games.length).toLocaleString('en-US')}</strong><b>${n.record.w}–${n.record.l} current career record</b><span>Recorded national-team games in this save</span></div>
     </div><div class="sectionTitle">Major Tournament Best</div><div class="intlRecordGrid"><div class="intlRecordCard"><small>World Cup Best</small><strong>${finish.wc}</strong><b>${finish.wcMedals} medal${finish.wcMedals===1?'':'s'}</b><span>Best recorded World Cup finish</span></div><div class="intlRecordCard"><small>Olympic Best</small><strong>${finish.oly}</strong><b>${finish.olyMedals} medal${finish.olyMedals===1?'':'s'}</b><span>Historical seed plus career Olympic results</span></div></div>`;
   }
   return hero+tabs+body;
@@ -21087,6 +21156,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
     p.experienceYears=nextExp;
     if(Number.isFinite(+p.professionalExperienceYears))p.professionalExperienceYears=Math.max(nextExp,+p.professionalExperienceYears);
     p.ovr=nextOvr;
+    p.peakOvr=Math.max(+p.peakOvr||0,nextOvr);
     p.potential=nextPot;
     p.nationality=$("#epNation").value;
     if(p.nationality!==oldNation&&p.nameOrigin==="country_generated"){
