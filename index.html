@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.38 League Transactions & Courtside Intelligence</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2678,7 +2678,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .txnSummaryCard b{display:block;font-size:18px}.txnSummaryCard small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 .txnFilterRow{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin:8px 0 12px}
 .txnFilterRow button{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 12px;font-weight:800;font-size:9px}
-.txnFilterRow button.active{background:var(--gold);color:#111;border-color:var(--gold)}
+.txnFilterRow button.active{background:var(--gold)!important;color:#0b0f14!important;border-color:var(--gold)!important;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
 .txnFeed{display:grid;gap:8px}.txnCard{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:13px}
 .txnCardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
 .txnCardHead small{display:block;color:var(--gold);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
@@ -2686,13 +2686,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .txnClubLine{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:4px 0}.txnClubLine strong{font-size:11px}
 .txnAssets{display:grid;gap:4px;margin-top:7px}.txnAsset{font-size:10px;color:var(--text);line-height:1.45}
 .txnAsset span{color:var(--muted)}.txnMeta{margin-top:8px;padding-top:7px;border-top:1px solid var(--line);color:var(--muted);font-size:9px;line-height:1.45}
-.txnEmpty{border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted);font-size:11px}
+.txnEmpty{border:1px dashed var(--line);border-radius:16px;padding:22px;text-align:center;color:var(--muted);font-size:11px}.txnLoadMore{width:100%;margin-top:10px;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:14px;padding:12px;font-weight:900;font-size:10px}
 @media(max-width:620px){.txnSummaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}.txnCard{padding:11px}.txnCardHead b{font-size:12px}}
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.38 League Transactions & Courtside Intelligence</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -5166,7 +5166,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.38
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.39
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7568,7 +7568,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.38 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.39 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7915,7 +7915,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.38 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.39 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -12407,7 +12407,7 @@ function advanceExternalProfessionalWorld(G,summary=null){
       p.worldAgeProcessedSeason=G.season;
       p.externalLeague=null;p.externalClub=null;
       nbaReturn.push(p);nbaChance++;
-      G.transactions.push({type:"world_nba_market",season:G.season,playerId:p.id,from:"International Basketball",to:"NBA Free Agency"});
+      G.transactions.push({type:"world_nba_market",season:G.season,playerId:p.id,from:"International Basketball",to:"League Free Agency"});
       continue;
     }
     if(expired||Math.random()<.12){
@@ -12444,7 +12444,7 @@ function settleUnsignedPlayersIntoWorld(G){
       const destination=worldDestinationForPlayer(p,"NBA free agent overseas");
       applyExternalProfessionalStatus(p,destination,rand(1,3),"NBA free agent signed overseas");
       G.externalProfessionals.push(p);moved.push(p);
-      G.transactions.push({type:"world_signing",season:G.season,playerId:p.id,from:"NBA Free Agency",to:destination});
+      G.transactions.push({type:"world_signing",season:G.season,playerId:p.id,from:"League Free Agency",to:destination});
     }else keep.push(p);
   }
   G.freeAgents=keep;
@@ -15754,9 +15754,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.38 League Transactions & Courtside Intelligence",ENGINE_VERSION="E2.26-PROD88";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix",ENGINE_VERSION="E2.26-PROD89";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -16522,13 +16522,20 @@ function saveMeta(){
   const club=me();
   return{gmName:G?.gmName||"GM",clubName:club?.name||"Unknown Club",clubId:club?.id||null,season:G?.season||1,phase:G?.phase||"Career",createdAt:G?.createdAt||Date.now()};
 }
+let _saveWriteChain=Promise.resolve(true),_saveWriteSerial=0;
 async function save(silent=true){
   if(!G||!activeSlot)return false;
   reportCareerIntegrity("pre-save");
-  G.runtimeMeta=G.runtimeMeta||{};G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
-  const ok=await writeSlot(activeSlot,JSON.stringify(G),saveMeta());
-  if(!silent)toast(ok?`Career saved · Slot ${activeSlot}`:"Career active · save storage unavailable");
+  const slot=activeSlot,payload=JSON.stringify(G),meta=saveMeta(),serial=++_saveWriteSerial;
+  // Serialise all writes. Mobile Safari can otherwise leave a mature career one
+  // UI action ahead of its durable IndexedDB record when several saves overlap.
+  _saveWriteChain=_saveWriteChain.catch(()=>false).then(()=>writeSlot(slot,payload,meta));
+  const ok=await _saveWriteChain;
+  if(G?.runtimeMeta)G.runtimeMeta.lastCompletedSaveSerial=serial;
+  if(!silent)toast(ok?`Career saved · Slot ${slot}`:"Career active · save storage unavailable");
   return ok;
 }
 function repairVerifiedNationalityAssignments(state){
@@ -16582,6 +16589,16 @@ async function loadSlot(slot){
       if(issues.length)console.warn(`[Mini&Me QA · load] ${issues.length} integrity issue(s)`,issues);
     }
 
+    const transactionIntelVersion="TXI2-POSTLOAD-CURSOR";
+    G.runtimeMeta=G.runtimeMeta||{};
+    if(G.runtimeMeta.transactionIntelVersion!==transactionIntelVersion){
+      const analyst=courtsideAnalystState(G);
+      analyst.lastTxnCount=(G.transactions||[]).length;
+      // Remove any retrospective v38 AI-market stories that may have been created
+      // from an old career's pre-existing transaction history.
+      if(Array.isArray(G.newsFeed))G.newsFeed=G.newsFeed.filter(n=>!/^CHASE_S\d+_(AI_TRADE_|AI_CONTRACT_)/.test(String(n?.tag||"")));
+      G.runtimeMeta.transactionIntelVersion=transactionIntelVersion;
+    }
     if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
     if(G.phase==="PLAY_IN"&&!G.playInLive&&!G.playIn){
       try{initializePlayInLive(G)}catch(err){console.warn("Play-In recovery",err)}
@@ -17367,7 +17384,7 @@ function playerTransactions(playerId){
       else if(t.type==="extension")out.push({season:t.season,type:"Extension",from:club?.name||"Club",to:club?.name||"Club",detail:`${t.years||"—"} yr · $${(+t.salaryM||0).toFixed(1)}M`});
       else if(t.type==="world_signing")out.push({season:t.season,type:"International Signing",from:t.from||"Free Agency",to:t.to||"International Basketball",detail:"Professional contract"});
       else if(t.type==="world_move")out.push({season:t.season,type:"International Move",from:t.from||"International Basketball",to:t.to||"International Basketball",detail:"League move"});
-      else if(t.type==="world_nba_market")out.push({season:t.season,type:"NBA Opportunity",from:t.from||"International Basketball",to:t.to||"NBA Free Agency",detail:"Entered NBA market"});
+      else if(t.type==="world_nba_market")out.push({season:t.season,type:"NBA Opportunity",from:t.from||"International Basketball",to:t.to||"League Free Agency",detail:"Entered NBA market"});
     }
   }
   const p=playerByAnyId(playerId);
@@ -17901,7 +17918,7 @@ function competitionGameLabel(g){
     if(tag.includes("final"))return `${tag.startsWith("east")?"East":"West"} Play-In · 8th Seed Game`;
     return "Play-In Tournament";
   }
-  if(tag.includes("playoff")||tag.includes("first_round")||tag.includes("semifinal")||tag.includes("conference_finals")||tag==="finals")return "NBA Playoffs";
+  if(tag.includes("playoff")||tag.includes("first_round")||tag.includes("semifinal")||tag.includes("conference_finals")||tag==="finals")return "League Playoffs";
   return String(g?.phaseTag||phaseName()).replaceAll("_"," ");
 }
 function playoffSeriesForGame(gameId){const p=G.playoffsLive||G.playoffs;return(p?.series||[]).find(s=>(s.games||[]).includes(gameId))||null}
@@ -18113,6 +18130,23 @@ function actionSpec(){
 }
 function action(){ $("#action").innerHTML=""; }
 
+function recordPostseasonCheckpoint(label,gameId=null){
+  if(!G)return;
+  G.runtimeMeta=G.runtimeMeta||{};
+  const live=G.playoffsLive||G.playoffs||null;
+  const st=userPostseasonState?.()||null;
+  const row={
+    at:Date.now(),label,season:G.season,phase:G.phase,
+    round:live?.round||null,gameId:gameId||null,
+    seriesId:st?.series?.id||null,
+    seriesStage:st?.series?.stage||null,
+    winsA:st?.series?.winsA??null,winsB:st?.series?.winsB??null,
+    userClubId:G.userClubGM?.clubId||null
+  };
+  const rows=Array.isArray(G.runtimeMeta.postseasonCheckpoints)?G.runtimeMeta.postseasonCheckpoints:[];
+  rows.push(row);G.runtimeMeta.postseasonCheckpoints=rows.slice(-16);
+  G.runtimeMeta.lastPostseasonCheckpoint=row;
+}
 function advanceUserPostseasonGame(){
   if(G.phase!=="PLAYOFFS")return null;
   if(!G.playoffsLive)initializePlayoffsLive(G);
@@ -18147,11 +18181,11 @@ function completePlayInForDirectQualifier(){
   return{ok:true,games,phase:"PLAYOFFS"};
 }
 
-function advanceFromUi(n){
+async function advanceFromUi(n){
   if(G.phase==="DRAFT_NIGHT"){openDraftWindow();return}
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete){openFibaWindow();return}
   if(G.allStarLive&&!G.allStarLive.complete){openAllStarWindow();return}
-  if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);save();render();return}
+  if(["OFFSEASON","CHAMPION"].includes(G.phase)){advance(G);await save();render();return}
 
   // v0.1.22.1 — one owner for every single playable career event.
   // v0.1.22.3 preserves the audited v0.1.22.2 phase fixes and only optimises presentation/render cost.
@@ -18169,7 +18203,7 @@ function advanceFromUi(n){
       if(pst.directQualified){
         const qr=completePlayInForDirectQualifier();
         if(!qr.ok){toast(qr.reason||"Unable to complete Play-In");return;}
-        save();ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;show("game");render();return;
+        recordPostseasonCheckpoint("play-in-complete");await save();ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;show("game");render();return;
       }
     }
     const phaseBefore=G.phase;
@@ -18191,7 +18225,8 @@ function advanceFromUi(n){
       }
     }
     if(userGame&&!isNationalResultGame(userGame))repairLegacyGameBox(userGame);
-    save();
+    if(phaseBefore==="PLAYOFFS"||phaseBefore==="PLAY_IN")recordPostseasonCheckpoint("user-game-complete",userGame?.id||null);
+    if(phaseBefore==="PLAYOFFS"||phaseBefore==="PLAY_IN")await save();else save();
     if(userGame){openResultWindow(userGame,resultReturnModeForAdvance(phaseBefore,userGame));return;}
     // Event may have been an observer/background transition. In particular,
     // Summer League Final Four rounds where the user's team is not involved
@@ -18207,7 +18242,8 @@ function advanceFromUi(n){
     if(pst.directQualified){
       const r=completePlayInForDirectQualifier();
       if(!r.ok){toast(r.reason||"Unable to complete Play-In");return}
-      save();
+      recordPostseasonCheckpoint("play-in-complete");
+      await save();
       ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;
       show("game");render();
       toast(`Play-In complete. #${pst.seed} seed enters Round 1.`);
@@ -18263,7 +18299,10 @@ function advanceFromUi(n){
   }
 
   if(G.phase==="PLAYOFFS")repairPlayoffSaveState();
-  save();
+  if(phaseBefore==="PLAYOFFS"||phaseBefore==="PLAY_IN"){
+    recordPostseasonCheckpoint("postseason-batch-complete",newUserGame?.id||null);
+    await save();
+  }else save();
 
   if(newUserGame&&phaseBefore==="WORLD_CUP"){
     if(G.worldCupLive)G.worldCupLive.lastUserGameId=newUserGame.id;
@@ -18353,7 +18392,7 @@ function phaseStatusCopy(){
     const seed=conferenceSeedForClub(me());
     return seed&&seed<=6?["Play-In Tournament",`#${seed} seed secured. Your club is already qualified for Round 1 while the league completes the Play-In Tournament.`]:["Play-In Tournament","The season is on the line. Win through to secure a playoff berth."];
   }
-  if(G.phase==="PLAYOFFS")return["NBA Playoffs","Every game matters. Advance the series and pursue the championship."];
+  if(G.phase==="PLAYOFFS")return["League Playoffs","Every game matters. Advance the series and pursue the championship."];
   if(G.phase==="WORLD_CUP")return["FIBA World Cup","Club play is paused while the international tournament takes centre stage."];
   if(G.phase==="OLYMPICS")return[`${G.olympicLive?.year||olympicYearForSeason(G.season)} Olympic Basketball`,`${G.olympicLive?.host?.city||"The host city"} · ${olympicStageLabel(G.olympicLive?.stage)}. Club offseason progression is paused until the Olympic tournament is complete.`];
   if(G.phase==="CHAMPION")return["Season Complete",`${G.champion?.name||"The champion"} has been crowned. Career history and season honours are recorded.`];
@@ -19285,8 +19324,8 @@ async function startNewSeason(){
     show("game");ui.page="home";render();toast(err?.message||"Unable to prepare the new season");
   }
 }
-function advancePostseasonObserver(){
-  if(G.phase==="PLAYOFFS"){repairPlayoffSaveState();save()}
+async function advancePostseasonObserver(){
+  if(G.phase==="PLAYOFFS"){repairPlayoffSaveState();recordPostseasonCheckpoint("observer-before");await save()}
   const phaseBefore=G.phase;
   const roundCodeBefore=phaseBefore==="PLAY_IN"?"PLAY_IN":(G.playoffsLive?.round||G.playoffs?.round||"R1");
   const roundBefore=phaseBefore==="PLAY_IN"?"Play-In":postseasonRoundLabel(roundCodeBefore);
@@ -19336,11 +19375,11 @@ function advancePostseasonObserver(){
   if(!games.length){
     if(lastReason){toast(lastReason);return}
     const repaired=repairPlayoffSaveState();
-    save();
+    recordPostseasonCheckpoint("observer-repair");await save();
     if(G.phase==="CHAMPION"){ui.postUpdate=null;show("game");ui.page="home";render();return}
     const activeNow=postseasonActiveSeriesCount();
     if(activeNow===0){
-      const forced=forceRecoverStrandedPostseason();save();
+      const forced=forceRecoverStrandedPostseason();recordPostseasonCheckpoint("observer-forced-recovery");await save();
       if(forced){toast("Postseason recovered. Finals are ready.");ui.postUpdate=null;show("game");ui.page="home";render();return}
       toast(repaired?"Postseason data recovered, but no playable series could be reconstructed.":"No playable postseason series found.");
       ui.postUpdate=null;show("game");ui.page="home";render();return;
@@ -19361,7 +19400,7 @@ function advancePostseasonObserver(){
     recapSeries=Object.values(after).filter(s=>s.complete&&(stageCode==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${stageCode}`)));
   }
   ui.postUpdate={phaseBefore,phaseAfter,roundBefore,roundAfter,roundChanged,games,completedSeries:recapSeries,observerMode:"round"};
-  save();show("postseasonUpdateWindow");renderPostseasonUpdate();
+  recordPostseasonCheckpoint("observer-round-complete");await save();show("postseasonUpdateWindow");renderPostseasonUpdate();
 }
 function allStarNextMatch(live){
   if(!live||live.complete)return null;
@@ -19478,7 +19517,7 @@ function postseasonObserverHome(){
     const r=G.playoffsLive?.round||"R1";
     return !s.complete&&(r==="FINALS"?s.stage==="FINALS":String(s.stage||"").endsWith(`_${r}`));
   }).length*2:0;
-  return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Observer Mode</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="postObserverBody"><h3>Your season has ended</h3><p>${me().name} were eliminated in ${st.eliminatedStage||"the postseason"}. You can continue the remaining NBA postseason from here, with the complete bracket available under League → Postseason.</p><div class="postObserverMetrics"><div class="postObserverMetric"><b>${st.eliminatedStage||"Eliminated"}</b><small>Your Finish</small></div><div class="postObserverMetric"><b>${leagueStage}</b><small>Current Stage</small></div><div class="postObserverMetric"><b>${active}</b><small>Active Series</small></div></div></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Sim Current Round</button></div></div>`;
+  return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Observer Mode</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="postObserverBody"><h3>Your season has ended</h3><p>${me().name} were eliminated in ${st.eliminatedStage||"the postseason"}. You can continue the remaining league postseason from here, with the complete bracket available under League → Postseason.</p><div class="postObserverMetrics"><div class="postObserverMetric"><b>${st.eliminatedStage||"Eliminated"}</b><small>Your Finish</small></div><div class="postObserverMetric"><b>${leagueStage}</b><small>Current Stage</small></div><div class="postObserverMetric"><b>${active}</b><small>Active Series</small></div></div></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Sim Current Round</button></div></div>`;
 }
 function postseasonRoundFromGame(g){
   const tag=String(g?.phaseTag||"");if(tag.includes("PLAYIN"))return "Play-In";if(tag==="FINALS")return "Finals";if(tag.endsWith("_R1"))return "Round 1";if(tag.endsWith("_SF"))return "Conference Semifinals";if(tag.endsWith("_CF"))return "Conference Finals";return "Postseason";
@@ -19489,7 +19528,7 @@ function postseasonUserHome(){
   if(G.phase==="PLAY_IN"){
     if(st.qualified){
       const direct=!!st.directQualified;
-      return `<div class="postseasonHome directQualifierHome"><div class="postseasonHomeTop"><b>League Postseason</b><span>${direct?"Direct Playoff Berth":"Play-In Qualified"}</span></div><div class="postseasonHomeBody"><h3>#${st.seed} seed secured</h3><p>${direct?`${x.name} finished inside the top six and have qualified directly for the NBA Playoffs. The league Play-In Tournament will determine your remaining Round 1 opponent.`:`${x.name} have secured a playoff berth through the Play-In. Complete the remaining league Play-In games before Round 1 is finalised.`}</p><div class="postSeriesStatus"><div class="postSeriesStat"><b>#${st.seed}</b><small>Your Seed</small></div><div class="postSeriesStat"><b>${direct?"Direct":"Qualified"}</b><small>Your Status</small></div><div class="postSeriesStat"><b>Round 1</b><small>Next Stage</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Complete League Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+      return `<div class="postseasonHome directQualifierHome"><div class="postseasonHomeTop"><b>League Postseason</b><span>${direct?"Direct Playoff Berth":"Play-In Qualified"}</span></div><div class="postseasonHomeBody"><h3>#${st.seed} seed secured</h3><p>${direct?`${x.name} finished inside the top six and have qualified directly for the League Playoffs. The league Play-In Tournament will determine your remaining Round 1 opponent.`:`${x.name} have secured a playoff berth through the Play-In. Complete the remaining league Play-In games before Round 1 is finalised.`}</p><div class="postSeriesStatus"><div class="postSeriesStat"><b>#${st.seed}</b><small>Your Seed</small></div><div class="postSeriesStat"><b>${direct?"Direct":"Qualified"}</b><small>Your Status</small></div><div class="postSeriesStat"><b>Round 1</b><small>Next Stage</small></div></div><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Complete League Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
     }
     const e=resolveUserPlayInEntry()||st.entry,a=c(e?.teamAId),b=c(e?.teamBId),userIsA=e?.teamAId===x.id,opp=userIsA?b:a;
     const userSeed=Number.isFinite(+(userIsA?e?.seedA:e?.seedB))?+(userIsA?e?.seedA:e?.seedB):(st.seed||"—");
@@ -19497,10 +19536,10 @@ function postseasonUserHome(){
     const label=e?.type==="7v8"?"7 vs 8 Seed Game":e?.type==="9v10"?"9 vs 10 Elimination Game":"8th Seed Game";
     const outcome=e?.type==="7v8"?"Winner secures the #7 seed. Loser gets one more chance for #8.":e?.type==="9v10"?"Winner advances. Loser is eliminated.":"Winner secures the #8 seed. Loser is eliminated.";
     if(!e||!opp){
-      return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>NBA Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} · Play-In matchup preparing</h3><p>The league is finalising the next Play-In opponent. Open Postseason for the complete bracket.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+      return `<div class="postseasonHome"><div class="postseasonHomeTop"><b>Play-In</b><span>${label}</span></div><div class="postseasonHomeBody"><h3>${x.name} · Play-In matchup preparing</h3><p>The league is finalising the next Play-In opponent. Open Postseason for the complete bracket.</p><div class="postHomeActions"><button id="homeMainAction" class="primaryProgress">Continue Play-In</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
     }
     return courtsideNextGameCard({
-      brand:"NBA PLAY-IN · COURTSIDE NETWORK",live:(userIsA?"HOME":"AWAY"),meta:`${label} · ${outcome}`,
+      brand:"PLAY-IN · COURTSIDE NETWORK",live:(userIsA?"HOME":"AWAY"),meta:`${label} · ${outcome}`,
       leftMark:teamMark(x),leftName:x.name,leftSub:`#${userSeed} · ${x.conference} Conference`,
       rightMark:teamMark(opp),rightName:opp.name,rightSub:`#${oppSeed} · ${opp.conference} Conference`,
       context:[{value:`#${userSeed}`,label:"Your Seed"},{value:label,label:"Play-In Stage"},{value:"Win",label:"Advance"}],
@@ -19531,7 +19570,7 @@ function postseasonUserHome(){
     const nextHomeId=playoffHomeTeamForGame(st.series);
     const venueLabel=String(nextHomeId)===String(x.id)?"HOME":"AWAY";
     return courtsideNextGameCard({
-      brand:`${ctx.conf==="NBA"?"NBA FINALS":`${ctx.conf.toUpperCase()}ERN CONFERENCE`} · COURTSIDE NETWORK`,
+      brand:`${ctx.conf==="NBA"?"FINALS":`${ctx.conf.toUpperCase()}ERN CONFERENCE`} · COURTSIDE NETWORK`,
       live:venueLabel,meta:`${ctx.stage} · ${status}`,
       leftMark:teamMark(x),leftName:x.name,leftSub:`#${ctx.userSeed||"—"} seed`,
       rightMark:opp?teamMark(opp):"",rightName:opp?.name||"Opponent",rightSub:`#${ctx.oppSeed||"—"} seed`,
@@ -20193,8 +20232,11 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
 }
 
 function courtsideAnalystState(G){
-  if(!G.courtsideAnalyst)G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:0,lastFlashRound:-99,stories:{}};
-  if(G.courtsideAnalyst.season!==G.season)G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:0,lastFlashRound:-99,stories:{}};
+  if(!G.courtsideAnalyst)G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:(G.transactions||[]).length,lastFlashRound:-99,stories:{}};
+  if(G.courtsideAnalyst.season!==G.season){
+    const cursor=Math.min(+G.courtsideAnalyst.lastTxnCount||0,(G.transactions||[]).length);
+    G.courtsideAnalyst={season:G.season,lastRound:-1,lastGameId:null,lastTxnCount:cursor,lastFlashRound:-99,stories:{}};
+  }
   return G.courtsideAnalyst;
 }
 function courtsideStoryOnce(G,key){
@@ -22064,6 +22106,9 @@ function leagueTransactionGroup(type){
   if(type==="draft")return"draft";
   return"other";
 }
+function transactionDisplayLocation(value){
+  return String(value||"").replaceAll("League Free Agency","League Free Agency").replaceAll("NBA G League","G League");
+}
 function transactionPlayerName(id){
   const p=playerByAnyId(id);return p?.name||"Player";
 }
@@ -22118,7 +22163,7 @@ function transactionCardHtml(t,index){
     return `<div class="txnCard"><div class="txnCardHead"><div><small>${type}</small><b>${club?.name||"Club"} ${verb} ${pName}</b></div><div class="txnCardSeason">${season}</div></div>${t.type==="two_way_convert"?`<div class="txnMeta">Converted from two-way to a standard roster contract.</div>`:""}</div>`;
   }
   if(["world_signing","world_nba_market","world_move"].includes(t.type)){
-    return `<div class="txnCard"><div class="txnCardHead"><div><small>${type}</small><b>${pName}</b></div><div class="txnCardSeason">${season}</div></div><div class="txnAssets"><div class="txnAsset">${t.from||"International Basketball"} → ${t.to||"League market"}</div></div></div>`;
+    return `<div class="txnCard"><div class="txnCardHead"><div><small>${type}</small><b>${pName}</b></div><div class="txnCardSeason">${season}</div></div><div class="txnAssets"><div class="txnAsset">${transactionDisplayLocation(t.from)||"International Basketball"} → ${transactionDisplayLocation(t.to)||"League market"}</div></div></div>`;
   }
   return `<div class="txnCard"><div class="txnCardHead"><div><small>${type}</small><b>${pName}</b></div><div class="txnCardSeason">${season}</div></div></div>`;
 }
@@ -22132,12 +22177,14 @@ function leagueTransactionsPage(){
     roster:current.filter(t=>["waive","two_way_waive","contract_expired","two_way_sign","two_way_convert"].includes(t.type)).length
   };
   const filter=ui.leagueTransactionFilter||"all";
-  const rows=tx.filter(t=>filter==="all"||leagueTransactionGroup(t.type)===filter).slice(0,120);
+  const matching=tx.filter(t=>filter==="all"||leagueTransactionGroup(t.type)===filter);
+  const limit=Math.max(12,+ui.leagueTransactionLimit||24);
+  const rows=matching.slice(0,limit);
   const filters=[["all","All"],["trades","Trades"],["signings","Signings"],["contracts","Extensions"],["twoway","Two-Way"],["draft","Draft"],["roster","Roster"]];
   return `<div class="txnPageIntro"><div class="eyebrow">LEAGUE TRANSACTIONS</div><h3>League Movement</h3><p>Factual league-wide movement across trades, signings, extensions, two-way moves, draft selections and roster changes. Courtside Network may separately analyse significant moves, but this ledger records what actually happened.</p></div>
     <div class="txnSummaryGrid"><div class="txnSummaryCard"><b>${counts.trades}</b><small>Trades · ${basketballSeasonLabel(G.season)}</small></div><div class="txnSummaryCard"><b>${counts.signings}</b><small>Signings</small></div><div class="txnSummaryCard"><b>${counts.contracts}</b><small>Extensions</small></div><div class="txnSummaryCard"><b>${counts.roster}</b><small>Roster Moves</small></div></div>
     <div class="txnFilterRow">${filters.map(([k,l])=>`<button data-txnfilter="${k}" class="${filter===k?"active":""}">${l}</button>`).join("")}</div>
-    <div class="txnFeed">${rows.length?rows.map((t,i)=>transactionCardHtml(t,i)).join(""):`<div class="txnEmpty">No transactions recorded for this filter yet.</div>`}</div>`;
+    <div class="txnFeed">${rows.length?rows.map((t,i)=>transactionCardHtml(t,i)).join(""):`<div class="txnEmpty">No transactions recorded for this filter yet.</div>`}</div>${matching.length>rows.length?`<button class="txnLoadMore" id="txnLoadMore">Load More · ${matching.length-rows.length} remaining</button>`:""}`;
 }
 
 
@@ -23082,7 +23129,7 @@ if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
 $$("[data-boxside]").forEach(b=>b.onclick=()=>{ui.boxSide=b.dataset.boxside;render()});$$("[data-fibaside]").forEach(b=>b.onclick=()=>{ui.fibaBoxSide=b.dataset.fibaside;render()});
 $$("[data-newsfilter]").forEach(b=>b.onclick=()=>{ui.newsFilter=b.dataset.newsfilter;ui.newsSeason=G.season;ui.newsHistoryMode=false;render()});
 $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.standingview;render()});
-$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-txnfilter]").forEach(b=>b.onclick=()=>{ui.leagueTransactionFilter=b.dataset.txnfilter;render()});$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});$$("[data-intlrecord]").forEach(b=>b.onclick=()=>{ui.intlRecordMode=b.dataset.intlrecord;render()});
+$$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-txnfilter]").forEach(b=>b.onclick=()=>{ui.leagueTransactionFilter=b.dataset.txnfilter;ui.leagueTransactionLimit=24;render()});if($("#txnLoadMore"))$("#txnLoadMore").onclick=()=>{ui.leagueTransactionLimit=(+ui.leagueTransactionLimit||24)+24;render()};$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});$$("[data-intlrecord]").forEach(b=>b.onclick=()=>{ui.intlRecordMode=b.dataset.intlrecord;render()});
   $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
   $$("[data-olystage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.olyReviewStage=b.dataset.olystage;render()});
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#globalExit"))$("#globalExit").onclick=async()=>{await save();ui.page="home";show("landing")};
