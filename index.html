@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.34 Contract Market Calibration & Payroll Reconciliation</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.36 QA Stability · Milestone Watch & MIP Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2671,7 +2671,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.34 Contract Market Calibration & Payroll Reconciliation</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.36 QA Stability · Milestone Watch & MIP Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
 
@@ -5145,7 +5145,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.34
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.36
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7545,6 +7545,142 @@ function draftPickTradeValue(G, pickAsset) {
   return Math.round(Math.max(3,12-(slot-31)*0.22)*discount*10)/10;
 }
 
+
+// ---------------------------------------------------------------------
+// v0.1.49.77.5.5.5.36 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// Every club still shares one objective asset-value spine, but AI clubs now
+// apply different philosophies to the same player or pick. This deliberately
+// allows contenders, rebuilding teams and different front offices to disagree.
+// ---------------------------------------------------------------------
+const AI_FRONT_OFFICE_MARKET_VERSION="FO4-SUBJECTIVE";
+
+function stableClubHash(text){
+  let h=2166136261>>>0;
+  for(const ch of String(text||"CLUB")){
+    h^=ch.charCodeAt(0);
+    h=Math.imul(h,16777619)>>>0;
+  }
+  return h>>>0;
+}
+function frontOfficeProfile(club){
+  if(!club)return {style:"Balanced",aggression:.5,prospectBias:.5,pickBias:.5,capDiscipline:.5,certaintyBias:.5,riskTolerance:.5};
+  if(club.aiFrontOfficeProfile?.version===AI_FRONT_OFFICE_MARKET_VERSION)return club.aiFrontOfficeProfile;
+  const h=stableClubHash(club.id||club.name);
+  const unit=(shift)=>(((h>>>shift)&255)/255);
+  const aggression=.22+unit(0)*.68;
+  const prospectBias=.20+unit(8)*.70;
+  const pickBias=.20+unit(16)*.70;
+  const capDiscipline=.25+unit(4)*.67;
+  const certaintyBias=.20+unit(12)*.72;
+  const riskTolerance=.18+unit(20)*.72;
+  let style="Balanced";
+  if(aggression>.72&&certaintyBias>.55)style="Win-Now";
+  else if(prospectBias>.68||pickBias>.72)style="Asset Builder";
+  else if(capDiscipline>.72)style="Cap Conscious";
+  else if(riskTolerance>.70)style="Opportunistic";
+  club.aiFrontOfficeProfile={
+    version:AI_FRONT_OFFICE_MARKET_VERSION,style,
+    aggression:+aggression.toFixed(3),
+    prospectBias:+prospectBias.toFixed(3),
+    pickBias:+pickBias.toFixed(3),
+    capDiscipline:+capDiscipline.toFixed(3),
+    certaintyBias:+certaintyBias.toFixed(3),
+    riskTolerance:+riskTolerance.toFixed(3)
+  };
+  return club.aiFrontOfficeProfile;
+}
+function subjectivePlayerTradeValue(G,club,player){
+  if(!club||!player)return 0;
+  const base=playerTradeValue(player);
+  const profile=frontOfficeProfile(club);
+  const direction=aiTeamDirection(club);
+  const age=+player.age||25,ovr=+player.ovr||60,pot=Math.max(ovr,+player.potential||ovr);
+  const upside=Math.max(0,pot-ovr);
+  const fitDelta=needAwareScore(club,player,{direction})-ovr;
+
+  let mult=1;
+  // Direction changes what "value" means to the club.
+  if(direction==="CONTEND"){
+    if(ovr>=84)mult*=1.08+profile.certaintyBias*.08;
+    if(age>=29&&ovr>=80)mult*=1.02+profile.aggression*.05;
+    mult*=1-Math.min(.10,upside*.0035*profile.prospectBias);
+  }else if(direction==="DEVELOP"){
+    if(age<=24)mult*=1.05+profile.prospectBias*.14;
+    if(upside>=5)mult*=1.04+profile.prospectBias*.10;
+    if(age>=31)mult*=.90-profile.pickBias*.04;
+  }else{
+    if(age<=26&&upside>=4)mult*=1.03+profile.prospectBias*.05;
+  }
+
+  // Positional need matters, but can no longer overwhelm the core talent value.
+  mult*=1+Math.max(-.08,Math.min(.12,fitDelta*.008));
+
+  // Contract efficiency is interpreted differently by different offices.
+  const efficiency=playerContractEfficiency(player);
+  mult*=1+(efficiency*.012*(.65+profile.capDiscipline));
+
+  // Expiring veterans are less attractive to cautious/rebuilding offices.
+  if((player.contractYearsLeft||0)<=1&&age>=29){
+    mult*=1-(.025+.055*profile.certaintyBias);
+  }
+  return Math.round(Math.max(1,base*mult)*10)/10;
+}
+function subjectivePickTradeValue(G,club,asset){
+  if(!club||!asset)return 0;
+  const base=draftPickTradeValue(G,asset);
+  const profile=frontOfficeProfile(club);
+  const direction=aiTeamDirection(club);
+  const yearsOut=Math.max(0,(asset.year||G.season)-G.season);
+  let mult=.88+profile.pickBias*.28;
+  if(direction==="DEVELOP")mult*=1.08+profile.prospectBias*.10;
+  if(direction==="CONTEND")mult*=.94-profile.aggression*.05;
+  if(yearsOut>=2)mult*=.96+profile.riskTolerance*.06;
+  return Math.round(Math.max(1,base*mult)*10)/10;
+}
+function aiTradeAcceptanceThreshold(club){
+  const profile=frontOfficeProfile(club);
+  const direction=aiTeamDirection(club);
+  // A high-risk/aggressive office can knowingly pay a small paper premium.
+  let threshold=.96;
+  threshold+=profile.certaintyBias*.055;
+  threshold+=profile.capDiscipline*.025;
+  threshold-=profile.aggression*.055;
+  threshold-=profile.riskTolerance*.025;
+  if(direction==="CONTEND")threshold-=.025;
+  if(direction==="DEVELOP")threshold+=.015;
+  return Math.max(.86,Math.min(1.04,Math.round(threshold*1000)/1000));
+}
+function tradePackageValueForSpecificClub(G,receivingClub,playerIds,pickIds){
+  let total=0;
+  for(const id of playerIds||[]){
+    const p=allPlayers(G).find(x=>x.id===id);
+    if(p)total+=subjectivePlayerTradeValue(G,receivingClub,p);
+  }
+  for(const id of pickIds||[]){
+    const asset=(G.draftPicks||[]).find(x=>x.id===id&&!x.consumed);
+    if(asset)total+=subjectivePickTradeValue(G,receivingClub,asset);
+  }
+  return Math.round(total*10)/10;
+}
+function evaluateBilateralAiTrade(G,clubAId,clubBId,packageA={},packageB={}){
+  const A=clubById(G,clubAId),B=clubById(G,clubBId);
+  if(!A||!B)return {accepted:false,reason:"Club not found"};
+  const aPlayers=packageA.playerIds||[],aPicks=packageA.pickIds||[],bPlayers=packageB.playerIds||[],bPicks=packageB.pickIds||[];
+  const aReceives=tradePackageValueForSpecificClub(G,A,bPlayers,bPicks);
+  const aGives=tradePackageValueForSpecificClub(G,A,aPlayers,aPicks);
+  const bReceives=tradePackageValueForSpecificClub(G,B,aPlayers,aPicks);
+  const bGives=tradePackageValueForSpecificClub(G,B,bPlayers,bPicks);
+  const ratioA=aReceives/Math.max(1,aGives),ratioB=bReceives/Math.max(1,bGives);
+  const thresholdA=aiTradeAcceptanceThreshold(A),thresholdB=aiTradeAcceptanceThreshold(B);
+  return {
+    accepted:ratioA>=thresholdA&&ratioB>=thresholdB,
+    ratioA:Math.round(ratioA*100)/100,ratioB:Math.round(ratioB*100)/100,
+    thresholdA,thresholdB,
+    aReceives,aGives,bReceives,bGives,
+    reason:(ratioA>=thresholdA&&ratioB>=thresholdB)?"Both front offices approve":"One or both front offices decline"
+  };
+}
+
 function playerTradeValue(player) {
   const quality=Math.max(0,player.ovr-60);
   let value=Math.pow(quality,1.38)*0.72;
@@ -7561,20 +7697,7 @@ function tradeAllowedPhase(G) {
 }
 
 function tradePackageValueForClub(G, receivingClub, playerIds, pickIds) {
-  let total=0;
-  for (const id of playerIds||[]) {
-    const p=allPlayers(G).find(x=>x.id===id);
-    if (!p) continue;
-    const direction=aiTeamDirection(receivingClub);
-    const fitDelta=needAwareScore(receivingClub,p,{direction})-p.ovr;
-    const needBonus=Math.max(-4,fitDelta)*0.72;
-    total+=playerTradeValue(p)+needBonus;
-  }
-  for (const id of pickIds||[]) {
-    const asset=(G.draftPicks||[]).find(x=>x.id===id && !x.consumed);
-    if (asset) total+=draftPickTradeValue(G,asset);
-  }
-  return Math.round(total*10)/10;
+  return tradePackageValueForSpecificClub(G,receivingClub,playerIds,pickIds);
 }
 
 function validateTradeAssets(G, clubId, playerIds, pickIds) {
@@ -7605,14 +7728,29 @@ function evaluateTradePackage(G, clubAId, clubBId, packageA={}, packageB={}) {
   const bSends=tradePackageValueForClub(G,A,bPlayers,bPicks);
   // From B's perspective it receives A's package and gives B's package.
   const ratio=aSends/Math.max(1,bSends);
-  const accepted=ratio>=0.92;
-  return {valid:true,accepted,reason:accepted?"Offer meets AI value threshold":"AI club wants more value",clubAId,clubBId,aSendsValue:aSends,bSendsValue:bSends,ratio:Math.round(ratio*100)/100,salaryMatch,postRoster:{[clubAId]:postA,[clubBId]:postB}};
+  const aiThreshold=aiTradeAcceptanceThreshold(B);
+  const accepted=ratio>=aiThreshold;
+  const profile=frontOfficeProfile(B);
+  return {
+    valid:true,accepted,
+    reason:accepted?"Offer fits this front office's valuation":"AI club wants more value",
+    clubAId,clubBId,aSendsValue:aSends,bSendsValue:bSends,
+    ratio:Math.round(ratio*100)/100,aiThreshold,
+    aiStyle:profile.style,salaryMatch,
+    postRoster:{[clubAId]:postA,[clubBId]:postB}
+  };
 }
 
 function executeTradePackage(G, clubAId, clubBId, packageA={}, packageB={}, force=false) {
   const evaln=evaluateTradePackage(G,clubAId,clubBId,packageA,packageB);
   if(!evaln.valid || (!evaln.accepted && !force)) return {...evaln,executed:false};
   const A=clubById(G,clubAId), B=clubById(G,clubBId);
+  const userClubId=G.userClubGM?.clubId||null;
+  let bilateral=null;
+  if(!force && A?.id!==userClubId && B?.id!==userClubId){
+    bilateral=evaluateBilateralAiTrade(G,clubAId,clubBId,packageA,packageB);
+    if(!bilateral.accepted)return {...evaln,bilateral,reason:bilateral.reason,executed:false};
+  }
   const aPlayers=packageA.playerIds||[], aPicks=packageA.pickIds||[], bPlayers=packageB.playerIds||[], bPicks=packageB.pickIds||[];
   const movedA=A.roster.filter(p=>aPlayers.includes(p.id)), movedB=B.roster.filter(p=>bPlayers.includes(p.id));
   A.roster=A.roster.filter(p=>!aPlayers.includes(p.id)); B.roster=B.roster.filter(p=>!bPlayers.includes(p.id));
@@ -7620,10 +7758,97 @@ function executeTradePackage(G, clubAId, clubBId, packageA={}, packageB={}, forc
   for(const id of aPicks){const asset=G.draftPicks.find(p=>p.id===id); asset.tradeHistory.push({season:G.season,fromClubId:A.id,toClubId:B.id}); asset.ownerClubId=B.id;}
   for(const id of bPicks){const asset=G.draftPicks.find(p=>p.id===id); asset.tradeHistory.push({season:G.season,fromClubId:B.id,toClubId:A.id}); asset.ownerClubId=A.id;}
   recalcClubCap(A); recalcClubCap(B);
-  const txn={type:"trade",season:G.season,clubAId,clubBId,fromA:{playerIds:[...aPlayers],pickIds:[...aPicks]},fromB:{playerIds:[...bPlayers],pickIds:[...bPicks]},values:{aSends:evaln.aSendsValue,bSends:evaln.bSendsValue},forced:!!force};
+  const txn={type:"trade",season:G.season,clubAId,clubBId,fromA:{playerIds:[...aPlayers],pickIds:[...aPicks]},fromB:{playerIds:[...bPlayers],pickIds:[...bPicks]},values:{aSends:evaln.aSendsValue,bSends:evaln.bSendsValue},aiMarket:bilateral?{version:AI_FRONT_OFFICE_MARKET_VERSION,...bilateral}:null,forced:!!force};
   G.transactions.push(txn);
   logEvent(G,`Trade: ${A.name} sent ${aPlayers.length} player(s) + ${aPicks.length} pick(s) to ${B.name}; ${B.name} sent ${bPlayers.length} player(s) + ${bPicks.length} pick(s).`);
   return {...evaln,accepted:true,executed:true,transaction:txn};
+}
+
+
+function aiTradeCandidateScore(club,p,mode="sell"){
+  const direction=aiTeamDirection(club),profile=frontOfficeProfile(club);
+  const age=+p.age||25,ovr=+p.ovr||60,pot=Math.max(ovr,+p.potential||ovr);
+  if(mode==="sell"){
+    let s=0;
+    if(direction==="DEVELOP"){s+=(age-25)*1.8;s+=(88-ovr)*.15;}
+    else if(direction==="CONTEND"){s+=(ovr<78?5:0)+(age>=33?2:0);}
+    else{s+=(age>=30?3:0);}
+    if((p.contractYearsLeft||0)<=1)s+=2.2;
+    if(playerContractEfficiency(p)<0)s+=1.5*profile.capDiscipline;
+    return s;
+  }
+  let s=needAwareScore(club,p,{direction})-ovr;
+  if(direction==="CONTEND"&&ovr>=82)s+=5+profile.aggression*4;
+  if(direction==="DEVELOP"&&age<=24)s+=(pot-ovr)*.8+profile.prospectBias*3;
+  return s;
+}
+function runAiTradeMarket(G,{checkpoint="REGULAR",maxTrades=1}={}){
+  if(!tradeAllowedPhase(G)||maxTrades<=0)return 0;
+  ensureDraftPickHorizon(G);
+  const userId=G.userClubGM?.clubId||null;
+  const clubs=G.clubs.filter(c=>c.id!==userId);
+  let made=0;
+  const shuffled=[...clubs].sort(()=>Math.random()-.5);
+
+  for(const seller of shuffled){
+    if(made>=maxTrades)break;
+    const sellerDirection=aiTeamDirection(seller);
+    const sellable=[...(seller.roster||[])]
+      .filter(p=>!p.injured&&(p.ovr||0)>=74&&(p.ovr||0)<=91)
+      .sort((a,b)=>aiTradeCandidateScore(seller,b,"sell")-aiTradeCandidateScore(seller,a,"sell"));
+    const target=sellable[0];
+    if(!target||aiTradeCandidateScore(seller,target,"sell")<2.5)continue;
+
+    const buyers=clubs
+      .filter(c=>c.id!==seller.id)
+      .map(c=>({club:c,score:aiTradeCandidateScore(c,target,"buy")}))
+      .filter(x=>x.score>2)
+      .sort((a,b)=>b.score-a.score);
+
+    for(const entry of buyers.slice(0,6)){
+      const buyer=entry.club;
+      const buyerAssets=[...(buyer.roster||[])]
+        .filter(p=>!p.injured&&p.id!==target.id&&(p.ovr||0)>=68)
+        .sort((a,b)=>{
+          const da=Math.abs((a.salaryM||0)-(target.salaryM||0));
+          const db=Math.abs((b.salaryM||0)-(target.salaryM||0));
+          return da-db;
+        });
+      const salaryPiece=buyerAssets[0];
+      if(!salaryPiece)continue;
+
+      const picks=clubDraftAssets(G,buyer.id)
+        .filter(p=>p.year>=G.season&&p.round===1)
+        .sort((a,b)=>subjectivePickTradeValue(G,seller,b)-subjectivePickTradeValue(G,seller,a));
+      const seconds=clubDraftAssets(G,buyer.id)
+        .filter(p=>p.year>=G.season&&p.round===2)
+        .sort((a,b)=>subjectivePickTradeValue(G,seller,b)-subjectivePickTradeValue(G,seller,a));
+
+      const options=[
+        {playerIds:[salaryPiece.id],pickIds:picks[0]?[picks[0].id]:[]},
+        {playerIds:[salaryPiece.id],pickIds:[...(picks[0]?[picks[0].id]:[]),...(seconds[0]?[seconds[0].id]:[])]},
+        {playerIds:[salaryPiece.id],pickIds:seconds[0]?[seconds[0].id]:[]}
+      ];
+      for(const incoming of options){
+        if(!incoming.pickIds.length&&Math.abs((salaryPiece.ovr||0)-(target.ovr||0))>4)continue;
+        const result=executeTradePackage(
+          G,seller.id,buyer.id,
+          {playerIds:[target.id],pickIds:[]},
+          incoming,
+          false
+        );
+        if(result.executed){
+          result.transaction.marketCheckpoint=checkpoint;
+          result.transaction.aiGenerated=true;
+          made++;
+          break;
+        }
+      }
+      if(made>=maxTrades)break;
+    }
+  }
+  if(made)logEvent(G,`${made} AI front-office trade${made===1?"":"s"} completed at the ${checkpoint.toLowerCase()} market checkpoint.`);
+  return made;
 }
 
 function tradeCenterSnapshot(G, clubId, partnerClubId=null) {
@@ -7669,7 +7894,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.34 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.36 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -11115,9 +11340,9 @@ function runWorldCupLegacy(G) {
   const championTeam=G.nationalTeams.find(t=>t.code===championCode), championPlayers=new Set(championTeam.rosterPlayerIds);
   const mvp=(rankedPlayers.filter(x=>championPlayers.has(x.player.id))[0]||rankedPlayers[0]||{}).player||null;
   const allTournament=rankedPlayers.slice(0,5).map(x=>x.player);
-  if(mvp)mvp.awardHistory.push({season:G.season,award:"World Cup MVP",cycle:q.cycle});
-  for(const p of allTournament)p.awardHistory.push({season:G.season,award:"All-World Cup Team",cycle:q.cycle});
-  for(const id of championTeam.rosterPlayerIds){const p=lookup.get(id);if(p)p.awardHistory.push({season:G.season,award:"World Cup Champion",cycle:q.cycle});}
+  if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"World Cup MVP",cycle:q.cycle});
+  for(const p of allTournament)pushPlayerAwardRecord(p,{season:G.season,award:"All-World Cup Team",cycle:q.cycle});
+  for(const id of championTeam.rosterPlayerIds){const p=lookup.get(id);if(p)pushPlayerAwardRecord(p,{season:G.season,award:"World Cup Champion",cycle:q.cycle});}
   const wc={cycle:q.cycle,season:G.season,status:"COMPLETE",groups,groupTables,secondGroups,secondTables,classificationGroups,classificationTables,games,qualifiedTeamCodes:field,championCode,runnerUpCode,bronzeCode:bronzeGame.winner,fifthCode:fifthGame.winner,seventhCode:seventhGame.winner,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats};
   G.worldCup=wc; G.worldCupHistory.push(wc); q.worldCupPlayed=true;
   G.awards[`WC${q.cycle}_Champion`]=championCode; G.awards[`WC${q.cycle}_MVP`]=mvp?.id||null;
@@ -11195,9 +11420,9 @@ function finalizeWorldCupLive(G){
   const champTeam=G.nationalTeams.find(t=>t.code===championCode),champIds=new Set(champTeam.rosterPlayerIds);
   const mvp=(ranked.filter(x=>champIds.has(x.player.id))[0]||ranked[0]||{}).player||null;
   const allTournament=ranked.slice(0,5).map(x=>x.player);
-  if(mvp)mvp.awardHistory.push({season:G.season,award:"World Cup MVP",cycle:q.cycle});
-  for(const p of allTournament)p.awardHistory.push({season:G.season,award:"All-World Cup Team",cycle:q.cycle});
-  for(const id of champTeam.rosterPlayerIds){const p=lookup.get(id);if(p)p.awardHistory.push({season:G.season,award:"World Cup Champion",cycle:q.cycle});}
+  if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"World Cup MVP",cycle:q.cycle});
+  for(const p of allTournament)pushPlayerAwardRecord(p,{season:G.season,award:"All-World Cup Team",cycle:q.cycle});
+  for(const id of champTeam.rosterPlayerIds){const p=lookup.get(id);if(p)pushPlayerAwardRecord(p,{season:G.season,award:"World Cup Champion",cycle:q.cycle});}
   const wc={cycle:q.cycle,season:G.season,status:"COMPLETE",groups:live.groups,groupTables:live.groupTables,
     secondGroups:live.secondGroups,secondTables:live.secondTables,classificationGroups:live.classificationGroups,
     classificationTables:live.classificationTables,games:[...live.games],qualifiedTeamCodes:[...live.field],
@@ -11403,10 +11628,10 @@ function finalizeOlympics(G,live=G.olympicLive){
   const mvp=(rankedPlayers.filter(x=>champIds.has(x.player.id))[0]||rankedPlayers[0]||{}).player||null;
   const allTournament=rankedPlayers.slice(0,5).map(x=>x.player);
   for(const [code,award] of [[championCode,"Olympic Gold Medal"],[runnerUpCode,"Olympic Silver Medal"],[bronzeCode,"Olympic Bronze Medal"]]){
-    const team=nat(code);for(const id of team?.rosterPlayerIds||[]){const p=lookup.get(id);if(p)p.awardHistory.push({season:G.season,award,international:true,olympicYear:live.year})}
+    const team=nat(code);for(const id of team?.rosterPlayerIds||[]){const p=lookup.get(id);if(p)pushPlayerAwardRecord(p,{season:G.season,award,international:true,olympicYear:live.year})}
   }
-  if(mvp)mvp.awardHistory.push({season:G.season,award:"Olympic Tournament MVP",international:true,olympicYear:live.year});
-  for(const p of allTournament)p.awardHistory.push({season:G.season,award:"Olympic All-Tournament Team",international:true,olympicYear:live.year});
+  if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"Olympic Tournament MVP",international:true,olympicYear:live.year});
+  for(const p of allTournament)pushPlayerAwardRecord(p,{season:G.season,award:"Olympic All-Tournament Team",international:true,olympicYear:live.year});
   const result={year:live.year,season:G.season,host:live.host?`${live.host.city}, ${live.host.country}`:"Olympic Host",hostCode:live.host?.code||null,hostGenerated:!!live.host?.generated,status:"COMPLETE",
     field:live.field,qualification:live.qualification,groups:live.groups,groupTables:live.groupTables,games:live.games,championCode,runnerUpCode,bronzeCode,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats:live.tournamentStats};
   live.complete=true;G.olympics=result;G.olympicHistory=G.olympicHistory||[];G.olympicHistory.push(result);
@@ -12395,7 +12620,7 @@ function runDraftDayTrades(G, round1OriginalOrder) {
     const futureFirst=clubDraftAssets(G,buyer.id).find(p=>p.year===G.season+1 && p.round===1);
     const sweetener=clubDraftAssets(G,buyer.id).find(p=>p.year===G.season+1 && p.round===2);
     if(!futureFirst) continue;
-    const result=executeTradePackage(G,seller.id,buyer.id,{pickIds:[currentPick.id]},{pickIds:[futureFirst.id,...(sweetener?[sweetener.id]:[])]},true);
+    const result=executeTradePackage(G,seller.id,buyer.id,{pickIds:[currentPick.id]},{pickIds:[futureFirst.id,...(sweetener?[sweetener.id]:[])]},false);
     if(result.executed) trades++;
     if(trades>=3) break;
   }
@@ -13756,7 +13981,7 @@ function finalizeSummerLeagueLive(G){
   for(const pos of POSITIONS){const p=ranked.find(x=>canPlayPosition(x,pos)&&!first.includes(x));if(p)first.push(p);}
   for(const p of ranked){if(first.length>=5)break;if(!first.includes(p))first.push(p);}
   const second=ranked.filter(p=>!first.includes(p)).slice(0,5);
-  if(mvp)mvp.awardHistory.push({season:G.season,award:"Summer League MVP"});for(const p of first)p.awardHistory.push({season:G.season,award:"All-Summer First Team"});for(const p of second)p.awardHistory.push({season:G.season,award:"All-Summer Second Team"});
+  if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"Summer League MVP"});for(const p of first)pushPlayerAwardRecord(p,{season:G.season,award:"All-Summer First Team"});for(const p of second)pushPlayerAwardRecord(p,{season:G.season,award:"All-Summer Second Team"});
   const contracted=participants.filter(p=>p.draftYear===G.season||p.draftYear===G.season-1);
   const vals=contracted.map(p=>summerPerformanceScore(p.summerLeagueStats)).filter(Number.isFinite).sort((a,b)=>a-b);
   const lo=vals.length?vals[Math.floor(vals.length*.2)]:0,hi=vals.length?vals[Math.floor(vals.length*.75)]:0,development=[];
@@ -14885,6 +15110,9 @@ function advanceRegularSeasonRound(G) {
     else if(intl?.complete) live.callUpsThisSeason++;
   }
 
+  // FO4 market checkpoints: AI clubs may make a small number of needs-driven
+  // trades during the season. The user club is never auto-traded.
+  if([18,36,54,72].includes(round))runAiTradeMarket(G,{checkpoint:`Round ${round}`,maxTrades:1});
   refreshRegularSeasonSnapshot(G);
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   if(typeof courtsideAnalystTick==="function")courtsideAnalystTick(G);
@@ -15076,14 +15304,26 @@ function generateAwardVoting(G,awardKey,candidates,scoreFn,{voters=100,noise=3.4
   const results=[...tally.values()].filter(x=>x.points>0).sort((a,b)=>b.points-a.points||b.first-a.first||b.second-a.second||b.third-a.third||String(a.playerId).localeCompare(String(b.playerId)));
   return{season:G.season,awardKey,voters,results,winnerId:results[0]?.playerId||null};
 }
-function mipAwardCandidates(players){
-  return players.filter(p=>p.seasonStats?.gp>=40&&p.seasonHistory?.length).map(p=>{
-    const prev=p.seasonHistory[p.seasonHistory.length-1]?.stats;
-    const prevScore=prev?.gp?(prev.pts/prev.gp)+(prev.reb/prev.gp)*.55+(prev.ast/prev.gp)*.70:0;
-    const cur=(p.seasonStats.pts/p.seasonStats.gp)+(p.seasonStats.reb/p.seasonStats.gp)*.55+(p.seasonStats.ast/p.seasonStats.gp)*.70;
-    const efficiency=p.seasonStats.fga?p.seasonStats.pts/Math.max(1,2*(p.seasonStats.fga+.44*p.seasonStats.fta)):.5;
-    return{p,score:(cur-prevScore)+Math.max(0,efficiency-.54)*3};
-  }).filter(x=>x.score>0).sort((a,b)=>b.score-a.score);
+function mipAwardCandidates(players,G){
+  return players.filter(p=>p.seasonStats?.gp>=40).map(p=>{
+    ensurePlayerCoreHistory(p);
+    const currentGp=Math.max(1,+p.seasonStats.gp||1);
+    const currentScore=(+p.seasonStats.pts||0)/currentGp+((+p.seasonStats.reb||0)/currentGp)*.55+((+p.seasonStats.ast||0)/currentGp)*.70;
+    let prev=null,baselineType="prior season";
+    if(p.seasonHistory?.length){
+      prev=p.seasonHistory[p.seasonHistory.length-1]?.stats||null;
+    }else{
+      prev=p.careerStats||null;baselineType="launch baseline";
+    }
+    const prevGp=+prev?.gp||0;
+    if(!prevGp)return null;
+    if((+p.draftYear||0)>0 && +p.draftYear===+G?.season)return null;
+    if(!p.seasonHistory?.length && (+p.ovr||0)>=90)return null;
+    const prevScore=((+prev.pts||0)/prevGp)+((+prev.reb||0)/prevGp)*.55+((+prev.ast||0)/prevGp)*.70;
+    const efficiency=(+p.seasonStats.fga||0)?(+p.seasonStats.pts||0)/Math.max(1,2*((+p.seasonStats.fga||0)+.44*(+p.seasonStats.fta||0))):.5;
+    const score=(currentScore-prevScore)+Math.max(0,efficiency-.54)*3;
+    return score>0?{p,score,baselineType}:null;
+  }).filter(Boolean).sort((a,b)=>b.score-a.score);
 }
 function awardPlayerById(G,id){return G?.clubs?.flatMap(c=>c.roster||[]).find(p=>p.id===id)||null;}
 function awardVoteLabel(key){return({MVP:"Most Valuable Player",ROY:"Rookie of the Year",DPOY:"Defensive Player of the Year",SixthMan:"Sixth Man of the Year",MIP:"Most Improved Player"})[key]||key;}
@@ -15107,7 +15347,16 @@ function queueMajorAwardResults(G){
   if(G.awardVotingPresentationSeen[seasonKey]||G.newsFlashPending)return;
   G.newsFlashPending={type:"award_results",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
 }
-function addAward(G,p,award){if(!p)return;p.awardHistory=p.awardHistory||[];p.awardHistory.push({season:G.season,award});}
+function ensurePlayerCoreHistory(p){
+  if(!p)return p;
+  if(!Array.isArray(p.awardHistory))p.awardHistory=[];
+  if(!Array.isArray(p.seasonHistory))p.seasonHistory=[];
+  if(!Array.isArray(p.transactionHistory))p.transactionHistory=[];
+  if(!p.careerStats||typeof p.careerStats!=="object")p.careerStats={};
+  return p;
+}
+function pushPlayerAwardRecord(p,row){if(!p)return;ensurePlayerCoreHistory(p);p.awardHistory.push(row);}
+function addAward(G,p,award){if(!p)return;pushPlayerAwardRecord(p,{season:G.season,award});}
 function settleSeasonAwards(G){
   G.awards=G.awards||{};G.awardVoting=G.awardVoting||{};
   if(G.seasonAwards?.season===G.season&&G.awards[`S${G.season}_MVP`])return G.seasonAwards;
@@ -15115,7 +15364,7 @@ function settleSeasonAwards(G){
   const eligible=players.filter(p=>p.seasonStats.gp>=50);
   const rookies=players.filter(p=>p.draftYear===G.season&&p.seasonStats.gp>=30);
   const sixthPool=players.filter(p=>p.rotationRole==="Sixth Man"&&p.seasonStats.gp>=40);
-  const mipPool=mipAwardCandidates(players);
+  const mipPool=mipAwardCandidates(players,G);
   const votes={
     MVP:generateAwardVoting(G,"MVP",eligible,p=>awardCandidateScore(G,p,50),{noise:3.5}),
     DPOY:generateAwardVoting(G,"DPOY",eligible,p=>defensiveAwardScore(G,p,50),{noise:2.7}),
@@ -15474,7 +15723,7 @@ function simSeasons(G, count) {
 }
 
 if (typeof module !== "undefined") {
-  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, aiTeamDirection, rosterPositionNeed, aiRosterFitSummary, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, gmRecruitmentState, generateGMRecruitmentOffer, acceptGMRecruitmentOffer, declineGMRecruitmentOffer, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
+  module.exports = { historicalRecordSnapshot, clubHistoricalSnapshot, ingestHistoricalGameRecords, continueFromSummerLeague, beginPreseasonFromReadiness, CLUB_IDENTITIES, basketballRecordBook, snapshotLeagueSeason, recordGMCareerSeason, gmCareerState, pushNews, advanceNBACupFinalEvent, initializeNBACup, cupGroupTable, advanceAllStarEvent, initializeAllStarLive, advanceWorldCupEvent, initializeWorldCupLive, advanceQualificationWindowEvent, initializeQualificationWindowLive, advancePlayInEvent, initializePlayInLive, advancePlayoffEvent, initializePlayoffsLive, advanceCareerEvent, advanceSummerLeagueRound, initializeSummerLeagueLive, advancePreseasonRound, initializePreseasonLive, advanceUserGames, advanceRegularSeasonRound, initializeRegularSeasonLive, userNextFixture, rosterDepthSnapshot, assignTwoWayContract, convertTwoWayToStandard, waiveTwoWay, progressInjuries, makeCareer, advance, simSeasons, needAwareScore, aiTeamDirection, rosterPositionNeed, aiRosterFitSummary, runDraftLottery, retirementChance, selectNationalRoster, nationalCandidates, buildNationalDepthChart, appointNationalGM, setUserNationalSquad, setNationalPlayerStatus, qualificationTable, currentQualificationGroup, runNationalWindow, resolveWorldCupQualifiers, runWorldCup, resetWorldCupCycle, nbaStyleOvr, salaryForOvr, appointClubGM, gmRecruitmentState, generateGMRecruitmentOffer, acceptGMRecruitmentOffer, declineGMRecruitmentOffer, offseasonRosterState, extendPlayerContract, negotiateExtension, extensionDemand, releasePlayer, signFreeAgent, makeFreeAgentOffer, freeAgentDemand, marketSalaryForPlayer, freeAgencyMarketSnapshot, financialThresholds, clubCapPosition, ensureRosterCompliance, ensureDraftPickHorizon, clubDraftAssets, draftPickTradeValue, playerTradeValue, frontOfficeProfile, subjectivePlayerTradeValue, subjectivePickTradeValue, evaluateBilateralAiTrade, runAiTradeMarket, evaluateTradePackage, executeTradePackage, tradeCenterSnapshot, makeUserDraftSelection, setUserDraftMode, draftBoardSnapshot };
 }
 
 </script>
@@ -15484,7 +15733,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.34 Contract Market Calibration & Payroll Reconciliation",ENGINE_VERSION="E2.26-PROD84";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.36 QA Stability · Milestone Watch & MIP Fix",ENGINE_VERSION="E2.26-PROD86";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21612,34 +21861,72 @@ function gmExecutiveMilestonesHtml(G){
   const s=gmExecutiveSnapshot(G),rows=[['wins',s.wins],['playoffWins',s.playoffWins],['championships',s.championships],['winPct',s.winPct]];
   return `<div class="sectionTitle">Executive Milestones</div><div class="gmMilestoneGrid">${rows.map(([k,v])=>{const b=EXECUTIVE_HISTORICAL_BENCHMARKS[k],disp=k==='winPct'?`${(v*100).toFixed(1)}%`:milestoneFmt(v),mark=k==='winPct'?`${(b.value*100).toFixed(1)}%`:milestoneFmt(b.value);return `<div class="gmMilestoneCard"><small>${b.label}</small><b>${disp}</b><span>${b.holder} · ${mark}<br>${gmBenchmarkStatus(k,v,s)}</span></div>`}).join('')}</div>`;
 }
+function milestoneEditorialRound(G){return Math.max(0,+G?.regularSeasonLive?.roundIndex||+G?.regularSeason?.currentRound||0)}
+function milestoneEditorialState(G){
+  G.courtsideMilestoneEditorial=G.courtsideMilestoneEditorial||{};
+  const key=`S${G.season}`;
+  if(!G.courtsideMilestoneEditorial[key])G.courtsideMilestoneEditorial[key]={stories:{}};
+  return G.courtsideMilestoneEditorial[key];
+}
 function playerCareerMilestoneWatches(G){
   const players=milestoneAllCareerPlayers(G),w=[];
-  let points=null;for(const p of players){const v=+unifiedCareerStats(p).pts||0;if(!points||v>points.value)points={p,value:v}}
-  if(points&&points.value>=40000){const target=51961,diff=target-points.value;w.push({id:'CAREER_POINTS',type:'PLAYER WATCH',priority:diff<=0?100:90-Math.min(40,diff/200),headline:`${points.p.name} and the all-time scoring mark`,detail:diff<=0?`${points.p.name} has passed the ${milestoneFmt(target)}-point historical benchmark with ${milestoneFmt(points.value)} combined career points.`:`${points.p.name} needs ${milestoneFmt(diff)} points to reach the ${milestoneFmt(target)}-point all-time combined scoring benchmark.`,state:diff<=0?'RECORD BROKEN':`${milestoneFmt(diff)} TO GO`});}
+  let points=null;for(const p of players){const v=currentCareerTotal(p,'pts');if(!points||v>points.value)points={p,value:v}}
+  if(points&&points.value>=40000){
+    const target=51961,diff=target-points.value;
+    if(diff>0&&diff<=2500)w.push({id:'CAREER_POINTS',playerId:points.p.id,type:'PLAYER WATCH',priority:88-Math.min(25,diff/120),headline:`${points.p.name} and the all-time scoring mark`,detail:`${points.p.name} needs ${milestoneFmt(diff)} points to reach the ${milestoneFmt(target)}-point all-time combined scoring benchmark.`,state:`${milestoneFmt(diff)} TO GO`,kind:'career'});
+  }
   const achievementDefs=[['TITLES','Championships',11,p=>honoursChampionshipSeasons(p).length],['MVP','MVP Awards',6,p=>honoursCareerAwardCount(p,'mvp')],['FMVP','Finals MVP Awards',6,p=>honoursCareerAwardCount(p,'finals mvp')],['DPOY','DPOY Awards',4,p=>honoursCareerAwardCount(p,'dpoy')]];
-  for(const [id,label,target,getter] of achievementDefs){let best=null;for(const p of players){const v=+getter(p)||0;if(!best||v>best.value)best={p,value:v}}if(!best)continue;const diff=target-best.value;if(diff<=2||best.value>=target)w.push({id:`PLAYER_${id}`,type:'PLAYER WATCH',priority:diff<=0?96:82-diff*4,headline:`${best.p.name} · ${label}`,detail:diff<=0?`${best.p.name} has passed the historical ${target} ${label.toLowerCase()} benchmark with ${best.value}.`:`${best.p.name} is ${diff} away from matching the historical mark of ${target}.`,state:diff<=0?'RECORD BROKEN':`${diff} TO MATCH`});}
+  for(const [id,label,target,getter] of achievementDefs){let best=null;for(const p of players){const v=+getter(p)||0;if(!best||v>best.value)best={p,value:v}}if(!best)continue;const diff=target-best.value;if(diff>0&&diff<=1)w.push({id:`PLAYER_${id}`,playerId:best.p.id,type:'PLAYER WATCH',priority:80,headline:`${best.p.name} · ${label}`,detail:`${best.p.name} is ${diff} away from matching the historical mark of ${target}.`,state:`${diff} TO MATCH`,kind:'career'});}
   return w;
 }
 function seasonMilestoneWatches(G){
-  const snap=seasonRecordWatchSnapshot(G),w=[];
-  for(const [key,x] of Object.entries(snap)){const {def,live}=x;if(!live.player||live.gp<8)continue;const diff=def.value-live.value,pacePct=live.pace/def.value;if(diff<=0||pacePct>=.88||diff<=Math.max(10,def.value*.08)){w.push({id:`SEASON_${key}`,type:'RECORD WATCH',priority:diff<=0?98:70+Math.min(20,pacePct*10),headline:`${live.player.name} · ${def.label}`,detail:diff<=0?`${live.player.name} has moved past ${def.holder}'s historical mark of ${milestoneFmt(def.value)} with ${milestoneFmt(live.value)}.`:`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Historical mark: ${milestoneFmt(def.value)} by ${def.holder}.`,state:diff<=0?'RECORD BROKEN':`${Math.round(pacePct*100)}% PACE`});}}
+  const snap=seasonRecordWatchSnapshot(G),w=[],round=milestoneEditorialRound(G),finalFive=round>=77;
+  for(const [key,x] of Object.entries(snap)){
+    const {def,live}=x;if(!live.player||live.gp<8)continue;
+    const diff=def.value-live.value,pacePct=live.pace/def.value;
+    if(diff<=0)continue;
+    let eligible=false,detail='',state='',priority=0;
+    if(finalFive){
+      const remaining=Math.max(0,82-live.gp),perGame=remaining?diff/remaining:Infinity;
+      const currentRate=live.value/Math.max(1,live.gp);
+      eligible=remaining>0&&perGame<=currentRate*1.35;
+      if(eligible){detail=`${live.player.name} needs ${milestoneFmt(diff)} ${def.key==='tpm'?'three-pointers':def.label.replace(' in a Season','').toLowerCase()} over the final ${remaining} game${remaining===1?'':'s'} to break ${def.holder}'s mark of ${milestoneFmt(def.value)}.`;state=`${milestoneFmt(diff)} NEEDED`;priority=94;}
+    }else if(pacePct>=.95){
+      eligible=true;detail=`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Historical mark: ${milestoneFmt(def.value)} by ${def.holder}.`;state=`${Math.round(pacePct*100)}% PACE`;priority=78+Math.min(12,(pacePct-.95)*100);
+    }
+    if(eligible)w.push({id:`SEASON_${key}_${live.player.id}`,playerId:live.player.id,type:'RECORD WATCH',priority,headline:`${live.player.name} · ${def.label}`,detail,state,kind:'season',pacePct});
+  }
   return w;
 }
 function gmMilestoneWatches(G){
   const s=gmExecutiveSnapshot(G),name=G.gmName||'The GM',w=[];
-  for(const [key,b] of Object.entries(EXECUTIVE_HISTORICAL_BENCHMARKS)){const value=s[key];if(key==='winPct'){if(s.games<1000)continue;const ratio=value/b.value;if(ratio>=.94)w.push({id:'GM_WINPCT',type:'GM WATCH',priority:value>=b.value?94:68,headline:`${name} · executive win percentage`,detail:value>=b.value?`${name}'s ${(value*100).toFixed(1)}% career mark has passed ${b.holder}'s ${(b.value*100).toFixed(1)}% benchmark.`:`${name} owns a ${(value*100).toFixed(1)}% career win rate across ${milestoneFmt(s.games)} games. ${b.holder}'s benchmark is ${(b.value*100).toFixed(1)}%.`,state:value>=b.value?'RECORD BROKEN':'IN RANGE'});continue;}const diff=b.value-value;if(diff<=0||value>=b.value*.72)w.push({id:`GM_${key.toUpperCase()}`,type:'GM WATCH',priority:diff<=0?95:65+Math.min(20,value/b.value*15),headline:`${name} · ${b.label}`,detail:diff<=0?`${name} has passed ${b.holder}'s historical executive benchmark of ${milestoneFmt(b.value)} with ${milestoneFmt(value)}.`:`${name} needs ${milestoneFmt(diff)} more to match ${b.holder}'s historical mark of ${milestoneFmt(b.value)}.`,state:diff<=0?'RECORD BROKEN':`${milestoneFmt(diff)} TO GO`});}
+  for(const [key,b] of Object.entries(EXECUTIVE_HISTORICAL_BENCHMARKS)){const value=s[key];if(key==='winPct'){if(s.games<1000)continue;const ratio=value/b.value;if(value<b.value&&ratio>=.985)w.push({id:'GM_WINPCT',type:'GM WATCH',priority:70,headline:`${name} · executive win percentage`,detail:`${name} owns a ${(value*100).toFixed(1)}% career win rate across ${milestoneFmt(s.games)} games. ${b.holder}'s benchmark is ${(b.value*100).toFixed(1)}%.`,state:'IN RANGE',kind:'gm'});continue;}const diff=b.value-value;if(diff>0&&diff<=Math.max(3,Math.round(b.value*.03)))w.push({id:`GM_${key.toUpperCase()}`,type:'GM WATCH',priority:72,headline:`${name} · ${b.label}`,detail:`${name} needs ${milestoneFmt(diff)} more to match ${b.holder}'s historical mark of ${milestoneFmt(b.value)}.`,state:`${milestoneFmt(diff)} TO GO`,kind:'gm'});}
   return w;
 }
-function courtsideMilestoneWatchItems(G,limit=3){return [...playerCareerMilestoneWatches(G),...seasonMilestoneWatches(G),...gmMilestoneWatches(G)].sort((a,b)=>b.priority-a.priority).slice(0,limit)}
+function courtsideMilestoneWatchItems(G,limit=3){
+  const candidates=[...playerCareerMilestoneWatches(G),...seasonMilestoneWatches(G),...gmMilestoneWatches(G)].sort((a,b)=>b.priority-a.priority);
+  if(G.phase!=='REGULAR_SEASON')return candidates.slice(0,limit);
+  const round=milestoneEditorialRound(G),ed=milestoneEditorialState(G),rows=[];
+  for(const item of candidates){
+    let st=ed.stories[item.id];
+    if(!st)st=ed.stories[item.id]={firstRound:round,lastShownRound:round,season:G.season};
+    const finalFive=round>=77;
+    const ordinaryActive=!finalFive&&(round-st.firstRound)<=1;
+    if(finalFive&&!st.finalFiveRound)st.finalFiveRound=round;
+    const lateActive=finalFive&&st.finalFiveRound!=null&&(round-st.finalFiveRound)<=1;
+    if(ordinaryActive||lateActive){st.lastShownRound=round;rows.push(item);if(rows.length>=limit)break;}
+  }
+  return rows;
+}
 function courtsideMilestoneWatchHtml(G){
   if(!G||!['REGULAR_SEASON','PLAY_IN','PLAYOFFS'].includes(G.phase))return'';const rows=courtsideMilestoneWatchItems(G,3);if(!rows.length)return'';
-  return `<div class="milestoneWatch"><div class="milestoneWatchHead"><div><small>COURTSIDE NETWORK</small><b>Milestone Watch</b></div><span>Records · Players · GM</span></div><div class="milestoneWatchRows">${rows.map(x=>`<div class="milestoneWatchRow"><div><small>${x.type}</small><b>${x.headline}</b><p>${x.detail}</p></div><div class="milestoneWatchState">${x.state}</div></div>`).join('')}</div></div>`;
+  return `<div class="milestoneWatch"><div class="milestoneWatchHead"><div><small>COURTSIDE NETWORK</small><b>Milestone Watch</b></div><span>Records · Players · GM</span></div><div class="milestoneWatchRows">${rows.map(x=>`<div class="milestoneWatchRow"><div><small>${x.type}</small><b>${x.playerId?`<a class="profileLink" data-playerprofile="${x.playerId}" href="#player-profile/${encodeURIComponent(String(x.playerId))}">${x.headline}</a>`:x.headline}</b><p>${x.detail}</p></div><div class="milestoneWatchState">${x.state}</div></div>`).join('')}</div></div>`;
 }
 function seasonRecordWatchHtml(G){
   const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'HISTORICAL MARK PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · historical benchmark</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Mini&Me best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
 }
 function courtsideCheckMilestoneWatches(G,round){
-  if(round<10||![10,20,30,41,55,68,76,81].some(x=>Math.abs(round-x)<=1))return;const watch=courtsideMilestoneWatchItems(G,1)[0];if(!watch)return;
+  if(round<10||![10,20,30,41,55,68,76,81].some(x=>Math.abs(round-x)<=1))return;const watch=[...playerCareerMilestoneWatches(G),...seasonMilestoneWatches(G),...gmMilestoneWatches(G)].sort((a,b)=>b.priority-a.priority)[0];if(!watch)return;
   courtsidePublish(G,`MILESTONE_${watch.id}_${watch.state.replace(/\\s+/g,'_')}`,watch.headline,watch.detail,{flash:false,label:watch.type});
 }
 
