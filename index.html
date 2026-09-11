@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.42 Draft Scouting UI Fix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.43 Contract Economy Recalibration</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2701,7 +2701,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.42 Draft Scouting UI Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.43 Contract Economy Recalibration</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5175,7 +5175,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.42
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.43
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7577,7 +7577,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.42 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.43 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7929,7 +7929,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.42 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.43 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -9260,52 +9260,87 @@ function contractTeamSuccessMultiplier(player){
   const pct=(+club.standings.w||0)/gp;
   return pct>=.65?1.035:pct>=.58?1.02:pct<=.35?.985:1;
 }
-const CONTRACT_MARKET_OVR_ANCHORS=[
-  [99,62.0],[97,58.0],[95,52.0],[93,50.2],[91,48.0],[89,45.0],
-  [87,41.0],[85,33.0],[83,30.3],[81,17.0],[80,14.0],[79,9.5],
-  [77,7.2],[75,4.5],[73,3.0],[71,2.7],[60,1.4]
-];
+// ---------------------------------------------------------------------
+// v43 CONTRACT ECONOMY RECALIBRATION
+// The 482-player Basketball-Reference contract snapshot is the calibration
+// anchor. Future contracts are now bounded to realistic quality/role bands
+// rather than compounded upward every season. Existing signed contracts are
+// left untouched and age out naturally.
+// ---------------------------------------------------------------------
+const CONTRACT_MARKET_MODEL_VERSION="CM4-BREF482-BOUNDED";
+
+function contractSalaryBandFromOvr(player){
+  const o=+player?.ovr||60,age=+player?.age||26;
+  let lo=1.4,hi=3.9,label="Depth / Minimum";
+  if(o>=96){lo=45;hi=58;label="Franchise / Max";}
+  else if(o>=93){lo=40;hi=52;label="Franchise / Max";}
+  else if(o>=90){lo=32;hi=44.9;label="Star Contract";}
+  else if(o>=87){lo=26;hi=38;label="Star Contract";}
+  else if(o>=84){lo=18;hi=29;label="Starter Salary";}
+  else if(o>=81){lo=12;hi=20;label="Starter / Rotation";}
+  else if(o>=78){lo=7;hi=13.5;label="Rotation";}
+  else if(o>=75){lo=4;hi=8.5;label="Rotation / Bench";}
+  else if(o>=72){lo=2.5;hi=5.5;label="Bench / Depth";}
+
+  // Older veterans should not retain prime-market bands indefinitely.
+  let ageMult=1;
+  if(age>=38)ageMult=.58;
+  else if(age>=36)ageMult=.68;
+  else if(age>=34)ageMult=.78;
+  else if(age>=32)ageMult=.90;
+  else if(age<=24&&(+player?.potential||o)>=o+5)ageMult=1.04;
+
+  lo*=ageMult; hi*=ageMult;
+  return {
+    lo:Math.max(1.4,Math.round(lo*10)/10),
+    hi:Math.max(2.0,Math.round(hi*10)/10),
+    label
+  };
+}
 function contractBaseSalaryFromOvr(ovr){
-  const anchors=CONTRACT_MARKET_OVR_ANCHORS;
-  const o=Math.max(60,Math.min(99,+ovr||60));
-  for(let i=0;i<anchors.length-1;i++){
-    const [hiO,hiS]=anchors[i],[loO,loS]=anchors[i+1];
-    if(o<=hiO&&o>=loO){
-      const t=(o-loO)/Math.max(1,hiO-loO);
-      return loS+(hiS-loS)*t;
-    }
-  }
-  return 1.4;
+  const fake={ovr:+ovr||60,age:26,potential:+ovr||60};
+  const b=contractSalaryBandFromOvr(fake);
+  return (b.lo+b.hi)/2;
 }
 function contractEconomySeasonFactor(){
-  // CM3: market salaries grow at 3% per season against the game's 5% cap model.
-  // This preserves cap-space growth over long careers without making veteran and
-  // star salaries progressively unrealistic relative to the financial environment.
-  return Math.pow(1.03,Math.max(0,(G?.season||1)-1));
+  // Deliberately neutral. Salary growth is handled by quality, production and
+  // market context rather than a compounding season multiplier.
+  return 1;
 }
 function marketSalaryForPlayer(player) {
   ensureContractEconomyState(G);
-  if(!player)return 1.2;
-  const base=contractBaseSalaryFromOvr(player.ovr);
-  const production=contractProductionIndex(player);
-  const role=contractRoleMultiplier(player);
-  const agePotential=contractAgePotentialMultiplier(player);
-  const reputation=contractReputationMultiplier(player);
-  const success=contractTeamSuccessMultiplier(player);
-  const seasonFactor=contractEconomySeasonFactor();
-  const annual=base*production*role*agePotential*reputation*success*seasonFactor;
-  const floor=1.2*seasonFactor,ceiling=68*seasonFactor;
-  return Math.round(Math.max(floor,Math.min(ceiling,annual))*10)/10;
+  if(!player)return 1.4;
+
+  const band=contractSalaryBandFromOvr(player);
+  const base=(band.lo+band.hi)/2;
+
+  // Keep modifiers deliberately bounded so they move a player within a tier
+  // rather than multiplying a normal starter into a max-level contract.
+  const production=Math.max(.88,Math.min(1.12,contractProductionIndex(player)));
+  const role=Math.max(.92,Math.min(1.08,contractRoleMultiplier(player)));
+  const agePotential=Math.max(.92,Math.min(1.08,contractAgePotentialMultiplier(player)));
+  const reputation=Math.max(1,Math.min(1.07,contractReputationMultiplier(player)));
+  const success=Math.max(.98,Math.min(1.03,contractTeamSuccessMultiplier(player)));
+
+  let annual=base*production*role*agePotential*reputation*success;
+
+  // Most players should remain within their calibrated band. Truly elite
+  // players can stretch slightly beyond the listed upper edge, but ordinary
+  // starters/rotation players cannot stack bonuses into superstar money.
+  const elite=(+player.ovr||0)>=93;
+  const floor=band.lo*.92;
+  const ceiling=band.hi*(elite?1.06:1.00);
+  annual=Math.max(floor,Math.min(ceiling,annual));
+
+  return Math.round(Math.max(1.4,annual)*10)/10;
 }
 function salaryBandForPlayer(player,annualM=null){
-  const salary=annualM==null?marketSalaryForPlayer(player):+annualM;
-  if(salary>=45)return{key:"franchise",label:"Franchise / Max",range:"$45M+"};
-  if(salary>=28)return{key:"star",label:"Star",range:"$28–44.9M"};
-  if(salary>=18)return{key:"starterPlus",label:"High Starter",range:"$18–27.9M"};
-  if(salary>=11)return{key:"starter",label:"Starter",range:"$11–17.9M"};
-  if(salary>=7)return{key:"rotation",label:"Rotation",range:"$7–10.9M"};
-  if(salary>=4)return{key:"bench",label:"Bench",range:"$4–6.9M"};
-  return{key:"minimum",label:"Depth / Minimum",range:"$1.2–3.9M"};
+  if(player?.contractType==="Rookie Scale")return{key:"rookie",label:"Rookie Scale",range:"Draft slot"};
+  if(player?.contractType==="Two-Way")return{key:"twoWay",label:"Two-Way",range:"Two-Way slot"};
+  const b=contractSalaryBandFromOvr(player);
+  const fmt=n=>n>=10?n.toFixed(1).replace(".0",""):n.toFixed(1);
+  const key=b.hi>=45?"franchise":b.hi>=28?"star":b.hi>=18?"starterPlus":b.hi>=10?"starter":b.hi>=7?"rotation":b.hi>=4?"bench":"minimum";
+  return{key,label:b.label,range:`$${fmt(b.lo)}–${fmt(b.hi)}M`};
 }
 function contractValueStatus(player){
   const market=marketSalaryForPlayer(player),actual=+player.salaryM||0;
@@ -9320,15 +9355,20 @@ function positionGroupForPlayer(player){
   return"Centers";
 }
 function rosterSalarySlot(player,annualM=null){
-  const salary=annualM==null?(+player.salaryM||marketSalaryForPlayer(player)):+annualM;
   if(player.contractType==="Rookie Scale")return{key:"rookie",label:"Rookie Scale",range:"Draft slot"};
   if(player.contractType==="Two-Way")return{key:"twoWay",label:"Two-Way",range:"Two-Way slot"};
-  if(salary>=45)return{key:"max",label:"Franchise / Max",range:"$45M+"};
-  if(salary>=28)return{key:"star",label:"Star Contract",range:"$28–44.9M"};
-  if(salary>=18)return{key:"starter",label:"Starter Salary",range:"$18–27.9M"};
-  if(salary>=10)return{key:"mle",label:"MLE / Rotation",range:"$10–17.9M"};
-  if(salary>=4)return{key:"rotation",label:"Rotation / Bench",range:"$4–9.9M"};
-  return{key:"minimum",label:"Veteran Minimum",range:"$1.2–3.9M"};
+
+  const band=contractSalaryBandFromOvr(player);
+  const salary=annualM==null?marketSalaryForPlayer(player):+annualM;
+  let key="minimum";
+  if(band.hi>=45)key="max";
+  else if(band.hi>=28)key="star";
+  else if(band.hi>=18)key="starter";
+  else if(band.hi>=10)key="mle";
+  else if(band.hi>=4)key="rotation";
+
+  const fmt=n=>n>=10?n.toFixed(1).replace(".0",""):n.toFixed(1);
+  return{key,label:band.label,range:`$${fmt(band.lo)}–${fmt(band.hi)}M`,marketM:salary};
 }
 function rosterSalaryPlan(club){
   const active=(club.roster||[]),slots={
@@ -9430,7 +9470,9 @@ function makeFreeAgentOffer(G, clubId, playerId, years, annualM) {
   const club=clubById(G,clubId); const p=(G.freeAgents||[]).find(x=>x.id===playerId);
   if(!club||!p) return {accepted:false,reason:'Club or free agent not found'};
   if(club.roster.length>=(club.offseasonRosterLimit||20)) return {accepted:false,reason:'Offseason roster limit reached'};
-  years=Math.max(1,Math.min(4,Number(years)||1)); annualM=Math.round(Math.max(1.2,Number(annualM)||freeAgentDemand(p).annualM)*10)/10;
+  years=Math.max(1,Math.min(4,Number(years)||1));
+  const offerBand=contractSalaryBandFromOvr(p),offerCeiling=offerBand.hi*((+p.ovr||0)>=93?1.08:1.03);
+  annualM=Math.round(Math.max(1.4,Math.min(offerCeiling,Number(annualM)||freeAgentDemand(p).annualM))*10)/10;
   const capCheck=canSignSalary(G,club,annualM);
   if(!capCheck.ok) return {accepted:false,reason:capCheck.reason};
   const userScore=contractOfferInterest(G,club,p,years,annualM);
@@ -9529,7 +9571,9 @@ function extensionDemand(player, years=2) {
 function negotiateExtension(G, clubId, playerId, years=2, annualM=null) {
   const club=clubById(G,clubId), p=club?.roster.find(x=>x.id===playerId);
   if(!p || (p.contractYearsLeft||0)>1) return {accepted:false,reason:'Player is not extension eligible'};
-  const demand=extensionDemand(p,years); years=demand.years; annualM=Math.round((annualM==null?demand.annualM:Number(annualM))*10)/10;
+  const demand=extensionDemand(p,years); years=demand.years;
+  const extBand=contractSalaryBandFromOvr(p),extCeiling=extBand.hi*((+p.ovr||0)>=93?1.08:1.03);
+  annualM=Math.round(Math.min(extCeiling,(annualM==null?demand.annualM:Number(annualM)))*10)/10;
   const ratio=annualM/Math.max(1,demand.annualM), role=needAwareScore(club,p,{direction:aiTeamDirection(club)})-p.ovr, tenure=playerClubTenure(p,club), floor=tenure>=4?.90:tenure>=2?.92:.94, accepted=ratio>=floor || (ratio>=Math.max(.88,floor-.035) && role>=5);
   if(!accepted) return {accepted:false,reason:'Player wants a stronger extension offer',demand};
   if(demand.teamFriendlyDeal)demand.teamFriendlyDeal.used=true;
@@ -11921,8 +11965,9 @@ function appointClubGM(G, clubId) {
 }
 function recalcClubCap(club) { club.capUsed=Math.round(club.roster.reduce((a,p)=>a+(p.salaryM||0),0)*10)/10; return club.capUsed; }
 function contractView(player) {
-  const band=salaryBandForPlayer(player),value=contractValueStatus(player);
-  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,secondaryPosition:player.secondaryPosition||null,positionLabel:positionLabel(player),positionGroup:positionGroupForPlayer(player),rotationRole:player.rotationRole||"Depth",yearsLeft:player.contractYearsLeft||0,salaryM:player.salaryM||0,marketSalaryM:value.market,valueStatus:value.label,salaryBand:band.label,salaryBandRange:band.range,type:player.contractType||"Standard",pendingExtension:player.pendingExtension?{...player.pendingExtension}:null,extensionEligible:!player.pendingExtension&&(player.contractYearsLeft||0)<=1};
+  const band=salaryBandForPlayer(player),value=contractValueStatus(player),calibrated=contractSalaryBandFromOvr(player);
+  const actual=+player.salaryM||0,legacyOverpay=actual>calibrated.hi*1.08;
+  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,secondaryPosition:player.secondaryPosition||null,positionLabel:positionLabel(player),positionGroup:positionGroupForPlayer(player),rotationRole:player.rotationRole||"Depth",yearsLeft:player.contractYearsLeft||0,salaryM:actual,marketSalaryM:value.market,valueStatus:legacyOverpay?"Above Calibrated Market":value.label,salaryBand:band.label,salaryBandRange:band.range,type:player.contractType||"Standard",legacyOverpay,pendingExtension:player.pendingExtension?{...player.pendingExtension}:null,extensionEligible:!player.pendingExtension&&(player.contractYearsLeft||0)<=1};
 }
 function offseasonRosterState(G, clubId) {
   const club=clubById(G,clubId); if(!club) return null;
@@ -12499,8 +12544,11 @@ function runOffseason(G) {
       if(completedSeason)creditNbaExperienceForCompletedSeason(G,p,G.season-1);
       if (completedSeason) {
         if ((p.contractYearsLeft||0)===1 && club.id !== G.userClubGM?.clubId && aiExtensionDecision(club,p)) {
-          const add=p.age<=29?rand(2,4):rand(1,2),extSalary=salaryForOvr(p.ovr,p.age); queuePendingExtension(p,add,extSalary,G.season-1); summary.extended++;
-          G.transactions.push({type:"extension",season:G.season,clubId:club.id,playerId:p.id,years:add,salaryM:extSalary,startSeason:G.season});
+          const add=p.age<=29?rand(2,4):rand(1,2);
+          const extDemand=extensionDemand(p,add);
+          const extSalary=Math.round(extDemand.annualM*10)/10;
+          queuePendingExtension(p,add,extSalary,G.season-1); summary.extended++;
+          G.transactions.push({type:"extension",season:G.season,clubId:club.id,playerId:p.id,years:add,salaryM:extSalary,startSeason:G.season,marketModel:CONTRACT_MARKET_MODEL_VERSION});
         }
         if ((p.contractYearsLeft||0)>0) p.contractYearsLeft--;
         if((p.contractYearsLeft||0)>0)advanceVerifiedContractSchedule(p);
@@ -15768,7 +15816,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.42 Draft Scouting UI Fix",ENGINE_VERSION="E2.26-PROD92";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.43 Contract Economy Recalibration",ENGINE_VERSION="E2.26-PROD93";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -16603,6 +16651,14 @@ async function loadSlot(slot){
       if(issues.length)console.warn(`[Mini&Me QA · load] ${issues.length} integrity issue(s)`,issues);
     }
 
+    const contractEconomyMigrationVersion="CM4-GO-FORWARD";
+    G.runtimeMeta=G.runtimeMeta||{};
+    if(G.runtimeMeta.contractEconomyMigrationVersion!==contractEconomyMigrationVersion){
+      // Existing signed contracts remain historically intact. New signings,
+      // extensions and future AI deals use CM4 from this point forward.
+      G.runtimeMeta.contractEconomyMigrationVersion=contractEconomyMigrationVersion;
+      G.runtimeMeta.contractEconomyActivatedSeason=G.season;
+    }
     const transactionIntelVersion="TXI2-POSTLOAD-CURSOR";
     G.runtimeMeta=G.runtimeMeta||{};
     if(G.runtimeMeta.transactionIntelVersion!==transactionIntelVersion){
