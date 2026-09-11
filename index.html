@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.40 Trade Evaluation, UI & Season Transition Refinement</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -430,8 +430,9 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .tradeAssetColumns{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tradeAssetPanel{background:var(--panel);border:1px solid #34414d;border-radius:16px;overflow:hidden;min-width:0}
 .tradeAssetHead{padding:11px 13px;border-bottom:1px solid var(--line)}.tradeAssetHead b{display:block;font-size:11px}.tradeAssetHead small{display:block;color:var(--muted);font-size:9px;margin-top:3px}
 .tradeGroupTitle{padding:8px 12px;background:#0f151c;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:9px;color:var(--accent2);font-weight:950;text-transform:uppercase;letter-spacing:.45px}
-.tradeAssetRow{display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer}.tradeAssetRow:last-child{border-bottom:0}.tradeAssetRow:hover{background:#151d26}
-.tradeAssetRow input{width:16px;height:16px}.tradeAssetMain{min-width:0}.tradeAssetMain b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tradeAssetMain small{display:block;color:var(--muted);font-size:9px;line-height:1.35;margin-top:2px}
+.tradeAssetRow{display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s ease}.tradeAssetRow:last-child{border-bottom:0}.tradeAssetRow:hover{background:#151d26}.tradeAssetRow.selected{background:rgba(244,163,64,.055)}
+.tradeAssetRow input.tradeToggleInput{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}.tradeToggle{width:36px;height:21px;border-radius:999px;background:#252e39;border:1px solid #46515e;display:flex;align-items:center;padding:2px;transition:.18s ease;box-sizing:border-box}.tradeToggle:before{content:"";width:15px;height:15px;border-radius:50%;background:#aab3bf;box-shadow:0 1px 3px rgba(0,0,0,.35);transition:.18s ease}.tradeAssetRow.selected .tradeToggle{background:var(--accent);border-color:var(--accent)}.tradeAssetRow.selected .tradeToggle:before{transform:translateX(15px);background:#111820}.tradeAssetRow:focus-within .tradeToggle{box-shadow:0 0 0 2px rgba(244,163,64,.25)}
+.tradeAssetMain{min-width:0}.tradeAssetMain b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tradeAssetMain small{display:block;color:var(--muted);font-size:9px;line-height:1.35;margin-top:2px}
 .tradeAssetValue{text-align:right}.tradeAssetValue b{display:block;color:#f3ce82;font-size:11px}.tradeAssetValue small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
 .tradePickRow{background:#10161d}.tradeEvalPanel{border:1px solid #34414d;background:#111821;border-radius:14px;padding:12px}.tradeEvalPanel.accept{border-color:#365b45}.tradeEvalPanel.reject{border-color:#603840}
 .tradeEvalTop{display:flex;align-items:center;justify-content:space-between;gap:8px}.tradeEvalTop b{font-size:11px}.tradeEvalTop span{font-size:9px;color:var(--muted)}
@@ -1628,7 +1629,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .scoutFocusCard{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;margin-bottom:14px}
 .scoutFocusHead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:9px}
 .scoutFocusHead b{display:block;font-size:11px}.scoutFocusHead small{display:block;color:var(--muted);font-size:9px;margin-top:3px;line-height:1.35}
-.scoutFocusHead strong{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.08em}
+.scoutFocusHead strong{font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:.08em}
 .scoutFocusButtons{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.scoutFocusButtons button{border:1px solid var(--line);background:var(--panel2);color:var(--muted);border-radius:10px;padding:9px 5px;font-weight:800;font-size:10px}
 .scoutFocusButtons button.active{border-color:var(--gold);color:#111;background:var(--gold)}.scoutFocusButtons button:disabled{opacity:.75}
 .scoutFocusCard p{font-size:9px;line-height:1.45;color:var(--muted);margin:9px 0 0}
@@ -2551,7 +2552,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .seasonTransitionCard .eyebrow{margin-bottom:7px}.seasonTransitionCard h2{margin:0;font-size:25px;line-height:1.1}.seasonTransitionCard p{margin:8px 0 18px;color:var(--muted);font-size:11px;line-height:1.5}
 .seasonTransitionProgress{height:7px;background:#242d38;border-radius:999px;overflow:hidden;border:1px solid #303b47}.seasonTransitionProgress>i{display:block;width:4%;height:100%;background:var(--accent);border-radius:999px;transition:width .22s ease}
 .seasonTransitionStatus{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:11px}.seasonTransitionStatus b{font-size:11px}.seasonTransitionStatus span{font-size:10px;color:var(--accent2);font-weight:900}
-.seasonTransitionTasks{margin-top:17px;border-top:1px solid var(--line);padding-top:10px}.seasonTransitionTask{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:9px;color:var(--muted)}.seasonTransitionTask.active{color:var(--text)}.seasonTransitionTask.done{color:#88c79d}.seasonTransitionTask strong{font-weight:900;color:inherit}
+.seasonTransitionTasks{display:none}.seasonTransitionTask{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:9px;color:var(--muted)}.seasonTransitionTask.active{color:var(--text)}.seasonTransitionTask.done{color:#88c79d}.seasonTransitionTask strong{font-weight:900;color:inherit}
 @media(max-width:430px){.seasonTransitionCard{padding:20px 17px}.seasonTransitionCard h2{font-size:22px}}
 /* v0.1.49.77.5.5.5.11 — League Records navigation integrity
    Restores the missing per-snapshot player lookup used by League > Records.
@@ -2671,17 +2672,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 /* v38 · League Transactions */
 .txnPageIntro{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px;margin-bottom:14px}
-.txnPageIntro .eyebrow{font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--gold);text-transform:uppercase}
+.txnPageIntro .eyebrow{font-size:9px;font-weight:900;letter-spacing:.14em;color:var(--accent2);text-transform:uppercase}
 .txnPageIntro h3{margin:5px 0 5px;font-size:20px}.txnPageIntro p{margin:0;color:var(--muted);font-size:11px;line-height:1.55}
 .txnSummaryGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:12px 0}
 .txnSummaryCard{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:11px 12px}
 .txnSummaryCard b{display:block;font-size:18px}.txnSummaryCard small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.1em;margin-top:2px}
 .txnFilterRow{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin:8px 0 12px}
 .txnFilterRow button{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:8px 12px;font-weight:800;font-size:9px}
-.txnFilterRow button.active{background:var(--gold)!important;color:#0b0f14!important;border-color:var(--gold)!important;box-shadow:0 0 0 1px rgba(255,255,255,.10) inset}
+.txnFilterRow button.active{background:var(--accent)!important;color:#0b0f14!important;border-color:var(--accent)!important;box-shadow:0 0 0 1px rgba(255,255,255,.12) inset}.txnFilterRow button.active:hover{background:var(--accent2)!important;border-color:var(--accent2)!important}
 .txnFeed{display:grid;gap:8px}.txnCard{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:13px}
 .txnCardHead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:8px}
-.txnCardHead small{display:block;color:var(--gold);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
+.txnCardHead small{display:block;color:var(--accent2);font-size:8px;font-weight:900;text-transform:uppercase;letter-spacing:.1em}
 .txnCardHead b{display:block;font-size:13px;margin-top:2px}.txnCardSeason{color:var(--muted);font-size:9px;white-space:nowrap}
 .txnClubLine{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin:4px 0}.txnClubLine strong{font-size:11px}
 .txnAssets{display:grid;gap:4px;margin-top:7px}.txnAsset{font-size:10px;color:var(--text);line-height:1.45}
@@ -2692,9 +2693,9 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.40 Trade Evaluation, UI & Season Transition Refinement</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
-<section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">SEASON TRANSITION</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Finalising the basketball world and preparing long-career data so the new season opens cleanly.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Initialising</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks"></div></div></div></section>
+<section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
 <div id="s1" class="card"><h3>Who are you?</h3><div class="smallcopy">Your GM name is carried through the club dashboard, career history and future international appointments.</div><label>GM NAME</label><input id="gmName" type="text" maxlength="28" value="" placeholder="Enter GM name"><button id="next1" class="btn primary" style="margin-top:14px">Choose Team</button></div>
@@ -5166,7 +5167,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.39
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.40
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7568,7 +7569,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.39 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.40 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7745,17 +7746,22 @@ function evaluateTradePackage(G, clubAId, clubBId, packageA={}, packageB={}) {
   if(postA>limitA || postB>limitB) return {valid:false,accepted:false,reason:`Roster limit would be exceeded (${A.name} ${postA}/${limitA}, ${B.name} ${postB}/${limitB})`};
   const salaryMatch=salaryMatchingCheck(G,A,B,aPlayers,bPlayers);
   if(!salaryMatch.ok) return {valid:false,accepted:false,reason:`Salary matching failed (${A.name} sends $${salaryMatch.salaryA.toFixed(1)}M, ${B.name} sends $${salaryMatch.salaryB.toFixed(1)}M)`};
-  const aSends=tradePackageValueForClub(G,B,aPlayers,aPicks);
-  const bSends=tradePackageValueForClub(G,A,bPlayers,bPicks);
-  // From B's perspective it receives A's package and gives B's package.
-  const ratio=aSends/Math.max(1,bSends);
+  // Evaluate the proposal entirely from the partner club's perspective.
+  // B values both the package it receives and the assets it is being asked to surrender.
+  const aiReceives=tradePackageValueForSpecificClub(G,B,aPlayers,aPicks);
+  const aiGives=tradePackageValueForSpecificClub(G,B,bPlayers,bPicks);
+  const ratio=aiReceives/Math.max(1,aiGives);
   const aiThreshold=aiTradeAcceptanceThreshold(B);
   const accepted=ratio>=aiThreshold;
   const profile=frontOfficeProfile(B);
+  const aiMargin=Math.round((aiReceives-aiGives)*10)/10;
   return {
     valid:true,accepted,
     reason:accepted?"Offer fits this front office's valuation":"AI club wants more value",
-    clubAId,clubBId,aSendsValue:aSends,bSendsValue:bSends,
+    clubAId,clubBId,
+    aiReceivesValue:aiReceives,aiGivesValue:aiGives,aiMargin,
+    // Compatibility aliases retained for historical transaction storage.
+    aSendsValue:aiReceives,bSendsValue:aiGives,
     ratio:Math.round(ratio*100)/100,aiThreshold,
     aiStyle:profile.style,salaryMatch,
     postRoster:{[clubAId]:postA,[clubBId]:postB}
@@ -7915,7 +7921,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.39 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.40 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -15754,7 +15760,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.39 Postseason Durability & Transactions Performance Hotfix",ENGINE_VERSION="E2.26-PROD89";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.40 Trade Evaluation, UI & Season Transition Refinement",ENGINE_VERSION="E2.26-PROD90";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -15764,7 +15770,9 @@ function transitionYield(){return new Promise(resolve=>setTimeout(resolve,0))}
 function setSeasonTransitionUi(index,total,label,taskRows){
   const pct=Math.max(0,Math.min(100,Math.round((index/Math.max(1,total))*100)));
   const bar=$("#seasonTransitionBar"),status=$("#seasonTransitionStatus"),percent=$("#seasonTransitionPercent"),rows=$("#seasonTransitionTasks");
-  if(bar)bar.style.width=`${Math.max(4,pct)}%`;if(status)status.textContent=label||"Preparing season";if(percent)percent.textContent=`${pct}%`;
+  const userLabel=index>=total?"Season ready":index<=1?"Finalising previous season":index<=4?"Updating league history":"Checking rosters";
+  if(bar)bar.style.width=`${Math.max(4,pct)}%`;if(status)status.textContent=userLabel;if(percent)percent.textContent=`${pct}%`;
+  // Detailed task state is retained off-screen for developer diagnostics.
   if(rows)rows.innerHTML=taskRows.map((x,i)=>`<div class="seasonTransitionTask ${i<index?"done":i===index?"active":""}"><span>${x}</span><strong>${i<index?"Ready":i===index?"Working":"Queued"}</strong></div>`).join("");
 }
 async function precomputeSeasonTransitionData(){
@@ -15785,13 +15793,11 @@ async function precomputeSeasonTransitionData(){
   setSeasonTransitionUi(tasks.length,tasks.length,"Season ready",labels);await nextPaint();
 }
 async function runSeasonTransitionWindow(){
-  const started=performance.now();
   const title=$("#seasonTransitionTitle");if(title)title.textContent=`Preparing ${basketballSeasonLabel(G.season)}`;
   setSeasonTransitionUi(0,6,"Initialising",["Finalising season archive","Indexing head-to-head history","Preparing league records","Preparing league honours","Preparing franchise records","Checking roster ecosystem"]);
   await nextPaint();
   await precomputeSeasonTransitionData();
-  const minimumMs=3000,elapsed=performance.now()-started;
-  if(elapsed<minimumMs)await new Promise(resolve=>setTimeout(resolve,minimumMs-elapsed));
+  // No artificial minimum delay: move on as soon as the real preparation work is complete.
 }
 function toast(t){let x=$("#toast");x.textContent=t;x.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>x.classList.remove("show"),1600)}
 function c(id){return G?.clubs?.find(x=>x.id===id)}function me(){return c(G?.userClubGM?.clubId)}function nat(id){return G?.nationalTeams?.find(x=>x.code===id)}
@@ -21486,12 +21492,12 @@ function trades(){
       return `<div class="tradeGroupTitle">${group}</div>${players.map(a=>{
         const p=livePlayer(sideSnap.clubId,a.id),checked=selection.players.includes(a.id),pos=p?positionLabel(p):a.position,role=p?.rotationRole||"Roster";
         const fit=side==="out"?tradeNeedFit(partner,p):tradeNeedFit(me(),p);
-        return `<label class="tradeAssetRow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="players" data-id="${a.id}" ${checked?"checked":""}><span class="tradeAssetMain"><b>${a.name}</b><small>${pos} · Age ${a.age} · OVR ${a.ovr} · ${role}</small><small>${a.yearsLeft} yr · $${(+a.salaryM).toFixed(1)}M · ${fit>=2?"Strong need fit":fit>=1?"Need fit":"Roster fit"}</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
+        return `<label class="tradeAssetRow ${checked?"selected":""}"><input class="tradeToggleInput" type="checkbox" aria-label="${checked?"Remove":"Select"} ${a.name} from trade" data-tradeasset data-side="${side}" data-type="players" data-id="${a.id}" ${checked?"checked":""}><span class="tradeToggle" aria-hidden="true"></span><span class="tradeAssetMain"><b>${a.name}</b><small>${pos} · Age ${a.age} · OVR ${a.ovr} · ${role}</small><small>${a.yearsLeft} yr · $${(+a.salaryM).toFixed(1)}M · ${fit>=2?"Strong need fit":fit>=1?"Need fit":"Roster fit"}</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
       }).join("")}`;
     }).join("");
     const picks=sideSnap.picks.length?`<div class="tradeGroupTitle">Draft Picks</div>${sideSnap.picks.map(a=>{
       const checked=selection.picks.includes(a.id);
-      return `<label class="tradeAssetRow tradePickRow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="picks" data-id="${a.id}" ${checked?"checked":""}><span class="tradeAssetMain"><b>${gameYearForSeason(a.year)} Draft · Round ${a.round}</b><small>Originally ${a.originalClubName}</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
+      return `<label class="tradeAssetRow tradePickRow ${checked?"selected":""}"><input class="tradeToggleInput" type="checkbox" aria-label="${checked?"Remove":"Select"} ${gameYearForSeason(a.year)} Round ${a.round} pick from trade" data-tradeasset data-side="${side}" data-type="picks" data-id="${a.id}" ${checked?"checked":""}><span class="tradeToggle" aria-hidden="true"></span><span class="tradeAssetMain"><b>${gameYearForSeason(a.year)} Draft · Round ${a.round}</b><small>Originally ${a.originalClubName}</small></span><span class="tradeAssetValue"><b>${a.value}</b><small>VALUE</small></span></label>`;
     }).join("")}`:"";
     return playersByGroup+picks||`<div class="empty" style="padding:14px">No assets available.</div>`;
   };
@@ -21499,7 +21505,7 @@ function trades(){
   const summarySide=(name,t,sideLabel)=>`<div class="tradeSummarySide"><h4>${name}</h4><small>${sideLabel} · ${t.count} selected asset${t.count===1?"":"s"}</small><div class="tradeTotals"><div class="tradeTotal"><b>${t.value.toFixed(1)}</b><span>Trade Value</span></div><div class="tradeTotal"><b>$${t.salary.toFixed(1)}M</b><span>Salary</span></div></div></div>`;
 
   const ev=ui.tradeEval;
-  const evalHtml=ev?(ev.valid?`<div class="tradeEvalPanel ${ev.accepted?"accept":"reject"}"><div class="tradeEvalTop"><b>${ev.accepted?"Trade Accepted":"Trade Rejected"}</b><span>${ev.reason}</span></div><div class="tradeEvalMetrics"><div class="tradeEvalMetric"><b>${ev.aSendsValue}</b><small>${me().name} Value</small></div><div class="tradeEvalMetric"><b>${ev.bSendsValue}</b><small>${snap.partner.clubName} Value</small></div><div class="tradeEvalMetric"><b>${valueDelta>0?"+":""}${valueDelta.toFixed(1)}</b><small>Value Difference</small></div><div class="tradeEvalMetric"><b>${G.settings.salaryCap?(ev.salaryMatch?.ok?"Valid":"Invalid"):"Not Required"}</b><small>Salary Match</small></div></div>${!ev.accepted?`<button id="counterTradeBtn" class="btn secondary" style="margin-top:9px">Ask for AI Counter</button>`:""}</div>`:`<div class="tradeEvalPanel reject"><div class="tradeEvalTop"><b>Trade Invalid</b><span>${ev.reason}</span></div></div>`):`<div class="tradeEvalPanel"><div class="tradeEvalTop"><b>Trade Evaluation</b><span>Select assets from both teams, then evaluate the proposal.</span></div></div>`;
+  const evalHtml=ev?(ev.valid?`<div class="tradeEvalPanel ${ev.accepted?"accept":"reject"}"><div class="tradeEvalTop"><b>${ev.accepted?"Trade Accepted":"Trade Rejected"}</b><span>${ev.reason}</span></div><div class="tradeEvalMetrics"><div class="tradeEvalMetric"><b>${(+ev.aiReceivesValue||+ev.aSendsValue||0).toFixed(1)}</b><small>${snap.partner.clubName} Receives</small></div><div class="tradeEvalMetric"><b>${(+ev.aiGivesValue||+ev.bSendsValue||0).toFixed(1)}</b><small>${snap.partner.clubName} Gives</small></div><div class="tradeEvalMetric"><b>${((ev.aiMargin??((+ev.aSendsValue||0)-(+ev.bSendsValue||0)))>0?"+":"")}${(+((ev.aiMargin??((+ev.aSendsValue||0)-(+ev.bSendsValue||0)))).toFixed(1))}</b><small>AI Acceptance Margin</small></div><div class="tradeEvalMetric"><b>${G.settings.salaryCap?(ev.salaryMatch?.ok?"Valid":"Invalid"):"Not Required"}</b><small>Salary Match</small></div></div><div class="tradeDelta" style="margin-top:9px"><b>Partner perspective:</b> ${snap.partner.clubName} compares the value it places on what it receives against the value it places on what it gives up. Team direction, age, contract, roster need and front-office style can all change those values.</div>${!ev.accepted?`<button id="counterTradeBtn" class="btn secondary" style="margin-top:9px">Ask for AI Counter</button>`:""}</div>`:`<div class="tradeEvalPanel reject"><div class="tradeEvalTop"><b>Trade Invalid</b><span>${ev.reason}</span></div></div>`):`<div class="tradeEvalPanel"><div class="tradeEvalTop"><b>Trade Evaluation</b><span>Select assets from both teams, then evaluate the proposal.</span></div></div>`;
 
   const counter=ui.tradeCounter?`<div class="tradeCounter ${ui.tradeCounter.ok?"accept":"reject"}"><b>${ui.tradeCounter.ok?"AI Counter Offer":"No Counter Available"}</b><small>${ui.tradeCounter.reason}</small>${ui.tradeCounter.ok&&ui.tradeCounter.added?`<button id="applyCounterBtn" class="pick">Apply Counter</button>`:""}</div>`:"";
 
@@ -21515,7 +21521,7 @@ function trades(){
         <div class="tradeOfferBalance"><span>${balance.label}</span><div class="tradeBalanceBar ${balance.tone}"><i style="width:${balance.pct}%"></i></div><small>${mine.value.toFixed(1)} ↔ ${theirs.value.toFixed(1)}</small></div>
         <div class="tradeOfferSide receive"><small>YOU RECEIVE</small><div class="tradePills">${tradeSelectionPills(theirs)}</div><div class="tradeOfferNumbers"><b>${theirs.value.toFixed(1)} value</b><span>$${theirs.salary.toFixed(1)}M salary</span></div></div>
       </div>
-      <div class="tradeDelta modern"><span><b>Value difference</b> ${valueDelta===0?"Even":`${valueDelta>0?"+":""}${valueDelta.toFixed(1)}`}</span><span><b>Salary</b> $${mine.salary.toFixed(1)}M ↔ $${theirs.salary.toFixed(1)}M</span><span>${G.settings.salaryCap?"Matching rules active":"Salary cap disabled"}</span></div>
+      <div class="tradeDelta modern"><span><b>Base asset difference</b> ${valueDelta===0?"Even":`${valueDelta>0?"+":""}${valueDelta.toFixed(1)}`}</span><span><b>Salary</b> $${mine.salary.toFixed(1)}M ↔ $${theirs.salary.toFixed(1)}M</span><span>${G.settings.salaryCap?"Matching rules active":"Salary cap disabled"}</span></div>
       <div class="tradeAssetColumns modern">
         <div class="tradeAssetPanel"><div class="tradeAssetHead"><b>${me().name} Assets</b><small>Select players or future picks to send.</small></div>${groupedAssets(snap.club,"out",ui.tradeOut)}</div>
         <div class="tradeAssetPanel"><div class="tradeAssetHead"><b>${snap.partner.clubName} Assets</b><small>Your top need is ${intel.myPriority.group}. Select what you want back.</small></div>${groupedAssets(snap.partner,"in",ui.tradeIn)}</div>
