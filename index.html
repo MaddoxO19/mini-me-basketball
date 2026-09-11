@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.43 Contract Economy Recalibration</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.44 News Milestone Watch & Intelligence</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2698,10 +2698,19 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .draftBriefReason{display:block!important;margin-top:3px;color:#8fc2df!important;font-size:9px!important;font-weight:800;letter-spacing:.02em}
 .draftBriefReason .scoutMark{margin-left:0}
 
+
+/* v44 · Milestone Watch moves from Home into News */
+.newsMilestoneIntro{border:1px solid rgba(244,163,64,.35);background:rgba(244,163,64,.045);border-radius:16px;padding:13px 14px;margin-bottom:12px}
+.newsMilestoneIntro small{display:block;color:var(--accent2);font-size:8px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+.newsMilestoneIntro b{display:block;font-size:14px;margin-top:3px}.newsMilestoneIntro p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.5}
+.newsItem.milestone{border-color:rgba(244,163,64,.30)}
+.newsItem.milestone .newsMeta span{color:var(--accent2)}
+.newsItem.achievement{border-color:rgba(85,190,125,.40);box-shadow:inset 3px 0 0 rgba(85,190,125,.55)}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.43 Contract Economy Recalibration</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.44 News Milestone Watch & Intelligence</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5175,7 +5184,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.43
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.44
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7577,7 +7586,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.43 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.44 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7929,7 +7938,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.43 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.44 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -15816,7 +15825,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.43 Contract Economy Recalibration",ENGINE_VERSION="E2.26-PROD93";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.44 News Milestone Watch & Intelligence",ENGINE_VERSION="E2.26-PROD94";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20074,7 +20083,7 @@ function home(){
     let [title,copy]=phaseStatusCopy();
     centre=`<div class="card homeStatus"><div class="homeStatusBody"><h3>${title}</h3><p>${copy}</p></div>${homeActionHtml()}</div>`;
   }
-  return centre+courtsideMilestoneWatchHtml(G);
+  return centre;
 }
 function eventSummaryCard({label,title,subtitle,metrics=[]}){
   return `<div class="eventHero"><div class="eventHeroTop"><b>${label}</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="eventHeroBody"><h3>${title}</h3><p>${subtitle||""}</p>${metrics.length?`<div class="eventMetrics">${metrics.map(m=>`<div class="eventMetric"><b>${m.value}</b><small>${m.label}</small></div>`).join("")}</div>`:""}</div></div>`;
@@ -20968,12 +20977,14 @@ function resetNewsViewForNewSeason(){
   ui.newsFilter="all";
 }
 function newsPage(){
+  syncMilestoneNews(G,{allowFlash:false});
   const season=newsSeasonFilter(),clubId=G.userClubGM?.clubId,filter=ui.newsFilter||"all";
   const seasonItems=newsCurrentSeasonItems(G.newsFeed||[]);
   const filtered=seasonItems.filter(n=>{
     if(filter==="all")return true;
     if(filter==="club")return n.clubId===clubId||n.category==="Club"||String(n.headline||"").includes(me()?.name||"");
-    if(filter==="league")return n.category!=="Club"&&n.category!=="GM";
+    if(filter==="league")return n.category!=="Club"&&n.category!=="GM"&&!String(n.category||"").startsWith("Milestone");
+    if(filter==="milestones")return String(n.category||"").startsWith("Milestone");
     return true;
   });
 
@@ -20982,10 +20993,12 @@ function newsPage(){
       <button class="${filter==="all"?"active":""}" data-newsfilter="all">All</button>
       <button class="${filter==="club"?"active":""}" data-newsfilter="club">Club</button>
       <button class="${filter==="league"?"active":""}" data-newsfilter="league">League</button>
+      <button class="${filter==="milestones"?"active":""}" data-newsfilter="milestones">Milestones</button>
     </div>
-    <div class="newsList">${filtered.length?filtered.map(n=>`<div class="newsItem ${n.article?"article":""}">
-      <div class="newsMeta"><span>${n.category||"League"}</span><small>Season ${n.season}</small></div>
-      <h3>${n.headline||"News Update"}</h3>
+    ${filter==="milestones"?`<div class="newsMilestoneIntro"><small>COURTSIDE NETWORK</small><b>Milestone Watch</b><p>Active record chases and major career benchmarks stay here as part of the season's news record. Courtside will interrupt play only when a milestone becomes imminent or is achieved.</p></div>`:""}
+    <div class="newsList">${filtered.length?filtered.map(n=>`<div class="newsItem ${n.article?"article":""} ${n.milestone?"milestone":""} ${n.achieved?"achievement":""}">
+      <div class="newsMeta"><span>${n.category||"League"}</span><small>Season ${n.season}${n.milestoneState?` · ${n.milestoneState}`:""}</small></div>
+      <h3>${n.playerId?`<a class="profileLink" data-playerprofile="${n.playerId}" href="#player-profile/${encodeURIComponent(String(n.playerId))}">${n.headline||"News Update"}</a>`:(n.headline||"News Update")}</h3>
       ${n.analyst?`<div class="newsAnalystByline"><b>${n.analyst}</b><span>${n.analystRole||"Courtside Network"}</span></div>`:""}
       ${n.article?`<div class="newsArticleBody">${n.body||""}</div>`:""}
     </div>`).join(""):`<div class="card empty">No ${filter==="all"?"news":filter+" news"} recorded yet for ${basketballSeasonLabel(season)}.</div>`}</div>`;
@@ -22071,6 +22084,126 @@ function courtsideMilestoneWatchItems(G,limit=3){
   }
   return rows;
 }
+
+function milestoneNewsSeenState(G){
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.milestoneNewsSeen=G.runtimeMeta.milestoneNewsSeen||{};
+  return G.runtimeMeta.milestoneNewsSeen;
+}
+function milestoneNewsCanFlash(G,key){
+  const seen=milestoneNewsSeenState(G);
+  if(seen[key])return false;
+  if(G.newsFlashPending)return false;
+  seen[key]=Date.now();
+  return true;
+}
+function milestoneSeasonWatchRows(G){
+  const snap=seasonRecordWatchSnapshot(G),round=milestoneEditorialRound(G),rows=[];
+  for(const [key,x] of Object.entries(snap)){
+    const {def,live}=x;if(!live.player||live.gp<8)continue;
+    const diff=def.value-live.value,pacePct=live.pace/def.value;
+    if(diff<=0){
+      rows.push({id:`SEASON_${key}`,playerId:live.player.id,type:"RECORD ACHIEVEMENT",headline:`${live.player.name} breaks the ${def.label.toLowerCase()} mark`,detail:`${live.player.name} has reached ${milestoneFmt(live.value)}, passing ${def.holder}'s historical benchmark of ${milestoneFmt(def.value)}.`,state:"RECORD BROKEN",achieved:true,priority:120});
+      continue;
+    }
+    // News can track a broader plausible chase than Home ever did.
+    if(pacePct>=.90){
+      const remaining=Math.max(0,82-live.gp);
+      const late=round>=77;
+      const perGame=remaining?diff/remaining:Infinity,currentRate=live.value/Math.max(1,live.gp);
+      const plausibleLate=late&&remaining>0&&perGame<=currentRate*1.35;
+      rows.push({
+        id:`SEASON_${key}`,playerId:live.player.id,type:"RECORD WATCH",
+        headline:`${live.player.name} · ${def.label}`,
+        detail:late&&plausibleLate
+          ?`${live.player.name} needs ${milestoneFmt(diff)} more over the final ${remaining} game${remaining===1?"":"s"} to break ${def.holder}'s mark of ${milestoneFmt(def.value)}.`
+          :`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Historical mark: ${milestoneFmt(def.value)} by ${def.holder}.`,
+        state:late&&plausibleLate?`${milestoneFmt(diff)} NEEDED`:`${Math.round(pacePct*100)}% PACE`,
+        imminent:plausibleLate,priority:plausibleLate?108:72+Math.min(20,(pacePct-.90)*100)
+      });
+    }
+  }
+  return rows;
+}
+function milestoneCareerNewsRows(G){
+  const players=milestoneAllCareerPlayers(G),rows=[];
+  let points=null;for(const p of players){const v=currentCareerTotal(p,"pts");if(!points||v>points.value)points={p,value:v}}
+  if(points){
+    const target=51961,diff=target-points.value;
+    if(diff<=0){
+      rows.push({id:"CAREER_POINTS",playerId:points.p.id,type:"CAREER ACHIEVEMENT",headline:`${points.p.name} owns the all-time scoring mark`,detail:`${points.p.name} has reached ${milestoneFmt(points.value)} combined career points, beyond the historical benchmark of ${milestoneFmt(target)}.`,state:"RECORD HOLDER",achieved:true,priority:122});
+    }else if(points.value>=40000&&diff<=3000){
+      const gp=Math.max(1,+points.p.seasonStats?.gp||1),seasonPts=+points.p.seasonStats?.pts||0,ppg=seasonPts/gp;
+      const imminent=diff<=Math.max(120,ppg*5);
+      rows.push({id:"CAREER_POINTS",playerId:points.p.id,type:"PLAYER WATCH",headline:`${points.p.name} and the all-time scoring mark`,detail:`${points.p.name} needs ${milestoneFmt(diff)} points to reach the ${milestoneFmt(target)}-point all-time combined scoring benchmark.`,state:`${milestoneFmt(diff)} TO GO`,imminent,priority:imminent?110:82-Math.min(20,diff/180)});
+    }
+  }
+
+  const defs=[
+    ["TITLES","Championships",11,p=>honoursChampionshipSeasons(p).length],
+    ["MVP","MVP Awards",6,p=>honoursCareerAwardCount(p,"mvp")],
+    ["FMVP","Finals MVP Awards",6,p=>honoursCareerAwardCount(p,"finals mvp")],
+    ["DPOY","Defensive Player of the Year Awards",4,p=>honoursCareerAwardCount(p,"dpoy")]
+  ];
+  for(const [id,label,target,getter] of defs){
+    let best=null;for(const p of players){const v=+getter(p)||0;if(!best||v>best.value)best={p,value:v}}
+    if(!best)continue;
+    const diff=target-best.value;
+    if(diff<=0){
+      rows.push({id:`PLAYER_${id}`,playerId:best.p.id,type:"CAREER ACHIEVEMENT",headline:`${best.p.name} matches or passes the ${label.toLowerCase()} benchmark`,detail:`${best.p.name} has ${best.value} ${label.toLowerCase()}, reaching the historical mark of ${target}.`,state:"HISTORICAL MARK",achieved:true,priority:118});
+    }else if(diff===1){
+      const pst=G.phase==="PLAYOFFS"&&typeof userPostseasonState==="function"?userPostseasonState():null;
+      const titleChase=id==="TITLES"&&pst?.series&&String(pst.series.stage||"").toUpperCase().includes("FINAL");
+      rows.push({id:`PLAYER_${id}`,playerId:best.p.id,type:"PLAYER WATCH",headline:`${best.p.name} · ${label}`,detail:`${best.p.name} is one away from matching the historical mark of ${target}.`,state:"1 TO MATCH",imminent:titleChase,priority:titleChase?109:76});
+    }
+  }
+  return rows;
+}
+function milestoneGmNewsRows(G){
+  const s=gmExecutiveSnapshot(G),name=G.gmName||"The GM",rows=[];
+  for(const [key,b] of Object.entries(EXECUTIVE_HISTORICAL_BENCHMARKS)){
+    const value=s[key];
+    if(key==="winPct"){
+      if(s.games<1000)continue;
+      if(value>=b.value){
+        rows.push({id:"GM_WINPCT",type:"GM ACHIEVEMENT",headline:`${name} reaches the executive win-rate benchmark`,detail:`${name} owns a ${(value*100).toFixed(1)}% career win rate across ${milestoneFmt(s.games)} games, matching or passing ${b.holder}'s ${(b.value*100).toFixed(1)}% benchmark.`,state:"HISTORICAL MARK",achieved:true,priority:116});
+      }else if(value/b.value>=.985){
+        rows.push({id:"GM_WINPCT",type:"GM WATCH",headline:`${name} · executive win percentage`,detail:`${name} owns a ${(value*100).toFixed(1)}% career win rate across ${milestoneFmt(s.games)} games. ${b.holder}'s benchmark is ${(b.value*100).toFixed(1)}%.`,state:"IN RANGE",priority:70});
+      }
+      continue;
+    }
+    const diff=b.value-value;
+    if(diff<=0){
+      rows.push({id:`GM_${key.toUpperCase()}`,type:"GM ACHIEVEMENT",headline:`${name} reaches the ${b.label.toLowerCase()} benchmark`,detail:`${name} has reached ${milestoneFmt(value)}, matching or passing ${b.holder}'s historical mark of ${milestoneFmt(b.value)}.`,state:"HISTORICAL MARK",achieved:true,priority:119});
+    }else if(diff<=Math.max(3,Math.round(b.value*.03))){
+      const pst=G.phase==="PLAYOFFS"&&typeof userPostseasonState==="function"?userPostseasonState():null;
+      const finals=key==="championships"&&pst?.series&&String(pst.series.stage||"").toUpperCase().includes("FINAL");
+      const imminent=finals&&diff===1||key==="wins"&&diff<=3||key==="playoffWins"&&diff<=2;
+      rows.push({id:`GM_${key.toUpperCase()}`,type:"GM WATCH",headline:`${name} · ${b.label}`,detail:`${name} needs ${milestoneFmt(diff)} more to match ${b.holder}'s historical mark of ${milestoneFmt(b.value)}.`,state:`${milestoneFmt(diff)} TO GO`,imminent,priority:imminent?111:72});
+    }
+  }
+  return rows;
+}
+function allMilestoneNewsRows(G){
+  return [...milestoneSeasonWatchRows(G),...milestoneCareerNewsRows(G),...milestoneGmNewsRows(G)]
+    .sort((a,b)=>(b.priority||0)-(a.priority||0));
+}
+function syncMilestoneNews(G,{allowFlash=true}={}){
+  if(!G)return[];
+  const rows=allMilestoneNewsRows(G),season=G.season;
+  for(const row of rows){
+    const tag=`MILESTONE_${row.achieved?"ACHIEVED":"WATCH"}_S${season}_${row.id}`;
+    const category=row.achieved?"Milestone Achievement":"Milestone Watch";
+    const article=pushNewsArticle(G,row.headline,row.detail,category,row.achieved?4:2,tag,false);
+    article.milestone=true;article.milestoneState=row.state;article.playerId=row.playerId||null;
+    article.achieved=!!row.achieved;
+    const shouldFlash=allowFlash&&(row.achieved||row.imminent);
+    const flashKey=`${tag}_${row.state}`;
+    if(shouldFlash&&milestoneNewsCanFlash(G,flashKey))queueNewsFlash(G,article);
+  }
+  return rows;
+}
+
 function courtsideMilestoneWatchHtml(G){
   if(!G||!['REGULAR_SEASON','PLAY_IN','PLAYOFFS'].includes(G.phase))return'';const rows=courtsideMilestoneWatchItems(G,3);if(!rows.length)return'';
   return `<div class="milestoneWatch"><div class="milestoneWatchHead"><div><small>COURTSIDE NETWORK</small><b>Milestone Watch</b></div><span>Records · Players · GM</span></div><div class="milestoneWatchRows">${rows.map(x=>`<div class="milestoneWatchRow"><div><small>${x.type}</small><b>${x.playerId?`<a class="profileLink" data-playerprofile="${x.playerId}" href="#player-profile/${encodeURIComponent(String(x.playerId))}">${x.headline}</a>`:x.headline}</b><p>${x.detail}</p></div><div class="milestoneWatchState">${x.state}</div></div>`).join('')}</div></div>`;
@@ -22079,8 +22212,8 @@ function seasonRecordWatchHtml(G){
   const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'HISTORICAL MARK PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · historical benchmark</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Mini&Me best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
 }
 function courtsideCheckMilestoneWatches(G,round){
-  if(round<10||![10,20,30,41,55,68,76,81].some(x=>Math.abs(round-x)<=1))return;const watch=[...playerCareerMilestoneWatches(G),...seasonMilestoneWatches(G),...gmMilestoneWatches(G)].sort((a,b)=>b.priority-a.priority)[0];if(!watch)return;
-  courtsidePublish(G,`MILESTONE_${watch.id}_${watch.state.replace(/\\s+/g,'_')}`,watch.headline,watch.detail,{flash:false,label:watch.type});
+  if(round<8)return;
+  syncMilestoneNews(G,{allowFlash:true});
 }
 
 const LEAGUE_HONOURS_BENCHMARKS={
@@ -23036,6 +23169,7 @@ function render(){
   ensureProductionCapFoundation(G);
   ensureProductionContractSnapshot(G);
   ensurePlayerMarketState(G);
+  syncMilestoneNews(G,{allowFlash:true});
   if(G.phase==="PRESEASON_READINESS"){
     for(const club of G.clubs||[])refreshClubRotation(club);
   }
