@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.49 Milestone Clarity Refinement</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.50 Record Holder Hero & Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2724,7 +2724,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.49 Milestone Clarity Refinement</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.50 Record Holder Hero & Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5198,7 +5198,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.49
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.50
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7600,7 +7600,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.49 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.50 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7952,7 +7952,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.49 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.50 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -10154,10 +10154,78 @@ function persistHistoricalLeaderboards(G){
 function formatHistoricalRecord(r,decimals=0){return r?Number(r.value).toFixed(decimals):"—"}
 function formatRecordValue(value,decimals=0){const n=Number(value);return Number.isFinite(n)?n.toLocaleString("en-US",{minimumFractionDigits:decimals,maximumFractionDigits:decimals}):"—"}
 function recordCard(label,r,unit="",decimals=0,Gctx=null){
-  const era=r?.historical?"League Record":r?.season?`${basketballSeasonLabel(r.season)}${r?.opponentName?` · vs ${r.opponentName}`:""}`:(r?"Career Record":"—");
+  const era=Gctx&&r?.playerName?recordHolderHeroText(Gctx,r):(r?.historical?"League Record":r?.season?`${basketballSeasonLabel(r.season)}${r?.opponentName?` · vs ${r.opponentName}`:""}`:(r?"Career Record":"—"));
   const who=r?.playerName?(Gctx?recordHolderNameHtml(Gctx,r):r.playerName):(r?.clubName||"No record yet");
   return `<div class="recordCard"><small>${label}</small><strong>${r?`${formatRecordValue(r.value,decimals)}${unit}`:"—"}</strong><b>${who}</b><span>${r?era:"Records begin as official games are played."}</span></div>`
 }
+
+const HISTORICAL_RECORD_HOLDER_META={
+  LEG_WILT:{position:"C",retiredSeason:"1972-73"},
+  LEG_WILT_PPG:{position:"C",retiredSeason:"1972-73"},
+  LEG_WILT_RPG:{position:"C",retiredSeason:"1972-73"},
+  LEG_WILT_PTS:{position:"C",retiredSeason:"1972-73"},
+  LEG_SKILES:{position:"PG",retiredSeason:"1995-96"},
+  LEG_SMITH:{position:"C",retiredSeason:"1978-79"},
+  LEG_JORDAN_PPG:{position:"SG/SF",retiredSeason:"2002-03"},
+  LEG_BARRY_PPG:{position:"SF",retiredSeason:"1979-80"},
+  LEG_KOBE_PPG:{position:"SG/SF",retiredSeason:"2015-16"},
+  LEG_KOBE:{position:"SG/SF",retiredSeason:"2015-16"},
+  LEG_RUSSELL_RPG:{position:"C",retiredSeason:"1968-69"},
+  LEG_THURMOND_RPG:{position:"C",retiredSeason:"1976-77"},
+  LEG_LUCAS_RPG:{position:"PF/C",retiredSeason:"1973-74"},
+  LEG_PETTIT_RPG:{position:"PF/C",retiredSeason:"1964-65"},
+  LEG_STOCKTON_APG:{position:"PG",retiredSeason:"2002-03"},
+  LEG_STOCKTON_SPG:{position:"PG",retiredSeason:"2002-03"},
+  LEG_STOCKTON:{position:"PG",retiredSeason:"2002-03"},
+  LEG_STOCKTON_STL:{position:"PG",retiredSeason:"2002-03"},
+  LEG_ISIAH_APG:{position:"PG",retiredSeason:"1993-94"},
+  LEG_PORTER_APG:{position:"PG",retiredSeason:"1982-83"},
+  LEG_MAGIC_APG:{position:"PG",retiredSeason:"1995-96"},
+  LEG_MAGIC_SPG:{position:"PG",retiredSeason:"1995-96"},
+  LEG_KJ_APG:{position:"PG",retiredSeason:"1999-00"},
+  LEG_ROBERTSON_SPG:{position:"SG/SF",retiredSeason:"1995-96"},
+  LEG_BUSE_SPG:{position:"PG",retiredSeason:"1984-85"},
+  LEG_RICHARDSON_SPG:{position:"PG/SG",retiredSeason:"1985-86"},
+  LEG_EATON_BPG:{position:"C",retiredSeason:"1992-93"},
+  LEG_BOL_BPG:{position:"C",retiredSeason:"1994-95"},
+  LEG_HAKEEM_BPG:{position:"C",retiredSeason:"2001-02"},
+  LEG_HAKEEM_PTS:{position:"C",retiredSeason:"2001-02"},
+  LEG_MUTOMBO_BPG:{position:"C",retiredSeason:"2008-09"},
+  LEG_KAREEM:{position:"C",retiredSeason:"1988-89"},
+  LEG_MALONE:{position:"PF",retiredSeason:"2003-04"},
+  LEG_JORDAN_PTS:{position:"SG/SF",retiredSeason:"2002-03"},
+  LEG_DIRK_PTS:{position:"PF/C",retiredSeason:"2018-19"},
+  LEG_SHAQ_PTS:{position:"C",retiredSeason:"2010-11"},
+  LEG_DUNCAN_PTS:{position:"PF/C",retiredSeason:"2015-16"},
+  LEG_CARMELO_PTS:{position:"SF/PF",retiredSeason:"2021-22"},
+  LEG_HAVLICEK_PTS:{position:"SF/SG",retiredSeason:"1977-78"},
+  LEG_WEST_PTS:{position:"PG/SG",retiredSeason:"1973-74"},
+  LEG_PIERCE_PTS:{position:"SF",retiredSeason:"2016-17"},
+  LEG_HAYES_PTS:{position:"PF/C",retiredSeason:"1983-84"},
+  LEG_HAYES:{position:"PF/C",retiredSeason:"1983-84"},
+  LEG_MOSES_PTS:{position:"C/PF",retiredSeason:"1994-95"},
+  LEG_MOSES:{position:"C/PF",retiredSeason:"1994-95"},
+  LEG_KIDD:{position:"PG",retiredSeason:"2012-13"}
+};
+function historicalRecordHolderMeta(r){
+  if(!r)return null;
+  return HISTORICAL_RECORD_HOLDER_META[String(r.playerId||"")]||null;
+}
+function recordHolderHeroText(G,r){
+  const p=G?historicalRecordProfilePlayer(G,r):null;
+  if(p?.retired){
+    return `${positionLabel(p)} · Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"}`;
+  }
+  if(p){
+    const club=clubForPlayer(G,p);
+    return `${positionLabel(p)}${club?.name?` · ${club.name}`:""}`;
+  }
+  const meta=historicalRecordHolderMeta(r);
+  if(meta)return `${meta.position} · Retired ${meta.retiredSeason}`;
+  if(r?.season)return basketballSeasonLabel(r.season);
+  return r?.clubName||"League record";
+}
+
 function recordHolderProfilePlayer(G,r){
   if(!G||!r)return null;
   const pool=[...allPlayers(G),...retiredPlayerPool(G)];
@@ -10193,11 +10261,11 @@ function linkedPlayerLabelByName(G,name){
 }
 function singleGameTopFiveList(G,title,list){
   const rows=(list||[]).slice(0,5);
-  return `<div class="recordCategory singleGameTopFiveCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.map((r,i)=>{const meta=!r.historical?`${r.season?basketballSeasonLabel(r.season):""}${r.opponentName?` · vs ${r.opponentName}`:""}`:"";return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${recordHolderNameHtml(G,r)}</b><small>${r.historical?"":(r.clubName||"")}${meta?`${r.clubName?" · ":""}${meta}`:""}</small></div><strong>${formatRecordValue(r.value,0)}</strong></div>`}).join("")||`<div class="empty">No qualifying record yet.</div>`}</div></div>`;
+  return `<div class="recordCategory singleGameTopFiveCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.map((r,i)=>{const p=historicalRecordProfilePlayer(G,r);let meta="";if(p?.retired||r.historical)meta=recordHolderHeroText(G,r);else{const gameMeta=`${r.season?basketballSeasonLabel(r.season):""}${r.opponentName?` · vs ${r.opponentName}`:""}`;meta=`${r.clubName||""}${gameMeta?`${r.clubName?" · ":""}${gameMeta}`:""}`;}return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${recordHolderNameHtml(G,r)}</b><small>${meta}</small></div><strong>${formatRecordValue(r.value,0)}</strong></div>`}).join("")||`<div class="empty">No qualifying record yet.</div>`}</div></div>`;
 }
 function recordLeaderList(title,list,unit="",decimals=0,Gctx=null){
   const rows=(list||[]).slice(0,5);
-  return `<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.length?rows.map((r,i)=>{const p=Gctx?historicalRecordProfilePlayer(Gctx,r):null;const club=p&&!p.retired?clubForPlayer(Gctx,p):null;const meta=r.historical?(club?.name||""):(r.season?basketballSeasonLabel(r.season):(club?.name||r.clubName||""));return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${Gctx?recordHolderNameHtml(Gctx,r):(r.playerName||"Player")}</b><small>${meta}</small></div><strong>${formatRecordValue(r.value,decimals)}${unit}</strong></div>`}).join(""):`<div class="empty">No qualifying record yet.</div>`}</div></div>`;
+  return `<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.length?rows.map((r,i)=>{const p=Gctx?historicalRecordProfilePlayer(Gctx,r):null;let meta="";if(Gctx&&p?.retired)meta=recordHolderHeroText(Gctx,r);else if(Gctx&&p){const club=clubForPlayer(Gctx,p);meta=`${positionLabel(p)}${club?.name?` · ${club.name}`:""}`;}else if(Gctx&&r.historical)meta=recordHolderHeroText(Gctx,r);else meta=r.season?basketballSeasonLabel(r.season):(r.clubName||"");return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${Gctx?recordHolderNameHtml(Gctx,r):(r.playerName||"Player")}</b><small>${meta}</small></div><strong>${formatRecordValue(r.value,decimals)}${unit}</strong></div>`}).join(""):`<div class="empty">No qualifying record yet.</div>`}</div></div>`;
 }
 function ingestCurrentSeasonRecordBackfill(G){
   ensureHistoricalRecords(G);
@@ -10238,7 +10306,7 @@ function dynastyLegacySnapshot(G){
 function leagueHistoryAllTimeHtml(G){
   ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
   const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12),legends=[...retiredPlayerPool(G)].sort((a,b)=>retiredLegendScore(b)-retiredLegendScore(a)).slice(0,10);
-  const legendsHtml=legends.length?`<div class="sectionTitle">Retired Legends</div><div class="retiredLegendList">${legends.map((p,i)=>{const cs=p.careerStats||{},hc=playerHonourCounts(p);return `<div class="retiredLegendRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"}</small></div><div><strong>${(+cs.pts||0).toLocaleString()}</strong><small>PTS</small></div><div><strong>${hc.total}</strong><small>HON</small></div></div>`}).join("")}</div>`:"";
+  const legendsHtml=legends.length?`<div class="sectionTitle">Retired Legends</div><div class="retiredLegendList">${legends.map((p,i)=>{const hc=playerHonourCounts(p),careerPts=currentCareerTotal(p,"pts");return `<div class="retiredLegendRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"}</small></div><div><strong>${(+careerPts||0).toLocaleString()}</strong><small>PTS</small></div><div><strong>${hc.total}</strong><small>HON</small></div></div>`}).join("")}</div>`:"";
   const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,ring=legacy.honours?.playerChampionships?.[0],run=legacy.honours?.consecutiveTitles,titleLegacy=playerTitleLegacySnapshot(G),dynasty=dynastyLegacySnapshot(G),three=titleLegacy.threePeats?.[0];
   const liveSingleGamePoints=x.league?.singleGame?.points||legacy.singleGame?.points;
   const liveCareerScoring=x.career?.points?.[0]||legacy.career?.points?.[0];
@@ -15842,7 +15910,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.49 Milestone Clarity Refinement",ENGINE_VERSION="E2.26-PROD99";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.50 Record Holder Hero & Integrity",ENGINE_VERSION="E2.26-PROD100";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
