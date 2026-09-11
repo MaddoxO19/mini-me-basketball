@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.41 Draft Scouting UI Refinement</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.42 Draft Scouting UI Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -323,8 +323,8 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .prospectTable tr.bestAvailable{background:#171b17}
 .prospectTable tr.gmBestFit{background:#201b12;box-shadow:inset 3px 0 0 var(--accent)}
 .prospectTable tr.gmStrongFit{background:#171b18}
-.prospectTable tr.scoutRecommended{background:#2a2112!important;box-shadow:inset 4px 0 0 var(--accent),inset 0 0 0 1px rgba(244,163,64,.34)}
-.scoutRecommendTag{display:inline-block;margin-left:6px;border:1px solid var(--accent);background:var(--accent);color:#17100a;border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;letter-spacing:.35px;text-transform:uppercase}
+.prospectTable tr.scoutRecommended{background:rgba(89,130,154,.055)!important;box-shadow:inset 3px 0 0 #6e9bb8}
+.scoutRecommendTag{display:inline-flex;align-items:center;justify-content:center;margin-left:6px;width:17px;height:17px;border:1px solid #5f7f94;background:rgba(89,130,154,.10);color:#8fc2df;border-radius:50%;font-size:10px;font-weight:950;line-height:1;vertical-align:middle}
 .gmFitTag{display:inline-block;margin-left:6px;border:1px solid #755826;background:#211a10;color:var(--accent2);border-radius:999px;padding:3px 6px;font-size:9px;font-weight:950;letter-spacing:.35px;text-transform:uppercase}
 .draftPickCard.current{border-width:2px;box-shadow:0 0 0 1px rgba(232,181,81,.18) inset}
 .draftPickCard.current b,.draftPickCard.current span{color:var(--accent2)}
@@ -368,7 +368,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .draftNeedChip strong{color:var(--accent2)}
 .draftRecList{display:grid;gap:8px}.draftRec{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px;background:#0f151c;border:1px solid #29343f;border-radius:12px}
 .draftRecRank{font-size:13px;font-weight:950;color:var(--accent2);text-align:center}.draftRecMain{min-width:0}.draftRecMain b{display:block;font-size:11px;line-height:1.2}.draftRecMain small{display:block;font-size:9px;color:var(--muted);line-height:1.35;margin-top:2px}
-.draftRecTag{font-size:9px;font-weight:950;color:#17100a;background:var(--accent);border-radius:999px;padding:6px 7px;white-space:nowrap}.draftScoutNote{margin-top:9px;color:var(--muted);font-size:9px;line-height:1.4}
+.draftRecTag{display:none}.draftScoutNote{margin-top:9px;color:var(--muted);font-size:9px;line-height:1.4}
 .contractEconomy{margin:12px 0 16px;border:1px solid #34414d;background:linear-gradient(135deg,#151c25,#10161d);border-radius:15px;overflow:hidden}
 .contractEconomyHead{padding:12px 14px;border-bottom:1px solid var(--line)}.contractEconomyHead b{display:block;font-size:11px}.contractEconomyHead small{display:block;color:var(--muted);font-size:9px;margin-top:3px;line-height:1.4}
 .salaryBandGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:12px}.salaryBandCard{padding:10px;background:#0f151c;border:1px solid #2d3945;border-radius:11px;min-width:0}
@@ -447,7 +447,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .capOffNote{margin-top:9px;padding:9px 11px;border:1px solid #3c4651;border-radius:10px;color:var(--muted);font-size:9px;line-height:1.4}.capOffNote b{color:var(--accent2)}
 @media(max-width:700px){.salaryBandGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
-@media(max-width:390px){.draftRec{grid-template-columns:24px minmax(0,1fr)}.draftRecTag{grid-column:2;justify-self:start}.draftScoutHead{align-items:flex-start}}
+@media(max-width:390px){.draftRec{grid-template-columns:24px minmax(0,1fr)}.draftRecTag{display:none}.draftScoutHead{align-items:flex-start}}
 @media(max-width:700px){.draftMetrics{grid-template-columns:repeat(2,1fr)}.draftMetric:first-child{grid-column:1/-1}}
 
 /* v0.1.2.0 Player / Club / Schedule foundation */
@@ -2695,13 +2695,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .scoutMark{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:1px solid #5f7f94;border-radius:50%;color:#8fc2df;font-size:11px;font-weight:900;line-height:1;background:rgba(89,130,154,.10);vertical-align:middle;margin-left:6px}
 .scoutMark.small{width:16px;height:16px;font-size:10px;margin-left:5px}
 .scoutMark[title]{cursor:help}
-.draftBriefReason{display:inline-flex;align-items:center;gap:5px;color:#9fb1bf;font-size:9px;font-weight:800;letter-spacing:.02em}
+.draftBriefReason{display:block!important;margin-top:3px;color:#8fc2df!important;font-size:9px!important;font-weight:800;letter-spacing:.02em}
 .draftBriefReason .scoutMark{margin-left:0}
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.41 Draft Scouting UI Refinement</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.42 Draft Scouting UI Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5175,7 +5175,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.41
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.42
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7577,7 +7577,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.41 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.42 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7929,7 +7929,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.41 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.42 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -15768,7 +15768,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.41 Draft Scouting UI Refinement",ENGINE_VERSION="E2.26-PROD91";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.42 Draft Scouting UI Fix",ENGINE_VERSION="E2.26-PROD92";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18927,7 +18927,7 @@ function draftScoutBriefHtml(prospects,nextPick){
   const chips=needs.map(n=>`<span class="draftNeedChip"><strong>${n.pos}</strong> ${n.score>=3.5?"Priority":n.score>=2?"Need":"Depth"}</span>`).join("");
   const rows=recommendations.map((p,i)=>{
     const tag=draftRecommendationTag(p,needs),viable=draftProspectViability(p,nextPick,p.boardRank);
-    return `<div class="draftRec"><div class="draftRecRank">${i+1}</div><div class="draftRecMain"><b>${p.name} · ${positionLabel(p)}</b><small>Board #${p.boardRank} · OVR est ${p.ovr} · POT est ${p.potential} · ${viable}</small><small>${p.archetype||"Prospect"} · Age ${p.age||"—"}${p.origin?` · ${p.origin}`:""}</small></div><span class="draftRecTag">${tag}</span></div>`;
+    return `<div class="draftRec"><div class="draftRecRank">${i+1}</div><div class="draftRecMain"><b>${p.name} · ${positionLabel(p)}<span class="scoutMark small" title="Scout recommendation" aria-label="Scout recommendation">◎</span></b><small>Board #${p.boardRank} · OVR est ${p.ovr} · POT est ${p.potential} · ${viable}</small><small>${p.archetype||"Prospect"} · Age ${p.age||"—"}${p.origin?` · ${p.origin}`:""}</small><small class="draftBriefReason">${tag}</small></div></div>`;
   }).join("");
   return `<div class="draftScoutBrief"><div class="draftScoutHead"><b>Scouting Department · Draft Brief</b><small>Baseline scouting</small></div><div class="draftScoutBody"><div class="draftNeedLine">${chips}</div><div class="draftRecList">${rows||`<div class="empty">No viable recommendations available.</div>`}</div><div class="draftScoutNote">Recommendations balance roster need, current talent, upside and likely availability near your next pick. Your Scouting Department controls confidence and accuracy without changing a player's true ability.</div></div></div>`;
 }
@@ -21013,7 +21013,7 @@ function draft(){
   const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
   const scoutPickNumber=p?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||1;
   const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
-  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag">Scout Recommends</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"class";
   const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
