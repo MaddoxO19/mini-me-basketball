@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2724,7 +2724,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5198,7 +5198,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.53
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.54
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7600,7 +7600,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.53 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.54 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7952,7 +7952,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.53 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.54 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -11543,11 +11543,12 @@ function runWorldCupLegacy(G) {
   const rankedPlayers=Object.entries(tournamentStats).map(([id,st])=>({player:lookup.get(id),stats:st,score:summerPerformanceScore(st)})).filter(x=>x.player).sort((a,b)=>b.score-a.score);
   const championTeam=G.nationalTeams.find(t=>t.code===championCode), championPlayers=new Set(championTeam.rosterPlayerIds);
   const mvp=(rankedPlayers.filter(x=>championPlayers.has(x.player.id))[0]||rankedPlayers[0]||{}).player||null;
-  const allTournament=rankedPlayers.slice(0,5).map(x=>x.player);
+  const bronzeCode=bronzeGame.winner;
+  const allTournament=selectWorldCupAllTournament(G,rankedPlayers,games,championCode,runnerUpCode,bronzeCode);
   if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"World Cup MVP",cycle:q.cycle});
   for(const p of allTournament)pushPlayerAwardRecord(p,{season:G.season,award:"All-World Cup Team",cycle:q.cycle});
   for(const id of championTeam.rosterPlayerIds){const p=lookup.get(id);if(p)pushPlayerAwardRecord(p,{season:G.season,award:"World Cup Champion",cycle:q.cycle});}
-  const wc={cycle:q.cycle,season:G.season,status:"COMPLETE",groups,groupTables,secondGroups,secondTables,classificationGroups,classificationTables,games,qualifiedTeamCodes:field,championCode,runnerUpCode,bronzeCode:bronzeGame.winner,fifthCode:fifthGame.winner,seventhCode:seventhGame.winner,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats};
+  const wc={cycle:q.cycle,season:G.season,status:"COMPLETE",groups,groupTables,secondGroups,secondTables,classificationGroups,classificationTables,games,qualifiedTeamCodes:field,championCode,runnerUpCode,bronzeCode,fifthCode:fifthGame.winner,seventhCode:seventhGame.winner,mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats};
   G.worldCup=wc; G.worldCupHistory.push(wc); q.worldCupPlayed=true;
   G.awards[`WC${q.cycle}_Champion`]=championCode; G.awards[`WC${q.cycle}_MVP`]=mvp?.id||null;
   championTeam.history.push({season:G.season,type:"World Cup Champion",cycle:q.cycle});
@@ -11612,6 +11613,101 @@ function buildWorldCupSecondStage(G,live){
   live.stage="SECOND_GROUP_STAGE"; live.eventIndex=0;
 }
 
+
+function worldCupNationForPlayer(G,p){
+  if(!p)return null;
+  for(const t of G.nationalTeams||[]){
+    if((t.rosterPlayerIds||[]).includes(p.id))return t.code;
+  }
+  return p.nationality||null;
+}
+function worldCupFinishBonusMap(games,championCode,runnerUpCode,bronzeCode){
+  const bonus=new Map();
+  const set=(code,value)=>{if(code)bonus.set(code,Math.max(value,bonus.get(code)||0));};
+  set(championCode,6.0);
+  set(runnerUpCode,5.2);
+  set(bronzeCode,4.5);
+
+  const semis=(games||[]).filter(g=>g.stage==="SEMIFINAL");
+  for(const g of semis){
+    const loser=g.winner===g.teamA?g.teamB:g.teamA;
+    set(loser,4.0);
+  }
+  const qfs=(games||[]).filter(g=>g.stage==="QUARTERFINAL");
+  for(const g of qfs){
+    set(g.teamA,Math.max(2.5,bonus.get(g.teamA)||0));
+    set(g.teamB,Math.max(2.5,bonus.get(g.teamB)||0));
+  }
+  const second=(games||[]).filter(g=>g.stage==="SECOND_GROUP_STAGE");
+  for(const g of second){
+    set(g.teamA,Math.max(1.0,bonus.get(g.teamA)||0));
+    set(g.teamB,Math.max(1.0,bonus.get(g.teamB)||0));
+  }
+  return bonus;
+}
+function worldCupRoleBuckets(p){
+  const pos=String(positionLabel(p)||p.position||"").toUpperCase();
+  const out=[];
+  if(/PG|SG/.test(pos))out.push("G");
+  if(/SG|SF/.test(pos))out.push("W");
+  if(/SF|PF/.test(pos))out.push("F");
+  if(/PF|C/.test(pos))out.push("B");
+  if(!out.length)out.push("W");
+  return out;
+}
+function selectWorldCupAllTournament(G,ranked,games,championCode,runnerUpCode,bronzeCode){
+  const finishBonus=worldCupFinishBonusMap(games,championCode,runnerUpCode,bronzeCode);
+  const enriched=(ranked||[]).map(x=>{
+    const nation=worldCupNationForPlayer(G,x.player);
+    return {...x,nation,selectionScore:x.score+(finishBonus.get(nation)||0)};
+  }).sort((a,b)=>b.selectionScore-a.selectionScore);
+
+  // A real all-tournament five should resemble a basketball lineup rather than
+  // simply being the five highest raw averages. Use two guards, one wing,
+  // one forward and one big, while allowing dual-position flexibility.
+  const slots=["G","G","W","F","B"],picked=[],used=new Set(),nationCounts=new Map();
+  for(const slot of slots){
+    let choice=enriched.find(x=>{
+      if(used.has(x.player.id)||!worldCupRoleBuckets(x.player).includes(slot))return false;
+      // Keep the team representative without letting one nation dominate all five.
+      return (nationCounts.get(x.nation)||0)<2;
+    });
+    if(!choice){
+      choice=enriched.find(x=>!used.has(x.player.id)&&worldCupRoleBuckets(x.player).includes(slot));
+    }
+    if(!choice)choice=enriched.find(x=>!used.has(x.player.id));
+    if(!choice)continue;
+    picked.push(choice);used.add(choice.player.id);
+    nationCounts.set(choice.nation,(nationCounts.get(choice.nation)||0)+1);
+  }
+
+  // Integrity rule: at least three selections should come from quarterfinalists,
+  // and at least two from semifinalists. Replace the weakest non-qualifying
+  // selection if raw performance alone produced an implausible early-exit five.
+  const qfTeams=new Set();
+  const sfTeams=new Set();
+  for(const g of games||[]){
+    if(g.stage==="QUARTERFINAL"){qfTeams.add(g.teamA);qfTeams.add(g.teamB);}
+    if(g.stage==="SEMIFINAL"){sfTeams.add(g.teamA);sfTeams.add(g.teamB);}
+  }
+  const replaceForDepth=(teamSet,minCount)=>{
+    while(picked.filter(x=>teamSet.has(x.nation)).length<minCount){
+      const candidate=enriched.find(x=>teamSet.has(x.nation)&&!used.has(x.player.id));
+      if(!candidate)break;
+      const replaceIdx=[...picked].map((x,i)=>({x,i}))
+        .filter(o=>!teamSet.has(o.x.nation))
+        .sort((a,b)=>a.x.selectionScore-b.x.selectionScore)[0]?.i;
+      if(replaceIdx===undefined)break;
+      used.delete(picked[replaceIdx].player.id);
+      picked[replaceIdx]=candidate;used.add(candidate.player.id);
+    }
+  };
+  replaceForDepth(sfTeams,2);
+  replaceForDepth(qfTeams,3);
+
+  return picked.slice(0,5).map(x=>x.player);
+}
+
 function finalizeWorldCupLive(G){
   const live=G.worldCupLive,q=G.nationalQualification;
   const finalGame=[...live.games].reverse().find(g=>g.stage==="FINAL");
@@ -11623,14 +11719,15 @@ function finalizeWorldCupLive(G){
   const ranked=Object.entries(live.tournamentStats).map(([id,st])=>({player:lookup.get(id),stats:st,score:summerPerformanceScore(st)})).filter(x=>x.player).sort((a,b)=>b.score-a.score);
   const champTeam=G.nationalTeams.find(t=>t.code===championCode),champIds=new Set(champTeam.rosterPlayerIds);
   const mvp=(ranked.filter(x=>champIds.has(x.player.id))[0]||ranked[0]||{}).player||null;
-  const allTournament=ranked.slice(0,5).map(x=>x.player);
+  const bronzeCode=bronze.winner;
+  const allTournament=selectWorldCupAllTournament(G,ranked,live.games,championCode,runnerUpCode,bronzeCode);
   if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"World Cup MVP",cycle:q.cycle});
   for(const p of allTournament)pushPlayerAwardRecord(p,{season:G.season,award:"All-World Cup Team",cycle:q.cycle});
   for(const id of champTeam.rosterPlayerIds){const p=lookup.get(id);if(p)pushPlayerAwardRecord(p,{season:G.season,award:"World Cup Champion",cycle:q.cycle});}
   const wc={cycle:q.cycle,season:G.season,status:"COMPLETE",groups:live.groups,groupTables:live.groupTables,
     secondGroups:live.secondGroups,secondTables:live.secondTables,classificationGroups:live.classificationGroups,
     classificationTables:live.classificationTables,games:[...live.games],qualifiedTeamCodes:[...live.field],
-    championCode,runnerUpCode,bronzeCode:bronze.winner,fifthCode:fifth.winner,seventhCode:seventh.winner,
+    championCode,runnerUpCode,bronzeCode,fifthCode:fifth.winner,seventhCode:seventh.winner,
     mvpPlayerId:mvp?.id||null,allTournamentPlayerIds:allTournament.map(p=>p.id),tournamentStats:live.tournamentStats};
   live.complete=true;live.status="COMPLETE";
   G.worldCup=wc;G.worldCupHistory.push(wc);q.worldCupPlayed=true;
@@ -15948,7 +16045,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue",ENGINE_VERSION="E2.26-PROD103";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection",ENGINE_VERSION="E2.26-PROD104";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
