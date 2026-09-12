@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.52 Mobile Safari Save & Memory Hardening</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2724,7 +2724,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.52 Mobile Safari Save & Memory Hardening</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5198,7 +5198,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.52
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.53
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7600,7 +7600,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.52 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.53 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7952,7 +7952,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.52 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.53 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -10359,14 +10359,38 @@ function pushNewsArticle(G,title,body,category="Sports Desk",importance=2,tag=""
   if(flash)queueNewsFlash(G,article);
   return article;
 }
-function queueNewsFlash(G,article){
-  if(!article)return;
-  G.newsFlashPending={
+function newsFlashFromArticle(G,article){
+  return {
     headline:article.headline,body:article.body,category:article.category||"Sports Desk",
     tag:article.tag||"",season:G.season,analyst:article.analyst||null,
     analystRole:article.analystRole||null,quote:article.quote||null,
     broadcastLabel:article.broadcastLabel||null,board:article.board||null
   };
+}
+function ensureNewsFlashQueue(G){
+  G.runtimeMeta=G.runtimeMeta||{};
+  return G.runtimeMeta.newsFlashQueue||(G.runtimeMeta.newsFlashQueue=[]);
+}
+function queueNewsFlash(G,article){
+  if(!article)return;
+  const flash=newsFlashFromArticle(G,article);
+  // Preserve the presentation already on screen. This matters most at the end
+  // of the Finals, where the official Awards presentation and a newly-earned
+  // milestone can legitimately be created by the same game.
+  if(G.newsFlashPending){
+    const q=ensureNewsFlashQueue(G),key=String(flash.tag||flash.headline||"");
+    if(!key||!q.some(x=>String(x.tag||x.headline||"")===key))q.push(flash);
+    if(q.length>8)q.splice(0,q.length-8);
+    return;
+  }
+  G.newsFlashPending=flash;
+}
+function promoteQueuedNewsFlash(G){
+  if(!G||G.newsFlashPending)return false;
+  const q=ensureNewsFlashQueue(G),next=q.shift();
+  if(!next)return false;
+  G.newsFlashPending=next;
+  return true;
 }
 function chaseMaddonQuote(use=false){return use?"“Numbers don’t lie, but sometimes they whisper.”":null;}
 function pushChaseMaddonArticle(G,title,body,{importance=2,tag="",flash=false,label="MADDON'S TAKE",quote=false,board=null}={}){
@@ -15528,7 +15552,14 @@ function publishMajorAwardNews(G,votes){
 function queueMajorAwardResults(G){
   const seasonKey=`S${G.season}`;
   G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};
-  if(G.awardVotingPresentationSeen[seasonKey]||G.newsFlashPending)return;
+  if(G.awardVotingPresentationSeen[seasonKey])return;
+  if(G.newsFlashPending){
+    const current=G.newsFlashPending;
+    if(current.type!=="award_results"){
+      const q=ensureNewsFlashQueue(G),key=String(current.tag||current.headline||"");
+      if(!key||!q.some(x=>String(x.tag||x.headline||"")===key))q.unshift(current);
+    }
+  }
   G.newsFlashPending={type:"award_results",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
 }
 function ensurePlayerCoreHistory(p){
@@ -15917,7 +15948,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.52 Mobile Safari Save & Memory Hardening",ENGINE_VERSION="E2.26-PROD102";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.53 Awards & Milestone Popup Queue",ENGINE_VERSION="E2.26-PROD103";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -16804,6 +16835,8 @@ async function loadSlot(slot){
       if(issues.length)console.warn(`[Mini&Me QA · load] ${issues.length} integrity issue(s)`,issues);
     }
 
+    G.runtimeMeta=G.runtimeMeta||{};
+    if(Array.isArray(G.runtimeMeta.newsFlashQueue)&&G.runtimeMeta.newsFlashQueue.length>8)G.runtimeMeta.newsFlashQueue=G.runtimeMeta.newsFlashQueue.slice(-8);
     const milestoneFlashMigrationVersion="MW2-NO-RETRO-FLASH";
     G.runtimeMeta=G.runtimeMeta||{};
     if(G.runtimeMeta.milestoneFlashMigrationVersion!==milestoneFlashMigrationVersion){
@@ -23411,6 +23444,7 @@ function syncBarHeights(){
 window.addEventListener("resize",syncBarHeights);
 window.addEventListener("orientationchange",syncBarHeights);
 function render(){
+  if(G&&typeof promoteQueuedNewsFlash==="function")promoteQueuedNewsFlash(G);
   ensureCareerBaselineMetadata(G);
   ensureVerifiedProductionBio(G);
   ensureProductionLaunchAudit(G);
