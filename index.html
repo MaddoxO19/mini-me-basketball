@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.55 Summer League Roster Readiness</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2721,10 +2721,43 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .newsItem.milestone:not(.achievement) .newsMeta span{color:#c5ccd5!important}
 .newsItem.milestone:not(.achievement) .newsMeta small{color:#8e99a8!important}
 
+
+/* v55 · Summer League roster readiness */
+.summerReadiness{border:1px solid var(--line);border-radius:20px;background:var(--panel);overflow:hidden}
+.summerReadinessHead{padding:18px 18px 14px}
+.summerReadinessHead h2{margin:0 0 6px;font-size:25px}
+.summerReadinessHead p{margin:0;color:var(--muted);font-size:12px;line-height:1.55}
+.summerReadinessMetrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 16px}
+.summerReadinessMetric{border:1px solid var(--line);border-radius:14px;background:var(--panel2);padding:12px 8px;text-align:center}
+.summerReadinessMetric b{display:block;font-size:18px}.summerReadinessMetric small{display:block;margin-top:3px;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.06em}
+.summerReadinessMetric .ready{color:#62d394}.summerReadinessMetric .open{color:var(--accent2)}
+.summerTwoWayPanel{margin:0 18px 14px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#0b0f14}
+.summerTwoWayHead{display:flex;align-items:center;justify-content:space-between;padding:11px 12px;border-bottom:1px solid var(--line)}
+.summerTwoWayHead b{font-size:12px}.summerTwoWayHead span{font-size:10px;color:var(--muted)}
+.summerTwoWayRow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid var(--line)}
+.summerTwoWayRow:last-child{border-bottom:0}
+.summerTwoWayRow b{font-size:11px}.summerTwoWayRow small{display:block;margin-top:2px;color:var(--muted);font-size:9px}
+.summerTwoWayRow strong{font-size:11px;color:var(--accent2)}
+.summerTwoWayVacant{color:var(--muted);font-style:italic}
+.summerDevelopmentHead{display:flex;justify-content:space-between;align-items:end;padding:3px 18px 9px}
+.summerDevelopmentHead b{font-size:15px}.summerDevelopmentHead small{font-size:9px;color:var(--muted)}
+.summerDevelopmentList{margin:0 18px 16px;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.summerDevRow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line)}
+.summerDevRow:last-child{border-bottom:0}.summerDevRow b{font-size:11px}.summerDevRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
+.summerDevStat{text-align:right}.summerDevStat b{font-size:12px}.summerDevStat small{text-transform:uppercase;font-size:8px}
+.summerReadinessNote{margin:0 18px 16px;padding:11px 12px;border-radius:14px;background:rgba(244,163,64,.06);border:1px solid rgba(244,163,64,.22)}
+.summerReadinessNote b{display:block;font-size:10px;color:var(--accent2);text-transform:uppercase;letter-spacing:.07em}
+.summerReadinessNote span{display:block;margin-top:4px;color:var(--muted);font-size:10px;line-height:1.45}
+.summerReadinessActions{display:grid;grid-template-columns:1fr 1.35fr;gap:10px;padding:0 18px 18px}
+.summerReadinessActions button{min-height:54px;border-radius:14px;font-weight:900}
+.summerReadinessActions .manage{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
+.summerReadinessActions .play{background:var(--accent);border:0;color:#101010}
+@media(max-width:420px){.summerReadinessMetrics{gap:6px}.summerReadinessMetric{padding:10px 4px}.summerReadinessActions{grid-template-columns:1fr}.summerDevRow{grid-template-columns:minmax(0,1fr) 46px 46px}}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.55 Summer League Roster Readiness</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5198,7 +5231,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.54
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.55
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7600,7 +7633,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.54 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.55 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7952,7 +7985,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.54 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.55 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -16045,7 +16078,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.54 World Cup All-Tournament Selection",ENGINE_VERSION="E2.26-PROD104";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.55 Summer League Roster Readiness",ENGINE_VERSION="E2.26-PROD105";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -19316,6 +19349,79 @@ function draftHomeContext(){
   const nextNum=s.pending?.overallPickNum||picks[0]?.overallPickNum||1;
   return `<div class="card homeStatus"><div class="homeStatusBody"><h3>Your Draft Position</h3><p>Review your assets, roster needs and scouting recommendations before making your next selection.</p></div><div class="draftMetrics"><div class="draftMetric"><b>${pickText}</b><small>Your Picks</small></div><div class="draftMetric"><b>${prospects.length}</b><small>Prospects Left</small></div><div class="draftMetric"><b>${avg}</b><small>Class OVR Est Avg</small></div><div class="draftMetric"><b>${top}</b><small>Top OVR Est</small></div><div class="draftMetric"><b>${next}</b><small>Next Pick</small></div></div>${draftScoutBriefHtml(prospects,nextNum)}${homeActionHtml()}</div>`;
 }
+
+function summerLeaguePlayerStatus(G,club,p){
+  if(!p)return"Development";
+  if((club.twoWayRoster||[]).some(x=>x.id===p.id))return"Two-Way";
+  if(p.temporarySummerLeaguePlayer||p.summerLeagueInvitee)return"Invite";
+  if((club.gLeagueRoster||[]).some(x=>x.id===p.id))return"Affiliate";
+  const exp=inferredNbaExperienceYears(G,p);
+  if(exp<=0)return"Rookie";
+  if(exp===1)return"Sophomore";
+  return"Development";
+}
+function summerLeagueReadinessData(G){
+  const club=me();
+  if(!club)return null;
+  initializeSummerLeagueLive(G);
+  syncSummerLeagueRosterForClub(G,club.id);
+  const summerRoster=summerRosterForClub(G,club.id);
+  const twoWays=[...(club.twoWayRoster||[])];
+  const limit=club.twoWayLimit||3;
+  const standardCount=(club.roster||[]).length;
+  const rookies=summerRoster.filter(p=>summerLeaguePlayerStatus(G,club,p)==="Rookie").length;
+  const twoWayParticipants=summerRoster.filter(p=>summerLeaguePlayerStatus(G,club,p)==="Two-Way").length;
+  const otherDevelopment=summerRoster.length-rookies-twoWayParticipants;
+  const sorted=[...summerRoster].sort((a,b)=>
+    ((club.twoWayRoster||[]).some(x=>x.id===b.id)?1:0)-((club.twoWayRoster||[]).some(x=>x.id===a.id)?1:0) ||
+    (+b.potential||+b.ovr||0)-(+a.potential||+a.ovr||0) ||
+    (+b.ovr||0)-(+a.ovr||0)
+  );
+  return {club,summerRoster,twoWays,limit,standardCount,rookies,twoWayParticipants,otherDevelopment,sorted};
+}
+function summerLeagueReadinessHtml(){
+  const d=summerLeagueReadinessData(G);
+  if(!d)return"";
+  const {club,summerRoster,twoWays,limit,standardCount,rookies,twoWayParticipants,otherDevelopment,sorted}=d;
+  const live=G.summerLeagueLive;
+  const stage=live?.championshipStage?.stage;
+  const title=stage==="SEMIFINALS"?"Summer League Final Four":stage==="CHAMPIONSHIP"?"Summer League Championship":"Summer League";
+  const copy=stage==="SEMIFINALS"
+    ?"The five-game table is complete. Review your development group before the semifinal."
+    :stage==="CHAMPIONSHIP"
+      ?"One game remains for the Summer League title. Your developmental roster stays active."
+      :"Evaluate rookies, two-way players and development talent before the main roster returns.";
+  const twoWayFull=twoWays.length>=limit;
+  const twoWayRows=Array.from({length:limit},(_,i)=>{
+    const p=twoWays[i];
+    if(!p)return `<div class="summerTwoWayRow"><div><b class="summerTwoWayVacant">Two-Way Slot ${i+1} · Vacant</b><small>Available developmental contract</small></div><strong>OPEN</strong></div>`;
+    const sl=summerRoster.some(x=>x.id===p.id);
+    return `<div class="summerTwoWayRow"><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Age ${p.age} · ${sl?"Summer League active":"Not in Summer League roster"}</small></div><strong>${p.ovr} OVR · ${p.potential} POT</strong></div>`;
+  }).join("");
+  const devRows=sorted.slice(0,8).map(p=>{
+    const status=summerLeaguePlayerStatus(G,club,p);
+    return `<div class="summerDevRow"><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Age ${p.age} · ${status}</small></div><div class="summerDevStat"><b>${p.ovr}</b><small>OVR</small></div><div class="summerDevStat"><b>${p.potential}</b><small>POT</small></div></div>`;
+  }).join("");
+  const slotsOpen=Math.max(0,limit-twoWays.length);
+  const recommendation=twoWayFull
+    ?"All three two-way positions are filled. Use Summer League to evaluate development and potential conversion candidates."
+    :`${slotsOpen} two-way slot${slotsOpen===1?" is":"s are"} still open. You can continue Summer League, but Contracts is available if you want to fill the developmental roster first.`;
+  const nextLabel=stage==="SEMIFINALS"?"Play Semifinal":stage==="CHAMPIONSHIP"?"Play Championship":"Sim Game";
+  return `<div class="summerReadiness">
+    <div class="summerReadinessHead"><h2>${title}</h2><p>${copy}</p></div>
+    <div class="summerReadinessMetrics">
+      <div class="summerReadinessMetric"><b>${standardCount}/15</b><small>Main Roster</small></div>
+      <div class="summerReadinessMetric"><b class="${twoWayFull?"ready":"open"}">${twoWays.length}/${limit}</b><small>Two-Ways</small></div>
+      <div class="summerReadinessMetric"><b>${summerRoster.length}</b><small>Summer Roster</small></div>
+    </div>
+    <div class="summerTwoWayPanel"><div class="summerTwoWayHead"><b>Two-Way Contracts</b><span>${twoWayFull?"FULL":"ROSTER CHECK"}</span></div>${twoWayRows}</div>
+    <div class="summerDevelopmentHead"><b>Development Group</b><small>${rookies} Rookie${rookies===1?"":"s"} · ${twoWayParticipants} Two-Way · ${otherDevelopment} Other</small></div>
+    <div class="summerDevelopmentList">${devRows||`<div class="empty">No eligible Summer League players.</div>`}</div>
+    <div class="summerReadinessNote"><b>GM Recommendation</b><span>${recommendation}</span></div>
+    <div class="summerReadinessActions"><button id="manageSummerTwoWays" class="manage">Manage Two-Ways</button><button id="summerLeagueMainAction" class="play">${nextLabel}</button></div>
+  </div>`;
+}
+
 function summerLeagueCompletionHtml(){
   repairSummerLeagueAwardIntegrity(G);
   repairHistoricalSummerLeagueAwards(G);
@@ -20382,6 +20488,7 @@ function home(){
   if(G.phase==="PLAYOFFS"&&repairPlayoffSaveState())save();
   if(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"){const pst=userPostseasonState();if(!pst.alive)return postseasonObserverHome();return postseasonUserHome();}
   let f=nextFixture();
+  if(G.phase==="SUMMER_LEAGUE")return summerLeagueReadinessHtml();
   if(G.phase==="SUMMER_LEAGUE_COMPLETE")return summerLeagueCompletionHtml();
   if(G.phase==="PRESEASON_READINESS")return preseasonReadinessHtml();
   let centre="";
@@ -23710,6 +23817,8 @@ if($("#seriesBack"))$("#seriesBack").onclick=()=>{ui.postSeriesId=null;render()}
 $$("[data-postgame]").forEach(b=>b.onclick=()=>{const g=gameById(b.dataset.postgame);if(g)openResultWindow(g,"series")});
 if($("#openDraftFromTeam"))$("#openDraftFromTeam").onclick=openDraftWindow;
 if($("#manageSquadHome"))$("#manageSquadHome").onclick=()=>{ui.page="team";ui.teamTab="squad";render()};
+if($("#manageSummerTwoWays"))$("#manageSummerTwoWays").onclick=()=>{ui.page="team";ui.teamTab="contracts";render()};
+if($("#summerLeagueMainAction"))$("#summerLeagueMainAction").onclick=()=>advanceFromUi(1);
 if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
