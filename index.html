@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.79 Mens Name Guard and Current Season Transactions</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2801,7 +2801,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.79 Mens Name Guard and Current Season Transactions</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2819,7 +2819,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.79 CHANGE TRACK
+// v0.1.49.77.5.5.5.80 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5283,7 +5283,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.79
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.80
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7728,7 +7728,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.79 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.80 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8080,7 +8080,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.79 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.80 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -10660,7 +10660,7 @@ function awardVotingPopupHtml(n){
   const last=idx>=keys.length-1;
   return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard">
     <div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>OFFICIAL AWARDS BALLOT</b></div><button type="button" id="closeAwardResults">×</button></div>
-      <div class="awardVoteKicker">${basketballSeasonLabel(n.season)} MINI&amp;ME BASKETBALL</div><h3>${awardVoteLabel(key)} Voting Results</h3>
+      <div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${awardVoteLabel(key)} Voting Results</h3>
       <p>The award is determined by a panel of basketball writers and broadcasters considering individual performance, team success and overall impact on the game.</p></div>
     <div class="awardVoteWinner"><small>${awardVoteLabel(key).toUpperCase()}</small><b>${winner?.name||"—"}${club?` · ${club.name}`:""}</b><span>${statLine}</span></div>
     <div class="awardVoteTableWrap"><table class="awardVoteTable"><thead><tr><th>Player, Team</th><th>1st<br>10 pts</th><th>2nd<br>7 pts</th><th>3rd<br>5 pts</th><th>4th<br>3 pts</th><th>5th<br>1 pt</th><th>Total</th></tr></thead><tbody>${rows}</tbody></table></div>
@@ -16644,7 +16644,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.79 Mens Name Guard and Current Season Transactions",ENGINE_VERSION="E2.26-PROD129";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding",ENGINE_VERSION="E2.26-PROD130";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17505,11 +17505,13 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD129-MENS-NAMES-CURRENT-TXN-1";
+    const loadMaintenanceVersion="LOAD-PROD130-NAME-DEPTH-BRANDING-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
     repairGeneratedMensLeagueNames(G);
+    G.runtimeMeta=G.runtimeMeta||{};
+    G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     backfillGMTransitionDevelopmentCredit(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
@@ -17840,7 +17842,19 @@ const MENS_LEAGUE_FEMALE_FIRST_NAMES=new Set([
   "agnė","milana","žemyna","aušra","eglė","karina","kornelija","vėjūnė","jorūnė","justina",
   "rytė","sonata","svetlana","adrija","dovilė","evelina","jovita","kotryna","miglė","milda",
   "raminta","vakarė","arielė","ieva","radvilė","viktorija","vytė","dominyka","enrika","ignė",
-  "jurgita","laurita","neringa","smiltė","vaida","viltė","živilė","aurėja"
+  "jurgita","laurita","neringa","smiltė","vaida","viltė","živilė","aurėja",
+  "sofia","sophia","emma","emily","olivia","isabella","isabel","camila","valentina","lucia",
+  "lucy","laura","sara","sarah","clara","carla","carmen","gabriela","gabriella","daniela",
+  "natalia","natalie","victoria","viktoria","alina","irina","marina","katarina","katerina",
+  "petra","ivana","jelena","milica","teodora","tamara","nina","anastasia","anastasiya",
+  "oksana","olena","yelena","tatiana","tatyana","kateryna","natasha","sabrina","bianca",
+  "francesca","chiara","giulia","alessia","silvia","paola","roberta","amelie","amélie",
+  "juliette","manon","chloe","chloé","celine","céline","audrey","marine","hannah","rebecca",
+  "rachel","megan","meghan","jessica","jennifer","ashley","samantha","nicole","michelle",
+  "stephanie","christina","kristina","alexandra","cassandra","melissa","aisha","ayesha",
+  "fatima","fatimah","layla","leila","noor","noura","yasmin","yasmina","sakura","yui",
+  "aoi","haruka","akari","nanami","misaki","mei","yuna","rin","jiwoo","seo-yeon","seoyeon",
+  "minji","sujin","eunji","hyejin","yujin","mei-ling","meiling","xiaomei","jingjing","xinyi"
 ]);
 function mensLeagueFirstNameAllowed(name){
   const first=String(name||"").trim().split(/\s+/)[0].toLocaleLowerCase();
@@ -17876,6 +17890,28 @@ function repairGeneratedMensLeagueNames(G){
   G.runtimeMeta.mensLeagueNameRepair={version:"MLN1",season:G.season,changed};
   return changed;
 }
+function generatedNameDepthAudit(){
+  const countries=Object.entries(GLOBAL_NAME_DATABASE?.countries||{}).map(([code,p])=>{
+    const style=NAME_POOLS[nameStyleForCountry(code)]||{};
+    const region=GLOBAL_NAME_DATABASE?.regionalFallbacks?.[p.region]||{};
+    return{
+      code,tier:p.tier||"C",
+      nationalFirst:(p.first||[]).length,nationalLast:(p.last||[]).length,
+      styleFirst:(style.first||[]).length,styleLast:(style.last||[]).length,
+      regionalFirst:(region.first||[]).length,regionalLast:(region.last||[]).length
+    };
+  });
+  return{
+    version:"NAMEDEPTH2",
+    countries:countries.length,
+    tierA:countries.filter(x=>x.tier==="A").length,
+    tierB:countries.filter(x=>x.tier==="B").length,
+    tierC:countries.filter(x=>x.tier==="C").length,
+    minimumNationalFirst:Math.min(...countries.map(x=>x.nationalFirst)),
+    minimumNationalLast:Math.min(...countries.map(x=>x.nationalLast)),
+    femaleFirstNameGuardCount:MENS_LEAGUE_FEMALE_FIRST_NAMES.size
+  };
+}
 function nationalGeneratedSurnameUsage(countryCode,excludePlayerId=null){
   const usage=new Map();
   for(const p of allPlayerObjectsForNaming()){
@@ -17887,13 +17923,19 @@ function nationalGeneratedSurnameUsage(countryCode,excludePlayerId=null){
 }
 function gndbSelectionPool(profile,kind,player,salt){
   const country=profile?.[kind]||[];
-  if(!profile||profile.tier!=="C")return country;
+  if(!profile)return country;
   const regional=GLOBAL_NAME_DATABASE?.regionalFallbacks?.[profile.region]?.[kind]||[];
-  if(!regional.length)return country;
-  // Tier C keeps a national identity overlay while drawing additional depth
-  // from its expanded regional pool. The choice remains deterministic.
-  const useCountry=(hashStringStable(`${player.id}|${player.nationality}|${salt}|${kind}|overlay`)%100)<68;
-  return useCountry&&country.length?country:regional;
+  const style=NAME_POOLS[nameStyleForCountry(player.nationality)]?.[kind]||[];
+  const styleEntries=style.map(v=>[v,`${player.nationality} style supplement`,1]);
+  const roll=hashStringStable(`${player.id}|${player.nationality}|${salt}|${kind}|depth`)%100;
+  const tier=profile.tier||"C";
+  const countryCut=tier==="A"?84:tier==="B"?76:64;
+  const styleCut=tier==="A"?94:tier==="B"?90:82;
+  if(country.length&&roll<countryCut)return country;
+  if(styleEntries.length&&roll<styleCut)return styleEntries;
+  if(regional.length)return regional;
+  if(styleEntries.length)return styleEntries;
+  return country;
 }
 function isLatinScriptPresentationName(name){
   const s=String(name||"").normalize("NFC");
