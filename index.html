@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.68 Career Peak Profile</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.69 Mature Career Continuity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2800,7 +2800,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.68 Career Peak Profile</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.69 Mature Career Continuity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2818,7 +2818,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.68 CHANGE TRACK
+// v0.1.49.77.5.5.5.69 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5282,7 +5282,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.68
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.69
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7727,7 +7727,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.68 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.69 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8079,7 +8079,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.68 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.69 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -10423,9 +10423,40 @@ function leagueHistoryGameRecordsHtml(G){
   const x=historicalRecordSnapshot(G),top=x.league.singleGameTop5||{},tg=x.league.teamGame||{};
   return `<div class="leagueHistoryIntro"><b>Game Records</b><small>Top five regular-season performances.</small></div><div class="recordCategory"><div class="recordCategoryHead"><b>Single-Game Player Records</b><small>TOP 5 · REGULAR SEASON</small></div></div>${singleGameTopFiveList(G,"Points",top.points)}${singleGameTopFiveList(G,"Assists",top.assists)}${singleGameTopFiveList(G,"Rebounds",top.rebounds)}${singleGameTopFiveList(G,"Steals",top.steals)}${singleGameTopFiveList(G,"Blocks",top.blocks)}${singleGameTopFiveList(G,"3-Pointers Made",top.threes)}<div class="recordCategory"><div class="recordCategoryHead"><b>Team Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Highest Team Score",tg.teamScore)}${recordCard("Largest Winning Margin",tg.winMargin)}</div></div>`;
 }
-function leagueHistorySeasonAveragesHtml(G){
-  ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G);
-  return `<div class="leagueHistoryIntro"><b>Season Averages</b><small>Top five qualifying regular-season per-game seasons.</small></div>${recordLeaderList("Season Scoring Average",x.seasonRates.ppg," PPG",2,G)}${recordLeaderList("Season Assist Average",x.seasonRates.apg," APG",2,G)}${recordLeaderList("Season Rebound Average",x.seasonRates.rpg," RPG",2,G)}${recordLeaderList("Season Steals Average",x.seasonRates.spg," SPG",2,G)}${recordLeaderList("Season Blocks Average",x.seasonRates.bpg," BPG",2,G)}`;
+function leagueSeasonTotalRecordLeaders(G,def,limit=5){
+  const rows=[{playerId:`HIST_SEASON_${def.key}`,playerName:def.holder,value:def.value,season:null,historical:true}];
+  const seen=new Set();
+  const addPlayer=p=>{
+    if(!p?.id||seen.has(String(p.id)))return;
+    seen.add(String(p.id));
+    for(const h of p.seasonHistory||[]){
+      const value=+h?.stats?.[def.key]||0;
+      if(value>0)rows.push({playerId:p.id,playerName:p.name,clubId:h.clubId||null,clubName:h.clubName||clubById(G,h.clubId)?.name||"—",season:h.season,value,historical:false});
+    }
+    if(!p.retired){
+      const value=+p.seasonStats?.[def.key]||0,gp=+p.seasonStats?.gp||0,club=clubForPlayer(G,p);
+      if(gp>0&&value>0)rows.push({playerId:p.id,playerName:p.name,clubId:club?.id||null,clubName:club?.name||"—",season:G.season,value,historical:false});
+    }
+  };
+  for(const p of [...allPlayers(G),...retiredPlayerPool(G)])addPlayer(p);
+  const map=new Map();
+  for(const r of rows){
+    const k=r.historical?`HIST|${def.key}`:`${r.playerId}|${r.season}|${r.clubId||""}`;
+    const old=map.get(k);if(!old||(+r.value||0)>(+old.value||0))map.set(k,r);
+  }
+  return [...map.values()].sort((a,b)=>(+b.value||0)-(+a.value||0)).slice(0,limit);
+}
+function leagueHistorySeasonRecordsHtml(G){
+  ingestCurrentSeasonRecordBackfill(G);
+  const defs=[
+    ["Points",HISTORICAL_SEASON_RECORDS.pts],
+    ["Assists",HISTORICAL_SEASON_RECORDS.ast],
+    ["Rebounds",HISTORICAL_SEASON_RECORDS.reb],
+    ["Steals",HISTORICAL_SEASON_RECORDS.stl],
+    ["Blocks",HISTORICAL_SEASON_RECORDS.blk],
+    ["3-Pointers Made",HISTORICAL_SEASON_RECORDS.tpm]
+  ];
+  return `<div class="leagueHistoryIntro"><b>Season Records</b><small>Top five regular-season single-season totals. These use the same historical benchmarks as Courtside record watches.</small></div>${defs.map(([label,def])=>recordLeaderList(`Season ${label}`,leagueSeasonTotalRecordLeaders(G,def),"",0,G)).join("")}`;
 }
 function playerTitleLegacySnapshot(G){
   const baseline=HISTORICAL_LEGACY_BASELINE.honours?.playerChampionships||[];
@@ -10522,9 +10553,9 @@ function leagueHistoryAllTimeHtml(G){
   return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>YEAR</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
 }
 function leagueHistoricalRecordsHtml(G){
-  const tabs=[["game","Game Records"],["season","Season Averages"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
-  const body=mode==="season"?leagueHistorySeasonAveragesHtml(G):mode==="alltime"?leagueHistoryAllTimeHtml(G):leagueHistoryGameRecordsHtml(G);
-  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>League Record Book</h3><p>Permanent league records across your career universe, including single-game, season-average and career marks.</p></div><div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}</div>`;
+  const tabs=[["game","Game Records"],["season","Season Records"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
+  const body=mode==="season"?leagueHistorySeasonRecordsHtml(G):mode==="alltime"?leagueHistoryAllTimeHtml(G):leagueHistoryGameRecordsHtml(G);
+  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>League Record Book</h3><p>Permanent league records across your career universe, including single-game, single-season and career marks.</p></div><div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}</div>`;
 }
 function clubHistoricalRecordsHtml(G,club){
   ingestCurrentSeasonRecordBackfill(G);
@@ -10632,7 +10663,7 @@ function newsFlashHtml(){
         <div><b>${o.record}</b><small>Last Record</small></div><div><b>${o.squadOvr}</b><small>Squad OVR</small></div>
         <div><b>${o.draftAssets}</b><small>3-Year Picks</small></div><div><b>${o.expectation}</b><small>Board Brief</small></div>
       </div>
-      <div class="gmOfferNote">Your GM reputation, career record and national-team role remain with you. Club facilities remain with each organisation.</div>
+      <div class="gmOfferNote">Your GM reputation, career record and national-team role remain with you. Club facilities stay with each organisation, but proven organisational experience can generate transition development credit.</div>
       <div class="newsFlashActions"><button id="acceptGMOffer">Accept Role</button><button id="declineGMOffer">Decline</button></div>
     </div></div>`;
   }
@@ -10793,15 +10824,17 @@ function acceptGMRecruitmentOffer(G){
   if(!offer)return{ok:false,reason:"No active GM offer"};
   const target=clubById(G,offer.targetClubId);if(!target)return{ok:false,reason:"Offering club is unavailable"};
   const old=clubById(G,G.userClubGM?.clubId);
-  // Persist current organisation facilities, then switch the GM job.
   ensureFrontOfficeState(G);
+  const moveKey=offer.id||`GMMOVE_S${G.season}_${old?.id||offer.previousClubId}_${target.id}`;
   appointClubGM(G,target.id);
+  const transitionCredit=applyGMTransitionDevelopmentCredit(G,old?.id||offer.previousClubId,target.id,moveKey);
   ensureFrontOfficeState(G);
-  rs.lastMoveSeason=G.season;offer.status="Accepted";rs.history.push({...offer,decisionSeason:G.season});
+  rs.lastMoveSeason=G.season;offer.status="Accepted";offer.transitionDevelopmentCredit=transitionCredit;rs.history.push({...offer,decisionSeason:G.season});
   rs.pending=null;G.newsFlashPending=null;
-  pushNewsArticle(G,`${G.gmName||"GM"} accepts ${target.name} role`,`${G.gmName||"The GM"} has left ${old?.name||offer.previousClubName} to take control of basketball operations at ${target.name}. The GM career record and reputation continue across clubs.`,"GM",3,`GMMOVE_S${G.season}_${target.id}`,false);
-  logEvent(G,`GM career move: ${old?.name||offer.previousClubName} -> ${target.name}.`);
-  return{ok:true,clubId:target.id,clubName:target.name};
+  const creditText=transitionCredit?` Your previous organisational build has earned ${transitionCredit} transition development points for the new club.`:"";
+  pushNewsArticle(G,`${G.gmName||"GM"} accepts ${target.name} role`,`${G.gmName||"The GM"} has left ${old?.name||offer.previousClubName} to take control of basketball operations at ${target.name}. The GM career record and reputation continue across clubs.${creditText}`,"GM",3,`GMMOVE_S${G.season}_${target.id}`,false);
+  logEvent(G,`GM career move: ${old?.name||offer.previousClubName} -> ${target.name}.${transitionCredit?` Transition development credit +${transitionCredit}.`:""}`);
+  return{ok:true,clubId:target.id,clubName:target.name,transitionDevelopmentCredit:transitionCredit};
 }
 function declineGMRecruitmentOffer(G){
   const rs=gmRecruitmentState(G),offer=rs.pending;
@@ -13492,6 +13525,29 @@ function frontOfficePointsInvested(fo){
     for(let l=1;l<level;l++)total+=frontOfficeUpgradeCost(l);
   }
   return total;
+}
+function gmTransitionDevelopmentCreditForInvestment(invested){
+  invested=Math.max(0,+invested||0);
+  if(invested>=30)return 6;
+  if(invested>=20)return 4;
+  if(invested>=10)return 2;
+  return 0;
+}
+function applyGMTransitionDevelopmentCredit(G,fromClubId,toClubId,moveKey){
+  if(!G||!fromClubId||!toClubId||fromClubId===toClubId)return 0;
+  const fromFo=ensureClubFrontOfficeState(G,fromClubId),toFo=ensureClubFrontOfficeState(G,toClubId);
+  const invested=frontOfficePointsInvested(fromFo),credit=gmTransitionDevelopmentCreditForInvestment(invested);
+  const key=String(moveKey||`${G.season}|${fromClubId}|${toClubId}`);
+  toFo.transitionCreditKeys=Array.isArray(toFo.transitionCreditKeys)?toFo.transitionCreditKeys:[];
+  if(toFo.transitionCreditKeys.includes(key))return 0;
+  toFo.transitionCreditKeys.push(key);
+  const fullyDeveloped=["training","medical","coaching"].every(k=>(+toFo.departments?.[k]||1)>=5);
+  const granted=fullyDeveloped?0:credit;
+  if(granted)toFo.points=(+toFo.points||0)+granted;
+  toFo.lastTransitionCredit={season:G.season,fromClubId,toClubId,invested,credit:granted,key};
+  const gm=gmCareerState(G);gm.transitionCredits=Array.isArray(gm.transitionCredits)?gm.transitionCredits:[];
+  gm.transitionCredits.push({...toFo.lastTransitionCredit});
+  return granted;
 }
 function frontOfficeProgressInfo(G){
   const fo=ensureFrontOfficeState(G),total=frontOfficeTotalUpgradeInvestment(),invested=frontOfficePointsInvested(fo);
@@ -16519,7 +16575,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.68 Career Peak Profile",ENGINE_VERSION="E2.26-PROD118";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.69 Mature Career Continuity",ENGINE_VERSION="E2.26-PROD119";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17380,12 +17436,13 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD117-MANUAL-NAME-PERSISTENCE-1";
+    const loadMaintenanceVersion="LOAD-PROD119-MATURE-CAREER-CONTINUITY-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
       cleanUpOverageDevelopmentalPlayers(G,{log:true});
+      syncInternationalCareerRecordArchive(G);
       repairVerifiedNationalityAssignments(G);
       repairOfficial2026DraftAssetIntegrity(G);
       repairActiveSummerLeagueEligibility(G);
@@ -17836,6 +17893,7 @@ function archiveRetiredPlayer(G,p,club=null){
   p.salaryM=0;
   p.injured=false;p.injury=null;p.fatigue=0;
   if(!existing)pool.push(p);
+  archiveInternationalCareerRecord(G,p);
   if(G.retirementReviewPending?.season===G.season){
     const ids=G.retirementReviewPending.playerIds||(G.retirementReviewPending.playerIds=[]);
     if(!ids.includes(p.id))ids.push(p.id);
@@ -23547,6 +23605,36 @@ function internationalOverview(n){
   </div>`;
 }
 
+function ensureInternationalCareerRecordArchive(G){
+  G.internationalCareerRecordArchive=G.internationalCareerRecordArchive||{};
+  return G.internationalCareerRecordArchive;
+}
+function archiveInternationalCareerRecord(G,p){
+  if(!G||!p?.id||!p.nationality)return null;
+  const st=p.internationalStats||{};
+  if((+st.gp||0)<=0)return null;
+  const root=ensureInternationalCareerRecordArchive(G);
+  const nation=root[p.nationality]||(root[p.nationality]={});
+  const key=String(p.id),old=nation[key]||{},stats={};
+  for(const k of ["gp","pts","reb","ast","stl","blk","tpm"])stats[k]=Math.max(+old.stats?.[k]||0,+st[k]||0);
+  nation[key]={
+    playerId:p.id,name:p.name||old.name||"Player",
+    position:positionLabel(p)||old.position||p.position||"—",
+    nationality:p.nationality,retired:!!p.retired,
+    retirementSeason:p.retirementSeason||old.retirementSeason||null,
+    stats,updatedSeason:G.season
+  };
+  return nation[key];
+}
+function syncInternationalCareerRecordArchive(G){
+  ensureInternationalCareerRecordArchive(G);
+  const seen=new Set();
+  for(const p of [...allPlayers(G),...retiredPlayerPool(G)]){
+    if(!p?.id||seen.has(String(p.id)))continue;
+    seen.add(String(p.id));archiveInternationalCareerRecord(G,p);
+  }
+  return G.internationalCareerRecordArchive;
+}
 function internationalRecordPlayerPool(n){
   const out=[],seen=new Set(),add=p=>{if(p?.id&&p.nationality===n.code&&!seen.has(String(p.id))){seen.add(String(p.id));out.push(p)}};
   for(const p of allPlayers(G))add(p);
@@ -23554,10 +23642,22 @@ function internationalRecordPlayerPool(n){
   return out.filter(p=>(+p.internationalStats?.gp||0)>0);
 }
 function internationalCareerLeaders(n,key,limit=5,{average=false,minGp=1}={}){
-  return internationalRecordPlayerPool(n).filter(p=>(+p.internationalStats?.gp||0)>=minGp).map(p=>{
-    const st=p.internationalStats||{},gp=+st.gp||0,value=average?(+st[key]||0)/Math.max(1,gp):(+st[key]||0);
-    return{p,gp,value};
-  }).sort((a,b)=>b.value-a.value||b.gp-a.gp||String(a.p.name).localeCompare(String(b.p.name))).slice(0,limit);
+  syncInternationalCareerRecordArchive(G);
+  const merged=new Map();
+  const put=(id,name,position,stats,livePlayer=null,retirementSeason=null)=>{
+    const gp=+stats?.gp||0;if(gp<minGp)return;
+    const value=average?(+stats?.[key]||0)/Math.max(1,gp):(+stats?.[key]||0);
+    const row={p:livePlayer||{id,name,position,retired:true,retirementSeason},gp,value,archivedOnly:!livePlayer};
+    const old=merged.get(String(id));
+    if(!old||row.value>old.value||row.gp>old.gp)merged.set(String(id),row);
+  };
+  for(const p of internationalRecordPlayerPool(n))put(p.id,p.name,positionLabel(p),p.internationalStats,p,p.retirementSeason||null);
+  for(const a of Object.values(ensureInternationalCareerRecordArchive(G)[n.code]||{})){
+    if(!a?.playerId)continue;
+    const live=playerByAnyId(a.playerId);
+    put(a.playerId,a.name,a.position,a.stats,live,a.retirementSeason||null);
+  }
+  return [...merged.values()].sort((a,b)=>b.value-a.value||b.gp-a.gp||String(a.p.name).localeCompare(String(b.p.name))).slice(0,limit);
 }
 function internationalRecordGames(n){
   const seen=new Set(),games=[];
@@ -23596,12 +23696,16 @@ function internationalBestFinish(n){
   return{wc:finish(wc),oly:finish(oly),wcMedals:wc.length,olyMedals:oly.length};
 }
 function intlRecordLeaderList(title,rows,formatter){
-  return `<div class="sectionTitle">${title}</div><div class="intlRecordLeaderList">${rows.length?rows.map((x,i)=>`<div class="intlRecordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${positionLabel(x.p)} · ${x.gp} international game${x.gp===1?'':'s'}</small></div><strong>${formatter(x)}</strong></div>`).join(''):`<div class="empty">No international record data yet.</div>`}</div>`;
+  return `<div class="sectionTitle">${title}</div><div class="intlRecordLeaderList">${rows.length?rows.map((x,i)=>{
+    const live=playerByAnyId(x.p?.id),name=live?playerNameLink(live):(x.p?.name||"Player"),pos=live?positionLabel(live):(x.p?.position||"—");
+    const retired=!live&&x.p?.retirementSeason?` · Retired ${basketballSeasonLabel(x.p.retirementSeason)}`:"";
+    return `<div class="intlRecordLeaderRow"><span>${i+1}</span><div><b>${name}</b><small>${pos} · ${x.gp} international game${x.gp===1?'':'s'}${retired}</small></div><strong>${formatter(x)}</strong></div>`;
+  }).join(''):`<div class="empty">No international record data yet.</div>`}</div>`;
 }
 function internationalRecordsPage(n){
   const mode=ui.intlRecordMode||'career';
   const tabs=`<div class="intlRecordTabs"><button data-intlrecord="career" class="${mode==='career'?'active':''}">Career</button><button data-intlrecord="single" class="${mode==='single'?'active':''}">Single Game</button><button data-intlrecord="team" class="${mode==='team'?'active':''}">Team</button></div>`;
-  const hero=`<div class="intlRecordHero"><div class="eyebrow">${n.name.toUpperCase()} · RECORD BOOK</div><h3>National Program Records</h3><p>Calculated from the program's authoritative international player statistics and recorded national-team game results. Records evolve automatically with the career.</p></div>`;
+  const hero=`<div class="intlRecordHero"><div class="eyebrow">${n.name.toUpperCase()} · RECORD BOOK</div><h3>National Program Records</h3><p>Permanent national-program records combining active player totals with archived international career records. Retired leaders remain in the record book until they are surpassed.</p></div>`;
   let body='';
   if(mode==='career'){
     body=intlRecordLeaderList('International Appearances',internationalCareerLeaders(n,'gp',5),x=>Math.round(x.gp).toLocaleString('en-US'))+
@@ -23940,7 +24044,9 @@ function frontOfficePage(embedded=false){
     return `<div class="foDeptCard"><div class="foDeptHead"><div><small>${info.short}</small><b>${info.name}</b></div><strong>LV ${level}</strong></div><p>${info.description}</p><div class="foLiveEffect"><small>LIVE EFFECT</small><b>${effect}</b></div><div class="foDeptFoot"><span>${max?"Maximum level":`Next level · ${cost} development point${cost===1?"":"s"}`}</span>${max?"":`<button class="pick" data-foupgrade="${k}" ${fo.points<cost?"disabled":""}>Upgrade</button>`}</div></div>`;
   }).join("");
   const progress=frontOfficeProgressInfo(G);
-  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><p>${progress.maxed?"This organisation is fully developed. No further development points will accumulate while Training, Medical and Coaching remain at maximum level.":"Earn two development points after each completed season, plus a third performance point after a 50-win season, Conference Semifinals-or-better run, or The Cup title. Training, Medical and Coaching provide persistent organisational effects."}</p></div><div class="scoutLevelBadge"><b>${progress.maxed?"MAX":fo.points}</b><small>${progress.maxed?"FULLY DEVELOPED":"AVAILABLE"}</small></div></div>
+  const transition=fo.lastTransitionCredit;
+  const transitionHtml=transition?.credit?`<div class="card"><div class="more"><div><b>GM Transition Credit</b><small>Transferred organisational expertise from ${clubById(G,transition.fromClubId)?.name||"previous club"} · awarded once on appointment</small></div><b>+${transition.credit}</b></div></div>`:"";
+  const content=`<div class="foHero"><div><div class="eyebrow">CLUB DEVELOPMENT</div><p>${progress.maxed?"This organisation is fully developed. No further development points will accumulate while Training, Medical and Coaching remain at maximum level.":"Earn two development points after each completed season, plus a third performance point after a 50-win season, Conference Semifinals-or-better run, or The Cup title. Training, Medical and Coaching provide persistent organisational effects."}</p></div><div class="scoutLevelBadge"><b>${progress.maxed?"MAX":fo.points}</b><small>${progress.maxed?"FULLY DEVELOPED":"AVAILABLE"}</small></div></div>${transitionHtml}
     <div class="foProgressCard"><div><small>ORGANISATIONAL BUILD</small><b>${progress.invested}/${progress.total} points invested</b><span>${progress.remaining===0?"All Front Office departments are fully developed.":`${progress.remaining} points remain to fully max Training, Medical and Coaching.`}</span></div><strong>${progress.remaining===0?"MAX":`~${progress.seasonsAtSuccessfulRate}–${progress.seasonsAtCurrentRate} SEASONS`}</strong></div>
     <div class="sectionTitle">Club Departments</div><div class="foDeptGrid">${cards}</div>
     <div class="sectionTitle">Scouting Department</div>
@@ -24208,7 +24314,7 @@ function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
-  if($("#acceptGMOffer"))$("#acceptGMOffer").onclick=async()=>{const r=acceptGMRecruitmentOffer(G);if(!r.ok){toast(r.reason);return;}ui.page="home";ui.clubTab="current";await save();toast(`You are now GM of ${r.clubName}`);render()};
+  if($("#acceptGMOffer"))$("#acceptGMOffer").onclick=async()=>{const r=acceptGMRecruitmentOffer(G);if(!r.ok){toast(r.reason);return;}ui.page="home";ui.clubTab="current";await save();toast(r.transitionDevelopmentCredit?`You are now GM of ${r.clubName} · +${r.transitionDevelopmentCredit} development points`:`You are now GM of ${r.clubName}`);render()};
   if($("#declineGMOffer"))$("#declineGMOffer").onclick=async()=>{declineGMRecruitmentOffer(G);await save();toast("GM offer declined");render()};
   $$("a[data-playerprofile]").forEach(a=>a.onclick=e=>openPlayerProfileDirect(a.dataset.playerprofile,e));
   $$("a[data-clubprofile]").forEach(a=>a.onclick=e=>openClubProfileDirect(a.dataset.clubprofile,e));
