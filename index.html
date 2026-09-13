@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.66 International Player Toggles</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.68 Career Peak Profile</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2800,7 +2800,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.66 International Player Toggles</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.68 Career Peak Profile</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2818,7 +2818,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.66 CHANGE TRACK
+// v0.1.49.77.5.5.5.68 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5282,7 +5282,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.66
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.68
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -5335,6 +5335,26 @@ function fictionalizeProductionName(sourceName){
   const raw=String(sourceName||"Player").trim();
   return buildProductionIdentityMap()[raw]||PRODUCTION_NAME_OVERRIDES[raw]||`Player ${Math.abs(stableTemplateHash(raw))%9000+1000}`;
 }
+function repairManualPlayerNameOverrides(G){
+  if(!G)return 0;
+  let repaired=0;
+  const pools=[...allPlayers(G),...retiredPlayerPool(G),...(G.freeAgents||[]),...(G.gLeaguePlayers||[])];
+  const seen=new Set();
+  for(const p of pools){
+    if(!p||seen.has(p))continue;seen.add(p);
+    if(p.nameOrigin==="manual"&&p.name&&!p.manualNameOverride){
+      p.manualNameOverride=p.name;
+      repaired++;
+    }else if(p.manualNameOverride&&p.name!==p.manualNameOverride){
+      p.name=p.manualNameOverride;
+      p.nameOrigin="manual";
+      repaired++;
+    }
+  }
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.manualPlayerNameRepair={version:"MPN1",season:G.season,repaired};
+  return repaired;
+}
 function applyReleaseIdentityLayer(G){
   if(!G)return 0;
   let changed=0;
@@ -5343,6 +5363,18 @@ function applyReleaseIdentityLayer(G){
   for(const p of pools){
     if(!p||seen.has(p))continue;seen.add(p);
     const source=p.sourceTemplateName||p.sourceName||null;if(!source)continue;
+
+    // v67: user-edited names are authoritative save data. Release-identity
+    // migrations may fictionalize source identities, but must never replace a
+    // name the user deliberately entered in Player Edit.
+    const hasManualName=p.nameOrigin==="manual" || !!p.manualNameOverride;
+    if(hasManualName){
+      if(!p.manualNameOverride&&p.name)p.manualNameOverride=p.name;
+      if(p.manualNameOverride&&p.name!==p.manualNameOverride){p.name=p.manualNameOverride;changed++}
+      p.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
+      continue;
+    }
+
     const next=fictionalizeProductionName(source);
     if(next&&p.name!==next){p.name=next;changed++}
     p.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
@@ -5994,6 +6026,17 @@ function playerRecordedPeakOvr(player){
   for(const rec of player.seasonHistory||[])values.push(+rec?.ovr||0,+rec?.peakOvr||0);
   for(const rec of player.generationalBuildHistory||[])values.push(+rec?.ovr||0);
   return Math.max(...values,0);
+}
+function playerProfileAbilityMetric(player){
+  if(!player)return{value:"—",label:"Potential",isPeak:false};
+  const current=+player.ovr||0;
+  const peak=Math.max(current,playerRecordedPeakOvr(player));
+  // Keep Potential for developing/prime players. Once an established player has
+  // clearly declined from an achieved peak, show the historical fact instead.
+  const established=(+player.age||0)>=30 || playerExperienceYears(player)>=8;
+  const clearlyDeclined=peak>=current+2;
+  if(established&&clearlyDeclined)return{value:peak,label:"Career Peak",isPeak:true};
+  return{value:(player.potential??current),label:"Potential",isPeak:false};
 }
 function eliteLegacyRetentionForAge(age){
   age=+age||24;
@@ -7684,7 +7727,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.66 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.68 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8036,7 +8079,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.66 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.68 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -16476,7 +16519,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.66 International Player Toggles",ENGINE_VERSION="E2.26-PROD116";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.68 Career Peak Profile",ENGINE_VERSION="E2.26-PROD118";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17337,8 +17380,9 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD115-INTL-SQUAD-GLEAGUE-1";
+    const loadMaintenanceVersion="LOAD-PROD117-MANUAL-NAME-PERSISTENCE-1";
     G.runtimeMeta=G.runtimeMeta||{};
+    repairManualPlayerNameOverrides(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
       cleanUpOverageDevelopmentalPlayers(G,{log:true});
@@ -18471,6 +18515,7 @@ function playerProfile(){
   const p=playerByAnyId(ui.playerProfileId);
   if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
   const club=playerClub(p.id);if(club)ensurePlayerJerseys(club);
+  p.peakOvr=Math.max(+p.peakOvr||0,playerRecordedPeakOvr(p),+p.ovr||0);
   const s=p.seasonStats||{},cs=unifiedCareerStats(p),pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
   const injury=p.retired?"Retired":p.injured?`${p.injury?.label||"Injured"} · ${injuryReturnEstimate(p).short}`:"Available",awards=(p.awardHistory||[]).slice().reverse(),history=(p.seasonHistory||[]).slice().reverse();
   const editable=userCanEditPlayerProfile(p),isFreeAgent=!club&&(G.freeAgents||[]).some(x=>x.id===p.id),nation=G.nationalTeams?.find(n=>n.code===p.nationality);
@@ -18479,13 +18524,14 @@ function playerProfile(){
   const secOptions=editing?`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`:"";
   const archOptions=editing?validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join(""):"";
   const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p),worldLoc=playerBasketballLocation(p);
+  const abilityMetric=playerProfileAbilityMetric(p);
   const draftLabel=playerDraftLabel(p),draftSeason=p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
   const historicalClubTimeline=playerHistoricalClubTimeline2026(p);
   const futureTimeline=history.map(h=>{const st=h.stats||{};return `<div class="timelineRow"><div class="season">${h.season?basketballSeasonLabel(h.season):"—"}</div><div><b>${h.clubName||clubById(G,h.clubId)?.name||"Club"}</b><small>${st.gp||0} GP · ${perGame(st,"pts")} PPG · ${perGame(st,"reb")} RPG · ${perGame(st,"ast")} APG · OVR ${h.ovr??"—"}</small></div><div class="right">${h.role||""}</div></div>`}).join("");
   const seededTimeline=historicalClubTimeline.map(h=>{const yrs=h.from===h.to?`${h.from}`:`${h.from}–${h.to}`;return `<div class="timelineRow"><div class="season">${yrs}</div><div><b>${h.clubName}</b><small>${h.gp} GP · ${h.ppg.toFixed(1)} PPG · ${h.rpg.toFixed(1)} RPG · ${h.apg.toFixed(1)} APG</small></div><div class="right">Career</div></div>`}).join("");
   const timeline=(futureTimeline+seededTimeline)||`<div class="empty">Career club history will appear as verified source data or future seasons are completed.</div>`;
   const overview=`
-    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${p.potential??"—"}</b>`}<small>Potential</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>NBA Experience</small></div></div>
+    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>NBA Experience</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
     <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div></div></div></div>
     <div class="sectionTitle">Development Outlook</div>${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel"><div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div><div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${Number(d.avgMin||0).toFixed(1)}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}</div>`})()}`;
@@ -24240,7 +24286,11 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
 
     const enteredName=($("#epName").value||p.name).trim();
     p.name=enteredName;
-    if(enteredName!==oldName)p.nameOrigin="manual";
+    if(enteredName!==oldName||p.nameOrigin==="manual"){
+      p.nameOrigin="manual";
+      p.manualNameOverride=enteredName;
+      p.manualNameEditedSeason=G.season;
+    }
     p.jerseyNumber=Math.max(0,Math.min(99,+$("#epJersey").value||0));
     p.age=nextAge;
     p.experienceYears=nextExp;
