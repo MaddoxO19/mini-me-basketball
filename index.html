@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.74 Latin Script Player Name Standardisation</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -901,7 +901,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
   .cupTieResult{font-size:10px!important}
 }
 
-/* v0.1.10.5 — Mini&Me series landing screen */
+/* v0.1.10.5 — H³O series landing screen */
 #landing .seriesLaunch{width:min(520px,calc(100vw - 40px));text-align:center}
 #landing .seriesLaunch .launchEyebrow{font-size:11px;letter-spacing:.28em;font-weight:900;color:var(--gold,#e1b84d);margin-bottom:7px}
 #landing .seriesLaunch h1{font-size:34px;line-height:1;margin:0;font-weight:950;letter-spacing:-.035em;text-transform:uppercase}
@@ -1499,7 +1499,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .compactArchiveIntro{padding:11px 12px}.compactArchiveIntro h3{font-size:15px}.compactArchiveIntro p{font-size:9px}
 .clubHistoryClean .teamSeasonRow{grid-template-columns:48px 82px minmax(0,1fr)!important}.clubHistoryClean .teamSeasonRow .finish{display:none!important}.clubHistoryClean .teamSeasonRow b{font-size:10px}.clubHistoryClean .teamSeasonRow small{font-size:9px}
 .clubLegendList{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}.clubLegendRow{display:grid;grid-template-columns:24px minmax(0,1fr) minmax(125px,.9fr);gap:8px;align-items:center;padding:10px 11px;border-top:1px solid var(--line)}.clubLegendRow:first-child{border-top:0}.clubLegendRow>span{font-size:10px;color:var(--accent2);font-weight:950;text-align:center}.clubLegendRow b{font-size:10px}.clubLegendRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.clubLegendRow>strong{text-align:right;font-size:9px;line-height:1.35;color:var(--accent2);font-weight:900}
-/* v0.1.49.77.5.5.5.27 — Mini&Me Basketball Writers' Top 50 */
+/* v0.1.49.77.5.5.5.27 — H³O Basketball Writers' Top 50 */
 .writersIntro{border:1px solid #66502c;background:linear-gradient(135deg,rgba(241,168,77,.065),var(--panel));border-radius:14px;padding:13px;margin:10px 0 12px}
 .writersIntro h3{margin:3px 0 4px;font-size:17px}.writersIntro p{margin:0;color:var(--muted);font-size:9px;line-height:1.45}.writersIntro strong{color:var(--accent2)}
 .writersTop50{border:1px solid var(--line);background:var(--panel);border-radius:13px;overflow:hidden}
@@ -2565,7 +2565,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
    scanning also uses its prebuilt player lookup rather than repeated full-pool
    searches. */
 /* v0.1.49.77.5.5.5.13 — Historical record identity integrity
-   League benchmark cards now read the evolving career-universe record snapshot,
+   League benchmark cards now read the evolving career record snapshot,
    not frozen 2026 legacy values. Launch-player historical identities merge by
    canonical source identity (sourceTemplateName/sourceName), preventing a player
    such as LeBron Haymes from existing separately from the LeBron James baseline.
@@ -2800,7 +2800,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.74 Latin Script Player Name Standardisation</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2810,15 +2810,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <div id="s3" class="card" style="display:none"><h3>Career settings</h3><div class="smallcopy">These settings are stored with this career and applied to the simulation.</div><div class="setting"><div><b>Salary Cap</b><small>Enforce cap space and salary matching for signings and trades.</small></div><button id="capSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>Injuries</b><small>Players can miss games based on fatigue, age and workload.</small></div><button id="injSwitch" class="switch on"><span></span></button></div><div id="summary" class="card"></div><button id="startBtn" class="btn primary">Start Career</button></div>
 </div></section>
 
-<section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">MINI&ME BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div class="statusPhase"><div id="phaseBadge" class="phaseBadge"></div><div id="statusDate" class="statusDate"></div></div></div><div class="globalTabs"><button data-global="news">News</button><button data-global="gmProfile" class="gmProfileTab"><span class="gmNavAvatar" aria-hidden="true"><i></i></span><span>GM Profile</span></button><button id="globalExit" class="globalExitTab" type="button">Exit</button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav footballNav"><button class="active" data-page="home"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></button><button data-page="team"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></button><button data-page="club"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></button><button data-page="league"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></button><button data-page="international"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></button><button data-page="facilities"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M4 21h16"/></svg></span><b>Facilities</b></button></nav></div></section>
+<section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">H³O BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div class="statusPhase"><div id="phaseBadge" class="phaseBadge"></div><div id="statusDate" class="statusDate"></div></div></div><div class="globalTabs"><button data-global="news">News</button><button data-global="gmProfile" class="gmProfileTab"><span class="gmNavAvatar" aria-hidden="true"><i></i></span><span>GM Profile</span></button><button id="globalExit" class="globalExitTab" type="button">Exit</button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav footballNav"><button class="active" data-page="home"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></button><button data-page="team"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></button><button data-page="club"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></button><button data-page="league"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></button><button data-page="international"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></button><button data-page="facilities"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M4 21h16"/></svg></span><b>Facilities</b></button></nav></div></section>
 <section id="resultWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="resultWindowTitle">Game Result</b></div></div></div><div id="resultWindowHost"></div></div></section>
 <section id="postseasonUpdateWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Courtside Network</div><b id="postseasonUpdateTitle">Postseason Update</b></div></div></div><div id="postseasonUpdateHost"></div></div></section>
-<section id="draftWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">Mini&Me Draft</div><b id="draftWindowStatus">Draft Night</b></div><button id="draftWindowClose" class="draftClose">Return Home</button></div></div><div id="draftWindowHost"></div></div></section>
+<section id="draftWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">League Draft</div><b id="draftWindowStatus">Draft Night</b></div><button id="draftWindowClose" class="draftClose">Return Home</button></div></div><div id="draftWindowHost"></div></div></section>
 <section id="allStarWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">All-Star Weekend</div><b id="allStarWindowStatus">All-Star</b></div></div></div><div id="allStarWindowHost"></div></div></section>
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.74 CHANGE TRACK
+// v0.1.49.77.5.5.5.75 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -2826,7 +2826,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // national-roster-safe external pool cap, bounded write-only diagnostic log,
 // tighter 10-season transaction window, Game Data diagnostics and PROD109 tracking.
 
-// Mini&Me Basketball Club — CORE ENGINE
+// H³O Basketball Club — CORE ENGINE
 // Skeleton pass. Pure state + logic, no DOM. Gets inlined into index.html
 // once the loop is validated, and gets deepened phase by phase from here.
 //
@@ -2856,7 +2856,7 @@ function positionLabel(player){
 const CLUB_IDENTITIES = [{"id":"BOS","name":"Boston Heritage","city":"Boston","conference":"East","division":"Atlantic","mark":"BOS","style":"Historic Power","color":"#55B68A"},{"id":"BKN","name":"Brooklyn Borough","city":"Brooklyn","conference":"East","division":"Atlantic","mark":"BKN","style":"Modern Market","color":"#D8D8D8"},{"id":"NYE","name":"New York Empire","city":"New York","conference":"East","division":"Atlantic","mark":"NYE","style":"Big Market","color":"#E68B4F"},{"id":"PHI","name":"Philadelphia Foundry","city":"Philadelphia","conference":"East","division":"Atlantic","mark":"PHI","style":"Star Driven","color":"#6D97D4"},{"id":"TOR","name":"Toronto North","city":"Toronto","conference":"East","division":"Atlantic","mark":"TOR","style":"International Market","color":"#D96464"},{"id":"CHI","name":"Chicago Stockyards","city":"Chicago","conference":"East","division":"Central","mark":"CHI","style":"Legacy Market","color":"#E85D64"},{"id":"CLE","name":"Cleveland Forge","city":"Cleveland","conference":"East","division":"Central","mark":"CLE","style":"Two-Way Core","color":"#D7A758"},{"id":"DET","name":"Detroit Motors","city":"Detroit","conference":"East","division":"Central","mark":"DET","style":"Rebuild Rising","color":"#6F9ED6"},{"id":"IND","name":"Indiana Racers","city":"Indianapolis","conference":"East","division":"Central","mark":"IND","style":"Fast Offence","color":"#E2C65B"},{"id":"MIL","name":"Milwaukee Antlers","city":"Milwaukee","conference":"East","division":"Central","mark":"MIL","style":"Contender","color":"#78B884"},{"id":"ATL","name":"Atlanta Firebirds","city":"Atlanta","conference":"East","division":"Southeast","mark":"ATL","style":"Athletic Tempo","color":"#E26A4A"},{"id":"CHA","name":"Charlotte Crown","city":"Charlotte","conference":"East","division":"Southeast","mark":"CHA","style":"Young Core","color":"#6DC7D4"},{"id":"MIA","name":"Miami Mirage","city":"Miami","conference":"East","division":"Southeast","mark":"MIA","style":"Culture Club","color":"#E56F85"},{"id":"ORL","name":"Orlando Kingdom","city":"Orlando","conference":"East","division":"Southeast","mark":"ORL","style":"Defence First","color":"#68A9DB"},{"id":"WAS","name":"Washington Capitol","city":"Washington","conference":"East","division":"Southeast","mark":"WAS","style":"Rebuild","color":"#788DAF"},{"id":"DEN","name":"Denver Peaks","city":"Denver","conference":"West","division":"Northwest","mark":"DEN","style":"Championship Core","color":"#E0B95F"},{"id":"MIN","name":"Minnesota Frost","city":"Minneapolis","conference":"West","division":"Northwest","mark":"MIN","style":"Elite Defence","color":"#74B6A1"},{"id":"OKC","name":"Oklahoma City Storm","city":"Oklahoma City","conference":"West","division":"Northwest","mark":"OKC","style":"Young Power","color":"#6FB6DD"},{"id":"POR","name":"Portland Pines","city":"Portland","conference":"West","division":"Northwest","mark":"POR","style":"Development Club","color":"#D36C6C"},{"id":"UTA","name":"Utah Summit","city":"Salt Lake City","conference":"West","division":"Northwest","mark":"UTA","style":"Asset Rich","color":"#8EBB6D"},{"id":"GSB","name":"Golden State Bay","city":"San Francisco","conference":"West","division":"Pacific","mark":"GSB","style":"Perimeter Dynasty","color":"#E8BD55"},{"id":"LAC","name":"Los Angeles Coast","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAC","style":"Veteran Depth","color":"#6D9AD6"},{"id":"LAG","name":"Los Angeles Gold","city":"Los Angeles","conference":"West","division":"Pacific","mark":"LAG","style":"Legacy Market","color":"#E6B953"},{"id":"PHX","name":"Phoenix Fire","city":"Phoenix","conference":"West","division":"Pacific","mark":"PHX","style":"Scoring Talent","color":"#E58D4F"},{"id":"SAC","name":"Sacramento Regents","city":"Sacramento","conference":"West","division":"Pacific","mark":"SAC","style":"Fast Offence","color":"#9A7FC1"},{"id":"DAL","name":"Dallas Wranglers","city":"Dallas","conference":"West","division":"Southwest","mark":"DAL","style":"Skilled Offence","color":"#5F9ED4"},{"id":"HOU","name":"Houston Orbit","city":"Houston","conference":"West","division":"Southwest","mark":"HOU","style":"Young Contender","color":"#DE6262"},{"id":"MEM","name":"Memphis Blues","city":"Memphis","conference":"West","division":"Southwest","mark":"MEM","style":"Physical Tempo","color":"#7D9FCB"},{"id":"NOP","name":"New Orleans Rhythm","city":"New Orleans","conference":"West","division":"Southwest","mark":"NOP","style":"Athletic Core","color":"#D3B35C"},{"id":"SAS","name":"San Antonio Riders","city":"San Antonio","conference":"West","division":"Southwest","mark":"SAS","style":"Generational Build","color":"#C6CCD2"}];
 
 // v0.1.42.0 — Production launch data foundation.
-// The career begins from a recognisable 2026/27 basketball universe, then evolves entirely inside the save.
+// The career begins from a recognisable 2026/27 career, then evolves entirely inside the save.
 const PRODUCTION_DATA_SNAPSHOT="2026-07-13";
 const FIBA_RANKING_ENGINE_VERSION="FIBA-MEN-2026.1";
 const FIBA_RANKING_SOURCE="FIBA World Ranking Men · 13 Jul 2026";
@@ -2895,7 +2895,7 @@ function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]
 // BASKETBALL HISTORY EXPANSION · UNIFIED HISTORY FOUNDATION
 // Lightweight retired identities remain separate simulation objects only for performance.
 // User-facing records are one continuous basketball history. Seeded history and future
-// Mini&Me results share the same honours, record books and career totals. Provenance
+// H³O results share the same honours, record books and career totals. Provenance
 // metadata exists only for integrity/audit and is not a separate basketball era.
 // ---------------------------------------------------------------------
 const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BT2-2026.1";
@@ -2980,7 +2980,7 @@ function historicalFranchiseCoverage(){
 }
 
 // Verified career-to-date baselines for the most historically significant active launch players.
-// Source stat blocks are regular-season figures through 2025/26. Because Mini&Me stores career scoring
+// Source stat blocks are regular-season figures through 2025/26. Because H³O stores career scoring
 // in one combined bucket, verified historical playoff points are added separately by
 // HISTORICAL_PLAYOFF_SCORING_ADJUSTMENTS so career PTS comparisons remain like-for-like.
 const ACTIVE_CAREER_BASELINES={
@@ -3009,7 +3009,7 @@ Object.assign(ELITE_LEGACY_SUMMARY_BASELINES,{"Alperen Sengun":{"gp":363,"ppg":1
 Object.assign(ELITE_LEGACY_SUMMARY_BASELINES,{"Klay Thompson":{"gp":870,"ppg":19.0,"rpg":3.5,"apg":2.3,"spg":0.9,"bpg":0.5,"threePg":3.1,"fgPct":45.0,"threePct":41.0,"ftPct":86.0},"Chris Paul":{"gp":1365,"ppg":16.7,"rpg":4.4,"apg":9.2,"spg":2.0,"bpg":0.2,"threePg":1.4,"fgPct":47.0,"threePct":37.0,"ftPct":87.0}});
 const CAREER_HISTORY_2026={"Nikola Jokic":{"clubs":["DEN"],"awards":[["League Champion",1,"DEN"],["Finals MVP",1,"DEN"],["MVP",3,null],["All-NBA",8,null],["All-Star",8,null],["All-Rookie Team",1,null],["Rebounding Champion",1,null],["Assist Champion",1,null],["Western Conference Finals MVP",1,"DEN"]]},"Shai Gilgeous-Alexander":{"clubs":["LAC","OKC"],"awards":[["League Champion",1,"OKC"],["Finals MVP",1,"OKC"],["MVP",2,null],["Scoring Champion",1,null],["All-NBA",4,null],["All-Star",4,null],["All-Rookie Team",1,null],["Western Conference Finals MVP",1,"OKC"]]},"Victor Wembanyama":{"clubs":["SAS"],"awards":[["All-NBA",2,null],["All-Star",2,null],["All-Defensive Team",2,null],["Defensive Player of the Year",1,null],["Blocks Champion",2,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null]]},"Giannis Antetokounmpo":{"clubs":["MIL","MIA"],"awards":[["League Champion",1,"MIL"],["Finals MVP",1,"MIL"],["MVP",2,null],["Defensive Player of the Year",1,null],["All-NBA",10,null],["All-Star",10,null],["All-Star MVP",1,null],["All-Defensive Team",5,null],["Most Improved Player",1,null],["NBA 75th Anniversary Team",1,null]]},"Jalen Brunson":{"clubs":["DAL","NYE"],"awards":[["All-NBA",3,null],["All-Star",3,null],["Clutch Player of the Year",1,null]]},"Luka Doncic":{"clubs":["DAL","LAG"],"awards":[["Scoring Champion",2,null],["All-NBA",6,null],["All-Star",6,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null],["Western Conference Finals MVP",1,"DAL"]]},"Anthony Edwards":{"clubs":["MIN"],"awards":[["All-NBA",3,null],["All-Star",4,null],["All-Star MVP",1,null],["All-Rookie Team",1,null]]},"Cade Cunningham":{"clubs":["DET"],"awards":[["All-NBA",2,null],["All-Star",2,null],["All-Rookie Team",1,null]]},"Donovan Mitchell":{"clubs":["UTA","CLE"],"awards":[["All-NBA",3,null],["All-Star",7,null],["All-Rookie Team",1,null],["Slam Dunk Champion",1,null]]},"Jayson Tatum":{"clubs":["BOS"],"awards":[["League Champion",1,"BOS"],["All-NBA",5,null],["All-Star",6,null],["All-Rookie Team",1,null],["Eastern Conference Finals MVP",1,"BOS"],["All-Star MVP",1,null]]},"Karl-Anthony Towns":{"clubs":["MIN","NYE"],"awards":[["Rookie of the Year",1,null],["All-NBA",2,null],["All-Star",5,null],["All-Rookie",1,null]]},"Kawhi Leonard":{"clubs":["SAS","TOR","LAC"],"awards":[["League Champion",2,null],["Finals MVP",2,null],["Defensive Player of the Year",2,null],["All-NBA",7,null],["All-Star",7,null],["All-Star MVP",1,null],["All-Defensive Team",7,null],["Steals Champion",1,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null]]},"Kevin Durant":{"clubs":["OKC","GSB","BKN","PHX","HOU"],"awards":[["League Champion",2,"GSB"],["Finals MVP",2,"GSB"],["MVP",1,null],["Rookie of the Year",1,null],["Scoring Champion",4,null],["All-NBA",12,null],["All-Star",16,null],["All-Star MVP",2,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null],["The Cup All-Tournament Team",1,null],["Olympic Gold Medal",4,null]]},"Stephen Curry":{"clubs":["GSB"],"awards":[["League Champion",4,"GSB"],["Finals MVP",1,"GSB"],["MVP",2,null],["Scoring Champion",2,null],["Steals Champion",1,null],["All-NBA",11,null],["All-Star",12,null],["All-Star MVP",2,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null],["Western Conference Finals MVP",1,"GSB"]]},"Tyrese Maxey":{"clubs":["PHI"],"awards":[["All-NBA",2,null],["All-Star",3,null],["Most Improved Player",1,null]]},"Devin Booker":{"clubs":["PHX"],"awards":[["All-NBA",2,null],["All-Star",5,null],["All-Rookie Team",1,null],["Three-Point Contest Champion",1,null]]},"Jaylen Brown":{"clubs":["BOS","PHI"],"awards":[["League Champion",1,"BOS"],["Finals MVP",1,"BOS"],["All-NBA",2,null],["All-Star",5,null],["Eastern Conference Finals MVP",1,"BOS"]]},"Joel Embiid":{"clubs":["PHI"],"awards":[["MVP",1,null],["Scoring Champion",2,null],["All-NBA",5,null],["All-Star",7,null],["All-Defensive Team",3,null],["All-Rookie Team",1,null]]},"LeBron James":{"clubs":["CLE","MIA","CLE","LAG","PHI"],"awards":[["League Champion",2,"MIA"],["League Champion",1,"CLE"],["League Champion",1,"LAG"],["Finals MVP",4,null],["MVP",4,null],["Rookie of the Year",1,null],["Scoring Champion",1,null],["Assist Champion",1,null],["All-NBA",21,null],["All-Star",22,null],["All-Star MVP",3,null],["All-Defensive Team",6,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null],["The Cup MVP",1,"LAG"],["The Cup All-Tournament Team",1,"LAG"],["Olympic Gold Medal",3,null],["Olympic Bronze Medal",1,null],["2008 USA Redeem Team — Hall of Fame (2025)",1,null]]},"Anthony Davis":{"clubs":["NOP","LAG","DAL","WAS"],"awards":[["League Champion",1,"LAG"],["All-NBA",5,null],["All-Star",10,null],["All-Star MVP",1,null],["All-Defensive Team",5,null],["Blocks Champion",3,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null],["The Cup Champion",1,"LAG"],["The Cup All-Tournament Team",1,"LAG"]]},"Tyrese Haliburton":{"clubs":["SAC","IND"],"awards":[["All-NBA",1,null],["All-Star",2,null],["Assist Champion",1,null]]},"Jamal Murray":{"clubs":["DEN"],"awards":[["All-NBA",1,null],["League Champion",1,"DEN"],["All-Star",1,null]]},"Austin Reaves":{"clubs":["LAG"],"awards":[]},"Deni Avdija":{"clubs":["WAS","POR"],"awards":[]},"OG Anunoby":{"clubs":["TOR","NYE"],"awards":[["All-Defensive Team",1,null],["Steals Champion",1,null]]},"Scottie Barnes":{"clubs":["TOR"],"awards":[["All-Star",1,null],["All-Defensive Team",1,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null]]},"Alperen Sengun":{"clubs":["HOU"],"awards":[["All-Star",1,null]]},"Bam Adebayo":{"clubs":["MIA"],"awards":[["All-Star",3,null],["All-Defensive Team",6,null]]},"Cooper Flagg":{"clubs":["DAL"],"awards":[["Rookie of the Year",1,null],["All-Rookie",1,null]]},"Evan Mobley":{"clubs":["CLE"],"awards":[["Defensive Player of the Year",1,null],["All-Star",1,null],["All-Defensive Team",2,null],["All-Rookie Team",1,null]]},"Jalen Johnson":{"clubs":["ATL"],"awards":[]},"James Harden":{"clubs":["OKC","HOU","BKN","PHI","LAC","CLE"],"awards":[["MVP",1,null],["Scoring Champion",3,null],["Assist Champion",2,null],["All-NBA",8,null],["All-Star",11,null],["Sixth Man of the Year",1,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null]]},"Kyrie Irving":{"clubs":["CLE","BOS","BKN","DAL"],"awards":[["League Champion",1,"CLE"],["All-NBA",3,null],["All-Star",9,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null],["All-Star MVP",1,null],["Three-Point Contest Champion",1,null]]},"Paolo Banchero":{"clubs":["ORL"],"awards":[["All-Star",1,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null]]},"Pascal Siakam":{"clubs":["TOR","IND"],"awards":[["League Champion",1,"TOR"],["All-NBA",2,null],["All-Star",3,null],["Most Improved Player",1,null]]},"Stephon Castle":{"clubs":["SAS"],"awards":[["Rookie of the Year",1,null],["All-Rookie Team",1,null]]},"Trae Young":{"clubs":["ATL","WAS"],"awards":[["All-NBA",1,null],["All-Star",4,null],["Assist Champion",1,null],["All-Rookie",1,null]]},"Amen Thompson":{"clubs":["HOU"],"awards":[["All-Defensive Team",1,null],["All-Rookie Team",1,null]]},"Chet Holmgren":{"clubs":["OKC"],"awards":[["League Champion",1,"OKC"],["All-NBA",1,null],["All-Defensive Team",2,null],["All-Rookie Team",1,null]]},"Damian Lillard":{"clubs":["POR","MIL","POR"],"awards":[["All-NBA",7,null],["All-Star",9,null],["All-Star MVP",1,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null],["Three-Point Contest Champion",3,null]]},"Jaren Jackson Jr.":{"clubs":["MEM","UTA"],"awards":[["Defensive Player of the Year",1,null],["All-Star",2,null],["All-Defensive Team",3,null],["Blocks Champion",2,null]]},"LaMelo Ball":{"clubs":["CHA","MIN"],"awards":[["Rookie of the Year",1,null],["All-Star",1,null],["All-Rookie",1,null]]},"Lauri Markkanen":{"clubs":["CHI","CLE","UTA"],"awards":[["Most Improved Player",1,null],["All-Star",1,null],["All-Rookie",1,null]]},"Ausar Thompson":{"clubs":["DET"],"awards":[["All-Defensive Team",1,null],["All-Rookie Team",1,null]]},"Brandon Miller":{"clubs":["CHA"],"awards":[["All-Rookie Team",1,null]]},"Domantas Sabonis":{"clubs":["OKC","IND","SAC"],"awards":[["All-NBA",3,null],["All-Star",4,null],["Rebounding Champion",1,null]]},"Dylan Harper":{"clubs":["SAS"],"awards":[]},"Franz Wagner":{"clubs":["ORL"],"awards":[]},"Jaden McDaniels":{"clubs":["MIN"],"awards":[["All-Defensive Team",1,null]]},"Jalen Duren":{"clubs":["DET"],"awards":[["All-Rookie",1,null]]},"Jalen Williams":{"clubs":["OKC"],"awards":[["League Champion",1,"OKC"],["All-NBA",1,null],["All-Defensive Team",1,null],["All-Rookie Team",1,null]]},"Jarrett Allen":{"clubs":["BKN","CLE"],"awards":[["All-Star",1,null]]},"Jimmy Butler":{"clubs":["CHI","MIN","PHI","MIA","GSB"],"awards":[["All-NBA",5,null],["All-Star",6,null],["All-Defensive Team",5,null],["Steals Champion",1,null],["Most Improved Player",1,null],["Eastern Conference Finals MVP",1,"MIA"]]},"Michael Porter Jr.":{"clubs":["DEN","BKN"],"awards":[["League Champion",1,"DEN"]]},"Trey Murphy III":{"clubs":["NOP"],"awards":[]},"Tyler Herro":{"clubs":["MIA","MIL"],"awards":[["Sixth Man of the Year",1,null],["All-Star",1,null]]},"Zion Williamson":{"clubs":["NOP"],"awards":[["All-Star",2,null],["All-Rookie",1,null]]},"Paul George":{"clubs":["IND","OKC","LAC","PHI","BOS"],"awards":[["All-NBA",6,null],["All-Star",9,null],["All-Defensive Team",4,null],["Steals Champion",1,null],["Most Improved Player",1,null],["All-Rookie Team",1,null]]},"DeMar DeRozan":{"clubs":["TOR","SAS","CHI","SAC","DEN"],"awards":[["All-NBA",3,null],["All-Star",6,null]]},"Russell Westbrook":{"clubs":["OKC","HOU","WAS","LAG","UTA","LAC","DEN"],"awards":[["MVP",1,null],["Scoring Champion",2,null],["Assist Champion",3,null],["All-NBA",9,null],["All-Star",9,null],["All-Star MVP",2,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null]]},"Klay Thompson":{"clubs":["GSB","DAL","MIA"],"awards":[["League Champion",4,"GSB"],["All-NBA",2,null],["All-Star",5,null],["All-Defensive Team",1,null],["Three-Point Contest Champion",1,null]]},"Chris Paul":{"clubs":["NOP","LAC","HOU","OKC","PHX","GSB","SAS"],"awards":[["Assist Champion",5,null],["Steals Champion",6,null],["All-NBA",11,null],["All-Star",12,null],["All-Star MVP",1,null],["All-Defensive Team",9,null],["Rookie of the Year",1,null],["All-Rookie Team",1,null],["NBA 75th Anniversary Team",1,null]]}};
 // v0.1.49.69.0 — historical NBA entry identity + senior international honours.
-// Drafting clubs are mapped into the Mini&Me franchise universe. These fields are
+// Drafting clubs are mapped into the H³O league. These fields are
 // historical metadata only and do not alter contracts, roster rights or current club.
 const HISTORICAL_DRAFT_IDENTITY_2026={
   "LeBron James":{year:2003,round:1,pick:1,clubId:"CLE"},
@@ -3233,7 +3233,7 @@ function applyCareerHistorySeed(p,sourceName){
 // Every launch player now carries an explicit provenance state. Verified historical totals are
 // never fabricated: players without a verified statistical seed remain clearly marked as
 // contextual until their source totals are loaded in a later production-data pass.
-const CAREER_BASELINE_VERSION="NBA-2026-27-CAREER-4"; // 85+ OVR career-history foundation. Real-world data is the 2026 starting point; Mini&Me owns everything after. // new-career only; no save migration
+const CAREER_BASELINE_VERSION="NBA-2026-27-CAREER-4"; // 85+ OVR career-history foundation. Real-world data is the 2026 starting point; H³O owns everything after. // new-career only; no save migration
 function applyLaunchCareerContext(p,t){
   p.careerBaselineVersion=CAREER_BASELINE_VERSION;
   if(t?.isRookie){
@@ -3284,7 +3284,7 @@ function careerBaselineCoverage(G){
 
 // Phase F2 — active-player career continuation.
 // User-facing career totals are continuous: the loaded career starting point plus
-// every completed Mini&Me season plus the live season. The baseline/live split is
+// every completed H³O season plus the live season. The baseline/live split is
 // internal accounting only and prevents rollover double-counting.
 function unifiedCareerStats(p){
   const total={...emptyRegularStats(),...(p?.careerStats||{})};
@@ -5074,7 +5074,7 @@ function applyVerifiedActiveCareerBaselineExpansion(G){
     if(!row)continue;
     const currentGp=+p.careerStats?.gp||0;
     // Never overwrite a more advanced career or a save that has already
-    // accumulated Mini&Me seasons beyond the source baseline.
+    // accumulated H³O seasons beyond the source baseline.
     if(currentGp>row.gp)continue;
     p.careerStats={...emptyRegularStats(),...row};
     p.careerBaselineStatus="verified-2026-career";
@@ -5110,7 +5110,7 @@ function repairActivePlayerHistoryCoverage(G){
     p.historyCoverageStatus=activePlayerHistoryStatus(p);
     p.historyCoverageVersion=BASKETBALL_HISTORY_EXPANSION_VERSION;
     // Never manufacture missing historical totals. Existing verified/reference
-    // baselines remain authoritative and future Mini&Me seasons continue them.
+    // baselines remain authoritative and future H³O seasons continue them.
     if(p.historyCoverageStatus==="rookie"&&!p.careerStats)p.careerStats=emptyRegularStats();
   }
   G.historyContinuityMode="unified";
@@ -5282,7 +5282,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.74
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.75
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -5728,7 +5728,7 @@ function normalizePlayerPotential(p){
 }
 const VERIFIED_YOUNG_PLAYER_POTENTIAL_FLOORS_2026={
   // Current NBA 2K27 potential-grade audit. Numeric floors translate the public
-  // letter-grade signal into Mini&Me's 0-99 development scale without forcing
+  // letter-grade signal into H³O's 0-99 development scale without forcing
   // every player to reach the floor as an actual OVR.
   "Victor Wembanyama":99,
   "Anthony Edwards":96,
@@ -5752,7 +5752,7 @@ const VERIFIED_YOUNG_PLAYER_POTENTIAL_FLOORS_2026={
   "Jalen Johnson":89,
   "Dyson Daniels":89,
 
-  // Existing Mini&Me elite prospect calibrations remain in force.
+  // Existing H³O elite prospect calibrations remain in force.
   "Cooper Flagg":97,
   "AJ Dybantsa":97
 };
@@ -7274,7 +7274,7 @@ function applyVerifiedLaunchJerseys(G){
         p.preferredJerseyNumber=fallback;
         p.jerseyNumber=fallback;
         p.jerseyNumberVerified=false;
-        p.jerseyNumberSource="Mini&Me launch fallback";
+        p.jerseyNumberSource="Launch fallback";
         p.jerseyNumberAudit="v0.1.45.12-FALLBACK";
       }
     }
@@ -7437,11 +7437,11 @@ function makeOfficial2026DraftProspect(row,G){
   p.experienceYears=0;p.draftYear=1;p.isProspect=true;p.entryPath="Draft Prospect";p.origin="2026 Draft";
   p.productionDraftBioVerified=!!officialBio;
   p.productionDraftBioSource=officialBio?"NBA.com 2026 Draft Prospects / Draft Board":null;
-  p.productionRatingSource=src||recovered?"User-supplied NBA 2K27":"Mini&Me 2026 draft-slot estimate";
+  p.productionRatingSource=src||recovered?"User-supplied NBA 2K27":"Simulation 2026 draft-slot estimate";
   p.productionRatingEstimated=!(src||recovered);
   p.productionRatingRecoveredFromSource=!!recovered&&!src;
   p.productionSourceOvr=src?+src.ovr:(recovered?+recovered.ovr:null);
-  p.productionPotentialSource="Mini&Me development model";
+  p.productionPotentialSource="Development model";
   p.productionPotentialEstimated=true;
   applyDraftJerseyPreference(p,row);
   p.contractYearsLeft=0;p.contractStatus="Prospect";p.contractType="Unsigned";p.salaryM=0;p.extensionEligible=false;
@@ -7494,10 +7494,10 @@ function makeMappedPlayer(t,rank,teamId){
   p.sourceThreePt=t.threePt;
   p.sourceDunk=t.dunk;
   p.sourceTemplateName=t.sourceName||null; // developer/audit field only
-  p.productionRatingSource=Number.isFinite(+t.ovr)?"User-supplied NBA 2K27":"Mini&Me rating model";
+  p.productionRatingSource=Number.isFinite(+t.ovr)?"User-supplied NBA 2K27":"Simulation rating model";
   p.productionRatingEstimated=!Number.isFinite(+t.ovr);
   p.productionSourceOvr=Number.isFinite(+t.ovr)?+t.ovr:null;
-  p.productionPotentialSource="Mini&Me development model";
+  p.productionPotentialSource="Development model";
   p.productionPotentialEstimated=true;
   p.name=fictionalizeProductionName(t.sourceName||p.name);
   // Preserve the recognisable father/son relationship after fictionalisation.
@@ -7524,7 +7524,7 @@ function makeMappedPlayer(t,rank,teamId){
     p.jerseyNumber=fallbackJersey;
     p.preferredJerseyNumber=fallbackJersey;
     p.jerseyNumberVerified=false;
-    p.jerseyNumberSource="Mini&Me launch fallback";
+    p.jerseyNumberSource="Launch fallback";
     p.jerseyNumberAudit="v0.1.45.12-FALLBACK";
   }
   p.experienceYears=t.isRookie?0:Math.max(1,age-20);
@@ -7727,7 +7727,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.74 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.75 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8050,7 +8050,7 @@ function tradeCenterSnapshot(G, clubId, partnerClubId=null) {
 
 // v0.1.45.14 — official NBA 2026/27 system levels.
 // Season 1 is a frozen real-world launch snapshot. Later seasons evolve under
-// Mini&Me's long-career cap model rather than pretending future NBA levels are known.
+// H³O's long-career cap model rather than pretending future NBA levels are known.
 const CAP_BASE_M = 164.961;
 const MIN_TEAM_SALARY_BASE_M = 148.465;
 const TAX_BASE_M = 200.428;
@@ -8069,7 +8069,7 @@ const CAP_FOUNDATION_VERSION="NBA-2026-27-CAP-1";
 // fictionalised players only after launch-roster construction. The listed
 // future salary schedule is used for term/rollover; player/team option or
 // non-guarantee status is NOT inferred unless independently explicit.
-// Players not yet present in this verified tranche retain the Mini&Me
+// Players not yet present in this verified tranche retain the H³O
 // generated contract economy and are marked as fallback in the audit.
 // ---------------------------------------------------------------------
 const CONTRACT_SNAPSHOT_VERSION="NBA-2026-27-CONTRACTS-B5-BREF482";
@@ -8079,7 +8079,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.74 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.75 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -9057,7 +9057,7 @@ const VERIFIED_2026_27_CONTRACTS={
 Object.assign(VERIFIED_2026_27_CONTRACTS,{
   // v0.1.45.15.3 — remaining clear standard-contract exceptions.
   "Dylan Cardwell":verifiedContract([2.150917,2.525901,2.735698],3.021917,"2026/27 salary fully guaranteed; 2027/28 non-guaranteed and 2028/29 team option retained as source metadata rather than auto-resolved."),
-  "Nick Richards":verifiedContract([3.066143],3.066143,"One-year 2026/27 veteran minimum contract; current reported deal carries a $2.449421M cap hit. Mini&Me retains the launch-team assignment independently of real-world transaction timing."),
+  "Nick Richards":verifiedContract([3.066143],3.066143,"One-year 2026/27 veteran minimum contract; current reported deal carries a $2.449421M cap hit. H³O retains the launch-team assignment independently of real-world transaction timing."),
   "AJ Green":verifiedContract([10.044644,10.848215,11.651786,12.455355],45.000000,"Spotrac: 4-year veteran extension, fully guaranteed."),
   "DeMar DeRozan":verifiedContract([25.740000],10.000000,"Spotrac: 2026/27 salary $25.74M; $10M base guarantee with conditional guarantee escalators. Game does not auto-resolve those real-world conditions."),
   "Tristan Vukcevic":verifiedContract([3.000000,3.000000],3.000000,"Spotrac: 2027/28 is a club option; stored as listed salary schedule without automatic option exercise."),
@@ -9075,7 +9075,7 @@ for(const key of CURRENT_TWO_WAY_STATUS_SOURCE.keys())VERIFIED_2026_27_TWO_WAY_N
 
 
 // v0.1.45.15.3 — explicit launch exceptions.
-// These players no longer receive random Mini&Me 1–4 year fallback contracts.
+// These players no longer receive random H³O 1–4 year fallback contracts.
 // They remain attached to the supplied launch universe, but their real 2026/27
 // contract state is represented honestly until ordinary career logic resolves it.
 const PRODUCTION_2026_27_CONTRACT_EXCEPTIONS=new Map([
@@ -9146,8 +9146,8 @@ function applyVerifiedLaunchContract(player,sourceName){
       player.launchContractException=true;
       return player;
     }
-    player.productionContractStatus="Mini&Me fallback — verification pending";
-    player.productionContractSource="Mini&Me generated contract economy";
+    player.productionContractStatus="Fallback — verification pending";
+    player.productionContractSource="Generated contract economy";
     player.productionContractVerified=false;
     player.productionContractVerifiedKind="Fallback";
     return player;
@@ -9252,11 +9252,11 @@ function productionContractSnapshotAudit(G){
       gamePayrollM:x.payrollM,
       referencePayrollM,
       deltaM:referencePayrollM==null?null:Math.round((x.payrollM-referencePayrollM)*1000)/1000,
-      note:"Reference only: Mini&Me begins before its 2026 Draft, while the supplied Basketball-Reference payroll reflects the later active-contract snapshot."
+      note:"Reference only: H³O begins before its 2026 Draft, while the supplied Basketball-Reference payroll reflects the later active-contract snapshot."
     };
   });
   const capStatusCounts=clubPayrolls.reduce((a,x)=>(a[x.capStatus]=(a[x.capStatus]||0)+1,a),{});
-  const unresolvedStatus=fallback.map(x=>({clubId:x.clubId,clubName:x.clubName,sourceName:x.p.sourceTemplateName||x.p.name,status:"Mini&Me fallback retained — no reliable current 2026/27 standard salary imported"})).sort((a,b)=>a.sourceName.localeCompare(b.sourceName));
+  const unresolvedStatus=fallback.map(x=>({clubId:x.clubId,clubName:x.clubName,sourceName:x.p.sourceTemplateName||x.p.name,status:"Fallback retained — no reliable current 2026/27 standard salary imported"})).sort((a,b)=>a.sourceName.localeCompare(b.sourceName));
   const report={
     version:CONTRACT_SNAPSHOT_VERSION,source:CONTRACT_SNAPSHOT_SOURCE,
     launchVeterans:launch.length,verifiedPlayers:verified.length,verifiedStandardPlayers:verifiedStandard.length,verifiedTwoWayPlayers:verifiedTwoWay.length,verifiedExceptionPlayers:verifiedExceptions.length,fallbackPlayers:fallback.length,
@@ -9298,7 +9298,7 @@ function financialThresholds(G) {
     nonTaxMleM:r(NON_TAX_MLE_BASE_M),
     taxMleM:r(TAX_MLE_BASE_M),
     roomMleM:r(ROOM_MLE_BASE_M),
-    source:yearIndex===0?"NBA official 2026/27":"Mini&Me 5% career growth model",
+    source:yearIndex===0?"NBA official 2026/27":"5% career growth model",
     sourceVerified:yearIndex===0
   };
 }
@@ -9330,7 +9330,7 @@ function productionCapFoundationAudit(G){
     source:"NBA official release, 30 June 2026",
     salaryCapSetting:G?.settings?.salaryCap!==false,
     draftProspectContractLeak:draftContractLeak,
-    futureCapModel:"5% annual Mini&Me growth from the official 2026/27 base",
+    futureCapModel:"5% annual growth from the official 2026/27 base",
     playerContractSnapshotStatus:"Basketball-Reference 482-player active-contract reference active; standard contracts use supplied schedules, two-way deals remain separated, and unresolved UFA/RFA/transition identities remain explicit rather than guessed",
     passed:mismatches.length===0&&draftContractLeak.length===0,
     mismatches
@@ -10565,12 +10565,12 @@ function leagueHistoryAllTimeHtml(G){
 function leagueHistoricalRecordsHtml(G){
   const tabs=[["game","Game Records"],["season","Season Records"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
   const body=mode==="season"?leagueHistorySeasonRecordsHtml(G):mode==="alltime"?leagueHistoryAllTimeHtml(G):leagueHistoryGameRecordsHtml(G);
-  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>League Record Book</h3><p>Permanent league records across your career universe. Pre-career benchmark records are presented as League legacy; career-era records retain their actual season history.</p></div><div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}</div>`;
+  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>League Record Book</h3><p>Permanent league records across the career. Pre-career benchmark records are presented as League legacy; career-era records retain their actual season history.</p></div><div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}</div>`;
 }
 function clubHistoricalRecordsHtml(G,club){
   ingestCurrentSeasonRecordBackfill(G);
   const x=clubHistoricalSnapshot(G,club.id),sg=x.singleGame||{},tg=x.teamGame||{};
-  return `<div class="clubRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>Franchise Record Book</h3><p>Permanent ${club.name} records across your career universe, including single-game, season and franchise career marks.</p></div><div class="recordCategory"><div class="recordCategoryHead"><b>Club Single-Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points,"",0,G)}${recordCard("Assists",sg.assists,"",0,G)}${recordCard("Rebounds",sg.rebounds,"",0,G)}${recordCard("Steals",sg.steals,"",0,G)}${recordCard("Blocks",sg.blocks,"",0,G)}${recordCard("3-Pointers",sg.threes,"",0,G)}${recordCard("Team Score",tg.teamScore)}${recordCard("Win Margin",tg.winMargin)}</div></div>
+  return `<div class="clubRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>Franchise Record Book</h3><p>Permanent ${club.name} records, including single-game, season and franchise career marks.</p></div><div class="recordCategory"><div class="recordCategoryHead"><b>Club Single-Game Records</b><small>REGULAR SEASON</small></div><div class="recordGrid">${recordCard("Points",sg.points,"",0,G)}${recordCard("Assists",sg.assists,"",0,G)}${recordCard("Rebounds",sg.rebounds,"",0,G)}${recordCard("Steals",sg.steals,"",0,G)}${recordCard("Blocks",sg.blocks,"",0,G)}${recordCard("3-Pointers",sg.threes,"",0,G)}${recordCard("Team Score",tg.teamScore)}${recordCard("Win Margin",tg.winMargin)}</div></div>
   ${recordLeaderList("Best Club Scoring Seasons",x.seasonRates.ppg," PPG",1,G)}${recordLeaderList("Best Club Assist Seasons",x.seasonRates.apg," APG",1,G)}${recordLeaderList("Best Club Rebound Seasons",x.seasonRates.rpg," RPG",1,G)}
   ${recordLeaderList("Franchise Career Points",x.career.points,"",0,G)}${recordLeaderList("Franchise Career Assists",x.career.assists,"",0,G)}${recordLeaderList("Franchise Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("Franchise Career Steals",x.career.steals,"",0,G)}${recordLeaderList("Franchise Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("Franchise Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("Franchise Games Played",x.career.games,"",0,G)}</div>`;
 }
@@ -11231,7 +11231,7 @@ function fibaCompetitionStageFactor(competitionTag,stage){
     if(st==="OLYMPIC_GROUP"||st.includes("GROUP"))return 1.75;
     return 1.75;
   }
-  // Mini&Me currently simulates World Cup regional qualifiers: first-round windows = Q1, second-round windows = Q2.
+  // H³O currently simulates World Cup regional qualifiers: first-round windows = Q1, second-round windows = Q2.
   const q=G?.nationalQualification;
   if(q?.round==="SECOND_ROUND"||String(stage||"").includes("SR-"))return 1.2;
   return 1.0;
@@ -12100,7 +12100,7 @@ function olympicQualificationPlan(G,year=olympicYearForSeason(G.season)){
   const add=(code,bucket)=>{if(code&&nat(code)&&!field.includes(code)){field.push(code);if(bucket)bucket.push(code);return true}return false};
   add(host?.code,direct);
 
-  // Mini&Me Olympic qualification: seven direct places are awarded from the
+  // H³O Olympic qualification: seven direct places are awarded from the
   // preceding World Cup / world-ranking order after the automatic host berth.
   const worldCupOrder=last?[last.championCode,last.runnerUpCode,last.bronzeCode,last.fifthCode,last.seventhCode,...(last.qualifiedTeamCodes||[])]:[];
   for(const code of worldCupOrder)if(field.length<8)add(code,direct);
@@ -12114,7 +12114,7 @@ function olympicQualificationPlan(G,year=olympicYearForSeason(G.season)){
 
   return {year,host,worldCupCycle:last?.cycle||null,directTeamCodes:direct,qualifierWinnerCodes:qualifierWinners,qualifiedTeamCodes:field.slice(0,12),resolved:true,
     model:"MINIME_SIMPLIFIED_OQT",hostBerths:host?.code?1:0,directBerths:Math.max(0,direct.length-(host?.code&&direct.includes(host.code)?1:0)),qualifierBerths:qualifierWinners.length,
-    qualificationNote:"Mini&Me streamlined Olympic qualification model"};
+    qualificationNote:"Streamlined Olympic qualification model"};
 }
 function olympicFieldFromWorldCup(G,year=olympicYearForSeason(G.season)){
   const plan=olympicQualificationPlan(G,year);
@@ -13559,6 +13559,41 @@ function applyGMTransitionDevelopmentCredit(G,fromClubId,toClubId,moveKey){
   gm.transitionCredits.push({...toFo.lastTransitionCredit});
   return granted;
 }
+function backfillGMTransitionDevelopmentCredit(G){
+  if(!G?.userClubGM?.clubId)return 0;
+  const currentId=G.userClubGM.clubId;
+  const currentFo=ensureClubFrontOfficeState(G,currentId);
+
+  // Already credited in a newer build.
+  if((+currentFo.lastTransitionCredit?.credit||0)>0)return 0;
+
+  const rs=gmRecruitmentState(G);
+  const accepted=(rs.history||[])
+    .filter(x=>x?.status==="Accepted"&&x.targetClubId===currentId)
+    .sort((a,b)=>(+b.decisionSeason||+b.season||0)-(+a.decisionSeason||+a.season||0));
+
+  let move=accepted[0]||null;
+  let fromId=move?.previousClubId||null;
+
+  // Older saves may not have a complete recruitment-history row. Infer the last
+  // different club from the GM season history only as a fallback.
+  if(!fromId){
+    const gm=gmCareerState(G);
+    const prior=[...(gm.seasons||[])].reverse().find(x=>x?.clubId&&x.clubId!==currentId);
+    if(prior)fromId=prior.clubId;
+  }
+  if(!fromId||fromId===currentId)return 0;
+
+  const key=`BACKFILL_TRANSITION_${move?.decisionSeason||move?.season||G.season}_${fromId}_${currentId}`;
+  const granted=applyGMTransitionDevelopmentCredit(G,fromId,currentId,key);
+  if(granted){
+    currentFo.lastTransitionCredit.backfilled=true;
+    currentFo.lastTransitionCredit.note="Applied retrospectively after transition-credit system update";
+    if(move&&!move.transitionDevelopmentCredit)move.transitionDevelopmentCredit=granted;
+    logEvent(G,`GM transition development credit backfilled: +${granted} points to ${clubById(G,currentId)?.name||"current club"}.`);
+  }
+  return granted;
+}
 function frontOfficeProgressInfo(G){
   const fo=ensureFrontOfficeState(G),total=frontOfficeTotalUpgradeInvestment(),invested=frontOfficePointsInvested(fo);
   const remaining=Math.max(0,total-invested);
@@ -13744,7 +13779,7 @@ function ensureReference2027DraftClass(G){
     const p=normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:2,ovr:base,isProspect:true}));
     p.entryPath="Draft Prospect";p.developmentEntrySeason=1;p.targetDraftSeason=2;
     p.referenceDraftRank=i+1;p.draftProjectionRank=i+1;p.referenceClass="2027_DEPTH";
-    p.productionDraftSource="Mini&Me 2027 depth prospect";
+    p.productionDraftSource="2027 depth prospect";
     enrichDraftProspect(p,G,i);prospects.push(p);
   }
   G.upcomingDraftClass={
@@ -14042,7 +14077,7 @@ function applyDevelopmentalExperience(p,path){
   p.experienceYears=profile.nbaExp;
   p.professionalExperienceYears=profile.professionalExp;
   p.developmentBackground=profile.background;
-  p.serviceHistorySource="Mini&Me developmental market";
+  p.serviceHistorySource="Developmental market";
   return p;
 }
 function twoWayPath(player){
@@ -16585,7 +16620,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.74 Latin Script Player Name Standardisation",ENGINE_VERSION="E2.26-PROD124";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup",ENGINE_VERSION="E2.26-PROD125";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17312,8 +17347,8 @@ function repairCareerIntegrityState(state=G){
 }
 function reportCareerIntegrity(context="runtime"){
   const issues=repairCareerIntegrityState(G);
-  if(issues.length)console.warn(`[Mini&Me QA · ${context}] ${issues.length} integrity issue(s)`,issues);
-  else console.info(`[Mini&Me QA · ${context}] career integrity check passed`);
+  if(issues.length)console.warn(`[Game QA · ${context}] ${issues.length} integrity issue(s)`,issues);
+  else console.info(`[Game QA · ${context}] career integrity check passed`);
   return issues;
 }
 function runReleaseGate(options={}){
@@ -17446,10 +17481,11 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD124-LATIN-NAMES-1";
+    const loadMaintenanceVersion="LOAD-PROD125-TRANSITION-COPY-CLEANUP-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
+    backfillGMTransitionDevelopmentCredit(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
       cleanUpOverageDevelopmentalPlayers(G,{log:true});
@@ -17474,7 +17510,7 @@ async function loadSlot(slot){
       // Normal repeat loads avoid the expensive whole-career repair suite.
       if(G.releaseIdentityVersion!==RELEASE_IDENTITY_VERSION)applyReleaseIdentityLayer(G);
       const issues=validateCareerIntegrityState(G);
-      if(issues.length)console.warn(`[Mini&Me QA · load] ${issues.length} integrity issue(s)`,issues);
+      if(issues.length)console.warn(`[Game QA · load] ${issues.length} integrity issue(s)`,issues);
     }
 
     G.runtimeMeta=G.runtimeMeta||{};
@@ -17635,7 +17671,7 @@ async function startCareer(){
     ui.page="home";show("game");render();await save();
   }catch(e){console.error("Start Career failed",e);alert("The career could not start: "+(e?.message||e))}
 }
-function header(title,sub="",showGmBadge=true,showBrand=true){return `<div class="head"><div>${showBrand?`<div class="eyebrow">MINI&ME BASKETBALL</div>`:""}<h2>${title}</h2><p>${sub}</p></div>${showGmBadge?`<div class="gmBadge">GM ${G.gmName||"GM"}</div>`:""}</div>`}
+function header(title,sub="",showGmBadge=true,showBrand=true){return `<div class="head"><div>${showBrand?`<div class="eyebrow">H³O BASKETBALL</div>`:""}<h2>${title}</h2><p>${sub}</p></div>${showGmBadge?`<div class="gmBadge">GM ${G.gmName||"GM"}</div>`:""}</div>`}
 
 const NATIONAL_FLAG_ISO={
   DEN:"DK",GEO:"GE",UKR:"UA",ESP:"ES",GRE:"GR",MNE:"ME",POR:"PT",ROU:"RO",SRB:"RS",TUR:"TR",BIH:"BA",SUI:"CH",GBR:"GB",ITA:"IT",ISL:"IS",LTU:"LT",CRO:"HR",GER:"DE",ISR:"IL",CYP:"CY",LAT:"LV",POL:"PL",AUT:"AT",NED:"NL",HUN:"HU",FRA:"FR",BEL:"BE",FIN:"FI",SLO:"SI",CZE:"CZ",SWE:"SE",EST:"EE",
@@ -17643,7 +17679,7 @@ const NATIONAL_FLAG_ISO={
   AUS:"AU",GUM:"GU",NZL:"NZ",PHI:"PH",TPE:"TW",CHN:"CN",JPN:"JP",KOR:"KR",IRI:"IR",IRQ:"IQ",JOR:"JO",SYR:"SY",IND:"IN",QAT:"QA",LBN:"LB",KSA:"SA",
   CMR:"CM",CPV:"CV",LBY:"LY",SSD:"SS",CIV:"CI",COD:"CD",SEN:"SN",RWA:"RW",NGA:"NG",NGR:"NG",MLI:"ML",UGA:"UG",ANG:"AO",GUI:"GN",TUN:"TN",EGY:"EG",MAD:"MG",RUS:"RU",HAI:"HT"
 };
-// Player data can legitimately contain either Mini&Me/FIBA nation codes or full
+// Player data can legitimately contain either H³O/FIBA nation codes or full
 // country names. Resolve both through one canonical ISO flag layer so roster,
 // profile, draft and international screens cannot fall back to a white flag merely
 // because the nationality field uses a human-readable country name.
@@ -18657,7 +18693,7 @@ function playerProfile(){
     <div class="sectionTitle">Career Overview</div><div class="profilePanel"><div class="profileStatsGrid"><div class="profileStat"><b>${cs.gp||0}</b><small>Career GP</small></div><div class="profileStat"><b>${perGame(cs,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(cs,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(cs,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${unifiedCareerRate(p,"fgm","fga","fgPct")}</b><small>FG%</small></div><div class="profileStat"><b>${unifiedCareerRate(p,"tpm","tpa","threePct")}</b><small>3PT%</small></div><div class="profileStat"><b>${unifiedCareerRate(p,"ftm","fta","ftPct")}</b><small>FT%</small></div><div class="profileStat"><b>${hc.total}</b><small>Honours</small></div></div></div>
     ${p.retired?`<div class="retirementBanner"><div><small>CAREER COMPLETE</small><b>Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} · Age ${p.retirementAge||p.age}</b><span>Last affiliation: ${p.retiredFromClubName||"Free Agency"}</span></div></div>`:""}
     <div class="sectionTitle">All-Time League Standing</div><div class="careerRankGrid">${allTimeRanks.length?allTimeRanks.slice(0,6).map(r=>`<div class="careerRankCard"><small>${r.label}</small><b>#${r.rank}</b><span>${Math.round(+r.value||0).toLocaleString()}</span></div>`).join(""):`<div class="profilePanel" style="grid-column:1/-1"><div class="empty">All-time rankings will appear as career history builds.</div></div>`}</div>
-    <div class="sectionTitle">Career Peak</div>${peak?`<div class="careerPeakCard"><div><small>SEASON ${peak.season}</small><b>${peak.clubName||clubById(G,peak.clubId)?.name||"Club"}</b><span>${peak.ppg.toFixed(1)} PPG · ${peak.rpg.toFixed(1)} RPG · ${peak.apg.toFixed(1)} APG</span></div><strong>OVR ${peak.ovr??"—"}</strong></div>`:`<div class="profilePanel"><div class="empty">Career peak will populate from Mini&Me season records as the career continues.</div></div>`}
+    <div class="sectionTitle">Career Peak</div>${peak?`<div class="careerPeakCard"><div><small>SEASON ${peak.season}</small><b>${peak.clubName||clubById(G,peak.clubId)?.name||"Club"}</b><span>${peak.ppg.toFixed(1)} PPG · ${peak.rpg.toFixed(1)} RPG · ${peak.apg.toFixed(1)} APG</span></div><strong>OVR ${peak.ovr??"—"}</strong></div>`:`<div class="profilePanel"><div class="empty">Career peak will populate from recorded season history as the career continues.</div></div>`}
     <div class="sectionTitle">Career Timeline</div><div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${(()=>{
       const rows=integratedCareerAwardRows(p);
       if(!rows.length)return `<div class="empty">No recorded honours yet.</div>`;
@@ -20385,7 +20421,7 @@ function seasonSummaryHtml(){
   const s=ensureSeasonSummary(),u=s.user;
   const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
   const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.name}</b></div>`).join("");
-  return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>Mini&Me Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are League Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
+  return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>H³O Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are League Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
     <div class="seasonSummarySection">Champions & Events</div><div class="seasonHonourGrid">${competitionHtml}</div>
     <div class="seasonSummarySection">Season Awards</div><div class="seasonAwardsList">${awardHtml||`<div class="seasonHistoryRow"><small>No season awards recorded.</small></div>`}</div>
     <div class="seasonSummarySection">Your Season</div><div class="seasonAwardsList"><div class="seasonAwardRow"><small>Club</small><b>${u.clubName}</b></div><div class="seasonAwardRow"><small>Regular Season</small><b>${u.record} · ${u.conferenceFinish} · ${u.divisionFinish}</b></div><div class="seasonAwardRow"><small>Postseason</small><b>${u.postseasonFinish}</b></div><div class="seasonAwardRow"><small>The Cup</small><b>${u.cupFinish}</b></div></div>
@@ -21931,7 +21967,7 @@ function gmBrief(){
 }
 function gameDataManifestRows(){
   const rows=[
-    {label:"Game Build",value:BUILD_ID,note:"Current Mini&Me Basketball runtime"},
+    {label:"Game Build",value:BUILD_ID,note:"Current H³O Basketball runtime"},
     {label:"Engine Build",value:ENGINE_VERSION,note:"Core simulation engine"},
     {label:"Global Names",value:GLOBAL_NAME_DATABASE_VERSION,note:"80-nation generated player identity database"},
     {label:"Basketball World",value:G.basketballWorldVersion||"BW1",note:"Persistent external professional basketball ecosystem"},
@@ -22882,7 +22918,7 @@ function leagueLegacy(){
     const selectedRows=awardRows.filter(x=>x.label===selected).sort((a,b)=>(+b.season||0)-(+a.season||0));
     const typeTabs=`<div class="awardHistoryTypeTabs">${awardTypes.map(label=>`<button data-awardhistory="${label}" class="${selected===label?"active":""}">${shortLabels[label]||label}</button>`).join("")}</div>`;
     const rows=selectedRows.length?`<div class="awardHistoryByTypeList">${selectedRows.map(x=>`<div class="awardHistoryByTypeRow"><div class="season">${seasonLabel(x.season)}</div><div class="recipient"><strong>${x.name}</strong>${x.clubName?`<small>${x.clubName}</small>`:""}</div></div>`).join("")}</div>`:`<div class="card empty">No completed-season ${selected} history is available in this save.</div>`;
-    return `${tabs}${typeTabs}<div class="recordBookIntro compactArchiveIntro awardHistoryIntro"><div class="eyebrow">Award History</div><h3>${selected}</h3><p>Season-by-season winners across the Mini&Me Basketball career universe.</p></div>${rows}`;
+    return `${tabs}${typeTabs}<div class="recordBookIntro compactArchiveIntro awardHistoryIntro"><div class="eyebrow">Award History</div><h3>${selected}</h3><p>Season-by-season winners across the H³O Basketball career.</p></div>${rows}`;
   }
 
   return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>League Winners</h3><p>NBA champions from each completed season.</p></div>
@@ -22891,7 +22927,7 @@ function leagueLegacy(){
 
 // v0.1.49.77.5.5.5.27 — living sportswriters' Top 50.
 // The 2026 editorial foundation is drawn from the NBA 75th Anniversary cohort,
-// but the ranking itself is intentionally Mini&Me's fictional writers ballot.
+// but the ranking itself is intentionally H³O's fictional writers ballot.
 // Career-era players can displace the historical seed through the same Legacy Index.
 const WRITERS_TOP50_2026=[
   ["Michael Jordan","Michael Jordon","SG"],
@@ -23342,7 +23378,7 @@ function courtsideMilestoneWatchHtml(G){
   return `<div class="milestoneWatch"><div class="milestoneWatchHead"><div><small>COURTSIDE NETWORK</small><b>Milestone Watch</b></div><span>Records · Players · GM</span></div><div class="milestoneWatchRows">${rows.map(x=>`<div class="milestoneWatchRow"><div><small>${x.type}</small><b>${x.playerId?`<a class="profileLink" data-playerprofile="${x.playerId}" href="#player-profile/${encodeURIComponent(String(x.playerId))}">${x.headline}</a>`:x.headline}</b><p>${x.detail}</p></div><div class="milestoneWatchState">${x.state}</div></div>`).join('')}</div></div>`;
 }
 function seasonRecordWatchHtml(G){
-  const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'HISTORICAL MARK PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · historical benchmark</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Mini&Me best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
+  const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'HISTORICAL MARK PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · historical benchmark</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Career best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
 }
 function courtsideCheckMilestoneWatches(G,round){
   if(round<8)return;
@@ -23415,7 +23451,7 @@ function honoursMilestoneStatus(current,benchmark){
 }
 function honoursBenchmarkCard(key,current){
   const b=LEAGUE_HONOURS_BENCHMARKS[key],s=honoursMilestoneStatus(+current.value||0,b.value);
-  return `<div class="honoursBenchmarkCard"><div class="honoursBenchmarkTop"><div><small>Historical Mark to Beat</small><b>${b.label}</b><span style="display:block;color:var(--muted);font-size:9px;margin-top:3px">${b.holder} · ${b.note}</span></div><div class="honoursBenchmarkMark"><strong>${b.value}</strong><span>BENCHMARK</span></div></div><div class="honoursBenchmarkCompare"><div><b>${current.name}</b><small>Mini&Me career-universe record · ${(+current.value||0).toLocaleString("en-US")}</small></div><span class="honoursBenchmarkStatus ${s.cls}">${s.label}</span></div></div>`;
+  return `<div class="honoursBenchmarkCard"><div class="honoursBenchmarkTop"><div><small>Historical Mark to Beat</small><b>${b.label}</b><span style="display:block;color:var(--muted);font-size:9px;margin-top:3px">${b.holder} · ${b.note}</span></div><div class="honoursBenchmarkMark"><strong>${b.value}</strong><span>BENCHMARK</span></div></div><div class="honoursBenchmarkCompare"><div><b>${current.name}</b><small>Career record · ${(+current.value||0).toLocaleString("en-US")}</small></div><span class="honoursBenchmarkStatus ${s.cls}">${s.label}</span></div></div>`;
 }
 function leagueHonours(){
   const awardSig=[...allPlayers(G),...retiredPlayerPool(G)].reduce((n,p)=>n+(p?.awardHistory?.length||0),0);
@@ -23423,7 +23459,7 @@ function leagueHonours(){
   if(G?._leagueHonoursHtmlCache?.signature===sig)return G._leagueHonoursHtmlCache.html;
   const current=leagueHonoursCurrentRecords();
   const keys=Object.keys(LEAGUE_HONOURS_BENCHMARKS),broken=keys.filter(k=>current[k].value>LEAGUE_HONOURS_BENCHMARKS[k].value).length,matched=keys.filter(k=>current[k].value===LEAGUE_HONOURS_BENCHMARKS[k].value&&current[k].value>0).length;
-  const html=`<div class="honoursMilestoneIntro"><div class="eyebrow">LEAGUE HONOURS</div><h3>Honours & Milestones</h3><p>Objective historical marks for the Mini&Me basketball universe to chase. <strong>Records</strong> tracks statistical leaderboards; this page tracks major team and player achievements. When the career universe matches or passes a benchmark, the card updates automatically.</p></div>
+  const html=`<div class="honoursMilestoneIntro"><div class="eyebrow">LEAGUE HONOURS</div><h3>Honours & Milestones</h3><p>Objective historical marks for clubs and players to chase. <strong>Records</strong> tracks statistical leaderboards; this page tracks major team and player achievements. When a career record matches or passes a benchmark, the card updates automatically.</p></div>
     <div class="honoursMilestoneHero"><div><b>${keys.length}</b><small>Benchmarks</small></div><div><b>${broken}</b><small>Records Broken</small></div><div><b>${matched}</b><small>Records Matched</small></div></div>
     <div class="honoursBenchmarkSection"><h3>Team Benchmarks</h3><div class="honoursBenchmarkList">${["teamTitles","teamConsecutive","teamCups"].map(k=>honoursBenchmarkCard(k,current[k])).join("")}</div></div>
     <div class="honoursBenchmarkSection"><h3>Player Benchmarks</h3><div class="honoursBenchmarkList">${["playerTitles","playerConsecutive","mvps","finalsMvps","dpoys"].map(k=>honoursBenchmarkCard(k,current[k])).join("")}</div></div>
@@ -23944,7 +23980,7 @@ function worldCupCompletedGroupArchiveHtml(wc,userCode){
 }
 function internationalWorldCup(){
   const userCode=G.userNationalGM?.nationCode,live=G.worldCupLive&&!G.worldCupLive.complete?G.worldCupLive:null,history=(G.worldCupHistory||[]).slice().reverse(),last=history[0]||null,q=G.nationalQualification;
-  if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup group draw is created when the 32-team field is confirmed. Until qualification is complete there are no official Mini&Me World Cup groups to display. Once the tournament opens, each navigation tab shows only that tournament phase, while completed World Cups retain the full archive.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
+  if(!live&&!last){const qualified=(q?.qualifiedTeamCodes||[]).length,userQualified=q?.qualifiedTeamCodes?.includes(userCode),year=nationalCompetitionYear();return `<div class="intlWcHero upcoming neutral"><div><div class="eyebrow">FIBA WORLD CUP</div><h2>Road to ${year} FIBA World Cup</h2><p>${q?.complete?`${qualified}/32 nations confirmed.`:`Qualification is underway across all four FIBA regions.`}</p></div><div class="intlWcBadge">${userQualified?"QUALIFIED":qualified+"/32"}</div></div><div class="intlWcProgress"><div><b>${String(q?.round||"Qualification").replaceAll("_"," ")}</b><small>Current Stage</small></div><div><b>${qualified}</b><small>Qualified Nations</small></div><div><b>${userQualified?"YES":"—"}</b><small>Your Nation</small></div></div><div class="card"><div class="smallcopy">The World Cup group draw is created when the 32-team field is confirmed. Until qualification is complete there are no official World Cup groups to display. Once the tournament opens, each navigation tab shows only that tournament phase, while completed World Cups retain the full archive.</div><button data-intltabgo="qual" class="btn primary" style="margin-top:10px">View Qualification</button></div>`}
   if(live){
     const stage=intlWorldCupStageLabel(live.stage),userInField=(live.field||[]).includes(userCode),year=gameYearForSeason(G.season),reviewStage=intlWorldCupReviewStage(live),reviewLabel=reviewStage==="FINALS"?"Finals":intlWorldCupStageLabel(reviewStage);
     let stageBody="";
@@ -24062,8 +24098,8 @@ function internationalOlympics(n){
   const qualification=(G.olympicQualificationHistory||[]).find(x=>x.year===nextYear)||olympicQualificationPlan(G,nextYear);
   const qStatus=qualification.qualifiedTeamCodes.includes(userCode)?(qualification.host?.code===userCode?"Host · Qualified":qualification.directTeamCodes.includes(userCode)?"Direct Qualification":"Olympic Qualifier · Qualified"):"Not Currently Qualified";
   const qNationList=codes=>codes.map(c=>nationalFlagLabel(c,nat(c)?.name||c,"historyFlag")).join("");
-  const qualificationHtml=`<div class="sectionTitle">${nextYear} Qualification</div><div class="card"><div class="more"><div><b>Automatic Host</b><small>Guaranteed Olympic berth</small></div><b>${qualification.host?nationalFlagLabel(qualification.host.code,nat(qualification.host.code)?.name||qualification.host.code,"historyFlag"):"—"}</b></div><div class="more"><div><b>World Cup / Ranking Path</b><small>${qualification.directBerths||0} additional direct berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.directTeamCodes.filter(c=>c!==qualification.host?.code))||"—"}</span></div><div class="more"><div><b>Olympic Qualifiers</b><small>${qualification.qualifierBerths||0} streamlined qualifier berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.qualifierWinnerCodes)||"—"}</span></div><div class="smallcopy">Mini&Me uses a streamlined qualification model so international play remains secondary to the club career. World Cup performance and world ranking determine the qualification pathway into the active Olympic cycle.</div></div>`;
-  const overviewHtml=`${!live&&current?`<div class="card olympicRecentPlacings"><div class="eyebrow">${current.year} OLYMPIC BASKETBALL</div><h3>${current.host}</h3><div class="metrics"><div class="metric"><b>${nationalFlagLabel(current.championCode,nat(current.championCode)?.name||current.championCode)}</b><small>Gold</small></div><div class="metric"><b>${nationalFlagLabel(current.runnerUpCode,nat(current.runnerUpCode)?.name||current.runnerUpCode)}</b><small>Silver</small></div><div class="metric"><b>${nationalFlagLabel(current.bronzeCode,nat(current.bronzeCode)?.name||current.bronzeCode)}</b><small>Bronze</small></div></div></div>`:""}${!live&&!current?`<div class="card"><div class="eyebrow">OLYMPIC BASKETBALL</div><h3>${nextYear} · ${nextHost?`${nextHost.city}, ${nextHost.country}`:"Host TBA"}</h3><div class="smallcopy">12 nations compete in three groups of four. The top two in each group and the two best third-placed nations advance to the quarterfinals.</div></div>`:""}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more olympicMedalSummaryRow"><div><b>${medalSummary}</b><small>${medals} ${n.name} Olympic medal${medals===1?"":"s"} in recorded history</small></div><b>${nextYear}</b></div><div class="more"><div><b>${qStatus}</b><small>${nextYear} Olympic pathway</small></div><b>${qualification.qualifiedTeamCodes.length}/12</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically, seven places are resolved through the preceding World Cup/ranking pathway, and four places are recorded as Olympic Qualifier winners. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 the career universe selects and permanently stores future hosts eight years ahead.</div></div>${qualificationHtml}<div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>`;
+  const qualificationHtml=`<div class="sectionTitle">${nextYear} Qualification</div><div class="card"><div class="more"><div><b>Automatic Host</b><small>Guaranteed Olympic berth</small></div><b>${qualification.host?nationalFlagLabel(qualification.host.code,nat(qualification.host.code)?.name||qualification.host.code,"historyFlag"):"—"}</b></div><div class="more"><div><b>World Cup / Ranking Path</b><small>${qualification.directBerths||0} additional direct berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.directTeamCodes.filter(c=>c!==qualification.host?.code))||"—"}</span></div><div class="more"><div><b>Olympic Qualifiers</b><small>${qualification.qualifierBerths||0} streamlined qualifier berths</small></div><span class="olympicQualificationNations">${qNationList(qualification.qualifierWinnerCodes)||"—"}</span></div><div class="smallcopy">A streamlined qualification model keeps international play secondary to the club career. World Cup performance and world ranking determine the qualification pathway into the active Olympic cycle.</div></div>`;
+  const overviewHtml=`${!live&&current?`<div class="card olympicRecentPlacings"><div class="eyebrow">${current.year} OLYMPIC BASKETBALL</div><h3>${current.host}</h3><div class="metrics"><div class="metric"><b>${nationalFlagLabel(current.championCode,nat(current.championCode)?.name||current.championCode)}</b><small>Gold</small></div><div class="metric"><b>${nationalFlagLabel(current.runnerUpCode,nat(current.runnerUpCode)?.name||current.runnerUpCode)}</b><small>Silver</small></div><div class="metric"><b>${nationalFlagLabel(current.bronzeCode,nat(current.bronzeCode)?.name||current.bronzeCode)}</b><small>Bronze</small></div></div></div>`:""}${!live&&!current?`<div class="card"><div class="eyebrow">OLYMPIC BASKETBALL</div><h3>${nextYear} · ${nextHost?`${nextHost.city}, ${nextHost.country}`:"Host TBA"}</h3><div class="smallcopy">12 nations compete in three groups of four. The top two in each group and the two best third-placed nations advance to the quarterfinals.</div></div>`:""}<div class="sectionTitle">Olympic Program</div><div class="card"><div class="more olympicMedalSummaryRow"><div><b>${medalSummary}</b><small>${medals} ${n.name} Olympic medal${medals===1?"":"s"} in recorded history</small></div><b>${nextYear}</b></div><div class="more"><div><b>${qStatus}</b><small>${nextYear} Olympic pathway</small></div><b>${qualification.qualifiedTeamCodes.length}/12</b></div><div class="smallcopy">World Cup performance and world ranking feed future Olympic qualification. The host nation qualifies automatically, seven places are resolved through the preceding World Cup/ranking pathway, and four places are recorded as Olympic Qualifier winners. Los Angeles 2028 and Brisbane 2032 are fixed real-world hosts; from 2036 future hosts are selected and permanently stored eight years ahead.</div></div>${qualificationHtml}<div class="sectionTitle">Olympic Medal History</div><div class="intlWcHistory modern"><div class="intlWcHistoryHead"><span>YEAR</span><span>GOLD</span><span>SILVER</span><span>BRONZE</span></div>${rows.map(w=>`<div><span>${w.year}</span><b>${nationalFlagLabel(w.championCode,nat(w.championCode)?.name||w.championCode,"historyFlag")}</b><b>${nationalFlagLabel(w.runnerUpCode,nat(w.runnerUpCode)?.name||w.runnerUpCode,"historyFlag")}</b><b>${nationalFlagLabel(w.bronzeCode,nat(w.bronzeCode)?.name||w.bronzeCode,"historyFlag")}</b></div>`).join("")}</div>`;
   if(!live)return overviewHtml;
   const olympicReviewStage=intlOlympicReviewStage(live);
   const liveHead=`<div class="card"><div class="eyebrow">${live.year} OLYMPIC BASKETBALL</div><h3>${live.host?`${live.host.city}, ${live.host.country}`:"Olympic Games"} · ${olympicStageLabel(live.stage)}</h3><div class="smallcopy">${(live.games||[]).length} tournament games completed · ${(live.field||[]).length} nations entered</div></div>`;
@@ -24294,7 +24330,7 @@ function productionRatingSourceAudit(G){
       pick:row.pick,
       sourceName:row.sourceName,
       sourceOvr,
-      ratingSource:src?"2K27 template":recovered?"2K27 recovered":"Mini&Me estimate",
+      ratingSource:src?"2K27 template":recovered?"2K27 recovered":"Simulation estimate",
       estimatedOvr:est?.ovr??null,
       estimatedPot:est?.potential??null
     };
@@ -24320,7 +24356,7 @@ function productionRatingSourceAudit(G){
     draftEstimatedOvrCount:estimatedDraft.length,
     draftEstimatedNames:estimatedDraft.map(x=>x.sourceName),
     recoveredDraftRatings:draft.filter(x=>x.ratingSource==="2K27 recovered"),
-    potentialSource:"Mini&Me development model; POT was not present in the supplied 2K27 source",
+    potentialSource:"Development model; POT was not present in the supplied 2K27 source",
     potBelowOvr,
     passed:invalidTemplateOvr.length===0&&draft.length===60&&potBelowOvr.length===0
   };
