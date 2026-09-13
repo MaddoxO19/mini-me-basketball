@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.76 Offseason Paycut and Retirement UI Refinement</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2770,8 +2770,9 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .retirementCardTop small{color:var(--accent2);font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
 .retirementCard h3{margin:5px 0 4px;font-size:15px}
 .retirementCard p{margin:0;color:var(--muted);font-size:10px}
-.retirementCareerLine{margin-top:9px;display:flex;flex-wrap:wrap;gap:8px;color:#dfe4ec;font-size:9px}
-.retirementCareerLine span{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+.retirementCareerLine{margin-top:10px;padding-top:9px;border-top:1px solid var(--line);color:#dfe4ec;font-size:9px;line-height:1.55}
+.retirementCareerLine b{color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.05em;margin-right:6px}
+.retirementCareerLine .retirementDataRow+.retirementDataRow{margin-top:3px}
 .retirementOther{margin:4px 18px 16px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:10px}
 .retirementReviewActions{padding:0 18px 18px}
 .retirementReviewActions button{width:100%;min-height:54px;border:0;border-radius:14px;background:var(--accent);color:#111;font-weight:900}
@@ -2800,7 +2801,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.76 Offseason Paycut and Retirement UI Refinement</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2818,7 +2819,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.75 CHANGE TRACK
+// v0.1.49.77.5.5.5.76 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5282,7 +5283,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.75
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.76
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7727,7 +7728,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.75 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.76 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8079,7 +8080,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.75 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.76 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -9654,6 +9655,10 @@ function teamFriendlyDealState(G){
   if(!G.teamFriendlyDeals)G.teamFriendlyDeals={};
   return G.teamFriendlyDeals;
 }
+function teamFriendlyDealsGeneratedThisSeason(G){
+  return Object.values(teamFriendlyDealState(G)).filter(d=>d&&+d.season===+G.season).length;
+}
+function teamFriendlyDealSeasonCap(){return 3;}
 function teamFriendlyDealKey(club,p){return `S${G.season}_${club?.id||"FA"}_${p?.id||"P"}`;}
 function teamFriendlyDealReason(club,p,tenure){
   const chemistry=+club?.chemistry||0,age=+p?.age||0;
@@ -9670,8 +9675,8 @@ function eligibleForTeamFriendlyDeal(club,p){
   const role=String(p.rotationRole||"").toLowerCase();
   const roleSatisfied=!role.includes("depth")||(+p.ovr||0)<78;
   const market=marketSalaryForPlayer(p),underpaid=(+p.salaryM||0)>0&&(+p.salaryM||0)<market*.72;
-  if(firstMajorDeal||age<26||underpaid||!roleSatisfied||chem<78)return false;
-  return tenure>=2||age>=30;
+  if(firstMajorDeal||age<27||underpaid||!roleSatisfied||chem<82)return false;
+  return tenure>=3||age>=31;
 }
 function ensureTeamFriendlyDeal(G,club,p){
   const state=teamFriendlyDealState(G),key=teamFriendlyDealKey(club,p);
@@ -9681,11 +9686,12 @@ function ensureTeamFriendlyDeal(G,club,p){
 
   const tenure=playerClubTenure(p,club),chem=+club.chemistry||0,gp=(club.standings?.w||0)+(club.standings?.l||0);
   const winPct=gp?(club.standings.w/gp):.5;
-  let chance=.02+Math.max(0,chem-78)*.0055+Math.min(.04,Math.max(0,tenure-2)*.01);
-  if(winPct>=.58)chance+=.02;
-  if(winPct>=.68)chance+=.018;
-  if((+p.age||0)>=30)chance+=.015;
-  chance=Math.min(.15,chance);
+  if(teamFriendlyDealsGeneratedThisSeason(G)>=teamFriendlyDealSeasonCap())return null;
+  let chance=.008+Math.max(0,chem-80)*.0028+Math.min(.018,Math.max(0,tenure-3)*.006);
+  if(winPct>=.60)chance+=.008;
+  if(winPct>=.70)chance+=.007;
+  if((+p.age||0)>=30)chance+=.006;
+  chance=Math.min(.065,chance);
   if(Math.random()>=chance)return null;
 
   const chemistryStrength=Math.max(0,Math.min(1,(chem-78)/18));
@@ -13229,12 +13235,12 @@ function retirementReviewHtml(){
     <div class="retirementCards">${shown.map(x=>`<div class="retirementCard">
       <div class="retirementCardTop"><div><small>${x.tier}</small><h3>${x.name}</h3><p>${x.position} · Retired ${basketballSeasonLabel(x.retiredSeason)} · ${x.club}</p></div><b>${x.age}</b></div>
       <div class="retirementCareerLine">
-        <span>${x.seasons} seasons</span>
-        <span>${x.points.toLocaleString()} PTS</span>
-        <span>${x.honours} honours</span>
-        ${x.titles?`<span>${x.titles}× Champion</span>`:""}
-        ${x.mvps?`<span>${x.mvps}× MVP</span>`:""}
-        ${x.allStars?`<span>${x.allStars}× All-Star</span>`:""}
+        <div class="retirementDataRow"><b>Career</b>${x.seasons} seasons · ${x.points.toLocaleString()} PTS · ${x.honours} honours</div>
+        ${(x.titles||x.mvps||x.allStars)?`<div class="retirementDataRow"><b>Honours</b>${[
+          x.titles?`${x.titles}× Champion`:"",
+          x.mvps?`${x.mvps}× MVP`:"",
+          x.allStars?`${x.allStars}× All-Star`:""
+        ].filter(Boolean).join(" · ")}</div>`:""}
       </div>
     </div>`).join("")}</div>
     ${other?`<div class="retirementOther">${other} other player${other===1?"":"s"} retired this offseason.</div>`:""}
@@ -16620,7 +16626,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.75 Transition Credit Backfill and Public Copy Cleanup",ENGINE_VERSION="E2.26-PROD125";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.76 Offseason Paycut and Retirement UI Refinement",ENGINE_VERSION="E2.26-PROD126";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
