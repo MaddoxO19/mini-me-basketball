@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.61 All-Time Title Record Integrity</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.62 Offseason Retirement Review</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2754,10 +2754,32 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .summerReadinessActions .play{background:var(--accent);border:0;color:#101010}
 @media(max-width:420px){.summerReadinessMetrics{gap:6px}.summerReadinessMetric{padding:10px 4px}.summerReadinessActions{grid-template-columns:1fr}.summerDevRow{grid-template-columns:minmax(0,1fr) 46px 46px}}
 
+
+/* v62 · offseason retirement review */
+.retirementReview{border:1px solid var(--line);border-radius:20px;background:var(--panel);overflow:hidden}
+.retirementReviewHead{padding:18px}
+.retirementReviewHead .eyebrow{color:var(--accent2)}
+.retirementReviewHead h2{margin:4px 0 6px;font-size:26px}
+.retirementReviewHead p{margin:0;color:var(--muted);font-size:11px;line-height:1.5}
+.retirementSummaryStrip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 16px}
+.retirementSummaryStrip>div{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:11px 8px;text-align:center}
+.retirementSummaryStrip b{display:block;font-size:18px}.retirementSummaryStrip small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase}
+.retirementCards{padding:0 18px 8px;display:grid;gap:10px}
+.retirementCard{border:1px solid var(--line);border-radius:16px;padding:13px;background:#0b0f14}
+.retirementCardTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.retirementCardTop small{color:var(--accent2);font-size:8px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.retirementCard h3{margin:5px 0 4px;font-size:15px}
+.retirementCard p{margin:0;color:var(--muted);font-size:10px}
+.retirementCareerLine{margin-top:9px;display:flex;flex-wrap:wrap;gap:8px;color:#dfe4ec;font-size:9px}
+.retirementCareerLine span{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:5px 8px}
+.retirementOther{margin:4px 18px 16px;padding:11px 12px;border:1px solid var(--line);border-radius:14px;color:var(--muted);font-size:10px}
+.retirementReviewActions{padding:0 18px 18px}
+.retirementReviewActions button{width:100%;min-height:54px;border:0;border-radius:14px;background:var(--accent);color:#111;font-weight:900}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.61 All-Time Title Record Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.62 Offseason Retirement Review</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2775,7 +2797,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.61 CHANGE TRACK
+// v0.1.49.77.5.5.5.62 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5239,7 +5261,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.61
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.62
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7641,7 +7663,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.61 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.62 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7993,7 +8015,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.61 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.62 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -12982,6 +13004,74 @@ function pruneUnboundedSaveGrowth(G){
   };
   return G.runtimeMeta.lastGrowthPrune;
 }
+
+function retirementSnapshotForPlayer(G,p){
+  const awards=p?.awardHistory||[];
+  const countFamily=fam=>awards.filter(a=>careerAwardFamily(a.award)===fam).reduce((n,a)=>n+careerAwardCount(a),0);
+  const honours=awards.reduce((n,a)=>n+careerAwardCount(a),0);
+  const points=Math.round(currentCareerTotal(p,"pts")||0);
+  const seasons=Math.max((p.seasonHistory||[]).length,+p.experienceYears||0,1);
+  const titles=countFamily("nbachampion");
+  const mvps=countFamily("mvp");
+  const allStars=countFamily("allstar");
+  const allNba=countFamily("allnba");
+  const score=points+(honours*900)+(titles*2500)+(mvps*5000)+(allNba*800)+(allStars*300);
+  const tier=(mvps>0||titles>=3||points>=25000||honours>=25)?"Headline Retirement":
+    (titles>0||points>=12000||honours>=8||allStars>=4)?"Notable Retirement":"Retirement";
+  return{
+    playerId:p.id,name:p.name,position:positionLabel(p),age:p.retirementAge||p.age,
+    retiredSeason:p.retirementSeason,club:p.retiredFromClubName||"Career Complete",
+    points,seasons,honours,titles,mvps,allStars,allNba,score,tier
+  };
+}
+function finalizeRetirementReview(G){
+  const pending=G.retirementReviewPending;
+  if(!pending||pending.season!==G.season)return null;
+  const snaps=(pending.playerIds||[])
+    .map(id=>playerByAnyId(id))
+    .filter(Boolean)
+    .map(p=>retirementSnapshotForPlayer(G,p))
+    .sort((a,b)=>b.score-a.score);
+  pending.snapshots=snaps;
+  pending.total=snaps.length;
+  pending.notableCount=snaps.filter(x=>x.tier!=="Retirement").length;
+  pending.headlineCount=snaps.filter(x=>x.tier==="Headline Retirement").length;
+  pending.acknowledged=false;
+  return pending;
+}
+function retirementReviewHtml(){
+  const r=G.retirementReviewPending;
+  if(!r||r.acknowledged||r.season!==G.season||!r.total)return"";
+  const notable=(r.snapshots||[]).filter(x=>x.tier!=="Retirement");
+  const shown=(notable.length?notable:(r.snapshots||[])).slice(0,5);
+  const other=Math.max(0,r.total-shown.length);
+  return `<div class="retirementReview">
+    <div class="retirementReviewHead">
+      <div class="eyebrow">COURTSIDE NETWORK · OFFSEASON</div>
+      <h2>League Retirements</h2>
+      <p>The league says farewell to this offseason's most notable careers before the new season begins.</p>
+    </div>
+    <div class="retirementSummaryStrip">
+      <div><b>${r.total}</b><small>Total Retirements</small></div>
+      <div><b>${r.notableCount}</b><small>Notable Careers</small></div>
+      <div><b>${basketballSeasonLabel(G.season)}</b><small>New Season</small></div>
+    </div>
+    <div class="retirementCards">${shown.map(x=>`<div class="retirementCard">
+      <div class="retirementCardTop"><div><small>${x.tier}</small><h3>${x.name}</h3><p>${x.position} · Retired ${basketballSeasonLabel(x.retiredSeason)} · ${x.club}</p></div><b>${x.age}</b></div>
+      <div class="retirementCareerLine">
+        <span>${x.seasons} seasons</span>
+        <span>${x.points.toLocaleString()} PTS</span>
+        <span>${x.honours} honours</span>
+        ${x.titles?`<span>${x.titles}× Champion</span>`:""}
+        ${x.mvps?`<span>${x.mvps}× MVP</span>`:""}
+        ${x.allStars?`<span>${x.allStars}× All-Star</span>`:""}
+      </div>
+    </div>`).join("")}</div>
+    ${other?`<div class="retirementOther">${other} other player${other===1?"":"s"} retired this offseason.</div>`:""}
+    <div class="retirementReviewActions"><button id="continueRetirementReview">Continue to Draft Night</button></div>
+  </div>`;
+}
+
 function runOffseason(G) {
   CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"OFFSEASON");
   pruneUnboundedSaveGrowth(G);
@@ -12997,6 +13087,7 @@ function runOffseason(G) {
     initializeOlympics(G);
     return;
   }
+  G.retirementReviewPending={season:G.season,playerIds:[],snapshots:[],total:0,notableCount:0,headlineCount:0,acknowledged:false};
   const completedSeason = G.season > 1;
   recordTalentHealthSeason(G,'pre-offseason');
   awardFrontOfficeSeasonPoint(G,completedSeason);
@@ -13063,6 +13154,7 @@ function runOffseason(G) {
   ensureAITwoWayRosters(G,{force:true});
   recordTalentHealthSeason(G,'post-offseason');
   G.rosterCompliancePending=null; G.offseasonSummary=summary;
+  finalizeRetirementReview(G);
   logEvent(G, `Offseason contracts processed: ${summary.expired} expired, ${summary.extended} AI extensions, ${summary.retired+summary.freeAgentRetired+(summary.externalRetired||0)} retirements, ${summary.externalMoves||0} external-league moves and ${summary.externalToNba||0} international players entering NBA free agency. Clubs may carry up to 20 until preseason roster compliance.`);
   G.phase="DRAFT_NIGHT";
   initializeDraftState(G); // Draft board and owned picks are visible immediately on entering Draft Night.
@@ -16300,7 +16392,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.61 All-Time Title Record Integrity",ENGINE_VERSION="E2.26-PROD111";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.62 Offseason Retirement Review",ENGINE_VERSION="E2.26-PROD112";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17615,6 +17707,10 @@ function archiveRetiredPlayer(G,p,club=null){
   p.salaryM=0;
   p.injured=false;p.injury=null;p.fatigue=0;
   if(!existing)pool.push(p);
+  if(G.retirementReviewPending?.season===G.season){
+    const ids=G.retirementReviewPending.playerIds||(G.retirementReviewPending.playerIds=[]);
+    if(!ids.includes(p.id))ids.push(p.id);
+  }
   return p;
 }
 function playerByAnyId(id){
@@ -20724,6 +20820,7 @@ function worldCupTournamentRecapHtml(wc){
 function homeMainMenuExitHtml(){return "";}
 function home(){
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
+  if(G.phase==="DRAFT_NIGHT"&&G.retirementReviewPending?.season===G.season&&!G.retirementReviewPending?.acknowledged&&G.retirementReviewPending?.total)return retirementReviewHtml();
   const worldCupRecap=worldCupRecapPendingTournament();
   if(worldCupRecap)return worldCupTournamentRecapHtml(worldCupRecap);
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
@@ -24107,6 +24204,7 @@ if($("#beginPreseasonReadiness"))$("#beginPreseasonReadiness").onclick=()=>{
   save();render();
 };
 if($("#continueWorldCupRecap"))$("#continueWorldCupRecap").onclick=()=>{G.worldCupRecapPending=null;ui.page="home";save();render()};
+if($("#continueRetirementReview"))$("#continueRetirementReview").onclick=()=>{if(G.retirementReviewPending)G.retirementReviewPending.acknowledged=true;save();render()};
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
 if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;const st=userPostseasonState();if(G.phase==="PLAY_IN")ui.postseasonStage="playin";else if(st.series)ui.postseasonStage=postseasonStageKey(st.series.stage);render()};
