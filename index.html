@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.64 Home Action Button Consistency</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.66 International Player Toggles</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2776,10 +2776,31 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .retirementReviewActions{padding:0 18px 18px}
 .retirementReviewActions button{width:100%;min-height:54px;border:0;border-radius:14px;background:var(--accent);color:#111;font-weight:900}
 
+
+/* v65 · international squad UX + developmental age integrity */
+.intlSquadControl{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 15px;border:1px solid var(--line);border-radius:14px;background:var(--panel);margin-bottom:12px}
+.intlSquadControl b{display:block;font-size:12px}.intlSquadControl small{display:block;color:var(--muted);font-size:9px;line-height:1.45;margin-top:3px}
+.intlSquadControl .switch{flex:0 0 auto}
+.intlManualActions{display:flex;gap:8px;margin:10px 0 12px}.intlManualActions .btn{flex:1;margin:0}
+.intlEligibleTable.autoMode{opacity:.62}.intlEligibleTable.autoMode input[type="checkbox"]{pointer-events:none}
+.intlModeBadge{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:4px 7px;font-size:8px;font-weight:900;color:var(--muted);margin-left:6px;vertical-align:middle}
+.intlModeBadge.on{border-color:#6f552d;color:var(--accent2);background:rgba(244,163,64,.06)}
+.intlPoolHeader{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.intlPoolHeader .sectionTitle{margin-bottom:0}
+
+
+/* v66 · per-player national squad toggles */
+.intlPlayerToggle{width:46px;height:27px;border:1px solid var(--line);border-radius:999px;background:#202733;position:relative;padding:0;display:inline-block;vertical-align:middle}
+.intlPlayerToggle span{position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#f2f4f7;transition:transform .16s ease}
+.intlPlayerToggle.on{background:var(--accent);border-color:var(--accent)}
+.intlPlayerToggle.on span{transform:translateX(19px);background:#111}
+.intlPlayerToggle[disabled]{opacity:.45;filter:saturate(.55)}
+.intlPickCell{text-align:center}
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.64 Home Action Button Consistency</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.66 International Player Toggles</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2797,7 +2818,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.64 CHANGE TRACK
+// v0.1.49.77.5.5.5.66 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5261,7 +5282,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.64
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.66
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7663,7 +7684,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.64 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.66 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8015,7 +8036,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.64 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.66 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -12801,6 +12822,54 @@ function worldDestinationForPlayer(p,reason="career move"){
   const league=externalLeagueForPlayer(p,nation,`${p.id||p.name}|${G.season}|${reason}|${Math.random()}`,true);
   return league||localDomesticLeagueLabel(nation);
 }
+function nonDevelopmentalWorldDestination(p,reason="veteran move"){
+  const nation=nat(p.nationality)||{code:p.nationality,name:p.nationality||"International",region:"Europe",tier:4};
+  const options=externalLeagueOptionsForPlayer(p,nation).filter(x=>x.value!=="G League");
+  return weightedRandomChoice(options)||HOME_PRO_LEAGUE_BY_NATION[nation.code]||localDomesticLeagueLabel(nation);
+}
+function shouldExitGLeagueForAge(p){
+  return (p?.externalLeague==="G League"||p?.externalClub==="G League"||p?.contractType==="G League") && (+p.age||0)>=33;
+}
+function shouldRetireFromDevelopmentalPath(p){
+  const age=+p?.age||0,ovr=+p?.ovr||0;
+  return age>=38 || (age>=35&&ovr<72) || (age>=33&&ovr<64);
+}
+function cleanUpOverageDevelopmentalPlayers(G,{log=true}={}){
+  let retired=0,moved=0;
+  G.externalProfessionals=Array.isArray(G.externalProfessionals)?G.externalProfessionals:[];
+  const survivors=[];
+  for(const p of G.externalProfessionals){
+    if(!p||!shouldExitGLeagueForAge(p)){if(p)survivors.push(p);continue;}
+    if(shouldRetireFromDevelopmentalPath(p)){
+      archiveRetiredPlayer(G,p,null);
+      p.retiredFromClubName="G League";
+      retired++;
+      if(log)logEvent(G,`${p.name} retires from professional basketball at age ${p.age} after leaving the developmental pathway.`);
+      continue;
+    }
+    const next=nonDevelopmentalWorldDestination(p,"overage G League exit");
+    applyExternalProfessionalStatus(p,next,rand(1,2),"Veteran moved out of developmental pathway");
+    survivors.push(p);moved++;
+    if(log)logEvent(G,`${p.name} leaves the G League at age ${p.age} for ${next}.`);
+  }
+  G.externalProfessionals=survivors;
+  for(const club of G.clubs||[]){
+    const keep=[];
+    for(const p of club.gLeagueRoster||[]){
+      if((+p.age||0)<33){keep.push(p);continue;}
+      if(shouldRetireFromDevelopmentalPath(p)){
+        archiveRetiredPlayer(G,p,club);retired++;
+      }else{
+        p.contractType="Unsigned";p.contractStatus="Free Agent";p.contractYearsLeft=0;p.salaryM=0;
+        p.nbaAvailability="Available";p.professionalStatus="NBA Free Agent";
+        if(!G.freeAgents.some(x=>x.id===p.id))G.freeAgents.push(p);
+        moved++;
+      }
+    }
+    club.gLeagueRoster=keep;
+  }
+  return{retired,moved};
+}
 function advanceExternalProfessionalWorld(G,summary=null){
   G.externalProfessionals=Array.isArray(G.externalProfessionals)?G.externalProfessionals:[];
   const survivors=[],nbaReturn=[];
@@ -12811,6 +12880,21 @@ function advanceExternalProfessionalWorld(G,summary=null){
     p.fatigue=0;p.recentForm=[];p.injured=false;p.injury=null;
     p.professionalExperienceYears=Math.max(1,(+p.professionalExperienceYears||0)+1);
     progressPlayerTalent(p,talentEraModifier(G),88,{trainingLevel:1,season:G.season-1});
+    if(shouldExitGLeagueForAge(p)){
+      if(shouldRetireFromDevelopmentalPath(p)){
+        archiveRetiredPlayer(G,p,null);
+        p.retiredFromClubName="G League";
+        logEvent(G,`${p.name} retires from professional basketball at age ${p.age} after leaving the developmental pathway.`);
+        retired++;continue;
+      }
+      const prior=p.externalLeague||"G League";
+      const next=nonDevelopmentalWorldDestination(p,"age-based G League exit");
+      applyExternalProfessionalStatus(p,next,rand(1,2),"Veteran moved out of developmental pathway");
+      if(next!==prior){
+        moved++;
+        G.transactions.push({type:"world_move",season:G.season,playerId:p.id,from:prior,to:next});
+      }
+    }
     if(Math.random()<retirementChance(p)){
       archiveRetiredPlayer(G,p,null);
       p.retiredFromClubName=p.externalLeague||p.externalClub||"International Basketball";
@@ -16392,7 +16476,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.64 Home Action Button Consistency",ENGINE_VERSION="E2.26-PROD114";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.66 International Player Toggles",ENGINE_VERSION="E2.26-PROD116";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17253,10 +17337,11 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD111-TITLE-RECORDS-1";
+    const loadMaintenanceVersion="LOAD-PROD115-INTL-SQUAD-GLEAGUE-1";
     G.runtimeMeta=G.runtimeMeta||{};
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
+      cleanUpOverageDevelopmentalPlayers(G,{log:true});
       repairVerifiedNationalityAssignments(G);
       repairOfficial2026DraftAssetIntegrity(G);
       repairActiveSummerLeagueEligibility(G);
@@ -23500,15 +23585,24 @@ function internationalRecordsPage(n){
 function internationalSquad(n,code){
   ensureNationalDepth(G,code,24);
   let cands=nationalCandidates(G,code).slice(0,36);cands.forEach(p=>ensureInternationalAffiliation(p));
-  if(!ui.natSelected||ui.natCode!==code){ui.natCode=code;ui.natSelected=n.selectedSquadPlayerIds.length?[...n.selectedSquadPlayerIds]:cands.filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id)}
+  const autoMode=n.nationalSquadMode!=="manual";
+  if(!ui.natSelected||ui.natCode!==code){
+    ui.natCode=code;
+    ui.natSelected=n.selectedSquadPlayerIds.length?[...n.selectedSquadPlayerIds]:cands.filter(p=>!p.injured&&p.nationalStatus!=="Opted Out").slice(0,12).map(p=>p.id);
+  }
   const selectedSet=new Set(ui.natSelected),selected=cands.filter(p=>selectedSet.has(p.id));
-  const rows=cands.map(p=>{const checked=selectedSet.has(p.id),unavailable=p.injured||p.nationalStatus==="Opted Out",affiliation=ensureInternationalAffiliation(p);return `<tr class="${unavailable?"disabled":""}"><td class="intlEligiblePlayer"><b>${playerNameLink(p)}</b><small>Age ${p.age} · ${affiliation}</small></td><td>${positionLabel(p)}</td><td><b>${p.ovr}</b></td><td class="intlPickCell"><input type="checkbox" aria-label="Select ${p.name}" data-natpick="${p.id}" ${checked?"checked":""} ${unavailable?"disabled":""}></td></tr>`}).join("");
+  const rows=cands.map(p=>{
+    const checked=selectedSet.has(p.id),unavailable=p.injured||p.nationalStatus==="Opted Out",affiliation=ensureInternationalAffiliation(p);
+    return `<tr class="${unavailable?"disabled":""}"><td class="intlEligiblePlayer"><b>${playerNameLink(p)}</b><small>Age ${p.age} · ${affiliation}</small></td><td>${positionLabel(p)}</td><td><b>${p.ovr}</b></td><td class="intlPickCell"><button type="button" class="intlPlayerToggle ${checked?"on":""}" aria-label="${checked?"Remove":"Select"} ${p.name}" aria-pressed="${checked?"true":"false"}" data-natpick="${p.id}" ${(unavailable||autoMode)?"disabled":""}><span></span></button></td></tr>`;
+  }).join("");
   const guards=selected.filter(p=>["PG","SG"].includes(p.position)).length,centers=selected.filter(p=>p.position==="C").length,forwards=selected.length-guards-centers;
   return `<div class="intlSquadSummary"><div><b>${ui.natSelected.length}/12</b><small>Selected</small></div><div><b>${guards}</b><small>Guards</small></div><div><b>${forwards}</b><small>Forwards</small></div><div><b>${centers}</b><small>Centers</small></div></div>
+    <div class="intlSquadControl"><div><b>Automatic Squad Selection <span class="intlModeBadge ${autoMode?"on":""}">${autoMode?"ON":"OFF"}</span></b><small>${autoMode?"The best available 12-player squad refreshes before each international series or tournament.":"Manual selection is active. Choose 8–12 eligible players, then save your squad."}</small></div><button id="nationalAutoSwitch" class="switch ${autoMode?"on":""}" aria-label="Toggle automatic national squad selection"><span></span></button></div>
     <div class="sectionTitle">National Team Depth Chart</div>${nationalDepthChartHtml(selected)}
-    <div class="intlSquadActions"><button id="autoSquadBtn" class="btn secondary">AI Auto Select</button><button id="saveSquadBtn" class="btn primary">Save Manual Squad</button></div>
-    <div class="smallcopy intlPoolCopy">${n.nationalSquadMode==="manual"?"Manual squad is locked until you return to automatic selection.":"Automatic selection is active. The best available 12-player squad will be refreshed before each international series or tournament."}</div>
-    <div class="sectionTitle">Eligible Player Pool</div><div class="smallcopy intlPoolCopy">You can override the automatic squad by selecting 8–12 eligible players and saving a manual squad.</div><div class="table intlEligibleTable mobileFit"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>SELECT</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    ${autoMode?"":`<div class="intlManualActions"><button id="resetManualSquadBtn" class="btn secondary">Reset Selection</button><button id="saveSquadBtn" class="btn primary">Save Manual Squad</button></div>`}
+    <div class="intlPoolHeader"><div class="sectionTitle">Eligible Player Pool</div><span class="intlModeBadge ${autoMode?"on":""}">${autoMode?"AUTO":"MANUAL"}</span></div>
+    <div class="smallcopy intlPoolCopy">${autoMode?"Automatic selection is active. Turn it off above to edit the squad manually.":"Select 8–12 eligible players. Injured or opted-out players remain unavailable."}</div>
+    <div class="table intlEligibleTable mobileFit ${autoMode?"autoMode":""}"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>IN SQUAD</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function internationalFixtures(n){
   const games=(n.games||[]).slice().reverse().slice(0,24),upcoming=[],year=nationalCompetitionYear(),live=G.internationalWindowLive;
@@ -24290,9 +24384,39 @@ if($("#applyCounterBtn"))$("#applyCounterBtn").onclick=()=>{
   ui.tradeCounter=null;render();
 };
 if($("#execTradeBtn"))$("#execTradeBtn").onclick=()=>{if(!confirm("Execute this trade? This transaction will be applied immediately."))return;let r=executeTradePackage(G,me().id,ui.tradePartner,{playerIds:ui.tradeOut.players,pickIds:ui.tradeOut.picks},{playerIds:ui.tradeIn.players,pickIds:ui.tradeIn.picks},false);if(r.executed){if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;if(G.season===1){G.production2026Draft=G.production2026Draft||{};G.production2026Draft.diverged=true;G.production2026Draft.divergedAtPick=G.draftState.index+1;}reconcileDraftPendingOwnership();}toast("Trade completed");ui.tradeOut={players:[],picks:[]};ui.tradeIn={players:[],picks:[]};ui.tradeEval=null;ui.tradeCounter=null;ui.tradeView="builder"}else{toast(r.reason||"Trade rejected");ui.tradeEval=r;ui.tradeCounter=null}save();render()};
-$$("[data-natpick]").forEach(b=>b.onchange=()=>{let id=b.dataset.natpick,i=ui.natSelected.indexOf(id);if(b.checked){if(ui.natSelected.length>=12){toast("Squad is already full (12)");b.checked=false;return}ui.natSelected.push(id)}else if(i>=0)ui.natSelected.splice(i,1);render()});
-if($("#autoSquadBtn"))$("#autoSquadBtn").onclick=()=>{let code=G.userNationalGM.nationCode,team=G.nationalTeams.find(t=>t.code===code);let roster=selectNationalRoster(G,code).slice(0,12);ui.natSelected=roster.map(p=>p.id);if(team){team.nationalSquadMode="auto";team.selectedSquadPlayerIds=[...ui.natSelected];team.rosterPlayerIds=[...ui.natSelected];team.currentDepthChart=buildNationalDepthChart(roster)}toast("Automatic national squad selection enabled");save();render()};
-if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Squad saved");save()}catch(e){toast(e.message)}render()};
+$$("[data-natpick]").forEach(b=>b.onclick=()=>{
+  const id=b.dataset.natpick;
+  const i=ui.natSelected.indexOf(id);
+  const selecting=i<0;
+  if(selecting){
+    if(ui.natSelected.length>=12){toast("Squad is already full (12)");return}
+    ui.natSelected.push(id);
+  }else{
+    ui.natSelected.splice(i,1);
+  }
+  render();
+});
+if($("#nationalAutoSwitch"))$("#nationalAutoSwitch").onclick=()=>{
+  const code=G.userNationalGM.nationCode,team=G.nationalTeams.find(t=>t.code===code);
+  if(!team)return;
+  const turningAuto=team.nationalSquadMode==="manual";
+  if(turningAuto){
+    const roster=selectNationalRoster(G,code).slice(0,12);
+    ui.natSelected=roster.map(p=>p.id);
+    team.nationalSquadMode="auto";
+    team.selectedSquadPlayerIds=[...ui.natSelected];
+    team.rosterPlayerIds=[...ui.natSelected];
+    team.currentDepthChart=buildNationalDepthChart(roster);
+    toast("Automatic squad selection enabled");
+  }else{
+    team.nationalSquadMode="manual";
+    if(!ui.natSelected?.length)ui.natSelected=(team.selectedSquadPlayerIds||[]).slice(0,12);
+    toast("Manual squad selection enabled");
+  }
+  save();render();
+};
+if($("#resetManualSquadBtn"))$("#resetManualSquadBtn").onclick=()=>{const code=G.userNationalGM.nationCode;ui.natSelected=selectNationalRoster(G,code).slice(0,12).map(p=>p.id);render()};
+if($("#saveSquadBtn"))$("#saveSquadBtn").onclick=()=>{try{setUserNationalSquad(G,G.userNationalGM.nationCode,ui.natSelected);toast("Manual national squad saved");save()}catch(e){toast(e.message)}render()};
 }
 
 function refreshLandingSaveCount(){
