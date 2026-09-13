@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Mini&Me Basketball — v0.1.49.77.5.5.5.60 Summer League Readiness State Fix</title>
+<title>Mini&Me Basketball — v0.1.49.77.5.5.5.61 All-Time Title Record Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2757,7 +2757,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.60 Summer League Readiness State Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">MINI&amp;ME</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">Mini&amp;Me Basketball<br><span>v0.1.49.77.5.5.5.61 All-Time Title Record Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2775,7 +2775,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.60 CHANGE TRACK
+// v0.1.49.77.5.5.5.61 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -2856,7 +2856,7 @@ function franchiseLegacyFor(clubId){const x=FRANCHISE_LEGACY[clubId]||{titles:[]
 // metadata exists only for integrity/audit and is not a separate basketball era.
 // ---------------------------------------------------------------------
 const BASKETBALL_HISTORY_EXPANSION_VERSION="HISTORY-F2BT2-2026.1";
-const HISTORICAL_FRANCHISE_NOTABLES={"BOS":[{"name":"Bill Russel","pos":"C","legacy":"11\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Larry Byrd","pos":"SF/PF","legacy":"3\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"John Havlichek","pos":"SF/SG","legacy":"8\u00d7 Champion \u00b7 Finals MVP"}],"BKN":[{"name":"Jason Kydd","pos":"PG","legacy":"Franchise assist leader \u00b7 All-NBA"},{"name":"Buck Williams","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"All-Star scorer \u00b7 iconic wing"}],"NYE":[{"name":"Walt Frasier","pos":"PG","legacy":"2\u00d7 Champion \u00b7 7\u00d7 All-Star"},{"name":"Patrick Ewingg","pos":"C","legacy":"11\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Willis Reed","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP"}],"PHI":[{"name":"Julius Ervingg","pos":"SF","legacy":"Champion \u00b7 MVP"},{"name":"Allen Iversonn","pos":"PG/SG","legacy":"MVP \u00b7 4\u00d7 scoring champion"},{"name":"Moses Maloney","pos":"C","legacy":"Champion \u00b7 MVP"}],"TOR":[{"name":"Kyle Lowrie","pos":"PG","legacy":"Champion \u00b7 6\u00d7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"DeMar DeRozenn","pos":"SG/SF","legacy":"Franchise scoring great \u00b7 All-Star"}],"CHI":[{"name":"Michael Jordon","pos":"SG","legacy":"6\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Scottie Pippenn","pos":"SF","legacy":"6\u00d7 Champion \u00b7 elite defender"},{"name":"Derrick Rosee","pos":"PG","legacy":"MVP \u00b7 Rookie of the Year"}],"CLE":[{"name":"LeBron Haymes","pos":"SF/PF","legacy":"Champion \u00b7 franchise scoring great"},{"name":"Mark Pricee","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 elite shooter"},{"name":"Brad Daughertyy","pos":"C","legacy":"5\u00d7 All-Star \u00b7 franchise centre"}],"DET":[{"name":"Isiah Thomass","pos":"PG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Joe Dumarss","pos":"SG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Ben Wallacee","pos":"C","legacy":"Champion \u00b7 4\u00d7 DPOY"}],"IND":[{"name":"Reggie Millerr","pos":"SG","legacy":"Franchise scoring great \u00b7 elite shooter"},{"name":"Jermaine ONeall","pos":"PF/C","legacy":"6\u00d7 All-Star \u00b7 All-NBA"},{"name":"Mel Danielss","pos":"C","legacy":"ABA champion \u00b7 MVP"}],"MIL":[{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"Champion \u00b7 3\u00d7 MVP with club"},{"name":"Oscar Robertsen","pos":"PG","legacy":"Champion \u00b7 MVP calibre guard"},{"name":"Sidney Moncrieff","pos":"SG","legacy":"2\u00d7 DPOY \u00b7 5\u00d7 All-Star"}],"ATL":[{"name":"Dominique Wilkinss","pos":"SF","legacy":"Franchise scoring great \u00b7 9\u00d7 All-Star"},{"name":"Bob Pettitt","pos":"PF","legacy":"MVP \u00b7 franchise legend"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"2\u00d7 DPOY with club \u00b7 All-Star"}],"CHA":[{"name":"Kemba Walkerr","pos":"PG","legacy":"Franchise scoring great \u00b7 3\u00d7 All-Star"},{"name":"Larry Johnsonn","pos":"PF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"Muggsy Boguess","pos":"PG","legacy":"Franchise assist great \u00b7 iconic guard"}],"MIA":[{"name":"Dwyane Wadee","pos":"SG","legacy":"3\u00d7 Champion \u00b7 Finals MVP"},{"name":"Alonzo Mourningg","pos":"C","legacy":"Champion \u00b7 2\u00d7 DPOY"},{"name":"Tim Hardawayy","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"ORL":[{"name":"Shaquille ONeall","pos":"C","legacy":"Rookie of the Year \u00b7 Finals run"},{"name":"Penny Hardawayy","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 All-NBA"},{"name":"Dwight Howardd","pos":"C","legacy":"3\u00d7 DPOY \u00b7 Finals run"}],"WAS":[{"name":"Wes Unseld","pos":"C","legacy":"Champion \u00b7 MVP"},{"name":"Elvin Hayess","pos":"PF/C","legacy":"Champion \u00b7 franchise scoring great"},{"name":"John Walll","pos":"PG","legacy":"5\u00d7 All-Star \u00b7 franchise assist great"}],"DEN":[{"name":"Alex Englishh","pos":"SF","legacy":"Franchise scoring great \u00b7 8\u00d7 All-Star"},{"name":"David Thompsonn","pos":"SG/SF","legacy":"Hall-level scorer \u00b7 4\u00d7 All-Star"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"DPOY \u00b7 iconic playoff run"}],"MIN":[{"name":"Kevin Garnettt","pos":"PF","legacy":"MVP \u00b7 franchise scoring/rebounding great"},{"name":"Kevin Lovee","pos":"PF/C","legacy":"All-NBA \u00b7 rebounding great"},{"name":"Sam Casselll","pos":"PG","legacy":"All-Star \u00b7 conference finals leader"}],"OKC":[{"name":"Gary Paytonn","pos":"PG","legacy":"DPOY \u00b7 franchise guard legend"},{"name":"Shawn Kempp","pos":"PF","legacy":"6\u00d7 All-Star \u00b7 Finals run"},{"name":"Jack Sikmaa","pos":"C","legacy":"Champion \u00b7 7\u00d7 All-Star"}],"POR":[{"name":"Clyde Drexlerr","pos":"SG","legacy":"Franchise scoring great \u00b7 Finals runs"},{"name":"Bill Waltonn","pos":"C","legacy":"Champion \u00b7 Finals MVP"},{"name":"Terry Porterr","pos":"PG","legacy":"Franchise assist great \u00b7 Finals runs"}],"UTA":[{"name":"Karl Maloney","pos":"PF","legacy":"2\u00d7 MVP \u00b7 franchise scoring great"},{"name":"John Stockman","pos":"PG","legacy":"All-time assist/steal benchmark"},{"name":"Pete Maravichh","pos":"SG","legacy":"Elite scorer \u00b7 franchise icon"}],"GSB":[{"name":"Walt Chamberlain","pos":"C","legacy":"Historic scoring/rebounding peak"},{"name":"Rick Barryy","pos":"SF","legacy":"Champion \u00b7 Finals MVP"},{"name":"Chris Mullinn","pos":"SF","legacy":"5\u00d7 All-Star \u00b7 elite scorer"}],"LAC":[{"name":"Bob McAdooo","pos":"C","legacy":"MVP \u00b7 scoring champion"},{"name":"Blake Griffinn","pos":"PF","legacy":"Rookie of the Year \u00b7 6\u00d7 All-Star"},{"name":"Chris Pall","pos":"PG","legacy":"Franchise assist great \u00b7 All-NBA"}],"LAG":[{"name":"Magic Johnsonn","pos":"PG","legacy":"5\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"Kobe Brayant","pos":"SG","legacy":"5\u00d7 Champion \u00b7 MVP"},{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"5\u00d7 Champion with club \u00b7 3\u00d7 MVP"}],"PHX":[{"name":"Steve Nashh","pos":"PG","legacy":"2\u00d7 MVP \u00b7 elite playmaker"},{"name":"Charles Barkleyy","pos":"PF","legacy":"MVP \u00b7 Finals run"},{"name":"Kevin Johnsonn","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"SAC":[{"name":"Oscar Robertsen","pos":"PG","legacy":"MVP \u00b7 triple-double pioneer"},{"name":"Jerry Lucass","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Chris Webberr","pos":"PF","legacy":"All-NBA \u00b7 conference finals leader"}],"DAL":[{"name":"Dirk Nowitzkii","pos":"PF","legacy":"Champion \u00b7 MVP \u00b7 Finals MVP"},{"name":"Rolando Blackmann","pos":"SG","legacy":"4\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Mark Aguirree","pos":"SF","legacy":"3\u00d7 All-Star \u00b7 elite scorer"}],"HOU":[{"name":"Hakeem Olajawon","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP \u00b7 2\u00d7 DPOY"},{"name":"Moses Maloney","pos":"C","legacy":"2\u00d7 MVP with club \u00b7 rebounding great"},{"name":"Calvin Murphyy","pos":"PG/SG","legacy":"Franchise scoring great \u00b7 All-Star"}],"MEM":[{"name":"Marc Gasoll","pos":"C","legacy":"DPOY \u00b7 3\u00d7 All-Star"},{"name":"Zach Randolphh","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise rebounding great"},{"name":"Mike Conleyy","pos":"PG","legacy":"Franchise assist/steal great"}],"NOP":[{"name":"Chris Pall","pos":"PG","legacy":"Rookie of the Year \u00b7 elite playmaker"},{"name":"Anthony Daviss","pos":"PF/C","legacy":"All-NBA \u00b7 franchise scoring great"},{"name":"David Westt","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise scorer"}],"SAS":[{"name":"Tim Duncann","pos":"PF/C","legacy":"5\u00d7 Champion \u00b7 2\u00d7 MVP"},{"name":"David Robinsonn","pos":"C","legacy":"Champion \u00b7 MVP \u00b7 DPOY"},{"name":"George Gervinn","pos":"SG/SF","legacy":"4\u00d7 scoring champion \u00b7 franchise icon"}]};
+const HISTORICAL_FRANCHISE_NOTABLES={"BOS":[{"name":"Bill Russel","pos":"C","legacy":"11\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Larry Byrd","pos":"SF/PF","legacy":"3\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"John Havlichek","pos":"SF/SG","legacy":"8\u00d7 Champion \u00b7 Finals MVP"}],"BKN":[{"name":"Jason Kydd","pos":"PG","legacy":"Franchise assist leader \u00b7 All-NBA"},{"name":"Buck Williams","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"All-Star scorer \u00b7 iconic wing"}],"NYE":[{"name":"Walt Frasier","pos":"PG","legacy":"2\u00d7 Champion \u00b7 7\u00d7 All-Star"},{"name":"Patrick Ewingg","pos":"C","legacy":"11\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Willis Reed","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP"}],"PHI":[{"name":"Julius Ervingg","pos":"SF","legacy":"Champion \u00b7 MVP"},{"name":"Allen Iversonn","pos":"PG/SG","legacy":"MVP \u00b7 4\u00d7 scoring champion"},{"name":"Moses Maloney","pos":"C","legacy":"Champion \u00b7 MVP"}],"TOR":[{"name":"Kyle Lowrie","pos":"PG","legacy":"Champion \u00b7 6\u00d7 All-Star"},{"name":"Vince Carterr","pos":"SG/SF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"DeMar DeRozenn","pos":"SG/SF","legacy":"Franchise scoring great \u00b7 All-Star"}],"CHI":[{"name":"Michael Jordon","pos":"SG","legacy":"6\u00d7 Champion \u00b7 5\u00d7 MVP"},{"name":"Scottie Pippenn","pos":"SF","legacy":"6\u00d7 Champion \u00b7 elite defender"},{"name":"Derrick Rosee","pos":"PG","legacy":"MVP \u00b7 Rookie of the Year"}],"CLE":[{"name":"LeBron Haymes","pos":"SF/PF","legacy":"Champion \u00b7 franchise scoring great"},{"name":"Mark Pricee","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 elite shooter"},{"name":"Brad Daughertyy","pos":"C","legacy":"5\u00d7 All-Star \u00b7 franchise centre"}],"DET":[{"name":"Isiah Thomass","pos":"PG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Joe Dumarss","pos":"SG","legacy":"2\u00d7 Champion \u00b7 Finals MVP"},{"name":"Ben Wallacee","pos":"C","legacy":"Champion \u00b7 4\u00d7 DPOY"}],"IND":[{"name":"Reggie Millerr","pos":"SG","legacy":"Franchise scoring great \u00b7 elite shooter"},{"name":"Jermaine ONeall","pos":"PF/C","legacy":"6\u00d7 All-Star \u00b7 All-NBA"},{"name":"Mel Danielss","pos":"C","legacy":"ABA champion \u00b7 MVP"}],"MIL":[{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"Champion \u00b7 3\u00d7 MVP with club"},{"name":"Oscar Robertsen","pos":"PG","legacy":"Champion \u00b7 MVP calibre guard"},{"name":"Sidney Moncrieff","pos":"SG","legacy":"2\u00d7 DPOY \u00b7 5\u00d7 All-Star"}],"ATL":[{"name":"Dominique Wilkinss","pos":"SF","legacy":"Franchise scoring great \u00b7 9\u00d7 All-Star"},{"name":"Bob Pettitt","pos":"PF","legacy":"MVP \u00b7 franchise legend"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"2\u00d7 DPOY with club \u00b7 All-Star"}],"CHA":[{"name":"Kemba Walkerr","pos":"PG","legacy":"Franchise scoring great \u00b7 3\u00d7 All-Star"},{"name":"Larry Johnsonn","pos":"PF","legacy":"Rookie of the Year \u00b7 All-Star"},{"name":"Muggsy Boguess","pos":"PG","legacy":"Franchise assist great \u00b7 iconic guard"}],"MIA":[{"name":"Dwyane Wadee","pos":"SG","legacy":"3\u00d7 Champion \u00b7 Finals MVP"},{"name":"Alonzo Mourningg","pos":"C","legacy":"Champion \u00b7 2\u00d7 DPOY"},{"name":"Tim Hardawayy","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"ORL":[{"name":"Shaquille ONeall","pos":"C","legacy":"Rookie of the Year \u00b7 Finals run"},{"name":"Penny Hardawayy","pos":"PG","legacy":"4\u00d7 All-Star \u00b7 All-NBA"},{"name":"Dwight Howardd","pos":"C","legacy":"3\u00d7 DPOY \u00b7 Finals run"}],"WAS":[{"name":"Wes Unseld","pos":"C","legacy":"Champion \u00b7 MVP"},{"name":"Elvin Hayess","pos":"PF/C","legacy":"Champion \u00b7 franchise scoring great"},{"name":"John Walll","pos":"PG","legacy":"5\u00d7 All-Star \u00b7 franchise assist great"}],"DEN":[{"name":"Alex Englishh","pos":"SF","legacy":"Franchise scoring great \u00b7 8\u00d7 All-Star"},{"name":"David Thompsonn","pos":"SG/SF","legacy":"Hall-level scorer \u00b7 4\u00d7 All-Star"},{"name":"Dikembe Mutomboh","pos":"C","legacy":"DPOY \u00b7 iconic playoff run"}],"MIN":[{"name":"Kevin Garnettt","pos":"PF","legacy":"MVP \u00b7 franchise scoring/rebounding great"},{"name":"Kevin Lovee","pos":"PF/C","legacy":"All-NBA \u00b7 rebounding great"},{"name":"Sam Casselll","pos":"PG","legacy":"All-Star \u00b7 conference finals leader"}],"OKC":[{"name":"Gary Paytonn","pos":"PG","legacy":"DPOY \u00b7 franchise guard legend"},{"name":"Shawn Kempp","pos":"PF","legacy":"6\u00d7 All-Star \u00b7 Finals run"},{"name":"Jack Sikmaa","pos":"C","legacy":"Champion \u00b7 7\u00d7 All-Star"}],"POR":[{"name":"Clyde Drexlerr","pos":"SG","legacy":"Franchise scoring great \u00b7 Finals runs"},{"name":"Bill Waltonn","pos":"C","legacy":"Champion \u00b7 Finals MVP"},{"name":"Terry Porterr","pos":"PG","legacy":"Franchise assist great \u00b7 Finals runs"}],"UTA":[{"name":"Karl Maloney","pos":"PF","legacy":"2\u00d7 MVP \u00b7 franchise scoring great"},{"name":"John Stockman","pos":"PG","legacy":"All-time assist/steal benchmark"},{"name":"Pete Maravichh","pos":"SG","legacy":"Elite scorer \u00b7 franchise icon"}],"GSB":[{"name":"Walter Mercer","pos":"C","legacy":"Historic scoring/rebounding peak"},{"name":"Rick Barryy","pos":"SF","legacy":"Champion \u00b7 Finals MVP"},{"name":"Chris Mullinn","pos":"SF","legacy":"5\u00d7 All-Star \u00b7 elite scorer"}],"LAC":[{"name":"Bob McAdooo","pos":"C","legacy":"MVP \u00b7 scoring champion"},{"name":"Blake Griffinn","pos":"PF","legacy":"Rookie of the Year \u00b7 6\u00d7 All-Star"},{"name":"Chris Pall","pos":"PG","legacy":"Franchise assist great \u00b7 All-NBA"}],"LAG":[{"name":"Magic Johnsonn","pos":"PG","legacy":"5\u00d7 Champion \u00b7 3\u00d7 MVP"},{"name":"Kobe Brayant","pos":"SG","legacy":"5\u00d7 Champion \u00b7 MVP"},{"name":"Kareem Abdul-Jaffar","pos":"C","legacy":"5\u00d7 Champion with club \u00b7 3\u00d7 MVP"}],"PHX":[{"name":"Steve Nashh","pos":"PG","legacy":"2\u00d7 MVP \u00b7 elite playmaker"},{"name":"Charles Barkleyy","pos":"PF","legacy":"MVP \u00b7 Finals run"},{"name":"Kevin Johnsonn","pos":"PG","legacy":"All-NBA \u00b7 franchise guard great"}],"SAC":[{"name":"Oscar Robertsen","pos":"PG","legacy":"MVP \u00b7 triple-double pioneer"},{"name":"Jerry Lucass","pos":"PF/C","legacy":"Franchise rebounding great \u00b7 All-Star"},{"name":"Chris Webberr","pos":"PF","legacy":"All-NBA \u00b7 conference finals leader"}],"DAL":[{"name":"Dirk Nowitzkii","pos":"PF","legacy":"Champion \u00b7 MVP \u00b7 Finals MVP"},{"name":"Rolando Blackmann","pos":"SG","legacy":"4\u00d7 All-Star \u00b7 franchise scoring great"},{"name":"Mark Aguirree","pos":"SF","legacy":"3\u00d7 All-Star \u00b7 elite scorer"}],"HOU":[{"name":"Hakeem Olajawon","pos":"C","legacy":"2\u00d7 Champion \u00b7 MVP \u00b7 2\u00d7 DPOY"},{"name":"Moses Maloney","pos":"C","legacy":"2\u00d7 MVP with club \u00b7 rebounding great"},{"name":"Calvin Murphyy","pos":"PG/SG","legacy":"Franchise scoring great \u00b7 All-Star"}],"MEM":[{"name":"Marc Gasoll","pos":"C","legacy":"DPOY \u00b7 3\u00d7 All-Star"},{"name":"Zach Randolphh","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise rebounding great"},{"name":"Mike Conleyy","pos":"PG","legacy":"Franchise assist/steal great"}],"NOP":[{"name":"Chris Pall","pos":"PG","legacy":"Rookie of the Year \u00b7 elite playmaker"},{"name":"Anthony Daviss","pos":"PF/C","legacy":"All-NBA \u00b7 franchise scoring great"},{"name":"David Westt","pos":"PF","legacy":"2\u00d7 All-Star \u00b7 franchise scorer"}],"SAS":[{"name":"Tim Duncann","pos":"PF/C","legacy":"5\u00d7 Champion \u00b7 2\u00d7 MVP"},{"name":"David Robinsonn","pos":"C","legacy":"Champion \u00b7 MVP \u00b7 DPOY"},{"name":"George Gervinn","pos":"SG/SF","legacy":"4\u00d7 scoring champion \u00b7 franchise icon"}]};
 function releaseHistoricalAlias(raw){
   const source=String(raw||"Historical Player").trim();
   const h=stableTemplateHash(`history|${source}`),h2=stableTemplateHash(`${source}|legacy`);
@@ -5239,7 +5239,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.60
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.61
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7641,7 +7641,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.60 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.61 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -7993,7 +7993,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.60 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.61 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -10039,7 +10039,17 @@ function ensureHistoricalRecords(G){
   G.historicalRecords.clubs=G.historicalRecords.clubs||{};
   G.historicalRecords.processedGameIds=G.historicalRecords.processedGameIds||{};
   if(!G.historicalRecords.legacy){G.historicalRecords.legacy=JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE));G.historicalRecords.version=2;}
-  for(const [k,v] of Object.entries(HISTORICAL_LEGACY_BASELINE.singleGame)){if(recordValueBetter(v,G.historicalRecords.league.singleGame[k]))G.historicalRecords.league.singleGame[k]={...v};}
+  for(const [k,v] of Object.entries(HISTORICAL_LEGACY_BASELINE.singleGame)){
+    const existing=G.historicalRecords.league.singleGame[k];
+    if(
+      recordValueBetter(v,existing) ||
+      (
+        existing?.historical &&
+        +existing.value===+v.value &&
+        String(existing.playerId||"")===String(v.playerId||"")
+      )
+    )G.historicalRecords.league.singleGame[k]={...v};
+  }
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.career))G.historicalRecords.league.career[k]=mergeHistoricalTop(G.historicalRecords.league.career[k],list);
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.seasonRates))G.historicalRecords.league.seasonRates[k]=mergeHistoricalTop(G.historicalRecords.league.seasonRates[k],list,"season");
   return G.historicalRecords;
@@ -10334,17 +10344,73 @@ function leagueHistorySeasonAveragesHtml(G){
 function playerTitleLegacySnapshot(G){
   const baseline=HISTORICAL_LEGACY_BASELINE.honours?.playerChampionships||[];
   const current=[];
+  const seenPlayers=new Set();
+
   for(const p of [...allPlayers(G),...retiredPlayerPool(G)]){
-    const seasons=(p.awardHistory||[]).filter(a=>a.award==="League Champion").map(a=>+a.season).filter(Number.isFinite).sort((a,b)=>a-b);
-    if(!seasons.length)continue;
-    let run=1,bestRun=1,threePeats=0;
-    for(let i=1;i<seasons.length;i++){if(seasons[i]===seasons[i-1]+1){run++;bestRun=Math.max(bestRun,run)}else run=1;}
-    let i=0;while(i<seasons.length){let j=i;while(j+1<seasons.length&&seasons[j+1]===seasons[j]+1)j++;threePeats+=Math.floor((j-i+1)/3);i=j+1;}
-    current.push({playerName:p.name,playerId:p.id,value:seasons.length,bestRun,threePeats});
+    if(!p?.id||seenPlayers.has(String(p.id)))continue;
+    seenPlayers.add(String(p.id));
+
+    const titleAwards=(p.awardHistory||[]).filter(a=>careerAwardFamily(a.award)==="nbachampion");
+    if(!titleAwards.length)continue;
+
+    // Total titles uses the same canonical/count-aware logic as Career Honours,
+    // so legacy "NBA Champion", "Champion" and cumulative award rows all count.
+    const titleCount=titleAwards.reduce((n,a)=>n+careerAwardCount(a),0);
+
+    // Consecutive-title records require actual season years, so use distinct
+    // recorded championship seasons. Historical seed counts without a season
+    // contribute to career title total but cannot invent a consecutive run.
+    const seasons=[...new Set(
+      titleAwards
+        .map(a=>+a.season)
+        .filter(s=>Number.isFinite(s)&&s>0)
+    )].sort((a,b)=>a-b);
+
+    let bestRun=0,threePeats=0;
+    if(seasons.length){
+      let run=1;bestRun=1;
+      for(let i=1;i<seasons.length;i++){
+        if(seasons[i]===seasons[i-1]+1){run++;bestRun=Math.max(bestRun,run)}
+        else run=1;
+      }
+      let i=0;
+      while(i<seasons.length){
+        let j=i;
+        while(j+1<seasons.length&&seasons[j+1]===seasons[j]+1)j++;
+        threePeats+=Math.floor((j-i+1)/3);
+        i=j+1;
+      }
+    }
+
+    current.push({
+      playerName:p.name,
+      playerId:p.id,
+      value:titleCount,
+      bestRun,
+      threePeats,
+      seasons
+    });
   }
-  const champs=[...baseline.map(x=>({...x,historical:true})),...current].sort((a,b)=>b.value-a.value).slice(0,10);
+
+  const champs=[
+    ...baseline.map(x=>({...x,historical:true})),
+    ...current
+  ].sort((a,b)=>b.value-a.value||((b.bestRun||0)-(a.bestRun||0))).slice(0,10);
+
   const baselineTriples=HISTORICAL_LEGACY_BASELINE.honours?.threePeats||[];
-  const triples=[...baselineTriples.map(x=>({...x,historical:true})),...current.filter(x=>x.threePeats>0).map(x=>({playerName:x.playerName,playerId:x.playerId,value:x.threePeats,bestRun:x.bestRun}))].sort((a,b)=>b.value-a.value||((b.bestRun||0)-(a.bestRun||0))).slice(0,10);
+  const triples=[
+    ...baselineTriples.map(x=>({...x,historical:true})),
+    ...current
+      .filter(x=>x.threePeats>0)
+      .map(x=>({
+        playerName:x.playerName,
+        playerId:x.playerId,
+        value:x.threePeats,
+        bestRun:x.bestRun,
+        seasons:x.seasons
+      }))
+  ].sort((a,b)=>b.value-a.value||((b.bestRun||0)-(a.bestRun||0))).slice(0,10);
+
   return{championships:champs,threePeats:triples};
 }
 function dynastyLegacySnapshot(G){
@@ -10360,7 +10426,13 @@ function leagueHistoryAllTimeHtml(G){
   const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,ring=legacy.honours?.playerChampionships?.[0],run=legacy.honours?.consecutiveTitles,titleLegacy=playerTitleLegacySnapshot(G),dynasty=dynastyLegacySnapshot(G),three=titleLegacy.threePeats?.[0];
   const liveSingleGamePoints=x.league?.singleGame?.points||legacy.singleGame?.points;
   const liveCareerScoring=x.career?.points?.[0]||legacy.career?.points?.[0];
-  const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLegacy.championships?.[0]?.value||ring?.value||11}</strong><b>${titleLegacy.championships?.[0]?.playerName||ring?.playerName||"Caleb Mercer"}</b><span>All-time title chase</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${three?.value||2}</strong><b>${three?.playerName||"Darius Cole"}</b><span>${three?.historical?"League record":"Career achievement"}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${(dynasty.bestRun?.value||0)>(run?.value||8)?dynasty.bestRun.clubName:(run?.playerName||"Caleb Mercer")}</b><span>Consecutive championships</span></div></div></div>`;
+  const titleLeader=titleLegacy.championships?.[0]||ring||{value:11,playerName:"Caleb Mercer",historical:true};
+  const threeLeader=three||{value:2,playerName:"Darius Cole",historical:true};
+  const titlePlayer=titleLeader.playerId?playerByAnyId(titleLeader.playerId):null;
+  const threePlayer=threeLeader.playerId?playerByAnyId(threeLeader.playerId):null;
+  const titleMeta=titlePlayer?(titlePlayer.retired?`${positionLabel(titlePlayer)} · Retired ${titlePlayer.retirementSeason?basketballSeasonLabel(titlePlayer.retirementSeason):"—"}`:`${positionLabel(titlePlayer)} · ${clubForPlayer(G,titlePlayer)?.name||"Active"}`):"All-time title record";
+  const threeMeta=threePlayer?(threePlayer.retired?`${positionLabel(threePlayer)} · Retired ${threePlayer.retirementSeason?basketballSeasonLabel(threePlayer.retirementSeason):"—"}`:`${positionLabel(threePlayer)} · ${clubForPlayer(G,threePlayer)?.name||"Active"}`):(threeLeader.historical?"League record":"Career achievement");
+  const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLeader.value}</strong><b>${titleLeader.playerName}</b><span>${titleMeta}</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${threeLeader.value}</strong><b>${threeLeader.playerName}</b><span>${threeMeta}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${(dynasty.bestRun?.value||0)>(run?.value||8)?dynasty.bestRun.clubName:(run?.playerName||"Caleb Mercer")}</b><span>Consecutive championships</span></div></div></div>`;
   return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>YEAR</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
 }
 function leagueHistoricalRecordsHtml(G){
@@ -16228,7 +16300,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.60 Summer League Readiness State Fix",ENGINE_VERSION="E2.26-PROD110";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.61 All-Time Title Record Integrity",ENGINE_VERSION="E2.26-PROD111";console.info("Mini&Me Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17089,7 +17161,7 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD109-LCG1";
+    const loadMaintenanceVersion="LOAD-PROD111-TITLE-RECORDS-1";
     G.runtimeMeta=G.runtimeMeta||{};
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
@@ -22483,7 +22555,7 @@ const WRITERS_TOP50_2026=[
   ["Bill Russell","Bill Russel","C"],
   ["Magic Johnson","Magic Johnsonn","PG"],
   ["Larry Bird","Larry Byrd","SF/PF"],
-  ["Wilt Chamberlain","Walt Chamberlain","C"],
+  ["Wilt Chamberlain","Walter Mercer","C"],
   ["Tim Duncan","Tim Duncann","PF/C"],
   ["Kobe Bryant","Kobe Brayant","SG"],
   ["Shaquille O'Neal","Shaq O'Neil","C"],
