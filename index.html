@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.81 Late Career Retirement Realism</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2801,7 +2801,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.81 Late Career Retirement Realism</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2819,7 +2819,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.80 CHANGE TRACK
+// v0.1.49.77.5.5.5.81 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5283,7 +5283,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.80
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.81
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7728,7 +7728,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.80 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.81 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8080,7 +8080,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.80 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.81 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -9639,7 +9639,7 @@ function makeFreeAgentOffer(G, clubId, playerId, years, annualM) {
   G.freeAgencyOffers.push(offer);
   if(!accepted) return {accepted:false,reason:bestComp&&bestComp.score>userScore?'Player prefers a competing offer':'Offer does not meet player expectations',offer};
   const idx=G.freeAgents.findIndex(x=>x.id===playerId); G.freeAgents.splice(idx,1);
-  p.contractYearsLeft=years; p.salaryM=annualM; p.contractType='Standard'; p.contractStatus='Under Contract'; p.extensionEligible=years===1; p.pendingExtension=null; p.productionContractScheduleM=[]; club.roster.push(p); recalcClubCap(club);
+  p.contractYearsLeft=years; p.salaryM=annualM; p.contractType='Standard'; p.contractStatus='Under Contract'; p.unsignedOffseasons=0; p.freeAgentSinceSeason=null; p.extensionEligible=years===1; p.pendingExtension=null; p.productionContractScheduleM=[]; club.roster.push(p); recalcClubCap(club);
   G.transactions.push({type:'sign',season:G.season,clubId,playerId,years,salaryM:annualM,mechanism:capCheck.mechanism,offerId:offer.id});
   logEvent(G,`${club.name} signed ${p.name} for ${years} year(s), $${annualM.toFixed(1)}M annually via ${capCheck.mechanism}.`);
   return {accepted:true,reason:'Offer accepted',offer,player:p};
@@ -12462,7 +12462,7 @@ function signFreeAgent(G, clubId, playerId, years=1) {
   let annualM=demand.annualM, capCheck=canSignSalary(G,club,annualM);
   if(!capCheck.ok && club.roster.length<15){ annualM=Math.min(3.5,Math.max(1.2,annualM*0.35)); capCheck=canSignSalary(G,club,annualM); }
   if(!capCheck.ok) return false;
-  G.freeAgents.splice(idx,1); p.contractYearsLeft=years; p.salaryM=Math.round(annualM*10)/10; p.contractType='Standard'; p.contractStatus='Under Contract'; p.extensionEligible=years===1; p.pendingExtension=null; p.productionContractScheduleM=[]; club.roster.push(p); recalcClubCap(club);
+  G.freeAgents.splice(idx,1); p.contractYearsLeft=years; p.salaryM=Math.round(annualM*10)/10; p.contractType='Standard'; p.contractStatus='Under Contract'; p.unsignedOffseasons=0; p.freeAgentSinceSeason=null; p.extensionEligible=years===1; p.pendingExtension=null; p.productionContractScheduleM=[]; club.roster.push(p); recalcClubCap(club);
   G.transactions.push({type:'sign',season:G.season,clubId,playerId,years,salaryM:p.salaryM,mechanism:capCheck.mechanism,ai:true}); return true;
 }
 function aiExtensionDecision(club,p) {
@@ -12554,7 +12554,7 @@ function assignTwoWayContract(G, clubId, playerId) {
   if(!player){idx=(club.gLeagueRoster||[]).findIndex(p=>p.id===playerId);if(idx>=0){player=club.gLeagueRoster[idx];source='gLeague';}}
   if(!player || !twoWayEligible(player)) return {ok:false,reason:'Player is not two-way eligible'};
   if(source==='freeAgents') G.freeAgents.splice(idx,1); else club.gLeagueRoster.splice(idx,1);
-  player.contractType='Two-Way'; player.contractStatus='Under Contract'; player.contractYearsLeft=1; player.salaryM=0.6; player.extensionEligible=false;
+  player.contractType='Two-Way'; player.contractStatus='Under Contract'; player.contractYearsLeft=1; player.unsignedOffseasons=0; player.freeAgentSinceSeason=null; player.salaryM=0.6; player.extensionEligible=false;
   player.twoWayHistory=player.twoWayHistory||[];
   player.twoWayHistory.push({season:G.season,clubId,from:twoWayPath(player),ovr:player.ovr,potential:player.potential});
   club.twoWayRoster=club.twoWayRoster||[]; club.twoWayRoster.push(player);
@@ -12828,28 +12828,90 @@ function rosterDepthSnapshot(G, clubId) {
   const club=clubById(G,clubId);if(!club)return null;ensurePersistentGLeague(club);
   return {clubId,clubName:club.name,nba:club.roster.map(p=>({id:p.id,name:p.name,pos:p.position,ovr:p.ovr,age:p.age,role:p.rotationRole,mins:p.targetMinutes,contract:p.contractType,injured:p.injured,injury:p.injury})).sort((a,b)=>b.ovr-a.ovr),twoWay:(club.twoWayRoster||[]).map(p=>({id:p.id,name:p.name,pos:p.position,ovr:p.ovr,age:p.age,injured:p.injured,injury:p.injury})),gLeague:(club.gLeagueRoster||[]).map(p=>({id:p.id,name:p.name,pos:p.position,ovr:p.ovr,age:p.age})).sort((a,b)=>b.ovr-a.ovr)};
 }
-
-function retirementChance(player) {
-  // Contract continuity rule: a player who has committed to a multi-year NBA deal
-  // should not randomly walk away mid-contract. Normal retirement is evaluated when
-  // the remaining guaranteed term has expired. Extreme age (44+) may still override.
-  const yearsLeft=Math.max(0,+player.contractYearsLeft||0);
-  if(yearsLeft>0 && (+player.age||0)<44)return 0;
-
-  // Career Legacy retirement model. Age remains the main driver, but productive stars
-  // and historically significant players receive a meaningful longevity buffer.
-  const ageBase={
-    33:0.002,34:0.006,35:0.018,36:0.045,
-    37:0.10,38:0.22,39:0.40,40:0.60,41:0.78,42:0.90,43:0.97,44:1.0
+function lateCareerPopulationAudit(G){
+  const active=allPlayers(G),free=G.freeAgents||[];
+  const band=list=>({
+    age40Plus:list.filter(p=>(+p.age||0)>=40).length,
+    age42Plus:list.filter(p=>(+p.age||0)>=42).length,
+    age44Plus:list.filter(p=>(+p.age||0)>=44).length
+  });
+  return{
+    version:"LCR1",
+    active:band(active),
+    freeAgents:band(free),
+    freeAgentExamples:free.filter(p=>(+p.age||0)>=40).sort((a,b)=>b.age-a.age||b.ovr-a.ovr).slice(0,12)
+      .map(p=>({id:p.id,name:p.name,age:p.age,ovr:p.ovr,peak:+p.peakOvr||p.ovr,unsignedOffseasons:+p.unsignedOffseasons||0}))
   };
-  let chance=player.age<33?0:(ageBase[player.age]??(player.age>44?1:0));
+}
+
+function lateCareerRetirementProfile(player){
+  const age=+player?.age||0,ovr=+player?.ovr||0,peak=Math.max(ovr,+player?.peakOvr||ovr);
+  const last=lastCompletedSeasonRecord(player),stats=last?.stats||null;
+  const gp=+stats?.gp||0,avgMin=gp?(+stats?.min||0)/gp:0,ppg=gp?(+stats?.pts||0)/gp:0;
+  const careerGp=+player?.careerStats?.gp||0;
+  const careerPpg=careerGp?(+player?.careerStats?.pts||0)/careerGp:ppg;
+  const productionRatio=careerPpg>0?ppg/careerPpg:1;
+  const abilityRatio=peak>0?ovr/peak:1;
+  const rolePeak=peak<=84;
+  const starPeak=peak>=88;
+  const goatPeak=peak>=94;
+  const meaningfulMinutes=gp>=20&&avgMin>=14;
+  const strongMinutes=gp>=20&&avgMin>=22;
+  const effectiveByOwnStandard=meaningfulMinutes&&productionRatio>=0.62&&abilityRatio>=0.86;
+  const stillHighLevel=strongMinutes&&ovr>=84&&productionRatio>=0.58;
+  const sharpDecline=(abilityRatio<0.82)||(gp>=20&&avgMin<12)||(careerPpg>=12&&productionRatio<0.42);
+  const unsigned=Math.max(0,+player?.unsignedOffseasons||0);
+  const freeAgent=player?.contractStatus==="Free Agent"||player?.contractType==="Unsigned";
+  return{age,ovr,peak,gp,avgMin,ppg,careerPpg,productionRatio,abilityRatio,rolePeak,starPeak,goatPeak,
+    meaningfulMinutes,strongMinutes,effectiveByOwnStandard,stillHighLevel,sharpDecline,unsigned,freeAgent};
+}
+function retirementChance(player) {
+  const r=lateCareerRetirementProfile(player),age=r.age;
+  if(age<33)return 0;
+
+  // Guaranteed-contract continuity still matters, but a 42+ veteran who has
+  // clearly fallen out of meaningful basketball can choose retirement.
+  const yearsLeft=Math.max(0,+player.contractYearsLeft||0);
+  if(yearsLeft>0&&age<42)return 0;
+  if(yearsLeft>0&&age<44&&(r.effectiveByOwnStandard||r.stillHighLevel))return 0;
+
+  // Age creates the baseline; role, production and career-relative decline decide
+  // whether an older player still has a credible reason to continue.
+  const ageBase={
+    33:.001,34:.002,35:.005,36:.012,37:.025,38:.055,39:.10,
+    40:.18,41:.28,42:.42,43:.58,44:.76,45:.92
+  };
+  let chance=ageBase[age]??(age>45?1:0);
+
   const longevity=player.longevity??60;
-  const longevityFactor=1.18-(longevity/100)*0.52;
-  const ovr=+player.ovr||0;
-  const qualityFactor=ovr>=92?0.22:ovr>=88?0.32:ovr>=84?0.46:ovr>=80?0.62:ovr>=74?0.82:ovr<64?1.22:1.0;
-  const legacyFactor=(player.legacyTracked||player.preCareerBaseline||player.awardHistory?.some(a=>a.historicalSeed))?0.68:1.0;
-  const roleFactor=(player.rotationRole==="starter"||(+player.targetMinutes||0)>=28)?0.78:(+player.targetMinutes||0)<=8?1.12:1.0;
-  return Math.max(0,Math.min(1,chance*longevityFactor*qualityFactor*legacyFactor*roleFactor));
+  chance*=1.12-(longevity/100)*0.34;
+
+  // Career role players can plausibly extend into their 40s when they are still
+  // doing roughly the same job they have always done.
+  if(age>=40&&r.rolePeak&&r.effectiveByOwnStandard)chance*=0.42;
+  else if(age>=40&&r.rolePeak&&r.meaningfulMinutes&&r.productionRatio>=0.50)chance*=0.62;
+
+  // Elite players can remain active while still performing at a high level.
+  if(r.starPeak&&r.stillHighLevel)chance*=0.48;
+
+  // The opposite is also important: former superstars/GOAT-level players become
+  // much more likely to retire once minutes, production and ability have fallen
+  // far below their own established standard.
+  if(age>=41&&r.starPeak&&r.sharpDecline)chance*=1.65;
+  if(age>=42&&r.goatPeak&&r.sharpDecline)chance*=1.35;
+
+  // Being unsigned matters increasingly with age. One offseason is survivable;
+  // repeated unsigned offseasons become a strong retirement signal.
+  if(r.freeAgent&&age>=39){
+    chance*=r.unsigned>=2?1.85:r.unsigned>=1?1.40:1.18;
+    if(age>=42&&!r.effectiveByOwnStandard)chance*=1.28;
+  }
+
+  // Very low current ability at an advanced age should not linger indefinitely.
+  if(age>=40&&r.ovr<74)chance*=1.35;
+  if(age>=42&&r.ovr<70)chance*=1.45;
+
+  return Math.max(0,Math.min(1,chance));
 }
 function inferredNbaExperienceYears(G,p){
   if(!p)return 0;
@@ -13315,13 +13377,13 @@ function runOffseason(G) {
       p.age++;
       if (Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,club); logEvent(G, `${p.name} (${club.name}) retires at age ${p.age} (OVR ${p.ovr}).`); summary.retired++; continue; }
       if (completedSeason && (p.contractYearsLeft||0)<=0) {
-        clearExpiredContractState(p); p.nbaAvailability="Available"; G.freeAgents.push(p); summary.expired++; G.transactions.push({type:"contract_expired",season:G.season,clubId:club.id,playerId:p.id}); continue;
+        clearExpiredContractState(p); p.nbaAvailability="Available"; p.unsignedOffseasons=0; p.freeAgentSinceSeason=G.season; G.freeAgents.push(p); summary.expired++; G.transactions.push({type:"contract_expired",season:G.season,clubId:club.id,playerId:p.id}); continue;
       }
       const trainingLevel=club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1;
       progressPlayerTalent(p,talentEraModifier(G),99,{clubId:club.id,trainingLevel,season:G.season-1}); p.contractStatus="Under Contract"; survivors.push(p);
     }
     survivors.sort((a,b)=>b.ovr-a.ovr);
-    while (survivors.length>(club.offseasonRosterLimit||20)) { const waived=survivors.pop(); waived.contractYearsLeft=0; waived.contractStatus="Free Agent"; waived.contractType="Unsigned"; G.freeAgents.push(waived); summary.waived++; G.transactions.push({type:"waive",season:G.season,clubId:club.id,playerId:waived.id}); }
+    while (survivors.length>(club.offseasonRosterLimit||20)) { const waived=survivors.pop(); waived.contractYearsLeft=0; waived.contractStatus="Free Agent"; waived.contractType="Unsigned"; waived.unsignedOffseasons=0; waived.freeAgentSinceSeason=G.season; G.freeAgents.push(waived); summary.waived++; G.transactions.push({type:"waive",season:G.season,clubId:club.id,playerId:waived.id}); }
     club.roster=survivors; recalcClubCap(club); club.standings={w:0,l:0,pf:0,pa:0};
     ensurePersistentGLeague(club);
     for(const p of club.gLeagueRoster){p.age++;progressPlayerTalent(p,talentEraModifier(G),78,{clubId:club.id,trainingLevel:club.id===G.userClubGM?.clubId?ensureFrontOfficeState(G).departments.training:1,season:G.season-1});p.injured=false;p.injury=null;}
@@ -13337,6 +13399,7 @@ function runOffseason(G) {
   for (const p of G.freeAgents) {
     const worldAged=p.worldAgeProcessedSeason===G.season;
     if(!worldAged)p.age++;
+    p.unsignedOffseasons=Math.max(0,+p.unsignedOffseasons||0)+1;
     p.fatigue=0; p.recentForm=[];
     if (!worldAged&&Math.random()<retirementChance(p)) { archiveRetiredPlayer(G,p,null); logEvent(G, `${p.name} (Free Agent) retires at age ${p.age} (OVR ${p.ovr}).`); summary.freeAgentRetired++; continue; }
     if(!worldAged)progressPlayerTalent(p,talentEraModifier(G),99,{trainingLevel:1,season:G.season-1});
@@ -16644,7 +16707,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.80 Expanded Name Depth and Landing Branding",ENGINE_VERSION="E2.26-PROD130";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.81 Late Career Retirement Realism",ENGINE_VERSION="E2.26-PROD131";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17505,13 +17568,14 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD130-NAME-DEPTH-BRANDING-1";
+    const loadMaintenanceVersion="LOAD-PROD131-LATE-CAREER-RETIREMENT-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
     repairGeneratedMensLeagueNames(G);
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
+    G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
     backfillGMTransitionDevelopmentCredit(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
