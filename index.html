@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.87 Play-In Fixture Visibility</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.90 Summer League Final Four Visibility</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -141,6 +141,24 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .playInFixtureRow>small{font-size:8px;color:var(--accent2);font-weight:900;text-transform:uppercase;letter-spacing:.04em}
 .playInFixtureTeams{font-size:10px;line-height:1.35}.playInFixtureTeams b{font-size:11px}
 .playInFixtureStatus{font-size:9px;color:var(--muted);text-align:right;white-space:nowrap}.playInFixtureStatus.final{color:var(--text);font-weight:900}
+.slFinalFour{display:flex;flex-direction:column;gap:12px}
+.slFinalFourHero{border:1px solid var(--line);border-radius:18px;background:var(--panel);overflow:hidden}
+.slFinalFourTop{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--line)}
+.slFinalFourTop b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent2)}
+.slFinalFourTop small{font-size:9px;color:var(--muted)}
+.slFinalFourBody{padding:14px}.slFinalFourBody h3{margin:0 0 5px;font-size:22px}.slFinalFourBody p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.slBracketSection{margin-top:4px}.slBracketSection>h4{margin:0 0 8px;font-size:13px}
+.slMatchup{border:1px solid var(--line);border-radius:14px;background:#0d1218;overflow:hidden;margin-bottom:8px}
+.slMatchup:last-child{margin-bottom:0}.slMatchup.user{box-shadow:inset 3px 0 0 var(--accent)}
+.slMatchupHead{display:flex;justify-content:space-between;align-items:center;padding:8px 11px;border-bottom:1px solid #222b36}
+.slMatchupHead small{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.slMatchupHead b{font-size:9px;color:var(--accent2)}
+.slTeamLine{display:grid;grid-template-columns:32px minmax(0,1fr) auto;align-items:center;gap:8px;padding:10px 11px;border-bottom:1px solid #222b36}
+.slTeamLine:last-child{border-bottom:0}.slTeamLine .seed{font-size:9px;color:var(--muted);font-weight:900}
+.slTeamLine .name{font-size:11px;font-weight:900}.slTeamLine .score{font-size:15px;font-weight:900;color:var(--text)}
+.slTeamLine.winner .name,.slTeamLine.winner .score{color:var(--accent2)}
+.slFinalFourAction{margin-top:12px}
+
 .postObserverMetric{background:#10161e;border:1px solid #29343f;border-radius:11px;padding:10px;text-align:center;min-width:0}.postObserverMetric b{display:block;font-size:14px;line-height:1.15;overflow-wrap:anywhere}.postObserverMetric small{display:block;color:var(--muted);font-size:9px;margin-top:3px;text-transform:uppercase}
 .postStageTabs{display:flex;gap:7px;overflow-x:auto;padding:2px 0 10px;scrollbar-width:none}.postStageTabs::-webkit-scrollbar{display:none}.postStageTabs button{flex:0 0 auto;border:1px solid var(--line);background:#171e28;color:var(--muted);border-radius:11px;padding:9px 12px;min-height:44px;font-size:10px;font-weight:900;white-space:nowrap}.postStageTabs button.active{background:var(--accent);border-color:var(--accent);color:#17100a}
 .seriesGrid{display:grid;gap:9px}.seriesCard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:11px;min-width:0}.seriesCard.userSeries{border-color:#7a5d26;box-shadow:inset 3px 0 0 var(--accent)}
@@ -2809,7 +2827,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.87 Play-In Fixture Visibility</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.90 Summer League Final Four Visibility</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2827,7 +2845,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.87 CHANGE TRACK
+// v0.1.49.77.5.5.5.90 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5291,7 +5309,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.87
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.90
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7736,7 +7754,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.87 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.90 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8088,7 +8106,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.87 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.90 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -12196,6 +12214,7 @@ function finalizeOlympics(G,live=G.olympicLive){
   G.awards[`OLY${live.year}_Gold`]=championCode;G.awards[`OLY${live.year}_MVP`]=mvp?.id||null;
   if(champ)champ.history.push({season:G.season,type:"Olympic Gold Medal",year:live.year});
   logEvent(G,`${live.year} Olympic Basketball complete. Gold: ${nat(championCode)?.name||championCode}.`);
+  G.olympicRecapPending={year:live.year,season:G.season};
   G.phase="OFFSEASON";
   return result;
 }
@@ -14952,6 +14971,66 @@ function setupSummerLeagueFinalFour(G){
   return live.championshipStage;
 }
 
+function summerLeagueFinalFourGameById(id){
+  return (G.summerLeagueLive?.games||[]).find(g=>g.id===id)||null;
+}
+function summerLeagueSeedForClub(stage,clubId){
+  return (stage?.seeds||[]).find(s=>s.clubId===clubId)?.seed||"—";
+}
+function summerLeagueMatchupHtml({homeId,awayId,gameId=null,label="Matchup",userId=null}){
+  const home=c(homeId),away=c(awayId),stage=G.summerLeagueLive?.championshipStage;
+  const g=gameId?summerLeagueFinalFourGameById(gameId):null;
+  const complete=!!g;
+  const homeScore=complete?g.homeScore:null,awayScore=complete?g.awayScore:null;
+  const winnerId=complete?g.winnerClubId:null;
+  const user=userId&&(homeId===userId||awayId===userId);
+  return `<div class="slMatchup ${user?"user":""}">
+    <div class="slMatchupHead"><small>${label}</small><b>${complete?"FINAL":"UPCOMING"}</b></div>
+    <div class="slTeamLine ${winnerId===homeId?"winner":""}"><span class="seed">#${summerLeagueSeedForClub(stage,homeId)}</span><span class="name">${home?.name||"TBD"}</span><span class="score">${complete?homeScore:""}</span></div>
+    <div class="slTeamLine ${winnerId===awayId?"winner":""}"><span class="seed">#${summerLeagueSeedForClub(stage,awayId)}</span><span class="name">${away?.name||"TBD"}</span><span class="score">${complete?awayScore:""}</span></div>
+  </div>`;
+}
+function summerLeagueFinalFourHomeHtml(){
+  const live=G.summerLeagueLive,stage=live?.championshipStage;
+  if(!live||!stage)return"";
+  const userId=G.userClubGM?.clubId||null;
+
+  const semiPairs=live.rounds?.[5]?.pairings||[];
+  const semiGames=(stage.semifinalGameIds||[]).map(id=>summerLeagueFinalFourGameById(id)).filter(Boolean);
+  const semis=semiPairs.map((pair,i)=>summerLeagueMatchupHtml({
+    homeId:pair[0],awayId:pair[1],gameId:semiGames[i]?.id||null,label:`Semifinal ${i+1}`,userId
+  })).join("");
+
+  let finalHtml="";
+  if(stage.stage==="CHAMPIONSHIP"||stage.stage==="COMPLETE"){
+    const pair=live.rounds?.[6]?.pairings?.[0];
+    if(pair){
+      finalHtml=`<div class="slBracketSection"><h4>Championship</h4>${summerLeagueMatchupHtml({
+        homeId:pair[0],awayId:pair[1],gameId:stage.finalGameId||null,label:"Summer League Championship",userId
+      })}</div>`;
+    }
+  }
+
+  const stageTitle=stage.stage==="SEMIFINALS"?"Summer League Final Four":
+    stage.stage==="CHAMPIONSHIP"?"Summer League Championship":"Summer League Complete";
+  const stageCopy=stage.stage==="SEMIFINALS"
+    ?"The five-game table is complete. Review the two semifinal matchups before advancing."
+    :stage.stage==="CHAMPIONSHIP"
+      ?"The semifinal winners are set. Review both semifinal results and the championship matchup before advancing."
+      :"The Summer League championship is complete.";
+  const actionLabel=stage.stage==="SEMIFINALS"?"Sim Semifinals":
+    stage.stage==="CHAMPIONSHIP"?"Sim Championship":"View Summer League Summary";
+
+  return `<div class="slFinalFour">
+    <div class="slFinalFourHero">
+      <div class="slFinalFourTop"><b>Summer League · Final Four</b><small>${basketballSeasonLabel(G.season)}</small></div>
+      <div class="slFinalFourBody"><h3>${stageTitle}</h3><p>${stageCopy}</p></div>
+    </div>
+    <div class="slBracketSection"><h4>Semifinals</h4>${semis}</div>
+    ${finalHtml}
+    <div class="slFinalFourAction"><button id="homeMainAction" class="primaryProgress">${actionLabel}</button></div>
+  </div>`;
+}
 function advanceSummerLeagueFinalFour(G){
   CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"SUMMER_FINALS",G.summerLeagueLive?.championshipStage?.stage==="CHAMPIONSHIP"?1:0);for(const club of G.clubs||[])syncSummerLeagueRosterForClub(G,club.id);
   const live=G.summerLeagueLive,stage=live?.championshipStage;
@@ -16513,27 +16592,45 @@ function finalizePlayInLive(G){
 function advancePlayInEvent(G){
   CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PLAY_IN",G.playInLive?.stage||0);
   if(G.phase!=="PLAY_IN")return{ok:false,reason:"Play-In is not active"};
-  const live=initializePlayInLive(G);
-  const games=[];
+  const live=initializePlayInLive(G),games=[],userId=G.userClubGM?.clubId||null;
+
+  const playEntry=(entry,round)=>{
+    const tag=round===1?`${entry.conference}_PLAYIN_${entry.type}`:`${entry.conference}_PLAYIN_FINAL`;
+    const g=playInGame(G,entry.teamAId,entry.teamBId,tag,round);
+    live.games.push(g);games.push(g);entry.complete=true;entry.gameId=g.id;
+    if(userId&&(g.homeClubId===userId||g.awayClubId===userId))live.lastUserGameId=g.id;
+    return g;
+  };
+
   if(live.stage===1){
-    for(const entry of live.initial.filter(x=>!x.complete)){
-      const g=playInGame(G,entry.teamAId,entry.teamBId,`${entry.conference}_PLAYIN_${entry.type}`,1);
-      live.games.push(g);games.push(g);entry.complete=true;entry.gameId=g.id;
-      if(G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))live.lastUserGameId=g.id;
+    const pending=live.initial.filter(x=>!x.complete);
+    const userEntry=userId?pending.find(x=>x.teamAId===userId||x.teamBId===userId):null;
+    if(userEntry){
+      // User Play-In game advances alone so the result is reviewed before unrelated fixtures.
+      playEntry(userEntry,1);
+    }else{
+      for(const entry of pending)playEntry(entry,1);
     }
-    preparePlayInFinals(G);
+    if(live.initial.every(x=>x.complete))preparePlayInFinals(G);
   } else {
-    for(const entry of live.finals.filter(x=>!x.complete)){
-      const g=playInGame(G,entry.teamAId,entry.teamBId,`${entry.conference}_PLAYIN_FINAL`,2);
-      live.games.push(g);games.push(g);entry.complete=true;entry.gameId=g.id;
-      if(G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))live.lastUserGameId=g.id;
+    const pending=live.finals.filter(x=>!x.complete);
+    const userEntry=userId?pending.find(x=>x.teamAId===userId||x.teamBId===userId):null;
+    if(userEntry){
+      // The decisive 8th-seed game also pauses immediately after the user's game.
+      playEntry(userEntry,2);
+    }else{
+      for(const entry of pending)playEntry(entry,2);
     }
-    if(live.finals.every(x=>x.complete))finalizePlayInLive(G);
+    if(live.finals.length===2&&live.finals.every(x=>x.complete))finalizePlayInLive(G);
   }
+
   G.playIn={...(G.playIn||{}),season:G.season,initial:live.initial.map(x=>({...x})),finals:live.finals.map(x=>({...x})),
     results:JSON.parse(JSON.stringify(live.results)),seedMap:{...(live.seedMap||{})},
     games:live.games,live:!live.complete,complete:live.complete};
-  return{ok:true,stage:live.stage,games,userGame:games.find(g=>G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete};
+
+  return{ok:true,stage:live.stage,games,
+    userGame:games.find(g=>userId&&(g.homeClubId===userId||g.awayClubId===userId))||null,
+    complete:live.complete};
 }
 
 function runPlayIn(G){initializePlayInLive(G);while(G.phase==="PLAY_IN"){const r=advancePlayInEvent(G);if(!r.ok)throw new Error(r.reason);}}
@@ -16773,7 +16870,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.87 Play-In Fixture Visibility",ENGINE_VERSION="E2.26-PROD137";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.90 Summer League Final Four Visibility",ENGINE_VERSION="E2.26-PROD140";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17634,7 +17731,7 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD132-LATE-CAREER-FA-RESOLUTION-1";
+    const loadMaintenanceVersion="LOAD-PROD139-OLYMPIC-RECAP-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
@@ -17642,6 +17739,13 @@ async function loadSlot(slot){
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
+    G.olympicRecapAcknowledgedYears=Array.isArray(G.olympicRecapAcknowledgedYears)?G.olympicRecapAcknowledgedYears:[];
+    if(!G.olympicRecapPending){
+      const latestOlympics=[...(G.olympicHistory||[])].reverse().find(o=>o?.status==="COMPLETE"&&+o.season===+G.season);
+      if(latestOlympics&&!G.olympicRecapAcknowledgedYears.includes(latestOlympics.year)){
+        G.olympicRecapPending={year:latestOlympics.year,season:latestOlympics.season,backfilled:true};
+      }
+    }
     const lateCareerLoadResolution=resolveStaleLateCareerFreeAgents(G,{allowMidseason:true});
     G.runtimeMeta.lateCareerLoadResolution={version:"LCFR1",season:G.season,...lateCareerLoadResolution};
     backfillGMTransitionDevelopmentCredit(G);
@@ -21382,6 +21486,33 @@ function worldCupRecapPendingTournament(){
   if(!pending)return null;
   return [...(G.worldCupHistory||[])].reverse().find(w=>w.status==="COMPLETE"&&w.cycle===pending.cycle&&w.season===pending.season)||null;
 }
+function olympicRecapPendingTournament(){
+  const pending=G.olympicRecapPending;
+  if(!pending)return null;
+  return [...(G.olympicHistory||[])].reverse().find(o=>o.status==="COMPLETE"&&o.year===pending.year&&o.season===pending.season)||null;
+}
+function olympicTournamentRecapHtml(oly){
+  if(!oly)return"";
+  const userCode=G.userNationalGM?.nationCode;
+  const gold=nat(oly.championCode),silver=nat(oly.runnerUpCode),bronze=nat(oly.bronzeCode);
+  const final=(oly.games||[]).find(g=>g.stage==="OLYMPIC_FINAL");
+  const mvp=playerByAnyId(oly.mvpPlayerId),leaders=worldCupAwardLeaders(oly);
+  const userGames=(oly.games||[]).filter(g=>g.teamA===userCode||g.teamB===userCode);
+  const userWins=userGames.filter(g=>g.winner===userCode).length,userLosses=userGames.length-userWins;
+  const userFinish=oly.championCode===userCode?"Gold Medal":
+    oly.runnerUpCode===userCode?"Silver Medal":
+    oly.bronzeCode===userCode?"Bronze Medal":
+    (oly.field||[]).includes(userCode)?"Tournament Complete":"Did Not Qualify";
+  const allTournament=(oly.allTournamentPlayerIds||[]).map(playerByAnyId).filter(Boolean);
+
+  return `<div class="wcRecapHero"><div class="wcRecapTop"><div><div class="eyebrow">${oly.year} OLYMPIC BASKETBALL · TOURNAMENT RECAP</div><h2>${gold?.name||oly.championCode} win Olympic gold</h2><p>${silver?.name||oly.runnerUpCode} take silver, with ${bronze?.name||oly.bronzeCode} earning bronze.</p></div><span>COMPLETE</span></div>
+    <div class="wcRecapMetrics"><div><b>${nationalFlagLabel(oly.championCode,gold?.name||oly.championCode,"medalFlag")}</b><small>Gold Medal</small></div><div>${userGames.length?recordBadge(userWins,userLosses):"<b>—</b>"}<small>Your Record</small></div><div><b>${userFinish}</b><small>Your Finish</small></div></div></div>
+    <div class="sectionTitle">Gold Medal Game</div><div class="wcRecapFinal">${final?`<div>${nationalFlagLabel(final.teamA,nat(final.teamA)?.name||final.teamA,"resultFlag")}<strong>${final.scoreA}</strong></div><span>FINAL</span><div>${nationalFlagLabel(final.teamB,nat(final.teamB)?.name||final.teamB,"resultFlag")}<strong>${final.scoreB}</strong></div>`:`<div class="empty">Final result unavailable.</div>`}</div>
+    <div class="sectionTitle">Medalists</div><div class="intlWcSummary wcRecapPodium"><div><small>GOLD</small><b>${nationalFlagLabel(oly.championCode,gold?.name||oly.championCode,"medalFlag")}</b></div><div><small>SILVER</small><b>${nationalFlagLabel(oly.runnerUpCode,silver?.name||oly.runnerUpCode,"medalFlag")}</b></div><div><small>BRONZE</small><b>${nationalFlagLabel(oly.bronzeCode,bronze?.name||oly.bronzeCode,"medalFlag")}</b></div></div>
+    <div class="sectionTitle">Tournament Honours</div><div class="intlWcAwards">${mvp?`<div class="intlWcAward"><small>OLYMPIC MVP</small><b>${playerNameLink(mvp)}</b><span>${positionLabel(mvp)} · ${flagEmoji(mvp.nationality)}</span></div>`:""}${worldCupAwardCard("TOP SCORER",leaders.scorer,x=>`${(x.stats.pts/x.gp).toFixed(1)} PPG · ${flagEmoji(x.player.nationality)}`)}${worldCupAwardCard("BEST DEFENDER",leaders.defender,x=>`${(x.stats.stl/x.gp).toFixed(1)} SPG · ${(x.stats.blk/x.gp).toFixed(1)} BPG · ${flagEmoji(x.player.nationality)}`)}</div>
+    ${allTournament.length?`<div class="sectionTitle">All-Olympic Team</div><div class="wcRecapTeam">${allTournament.map(p=>`<div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${flagEmoji(p.nationality)}</small></div>`).join("")}</div>`:""}
+    <div class="transitionActions one wcRecapContinue"><button id="continueOlympicRecap" class="transitionPrimary">Continue Career</button></div>`;
+}
 function worldCupTournamentRecapHtml(wc){
   if(!wc)return"";
   const userCode=G.userNationalGM?.nationCode,champ=nat(wc.championCode),runner=nat(wc.runnerUpCode),bronze=nat(wc.bronzeCode);
@@ -21406,6 +21537,8 @@ function home(){
   if(G.phase==="DRAFT_NIGHT"&&G.retirementReviewPending?.season===G.season&&!G.retirementReviewPending?.acknowledged&&G.retirementReviewPending?.total)return retirementReviewHtml();
   const worldCupRecap=worldCupRecapPendingTournament();
   if(worldCupRecap)return worldCupTournamentRecapHtml(worldCupRecap);
+  const olympicRecap=olympicRecapPendingTournament();
+  if(olympicRecap)return olympicTournamentRecapHtml(olympicRecap);
   if(G.internationalWindowLive&&!G.internationalWindowLive.complete)return fibaHomeHtml();
   if(G.phase==="WORLD_CUP")return worldCupHomeHtml();
   if(G.phase==="OLYMPICS")return olympicHomeHtml();
@@ -21432,6 +21565,7 @@ function home(){
     )
   );
   if(G.phase==="SUMMER_LEAGUE"&&!summerHasStarted)return summerLeagueReadinessHtml();
+  if(G.phase==="SUMMER_LEAGUE"&&G.summerLeagueLive?.championshipStage)return summerLeagueFinalFourHomeHtml();
   if(G.phase==="SUMMER_LEAGUE_COMPLETE")return summerLeagueCompletionHtml();
   if(G.phase==="PRESEASON_READINESS")return preseasonReadinessHtml();
   let centre="";
@@ -24863,6 +24997,7 @@ if($("#beginPreseasonReadiness"))$("#beginPreseasonReadiness").onclick=()=>{
   save();render();
 };
 if($("#continueWorldCupRecap"))$("#continueWorldCupRecap").onclick=()=>{G.worldCupRecapPending=null;ui.page="home";save();render()};
+if($("#continueOlympicRecap"))$("#continueOlympicRecap").onclick=()=>{G.olympicRecapAcknowledgedYears=Array.isArray(G.olympicRecapAcknowledgedYears)?G.olympicRecapAcknowledgedYears:[];if(G.olympicRecapPending?.year&&!G.olympicRecapAcknowledgedYears.includes(G.olympicRecapPending.year))G.olympicRecapAcknowledgedYears.push(G.olympicRecapPending.year);G.olympicRecapPending=null;ui.page="home";save();render()};
 if($("#continueRetirementReview"))$("#continueRetirementReview").onclick=()=>{if(G.retirementReviewPending)G.retirementReviewPending.acknowledged=true;save();render()};
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
