@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.81 Late Career Retirement Realism</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.82 Late Career Free Agent Resolution</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2801,7 +2801,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.81 Late Career Retirement Realism</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.82 Late Career Free Agent Resolution</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2819,7 +2819,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.81 CHANGE TRACK
+// v0.1.49.77.5.5.5.82 CHANGE TRACK
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5283,7 +5283,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.81
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.82
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7728,7 +7728,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.81 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.82 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8080,7 +8080,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.81 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.82 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -12913,6 +12913,61 @@ function retirementChance(player) {
 
   return Math.max(0,Math.min(1,chance));
 }
+function lateCareerFreeAgentResolution(player,G){
+  const r=lateCareerRetirementProfile(player);
+  const age=r.age,unsigned=Math.max(0,+player?.unsignedOffseasons||0);
+  const overdue=(age>=42&&unsigned>=2)||(age>=40&&unsigned>=3);
+  if(!overdue)return null;
+
+  const roll=(hashStringStable(`${player.id}|${G.season}|${age}|${unsigned}|late-career-resolution`)%10000)/10000;
+  let retireBias=.48;
+
+  if(r.goatPeak&&r.sharpDecline)retireBias=.84;
+  else if(r.starPeak&&r.sharpDecline)retireBias=.72;
+  else if(r.rolePeak&&r.ovr>=74)retireBias=.34;
+  else if(r.ovr>=82)retireBias=.38;
+  else if(r.ovr<72)retireBias=.78;
+
+  if(age>=44)retireBias+=.10;
+  if(unsigned>=3)retireBias+=.08;
+  retireBias=Math.max(.20,Math.min(.96,retireBias));
+
+  if(roll<retireBias)return{action:"retire",reason:"Extended late-career free agency"};
+
+  const nation=nat(player.nationality)||{code:player.nationality,name:player.nationality||"International",region:"Europe",tier:4};
+  let league=HOME_PRO_LEAGUE_BY_NATION?.[player.nationality]||null;
+  if(!league||league==="G League"){
+    league=externalLeagueForPlayer(player,nation,`${player.id}|late-career|${G.season}`,false);
+  }
+  return{action:"external",league,reason:"Late-career professional continuation"};
+}
+function resolveStaleLateCareerFreeAgents(G,{allowMidseason=false}={}){
+  if(!G?.freeAgents?.length)return{retired:0,moved:0};
+  const keep=[],retired=[],moved=[];
+  for(const p of G.freeAgents){
+    const decision=lateCareerFreeAgentResolution(p,G);
+    if(!decision){keep.push(p);continue;}
+    if(allowMidseason&&!((+p.age||0)>=44&&(+p.unsignedOffseasons||0)>=2)){keep.push(p);continue;}
+
+    if(decision.action==="external"){
+      applyExternalProfessionalStatus(p,decision.league,1,decision.reason);
+      p.unsignedOffseasons=0;
+      p.freeAgentSinceSeason=null;
+      G.externalProfessionals=G.externalProfessionals||[];
+      if(!G.externalProfessionals.some(x=>x.id===p.id))G.externalProfessionals.push(p);
+      G.transactions=G.transactions||[];
+      G.transactions.push({type:"world_signing",season:G.season,playerId:p.id,from:"League Free Agency",to:decision.league,lateCareer:true});
+      moved.push(p);
+      logEvent(G,`${p.name} leaves league free agency for ${decision.league} at age ${p.age}.`);
+    }else{
+      archiveRetiredPlayer(G,p,null);
+      retired.push(p);
+      logEvent(G,`${p.name} retires from extended free agency at age ${p.age} (OVR ${p.ovr}).`);
+    }
+  }
+  G.freeAgents=keep;
+  return{retired:retired.length,moved:moved.length};
+}
 function inferredNbaExperienceYears(G,p){
   if(!p)return 0;
   const stored=Number.isFinite(+p.experienceYears)?Math.max(0,+p.experienceYears):0;
@@ -13394,6 +13449,10 @@ function runOffseason(G) {
   }
 
   advanceExternalProfessionalWorld(G,summary);
+
+  const staleResolution=resolveStaleLateCareerFreeAgents(G,{allowMidseason:false});
+  summary.freeAgentRetired+=(staleResolution.retired||0);
+  summary.externalMoves=(summary.externalMoves||0)+(staleResolution.moved||0);
 
   const faSurvivors=[];
   for (const p of G.freeAgents) {
@@ -16707,7 +16766,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.81 Late Career Retirement Realism",ENGINE_VERSION="E2.26-PROD131";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.82 Late Career Free Agent Resolution",ENGINE_VERSION="E2.26-PROD132";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17568,7 +17627,7 @@ async function loadSlot(slot){
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
-    const loadMaintenanceVersion="LOAD-PROD131-LATE-CAREER-RETIREMENT-1";
+    const loadMaintenanceVersion="LOAD-PROD132-LATE-CAREER-FA-RESOLUTION-1";
     G.runtimeMeta=G.runtimeMeta||{};
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
@@ -17576,6 +17635,8 @@ async function loadSlot(slot){
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
+    const lateCareerLoadResolution=resolveStaleLateCareerFreeAgents(G,{allowMidseason:true});
+    G.runtimeMeta.lateCareerLoadResolution={version:"LCFR1",season:G.season,...lateCareerLoadResolution};
     backfillGMTransitionDevelopmentCredit(G);
     if(G.runtimeMeta.loadMaintenanceVersion!==loadMaintenanceVersion){
       pruneUnboundedSaveGrowth(G);
