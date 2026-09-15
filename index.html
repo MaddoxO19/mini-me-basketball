@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.94 Postseason Bracket Beta</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.96 World Cup Bracket Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2868,7 +2868,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.94 Postseason Bracket Beta</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.96 World Cup Bracket Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2886,7 +2886,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.94 CHANGE TRACK
+// v0.1.49.77.5.5.5.96 CHANGE TRACK
 // Postseason Bracket Beta: added a mobile-first horizontal bracket across Play-In, First Round,
 // Conference Semifinals and Conference Finals, with League Finals/champion below.
 // Existing round tabs, series drilldowns and box-score history are preserved as the detailed view.
@@ -5356,7 +5356,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.94
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.96
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7801,7 +7801,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.94 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.96 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8153,7 +8153,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.94 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.96 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -11851,11 +11851,13 @@ function runWorldCupLegacy(G) {
   const qfPairs=[[I[0].code,J[1].code],[J[0].code,I[1].code],[K[0].code,L[1].code],[L[0].code,K[1].code]];
   const qfGames=qfPairs.map(([a,b])=>worldCupGame(G,a,b,"QUARTERFINAL",tournamentStats,games));
   const qfWinners=qfGames.map(g=>g.winner), qfLosers=qfGames.map(g=>g.winner===g.teamA?g.teamB:g.teamA);
-  const sfGames=[[qfWinners[0],qfWinners[1]],[qfWinners[2],qfWinners[3]]].map(([a,b])=>worldCupGame(G,a,b,"SEMIFINAL",tournamentStats,games));
+  // Cross the quarterfinal pathways so nations from the same second-round group
+  // cannot meet again before the World Cup Final.
+  const sfGames=[[qfWinners[0],qfWinners[2]],[qfWinners[1],qfWinners[3]]].map(([a,b])=>worldCupGame(G,a,b,"SEMIFINAL",tournamentStats,games));
   const finalists=sfGames.map(g=>g.winner), semiLosers=sfGames.map(g=>g.winner===g.teamA?g.teamB:g.teamA);
   const finalGame=worldCupGame(G,finalists[0],finalists[1],"FINAL",tournamentStats,games);
   const bronzeGame=worldCupGame(G,semiLosers[0],semiLosers[1],"BRONZE",tournamentStats,games);
-  const class58Semis=[[qfLosers[0],qfLosers[1]],[qfLosers[2],qfLosers[3]]].map(([a,b])=>worldCupGame(G,a,b,"CLASSIFICATION_5_8",tournamentStats,games));
+  const class58Semis=[[qfLosers[0],qfLosers[2]],[qfLosers[1],qfLosers[3]]].map(([a,b])=>worldCupGame(G,a,b,"CLASSIFICATION_5_8",tournamentStats,games));
   const class58W=class58Semis.map(g=>g.winner), class58L=class58Semis.map(g=>g.winner===g.teamA?g.teamB:g.teamA);
   const fifthGame=worldCupGame(G,class58W[0],class58W[1],"FIFTH_PLACE",tournamentStats,games);
   const seventhGame=worldCupGame(G,class58L[0],class58L[1],"SEVENTH_PLACE",tournamentStats,games);
@@ -12099,9 +12101,9 @@ function advanceWorldCupEvent(G){
     for(const [a,b] of pairs){const g=wcRecordGame(G,live,a,b,"QUARTERFINAL");games.push(g);live.qfWinners.push(g.winner);live.qfLosers.push(g.winner===g.teamA?g.teamB:g.teamA);}
     live.stage="SEMIFINAL";live.eventIndex=0;
   } else if(live.stage==="SEMIFINAL"){
-    const pairs=[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]];
+    const pairs=[[live.qfWinners[0],live.qfWinners[2]],[live.qfWinners[1],live.qfWinners[3]]];
     for(const [a,b] of pairs){const g=wcRecordGame(G,live,a,b,"SEMIFINAL");games.push(g);live.semiWinners.push(g.winner);live.semiLosers.push(g.winner===g.teamA?g.teamB:g.teamA);}
-    const cPairs=[[live.qfLosers[0],live.qfLosers[1]],[live.qfLosers[2],live.qfLosers[3]]];
+    const cPairs=[[live.qfLosers[0],live.qfLosers[2]],[live.qfLosers[1],live.qfLosers[3]]];
     for(const [a,b] of cPairs){const g=wcRecordGame(G,live,a,b,"CLASSIFICATION_5_8");games.push(g);live.class58Winners.push(g.winner);live.class58Losers.push(g.winner===g.teamA?g.teamB:g.teamA);}
     live.stage="FINALS";live.eventIndex=0;
   } else if(live.stage==="FINALS"){
@@ -17017,7 +17019,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.94 Postseason Bracket Beta",ENGINE_VERSION="E2.26-PROD144";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.96 World Cup Bracket Integrity",ENGINE_VERSION="E2.26-PROD146";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20218,6 +20220,9 @@ function worldCupStageLabel(stage){
     CLASSIFICATION_5_8:"5th–8th Classification"
   })[stage]||String(stage||"World Cup").replaceAll("_"," ");
 }
+// v0.1.49.77.5.5.5.96 — World Cup knockout bracket integrity.
+// The I/J quarterfinal pathway now crosses the K/L pathway in the semifinals,
+// preventing second-round group opponents from rematching before the Final.
 function worldCupNextEventPairs(live){
   if(!live)return[];
   if(live.stage==="FIRST_GROUP_STAGE"){
@@ -20245,7 +20250,7 @@ function worldCupNextEventPairs(live){
     return pairs.filter(x=>x[0]&&x[1]).map(([a,b])=>({a,b,stage:"QUARTERFINAL"}));
   }
   if(live.stage==="SEMIFINAL"){
-    const pairs=[[live.qfWinners?.[0],live.qfWinners?.[1]],[live.qfWinners?.[2],live.qfWinners?.[3]]];
+    const pairs=[[live.qfWinners?.[0],live.qfWinners?.[2]],[live.qfWinners?.[1],live.qfWinners?.[3]]];
     return pairs.filter(x=>x[0]&&x[1]).map(([a,b])=>({a,b,stage:"SEMIFINAL"}));
   }
   if(live.stage==="FINALS"){
@@ -23444,10 +23449,14 @@ function playInBracketColumn(conf){
     return postseasonBracketSeriesHtml(fake,label).replace(` data-seriesid="${fake.id}"`,"");
   }).join("");
 }
+// v0.1.49.77.5.5.5.96 — current-season champion integrity.
 function postseasonBracketHtml(){
   const conf=ui.postConference||"East",r1=bracketSeriesFor(conf,"r1"),sf=bracketSeriesFor(conf,"sf"),cf=bracketSeriesFor(conf,"cf"),finals=bracketSeriesFor(conf,"finals");
   const userId=G.userClubGM?.clubId;
-  const champion=G.champion?.id?G.champion:(G.championClubId?c(G.championClubId):null);
+  // Only the completed Finals in this current-season bracket can crown a champion.
+  // G.champion may still contain the previous season's champion during an active postseason.
+  const currentFinal=finals.find(s=>s.complete&&s.winnerClubId);
+  const champion=currentFinal?c(currentFinal.winnerClubId):null;
   const columns=[
     ["Play-In",playInBracketColumn(conf)],
     ["First Round",r1.length?r1.map((s,i)=>postseasonBracketSeriesHtml(s,`Series ${i+1}`)).join(""):`<div class="postBracketTbd">First Round<br><b>Awaiting Play-In</b></div>`],
