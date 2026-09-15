@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.92 Olympic All-Tournament Integrity</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.93 Qualification Matchday Presentation</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -422,6 +422,21 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .fibaOtherRow{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-top:1px solid #27313a;background:#121820}
 .fibaOtherRow:first-of-type{border-top:0}.fibaOtherRow span{font-size:10px;color:var(--muted)}.fibaOtherRow b{font-size:10px}
 .fibaResultAction{margin-top:12px}
+.fibaMatchdayHero{margin-top:13px;border:1px solid var(--line);background:#0f151d;border-radius:15px;overflow:hidden}
+.fibaMatchdayEyebrow{padding:10px 12px 8px;color:var(--accent2);font-size:9px;font-weight:950;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #25303b}
+.fibaMatchupGrid{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr);align-items:start;gap:7px;padding:14px 10px 12px}
+.fibaMatchupNation{text-align:center;min-width:0}
+.fibaMatchupNation .nationalFlagMark{margin:0 auto 7px}
+.fibaMatchupNation b{display:block;font-size:13px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fibaMatchupNation small{display:block;color:var(--muted);font-size:9px;line-height:1.45;margin-top:5px}
+.fibaMatchupVs{align-self:center;text-align:center;color:var(--muted);font-weight:950;font-size:12px}
+.fibaMatchContext{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid #25303b;background:#111820}
+.fibaMatchContext>div{padding:9px 6px;text-align:center;border-left:1px solid #25303b;min-width:0}
+.fibaMatchContext>div:first-child{border-left:0}
+.fibaMatchContext b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fibaMatchContext small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.45px;margin-top:3px}
+.fibaMatchContext .accent{color:var(--accent2)}
+
 .olympicHomeWrap{padding-top:14px}
 .olympicBroadcast .broadcastSide .nationalFlagMark.heroFlag{margin:0 auto 8px}
 .olympicBroadcast .broadcastVs{font-size:13px}
@@ -2837,7 +2852,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.92 Olympic All-Tournament Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.93 Qualification Matchday Presentation</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2855,7 +2870,10 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.92 CHANGE TRACK
+// v0.1.49.77.5.5.5.93 CHANGE TRACK
+
+// Qualification Matchday Presentation: active international fixtures now show live world/regional rank,
+// qualification record, group position/points, stage, matchday and home/away context using existing game state.
 // Base: Claude-supplied v57 derivative (2026-09-12).
 // Retained from supplied fix: measured growth maintenance hook, offseason pruning,
 // one-time load repair and OLYMPICS phase handler.
@@ -5319,7 +5337,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.92
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.93
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7764,7 +7782,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.92 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.93 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8116,7 +8134,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.92 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.93 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -16980,7 +16998,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.92 Olympic All-Tournament Integrity",ENGINE_VERSION="E2.26-PROD142";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.93 Qualification Matchday Presentation",ENGINE_VERSION="E2.26-PROD143";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20752,6 +20770,27 @@ function fibaHomeHtml(){
     extraClass:"internationalCourtside"
   });
 }
+function fibaQualificationRoundLabel(){
+  const round=String(G.nationalQualification?.round||"").replaceAll("_"," ");
+  return round?round.replace(/\b\w/g,c=>c.toUpperCase()):"Qualification";
+}
+function fibaQualificationTeamContext(code){
+  const team=fibaNationByCode(code)||nat(code);
+  const group=currentQualificationGroup(G,code);
+  const table=group?qualificationTable(G,group.id):[];
+  const standing=G.nationalQualification?.standings?.[code];
+  const place=table.findIndex(x=>x.code===code)+1;
+  return{world:nationalWorldRank(code),regional:nationalRegionalRank(code),region:team?.region||"Region",
+    group:group?.label||group?.id||"Qualification",place:place||null,w:+standing?.w||0,l:+standing?.l||0,
+    gp:+standing?.gp||0,points:+standing?.points||0};
+}
+function fibaQualificationMatchupHtml(fixture,matchday,total){
+  if(!fixture)return `<div class="fibaMatchdayHero"><div class="fibaMatchdayEyebrow">Match Context</div><div class="fibaMatchupGrid"><div></div><div class="fibaMatchupVs">—</div><div></div></div><div class="fibaMatchContext"><div><b>No fixture</b><small>Your Nation</small></div><div><b>${fibaQualificationRoundLabel()}</b><small>Stage</small></div><div><b>${matchday}/${total}</b><small>Window</small></div></div></div>`;
+  const a=fibaQualificationTeamContext(fixture.a),b=fibaQualificationTeamContext(fixture.b);
+  const team=(code,c)=>`<div class="fibaMatchupNation">${nationalFlagMark(code,"heroFlag")}<b>${fibaNationName(code)}</b><small>World #${c.world||"—"} · ${c.region} #${c.regional||"—"}<br>${c.gp?`${ordinal(c.place)} · ${c.w}–${c.l} · ${c.points} pts`:"Qualification record 0–0"}</small></div>`;
+  const groupLabel=a.group===b.group?a.group:"Qualification";
+  return `<div class="fibaMatchdayHero"><div class="fibaMatchdayEyebrow">Your Fixture · ${fixture.a===G.userNationalGM?.nationCode?"Home":"Away"}</div><div class="fibaMatchupGrid">${team(fixture.a,a)}<div class="fibaMatchupVs">VS</div>${team(fixture.b,b)}</div><div class="fibaMatchContext"><div><b>${groupLabel}</b><small>Group</small></div><div><b class="accent">${fibaQualificationRoundLabel()}</b><small>Stage</small></div><div><b>${matchday}/${total}</b><small>Matchday</small></div></div></div>`;
+}
 function openFibaWindow(){show('fibaWindow');renderFibaWindow()}
 
 function fibaNationByCode(code){return(G.nationalTeams||[]).find(n=>n.code===code)||null}
@@ -20850,7 +20889,7 @@ function renderFibaWindow(){
     return;
   }
 
-  $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>${gameYearForSeason(G.season)} World Cup Qualification</b><small>International Matchday</small></div><div class="allStarBody"><h3>Matchday ${nextMd} of ${total}</h3><p>Your club schedule is paused. Complete your national team fixture before returning to league action.</p>${fixture?`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>${nationalFlagLabel(fixture.a,fibaNationName(fixture.a))}</b><span>vs</span><b>${nationalFlagLabel(fixture.b,fibaNationName(fixture.b))}</b></div></div>`:`<div class="allStarMatch"><div class="allStarMatchLabel">Your Fixture</div><div class="allStarTeams"><b>None scheduled</b></div></div>`}</div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Play Matchday ${nextMd}</button></div>`;
+  $("#fibaWindowHost").innerHTML=`<div class="allStarHero"><div class="allStarHeroTop"><b>${gameYearForSeason(G.season)} World Cup Qualification</b><small>International Matchday</small></div><div class="allStarBody"><h3>Matchday ${nextMd} of ${total}</h3><p>Your club schedule is paused. Complete your national team fixture before returning to league action.</p>${fibaQualificationMatchupHtml(fixture,nextMd,total)}</div></div><div class="allStarAction"><button id="playFibaMd" class="primaryProgress">Play Matchday ${nextMd}</button></div>`;
 
   $("#playFibaMd").onclick=async()=>{
     const r=advanceQualificationWindowEvent(G);
