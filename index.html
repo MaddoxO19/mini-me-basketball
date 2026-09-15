@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.93 Qualification Matchday Presentation</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.94 Postseason Bracket Beta</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -436,6 +436,22 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .fibaMatchContext b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .fibaMatchContext small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase;letter-spacing:.45px;margin-top:3px}
 .fibaMatchContext .accent{color:var(--accent2)}
+.postBracketIntro{margin:0 0 12px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(135deg,#111923,#0d1218);padding:14px}
+.postBracketIntro .eyebrow{color:var(--accent2);font-size:9px;font-weight:950;letter-spacing:1px}.postBracketIntro h3{margin:5px 0 4px;font-size:21px}.postBracketIntro p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.postBracketConfTabs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.postBracketConfTabs button{padding:10px;border:1px solid var(--line);border-radius:11px;background:#0e141b;color:var(--muted);font-weight:900}.postBracketConfTabs button.active{border-color:var(--accent);color:var(--accent2)}
+.postBracketViewport{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0 10px;scroll-snap-type:x proximity}
+.postBracketTrack{display:grid;grid-template-columns:210px 210px 210px 210px;gap:14px;min-width:882px;align-items:start}
+.postBracketCol{scroll-snap-align:start;min-width:0}.postBracketColTitle{height:30px;display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.7px}
+.postBracketSeries{border:1px solid var(--line);border-radius:12px;background:#0e141b;overflow:hidden;margin-bottom:10px;position:relative}
+.postBracketSeries.userSeries{box-shadow:inset 3px 0 0 var(--accent);border-color:#4b402b}
+.postBracketSeries.complete{background:#101820}.postBracketSeriesHead{padding:6px 9px;border-bottom:1px solid #25303b;display:flex;justify-content:space-between;gap:6px;font-size:8px;color:var(--muted);text-transform:uppercase}
+.postBracketTeam{display:grid;grid-template-columns:20px 24px minmax(0,1fr) 22px;gap:5px;align-items:center;padding:8px;border-bottom:1px solid #222b35}.postBracketTeam:last-child{border-bottom:0}
+.postBracketTeam .seed{font-size:8px;color:var(--muted);font-weight:900}.postBracketTeam .teamMiniCrest{width:22px;height:26px}.postBracketTeam b{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.postBracketTeam strong{font-size:11px;text-align:right}.postBracketTeam.winner b,.postBracketTeam.winner strong{color:var(--accent2)}
+.postBracketTbd{border:1px dashed var(--line);border-radius:12px;padding:15px 9px;margin-bottom:10px;color:var(--muted);font-size:9px;text-align:center}
+.postBracketHint{font-size:9px;color:var(--muted);margin:2px 0 8px}.postBracketHint b{color:var(--accent2)}
+.postBracketFinals{margin-top:10px}.postBracketChampion{border:1px solid var(--accent);border-radius:14px;padding:13px;background:#17150f;text-align:center}.postBracketChampion small{display:block;color:var(--accent2);font-size:8px;font-weight:950;letter-spacing:1px}.postBracketChampion b{display:block;font-size:15px;margin-top:6px}
+
 
 .olympicHomeWrap{padding-top:14px}
 .olympicBroadcast .broadcastSide .nationalFlagMark.heroFlag{margin:0 auto 8px}
@@ -2852,7 +2868,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.93 Qualification Matchday Presentation</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.94 Postseason Bracket Beta</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2870,7 +2886,10 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.93 CHANGE TRACK
+// v0.1.49.77.5.5.5.94 CHANGE TRACK
+// Postseason Bracket Beta: added a mobile-first horizontal bracket across Play-In, First Round,
+// Conference Semifinals and Conference Finals, with League Finals/champion below.
+// Existing round tabs, series drilldowns and box-score history are preserved as the detailed view.
 
 // Qualification Matchday Presentation: active international fixtures now show live world/regional rank,
 // qualification record, group position/points, stage, matchday and home/away context using existing game state.
@@ -5337,7 +5356,7 @@ function historyCoverageReconciliation(G){
 }
 
 
-// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.93
+// RELEASE IDENTITY LAYER — v0.1.49.77.5.5.5.94
 // Source identities remain developer-only calibration keys. Public player names are
 // deliberately unrelated fictional identities rather than one-letter or phonetic
 // variations of real-world names. The mapping is deterministic so a source player
@@ -7782,7 +7801,7 @@ function draftPickTradeValue(G, pickAsset) {
 
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.93 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
+// v0.1.49.77.5.5.5.94 — AI FRONT OFFICE / SUBJECTIVE TRADE MARKET
 // Every club still shares one objective asset-value spine, but AI clubs now
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
@@ -8134,7 +8153,7 @@ function verifiedContract(schedule,guaranteedM=null,note=null){
 }
 
 // ---------------------------------------------------------------------
-// v0.1.49.77.5.5.5.93 — supplied Basketball-Reference contract reference.
+// v0.1.49.77.5.5.5.94 — supplied Basketball-Reference contract reference.
 // 482 active standard-player contracts plus all 30 team payroll schedules.
 // This is reference/calibration data. Public-facing player identities remain
 // fictionalised; source names exist only in developer/audit fields.
@@ -16998,9 +17017,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.93 Qualification Matchday Presentation",ENGINE_VERSION="E2.26-PROD143";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.94 Postseason Bracket Beta",ENGINE_VERSION="E2.26-PROD144";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"playin",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -23402,14 +23421,54 @@ function playoffStageHistory(key){
   const conf=ui.postConference||"East",rows=series.filter(s=>s.conference===conf);
   return `<div class="postConfTabs"><button data-postconf="East" class="${conf==="East"?"active":""}">Eastern Conference</button><button data-postconf="West" class="${conf==="West"?"active":""}">Western Conference</button></div><div class="seriesGrid">${rows.map(seriesCard).join("")}</div>`;
 }
+function bracketSeriesFor(conf,key){
+  const p=currentPlayoffsState();
+  if(!p?.series)return[];
+  return p.series.filter(s=>postseasonStageKey(s.stage)===key&&(key==="finals"||s.conference===conf));
+}
+function postseasonBracketSeriesHtml(s,label){
+  if(!s)return `<div class="postBracketTbd">${label}<br><b>Matchup TBD</b></div>`;
+  const a=c(s.teamAId),b=c(s.teamBId),winner=s.winnerClubId,userId=G.userClubGM?.clubId;
+  const status=s.complete?"FINAL":s.winsA===s.winsB?`TIED ${s.winsA}–${s.winsB}`:s.winsA>s.winsB?`${s.winsA}–${s.winsB}`:`${s.winsB}–${s.winsA}`;
+  const team=(club,seed,wins,id)=>`<div class="postBracketTeam ${winner===id?"winner":""}"><span class="seed">#${seed||"—"}</span>${club?teamMark(club,"teamMiniCrest"):""}<b>${club?.name||"TBD"}</b><strong>${s.complete||s.gameNo?wins:""}</strong></div>`;
+  return `<div class="postBracketSeries ${s.complete?"complete":""} ${(s.teamAId===userId||s.teamBId===userId)?"userSeries":""}" data-seriesid="${s.id}"><div class="postBracketSeriesHead"><span>${label}</span><b>${status}</b></div>${team(a,s.seedA,s.winsA,s.teamAId)}${team(b,s.seedB,s.winsB,s.teamBId)}</div>`;
+}
+function playInBracketColumn(conf){
+  const p=currentPlayInState(),entries=[...(p?.initial||[]).filter(e=>e.conference===conf),...(p?.finals||[]).filter(e=>e.conference===conf)];
+  if(!entries.length)return `<div class="postBracketTbd">Play-In<br><b>Seeds 7–10</b></div>`;
+  return entries.map((e,i)=>{
+    const g=e.gameId?gameById(e.gameId):null,a=c(e.teamAId),b=c(e.teamBId),winner=g?.winnerClubId;
+    const label=e.type==="7v8"?"7 vs 8":e.type==="9v10"?"9 vs 10":"8th Seed Game";
+    const sa=g?(g.homeClubId===e.teamAId?g.homeScore:g.awayScore):"",sb=g?(g.homeClubId===e.teamBId?g.homeScore:g.awayScore):"";
+    const fake={id:`pi-${conf}-${i}`,teamAId:e.teamAId,teamBId:e.teamBId,seedA:e.seedA,seedB:e.seedB,winsA:sa,winsB:sb,complete:e.complete,winnerClubId:winner,gameNo:e.complete?1:0};
+    return postseasonBracketSeriesHtml(fake,label).replace(` data-seriesid="${fake.id}"`,"");
+  }).join("");
+}
+function postseasonBracketHtml(){
+  const conf=ui.postConference||"East",r1=bracketSeriesFor(conf,"r1"),sf=bracketSeriesFor(conf,"sf"),cf=bracketSeriesFor(conf,"cf"),finals=bracketSeriesFor(conf,"finals");
+  const userId=G.userClubGM?.clubId;
+  const champion=G.champion?.id?G.champion:(G.championClubId?c(G.championClubId):null);
+  const columns=[
+    ["Play-In",playInBracketColumn(conf)],
+    ["First Round",r1.length?r1.map((s,i)=>postseasonBracketSeriesHtml(s,`Series ${i+1}`)).join(""):`<div class="postBracketTbd">First Round<br><b>Awaiting Play-In</b></div>`],
+    ["Conference Semifinals",sf.length?sf.map((s,i)=>postseasonBracketSeriesHtml(s,`Semifinal ${i+1}`)).join(""):`<div class="postBracketTbd">Conference Semifinals<br><b>Winners advance here</b></div>`],
+    ["Conference Finals",cf.length?cf.map(s=>postseasonBracketSeriesHtml(s,"Conference Final")).join(""):`<div class="postBracketTbd">Conference Final<br><b>Matchup TBD</b></div>`]
+  ];
+  const finalsHtml=finals.length?`<div class="sectionTitle">League Finals</div><div class="postBracketFinals">${finals.map(s=>postseasonBracketSeriesHtml(s,"League Finals")).join("")}</div>`:"";
+  const champHtml=champion?`<div class="postBracketChampion"><small>LEAGUE CHAMPION</small><b>${teamIdentityInline(champion)}</b></div>`:"";
+  return `<div class="postBracketIntro"><div class="eyebrow">H³O POSTSEASON</div><h3>${basketballSeasonLabel(G.season)} Bracket</h3><p>Follow the Play-In through the conference rounds and into the League Finals. Select a playoff series for its game history and box scores.</p></div>
+    <div class="postBracketConfTabs"><button data-postconf="East" class="${conf==="East"?"active":""}">Eastern</button><button data-postconf="West" class="${conf==="West"?"active":""}">Western</button></div>
+    <div class="postBracketHint"><b>Swipe horizontally</b> to follow the bracket through each round.</div>
+    <div class="postBracketViewport"><div class="postBracketTrack">${columns.map(([title,body])=>`<div class="postBracketCol"><div class="postBracketColTitle"><span>${title}</span><span>›</span></div>${body}</div>`).join("")}</div></div>${finalsHtml}${champHtml}`;
+}
 function postseasonPage(){
-  const tabs=[["playin","Play-In"],["r1","Round 1"],["sf","Conf. Semis"],["cf","Conf. Finals"],["finals","Finals"]],st=userPostseasonState();
+  const tabs=[["bracket","Bracket"],["playin","Play-In"],["r1","Round 1"],["sf","Conf. Semis"],["cf","Conf. Finals"],["finals","Finals"]],st=userPostseasonState();
   const currentPo=currentPlayoffsState();
   const currentStage=G.phase==="PLAY_IN"?"Play-In":G.phase==="PLAYOFFS"?postseasonRoundLabel(currentPo?.round||"R1"):G.phase==="CHAMPION"?"Season Complete":"Postseason";
   const statusText=st.alive?(st.qualified?`#${st.seed} seed secured`:"Active"):"Eliminated";
   const summary=(G.phase==="PLAY_IN"||G.phase==="PLAYOFFS"||G.phase==="CHAMPION")?eventSummaryCard({label:"League Postseason",title:G.phase==="CHAMPION"?`${G.champion?.name||"Champion"} are League Champions`:st.alive?`${me().name} · ${statusText}`:`${me().name} eliminated`,subtitle:st.alive?(st.qualified?`Your Play-In is complete. The league is finalising the remaining postseason field.`:`Follow your series game by game or review the full bracket below.`):`Your postseason ended in ${st.eliminatedStage||"the postseason"}. The remaining bracket can still be followed by round.`,metrics:[{label:"Your Seed",value:st.seed?`#${st.seed}`:"—"},{label:"Your Status",value:statusText},{label:"Current Stage",value:currentStage}]}):"";
   const nav=`<div class="postStageTabs globalLevel2Tabs">${tabs.map(([k,l])=>`<button data-poststage="${k}" class="${ui.postseasonStage===k?"active":""}">${l}</button>`).join("")}</div>`;
-  return summary+nav+(ui.postseasonStage==="playin"?playInHistory():playoffStageHistory(ui.postseasonStage));
+  return summary+nav+(ui.postseasonStage==="bracket"?postseasonBracketHtml():ui.postseasonStage==="playin"?playInHistory():playoffStageHistory(ui.postseasonStage));
 }
 
 function leagueInjuries(){
@@ -25161,7 +25220,7 @@ if($("#continueOlympicRecap"))$("#continueOlympicRecap").onclick=()=>{G.olympicR
 if($("#continueRetirementReview"))$("#continueRetirementReview").onclick=()=>{if(G.retirementReviewPending)G.retirementReviewPending.acknowledged=true;save();render()};
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
-if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;const st=userPostseasonState();if(G.phase==="PLAY_IN")ui.postseasonStage="playin";else if(st.series)ui.postseasonStage=postseasonStageKey(st.series.stage);render()};
+if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;ui.postseasonStage="bracket";render()};
 $$("[data-poststage]").forEach(b=>b.onclick=()=>{ui.postseasonStage=b.dataset.poststage;ui.postSeriesId=null;render()});
 $$("[data-postconf]").forEach(b=>b.onclick=()=>{ui.postConference=b.dataset.postconf;ui.postSeriesId=null;render()});
 $$("[data-seriesid]").forEach(b=>b.onclick=()=>{ui.postSeriesId=b.dataset.seriesid;render()});
