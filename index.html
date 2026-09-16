@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.99 Awards Presentation Stability</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.100 National Pipeline Health</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2868,7 +2868,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.99 Awards Presentation Stability</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.100 National Pipeline Health</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2886,8 +2886,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.99 CHANGE TRACK
-// Awards Presentation Stability: award-to-award navigation no longer serialises the
+// v0.1.49.77.5.5.5.100 CHANGE TRACK
+// National Pipeline Health: national-team depth now considers age distribution as well
+// as raw headcount. Bounded youth regeneration fills only genuine U23/U26 shortages and
+// uses restrained OVR/POT ceilings so the safeguard cannot manufacture superstar classes.
+// International Overview exposes the live candidate-pool age profile for long-career QA.
+//
+// v0.1.49.77.5.5.5.99 Awards Presentation Stability: award-to-award navigation no longer serialises the
 // entire mature career on every ballot. A tiny slot-scoped local checkpoint records
 // presentation progress, survives Safari reloads, and is cleared after the completed
 // presentation is durably saved. The award overlay is refreshed in place rather than
@@ -11732,6 +11737,55 @@ function nationalRegionalRank(code){
   const i=ranked.findIndex(n=>n.code===code);return i>=0?i+1:null;
 }
 function ordinal(n){if(!n)return"—";const s=["th","st","nd","rd"],v=n%100;return n+(s[(v-20)%10]||s[v]||s[0]);}
+function nationalPipelineTargets(nation){
+  const tier=Math.max(1,+nation?.tier||4);
+  if(tier===1)return{u23:2,u26:5,potCap:86,u23Ovr:[61,74],u26Ovr:[63,76]};
+  if(tier===2)return{u23:2,u26:4,potCap:82,u23Ovr:[59,72],u26Ovr:[61,74]};
+  if(tier===3)return{u23:1,u26:3,potCap:78,u23Ovr:[57,69],u26Ovr:[59,71]};
+  return{u23:1,u26:2,potCap:75,u23Ovr:[55,66],u26Ovr:[57,68]};
+}
+function nationalPipelineProfile(G,nationCode){
+  const candidates=nationalCandidates(G,nationCode).filter(p=>p.nationalStatus!=="Opted Out");
+  const healthy=candidates.filter(p=>!p.injured);
+  const u23=healthy.filter(p=>(+p.age||99)<=22);
+  const u26=healthy.filter(p=>(+p.age||99)<=25);
+  const sorted=[...healthy].sort((a,b)=>(+b.ovr||0)-(+a.ovr||0)||(+a.age||99)-(+b.age||99));
+  const top12=sorted.slice(0,12);
+  const avgAge=top12.length?top12.reduce((s,p)=>s+(+p.age||0),0)/top12.length:0;
+  const bestU23=[...u23].sort((a,b)=>(+b.ovr||0)-(+a.ovr||0))[0]||null;
+  return{total:candidates.length,healthy:healthy.length,u23:u23.length,u26:u26.length,avgAge,bestU23,bestU23Ovr:bestU23?.ovr||0};
+}
+function ensureNationalPipeline(G,nationCode){
+  const nation=G.nationalTeams.find(n=>n.code===nationCode);
+  if(!nation)return 0;
+  const target=nationalPipelineTargets(nation);
+  let created=0,guard=0;
+  const createYouth=(ageRange,ovrRange,label)=>{
+    const age=rand(ageRange[0],ageRange[1]),base=rand(ovrRange[0],ovrRange[1]);
+    const p=makePlayer({age,ovr:base,nationality:nationCode,origin:"International Pro"});
+    p.potential=Math.max(p.ovr,Math.min(target.potCap,p.ovr+rand(3,10)));
+    p.peakOvr=Math.max(+p.peakOvr||0,p.ovr);
+    p.experienceYears=0;p.professionalExperienceYears=Math.max(1,p.age-rand(18,21));
+    p.serviceHistorySource="National pipeline professional";
+    p.entryPath="National Pipeline";p.nationalPipelineGenerated=true;p.nationalPipelineSeason=G.season;
+    const affiliation=externalLeagueForPlayer(p,nation,`${nationCode}|pipeline|${G.season}|${label}|${created}`,false);
+    applyExternalProfessionalStatus(p,affiliation,rand(1,3),"National-team pipeline professional");
+    G.externalProfessionals=G.externalProfessionals||[];G.externalProfessionals.push(p);created++;
+  };
+  // Hard cap per invocation prevents a depleted nation from receiving an artificial class.
+  while(guard<4){
+    const profile=nationalPipelineProfile(G,nationCode);
+    if(profile.u23<target.u23){createYouth([19,22],target.u23Ovr,"U23");guard++;continue;}
+    if(profile.u26<target.u26){createYouth([23,25],target.u26Ovr,"U26");guard++;continue;}
+    break;
+  }
+  if(created){
+    G.nationalPipelineAudit=G.nationalPipelineAudit||{};
+    G.nationalPipelineAudit[nationCode]={season:G.season,created,profile:nationalPipelineProfile(G,nationCode),targets:{u23:target.u23,u26:target.u26}};
+    logEvent(G,`${nation.name} national pipeline generated ${created} developmental professional${created===1?"":"s"} to restore age-depth balance.`);
+  }
+  return created;
+}
 function ensureNationalDepth(G, nationCode, minHealthy=12) {
   const nation=G.nationalTeams.find(n=>n.code===nationCode);
   if(!nation) return;
@@ -11748,6 +11802,9 @@ function ensureNationalDepth(G, nationCode, minHealthy=12) {
     G.externalProfessionals=G.externalProfessionals||[];
     G.externalProfessionals.push(p);healthy.push(p);guard++;
   }
+  // Headcount alone is not enough in a 20–30 season career. Once senior depth is
+  // secure, repair only genuine youth shortages with lower-ceiling developmental pros.
+  ensureNationalPipeline(G,nationCode);
 }
 function prepareNationalRosters(G, teamCodes=null) {
   const wanted=teamCodes ? new Set(teamCodes) : null;
@@ -17129,7 +17186,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.99 Awards Presentation Stability",ENGINE_VERSION="E2.26-PROD149";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.100 National Pipeline Health",ENGINE_VERSION="E2.26-PROD150";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -24508,6 +24565,8 @@ function internationalOverview(n){
   const nextText=next?`${next.home?"vs":"@"} ${nextOpp?.name||next.opp}`:"No fixture scheduled";
   const nextSub=next?.label||"Awaiting next international window";
   const legacyText=wcTitles||olyGolds?`${wcTitles} World Cup · ${olyGolds} Olympic gold`:(wcMedals||olympicMedals?`${wcMedals+olympicMedals} major medal${wcMedals+olympicMedals===1?"":"s"}`:"Building first major medal");
+  const pipeline=nationalPipelineProfile(G,n.code),pipelineTarget=nationalPipelineTargets(n);
+  const pipelineState=(pipeline.u23>=pipelineTarget.u23&&pipeline.u26>=pipelineTarget.u26)?"Healthy":"Developing";
   return `<div class="intlNationHubHero">
     <div class="intlCommandHero streamlined">
       <div class="intlCommandIdentity"><div class="intlCommandFlag">${nationalFlagMark(n.code,"heroFlag")}</div><div><div class="eyebrow">${n.region} · National Team</div><h2>${n.name}</h2><p>${campaign}</p></div></div>
@@ -24520,6 +24579,13 @@ function internationalOverview(n){
     <div class="intlSnapshotCard"><small>Qualification Position</small><b>${qualText}</b><span>${qpos?.row?`${qpos.row.w||0}–${qpos.row.l||0} · ${qpos.row.points||0} points`:"Current qualification pathway"}</span></div>
     <div class="intlSnapshotCard"><small>Next International Game</small><b>${nextText}</b><span>${nextSub}</span></div>
     <div class="intlSnapshotCard"><small>Program Legacy</small><b>${legacyText}</b><span>${wcMedals} World Cup medal${wcMedals===1?"":"s"} · ${olympicMedals} Olympic medal${olympicMedals===1?"":"s"}</span></div>
+  </div>
+  <div class="sectionTitle">Player Pipeline</div>
+  <div class="intlProgramSnapshot">
+    <div class="intlSnapshotCard"><small>Eligible Pool</small><b>${pipeline.healthy}</b><span>${pipeline.total} total candidates · injuries excluded from active depth</span></div>
+    <div class="intlSnapshotCard"><small>Under 23</small><b>${pipeline.u23}</b><span>Target ${pipelineTarget.u23} · developmental succession</span></div>
+    <div class="intlSnapshotCard"><small>Under 26</small><b>${pipeline.u26}</b><span>Target ${pipelineTarget.u26} · next-cycle player base</span></div>
+    <div class="intlSnapshotCard"><small>Pipeline Health</small><b>${pipelineState}</b><span>Top-12 average age ${pipeline.avgAge?pipeline.avgAge.toFixed(1):"—"}${pipeline.bestU23?` · best U23 ${pipeline.bestU23.name} ${pipeline.bestU23.ovr} OVR`:""}</span></div>
   </div>`;
 }
 
