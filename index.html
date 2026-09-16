@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.97 Retirement Pathway Balance</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.99 Awards Presentation Stability</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2868,7 +2868,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.97 Retirement Pathway Balance</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.99 Awards Presentation Stability</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2886,7 +2886,15 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.97 CHANGE TRACK
+// v0.1.49.77.5.5.5.99 CHANGE TRACK
+// Awards Presentation Stability: award-to-award navigation no longer serialises the
+// entire mature career on every ballot. A tiny slot-scoped local checkpoint records
+// presentation progress, survives Safari reloads, and is cleared after the completed
+// presentation is durably saved. The award overlay is refreshed in place rather than
+// rebuilding the whole game screen between ballots.
+// Olympic Bracket Integrity: Olympic quarterfinal seeding now preserves the existing
+// strongest-versus-weakest preference while avoiding group-stage rematches wherever
+// a valid draw exists. Live pre-quarterfinal saves are repaired safely on load.
 // Postseason Bracket Beta: added a mobile-first horizontal bracket across Play-In, First Round,
 // Conference Semifinals and Conference Finals, with League Finals/champion below.
 // Existing round tabs, series drilldowns and box-score history are preserved as the detailed view.
@@ -12233,13 +12241,70 @@ function olympicStageLabel(stage){
 function olympicRecordGame(G,live,a,b,stage){
   const tmp=[];const g=worldCupGame(G,a,b,stage,live.tournamentStats,tmp,"olympics");g.competition="olympics";g.olympicYear=live.year;live.games.push(g);return g;
 }
+function olympicQuarterfinalPairings(live){
+  const tables=live.groupTables&&Object.keys(live.groupTables).length
+    ?live.groupTables
+    :Object.fromEntries((live.groups||[]).map(gr=>[gr.id,wcTableSort(live.groupState?.[gr.id]||{})]));
+  const direct=(live.groups||[]).flatMap(gr=>(tables[gr.id]||[]).slice(0,2));
+  const thirds=(live.groups||[]).map(gr=>(tables[gr.id]||[])[2]).filter(Boolean)
+    .sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf).slice(0,2);
+  const ranked=[...direct,...thirds]
+    .sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf);
+  const eight=ranked.map(x=>x.code);
+  if(eight.length<8)return[];
+
+  // Keep the established bracket halves: 1/4 on one side and 2/3 on the other,
+  // with seeds 5-8 assigned as opponents. Search the 24 possible lower-seed
+  // assignments and choose the closest match to the original 1v8, 4v5, 2v7,
+  // 3v6 structure that does not immediately repeat a group-stage matchup.
+  const groupByCode=new Map();
+  for(const gr of live.groups||[])for(const code of gr.teamCodes||[])groupByCode.set(code,gr.id);
+  const seedByCode=new Map(eight.map((code,i)=>[code,i+1]));
+  const top=[eight[0],eight[3],eight[1],eight[2]];
+  const lower=[eight[4],eight[5],eight[6],eight[7]];
+  const desiredOpponentSeed=[8,5,7,6];
+  const perms=[];
+  const permute=(arr,prefix=[])=>{
+    if(!arr.length){perms.push(prefix);return;}
+    for(let i=0;i<arr.length;i++)permute([...arr.slice(0,i),...arr.slice(i+1)],[...prefix,arr[i]]);
+  };
+  permute(lower);
+  let best=null,bestScore=Infinity,bestConflicts=Infinity;
+  for(const opp of perms){
+    let conflicts=0,displacement=0;
+    for(let i=0;i<4;i++){
+      if(groupByCode.get(top[i])===groupByCode.get(opp[i]))conflicts++;
+      displacement+=Math.abs((seedByCode.get(opp[i])||99)-desiredOpponentSeed[i]);
+    }
+    const score=conflicts*1000+displacement;
+    if(score<bestScore){bestScore=score;bestConflicts=conflicts;best=opp;}
+  }
+  const pairs=top.map((code,i)=>[code,best?.[i]||lower[i]]);
+  live.qfIntegrity={
+    version:"OQF1",
+    sameGroupRematches:bestConflicts,
+    seedOrder:[...eight],
+    repaired:bestConflicts===0
+  };
+  return pairs;
+}
 function olympicBuildQuarterfinals(live){
   live.groupTables=Object.fromEntries(live.groups.map(gr=>[gr.id,wcTableSort(live.groupState[gr.id])]));
-  const direct=live.groups.flatMap(gr=>live.groupTables[gr.id].slice(0,2));
-  const thirds=live.groups.map(gr=>live.groupTables[gr.id][2]).filter(Boolean).sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf).slice(0,2);
-  const eight=[...direct,...thirds].sort((a,b)=>b.points-a.points||(b.pf-b.pa)-(a.pf-a.pa)||b.pf-a.pf).map(x=>x.code);
-  live.qfPairs=[[eight[0],eight[7]],[eight[3],eight[4]],[eight[1],eight[6]],[eight[2],eight[5]]];
+  live.qfPairs=olympicQuarterfinalPairings(live);
   live.stage="OLYMPIC_QUARTERFINAL";live.eventIndex=0;
+}
+function repairLiveOlympicQuarterfinalIntegrity(G){
+  const live=G?.olympicLive;
+  if(!live||live.complete||live.stage!=="OLYMPIC_QUARTERFINAL")return false;
+  if((live.games||[]).some(g=>g.stage==="OLYMPIC_QUARTERFINAL"))return false;
+  const next=olympicQuarterfinalPairings(live);
+  if(next.length!==4)return false;
+  const prev=Array.isArray(live.qfPairs)?live.qfPairs:[];
+  if(JSON.stringify(prev)===JSON.stringify(next))return false;
+  live.qfPairs=next;
+  if(G.olympics?.status==="LIVE"&&+G.olympics.year===+live.year)G.olympics.stage=live.stage;
+  logEvent(G,`${live.year} Olympic quarterfinal draw repaired to prevent an avoidable group-stage rematch.`);
+  return true;
 }
 function olympicFinishBonusMap(games,championCode,runnerUpCode,bronzeCode){
   const bonus=new Map(),set=(code,value)=>{if(code)bonus.set(code,Math.max(value,bonus.get(code)||0));};
@@ -17064,7 +17129,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.97 Retirement Pathway Balance",ENGINE_VERSION="E2.26-PROD147";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.99 Awards Presentation Stability",ENGINE_VERSION="E2.26-PROD149";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17878,6 +17943,42 @@ function saveMeta(){
   return{gmName:G?.gmName||"GM",clubName:club?.name||"Unknown Club",clubId:club?.id||null,season:G?.season||1,phase:G?.phase||"Career",createdAt:G?.createdAt||Date.now()};
 }
 let _saveWriteChain=Promise.resolve(true),_saveWriteSerial=0;
+
+// v99: Awards are presentation state, not a reason to stringify a 20-30 season
+// career five times in quick succession. Keep only the tiny ballot cursor outside
+// the main save so Safari can resume the exact award after a reload or tab eviction.
+const AWARD_PRESENTATION_CHECKPOINT_VERSION="APC1";
+function awardPresentationCheckpointKey(slot=activeSlot){return slot?`H3O_BASKETBALL_AWARDS_${slot}`:null}
+function readAwardPresentationCheckpoint(slot=activeSlot){
+  const key=awardPresentationCheckpointKey(slot);if(!key)return null;
+  try{const raw=localStorage.getItem(key);if(!raw)return null;const cp=JSON.parse(raw);return cp?.version===AWARD_PRESENTATION_CHECKPOINT_VERSION?cp:null}catch(_){return null}
+}
+function writeAwardPresentationCheckpoint(n,{complete=false}={}){
+  const key=awardPresentationCheckpointKey();if(!key||!n||n.type!=="award_results")return false;
+  const cp={version:AWARD_PRESENTATION_CHECKPOINT_VERSION,slot:activeSlot,season:+n.season||+G?.season||0,index:+n.index||0,awardKeys:[...(n.awardKeys||[])],complete:!!complete,updatedAt:Date.now()};
+  try{localStorage.setItem(key,JSON.stringify(cp));return true}catch(_){return false}
+}
+function clearAwardPresentationCheckpoint(slot=activeSlot){const key=awardPresentationCheckpointKey(slot);if(!key)return;try{localStorage.removeItem(key)}catch(_){}}
+function restoreAwardPresentationCheckpoint(state,slot=activeSlot){
+  if(!state||!slot)return false;const cp=readAwardPresentationCheckpoint(slot);if(!cp)return false;
+  const n=state.newsFlashPending;
+  if(!n||n.type!=="award_results"||+n.season!==+cp.season){
+    if(+state.season>+cp.season||state.awardVotingPresentationSeen?.[`S${cp.season}`])clearAwardPresentationCheckpoint(slot);
+    return false;
+  }
+  if(cp.complete){
+    state.awardVotingPresentationSeen=state.awardVotingPresentationSeen||{};
+    state.awardVotingPresentationSeen[`S${n.season}`]=true;state.newsFlashPending=null;return true;
+  }
+  const keys=n.awardKeys||[];n.index=Math.max(0,Math.min(+cp.index||0,Math.max(0,keys.length-1)));return true;
+}
+function refreshAwardPresentationOnly(){
+  const n=G?.newsFlashPending;if(!n||n.type!=="award_results"){render();return}
+  const overlay=document.querySelector(".newsFlashOverlay");
+  if(!overlay){render();return}
+  overlay.outerHTML=awardVotingPopupHtml(n);bind();
+}
+
 async function save(silent=true){
   if(!G||!activeSlot)return false;
   reportCareerIntegrity("pre-save");
@@ -17922,6 +18023,7 @@ async function loadSlot(slot){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
+    restoreAwardPresentationCheckpoint(G,slot);
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
@@ -17933,6 +18035,7 @@ async function loadSlot(slot){
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
+    G.runtimeMeta.olympicQuarterfinalIntegrityRepair={version:"OQF1",season:G.season,changed:repairLiveOlympicQuarterfinalIntegrity(G)};
     G.olympicRecapAcknowledgedYears=Array.isArray(G.olympicRecapAcknowledgedYears)?G.olympicRecapAcknowledgedYears:[];
     const latestCompletedOlympics=[...(G.olympicHistory||[])].reverse().find(o=>o?.status==="COMPLETE");
     if(latestCompletedOlympics){
@@ -18089,7 +18192,7 @@ async function renderSaveManager(mode,token=0){
   }).join("");
   $$("[data-loadslot]").forEach(b=>b.onclick=()=>loadSlot(+b.dataset.loadslot));
   $$("[data-newslot]").forEach(b=>b.onclick=()=>beginNewCareerInSlot(+b.dataset.newslot,b.dataset.replace==="1"));
-  $$("[data-deleteslot]").forEach(b=>b.onclick=async()=>{const slot=+b.dataset.deleteslot;if(confirm(`Delete Save Slot ${slot}? This cannot be undone.`)){await removeSlot(slot);renderSaveManager(saveMode)}});
+  $$("[data-deleteslot]").forEach(b=>b.onclick=async()=>{const slot=+b.dataset.deleteslot;if(confirm(`Delete Save Slot ${slot}? This cannot be undone.`)){await removeSlot(slot);clearAwardPresentationCheckpoint(slot);renderSaveManager(saveMode)}});
 }
 async function openSaveManager(mode){
   const token=++_saveManagerOpenToken;
@@ -18105,6 +18208,7 @@ async function openSaveManager(mode){
 async function beginNewCareerInSlot(slot,replace=false){
   if(replace&&!confirm(`Replace Save Slot ${slot} with a new career? The existing career will be deleted.`))return;
   if(replace)await removeSlot(slot);
+  clearAwardPresentationCheckpoint(slot);
   activeSlot=slot;
   setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:makeCareer()};
   show("setup");setStep(1);
@@ -25124,9 +25228,25 @@ function render(){
   }
 prepareRenderState();status();action();const pageHtml=(ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmProfile():ui.page==="gmProfile"?gmProfile():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+newsFlashHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
 function bind(){
-  if($("#awardResultsNext"))$("#awardResultsNext").onclick=()=>{const n=G.newsFlashPending;if(!n||n.type!=="award_results")return;const keys=n.awardKeys||[];if((+n.index||0)<keys.length-1){n.index=(+n.index||0)+1;}else{G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;G.newsFlashPending=null;}save();render()};
-  if($("#closeAwardResults"))$("#closeAwardResults").onclick=()=>{const n=G.newsFlashPending;if(n?.type==="award_results"){G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}G.newsFlashPending=null;save();render()};
-  if($("#openAwardResultsNews"))$("#openAwardResultsNews").onclick=()=>{const n=G.newsFlashPending;if(n?.type==="award_results"){G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}G.newsFlashPending=null;ui.page="news";save();render()};
+  if($("#awardResultsNext"))$("#awardResultsNext").onclick=async()=>{
+    const n=G.newsFlashPending;if(!n||n.type!=="award_results")return;const keys=n.awardKeys||[];
+    if((+n.index||0)<keys.length-1){
+      n.index=(+n.index||0)+1;writeAwardPresentationCheckpoint(n);refreshAwardPresentationOnly();return;
+    }
+    // Record completion first in the lightweight checkpoint. If Safari reloads
+    // during the one final full save, the awards will not restart from ballot one.
+    writeAwardPresentationCheckpoint(n,{complete:true});
+    G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;G.newsFlashPending=null;
+    const ok=await save();if(ok)clearAwardPresentationCheckpoint();render();
+  };
+  if($("#closeAwardResults"))$("#closeAwardResults").onclick=async()=>{
+    const n=G.newsFlashPending;if(n?.type==="award_results"){writeAwardPresentationCheckpoint(n,{complete:true});G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}
+    G.newsFlashPending=null;const ok=await save();if(ok)clearAwardPresentationCheckpoint();render();
+  };
+  if($("#openAwardResultsNews"))$("#openAwardResultsNews").onclick=async()=>{
+    const n=G.newsFlashPending;if(n?.type==="award_results"){writeAwardPresentationCheckpoint(n,{complete:true});G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}
+    G.newsFlashPending=null;ui.page="news";const ok=await save();if(ok)clearAwardPresentationCheckpoint();render();
+  };
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
