@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.100 National Pipeline Health</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.103 Late-Season Clinch Markers</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1708,6 +1708,26 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .standingsClubLink .teamIdentityCompact{pointer-events:none}
 @media (hover:hover){.standingsClubLink:hover{color:var(--accent2)}}
 @media (hover:none),(pointer:coarse){.standingsClubLink:active{color:var(--accent2)}}
+/* v0.1.49.77.5.5.5.102 — standings qualification zones */
+.standingsZoneLegend{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-2px 2px 8px;color:var(--muted);font-size:9px;font-weight:800}
+.standingsZoneLegend span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.standingsZoneLegend i{display:inline-block;width:18px;border-top:2px dashed #6d7a88}
+.standingsZoneLegend i.playoff{border-top-color:var(--accent)}
+.standingsZoneLegend i.playin{border-top-color:#6d7a88}
+.compactStandings tr.standingsCut td{border-top:2px dashed #6d7a88!important}
+.compactStandings tr.standingsCut.playoffCut td{border-top-color:var(--accent)!important}
+.compactStandings tr.standingsCut.playinCut td{border-top-color:#6d7a88!important}
+.standingClinchMarkers{display:inline-flex;align-items:center;gap:3px;margin-left:6px;vertical-align:1px;white-space:nowrap}
+.standingClinchMarkers b{display:inline-flex!important;align-items:center;justify-content:center;min-width:16px;height:16px;padding:0 4px;border:1px solid #5d6875;border-radius:5px;background:#111820;color:#d8dee6;font-size:9px!important;font-weight:950;line-height:1;text-transform:lowercase}
+.standingClinchMarkers b.z{border-color:#8a6726;color:var(--accent2);background:#211a10}
+.standingClinchMarkers b.y{border-color:#66502c;color:#e7c57d}
+.standingClinchMarkers b.x{border-color:#41634c;color:#8fd0a4}
+.standingClinchMarkers b.p{border-color:#50627a;color:#a9c0dc}
+.standingsClinchLegend{display:flex;gap:7px 12px;flex-wrap:wrap;margin:0 2px 9px;padding:8px 9px;border:1px solid var(--line);border-radius:10px;background:#0f151c;color:var(--muted);font-size:9px;line-height:1.3}
+.standingsClinchLegend span{white-space:nowrap}.standingsClinchLegend b{color:var(--accent2);font-size:9px}
+@media(max-width:430px){.standingClinchMarkers{gap:2px;margin-left:4px}.standingClinchMarkers b{min-width:14px;height:15px;padding:0 3px;font-size:8px!important}.standingsClinchLegend{gap:5px 9px}}
+.cupQualificationTag{display:block;color:var(--accent2)!important;font-size:9px!important;font-weight:900;line-height:1.25;margin-top:2px}
+.cupQualificationTag.runner{color:#b9c4d1!important}
 
 
 /* v0.1.33.0 — Historical Depth & Persistence */
@@ -2868,7 +2888,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.100 National Pipeline Health</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.103 Late-Season Clinch Markers</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2886,8 +2906,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
-// v0.1.49.77.5.5.5.100 CHANGE TRACK
-// National Pipeline Health: national-team depth now considers age distribution as well
+// v0.1.49.77.5.5.5.102 CHANGE TRACK
+// - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
+// - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
+// v0.1.49.77.5.5.5.103 — Late-Season Clinch Markers
+// - From approximately game 65 onward, conference standings can show mathematically secured z/y/x/p markers.
+// - z = conference #1 seed; y = division winner; x = guaranteed top-6 postseason; p = guaranteed Play-In (top 10) only.
+// - Clinches use conservative max-win checks so ties are not assumed to be secured before a tiebreak is known.
+// - Competition logic is unchanged; this is a presentation/clarity pass.
+// v0.1.49.77.5.5.5.101 CHANGE TRACK
+// Season Forecast Records: preseason and midseason analyst boards now use predicted W-L records,
+// with career-history context and qualitative Cup analysis instead of betting-style odds.
 // as raw headcount. Bounded youth regeneration fills only genuine U23/U26 shortages and
 // uses restrained OVR/POT ceilings so the safeguard cannot manufacture superstar classes.
 // International Overview exposes the live candidate-pool age profile for long-career QA.
@@ -17186,7 +17215,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.100 National Pipeline Health",ENGINE_VERSION="E2.26-PROD150";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.103 Late-Season Clinch Markers",ENGINE_VERSION="E2.26-PROD153";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -22144,6 +22173,46 @@ function mediaFractionalOdds(prob){
   return `${best[0]}/${best[1]}`;
 }
 function mediaTopLine(rows,key,count=5){return [...rows].sort((a,b)=>(b[key]||0)-(a[key]||0)).slice(0,count).map((x,i)=>`${i+1}. ${x.name} ${mediaPct(x[key])}`).join(" · ");}
+function mediaProjectedRecord(row){
+  const wins=Math.max(0,Math.min(82,Math.round(+row?.projectedWins||0)));
+  return `${wins}–${82-wins}`;
+}
+function mediaPreviousSeason(G){
+  const hist=(G?.leagueHistory||[]).filter(h=>(+h?.season||0)<(+G?.season||0)).sort((a,b)=>(+b.season||0)-(+a.season||0));
+  return hist[0]||null;
+}
+function mediaPreviousSeasonContext(G,clubId){
+  const prev=mediaPreviousSeason(G);if(!prev||!clubId)return null;
+  const rec=prev.clubRecords?.[clubId]||null;
+  const parts=[];
+  if(prev.championClubId===clubId)parts.push("reigning champions");
+  else if(rec?.postseasonFinish==="Finals")parts.push("last season's finalist");
+  else if(rec?.postseasonFinish==="Conference Finals")parts.push("last season's conference finalist");
+  if(rec?.conferenceFinish&&rec.conferenceFinish!=="—"){
+    const m=String(rec.conferenceFinish).match(/^#(\d+)/);
+    if(m)parts.push(`last season's #${m[1]} seed`);
+  }
+  if(rec?.record)parts.push(`${rec.record} last season`);
+  return {prev,rec,parts};
+}
+function mediaTeamContextPhrase(G,clubId,{sentence=false}={}){
+  const ctx=mediaPreviousSeasonContext(G,clubId);if(!ctx?.parts?.length)return "";
+  const selected=ctx.parts.slice(0,2);
+  const text=selected.join(" and ");
+  return sentence?`${text.charAt(0).toUpperCase()}${text.slice(1)}`:text;
+}
+function mediaCupInsight(G,forecast,{midseason=false}={}){
+  const cup=G?.inSeasonCup;
+  if(cup?.complete&&cup?.winnerClubId){
+    const winner=clubById(G,cup.winnerClubId);
+    if(winner)return `${winner.name} have already converted their form into The Cup title this season.`;
+  }
+  const leaders=(forecast?.rows||[]).slice().sort((a,b)=>(b.cupPct||0)-(a.cupPct||0)).slice(0,3);
+  if(!leaders.length)return "The Cup remains open, with no clear early favourite.";
+  if(leaders.length===1)return `${leaders[0].name} project as the strongest Cup side.`;
+  const names=leaders.map(x=>x.name);
+  return `${names.slice(0,-1).join(", ")} and ${names[names.length-1]} project as the strongest Cup contenders${midseason?" from here":" entering the season"}.`;
+}
 function preseasonForecastTag(G){return `PRESEASON_FORECAST_S${G.season}`;}
 function hasPreseasonForecastArticle(G){return (G.newsFeed||[]).some(n=>n?.tag===preseasonForecastTag(G));}
 function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
@@ -22153,15 +22222,16 @@ function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
   if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;}
   if(!forceArticle&&hasPreseasonForecastArticle(G))return f;
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaFractionalOdds(x.titlePct)}));
-  const cup=f.rows.slice().sort((a,b)=>b.cupPct-a.cupPct).slice(0,3);
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
+  const leader=f.rows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
   const intro=lateRepair
-    ?`We did not get the opening board on air earlier, so here is the season outlook as it stands. `
-    :`${f.rows[0]?.name||"The early favourite"} starts the year at the top of my championship board, but the gap is far from decisive. `;
+    ?`We did not get the opening forecast on air earlier, so here is the season outlook as it stands. `
+    :`${leader?.name||"The early favourite"} start the year at the top of my championship picture${leaderContext?`, coming in as ${leaderContext}`:""}, but the gap is far from decisive. `;
   const rivals=board.slice(1,4).map(x=>x.name).join(", ");
-  const body=`${intro}${rivals?`${rivals} are the leading challengers. `:""}${user?`${user.name} looks like a ${user.projectedWins.toFixed(0)}-win team with a likely top-${Math.max(1,Math.round(user.expectedSeed))} conference seed. I have them at ${mediaFractionalOdds(user.conferencePct)} to win the conference and ${mediaFractionalOdds(user.titlePct)} to win the championship. `:""}On the Cup side, ${cup.map(x=>`${x.name} ${mediaFractionalOdds(x.cupPct)}`).join(", ")} head the early board.`;
+  const userContext=user?mediaTeamContextPhrase(G,user.clubId):"";
+  const body=`${intro}${rivals?`${rivals} are the leading challengers. `:""}${user?`${user.name}${user.clubId===leader?.clubId?"":userContext?`, ${userContext},`:""} project at ${mediaProjectedRecord(user)}, which puts them around the #${Math.max(1,Math.round(user.expectedSeed))} seed in the ${user.conference}. `:""}${mediaCupInsight(G,f)}`;
   pushChaseMaddonArticle(G,
-    `${f.rows[0]?.name||"The contenders"} enters the season as the team to beat`,
+    `${leader?.name||"The contenders"} enter the season as the team to beat`,
     body,{importance:3,tag:preseasonForecastTag(G),flash:true,label:"SEASON FORECAST",quote:true,board});
   G.mediaMilestones=G.mediaMilestones||{};G.mediaMilestones[`preseasonForecastS${G.season}`]=true;
   return f;
@@ -22183,11 +22253,13 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
   const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,2);
   const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,2);
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaFractionalOdds(x.titlePct)}));
-  const body=`The title picture has changed since opening night. ${f.rows[0]?.name||"The current leader"} now sits at the top of my board.${pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:""}${user?` ${user.name} is tracking toward ${user.projectedWins.toFixed(0)} wins and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed, with ${mediaFractionalOdds(user.conferencePct)} conference-title odds and ${mediaFractionalOdds(user.titlePct)} championship odds.`:""} This is the point of the season where contenders stop being theoretical.`;
+  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
+  const leader=f.rows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
+  const movementCopy=pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up since opening night, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:"";
+  const body=`The season has given us enough evidence to sharpen the forecast. ${leader?.name||"The current leader"}${leaderContext?`, ${leaderContext},`:""} now project at ${leader?mediaProjectedRecord(leader):"—"} and set the pace in my championship picture.${movementCopy}${user?` ${user.name} are tracking toward ${mediaProjectedRecord(user)} and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed in the ${user.conference}.`:""} ${mediaCupInsight(G,f,{midseason:true})} This is the point of the season where contenders stop being theoretical.`;
   pushChaseMaddonArticle(G,
-    `Maddon's Midseason Board: ${f.rows[0]?.name||"The leaders"} sets the pace`,
-    body,{importance:3,tag:postAllStarForecastTag(G),flash:true,label:"MIDSEASON TITLE BOARD",quote:true,board});
+    `Maddon's Midseason Forecast: ${leader?.name||"The leaders"} set the pace`,
+    body,{importance:3,tag:postAllStarForecastTag(G),flash:true,label:"MIDSEASON REVIEW",quote:true,board});
   G.mediaMilestones=G.mediaMilestones||{};G.mediaMilestones[`allStarForecastS${G.season}`]=true;
   return f;
 }
@@ -23503,14 +23575,53 @@ function standingsRows(){
     pf:x.standings.pf||0,pa:x.standings.pa||0,diff:(x.standings.pf||0)-(x.standings.pa||0)
   }));
 }
-function standingTable(rows,label){
+const CLINCH_MARKERS_START_GP=65;
+function lateSeasonClinchActive(rows=standingsRows()){
+  return rows.some(x=>(+x.w||0)+(+x.l||0)>=CLINCH_MARKERS_START_GP);
+}
+function maxPossibleWins(row){
+  const gp=(+row?.w||0)+(+row?.l||0);
+  return (+row?.w||0)+Math.max(0,82-gp);
+}
+function clinchMarkersForStanding(row,allRows){
+  const gp=(+row?.w||0)+(+row?.l||0);
+  if(gp<CLINCH_MARKERS_START_GP)return [];
+  const confRows=allRows.filter(x=>x.conference===row.conference);
+  const divRows=allRows.filter(x=>x.division===row.division);
+  const wins=+row.w||0;
+  const otherConf=confRows.filter(x=>x.clubId!==row.clubId);
+  const otherDiv=divRows.filter(x=>x.clubId!==row.clubId);
+  // Conservative clinches: a tie is not treated as secured because the eventual
+  // tiebreak can still matter. The team's current wins are its guaranteed floor;
+  // every opponent's maximum possible wins is their ceiling.
+  const canStillTieOrPass=otherConf.filter(x=>maxPossibleWins(x)>=wins).length;
+  const z=otherConf.every(x=>maxPossibleWins(x)<wins);
+  const y=otherDiv.length>0&&otherDiv.every(x=>maxPossibleWins(x)<wins);
+  const x=canStillTieOrPass<=5;
+  const p=!x&&canStillTieOrPass<=9;
+  const marks=[];
+  if(z)marks.push('z');
+  if(y)marks.push('y');
+  if(x)marks.push('x');
+  else if(p)marks.push('p');
+  return marks;
+}
+function clinchMarkerHtml(row,allRows){
+  const marks=clinchMarkersForStanding(row,allRows);
+  if(!marks.length)return '';
+  const labels={z:'Conference #1 seed',y:'Division winner',x:'Clinched postseason',p:'Clinched Play-In'};
+  return `<span class="standingClinchMarkers" aria-label="${marks.map(m=>labels[m]).join(', ')}">${marks.map(m=>`<b class="${m}" title="${labels[m]}">${m}</b>`).join('')}</span>`;
+}
+function standingTable(rows,label,zoned=false,allRows=rows){
   const sorted=[...rows].sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);
   const leader=sorted[0],leaderPct=(leader?.w||0)/Math.max(1,(leader?.w||0)+(leader?.l||0));
   return `<div class="sectionTitle">${label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>PCT</th><th>GB</th></tr></thead><tbody>${sorted.map((x,i)=>{
     const gp=x.w+x.l,pct=gp?x.w/gp:0,gb=i===0?"—":Math.max(0,((leader.w-x.w)+(x.l-leader.l))/2).toFixed(1);
     const club=c(x.clubId);
-    const teamHtml=club?`<a class="standingsClubLink" data-clubprofile="${club.id}" href="#club-profile/${encodeURIComponent(String(club.id))}">${teamIdentityCompact(club,x.division)}</a>`:teamIdentityCompact(club,x.division);
-    return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamHtml}</td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
+    const markers=zoned?clinchMarkerHtml(x,allRows):'';
+    const teamHtml=club?`<a class="standingsClubLink" data-clubprofile="${club.id}" href="#club-profile/${encodeURIComponent(String(club.id))}">${teamIdentityCompact(club,x.division)}${markers}</a>`:`${teamIdentityCompact(club,x.division)}${markers}`;
+    const cuts=zoned?(i===6?" standingsCut playoffCut":i===10?" standingsCut playinCut":""):"";
+    return `<tr class="${x.clubId===me().id?"me":""}${cuts}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamHtml}</td><td>${x.w}</td><td>${x.l}</td><td>${pct.toFixed(3).replace(/^0/,"")}</td><td>${gb}</td></tr>`;
   }).join("")}</tbody></table></div>`;
 }
 function standings(){
@@ -23519,9 +23630,11 @@ function standings(){
   if(ui.standingsView==="division"){
     const myDiv=me()?.division;
     const divisions=[myDiv,...Object.values(DIVISIONS).flat().filter(d=>d!==myDiv)];
-    return switcher+divisions.map(div=>standingTable(rows.filter(x=>x.division===div),`${div} Division`)).join("");
+    return switcher+divisions.map(div=>standingTable(rows.filter(x=>x.division===div),`${div} Division`,false,rows)).join("");
   }
-  return switcher+["East","West"].map(conf=>standingTable(rows.filter(x=>x.conference===conf),`${conf}ern Conference`)).join("");
+  const zoneLegend=`<div class="standingsZoneLegend"><span><i class="playoff"></i>1–6 Guaranteed Playoffs</span><span><i class="playin"></i>7–10 Play-In</span></div>`;
+  const clinchLegend=lateSeasonClinchActive(rows)?`<div class="standingsClinchLegend"><span><b>z</b> Conference #1 seed</span><span><b>y</b> Division winner</span><span><b>x</b> Clinched postseason</span><span><b>p</b> Clinched Play-In</span></div>`:"";
+  return switcher+zoneLegend+clinchLegend+["East","West"].map(conf=>standingTable(rows.filter(x=>x.conference===conf),`${conf}ern Conference`,true,rows)).join("");
 }
 function leagueLeaders(){
   const l=G.regularSeason?.leaders;
@@ -23568,8 +23681,13 @@ function nbaCupPage(){
   if(!cup)return `<div class="card empty">The Cup begins with the regular season.</div>`;
   const userGroup=cup.groups?.find(g=>g.teamIds.includes(me().id));
   const groupTable=g=>{
-    const rows=cupGroupTable(G,g.id);
-    return `<div class="sectionTitle">${g.label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th><th>GP</th></tr></thead><tbody>${rows.map((x,i)=>`<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamIdentityCompact(c(x.clubId),i===0?"Group leader":"")}</td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff}</td><td>${x.gp}</td></tr>`).join("")}</tbody></table></div>`;
+    const rows=cupGroupTable(G,g.id),qualified=new Map((cup.qualifiers||[]).map(q=>[q.clubId,q]));
+    return `<div class="sectionTitle">${g.label}</div><div class="compactStandings"><table><thead><tr><th>#</th><th>TEAM</th><th>W</th><th>L</th><th>DIFF</th><th>GP</th></tr></thead><tbody>${rows.map((x,i)=>{
+      const q=qualified.get(x.clubId);
+      let status=i===0?"Group leader":"";
+      if(q)status=q.wildCard?`<span class="cupQualificationTag runner">Best runner-up · Qualified</span>`:`<span class="cupQualificationTag">Group winner · Qualified</span>`;
+      return `<tr class="${x.clubId===me().id?"me":""}"><td>${i+1}</td><td class="pname standingsTeamCell">${teamIdentityCompact(c(x.clubId),status)}</td><td>${x.w}</td><td>${x.l}</td><td>${x.diff>0?"+":""}${x.diff}</td><td>${x.gp}</td></tr>`;
+    }).join("")}</tbody></table></div>`;
   };
   if(cup.complete){
     const winner=c(cup.winnerClubId);
