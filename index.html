@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.103 Late-Season Clinch Markers</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.104 Fixture Queue Authority</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2888,7 +2888,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.103 Late-Season Clinch Markers</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.104 Fixture Queue Authority</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2909,7 +2909,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.103 — Late-Season Clinch Markers
+// v0.1.49.77.5.5.5.104 — Fixture Queue Authority
 // - From approximately game 65 onward, conference standings can show mathematically secured z/y/x/p markers.
 // - z = conference #1 seed; y = division winner; x = guaranteed top-6 postseason; p = guaranteed Play-In (top 10) only.
 // - Clinches use conservative max-win checks so ties are not assumed to be secured before a tiebreak is known.
@@ -17215,7 +17215,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.103 Late-Season Clinch Markers",ENGINE_VERSION="E2.26-PROD153";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.104 Fixture Queue Authority",ENGINE_VERSION="E2.26-PROD154";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20363,12 +20363,27 @@ function futureLeagueFixtures(limit=3){
 }
 function nextCupFixture(){
   const cup=G.inSeasonCup,clubId=G.userClubGM?.clubId;if(!cup||cup.complete||!clubId)return null;
-  if(cup.finalPending&&cup.final&&(cup.final.aId===clubId||cup.final.bId===clubId)){
+  // v0.1.49.77.5.5.5.104 — Only return a Cup event when it is actually
+  // actionable now. Earlier builds scanned arbitrarily far ahead for the next
+  // known Cup tie, then Upcoming Fixtures promoted that future tie above the
+  // intervening league schedule. That let Home show (correctly) League Game 7
+  // while Upcoming Fixtures incorrectly labelled a Round-12 quarterfinal as
+  // the next event. The live career queue is now authoritative.
+  if(cup.finalPending&&cup.final&&!cup.final.complete&&(cup.final.aId===clubId||cup.final.bId===clubId)){
     const opp=cup.final.aId===clubId?cup.final.bId:cup.final.aId;
-    return{label:"Championship",opponent:c(opp)?.name||opp,venue:cup.final.aId===clubId?"vs":"@",round:16,cupKnockout:true};
+    return{label:"Championship",opponent:c(opp)?.name||opp,venue:cup.final.aId===clubId?"vs":"@",round:16,cupStage:"Championship",cupKnockout:true,currentActionable:true};
   }
-  const future=futureLeagueFixtures(82).find(x=>x.cupGroupId||x.cupKnockout);
-  return future?{...future,label:future.cupStage||future.label}:null;
+  const active=userCupKnockoutFixture(G);
+  if(!active)return null;
+  return{
+    label:active.cupStage||"The Cup",
+    opponent:c(active.opponentClubId)?.name||active.opponentClubId,
+    venue:active.homeClubId===clubId?"vs":"@",
+    round:active.round,
+    cupStage:active.cupStage,
+    cupKnockout:true,
+    currentActionable:true
+  };
 }
 function nextInternationalFixtures(limit=3){
   const live=G.internationalWindowLive,code=G.userNationalGM?.nationCode;if(!live||live.complete||!code)return[];
@@ -20387,10 +20402,10 @@ function upcomingFixturesHtml(){
   const nation=nextInternationalFixtures(3);
   const cup=nextCupFixture();
 
-  // The current live knockout event is authoritative. This matters immediately
-  // after progression (e.g. semifinal -> Final), when the regular-season queue
-  // has not yet naturally moved past its next numbered game.
-  const liveCup=(cup&&cup.cupKnockout)?[{...cup,competition:"The Cup",sortKey:-250,currentActionable:true}]:[];
+  // Only an actually playable Cup event receives priority. Future Cup ties are
+  // left in their real regular-season calendar position by futureLeagueFixtures().
+  // This keeps the Home hero and Upcoming Fixtures on one authoritative queue.
+  const liveCup=(cup&&cup.cupKnockout&&cup.currentActionable)?[{...cup,competition:"The Cup",sortKey:-250,currentActionable:true}]:[];
 
   const club=futureLeagueFixtures(8).map(x=>{
     const competition=(x.cupGroupId||x.cupKnockout)?"The Cup":"League";
@@ -20409,6 +20424,21 @@ function upcomingFixturesHtml(){
       return (+a.sortKey||999)-(+b.sortKey||999);
     })
     .slice(0,3);
+
+  // Defensive alignment check: during the regular season, the first club
+  // fixture displayed here must match the same event used by the Home hero.
+  // National windows remain separate because they can pause the club calendar.
+  const authoritative=userNextFixture(G);
+  if(authoritative&&!G.internationalWindowLive){
+    const oppId=authoritative.opponentClubId;
+    const expectedComp=authoritative.competition||"League";
+    const expectedLabel=authoritative.cupStage||((expectedComp==="The Cup"&&authoritative.round<=5)?"Group Play":`Game ${authoritative.round}`);
+    const expectedVenue=authoritative.homeClubId===G.userClubGM?.clubId?"vs":"@";
+    const expectedOpp=c(oppId)?.name||oppId;
+    const idx=fixtures.findIndex(x=>x.competition===expectedComp&&x.opponent===expectedOpp&&x.venue===expectedVenue&&
+      (x.label===expectedLabel||(+x.round||0)===(+authoritative.round||0)));
+    if(idx>0){const [row]=fixtures.splice(idx,1);fixtures.unshift(row)}
+  }
 
   if(!fixtures.length)return"";
   const rows=fixtures.map(x=>`<div class="fixtureRow"><span class="fixtureRound"><small>${x.competition}</small>${x.label}</span><b class="fixtureOpponent">${x.venue} ${x.opponent}</b><strong class="fixtureVenue">${x.venue==="@"?"Away":x.competition==="Nation"?"National":"Home"}</strong></div>`).join("");
