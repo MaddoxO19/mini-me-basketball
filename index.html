@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.117 Native Save Storage</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.118 New Season Offseason Hub</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2910,10 +2910,23 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .legacyFranchiseMetric strong{font-size:10px!important}
  .legacyFranchiseMetric small{font-size:8px!important}
 }
+
+/* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
+.newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
+.newSeasonHead{padding:16px 16px 13px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(241,168,77,.10),rgba(241,168,77,.025))}
+.newSeasonKicker{display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--accent);font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase}
+.newSeasonHead h2{margin:7px 0 3px;font-size:25px;line-height:1.05}.newSeasonHead p{margin:0;color:var(--muted);font-size:11px;line-height:1.45}
+.newSeasonOutcome{margin-top:11px;display:flex;align-items:center;gap:8px;font-size:11px}.newSeasonOutcome b{color:var(--text)}.newSeasonOutcome span{color:var(--muted)}
+.newSeasonMetrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-bottom:1px solid var(--line)}
+.newSeasonMetric{padding:11px 8px;text-align:center;min-width:0;border-right:1px solid var(--line)}.newSeasonMetric:last-child{border-right:0}
+.newSeasonMetric b{display:block;font-size:16px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.newSeasonMetric small{display:block;margin-top:4px;color:var(--muted);font-size:8px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}
+.newSeasonPriorities{padding:13px 15px 4px}.newSeasonPriorities h3{margin:0 0 7px;font-size:14px}.newSeasonPriority{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-top:1px solid var(--line)}.newSeasonPriority:first-of-type{border-top:0}.newSeasonPriority span{color:var(--muted);font-size:10px}.newSeasonPriority b{font-size:11px;text-align:right}
+.newSeasonHub .homeActionRow{padding:10px 15px 15px;margin:0}.newSeasonHub .offseasonChoice{display:grid;grid-template-columns:1fr;gap:8px}.newSeasonHub .offseasonChoice button{width:100%}
+@media(min-width:620px){.newSeasonHub .offseasonChoice{grid-template-columns:1fr 1fr}.newSeasonHead{padding:18px}.newSeasonPriorities{padding-left:18px;padding-right:18px}}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.117 Native Save Storage</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.118 New Season Offseason Hub</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -17412,7 +17425,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.117 Native Save Storage",ENGINE_VERSION="E2.26-PROD167";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.118 New Season Offseason Hub",ENGINE_VERSION="E2.26-PROD168";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20556,7 +20569,7 @@ function homeActionHtml(){
   return `<div class="homeActionRow ${a.alt?"":"one"}"><button id="homeMainAction" class="homePrimary primaryProgress">${a.main}</button>${a.alt?`<button id="homeAltAction" class="homeSecondary">${a.alt}</button>`:""}</div>`;
 }
 function phaseStatusCopy(){
-  if(G.phase==="OFFSEASON")return["Offseason","Basketball operations are open. Review contracts, roster decisions and draft assets before moving into Draft Night."];
+  if(G.phase==="OFFSEASON")return[`New Season: ${basketballSeasonLabel(G.season)}`,"Offseason operations are open. Review contracts, roster decisions and draft assets before moving into Draft Night."];
   if(G.phase==="DRAFT_NIGHT")return["Draft Night",G.draftState?.pendingUserPick?`Your club owns the current selection. The Draft Board is ready.`:"The two-round draft is underway. Open the Draft Board to follow your selections."];
   if(G.phase==="SUMMER_LEAGUE"){
     const st=G.summerLeagueLive?.championshipStage?.stage;
@@ -22385,6 +22398,66 @@ function worldCupTournamentRecapHtml(wc){
     <div class="transitionActions one wcRecapContinue"><button id="continueWorldCupRecap" class="transitionPrimary">Continue Career</button></div></div>`;
 }
 function homeMainMenuExitHtml(){return "";}
+
+function offseasonPreviousSeasonContext(){
+  const club=me();
+  const histories=Array.isArray(G.leagueHistory)?G.leagueHistory:[];
+  const last=histories.length?histories[histories.length-1]:null;
+  const rec=last?.clubRecords?.[club?.id]||null;
+  const gm=gmCareerState?.(G);
+  const gmLast=Array.isArray(gm?.seasons)?[...gm.seasons].reverse().find(s=>s.clubId===club?.id):null;
+  const record=rec?.record||(Number.isFinite(+gmLast?.w)&&Number.isFinite(+gmLast?.l)?`${gmLast.w}-${gmLast.l}`:"—");
+  let finish=rec?.postseasonFinish||gmLast?.finish||"Season complete";
+  if(last?.championClubId===club?.id)finish="League Champion";
+  const cup=last?.cupChampionClubId===club?.id;
+  return {last,rec,record,finish,cup};
+}
+function offseasonDraftPickCount(clubId){
+  const picks=(G.draftPicks||[]).filter(p=>p.ownerClubId===clubId && !p.consumed && (+p.year||0)===+G.season);
+  return picks.length;
+}
+function offseasonCapSummary(club){
+  if(G.settings?.salaryCap===false)return "Cap Off";
+  const cap=clubCapPosition?.(G,club?.id);
+  if(!cap)return "—";
+  if((+cap.capSpaceM||0)>0)return `$${Math.max(0,+cap.capSpaceM||0).toFixed(1)}M space`;
+  return cap.status||"Over Cap";
+}
+function newSeasonOffseasonHubHtml(){
+  const club=me(); if(!club)return "";
+  const prev=offseasonPreviousSeasonContext();
+  const standard=(club.roster||[]).filter(p=>String(p.contractType||"").toLowerCase()!=="two-way");
+  const twoWay=(club.roster||[]).filter(p=>String(p.contractType||"").toLowerCase()==="two-way");
+  const expiring=(club.roster||[]).filter(p=>String(p.contractType||"").toLowerCase()!=="two-way" && (+p.contractYearsLeft||0)<=1).length;
+  const rosterOpen=Math.max(0,15-standard.length);
+  const twoWayOpen=Math.max(0,3-twoWay.length);
+  const draftPicks=offseasonDraftPickCount(club.id);
+  const capText=offseasonCapSummary(club);
+  const priorOutcome=prev.finish||"Season complete";
+  const cupTag=prev.cup?" · The Cup Champion":"";
+  const priorities=[
+    {label:"Contracts",value:expiring?`${expiring} expiring${expiring===1?"":" contracts"}`:"No immediate expiries"},
+    {label:"Roster",value:rosterOpen?`${rosterOpen} standard spot${rosterOpen===1?"":"s"} open`:"Standard roster full"},
+    {label:"Two-Way",value:twoWayOpen?`${twoWayOpen} spot${twoWayOpen===1?"":"s"} open`:"3/3 filled"},
+    {label:"Draft Assets",value:`${draftPicks} pick${draftPicks===1?"":"s"} owned`}
+  ];
+  return `<div class="newSeasonHub">
+    <div class="newSeasonHead">
+      <div class="newSeasonKicker"><span>NEW SEASON</span><span>OFFSEASON</span></div>
+      <h2>${basketballSeasonLabel(G.season)} · ${club.name}</h2>
+      <p>Review the club position, contracts and draft assets before moving into Draft Night.</p>
+      <div class="newSeasonOutcome"><b>Last season</b><span>${priorOutcome}${cupTag}${prev.record&&prev.record!=="—"?` · ${prev.record}`:""}</span></div>
+    </div>
+    <div class="newSeasonMetrics">
+      <div class="newSeasonMetric"><b>${standard.length}/15</b><small>Roster</small></div>
+      <div class="newSeasonMetric"><b>${draftPicks}</b><small>Draft Picks</small></div>
+      <div class="newSeasonMetric"><b>${capText}</b><small>Cap Position</small></div>
+    </div>
+    <div class="newSeasonPriorities"><h3>Offseason Priorities</h3>${priorities.map(x=>`<div class="newSeasonPriority"><span>${x.label}</span><b>${x.value}</b></div>`).join("")}</div>
+    ${homeActionHtml()}
+  </div>`;
+}
+
 function home(){
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
   if(G.phase==="DRAFT_NIGHT"&&G.retirementReviewPending?.season===G.season&&!G.retirementReviewPending?.acknowledged&&G.retirementReviewPending?.total)return retirementReviewHtml();
@@ -22396,6 +22469,7 @@ function home(){
   if(G.phase==="WORLD_CUP")return worldCupHomeHtml();
   if(G.phase==="OLYMPICS")return olympicHomeHtml();
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
+  if(G.phase==="OFFSEASON")return newSeasonOffseasonHubHtml();
   if(G.phase==="PLAYOFFS"&&!G.playoffsLive){
     initializePlayoffsLive(G);
     save();
