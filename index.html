@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.115 Session Recovery Guard</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.117 Native Save Storage</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2896,7 +2896,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 
 /* v0.1.49.77.5.5.5.113 — record flags and honours layout polish */
-/* v0.1.49.77.5.5.5.115 — unexpected reload/session recovery guard */
+/* v0.1.49.77.5.5.5.117 — native IndexedDB save storage */
 .recordPlayerIdentity{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:100%;vertical-align:middle}
 .recordPlayerIdentity .nationalFlagMark{flex:0 0 auto;width:21px;height:14px;font-size:16px}
 .recordPlayerIdentity .profileLink{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2913,13 +2913,13 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.115 Session Recovery Guard</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.117 Native Save Storage</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
 <div id="s1" class="card"><h3>Who are you?</h3><div class="smallcopy">Your GM name is carried through the club dashboard, career history and future international appointments.</div><label>GM NAME</label><input id="gmName" type="text" maxlength="28" value="" placeholder="Enter GM name"><button id="next1" class="btn primary" style="margin-top:14px">Choose Team</button></div>
-<div id="s2" class="card" style="display:none"><h3>Choose your club</h3><div class="smallcopy">Choose one of the 30 clubs across the six divisions.</div><div class="confTabs"><button class="active" data-conf="East">Eastern Conference</button><button data-conf="West">Western Conference</button></div><div id="teamGrid" class="teamGrid"></div><button id="next2" class="btn primary" style="margin-top:14px">Career Settings</button></div>
+<div id="s2" class="card" style="display:none"><h3>Choose your club</h3><div class="smallcopy">Choose a club from the current league structure.</div><div class="confTabs"><button class="active" data-conf="East">Eastern Conference</button><button data-conf="West">Western Conference</button></div><div id="teamGrid" class="teamGrid"></div><button id="next2" class="btn primary" style="margin-top:14px">Career Settings</button></div>
 <div id="s3" class="card" style="display:none"><h3>Career settings</h3><div class="smallcopy">These settings are stored with this career and applied to the simulation.</div><div class="setting"><div><b>Salary Cap</b><small>Enforce cap space and salary matching for signings and trades.</small></div><button id="capSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>Injuries</b><small>Players can miss games based on fatigue, age and workload.</small></div><button id="injSwitch" class="switch on"><span></span></button></div><div id="summary" class="card"></div><button id="startBtn" class="btn primary">Start Career</button></div>
 </div></section>
 
@@ -2937,7 +2937,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.115 — Session Recovery Guard
+// v0.1.49.77.5.5.5.117 — Native Save Storage
 // Adds structural validation around Play-In and Playoff round transitions.
 // Missing or malformed saved bracket state is routed through the existing repair path
 // before advancement, and invalid transitions stop safely instead of recursing/crashing.
@@ -2991,6 +2991,52 @@ const DIVISIONS = {
   East: ["Atlantic", "Central", "Southeast"],
   West: ["Northwest", "Pacific", "Southwest"],
 };
+
+// v0.1.49.77.5.5.5.117 — Native Save Storage.
+// These helpers make the mature engine read the active career structure rather
+// than assuming 30 clubs / 15 per conference. Expansion remains disabled in this
+// build; 32-team competition rules are deliberately introduced in later phases.
+const LEAGUE_STRUCTURE_VERSION="LS1-30-32";
+const SUPPORTED_LEAGUE_SIZES=[30,32];
+const DEFAULT_DIRECT_PLAYOFF_SEEDS=6;
+const DEFAULT_PLAY_IN_START_SEED=7;
+const DEFAULT_PLAY_IN_END_SEED=10;
+function leagueClubCount(state){return Array.isArray(state?.clubs)?state.clubs.length:CLUB_IDENTITIES.length;}
+function leagueConferenceClubs(state,conf){return (state?.clubs||[]).filter(c=>c.conference===conf);}
+function leagueConferenceSize(state,conf){return leagueConferenceClubs(state,conf).length;}
+function leagueDivisionClubs(state,conf,division){return leagueConferenceClubs(state,conf).filter(c=>c.division===division);}
+function leagueStructureSnapshot(state){
+  const teamCount=leagueClubCount(state),conferenceSizes={};
+  for(const conf of CONFERENCES)conferenceSizes[conf]=leagueConferenceSize(state,conf);
+  const divisionSizes={};
+  for(const conf of CONFERENCES)for(const div of (DIVISIONS[conf]||[]))divisionSizes[`${conf}:${div}`]=leagueDivisionClubs(state,conf,div).length;
+  return{version:LEAGUE_STRUCTURE_VERSION,teamCount,conferenceSizes,divisionSizes,directPlayoffSeeds:DEFAULT_DIRECT_PLAYOFF_SEEDS,playInStartSeed:DEFAULT_PLAY_IN_START_SEED,playInEndSeed:DEFAULT_PLAY_IN_END_SEED};
+}
+function ensureLeagueStructureState(state){
+  if(!state||typeof state!=="object")return null;
+  const snap=leagueStructureSnapshot(state),prior=state.leagueStructure||{};
+  state.leagueStructure={...prior,...snap,expansionEnabled:!!prior.expansionEnabled,commissionerEnabled:!!prior.commissionerEnabled};
+  return state.leagueStructure;
+}
+function leagueExpansionReadinessAudit(state){
+  const structure=ensureLeagueStructureState(state),issues=[],blockers=[];
+  if(!structure)return{version:LEAGUE_STRUCTURE_VERSION,issues:["Career state unavailable"],blockers:["Career state unavailable"],readyForExpansion:false};
+  if(!SUPPORTED_LEAGUE_SIZES.includes(structure.teamCount))issues.push(`Unsupported team count ${structure.teamCount}`);
+  if(structure.conferenceSizes.East!==structure.conferenceSizes.West)issues.push("Conferences are not balanced");
+  for(const c of state.clubs||[]){
+    if(!CONFERENCES.includes(c.conference))issues.push(`${c.id}: unknown conference ${c.conference}`);
+    if(!(DIVISIONS[c.conference]||[]).includes(c.division))issues.push(`${c.id}: unknown division ${c.division}`);
+  }
+  // Known future-work gates. They are explicit so a 32-team save cannot be
+  // activated accidentally before these competition systems are redesigned.
+  if(structure.teamCount===32){
+    blockers.push("The Cup group format requires a 32-team draw design");
+    blockers.push("Division realignment requires an approved 32-team structure");
+    blockers.push("Expansion franchise identities and logos are not installed");
+    blockers.push("Expansion Draft and GM opportunity systems are not installed");
+  }
+  return{version:LEAGUE_STRUCTURE_VERSION,teamCount:structure.teamCount,conferenceSizes:structure.conferenceSizes,divisionSizes:structure.divisionSizes,issues,blockers,readyForExpansion:structure.teamCount===32&&issues.length===0&&blockers.length===0,foundationReady:issues.length===0};
+}
 const POSITIONS = ["PG", "SG", "SF", "PF", "C"];
 const SECONDARY_POSITION_OPTIONS = {
   PG:["SG"], SG:["PG","SF"], SF:["SG","PF"], PF:["SF","C"], C:["PF"]
@@ -9423,7 +9469,7 @@ function productionContractSnapshotAudit(G){
     guaranteePolicy:"Guaranteed totals retained where reliably exposed. Conditional guarantees and options are recorded as metadata and are not auto-resolved unless the game explicitly supports that mechanism.",
     twoWayPolicy:"Verified two-way roster status is stored separately from standard payroll and does not receive an invented standard salary.",
     unresolvedPolicy:"Launch exceptions are explicit. Verified two-way players carry two-way status; UFA/RFA/retired transition cases carry zero standard salary rather than a random generated contract.",
-    passed:invalid.length===0&&draftLeak.length===0&&payrollIntegrityIssues.length===0&&clubPayrolls.length===30&&fallback.length===0
+    passed:invalid.length===0&&draftLeak.length===0&&payrollIntegrityIssues.length===0&&clubPayrolls.length===CLUB_IDENTITIES.length&&fallback.length===0
   };
   if(G)G.productionContractAudit=report;
   return report;
@@ -9986,6 +10032,7 @@ function makeCareer() {
     gmName: "GM",
     settings: { salaryCap:true, injuries:true },
     clubs,
+    leagueStructure:{...leagueStructureSnapshot({clubs}),expansionEnabled:false,commissionerEnabled:false},
     freeAgents,
     externalProfessionals,
     playerMarketVersion:"PM2",
@@ -10033,9 +10080,9 @@ function makeCareer() {
     // exists because runOffseason zeroes club.standings before DRAFT_NIGHT
     // runs, so the draft order can't be derived from live standings at
     // that point — it has to be captured earlier and carried forward.
-    pendingLotteryPool: null, // [{clubId, balls, relegated}] — 14 non-playoff teams
-    pendingNonLotteryOrder: null, // [clubId,...] worst-to-best among the 16 playoff teams
-    pendingFullStandingsOrder: null, // [clubId,...] all 30, worst-to-best, for round 2
+    pendingLotteryPool: null, // [{clubId, balls, relegated}] — all non-playoff teams
+    pendingNonLotteryOrder: null, // [clubId,...] worst-to-best among playoff teams
+    pendingFullStandingsOrder: null, // [clubId,...] full active league, worst-to-best, for round 2
   };
 }
 
@@ -16988,7 +17035,7 @@ function initializePlayInLive(G){
   for(const conf of CONFERENCES){
     const clubs=G.clubs.filter(c=>c.conference===conf).sort((a,b)=>b.standings.w-a.standings.w||((b.standings.pf-b.standings.pa)-(a.standings.pf-a.standings.pa)));
     const s7=clubs[6],s8=clubs[7],s9=clubs[8],s10=clubs[9];
-    missedByConf[conf]=clubs.slice(10,15).map(c=>c.id);
+    missedByConf[conf]=clubs.slice(10).map(c=>c.id);
     initial.push({conference:conf,type:"7v8",teamAId:s7.id,teamBId:s8.id,seedA:7,seedB:8,complete:false,gameId:null});
     initial.push({conference:conf,type:"9v10",teamAId:s9.id,teamBId:s10.id,seedA:9,seedB:10,complete:false,gameId:null});
   }
@@ -17365,9 +17412,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.115 Session Recovery Guard",ENGINE_VERSION="E2.26-PROD165";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.117 Native Save Storage",ENGINE_VERSION="E2.26-PROD167";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -17906,8 +17953,22 @@ let memorySlots={};
 function openSaveDB(){
   return new Promise((resolve,reject)=>{
     if(!window.indexedDB){reject(new Error("IndexedDB unavailable"));return}
-    const req=indexedDB.open(SAVE_DB,1);
-    req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(SAVE_STORE))db.createObjectStore(SAVE_STORE,{keyPath:"slot"})};
+    const req=indexedDB.open(SAVE_DB,SAVE_DB_VERSION);
+    req.onupgradeneeded=()=>{
+      const db=req.result,tx=req.transaction;
+      let careers;
+      if(!db.objectStoreNames.contains(SAVE_STORE))careers=db.createObjectStore(SAVE_STORE,{keyPath:"slot"});
+      else careers=tx.objectStore(SAVE_STORE);
+      let metaStore;
+      if(!db.objectStoreNames.contains(SAVE_META_STORE))metaStore=db.createObjectStore(SAVE_META_STORE,{keyPath:"slot"});
+      else metaStore=tx.objectStore(SAVE_META_STORE);
+      // Backfill lightweight metadata for legacy string-payload saves during the v2 upgrade.
+      // This lets the save picker read metadata without materialising every mature career.
+      try{
+        const q=careers.openCursor();
+        q.onsuccess=()=>{const c=q.result;if(!c)return;const rec=c.value||{};metaStore.put({slot:+rec.slot||0,meta:rec.meta||null,updatedAt:+rec.updatedAt||0,persisted:true});c.continue();};
+      }catch(_){}
+    };
     req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
   });
 }
@@ -17920,19 +17981,33 @@ function saveSlotMetaOnly(rec){
   if(!rec)return null;
   return {slot:+rec.slot||0,meta:rec.meta||null,updatedAt:+rec.updatedAt||0,persisted:true};
 }
-async function writeSlot(slot,payload,meta){
-  const rec={slot,payload,meta,updatedAt:Date.now()};
+async function writeSlot(slot,state,meta){
+  // v117: IndexedDB can structured-clone the live career object directly.
+  // Avoiding JSON.stringify removes the largest JS-side duplicate allocation
+  // from ordinary saves on mature iPhone/Safari careers. Legacy string payloads
+  // remain readable, so existing saves migrate without a new career.
+  const updatedAt=Date.now();
+  let nativeState=state;
+  if(typeof nativeState==="string"){try{nativeState=JSON.parse(nativeState)}catch(_){nativeState=null}}
+  const rec={slot,state:nativeState,meta,updatedAt,storageVersion:"STATE1"};
+  const lite={slot,meta,updatedAt,persisted:true};
   try{
     const db=await openSaveDB();
-    await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).put(rec);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
-    db.close();
-    // Deliberately release the payload reference after durable storage succeeds.
-    memorySlots[slot]=saveSlotMetaOnly(rec);
-    return true;
+    await new Promise((res,rej)=>{
+      const tx=db.transaction([SAVE_STORE,SAVE_META_STORE],"readwrite");
+      tx.objectStore(SAVE_STORE).put(rec);
+      tx.objectStore(SAVE_META_STORE).put(lite);
+      tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error||new Error("Save transaction aborted"));
+    });
+    db.close();memorySlots[slot]=lite;return true;
   }catch(e){
-    // Fallback storage needs the payload because it is now the durable copy.
-    memorySlots[slot]=rec;
-    try{localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(rec));return true}catch(f){console.warn("Persistent save unavailable",e,f);return false}
+    // Last-resort fallback preserves the established legacy string format. It is
+    // intentionally created only after native IndexedDB storage has failed.
+    try{
+      const payload=JSON.stringify(nativeState,careerSaveReplacer);
+      const legacy={slot,payload,meta,updatedAt};memorySlots[slot]=legacy;
+      localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(legacy));return true;
+    }catch(f){console.warn("Persistent save unavailable",e,f);return false}
   }
 }
 async function readSlot(slot){
@@ -17944,14 +18019,14 @@ async function readSlot(slot){
   try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw);memorySlots[slot]=rec;return rec}}catch(e){}
   // Only return an in-memory fallback when it genuinely contains a payload. A
   // metadata-only IndexedDB cache is not itself a loadable career.
-  return memorySlots[slot]?.payload?memorySlots[slot]:null;
+  return (memorySlots[slot]?.payload||memorySlots[slot]?.state)?memorySlots[slot]:null;
 }
 async function readAllSlots(){
   const records=Array(MAX_SAVES).fill(null);
   try{
     const db=await openSaveDB();
     await new Promise((res,rej)=>{
-      const tx=db.transaction(SAVE_STORE,"readonly"),store=tx.objectStore(SAVE_STORE);
+      const tx=db.transaction(SAVE_META_STORE,"readonly"),store=tx.objectStore(SAVE_META_STORE);
       const q=store.openCursor();
       q.onsuccess=()=>{
         const cursor=q.result;
@@ -18016,7 +18091,7 @@ async function attemptUnexpectedSessionRecovery(){
 
 async function removeSlot(slot){
   delete memorySlots[slot];
-  try{const db=await openSaveDB();await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).delete(slot);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});db.close()}catch(e){}
+  try{const db=await openSaveDB();await new Promise((res,rej)=>{const tx=db.transaction([SAVE_STORE,SAVE_META_STORE],"readwrite");tx.objectStore(SAVE_STORE).delete(slot);tx.objectStore(SAVE_META_STORE).delete(slot);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});db.close()}catch(e){}
   try{localStorage.removeItem(`MMB_SAVE_SLOT_${slot}`)}catch(e){}
   clearSessionGuard(slot);
 }
@@ -18025,7 +18100,7 @@ async function migrateLegacySave(preloaded=null){
   try{
     const old=localStorage.getItem(LEGACY_SAVE_KEY);if(!old)return;
     const state=JSON.parse(old),club=state.clubs?.find(c=>c.id===state.userClubGM?.clubId);
-    await writeSlot(1,old,{gmName:state.gmName||"GM",clubName:club?.name||"Unknown Club",season:state.season||1,phase:state.phase||"Career",createdAt:Date.now()});
+    await writeSlot(1,state,{gmName:state.gmName||"GM",clubName:club?.name||"Unknown Club",season:state.season||1,phase:state.phase||"Career",createdAt:Date.now()});
     if(preloaded)preloaded[0]=memorySlots[1]||await readSlot(1);
   }catch(e){}
   return preloaded;
@@ -18035,7 +18110,14 @@ function validateCareerIntegrityState(state=G){
   if(!state||typeof state!=="object")return["Career state is unavailable."];
   const phases=new Set(["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","OLYMPICS","CHAMPION"]);
   if(!phases.has(state.phase))issues.push(`Unknown career phase: ${state.phase}`);
-  if(!Array.isArray(state.clubs)||state.clubs.length!==30)issues.push(`Expected 30 clubs; found ${state.clubs?.length??0}.`);
+  if(!Array.isArray(state.clubs))issues.push("Career clubs collection is unavailable.");
+  else{
+    const count=leagueClubCount(state);
+    if(!SUPPORTED_LEAGUE_SIZES.includes(count))issues.push(`Unsupported league size: ${count} clubs. Supported structures are ${SUPPORTED_LEAGUE_SIZES.join(" or ")}.`);
+    const east=leagueConferenceSize(state,"East"),west=leagueConferenceSize(state,"West");
+    if(east!==west)issues.push(`Conference imbalance: East ${east}, West ${west}.`);
+    if(count%2!==0)issues.push(`League requires an even club count; found ${count}.`);
+  }
   const clubIds=new Set(),playerOwners=new Map();
   for(const club of state.clubs||[]){
     if(clubIds.has(club.id))issues.push(`Duplicate club id: ${club.id}.`);
@@ -18316,25 +18398,23 @@ async function performCareerSave(silent=true){
   G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
   const slot=activeSlot,meta=saveMeta(),serial=++_saveWriteSerial;
-  const t0=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
-  const payload=JSON.stringify(G,careerSaveReplacer);
-  const t1=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
-  G.runtimeMeta.lastSavePayloadBytes=payload.length;
-  G.runtimeMeta.lastSaveSerializeMs=Math.max(0,Math.round((t1-t0)*10)/10);
   G.runtimeMeta.lastSaveSerial=serial;
   G.runtimeMeta.saveQueueDepth=1;
+  G.runtimeMeta.lastSaveSerializeMs=0;
+  G.runtimeMeta.lastSavePayloadBytes=null;
+  G.runtimeMeta.saveStorageModel="IDB-NATIVE-STATE1";
   const writeStarted=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
-  const ok=await writeSlot(slot,payload,meta);
+  const ok=await writeSlot(slot,G,meta);
   const writeEnded=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
   if(G?.runtimeMeta){
     G.runtimeMeta.lastCompletedSaveSerial=serial;
     G.runtimeMeta.lastSaveWriteMs=Math.max(0,Math.round((writeEnded-writeStarted)*10)/10);
-    G.runtimeMeta.saveMemoryModel="IDB-COALESCED-2";
+    G.runtimeMeta.saveMemoryModel="IDB-NATIVE-STATE1";
     G.runtimeMeta.saveQueueDepth=0;
     G.runtimeMeta.saveRequests=+_saveRequestSerial||0;
     G.runtimeMeta.saveCoalescedRequests=+_saveCoalescedRequests||0;
   }
-  if(ok)writeSessionGuard("active",{lastSaveSerial:serial,lastSavePayloadBytes:payload.length});
+  if(ok)writeSessionGuard("active",{lastSaveSerial:serial,saveStorageModel:"IDB-NATIVE-STATE1"});
   if(!silent)toast(ok?`Career saved · Slot ${slot}`:"Career active · save storage unavailable");
   return ok;
 }
@@ -18395,13 +18475,15 @@ function syncCounter(){
 async function loadSlot(slot,options={}){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
-    G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
+    G=rec?.state&&typeof rec.state==="object"?rec.state:JSON.parse(rec.payload);activeSlot=slot;syncCounter();
     restoreAwardPresentationCheckpoint(G,slot);
     // Release obsolete AI regular-season box scores from older saves before
     // rendering. User-game box scores and all compact record data are retained.
     compactRegularSeasonRuntime(G);
     const loadMaintenanceVersion="LOAD-PROD142-OLYMPIC-ALL-TOURNAMENT-2";
     G.runtimeMeta=G.runtimeMeta||{};
+    ensureLeagueStructureState(G);
+    G.runtimeMeta.expansionReadinessAudit=leagueExpansionReadinessAudit(G);
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
     repairGeneratedMensLeagueNames(G);
@@ -25547,7 +25629,7 @@ function scoutingPage(embedded=false){
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>${basketballSeasonLabel(s.season)} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
-  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>League Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>The Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Roster Foundation</b><small>2027 launch player universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button></div>`;
+  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>League Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>The Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")} · expansion foundation only</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Roster Foundation</b><small>2027 launch player universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button></div>`;
 }
 let _renderPrepSignature="";
 function renderPrepSignature(){
