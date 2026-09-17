@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.114 Save Write Coalescing</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.115 Session Recovery Guard</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2896,7 +2896,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 
 /* v0.1.49.77.5.5.5.113 — record flags and honours layout polish */
-/* v0.1.49.77.5.5.5.114 — long-career save write coalescing */
+/* v0.1.49.77.5.5.5.115 — unexpected reload/session recovery guard */
 .recordPlayerIdentity{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:100%;vertical-align:middle}
 .recordPlayerIdentity .nationalFlagMark{flex:0 0 auto;width:21px;height:14px;font-size:16px}
 .recordPlayerIdentity .profileLink{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2913,7 +2913,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.114 Save Write Coalescing</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.115 Session Recovery Guard</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2937,7 +2937,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.114 — Save Write Coalescing
+// v0.1.49.77.5.5.5.115 — Session Recovery Guard
 // Adds structural validation around Play-In and Playoff round transitions.
 // Missing or malformed saved bracket state is routed through the existing repair path
 // before advancement, and invalid transitions stop safely instead of recursing/crashing.
@@ -17365,7 +17365,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.114 Save Write Coalescing",ENGINE_VERSION="E2.26-PROD164";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.115 Session Recovery Guard",ENGINE_VERSION="E2.26-PROD165";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17972,10 +17972,53 @@ async function readAllSlots(){
   return records;
 }
 
+// v115: lightweight active-session recovery. The guard stores only slot/phase
+// metadata, never the career payload, so it adds negligible memory pressure. It
+// lets Safari reloads or process evictions return to the last active career
+// without confusing an interrupted session with a deliberate Exit.
+const SESSION_GUARD_KEY="H3O_BASKETBALL_ACTIVE_SESSION",SESSION_GUARD_VERSION="SG1",SESSION_RECOVERY_WINDOW_MS=6*60*60*1000;
+function readSessionGuard(){
+  try{const raw=localStorage.getItem(SESSION_GUARD_KEY);if(!raw)return null;const g=JSON.parse(raw);return g?.version===SESSION_GUARD_VERSION?g:null}catch(_){return null}
+}
+function writeSessionGuard(status="active",extra={}){
+  if(!activeSlot)return false;
+  const guard={version:SESSION_GUARD_VERSION,status,slot:+activeSlot,season:+G?.season||0,phase:G?.phase||"Career",updatedAt:Date.now(),...extra};
+  try{localStorage.setItem(SESSION_GUARD_KEY,JSON.stringify(guard));updateResumeButton();return true}catch(_){return false}
+}
+function clearSessionGuard(slot=null){
+  try{const g=readSessionGuard();if(slot&&g&&+g.slot!==+slot)return;localStorage.removeItem(SESSION_GUARD_KEY)}catch(_){}
+  updateResumeButton();
+}
+function markSessionClosed(){
+  const g=readSessionGuard();if(!g||!activeSlot||+g.slot!==+activeSlot){clearSessionGuard();return}
+  try{localStorage.setItem(SESSION_GUARD_KEY,JSON.stringify({...g,status:"closed",updatedAt:Date.now()}))}catch(_){}
+  updateResumeButton();
+}
+function sessionRecoveryCandidate(){
+  const g=readSessionGuard();if(!g||g.status==="closed"||!g.slot)return null;
+  if(Date.now()-(+g.updatedAt||0)>SESSION_RECOVERY_WINDOW_MS)return null;
+  return g;
+}
+function updateResumeButton(){
+  const btn=document.getElementById("resumeBtn");if(!btn)return;const g=sessionRecoveryCandidate();
+  btn.style.display=g?"block":"none";
+  if(g)btn.textContent=`RESUME ${basketballSeasonLabel(g.season||1)}`;
+}
+async function attemptUnexpectedSessionRecovery(){
+  const g=sessionRecoveryCandidate();if(!g)return false;
+  let navType="";try{navType=performance.getEntriesByType("navigation")?.[0]?.type||""}catch(_){}
+  const recentAttempt=Date.now()-(+g.lastAttemptAt||0)<60000;
+  if(!["reload","back_forward"].includes(navType)||recentAttempt)return false;
+  try{localStorage.setItem(SESSION_GUARD_KEY,JSON.stringify({...g,status:"recovering",lastAttemptAt:Date.now(),updatedAt:Date.now()}))}catch(_){}
+  const ok=await loadSlot(+g.slot,{sessionRecovery:true});
+  return !!ok;
+}
+
 async function removeSlot(slot){
   delete memorySlots[slot];
   try{const db=await openSaveDB();await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).delete(slot);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});db.close()}catch(e){}
   try{localStorage.removeItem(`MMB_SAVE_SLOT_${slot}`)}catch(e){}
+  clearSessionGuard(slot);
 }
 async function migrateLegacySave(preloaded=null){
   const existing=preloaded?.[0]||await readSlot(1);if(existing)return preloaded;
@@ -18291,6 +18334,7 @@ async function performCareerSave(silent=true){
     G.runtimeMeta.saveRequests=+_saveRequestSerial||0;
     G.runtimeMeta.saveCoalescedRequests=+_saveCoalescedRequests||0;
   }
+  if(ok)writeSessionGuard("active",{lastSaveSerial:serial,lastSavePayloadBytes:payload.length});
   if(!silent)toast(ok?`Career saved · Slot ${slot}`:"Career active · save storage unavailable");
   return ok;
 }
@@ -18348,7 +18392,7 @@ function syncCounter(){
   if(typeof _idCounter!=="undefined")_idCounter=Math.max(_idCounter,m);
   G.runtimeMeta=G.runtimeMeta||{};G.runtimeMeta.nextIdCounter=Math.max(m,typeof _idCounter!=="undefined"?_idCounter:m);
 }
-async function loadSlot(slot){
+async function loadSlot(slot,options={}){
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=JSON.parse(rec.payload);activeSlot=slot;syncCounter();
@@ -18495,10 +18539,18 @@ async function loadSlot(slot){
     }
     // Do not immediately stringify and rewrite a mature save just for opening it.
     // The normal gameplay save path persists maintenance markers and the ID counter.
-    toast(`Loaded Slot ${slot}`);
+    writeSessionGuard("active",{recovered:!!options.sessionRecovery,recoveredAt:options.sessionRecovery?Date.now():undefined,lastAttemptAt:0});
+    toast(options.sessionRecovery?`Career recovered · Slot ${slot}`:`Loaded Slot ${slot}`);
+    return true;
   }catch(e){
     console.error("Career load failed",e);
+    if(options.sessionRecovery){
+      const g=readSessionGuard();
+      try{if(g)localStorage.setItem(SESSION_GUARD_KEY,JSON.stringify({...g,status:"active",recoveryFailedAt:Date.now(),updatedAt:Date.now()}))}catch(_){}
+      updateResumeButton();
+    }
     alert("Career save could not be loaded.");
+    return false;
   }
 }
 function savePhaseDisplay(phase){
@@ -18538,6 +18590,7 @@ async function beginNewCareerInSlot(slot,replace=false){
   if(replace&&!confirm(`Replace Save Slot ${slot} with a new career? The existing career will be deleted.`))return;
   if(replace)await removeSlot(slot);
   clearAwardPresentationCheckpoint(slot);
+  clearSessionGuard(slot);
   activeSlot=slot;
   setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:makeCareer()};
   show("setup");setStep(1);
@@ -25917,7 +25970,7 @@ $$("[data-standingview]").forEach(b=>b.onclick=()=>{ui.standingsView=b.dataset.s
 $$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[data-teamtab]").forEach(b=>b.onclick=()=>{ui.teamTab=b.dataset.teamtab;render()});$$(["[data-clubtab]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtab;render()});$$(["[data-clubrecord]"][0]).forEach(b=>b.onclick=()=>{ui.clubRecordMode=b.dataset.clubrecord;ui.h2hOpponentId=null;render()});$$(["[data-clubhistory]"][0]).forEach(b=>b.onclick=()=>{ui.clubHistoryMode=b.dataset.clubhistory;ui.h2hOpponentId=null;render()});$$("[data-h2hopponent]").forEach(b=>b.onclick=()=>{ui.h2hOpponentId=b.dataset.h2hopponent;render()});if($("[data-h2hback]"))$("[data-h2hback]").onclick=()=>{ui.h2hOpponentId=null;render()};$$(["[data-clubtabquick]"][0]).forEach(b=>b.onclick=()=>{ui.clubTab=b.dataset.clubtabquick;render()});$$("[data-perfsort]").forEach(b=>b.onclick=()=>{const k=b.dataset.perfsort;if(ui.performanceSort===k)ui.performanceDir=ui.performanceDir==="desc"?"asc":"desc";else{ui.performanceSort=k;ui.performanceDir="desc"}render()});$$("[data-leaguetab]").forEach(b=>b.onclick=()=>{ui.leagueTab=b.dataset.leaguetab;render()});$$("[data-txnfilter]").forEach(b=>b.onclick=()=>{ui.leagueTransactionFilter=b.dataset.txnfilter;ui.leagueTransactionLimit=24;render()});if($("#txnLoadMore"))$("#txnLoadMore").onclick=()=>{ui.leagueTransactionLimit=(+ui.leagueTransactionLimit||24)+24;render()};$$("[data-leaguehistory]").forEach(b=>b.onclick=()=>{ui.leagueHistoryTab=b.dataset.leaguehistory;render()});$$("[data-awardhistory]").forEach(b=>b.onclick=()=>{ui.leagueAwardHistoryType=b.dataset.awardhistory;render()});$$("[data-leaguerecord]").forEach(b=>b.onclick=()=>{ui.leagueRecordMode=b.dataset.leaguerecord;render()});$$("[data-intltab]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltab;render()});$$("[data-intlrecord]").forEach(b=>b.onclick=()=>{ui.intlRecordMode=b.dataset.intlrecord;render()});
   $$("[data-wcstage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.wcReviewStage=b.dataset.wcstage;render()});
   $$("[data-olystage]").forEach(b=>b.onclick=()=>{if(b.disabled)return;ui.olyReviewStage=b.dataset.olystage;render()});
-$$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#globalExit"))$("#globalExit").onclick=async()=>{await save();ui.page="home";show("landing")};
+$$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#globalExit"))$("#globalExit").onclick=async()=>{await save();markSessionClosed();ui.page="home";show("landing")};
 $$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
 if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
 if($("#resetExtensionAsk"))$("#resetExtensionAsk").onclick=()=>{
@@ -26029,6 +26082,8 @@ function refreshLandingSaveCount(){
 }
 refreshLandingSaveCount();
 
-$("#newBtn").onclick=()=>openSaveManager("new");$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>{_saveManagerOpenToken++;show("landing")};$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
+$("#newBtn").onclick=()=>openSaveManager("new");$("#resumeBtn").onclick=async()=>{const g=sessionRecoveryCandidate();if(g)await loadSlot(+g.slot,{sessionRecovery:true});else openSaveManager("load")};$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>{_saveManagerOpenToken++;show("landing")};$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
 drawTeams();
+updateResumeButton();
+setTimeout(()=>attemptUnexpectedSessionRecovery().catch(err=>console.warn("Session recovery",err)),0);
 </script></body></html>
