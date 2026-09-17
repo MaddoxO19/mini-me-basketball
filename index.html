@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.107 Compact Clinch Markers</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.108 Summer League Fixture Visibility</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1717,7 +1717,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .compactStandings tr.standingsCut td{border-top:2px dashed #6d7a88!important}
 .compactStandings tr.standingsCut.playoffCut td{border-top-color:var(--accent)!important}
 .compactStandings tr.standingsCut.playinCut td{border-top-color:#6d7a88!important}
-/* v0.1.49.77.5.5.5.107 — compact standings clinch markers */
+/* v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility */
 .standingsMetaLine{display:flex!important;align-items:center;gap:5px;min-width:0;white-space:nowrap}
 .standingClinchSep{color:#596675;font-size:9px;font-weight:700}
 .standingClinchMarkers{display:inline-flex;align-items:center;gap:5px;margin:0;vertical-align:baseline;white-space:nowrap}
@@ -2887,12 +2887,12 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlPlayerToggle[disabled]{opacity:.45;filter:saturate(.55)}
 .intlPickCell{text-align:center}
 
-/* v0.1.49.77.5.5.5.107 — Compact Clinch Markers */
+/* v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility */
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.107 Compact Clinch Markers</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.108 Summer League Fixture Visibility</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2913,7 +2913,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.107 — Compact Clinch Markers
+// v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility
 // - From approximately game 65 onward, conference standings can show mathematically secured z/y/x/p markers.
 // - z = conference #1 seed; y = division winner; x = guaranteed top-6 postseason; p = guaranteed Play-In (top 10) only.
 // - Clinches use conservative max-win checks so ties are not assumed to be secured before a tiebreak is known.
@@ -15155,7 +15155,7 @@ function initializeSummerLeagueLive(G) {
     const pairings=[]; for(let i=0;i<shuffled.length;i+=2)pairings.push([shuffled[i],shuffled[i+1]]);
     rounds.push({round,pairings});
   }
-  G.summerLeagueLive={season:G.season,roundIndex:0,rounds,teams,invitees,games:[],complete:false,lastUserGameId:null,championshipStage:null};
+  G.summerLeagueLive={season:G.season,roundIndex:0,rounds,teams,invitees,games:[],complete:false,started:false,lastUserGameId:null,championshipStage:null};
   summerLeagueSnapshot(G); return G.summerLeagueLive;
 }
 
@@ -17219,7 +17219,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.107 Compact Clinch Markers",ENGINE_VERSION="E2.26-PROD157";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.108 Summer League Fixture Visibility",ENGINE_VERSION="E2.26-PROD158";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -20452,7 +20452,25 @@ function nextInternationalFixtures(limit=3){
   return out;
 }
 function nextInternationalFixture(){return nextInternationalFixtures(1)[0]||null;}
+function summerLeagueUpcomingFixturesHtml(limit=3){
+  if(G.phase!=="SUMMER_LEAGUE")return"";
+  const live=initializeSummerLeagueLive(G),clubId=G.userClubGM?.clubId;
+  if(!live||live.complete||!clubId||live.championshipStage)return"";
+  const fixtures=[];
+  for(let i=live.roundIndex||0;i<(live.rounds||[]).length&&fixtures.length<limit;i++){
+    const rd=live.rounds[i];
+    if(!rd||!Number.isFinite(+rd.round)||+rd.round>5)continue;
+    const pair=(rd.pairings||[]).find(p=>p?.includes?.(clubId));
+    if(!pair)continue;
+    const oppId=pair[0]===clubId?pair[1]:pair[0];
+    fixtures.push({round:+rd.round,opponent:c(oppId)?.name||oppId});
+  }
+  if(!fixtures.length)return"";
+  const rows=fixtures.map((x,i)=>`<div class="fixtureRow"><span class="fixtureRound"><small>SUMMER LEAGUE</small>Game ${x.round}</span><b class="fixtureOpponent">vs ${x.opponent}</b><strong class="fixtureVenue">Neutral</strong></div>`).join("");
+  return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Next ${fixtures.length} · Summer League</small></div><div class="fixtureSection unifiedFixtureSection"><div class="fixtureRows">${rows}</div></div></div>`;
+}
 function upcomingFixturesHtml(){
+  if(G.phase==="SUMMER_LEAGUE")return summerLeagueUpcomingFixturesHtml(3);
   if(G.phase!=="REGULAR_SEASON")return"";
   const nation=nextInternationalFixtures(3);
   const cup=nextCupFixture();
@@ -22064,6 +22082,7 @@ function home(){
   const summerHasStarted=G.phase==="SUMMER_LEAGUE"&&(
     G.summerLeagueLive?.season===G.season &&
     (
+      G.summerLeagueLive?.started===true ||
       (G.summerLeagueLive?.games||[]).some(g=>g.played||Number.isFinite(+g.homeScore)||Number.isFinite(+g.awayScore)) ||
       (+G.summerLeagueLive?.roundIndex||0)>0
     )
@@ -25673,7 +25692,15 @@ $$("[data-postgame]").forEach(b=>b.onclick=()=>{const g=gameById(b.dataset.postg
 if($("#openDraftFromTeam"))$("#openDraftFromTeam").onclick=openDraftWindow;
 if($("#manageSquadHome"))$("#manageSquadHome").onclick=()=>{ui.page="team";ui.teamTab="squad";render()};
 if($("#manageSummerTwoWays"))$("#manageSummerTwoWays").onclick=()=>{ui.page="team";ui.teamTab="contracts";render()};
-if($("#summerLeagueMainAction"))$("#summerLeagueMainAction").onclick=()=>advanceFromUi(1);
+if($("#summerLeagueMainAction"))$("#summerLeagueMainAction").onclick=async()=>{
+  const live=initializeSummerLeagueLive(G);
+  live.started=true;
+  // Opening Summer League is a schedule transition, not Game 1. Preserve the
+  // pre-generated five-game slate so the GM can review the current matchup and
+  // next three neutral-site fixtures before simulating anything.
+  await save();
+  ui.page="home";show("game");render();
+};
 if($("#homeMainAction"))$("#homeMainAction").onclick=()=>advanceFromUi(1);
 
 if($("#homeAltAction"))$("#homeAltAction").onclick=()=>advanceFromUi(5);
