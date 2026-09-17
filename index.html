@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.104 Fixture Queue Authority</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.105 Long-Career Save Memory</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2885,10 +2885,12 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlPlayerToggle[disabled]{opacity:.45;filter:saturate(.55)}
 .intlPickCell{text-align:center}
 
+/* v0.1.49.77.5.5.5.105 — Long-Career Save Memory */
+
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.104 Fixture Queue Authority</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.105 Long-Career Save Memory</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2909,7 +2911,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.104 — Fixture Queue Authority
+// v0.1.49.77.5.5.5.105 — Long-Career Save Memory
 // - From approximately game 65 onward, conference standings can show mathematically secured z/y/x/p markers.
 // - z = conference #1 seed; y = division winner; x = guaranteed top-6 postseason; p = guaranteed Play-In (top 10) only.
 // - Clinches use conservative max-win checks so ties are not assumed to be secured before a tiebreak is known.
@@ -17215,7 +17217,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.104 Fixture Queue Authority",ENGINE_VERSION="E2.26-PROD154";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.105 Long-Career Save Memory",ENGINE_VERSION="E2.26-PROD155";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -17761,40 +17763,63 @@ function openSaveDB(){
     req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
   });
 }
+// v105: mature careers must not keep their full serialized payload resident in
+// JavaScript memory after a successful IndexedDB write. Safari already holds the
+// live career object; retaining the JSON save string as a slot cache can keep a
+// second, very large representation alive indefinitely. Slot browsing also reads
+// metadata only, rather than getAll() materialising every career payload at once.
+function saveSlotMetaOnly(rec){
+  if(!rec)return null;
+  return {slot:+rec.slot||0,meta:rec.meta||null,updatedAt:+rec.updatedAt||0,persisted:true};
+}
 async function writeSlot(slot,payload,meta){
-  memorySlots[slot]={slot,payload,meta,updatedAt:Date.now()};
+  const rec={slot,payload,meta,updatedAt:Date.now()};
   try{
     const db=await openSaveDB();
-    await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).put(memorySlots[slot]);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
-    db.close();return true;
+    await new Promise((res,rej)=>{const tx=db.transaction(SAVE_STORE,"readwrite");tx.objectStore(SAVE_STORE).put(rec);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});
+    db.close();
+    // Deliberately release the payload reference after durable storage succeeds.
+    memorySlots[slot]=saveSlotMetaOnly(rec);
+    return true;
   }catch(e){
-    try{localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(memorySlots[slot]));return true}catch(f){console.warn("Persistent save unavailable",e,f);return false}
+    // Fallback storage needs the payload because it is now the durable copy.
+    memorySlots[slot]=rec;
+    try{localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(rec));return true}catch(f){console.warn("Persistent save unavailable",e,f);return false}
   }
 }
 async function readSlot(slot){
   try{
     const db=await openSaveDB();
     const rec=await new Promise((res,rej)=>{const q=db.transaction(SAVE_STORE,"readonly").objectStore(SAVE_STORE).get(slot);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)});
-    db.close();if(rec){memorySlots[slot]=rec;return rec}
+    db.close();if(rec){memorySlots[slot]=saveSlotMetaOnly(rec);return rec}
   }catch(e){}
   try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw);memorySlots[slot]=rec;return rec}}catch(e){}
-  return memorySlots[slot]||null;
+  // Only return an in-memory fallback when it genuinely contains a payload. A
+  // metadata-only IndexedDB cache is not itself a loadable career.
+  return memorySlots[slot]?.payload?memorySlots[slot]:null;
 }
 async function readAllSlots(){
   const records=Array(MAX_SAVES).fill(null);
   try{
     const db=await openSaveDB();
-    const found=await new Promise((res,rej)=>{
-      const tx=db.transaction(SAVE_STORE,"readonly"),store=tx.objectStore(SAVE_STORE),out=[];
-      const q=store.getAll();q.onsuccess=()=>res(q.result||[]);q.onerror=()=>rej(q.error);
+    await new Promise((res,rej)=>{
+      const tx=db.transaction(SAVE_STORE,"readonly"),store=tx.objectStore(SAVE_STORE);
+      const q=store.openCursor();
+      q.onsuccess=()=>{
+        const cursor=q.result;
+        if(!cursor){res();return}
+        const rec=cursor.value,lite=saveSlotMetaOnly(rec);
+        if(lite&&lite.slot>=1&&lite.slot<=MAX_SAVES){records[lite.slot-1]=lite;memorySlots[lite.slot]=lite}
+        cursor.continue();
+      };
+      q.onerror=()=>rej(q.error);
     });
     db.close();
-    for(const rec of found){if(rec&&rec.slot>=1&&rec.slot<=MAX_SAVES){records[rec.slot-1]=rec;memorySlots[rec.slot]=rec}}
   }catch(e){}
   for(let slot=1;slot<=MAX_SAVES;slot++){
     if(records[slot-1])continue;
-    try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw);records[slot-1]=rec;memorySlots[slot]=rec;continue}}catch(e){}
-    if(memorySlots[slot])records[slot-1]=memorySlots[slot];
+    try{const raw=localStorage.getItem(`MMB_SAVE_SLOT_${slot}`);if(raw){const rec=JSON.parse(raw),lite=saveSlotMetaOnly(rec);records[slot-1]=lite;memorySlots[slot]=rec;continue}}catch(e){}
+    if(memorySlots[slot])records[slot-1]=saveSlotMetaOnly(memorySlots[slot]);
   }
   return records;
 }
@@ -17976,7 +18001,15 @@ window.MiniMeBasketballQA={
   validate:()=>validateCareerIntegrityState(G),
   repair:()=>repairCareerIntegrityState(G),
   releaseGate:(options={})=>runReleaseGate(options),
-  tuning:()=>JSON.parse(JSON.stringify(SIM_TUNING))
+  tuning:()=>JSON.parse(JSON.stringify(SIM_TUNING)),
+  saveHealth:()=>({
+    payloadBytes:+G?.runtimeMeta?.lastSavePayloadBytes||0,
+    payloadMB:+(((+G?.runtimeMeta?.lastSavePayloadBytes||0)/1048576).toFixed(2)),
+    serializeMs:+G?.runtimeMeta?.lastSaveSerializeMs||0,
+    writeMs:+G?.runtimeMeta?.lastSaveWriteMs||0,
+    serial:+G?.runtimeMeta?.lastCompletedSaveSerial||0,
+    memoryModel:G?.runtimeMeta?.saveMemoryModel||"legacy"
+  })
 };
 
 
@@ -18065,22 +18098,41 @@ function refreshAwardPresentationOnly(){
   overlay.outerHTML=awardVotingPopupHtml(n);bind();
 }
 
+let _ordinarySaveCounter=0;
+function shouldRunPeriodicIntegrityCheck(){
+  _ordinarySaveCounter++;
+  // Full repair/validation remains available through QA and still runs during
+  // load maintenance. Ordinary game-by-game saves use it only periodically so
+  // a mature career is not fully traversed immediately before every stringify.
+  return _ordinarySaveCounter===1||(_ordinarySaveCounter%20)===0||["OFFSEASON","CHAMPION"].includes(G?.phase);
+}
 async function save(silent=true){
   if(!G||!activeSlot)return false;
-  reportCareerIntegrity("pre-save");
-  // v52: on long iPhone/Safari careers, full AI box-score history causes
-  // late-season memory growth and large JSON serialization spikes.
+  // Release obsolete AI regular-season detail before any expensive career walk
+  // or JSON serialization so the peak-memory operation sees the compact state.
   compactRegularSeasonRuntime(G);
+  if(shouldRunPeriodicIntegrityCheck())reportCareerIntegrity("periodic-save");
   G.runtimeMeta=G.runtimeMeta||{};
   G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
-  const slot=activeSlot,payload=JSON.stringify(G,careerSaveReplacer),meta=saveMeta(),serial=++_saveWriteSerial;
+  const slot=activeSlot,meta=saveMeta(),serial=++_saveWriteSerial;
+  const t0=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
+  const payload=JSON.stringify(G,careerSaveReplacer);
+  const t1=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
   G.runtimeMeta.lastSavePayloadBytes=payload.length;
+  G.runtimeMeta.lastSaveSerializeMs=Math.max(0,Math.round((t1-t0)*10)/10);
+  G.runtimeMeta.lastSaveSerial=serial;
   // Serialise all writes. Mobile Safari can otherwise leave a mature career one
   // UI action ahead of its durable IndexedDB record when several saves overlap.
+  const writeStarted=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
   _saveWriteChain=_saveWriteChain.catch(()=>false).then(()=>writeSlot(slot,payload,meta));
   const ok=await _saveWriteChain;
-  if(G?.runtimeMeta)G.runtimeMeta.lastCompletedSaveSerial=serial;
+  const writeEnded=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
+  if(G?.runtimeMeta){
+    G.runtimeMeta.lastCompletedSaveSerial=serial;
+    G.runtimeMeta.lastSaveWriteMs=Math.max(0,Math.round((writeEnded-writeStarted)*10)/10);
+    G.runtimeMeta.saveMemoryModel="IDB-META-CACHE-1";
+  }
   if(!silent)toast(ok?`Career saved · Slot ${slot}`:"Career active · save storage unavailable");
   return ok;
 }
@@ -20363,7 +20415,7 @@ function futureLeagueFixtures(limit=3){
 }
 function nextCupFixture(){
   const cup=G.inSeasonCup,clubId=G.userClubGM?.clubId;if(!cup||cup.complete||!clubId)return null;
-  // v0.1.49.77.5.5.5.104 — Only return a Cup event when it is actually
+  // v0.1.49.77.5.5.5.105 — Only return a Cup event when it is actually
   // actionable now. Earlier builds scanned arbitrarily far ahead for the next
   // known Cup tie, then Upcoming Fixtures promoted that future tie above the
   // intervening league schedule. That let Home show (correctly) League Game 7
