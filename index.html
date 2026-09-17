@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.110 Postseason Integrity Guard</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.112 Retired Archive Identity Cleanup</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1439,6 +1439,11 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .recordCategory{margin-top:13px}.recordCategoryHead{display:flex;justify-content:space-between;gap:8px;align-items:flex-end;margin:0 2px 6px}.recordCategoryHead b{font-size:12px}.recordCategoryHead small{font-size:9px;color:var(--muted)}
 .recordGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.recordCard{border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:10px;min-width:0}.recordCard small{display:block;font-size:9px;color:var(--accent2);font-weight:950;text-transform:uppercase;letter-spacing:.45px}.recordCard strong{display:block;font-size:18px;margin:3px 0;color:var(--text)}.recordCard b{display:block;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recordCard span{display:block;font-size:9px;color:var(--muted);margin-top:3px;line-height:1.35}
 .recordLeaderList{border:1px solid var(--line);background:var(--panel);border-radius:12px;overflow:hidden}.recordLeaderRow{display:grid;grid-template-columns:25px minmax(0,1fr) 52px;gap:8px;align-items:center;padding:8px 10px;border-top:1px solid var(--line)}.recordLeaderRow:first-child{border-top:0}.recordLeaderRow>span{font-size:9px;color:var(--muted);font-weight:950;text-align:center}.recordLeaderRow b{font-size:10px}.recordLeaderRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.recordLeaderRow strong{text-align:right;font-size:11px;color:var(--accent2)}
+.recordPlayerName{display:flex;align-items:center;gap:6px;min-width:0}
+.recordPlayerName .nationalFlagMark.small{flex:0 0 auto}
+.recordPlayerNameText{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.recordPlayerNameText.compactPreferred{font-weight:900}
+
 .clubRecordStrip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.clubRecordStrip .recordCard{padding:9px;text-align:center}.clubRecordStrip .recordCard strong{font-size:15px}
 @media(max-width:560px){.recordGrid{grid-template-columns:1fr 1fr}.recordCard{padding:9px}.recordCard strong{font-size:16px}.clubRecordStrip{grid-template-columns:1fr 1fr}.clubRecordStrip .recordCard:last-child{grid-column:1/-1}}
 
@@ -2892,7 +2897,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.110 Postseason Integrity Guard</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.112 Retired Archive Identity Cleanup</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2916,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.110 — Postseason Integrity Guard
+// v0.1.49.77.5.5.5.112 — Retired Archive Identity Cleanup
 // Adds structural validation around Play-In and Playoff round transitions.
 // Missing or malformed saved bracket state is routed through the existing repair path
 // before advancement, and invalid transitions stop safely instead of recursing/crashing.
@@ -10679,8 +10684,7 @@ function dynastyLegacySnapshot(G){
 }
 function leagueHistoryAllTimeHtml(G){
   ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
-  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12),legends=[...retiredPlayerPool(G)].sort((a,b)=>retiredLegendScore(b)-retiredLegendScore(a)).slice(0,10);
-  const legendsHtml=legends.length?`<div class="sectionTitle">Retired Legends</div><div class="retiredLegendList">${legends.map((p,i)=>{const hc=playerHonourCounts(p),careerPts=currentCareerTotal(p,"pts");return `<div class="retiredLegendRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"}</small></div><div><strong>${(+careerPts||0).toLocaleString()}</strong><small>PTS</small></div><div><strong>${hc.total}</strong><small>HON</small></div></div>`}).join("")}</div>`:"";
+  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12);
   const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,ring=legacy.honours?.playerChampionships?.[0],run=legacy.honours?.consecutiveTitles,titleLegacy=playerTitleLegacySnapshot(G),dynasty=dynastyLegacySnapshot(G),three=titleLegacy.threePeats?.[0];
   const liveSingleGamePoints=x.league?.singleGame?.points||legacy.singleGame?.points;
   const liveCareerScoring=x.career?.points?.[0]||legacy.career?.points?.[0];
@@ -10692,7 +10696,7 @@ function leagueHistoryAllTimeHtml(G){
   const threeMeta=threeLeader.historical?"League legacy":threePlayer?(threePlayer.retired?`${positionLabel(threePlayer)} · Retired ${threePlayer.retirementSeason?basketballSeasonLabel(threePlayer.retirementSeason):"—"}`:`${positionLabel(threePlayer)} · ${clubForPlayer(G,threePlayer)?.name||"Active"}`):"Career achievement";
   const liveDynastyWins=(dynasty.bestRun?.value||0)>(run?.value||8);
   const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLeader.value}</strong><b>${titleLeader.playerName}</b><span>${titleMeta}</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${threeLeader.value}</strong><b>${threeLeader.playerName}</b><span>${threeMeta}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${liveDynastyWins?dynasty.bestRun.clubName:(run?.playerName||"Caleb Mercer")}</b><span>${liveDynastyWins?"Consecutive championships":"League legacy"}</span></div></div></div>`;
-  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${legendsHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>YEAR</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>LEAGUE-BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST REC</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonYear"><small>YEAR</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div><small>NBA CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div><small>NBA CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div><small>LEAGUE-BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div><strong>${x.nba}</strong><small>NBA</small></div><div><strong>${x.cup}</strong><small>CUP</small></div><div><strong>${x.best}</strong><small>BEST REC</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
 }
 function leagueHistoricalRecordsHtml(G){
   const tabs=[["game","Game Records"],["season","Season Records"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
@@ -17343,7 +17347,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.110 Postseason Integrity Guard",ENGINE_VERSION="E2.26-PROD160";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.112 Retired Archive Identity Cleanup",ENGINE_VERSION="E2.26-PROD162";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18852,6 +18856,11 @@ function allPlayerObjectsForNaming(){
   for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
   (G.freeAgents||[]).forEach(add);(G.externalProfessionals||[]).forEach(add);(G.draftPool||[]).forEach(add);(G.draftState?.prospects||[]).forEach(add);
   (G.upcomingDraftClass?.prospects||[]).forEach(add);
+  // v111: retired players remain part of the permanent career record and must
+  // receive the same identity repair as active players. Older saves could archive
+  // a generated player before the country-name migration ran, leaving labels such
+  // as “Player 3356” visible forever in all-time leaderboards.
+  (G.retiredPlayers||[]).forEach(add);
   return out;
 }
 function ensureCountryBasedPlayerNames(){
@@ -18879,8 +18888,10 @@ function ensureCountryBasedPlayerNames(){
       registry.used[name]={season:G.season,playerId:p.id};used.add(name);changed=true;
     }
   }
-  G.playerNameModelVersion=3;
+  G.playerNameModelVersion=4;
   G.globalNameDatabaseVersion=GLOBAL_NAME_DATABASE_VERSION;
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.retiredArchiveIdentityRepair={version:"RAI1",season:G.season,changed:!!changed};
   if(changed)save();
   return changed;
 }
