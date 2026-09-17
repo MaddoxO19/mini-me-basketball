@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.108 Summer League Fixture Visibility</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.110 Postseason Integrity Guard</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -1717,7 +1717,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .compactStandings tr.standingsCut td{border-top:2px dashed #6d7a88!important}
 .compactStandings tr.standingsCut.playoffCut td{border-top-color:var(--accent)!important}
 .compactStandings tr.standingsCut.playinCut td{border-top-color:#6d7a88!important}
-/* v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility */
+/* v0.1.49.77.5.5.5.109 — Forecast Record Order */
 .standingsMetaLine{display:flex!important;align-items:center;gap:5px;min-width:0;white-space:nowrap}
 .standingClinchSep{color:#596675;font-size:9px;font-weight:700}
 .standingClinchMarkers{display:inline-flex;align-items:center;gap:5px;margin:0;vertical-align:baseline;white-space:nowrap}
@@ -2887,12 +2887,12 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .intlPlayerToggle[disabled]{opacity:.45;filter:saturate(.55)}
 .intlPickCell{text-align:center}
 
-/* v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility */
+/* v0.1.49.77.5.5.5.109 — Forecast Record Order */
 
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.108 Summer League Fixture Visibility</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.110 Postseason Integrity Guard</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2910,10 +2910,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <section id="fibaWindow" class="screen"><div class="draftWindowWrap"><div class="draftWindowTop"><div class="draftWindowRow"><div class="draftWindowIdentity"><div class="eyebrow">FIBA World Cup Qualification</div><b id="fibaWindowStatus">International Matchday</b></div></div></div><div id="fibaWindowHost"></div></div></section>
 </div><div id="toast" class="toast"></div>
 <script>
+// v0.1.49.77.5.5.5.109 CHANGE TRACK
+// - Season Forecast and Midseason Review boards are ordered by the predicted W-L record they display.
+// - Championship outlook remains a tie-breaker only when two teams round to the same projected record.
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.108 — Summer League Fixture Visibility
+// v0.1.49.77.5.5.5.110 — Postseason Integrity Guard
+// Adds structural validation around Play-In and Playoff round transitions.
+// Missing or malformed saved bracket state is routed through the existing repair path
+// before advancement, and invalid transitions stop safely instead of recursing/crashing.
+// v0.1.49.77.5.5.5.109 — Forecast Record Order
 // - From approximately game 65 onward, conference standings can show mathematically secured z/y/x/p markers.
 // - z = conference #1 seed; y = division winner; x = guaranteed top-6 postseason; p = guaranteed Play-In (top 10) only.
 // - Clinches use conservative max-win checks so ties are not assumed to be secured before a tiebreak is known.
@@ -16860,6 +16867,95 @@ function settleSeasonAwards(G){
 }
 
 // ---------------------------------------------------------------------
+// POSTSEASON INTEGRITY GUARD
+// ---------------------------------------------------------------------
+
+function recordPostseasonIntegrity(G,label,issues=[],repaired=false){
+  G.runtimeMeta=G.runtimeMeta||{};
+  const row={season:G.season,phase:G.phase,label,ok:issues.length===0,issues:[...issues],repaired:!!repaired,at:Date.now()};
+  const rows=Array.isArray(G.runtimeMeta.postseasonIntegrity)?G.runtimeMeta.postseasonIntegrity:[];
+  rows.push(row);G.runtimeMeta.postseasonIntegrity=rows.slice(-24);
+  G.runtimeMeta.lastPostseasonIntegrity=row;
+  if(issues.length)console.warn('Postseason integrity',label,issues);
+  return row;
+}
+
+function playInIntegrityIssues(G){
+  const live=G.playInLive;if(!live)return[];
+  const issues=[];
+  const clubOk=id=>!!G.clubs.find(c=>c.id===id);
+  const initial=Array.isArray(live.initial)?live.initial:[];
+  const finals=Array.isArray(live.finals)?live.finals:[];
+  const games=Array.isArray(live.games)?live.games:[];
+  if(initial.length!==4)issues.push(`Expected 4 opening Play-In games, found ${initial.length}`);
+  for(const conf of CONFERENCES){
+    const rows=initial.filter(x=>x.conference===conf);
+    if(rows.length!==2)issues.push(`${conf} opening Play-In count ${rows.length}/2`);
+    const ids=rows.flatMap(x=>[x.teamAId,x.teamBId]).filter(Boolean);
+    if(new Set(ids).size!==ids.length)issues.push(`${conf} opening Play-In contains a duplicate team`);
+    for(const id of ids){const club=G.clubs.find(c=>c.id===id);if(!clubOk(id))issues.push(`${conf} Play-In references missing club ${id}`);else if(club.conference!==conf)issues.push(`${club.name} is in the wrong Play-In conference`);}
+    const seeds=rows.flatMap(x=>[+x.seedA,+x.seedB]).filter(Number.isFinite).sort((a,b)=>a-b).join(',');
+    if(rows.length===2&&seeds!=='7,8,9,10')issues.push(`${conf} Play-In seeds are ${seeds||'missing'}`);
+  }
+  for(const e of [...initial,...finals]){
+    if(e.complete&&(!e.gameId||!games.some(g=>g.id===e.gameId)))issues.push(`Completed Play-In entry ${e.conference||''} ${e.type||''} has no recorded game`);
+  }
+  if(live.stage>=2&&finals.length!==2)issues.push(`Play-In final stage expected 2 games, found ${finals.length}`);
+  return issues;
+}
+
+function playoffIntegrityIssues(G){
+  const live=G.playoffsLive;if(!live)return[];
+  const issues=[];
+  const series=Array.isArray(live.series)?live.series:[];
+  const expected={R1:4,SF:2,CF:1};
+  for(const s of series){
+    if(!s?.teamAId||!s?.teamBId)issues.push(`Series ${s?.stage||'unknown'} is missing a team`);
+    else if(s.teamAId===s.teamBId)issues.push(`Series ${s.stage} contains the same club twice`);
+    if((+s.winsA||0)>4||(+s.winsB||0)>4)issues.push(`Series ${s.stage} has an impossible win total`);
+    if(s.complete&&!s.winnerClubId)issues.push(`Completed series ${s.stage} has no winner`);
+    if(s.winnerClubId&&s.winnerClubId!==s.teamAId&&s.winnerClubId!==s.teamBId)issues.push(`Series ${s.stage} winner is not a participant`);
+    if((s.games||[]).length>7)issues.push(`Series ${s.stage} has more than 7 games`);
+  }
+  for(const round of ['R1','SF','CF']){
+    for(const conf of CONFERENCES){
+      const rows=series.filter(s=>s.stage===`${conf}_${round}`);
+      if(rows.length>expected[round])issues.push(`${conf} ${round} has ${rows.length} series; expected at most ${expected[round]}`);
+      const teams=rows.flatMap(s=>[s.teamAId,s.teamBId]).filter(Boolean);
+      if(new Set(teams).size!==teams.length)issues.push(`${conf} ${round} contains a duplicate club`);
+    }
+  }
+  const finals=series.filter(s=>s.stage==='FINALS');
+  if(finals.length>1)issues.push(`Finals has ${finals.length} series`);
+  if(finals[0]){
+    const a=G.clubs.find(c=>c.id===finals[0].teamAId),b=G.clubs.find(c=>c.id===finals[0].teamBId);
+    if(a&&b&&a.conference===b.conference)issues.push(`Finals participants come from the same conference`);
+  }
+  return issues;
+}
+
+function currentPlayoffRoundSeries(live){
+  if(!live)return[];
+  return (live.series||[]).filter(s=>live.round==='FINALS'?s.stage==='FINALS':s.stage?.endsWith(`_${live.round}`));
+}
+
+function ensurePlayoffRoundIntegrity(G,label){
+  let live=G.playoffsLive;if(!live)return true;
+  let issues=playoffIntegrityIssues(G),repaired=false;
+  const expectedTotal=live.round==='R1'?8:live.round==='SF'?4:live.round==='CF'?2:live.round==='FINALS'?1:null;
+  let current=currentPlayoffRoundSeries(live);
+  if(expectedTotal!=null&&current.length!==expectedTotal)issues.push(`${live.round} has ${current.length}/${expectedTotal} required series`);
+  if(issues.length&&typeof repairPlayoffSaveState==='function'){
+    repaired=!!repairPlayoffSaveState();live=G.playoffsLive;current=currentPlayoffRoundSeries(live);
+    issues=playoffIntegrityIssues(G);
+    const expectedAfter=live?.round==='R1'?8:live?.round==='SF'?4:live?.round==='CF'?2:live?.round==='FINALS'?1:null;
+    if(expectedAfter!=null&&current.length!==expectedAfter)issues.push(`${live?.round||'unknown'} has ${current.length}/${expectedAfter} required series after repair`);
+  }
+  recordPostseasonIntegrity(G,label,issues,repaired);
+  return issues.length===0;
+}
+
+// ---------------------------------------------------------------------
 // PHASE: PLAY_IN
 // ---------------------------------------------------------------------
 
@@ -16906,6 +17002,9 @@ function preparePlayInFinals(G){
 
 function finalizePlayInLive(G){
   const live=G.playInLive;if(!live||live.complete)return;
+  const preIssues=playInIntegrityIssues(G);
+  if(live.finals?.length!==2||!live.finals.every(x=>x.complete&&x.gameId))preIssues.push("Play-In cannot finalize before both final games are complete");
+  if(preIssues.length){recordPostseasonIntegrity(G,"play-in-finalize-blocked",preIssues,false);return false;}
   const playInEliminated=[];
   for(const conf of CONFERENCES){
     const f=live.finals.find(x=>x.conference===conf);
@@ -16936,12 +17035,16 @@ function finalizePlayInLive(G){
   };
   logEvent(G,`Play-in tournament complete. Six games recorded; lottery pool ${G.pendingLotteryPool.length} teams.`);
   G.phase="PLAYOFFS";
+  recordPostseasonIntegrity(G,"play-in-complete",playInIntegrityIssues(G),false);
+  return true;
 }
 
 function advancePlayInEvent(G){
   CURRENT_GAME_STATE=G;syncBasketballCalendarForEvent(G,"PLAY_IN",G.playInLive?.stage||0);
   if(G.phase!=="PLAY_IN")return{ok:false,reason:"Play-In is not active"};
   const live=initializePlayInLive(G),games=[],userId=G.userClubGM?.clubId||null;
+  const entryIssues=playInIntegrityIssues(G);
+  if(entryIssues.length){recordPostseasonIntegrity(G,"play-in-entry",entryIssues,false);return{ok:false,reason:"Play-In bracket integrity check failed"};}
 
   const playEntry=(entry,round)=>{
     const tag=round===1?`${entry.conference}_PLAYIN_${entry.type}`:`${entry.conference}_PLAYIN_FINAL`;
@@ -16970,7 +17073,9 @@ function advancePlayInEvent(G){
     }else{
       for(const entry of pending)playEntry(entry,2);
     }
-    if(live.finals.length===2&&live.finals.every(x=>x.complete))finalizePlayInLive(G);
+    if(live.finals.length===2&&live.finals.every(x=>x.complete)){
+      if(finalizePlayInLive(G)===false)return{ok:false,reason:"Play-In finalization was blocked by an integrity check"};
+    }
   }
 
   G.playIn={...(G.playIn||{}),season:G.season,initial:live.initial.map(x=>({...x})),finals:live.finals.map(x=>({...x})),
@@ -17006,6 +17111,7 @@ function initializePlayoffsLive(G){
   }
   G.playoffsLive={season:G.season,round:"R1",series,games:[],seedMap,complete:false,lastUserGameId:null,conferenceWinners:{East:null,West:null},championClubId:null};
   G.playoffs={season:G.season,round:"R1",seedMap:{...seedMap},series:series.map(x=>({...x})),games:[],live:true,complete:false};
+  recordPostseasonIntegrity(G,"playoffs-initialized",playoffIntegrityIssues(G),false);
   return G.playoffsLive;
 }
 
@@ -17022,12 +17128,19 @@ function simulatePlayoffSeriesGame(G,s){
 
 function buildNextPlayoffRound(G){
   const live=G.playoffsLive;
-  const active=live.series.filter(s=>live.round==="FINALS" ? s.stage==="FINALS" : s.stage.endsWith(`_${live.round}`));
-  if(!active.length||!active.every(s=>s.complete))return false;
+  if(!live)return false;
+  const expectedTotal=live.round==="R1"?8:live.round==="SF"?4:live.round==="CF"?2:live.round==="FINALS"?1:null;
+  let active=currentPlayoffRoundSeries(live);
+  if(expectedTotal!=null&&active.length!==expectedTotal){
+    if(!ensurePlayoffRoundIntegrity(G,`before-${live.round}-advance`))return false;
+    active=currentPlayoffRoundSeries(G.playoffsLive);
+  }
+  if(!active.length||!active.every(s=>s.complete&&s.winnerClubId))return false;
 
   if(live.round==="R1"){
     for(const conf of CONFERENCES){
       const c=active.filter(s=>s.conference===conf);
+      if(c.length!==4){recordPostseasonIntegrity(G,"r1-transition",[`${conf} Round 1 has ${c.length}/4 completed series`],false);return false;}
       live.series.push(makePlayoffSeries(`${conf}_SF`,conf,c[0].winnerClubId,c[1].winnerClubId,live.seedMap[c[0].winnerClubId]||null,live.seedMap[c[1].winnerClubId]||null));
       live.series.push(makePlayoffSeries(`${conf}_SF`,conf,c[2].winnerClubId,c[3].winnerClubId,live.seedMap[c[2].winnerClubId]||null,live.seedMap[c[3].winnerClubId]||null));
     }
@@ -17036,6 +17149,7 @@ function buildNextPlayoffRound(G){
   if(live.round==="SF"){
     for(const conf of CONFERENCES){
       const c=live.series.filter(s=>s.stage===`${conf}_SF`);
+      if(c.length!==2||!c.every(s=>s.complete&&s.winnerClubId)){recordPostseasonIntegrity(G,"sf-transition",[`${conf} Semifinals are incomplete or malformed`],false);return false;}
       live.series.push(makePlayoffSeries(`${conf}_CF`,conf,c[0].winnerClubId,c[1].winnerClubId,live.seedMap[c[0].winnerClubId]||null,live.seedMap[c[1].winnerClubId]||null));
     }
     live.round="CF";return true;
@@ -17043,6 +17157,7 @@ function buildNextPlayoffRound(G){
   if(live.round==="CF"){
     for(const conf of CONFERENCES){
       const c=live.series.find(s=>s.stage===`${conf}_CF`);
+      if(!c?.complete||!c.winnerClubId){recordPostseasonIntegrity(G,"cf-transition",[`${conf} Conference Final is incomplete or missing`],false);return false;}
       live.conferenceWinners[conf]=c.winnerClubId;
     }
     live.series.push(makePlayoffSeries("FINALS","Finals",live.conferenceWinners.East,live.conferenceWinners.West,live.seedMap[live.conferenceWinners.East]||null,live.seedMap[live.conferenceWinners.West]||null));
@@ -17083,7 +17198,15 @@ function advancePlayoffEvent(G){
     if(live.round==="FINALS")return s.stage==="FINALS";
     return s.stage.endsWith(`_${live.round}`);
   }).filter(s=>!s.complete);
-  if(!active.length){buildNextPlayoffRound(G);return advancePlayoffEvent(G);}
+  if(!active.length){
+    const before=live.round,progressed=buildNextPlayoffRound(G);
+    if(!progressed&&G.phase==="PLAYOFFS"&&live.round===before){
+      ensurePlayoffRoundIntegrity(G,`stranded-${before}`);
+      return{ok:false,reason:`Postseason bracket could not advance from ${before}`};
+    }
+    if(G.phase!=="PLAYOFFS")return{ok:true,round:live.round,games:[],userGame:null,complete:true};
+    return advancePlayoffEvent(G);
+  }
   const games=[];
   for(const s of active){
     const g=simulatePlayoffSeriesGame(G,s);live.games.push(g);games.push(g);
@@ -17093,6 +17216,7 @@ function advancePlayoffEvent(G){
   if(G.phase==="PLAYOFFS"){
     G.playoffs={season:G.season,round:live.round,seedMap:{...(live.seedMap||{})},conferenceWinners:{...live.conferenceWinners},series:live.series.map(s=>({...s})),games:live.games,live:true,complete:false};
   }
+  if(G.phase==="PLAYOFFS")recordPostseasonIntegrity(G,`after-${live.round}-event`,playoffIntegrityIssues(G),false);
   return{ok:true,round:live.round,games,userGame:games.find(g=>G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete};
 }
 
@@ -17219,7 +17343,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.108 Summer League Fixture Visibility",ENGINE_VERSION="E2.26-PROD158";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.110 Postseason Integrity Guard",ENGINE_VERSION="E2.26-PROD160";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -22281,6 +22405,15 @@ function mediaProjectedRecord(row){
   const wins=Math.max(0,Math.min(82,Math.round(+row?.projectedWins||0)));
   return `${wins}–${82-wins}`;
 }
+function mediaRecordOrderedRows(forecast){
+  return [...(forecast?.rows||[])].sort((a,b)=>{
+    const aw=Math.max(0,Math.min(82,Math.round(+a?.projectedWins||0)));
+    const bw=Math.max(0,Math.min(82,Math.round(+b?.projectedWins||0)));
+    if(bw!==aw)return bw-aw;
+    // If the displayed W-L records are identical, retain championship outlook as the tie-breaker.
+    return (+b?.titlePct||0)-(+a?.titlePct||0)||(+b?.rating||0)-(+a?.rating||0)||String(a?.name||'').localeCompare(String(b?.name||''));
+  });
+}
 function mediaPreviousSeason(G){
   const hist=(G?.leagueHistory||[]).filter(h=>(+h?.season||0)<(+G?.season||0)).sort((a,b)=>(+b.season||0)-(+a.season||0));
   return hist[0]||null;
@@ -22326,8 +22459,9 @@ function publishPreseasonForecast(G,{forceArticle=false,lateRepair=false}={}){
   if(!f){f=calculateMediaLeagueForecast(100);if(!f)return null;state.preseason=f;}
   if(!forceArticle&&hasPreseasonForecastArticle(G))return f;
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
-  const leader=f.rows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
+  const recordRows=mediaRecordOrderedRows(f);
+  const board=recordRows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
+  const leader=recordRows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
   const intro=lateRepair
     ?`We did not get the opening forecast on air earlier, so here is the season outlook as it stands. `
     :`${leader?.name||"The early favourite"} start the year at the top of my championship picture${leaderContext?`, coming in as ${leaderContext}`:""}, but the gap is far from decisive. `;
@@ -22357,8 +22491,9 @@ function publishPostAllStarForecast(G,{forceArticle=false}={}){
   const risers=[...movement].sort((a,b)=>b.deltaTitle-a.deltaTitle).slice(0,2);
   const fallers=[...movement].sort((a,b)=>a.deltaTitle-b.deltaTitle).slice(0,2);
   const user=f.rows.find(x=>x.clubId===G.userClubGM?.clubId);
-  const board=f.rows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
-  const leader=f.rows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
+  const recordRows=mediaRecordOrderedRows(f);
+  const board=recordRows.slice(0,5).map(x=>({name:x.name,value:mediaProjectedRecord(x)}));
+  const leader=recordRows[0],leaderContext=leader?mediaTeamContextPhrase(G,leader.clubId):"";
   const movementCopy=pre?.rows?.length?` ${risers.map(x=>x.name).join(" and ")} have made the biggest moves up since opening night, while ${fallers.map(x=>x.name).join(" and ")} have lost ground.`:"";
   const body=`The season has given us enough evidence to sharpen the forecast. ${leader?.name||"The current leader"}${leaderContext?`, ${leaderContext},`:""} now project at ${leader?mediaProjectedRecord(leader):"—"} and set the pace in my championship picture.${movementCopy}${user?` ${user.name} are tracking toward ${mediaProjectedRecord(user)} and roughly the #${Math.max(1,Math.round(user.expectedSeed))} seed in the ${user.conference}.`:""} ${mediaCupInsight(G,f,{midseason:true})} This is the point of the season where contenders stop being theoretical.`;
   pushChaseMaddonArticle(G,
