@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.113 Record Flags & Honours Polish</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.114 Save Write Coalescing</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2896,6 +2896,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 
 
 /* v0.1.49.77.5.5.5.113 — record flags and honours layout polish */
+/* v0.1.49.77.5.5.5.114 — long-career save write coalescing */
 .recordPlayerIdentity{display:inline-flex;align-items:center;gap:6px;min-width:0;max-width:100%;vertical-align:middle}
 .recordPlayerIdentity .nationalFlagMark{flex:0 0 auto;width:21px;height:14px;font-size:16px}
 .recordPlayerIdentity .profileLink{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -2912,7 +2913,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.113 Record Flags & Honours Polish</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.114 Save Write Coalescing</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -2936,7 +2937,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // v0.1.49.77.5.5.5.102 CHANGE TRACK
 // - Cup group tables now identify qualified group winners and best runners-up once knockout qualification is resolved.
 // - Conference standings restore dashed cut lines after seed 6 and seed 10, with a compact playoff-zone legend.
-// v0.1.49.77.5.5.5.113 — Record Flags & Honours Polish
+// v0.1.49.77.5.5.5.114 — Save Write Coalescing
 // Adds structural validation around Play-In and Playoff round transitions.
 // Missing or malformed saved bracket state is routed through the existing repair path
 // before advancement, and invalid transitions stop safely instead of recursing/crashing.
@@ -17364,7 +17365,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.113 Record Flags & Honours Polish",ENGINE_VERSION="E2.26-PROD163";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.114 Save Write Coalescing",ENGINE_VERSION="E2.26-PROD164";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18155,6 +18156,9 @@ window.MiniMeBasketballQA={
     serializeMs:+G?.runtimeMeta?.lastSaveSerializeMs||0,
     writeMs:+G?.runtimeMeta?.lastSaveWriteMs||0,
     serial:+G?.runtimeMeta?.lastCompletedSaveSerial||0,
+    saveRequests:+G?.runtimeMeta?.saveRequests||0,
+    coalescedRequests:+G?.runtimeMeta?.saveCoalescedRequests||0,
+    queueDepth:+G?.runtimeMeta?.saveQueueDepth||0,
     memoryModel:G?.runtimeMeta?.saveMemoryModel||"legacy"
   })
 };
@@ -18208,7 +18212,13 @@ function saveMeta(){
   const club=me();
   return{gmName:G?.gmName||"GM",clubName:club?.name||"Unknown Club",clubId:club?.id||null,season:G?.season||1,phase:G?.phase||"Career",createdAt:G?.createdAt||Date.now()};
 }
-let _saveWriteChain=Promise.resolve(true),_saveWriteSerial=0;
+// v114: Safari stability — serialize the *entire* save operation, not only the
+// IndexedDB write. In older builds multiple UI actions could each stringify the
+// full 20–30 season career before their writes entered the queue, leaving several
+// multi-megabyte payload strings resident at once. A single drain now coalesces
+// rapid requests and creates at most one full JSON payload at any moment.
+let _saveWriteSerial=0,_saveRequestSerial=0,_saveCompletedRequestSerial=0;
+let _saveDrainPromise=null,_saveDirty=false,_saveNeedsToast=false,_saveCoalescedRequests=0;
 
 // v99: Awards are presentation state, not a reason to stringify a 20-30 season
 // career five times in quick succession. Keep only the tiny ballot cursor outside
@@ -18253,7 +18263,7 @@ function shouldRunPeriodicIntegrityCheck(){
   // a mature career is not fully traversed immediately before every stringify.
   return _ordinarySaveCounter===1||(_ordinarySaveCounter%20)===0||["OFFSEASON","CHAMPION"].includes(G?.phase);
 }
-async function save(silent=true){
+async function performCareerSave(silent=true){
   if(!G||!activeSlot)return false;
   // Release obsolete AI regular-season detail before any expensive career walk
   // or JSON serialization so the peak-memory operation sees the compact state.
@@ -18269,19 +18279,53 @@ async function save(silent=true){
   G.runtimeMeta.lastSavePayloadBytes=payload.length;
   G.runtimeMeta.lastSaveSerializeMs=Math.max(0,Math.round((t1-t0)*10)/10);
   G.runtimeMeta.lastSaveSerial=serial;
-  // Serialise all writes. Mobile Safari can otherwise leave a mature career one
-  // UI action ahead of its durable IndexedDB record when several saves overlap.
+  G.runtimeMeta.saveQueueDepth=1;
   const writeStarted=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
-  _saveWriteChain=_saveWriteChain.catch(()=>false).then(()=>writeSlot(slot,payload,meta));
-  const ok=await _saveWriteChain;
+  const ok=await writeSlot(slot,payload,meta);
   const writeEnded=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
   if(G?.runtimeMeta){
     G.runtimeMeta.lastCompletedSaveSerial=serial;
     G.runtimeMeta.lastSaveWriteMs=Math.max(0,Math.round((writeEnded-writeStarted)*10)/10);
-    G.runtimeMeta.saveMemoryModel="IDB-META-CACHE-1";
+    G.runtimeMeta.saveMemoryModel="IDB-COALESCED-2";
+    G.runtimeMeta.saveQueueDepth=0;
+    G.runtimeMeta.saveRequests=+_saveRequestSerial||0;
+    G.runtimeMeta.saveCoalescedRequests=+_saveCoalescedRequests||0;
   }
   if(!silent)toast(ok?`Career saved · Slot ${slot}`:"Career active · save storage unavailable");
   return ok;
+}
+async function save(silent=true){
+  if(!G||!activeSlot)return false;
+  _saveRequestSerial++;
+  if(_saveDirty||_saveDrainPromise)_saveCoalescedRequests++;
+  _saveDirty=true;
+  if(!silent)_saveNeedsToast=true;
+  if(!_saveDrainPromise){
+    _saveDrainPromise=(async()=>{
+      let lastOk=true;
+      try{
+        while(_saveDirty){
+          _saveDirty=false;
+          const showToast=_saveNeedsToast;_saveNeedsToast=false;
+          lastOk=await performCareerSave(!showToast);
+          _saveCompletedRequestSerial=_saveRequestSerial;
+          // If another UI action requested a save while stringify/IDB was active,
+          // _saveDirty is now true and the loop writes one fresh latest-state copy.
+          // Intermediate duplicate requests are intentionally collapsed.
+        }
+        return lastOk;
+      }finally{
+        _saveDrainPromise=null;
+        if(G?.runtimeMeta){
+          G.runtimeMeta.saveRequests=+_saveRequestSerial||0;
+          G.runtimeMeta.saveCompletedRequests=+_saveCompletedRequestSerial||0;
+          G.runtimeMeta.saveCoalescedRequests=+_saveCoalescedRequests||0;
+          G.runtimeMeta.saveQueueDepth=0;
+        }
+      }
+    })();
+  }
+  return await _saveDrainPromise;
 }
 function repairVerifiedNationalityAssignments(state){
   if(!state)return 0;
