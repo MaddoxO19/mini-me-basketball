@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.137 Identity & League Label Consistency</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.138 Save Load Compatibility</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.137 — Identity & League Label Consistency: launch aliases use deterministic first/surname component maps with nationality-aware pools; public league labels are fictionalised consistently. */
+/* v0.1.49.77.5.5.5.138 — Save Load Compatibility: hardens release-identity migration so alias generation can never abort an existing career load. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.137 Identity & League Label Consistency</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.138 Save Load Compatibility</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -5813,10 +5813,25 @@ function buildProductionComponentMaps(){
   _productionComponentMaps={first,last};return _productionComponentMaps;
 }
 function fictionalizeProductionName(sourceName){
-  const raw=String(sourceName||"Player").trim(),parsed=parseProductionSourceName(raw),maps=buildProductionComponentMaps();
-  const first=maps.first[productionComponentKey(parsed.first)]||"Player";
-  const last=maps.last[productionComponentKey(parsed.surname)]||`${Math.abs(stableTemplateHash(parsed.surname))%9000+1000}`;
-  return `${first} ${last}${parsed.suffix?` ${parsed.suffix}`:""}`;
+  const raw=String(sourceName||"Player").trim();
+  try{
+    const parsed=parseProductionSourceName(raw),maps=buildProductionComponentMaps();
+    const first=maps.first[productionComponentKey(parsed.first)]||
+      PRODUCTION_FIRST_COMPONENT_OVERRIDES[productionComponentKey(parsed.first)]||
+      PRODUCTION_COMPONENT_POOLS.DEFAULT.first[Math.abs(stableTemplateHash(`fallback-first|${parsed.first}`))%PRODUCTION_COMPONENT_POOLS.DEFAULT.first.length];
+    const last=maps.last[productionComponentKey(parsed.surname)]||
+      PRODUCTION_LAST_COMPONENT_OVERRIDES[productionComponentKey(parsed.surname)]||
+      PRODUCTION_COMPONENT_POOLS.DEFAULT.last[Math.abs(stableTemplateHash(`fallback-last|${parsed.surname}`))%PRODUCTION_COMPONENT_POOLS.DEFAULT.last.length];
+    return `${first} ${last}${parsed.suffix?` ${parsed.suffix}`:""}`;
+  }catch(err){
+    console.warn("Release identity fallback",raw,err);
+    const parsed=parseProductionSourceName(raw);
+    const first=PRODUCTION_FIRST_COMPONENT_OVERRIDES[productionComponentKey(parsed.first)]||
+      PRODUCTION_COMPONENT_POOLS.DEFAULT.first[Math.abs(stableTemplateHash(`safe-first|${parsed.first}`))%PRODUCTION_COMPONENT_POOLS.DEFAULT.first.length];
+    const last=PRODUCTION_LAST_COMPONENT_OVERRIDES[productionComponentKey(parsed.surname)]||
+      PRODUCTION_COMPONENT_POOLS.DEFAULT.last[Math.abs(stableTemplateHash(`safe-last|${parsed.surname}`))%PRODUCTION_COMPONENT_POOLS.DEFAULT.last.length];
+    return `${first} ${last}${parsed.suffix?` ${parsed.suffix}`:""}`;
+  }
 }
 function repairManualPlayerNameOverrides(G){
   if(!G)return 0;
@@ -5858,11 +5873,17 @@ function applyReleaseIdentityLayer(G){
       continue;
     }
 
-    const next=fictionalizeProductionName(source);
-    if(next&&p.name!==next){p.name=next;changed++}
-    p.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
-    if(source==="LeBron James")p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"father",relatedSourceName:"Bronny James",relatedDisplayName:fictionalizeProductionName("Bronny James")};
-    else if(source==="Bronny James")p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"son",relatedSourceName:"LeBron James",relatedDisplayName:fictionalizeProductionName("LeBron James")};
+    try{
+      const next=fictionalizeProductionName(source);
+      if(next&&p.name!==next){p.name=next;changed++}
+      p.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
+      if(source==="LeBron James")p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"father",relatedSourceName:"Bronny James",relatedDisplayName:fictionalizeProductionName("Bronny James")};
+      else if(source==="Bronny James")p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"son",relatedSourceName:"LeBron James",relatedDisplayName:fictionalizeProductionName("LeBron James")};
+    }catch(err){
+      // Identity presentation must never make the career itself unloadable.
+      console.warn("Player identity migration skipped",p?.id||source,err);
+      p.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
+    }
   }
   G.releaseIdentityVersion=RELEASE_IDENTITY_VERSION;
   return changed;
@@ -17861,7 +17882,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.137 Identity & League Label Consistency",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.138 Save Load Compatibility",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18997,7 +19018,13 @@ async function loadSlot(slot,options={}){
       applyVerifiedActiveCareerBaselineExpansion(G);
       applyVerifiedYoungPlayerPotentialAudit(G);
       applyHistoricalPlayerIdentityAudit(G);
-      applyReleaseIdentityLayer(G);
+      try{
+        applyReleaseIdentityLayer(G);
+      }catch(identityErr){
+        console.warn("Release identity migration deferred during load",identityErr);
+        G.runtimeMeta=G.runtimeMeta||{};
+        G.runtimeMeta.releaseIdentityLoadWarning={version:RELEASE_IDENTITY_VERSION,season:G.season,message:String(identityErr?.message||identityErr)};
+      }
       G.olympicHistory=G.olympicHistory||[];
       G.olympicQualificationHistory=G.olympicQualificationHistory||[];
       G.olympicHistoricalMedals=G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS.map(x=>({...x}));
@@ -19008,7 +19035,14 @@ async function loadSlot(slot,options={}){
       G.runtimeMeta.loadMaintenanceVersion=loadMaintenanceVersion;
     }else{
       // Normal repeat loads avoid the expensive whole-career repair suite.
-      if(G.releaseIdentityVersion!==RELEASE_IDENTITY_VERSION)applyReleaseIdentityLayer(G);
+      if(G.releaseIdentityVersion!==RELEASE_IDENTITY_VERSION){
+        try{applyReleaseIdentityLayer(G)}
+        catch(identityErr){
+          console.warn("Release identity migration deferred during repeat load",identityErr);
+          G.runtimeMeta=G.runtimeMeta||{};
+          G.runtimeMeta.releaseIdentityLoadWarning={version:RELEASE_IDENTITY_VERSION,season:G.season,message:String(identityErr?.message||identityErr)};
+        }
+      }
       const issues=validateCareerIntegrityState(G);
       if(issues.length)console.warn(`[Game QA · load] ${issues.length} integrity issue(s)`,issues);
     }
@@ -19104,6 +19138,7 @@ async function loadSlot(slot,options={}){
     return true;
   }catch(e){
     console.error("Career load failed",e);
+    try{window.__H3OLastLoadError={message:String(e?.message||e),stack:String(e?.stack||""),build:BUILD_ID,at:Date.now()}}catch(_){}
     if(options.sessionRecovery){
       const g=readSessionGuard();
       try{if(g)localStorage.setItem(SESSION_GUARD_KEY,JSON.stringify({...g,status:"active",recoveryFailedAt:Date.now(),updatedAt:Date.now()}))}catch(_){}
