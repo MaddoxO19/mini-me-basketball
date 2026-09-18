@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.153 Expansion Protection Sliders</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.152 — Expansion Summer League Timing Fix: stops expansion interruptions once Summer League has started, fixes checkpoint acknowledgement, and moves missed expansion recovery to the Summer League-to-preseason boundary. */
+/* v0.1.49.77.5.5.5.153 — Expansion Protection Sliders: fixes lost protection selections, replaces Protect buttons with standard on/off sliders, auto-readies the list at 8 players and uses one final Confirm Expansion Draft action. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.153 Expansion Protection Sliders</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -3075,7 +3075,7 @@ const CAREER_CONTROL_VERSION="CC2";
 const COMMISSIONER_FRAMEWORK_VERSION="CM1";
 const EXPANSION_EVENT_VERSION="EX8";
 const EXPANSION_FRANCHISE_VERSION="EF2";
-const EXPANSION_DRAFT_VERSION="ED3";
+const EXPANSION_DRAFT_VERSION="ED4";
 const EXPANSION_DRAFT_RULES={
   protectionLimit:8,
   selectionsPerExpansionClub:14,
@@ -3172,7 +3172,7 @@ function ensureExpansionDraftState(state,force=false){
       const legacyAutoPlaceholder=prior.version==="ED1"&&!old.complete&&!old.userSelected;
       const kept=(legacyAutoPlaceholder?[]:old.protectedIds).filter(id=>eligibleIds.has(id)).slice(0,EXPANSION_DRAFT_RULES.protectionLimit);
       const required=Math.min(EXPANSION_DRAFT_RULES.protectionLimit,current.eligibleIds.length);
-      const locked=!!old.locked&&kept.length===required;
+      const ready=kept.length===required;
       protectionByClub[club.id]={
         ...current,
         ...old,
@@ -3181,8 +3181,8 @@ function ensureExpansionDraftState(state,force=false){
         eligibleIds:current.eligibleIds,
         manual:true,
         userSelected:legacyAutoPlaceholder?false:!!old.userSelected||kept.length>0,
-        locked,
-        complete:locked
+        locked:false,
+        complete:ready
       };
     }else{
       protectionByClub[club.id]=current;
@@ -3215,37 +3215,44 @@ function toggleUserExpansionProtection(state,playerId){
   const draft=ensureExpansionDraftState(state,true),clubId=state?.userClubGM?.clubId;
   const p=clubId?draft?.protectionByClub?.[clubId]:null;
   if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
-  if(p.locked)return{ok:false,reason:"Protection list is locked."};
   if(!p.eligibleIds?.includes(playerId))return{ok:false,reason:"That player is not eligible for the Expansion Draft."};
-  const selected=[...(p.protectedIds||[])],idx=selected.indexOf(playerId),required=userExpansionProtectionRequired(state);
+
+  const selected=[...(p.protectedIds||[])];
+  const idx=selected.indexOf(playerId);
+  const required=Math.min(EXPANSION_DRAFT_RULES.protectionLimit,p.eligibleIds?.length||0);
+
   if(idx>=0)selected.splice(idx,1);
   else{
     if(selected.length>=required)return{ok:false,reason:`You can protect only ${required} players.`};
     selected.push(playerId);
   }
+
   p.protectedIds=selected;
   p.exposedIds=(p.eligibleIds||[]).filter(id=>!selected.includes(id));
   p.userSelected=true;
-  p.complete=false;
   p.locked=false;
-  draft.status="protection_pending";
-  return{ok:true,selected:selected.length,required};
+  p.complete=selected.length===required;
+  draft.status=p.complete?"protection_ready":"protection_pending";
+
+  return{ok:true,selected:selected.length,required,ready:p.complete};
 }
 function lockUserExpansionProtection(state){
-  const draft=ensureExpansionDraftState(state,true),p=userExpansionProtection(state),required=userExpansionProtectionRequired(state);
+  const draft=ensureExpansionDraftState(state,true),p=userExpansionProtection(state);
   if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
+  const required=Math.min(EXPANSION_DRAFT_RULES.protectionLimit,p.eligibleIds?.length||0);
   if((p.protectedIds?.length||0)!==required)return{ok:false,reason:`Select exactly ${required} protected players first.`};
-  p.locked=true;p.complete=true;p.userSelected=true;p.lockedSeason=state.season;
+  p.locked=false;p.complete=true;p.userSelected=true;
   p.exposedIds=(p.eligibleIds||[]).filter(id=>!(p.protectedIds||[]).includes(id));
-  draft.status="protection_locked";
+  draft.status="protection_ready";
   return{ok:true};
 }
 function unlockUserExpansionProtection(state){
   const draft=ensureExpansionDraftState(state,true),p=userExpansionProtection(state);
   if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
   if((draft.selections||[]).length)return{ok:false,reason:"Protection cannot be changed after the Expansion Draft begins."};
-  p.locked=false;p.complete=false;
-  draft.status="protection_pending";
+  p.locked=false;
+  p.complete=(p.protectedIds?.length||0)===Math.min(EXPANSION_DRAFT_RULES.protectionLimit,p.eligibleIds?.length||0);
+  draft.status=p.complete?"protection_ready":"protection_pending";
   return{ok:true};
 }
 function expansionDraftPlayerBucket(p){
@@ -3295,7 +3302,7 @@ function expansionDraftCanExecute(state){
   if(ex?.entrySeason&&state.season<ex.entrySeason)return{ok:false,reason:`The Expansion Draft is scheduled for the Season ${ex.entrySeason} offseason.`};
   const protections=Object.values(draft.protectionByClub||{});
   const incomplete=protections.filter(p=>!p.complete);
-  if(incomplete.length)return{ok:false,reason:`${incomplete.length} protection list${incomplete.length===1?" is":"s are"} not locked yet.`};
+  if(incomplete.length)return{ok:false,reason:`${incomplete.length} protection list${incomplete.length===1?" is":"s are"} not ready yet.`};
   const pool=expansionDraftCandidatePool(state);
   const distinct=new Set(pool.map(x=>x.sourceClub.id));
   if(distinct.size<draft.rules.totalSelections)return{ok:false,reason:`Only ${distinct.size} existing clubs currently have an eligible exposed player. ${draft.rules.totalSelections} distinct clubs are required.`};
@@ -11743,7 +11750,7 @@ function newsFlashHtml(){
     return `<div class="newsFlashOverlay"><div class="newsFlashCard gmRecruitmentCard">
       <div class="newsFlashHead"><div><small>LEAGUE EXPANSION</small><b>SEASON ${G.season} ENTRY CHECKPOINT</b></div></div>
       <h3>Expansion preparation must be completed</h3>
-      <p>Seattle Cascades and Las Vegas Neon are scheduled to enter the league this season. Your club must finalise its protected players before the Expansion Draft can be completed.</p>
+      <p>Seattle Cascades and Las Vegas Neon are scheduled to enter the league this season. Your club must select its protected players before the Expansion Draft can be confirmed.</p>
       <div class="gmOfferGrid">
         <div><b>${p?.protectedIds?.length||0}/${required}</b><small>Your Protected Players</small></div>
         <div><b>${draft?.rules?.totalSelections||28}</b><small>Expansion Picks</small></div>
@@ -18475,7 +18482,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.153 Expansion Protection Sliders",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -24534,7 +24541,7 @@ function expansionDraftHomeHtml(state){
     <div class="newSeasonMetrics">
       <div class="newSeasonMetric"><b>${selected.size}/${required}</b><small>Your Protected</small></div>
       <div class="newSeasonMetric"><b>${draft.rules.totalSelections}</b><small>Expansion Picks</small></div>
-      <div class="newSeasonMetric"><b>${complete?"COMPLETE":protection?.locked?"READY":"ACTION"}</b><small>Draft Status</small></div>
+      <div class="newSeasonMetric"><b>${complete?"COMPLETE":protection?.complete?"READY":"ACTION"}</b><small>Draft Status</small></div>
     </div>
   </div>`;
 
@@ -24546,21 +24553,18 @@ function expansionDraftHomeHtml(state){
         const contract=(+p.contractYearsLeft||0)===1?"1 yr":`${+p.contractYearsLeft||0} yrs`;
         return `<div class="more" style="align-items:center">
           <div style="min-width:0"><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Age ${p.age} · ${p.ovr} OVR · POT ${p.potential||p.ovr} · ${contract}</small></div>
-          <button type="button" class="pick ${on?"active":""}" data-exp-protect="${p.id}" ${protection.locked?"disabled":""} style="${on?"border-color:#c9953d;color:#f4b04d":""}">${on?"Protected":"Protect"}</button>
+          <button type="button" class="intlPlayerToggle ${on?"on":""}" aria-label="${on?"Protected":"Not protected"} ${p.name}" aria-pressed="${on?"true":"false"}" data-exp-protect="${p.id}"><span></span></button>
         </div>`;
       }).join("")}</div>
-      <div class="smallcopy" style="margin-top:10px">Two-way players are excluded automatically. Each existing club can lose at most one player.</div>
-      <div class="actionRow" style="margin-top:12px">
-        ${protection.locked?`<button id="editExpansionProtection" class="btn ghost">Edit Protection List</button>`:`<button id="lockExpansionProtection" class="btn primary" ${selected.size===required?"":"disabled"}>Lock Protection List</button>`}
-      </div>
+      <div class="smallcopy" style="margin-top:10px">Two-way players are excluded automatically. Select exactly ${required}. Once all ${required} are ON, your protection list is ready automatically.</div>
     </div>`:"";
 
   const canRun=expansionDraftCanExecute(state);
   const execution=!complete?`<div class="sectionTitle">Expansion Draft</div><div class="card">
-    <div class="more"><div><b>${canRun.ok?"Ready to Run":"Waiting"}</b><small>${canRun.ok?"All protection lists are locked. Seattle and Las Vegas can now select their expansion rosters.":canRun.reason}</small></div><b>${canRun.ok?"READY":"WAITING"}</b></div>
+    <div class="more"><div><b>${canRun.ok?"Ready to Run":"Waiting"}</b><small>${canRun.ok?"All protection lists are ready. Seattle and Las Vegas can now select their expansion rosters.":canRun.reason}</small></div><b>${canRun.ok?"READY":"WAITING"}</b></div>
     <div class="more"><div><b>Draft Format</b><small>${draft.rules.selectionsPerExpansionClub} players per expansion club · alternating selections</small></div><b>${draft.rules.totalSelections} PICKS</b></div>
     <div class="more"><div><b>First Selection</b><small>Alternating selection order</small></div><b>${first?.name||"Seattle"}</b></div>
-    <div class="actionRow" style="margin-top:12px"><button id="runExpansionDraft" class="btn primary" ${canRun.ok?"":"disabled"}>Run Expansion Draft</button></div>
+    <div class="actionRow" style="margin-top:12px"><button id="runExpansionDraft" class="btn primary" ${canRun.ok?"":"disabled"}>Confirm Expansion Draft</button></div>
   </div>`:"";
 
   const results=complete?`<div class="sectionTitle">Expansion Draft Complete</div><div class="card">
@@ -27193,26 +27197,17 @@ function bind(){
   $$("[data-exp-protect]").forEach(b=>b.onclick=async()=>{
     const r=toggleUserExpansionProtection(G,b.dataset.expProtect);
     if(!r.ok){toast(r.reason);return}
-    await save();render();
+    await save();
+    if(r.ready)toast(`Protection list ready · ${r.selected}/${r.required}`);
+    render();
   });
-  if($("#lockExpansionProtection"))$("#lockExpansionProtection").onclick=async()=>{
-    const r=lockUserExpansionProtection(G);
-    if(!r.ok){toast(r.reason);return}
-    if(typeof logEvent==="function")logEvent(G,"Expansion Draft protection list locked.");
-    await save();toast("Expansion protection list locked");render();
-  };
-  if($("#editExpansionProtection"))$("#editExpansionProtection").onclick=async()=>{
-    const r=unlockUserExpansionProtection(G);
-    if(!r.ok){toast(r.reason);return}
-    await save();toast("Expansion protection list reopened");render();
-  };
   if($("#runExpansionDraft"))$("#runExpansionDraft").onclick=async()=>{
     const check=expansionDraftCanExecute(G);
     if(!check.ok){toast(check.reason);return}
-    if(!confirm("Run the Expansion Draft now? Selected players will leave their existing clubs and move to inactive Seattle/Las Vegas expansion rosters."))return;
+    if(!confirm("Confirm the Expansion Draft? Your 8 protected players will remain with your club. Seattle and Las Vegas will then select from the exposed-player pool. This cannot be undone."))return;
     const r=executeExpansionDraft(G);
     if(!r.ok){toast(r.reason);return}
-    await save();toast(r.activation?.ok?`Expansion complete · 32-team league activated`:`Expansion Draft complete · ${r.selections.length} players selected`);render();
+    await save();toast(r.activation?.ok?`Expansion complete · 32-team league activated`:`Expansion Draft confirmed · ${r.selections.length} players selected`);render();
   };
   $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-gmhistorytab]`).forEach(b=>b.onclick=()=>{ui.gmHistoryTab=b.dataset.gmhistorytab;ui.gmProfileTab="history";ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
   if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
