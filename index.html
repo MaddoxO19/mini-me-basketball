@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.141 Expansion Draft Foundation</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.144 Expansion Activation & Realignment</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.141 — Expansion Draft Foundation: adds persistent protection rules, AI protection lists, eligibility pools and alternating Seattle/Las Vegas draft order without activating the 32-team league. */
+/* v0.1.49.77.5.5.5.144 — Expansion Activation & Realignment: activates Seattle/Las Vegas after Draft Night, moves Minnesota East, applies four 8-team divisions and seeds future 32-team draft assets. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.141 Expansion Draft Foundation</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.144 Expansion Activation & Realignment</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -3075,7 +3075,7 @@ const CAREER_CONTROL_VERSION="CC2";
 const COMMISSIONER_FRAMEWORK_VERSION="CM1";
 const EXPANSION_EVENT_VERSION="EX2";
 const EXPANSION_FRANCHISE_VERSION="EF2";
-const EXPANSION_DRAFT_VERSION="ED1";
+const EXPANSION_DRAFT_VERSION="ED3";
 const EXPANSION_DRAFT_RULES={
   protectionLimit:8,
   selectionsPerExpansionClub:14,
@@ -3098,7 +3098,7 @@ function ensureExpansionFranchisePlan(state,force=false){
   const priorClubs=Array.isArray(prior.clubs)?prior.clubs:[];
   const clubs=EXPANSION_FRANCHISE_BLUEPRINTS.map(bp=>{
     const old=(prior.version===EXPANSION_FRANCHISE_VERSION?priorClubs.find(c=>c.slot===bp.slot||c.id===bp.id):null)||{};
-    return {...bp,...old,slot:bp.slot,id:bp.id,name:old.name||bp.name,city:old.city||bp.city,conference:bp.conference,division:bp.division,mark:old.mark||bp.mark,color:old.color||bp.color,style:old.style||bp.style,active:leagueClubCount(state)>=32};
+    return {...bp,...old,slot:bp.slot,id:bp.id,name:old.name||bp.name,city:old.city||bp.city,conference:bp.conference,division:bp.division,mark:old.mark||bp.mark,color:old.color||bp.color,style:old.style||bp.style,roster:Array.isArray(old.roster)?old.roster:[],twoWayRoster:Array.isArray(old.twoWayRoster)?old.twoWayRoster:[],gLeagueRoster:Array.isArray(old.gLeagueRoster)?old.gLeagueRoster:[],active:leagueClubCount(state)>=32};
   });
   state.expansionFranchisePlan={...prior,version:EXPANSION_FRANCHISE_VERSION,clubs,announcedSeason:Number.isFinite(+prior.announcedSeason)?+prior.announcedSeason:(publicStage?+state.expansionState?.stageSeason||+state.season:null)};
   return state.expansionFranchisePlan;
@@ -3121,18 +3121,21 @@ function expansionDraftEligiblePlayer(p){
   return true;
 }
 function buildExpansionProtectionForClub(state,club){
-  if(!club)return{clubId:null,protectedIds:[],eligibleIds:[],exposedIds:[],manual:false,complete:true};
+  if(!club)return{clubId:null,protectedIds:[],eligibleIds:[],exposedIds:[],manual:false,complete:true,locked:true};
   const eligible=(club.roster||[]).filter(expansionDraftEligiblePlayer);
+  const manual=club.id===state?.userClubGM?.clubId;
   const ranked=eligible.slice().sort((a,b)=>expansionProtectionScore(b)-expansionProtectionScore(a)||(+b.ovr||0)-(+a.ovr||0)||String(a.id).localeCompare(String(b.id)));
-  const protectedIds=ranked.slice(0,EXPANSION_DRAFT_RULES.protectionLimit).map(p=>p.id);
+  const protectedIds=manual?[]:ranked.slice(0,EXPANSION_DRAFT_RULES.protectionLimit).map(p=>p.id);
   const exposedIds=eligible.filter(p=>!protectedIds.includes(p.id)).map(p=>p.id);
   return{
     clubId:club.id,
     protectedIds,
     eligibleIds:eligible.map(p=>p.id),
     exposedIds,
-    manual:club.id===state?.userClubGM?.clubId,
-    complete:club.id!==state?.userClubGM?.clubId
+    manual,
+    userSelected:false,
+    locked:!manual,
+    complete:!manual
   };
 }
 function expansionDraftOrder(state){
@@ -3161,12 +3164,26 @@ function ensureExpansionDraftState(state,force=false){
   for(const club of state.clubs||[]){
     const current=buildExpansionProtectionForClub(state,club);
     const old=previousProtection[club.id];
-    // Preserve a completed manual list if it is still structurally valid.
-    if(old?.manual&&old?.complete&&Array.isArray(old.protectedIds)){
+    // Preserve manual human selections, whether locked or still being edited.
+    // ED1 temporarily populated the human list with an AI suggestion even though it
+    // was marked incomplete; do not mistake that foundation placeholder for a choice.
+    if(current.manual&&old?.manual&&Array.isArray(old.protectedIds)){
       const eligibleIds=new Set(current.eligibleIds);
-      const kept=old.protectedIds.filter(id=>eligibleIds.has(id)).slice(0,EXPANSION_DRAFT_RULES.protectionLimit);
-      const exposed=current.eligibleIds.filter(id=>!kept.includes(id));
-      protectionByClub[club.id]={...current,...old,protectedIds:kept,exposedIds:exposed,eligibleIds:current.eligibleIds,manual:true,complete:kept.length===Math.min(EXPANSION_DRAFT_RULES.protectionLimit,current.eligibleIds.length)};
+      const legacyAutoPlaceholder=prior.version==="ED1"&&!old.complete&&!old.userSelected;
+      const kept=(legacyAutoPlaceholder?[]:old.protectedIds).filter(id=>eligibleIds.has(id)).slice(0,EXPANSION_DRAFT_RULES.protectionLimit);
+      const required=Math.min(EXPANSION_DRAFT_RULES.protectionLimit,current.eligibleIds.length);
+      const locked=!!old.locked&&kept.length===required;
+      protectionByClub[club.id]={
+        ...current,
+        ...old,
+        protectedIds:kept,
+        exposedIds:current.eligibleIds.filter(id=>!kept.includes(id)),
+        eligibleIds:current.eligibleIds,
+        manual:true,
+        userSelected:legacyAutoPlaceholder?false:!!old.userSelected||kept.length>0,
+        locked,
+        complete:locked
+      };
     }else{
       protectionByClub[club.id]=current;
     }
@@ -3185,6 +3202,167 @@ function ensureExpansionDraftState(state,force=false){
   };
   return state.expansionDraftState;
 }
+function userExpansionProtection(state=G){
+  const draft=ensureExpansionDraftState(state,true);
+  const clubId=state?.userClubGM?.clubId;
+  return clubId?draft?.protectionByClub?.[clubId]||null:null;
+}
+function userExpansionProtectionRequired(state=G){
+  const p=userExpansionProtection(state);
+  return p?Math.min(EXPANSION_DRAFT_RULES.protectionLimit,p.eligibleIds?.length||0):0;
+}
+function toggleUserExpansionProtection(state,playerId){
+  const draft=ensureExpansionDraftState(state,true),clubId=state?.userClubGM?.clubId;
+  const p=clubId?draft?.protectionByClub?.[clubId]:null;
+  if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
+  if(p.locked)return{ok:false,reason:"Protection list is locked."};
+  if(!p.eligibleIds?.includes(playerId))return{ok:false,reason:"That player is not eligible for the Expansion Draft."};
+  const selected=[...(p.protectedIds||[])],idx=selected.indexOf(playerId),required=userExpansionProtectionRequired(state);
+  if(idx>=0)selected.splice(idx,1);
+  else{
+    if(selected.length>=required)return{ok:false,reason:`You can protect only ${required} players.`};
+    selected.push(playerId);
+  }
+  p.protectedIds=selected;
+  p.exposedIds=(p.eligibleIds||[]).filter(id=>!selected.includes(id));
+  p.userSelected=true;
+  p.complete=false;
+  p.locked=false;
+  draft.status="protection_pending";
+  return{ok:true,selected:selected.length,required};
+}
+function lockUserExpansionProtection(state){
+  const draft=ensureExpansionDraftState(state,true),p=userExpansionProtection(state),required=userExpansionProtectionRequired(state);
+  if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
+  if((p.protectedIds?.length||0)!==required)return{ok:false,reason:`Select exactly ${required} protected players first.`};
+  p.locked=true;p.complete=true;p.userSelected=true;p.lockedSeason=state.season;
+  p.exposedIds=(p.eligibleIds||[]).filter(id=>!(p.protectedIds||[]).includes(id));
+  draft.status="protection_locked";
+  return{ok:true};
+}
+function unlockUserExpansionProtection(state){
+  const draft=ensureExpansionDraftState(state,true),p=userExpansionProtection(state);
+  if(!draft||!p)return{ok:false,reason:"Protection list is unavailable."};
+  if((draft.selections||[]).length)return{ok:false,reason:"Protection cannot be changed after the Expansion Draft begins."};
+  p.locked=false;p.complete=false;
+  draft.status="protection_pending";
+  return{ok:true};
+}
+function expansionDraftPlayerBucket(p){
+  const primary=String(p?.primaryPosition||p?.position||p?.pos||"").split("/")[0];
+  if(primary==="PG"||primary==="SG")return"guard";
+  if(primary==="C"||primary==="PF")return"big";
+  return"wing";
+}
+function expansionDraftSelectionScore(p,currentRoster=[]){
+  const age=+p.age||27,ovr=+p.ovr||50,pot=+p.potential||ovr,yrs=Math.max(0,+p.contractYearsLeft||0),salary=Math.max(0,+p.salaryM||0);
+  const bucket=expansionDraftPlayerBucket(p);
+  const counts={guard:0,wing:0,big:0};
+  for(const q of currentRoster)counts[expansionDraftPlayerBucket(q)]=(counts[expansionDraftPlayerBucket(q)]||0)+1;
+  const target={guard:5,wing:5,big:4};
+  const needBonus=Math.max(0,(target[bucket]||4)-(counts[bucket]||0))*3.2;
+  const youthBonus=Math.max(-5,Math.min(8,(28-age)*0.7));
+  const upsideBonus=Math.max(0,pot-ovr)*0.7;
+  const controlBonus=Math.min(4,yrs)*1.2;
+  const salaryPenalty=Math.max(0,salary-18)*0.18;
+  const deterministic=(Math.abs(stableTemplateHash(`expansion-pick|${p.id}`))%1000)/100000;
+  return ovr*2.1+upsideBonus+youthBonus+controlBonus+needBonus-salaryPenalty+deterministic;
+}
+function expansionDraftCandidatePool(state){
+  const draft=ensureExpansionDraftState(state,true),out=[];
+  for(const club of state.clubs||[]){
+    const protection=draft?.protectionByClub?.[club.id];
+    if(!protection?.complete)continue;
+    const exposed=new Set(protection.exposedIds||[]);
+    for(const p of club.roster||[])if(exposed.has(p.id)&&expansionDraftEligiblePlayer(p)){
+      out.push({player:p,sourceClub:club});
+    }
+  }
+  return out;
+}
+function expansionDraftCanExecute(state){
+  const draft=ensureExpansionDraftState(state,true);
+  if(!draft)return{ok:false,reason:"Expansion Draft state is unavailable."};
+  if(draft.status==="complete")return{ok:false,reason:"The Expansion Draft has already been completed."};
+  const protections=Object.values(draft.protectionByClub||{});
+  const incomplete=protections.filter(p=>!p.complete);
+  if(incomplete.length)return{ok:false,reason:`${incomplete.length} protection list${incomplete.length===1?" is":"s are"} not locked yet.`};
+  const pool=expansionDraftCandidatePool(state);
+  const distinct=new Set(pool.map(x=>x.sourceClub.id));
+  if(distinct.size<draft.rules.totalSelections)return{ok:false,reason:`Only ${distinct.size} existing clubs currently have an eligible exposed player. ${draft.rules.totalSelections} distinct clubs are required.`};
+  return{ok:true};
+}
+function executeExpansionDraft(state){
+  const ready=expansionDraftCanExecute(state);
+  if(!ready.ok)return ready;
+  const draft=ensureExpansionDraftState(state,true),plan=ensureExpansionFranchisePlan(state,true);
+  const pool=expansionDraftCandidatePool(state);
+  const usedSourceClubs=new Set(),planned=[],holdingBySlot={};
+  for(const c of plan.clubs||[])holdingBySlot[c.slot]=[];
+
+  for(let i=0;i<draft.order.length;i++){
+    const slot=draft.order[i];
+    const candidates=pool.filter(x=>!usedSourceClubs.has(x.sourceClub.id));
+    if(!candidates.length)return{ok:false,reason:`The draft pool ran out of eligible source clubs at pick ${i+1}. No changes were made.`};
+    candidates.sort((a,b)=>{
+      const sb=expansionDraftSelectionScore(b.player,holdingBySlot[slot]);
+      const sa=expansionDraftSelectionScore(a.player,holdingBySlot[slot]);
+      return sb-sa||(+b.player.ovr||0)-(+a.player.ovr||0)||String(a.player.id).localeCompare(String(b.player.id));
+    });
+    const choice=candidates[0],franchise=expansionFranchiseBySlot(state,slot);
+    planned.push({
+      pickNo:i+1,
+      expansionSlot:slot,
+      expansionClubId:franchise?.id||slot,
+      expansionClubName:franchise?.name||slot,
+      sourceClubId:choice.sourceClub.id,
+      sourceClubName:choice.sourceClub.name,
+      playerId:choice.player.id,
+      playerName:choice.player.name,
+      position:positionLabel(choice.player),
+      age:+choice.player.age||0,
+      ovr:+choice.player.ovr||0,
+      potential:+choice.player.potential||+choice.player.ovr||0,
+      contractYearsLeft:+choice.player.contractYearsLeft||0,
+      salaryM:+choice.player.salaryM||0
+    });
+    holdingBySlot[slot].push(choice.player);
+    usedSourceClubs.add(choice.sourceClub.id);
+  }
+
+  // Apply only after a full valid 28-pick plan has been produced.
+  for(const pick of planned){
+    const source=clubById(state,pick.sourceClubId),franchise=expansionFranchiseBySlot(state,pick.expansionSlot);
+    if(!source||!franchise)continue;
+    const idx=(source.roster||[]).findIndex(p=>p.id===pick.playerId);
+    if(idx<0)continue;
+    const [player]=source.roster.splice(idx,1);
+    player.expansionDraftSelection={season:state.season,pickNo:pick.pickNo,fromClubId:source.id,toExpansionSlot:pick.expansionSlot,toClubId:franchise.id,toClubName:franchise.name};
+    franchise.roster=franchise.roster||[];
+    franchise.roster.push(player);
+    recalcClubCap(source);
+    if(typeof refreshClubRotation==="function")refreshClubRotation(source);
+    state.transactions=state.transactions||[];
+    state.transactions.push({type:"expansion_draft",season:state.season,playerId:player.id,fromClubId:source.id,toClubId:franchise.id,pickNum:pick.pickNo,expansionSlot:pick.expansionSlot});
+  }
+
+  for(const franchise of plan.clubs||[]){
+    franchise.capUsed=Math.round((franchise.roster||[]).reduce((s,p)=>s+(+p.salaryM||0),0)*10)/10;
+    franchise.expansionDraftComplete=true;
+    franchise.expansionDraftSeason=state.season;
+  }
+  draft.selections=planned;
+  draft.status="complete";
+  draft.completedSeason=state.season;
+  draft.completedAtPhase=state.phase||null;
+  plan.expansionDraftComplete=true;
+  plan.expansionDraftSeason=state.season;
+
+  if(typeof logEvent==="function")logEvent(state,`Expansion Draft completed: ${plan.clubs.map(c=>`${c.name} selected ${(c.roster||[]).length} players`).join(" · ")}.`);
+  if(typeof pushNews==="function")pushNews(state,`The Expansion Draft is complete. ${plan.clubs.map(c=>`${c.name} selected ${(c.roster||[]).length} players`).join("; ")}. The new clubs remain inactive until league realignment and activation.`,"Expansion",2);
+
+  return{ok:true,selections:planned};
+}
 function expansionDraftSummary(state){
   const draft=ensureExpansionDraftState(state);
   if(!draft)return null;
@@ -3201,6 +3379,140 @@ function expansionDraftSummary(state){
     orderLength:draft.order?.length||0
   };
 }
+const EXPANSION_ACTIVATION_VERSION="EA1";
+
+function expansionAlignmentLookup32(){
+  const map={};
+  for(const [conf,divisions] of Object.entries(EXPANSION_ALIGNMENT_32)){
+    for(const [division,ids] of Object.entries(divisions)){
+      for(const raw of ids){
+        const id=raw==="EXP_SEATTLE"?"SEA":raw==="EXP_VEGAS"?"LVN":raw;
+        map[id]={conference:conf,division};
+      }
+    }
+  }
+  return map;
+}
+function makeActiveExpansionClub(franchise){
+  return {
+    id:franchise.id,
+    name:franchise.name,
+    city:franchise.city,
+    mark:franchise.mark,
+    style:franchise.style||"Expansion Club",
+    color:franchise.color,
+    conference:franchise.conference,
+    division:franchise.division,
+    roster:Array.isArray(franchise.roster)?franchise.roster:[],
+    gLeagueRoster:Array.isArray(franchise.gLeagueRoster)?franchise.gLeagueRoster:[],
+    twoWayRoster:Array.isArray(franchise.twoWayRoster)?franchise.twoWayRoster:[],
+    twoWayLimit:3,
+    standings:{w:0,l:0,pf:0,pa:0},
+    preseasonRecord:{w:0,l:0},
+    chemistry:64,
+    capUsed:Math.round((franchise.roster||[]).reduce((a,p)=>a+(+p.salaryM||0),0)*10)/10,
+    offseasonRosterLimit:20,
+    regularRosterLimit:15,
+    draftHistory:{lastNo1Season:null,top5Seasons:[]},
+    rosterFoundationVersion:"EXPANSION",
+    franchiseLegacy:franchiseLegacyFor(franchise.id),
+    productionSourceOvr:null,
+    productionSnapshot:"H3O Expansion",
+    expansionClub:true,
+    expansionSlot:franchise.slot,
+    expansionActivatedSeason:null
+  };
+}
+function seedExpansionFutureDraftAssets(state,clubIds,seasonsAhead=5){
+  state.draftPicks=Array.isArray(state.draftPicks)?state.draftPicks:[];
+  const start=(state.season||1)+1,end=start+Math.max(0,seasonsAhead-1);
+  const existing=new Set(state.draftPicks.map(p=>`${p.year}|${p.round}|${p.originalClubId}`));
+  let added=0;
+  for(let year=start;year<=end;year++){
+    for(const clubId of clubIds)for(const round of [1,2]){
+      const key=`${year}|${round}|${clubId}`;
+      if(existing.has(key))continue;
+      state.draftPicks.push(makeDraftPick(clubId,year,round));
+      existing.add(key);added++;
+    }
+  }
+  return added;
+}
+function expansionActivationCanRun(state){
+  if(!state)return{ok:false,reason:"Career state unavailable."};
+  if(leagueClubCount(state)>=32)return{ok:false,reason:"The 32-team league is already active."};
+  if(state.phase!=="SUMMER_LEAGUE")return{ok:false,reason:"Expansion activation occurs after Draft Night and before Summer League begins."};
+  const draft=ensureExpansionDraftState(state,true);
+  if(draft?.status!=="complete")return{ok:false,reason:"The Expansion Draft must be completed first."};
+  const plan=ensureExpansionFranchisePlan(state,true);
+  if((plan?.clubs||[]).length!==2)return{ok:false,reason:"Both expansion franchises are required."};
+  for(const c of plan.clubs||[]){
+    if((c.roster||[]).length!==EXPANSION_DRAFT_RULES.selectionsPerExpansionClub)
+      return{ok:false,reason:`${c.name} has ${(c.roster||[]).length} expansion selections; ${EXPANSION_DRAFT_RULES.selectionsPerExpansionClub} are required.`};
+  }
+  return{ok:true};
+}
+function activateExpansionLeague(state){
+  const ready=expansionActivationCanRun(state);
+  if(!ready.ok)return ready;
+  const plan=ensureExpansionFranchisePlan(state,true),alignment=expansionAlignmentLookup32();
+  const ids=new Set((state.clubs||[]).map(c=>c.id));
+  const activated=[];
+
+  for(const franchise of plan.clubs||[]){
+    if(ids.has(franchise.id))continue;
+    const club=makeActiveExpansionClub(franchise);
+    const target=alignment[club.id];
+    if(target){club.conference=target.conference;club.division=target.division}
+    club.expansionActivatedSeason=state.season;
+    state.clubs.push(club);ids.add(club.id);activated.push(club.id);
+  }
+
+  // Apply the approved 32-team alignment to every club, including Minnesota's
+  // conference move and the new four-division structure.
+  for(const club of state.clubs||[]){
+    const target=alignment[club.id];
+    if(target){club.conference=target.conference;club.division=target.division}
+  }
+
+  const snap=leagueStructureSnapshot(state);
+  const valid=snap.teamCount===32 &&
+    snap.conferenceSizes.East===16 && snap.conferenceSizes.West===16 &&
+    Object.values(snap.divisionSizes).every(n=>n===8);
+  if(!valid)return{ok:false,reason:"32-team alignment validation failed before activation was committed."};
+
+  // Expansion clubs join after the current Draft Night, so their normal draft
+  // assets begin with the following draft rather than creating phantom picks in
+  // the already-completed 30-team draft.
+  const futureAssets=seedExpansionFutureDraftAssets(state,activated,5);
+  if(typeof _draftHorizonMemo!=="undefined"&&_draftHorizonMemo?.delete)_draftHorizonMemo.delete(state);
+
+  for(const franchise of plan.clubs||[]){
+    franchise.active=true;
+    franchise.activatedSeason=state.season;
+  }
+  plan.activatedSeason=state.season;
+  plan.activationVersion=EXPANSION_ACTIVATION_VERSION;
+
+  state.expansionActivation={
+    version:EXPANSION_ACTIVATION_VERSION,
+    season:state.season,
+    activatedClubIds:activated,
+    minnesotaMovedEast:true,
+    structure:{teamCount:32,East:16,West:16,divisions:"4x8"},
+    futureDraftAssetsAdded:futureAssets
+  };
+  ensureLeagueStructureState(state);
+  recordExpansionStage(state,"implemented","32-team league activated","Seattle Cascades and Las Vegas Neon are now active league clubs. Minnesota Frost has moved to the Eastern Conference, and the league now operates with Atlantic, Central, Pacific and Midwest divisions of eight clubs each.");
+  if(typeof pushNews==="function")pushNews(state,"The 32-team era begins","Expansion",3,"Seattle Cascades and Las Vegas Neon have officially joined the league. Minnesota Frost moves East as the new four-division alignment takes effect.");
+  return{ok:true,activated,structure:state.leagueStructure,futureAssets};
+}
+function maybeActivateExpansionAfterDraft(state){
+  if(!state||state.phase!=="SUMMER_LEAGUE"||leagueClubCount(state)>=32)return null;
+  if(state.expansionDraftState?.status!=="complete")return null;
+  return activateExpansionLeague(state);
+}
+
 function expansionStageLabel(stage){
   return ({disabled:"Disabled",dormant:"Not under consideration",considering:"League considering expansion",approved:"Expansion approved",franchises_announced:"Two franchises awarded",preparation:"Expansion preparation",implemented:"32-team league active"})[stage]||"Not under consideration";
 }
@@ -3299,7 +3611,8 @@ function leagueExpansionReadinessAudit(state){
     }
     if((ensureExpansionFranchisePlan(state,true)?.clubs||[]).length!==2)blockers.push("Expansion franchise identities are not installed");
     if(!ensureExpansionDraftState(state,true))blockers.push("Expansion Draft foundation is not installed");
-    else blockers.push("Expansion Draft execution and club activation are not yet complete");
+    else if(state.expansionDraftState?.status!=="complete")blockers.push("Expansion Draft has not been executed");
+    else if(leagueClubCount(state)<32)blockers.push("Expansion clubs are awaiting post-Draft-Night activation");
     blockers.push("Expansion GM opportunity system is not installed");
   }
   return{version:LEAGUE_STRUCTURE_VERSION,teamCount:structure.teamCount,conferenceSizes:structure.conferenceSizes,divisionSizes:structure.divisionSizes,divisionArchitecture:"4x8-ready",cupArchitecture:cupFormatForLeague(state).version,expansionDraftVersion:state.expansionDraftState?.version||EXPANSION_DRAFT_VERSION,expansionEnabled:!!structure.expansionEnabled,commissionerEnabled:!!structure.commissionerEnabled,issues,blockers,readyForExpansion:structure.teamCount===32&&issues.length===0&&blockers.length===0,foundationReady:issues.length===0};
@@ -6315,6 +6628,7 @@ function allTalentPlayers(G){
   const out=[],seen=new Set();
   const add=p=>{if(p&&p.id&&!seen.has(p.id)){seen.add(p.id);out.push(p)}};
   for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
+  for(const club of(G.expansionFranchisePlan?.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
   (G.freeAgents||[]).forEach(add);(G.externalProfessionals||[]).forEach(add);(G.draftPool||[]).forEach(add);
   return out;
 }
@@ -8225,12 +8539,13 @@ function expectedPickSlot(G, pickAsset) {
   const idx=full.indexOf(pickAsset.originalClubId);
 
   if(pickAsset.round===2){
-    if(idx>=0)return 31+idx;
+    const round2Start=leagueClubCount(G)+1;
+    if(idx>=0)return round2Start+idx;
     const club=clubById(G,pickAsset.originalClubId);
     if(club && (club.standings.w+club.standings.l)>0){
       const ordered=[...G.clubs].sort((a,b)=>a.standings.w-b.standings.w);
       const j=ordered.findIndex(c=>c.id===pickAsset.originalClubId);
-      if(j>=0)return 31+j;
+      if(j>=0)return round2Start+j;
     }
     return 45;
   }
@@ -8253,8 +8568,8 @@ function draftPickTradeValue(G, pickAsset) {
     const slotValue=Math.max(14,52-(slot-1)*1.25);
     return Math.round(slotValue*discount*10)/10;
   }
-  const slot=expectedPickSlot(G,pickAsset);
-  return Math.round(Math.max(3,12-(slot-31)*0.22)*discount*10)/10;
+  const slot=expectedPickSlot(G,pickAsset),round2Start=leagueClubCount(G)+1;
+  return Math.round(Math.max(3,12-(slot-round2Start)*0.22)*discount*10)/10;
 }
 
 
@@ -11670,6 +11985,11 @@ function allPlayers(G) {
     (c.twoWayRoster||[]).forEach(add);
     (c.gLeagueRoster||[]).forEach(add);
   }
+  for(const c of G.expansionFranchisePlan?.clubs||[]){
+    (c.roster||[]).forEach(add);
+    (c.twoWayRoster||[]).forEach(add);
+    (c.gLeagueRoster||[]).forEach(add);
+  }
   (G.freeAgents||[]).forEach(add);(G.externalProfessionals||[]).forEach(add);
   (G.externalProfessionals||[]).forEach(add);
   return out;
@@ -12146,6 +12466,8 @@ function publicPlayerOriginLabel(value){
 }
 function ensureInternationalAffiliation(p){
   if(!p)return"International Pro";
+  const expansionClub=(G?.expansionFranchisePlan?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
+  if(expansionClub)return expansionClub.name;
   const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
   if(club){
     if((club.gLeagueRoster||[]).some(x=>x.id===p.id))return"G League";
@@ -12165,6 +12487,8 @@ function ensureInternationalAffiliation(p){
 }
 function playerBasketballLocation(p){
   if(!p)return{club:"—",league:"—",status:"—"};
+  const expansionClub=(G?.expansionFranchisePlan?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
+  if(expansionClub)return{club:expansionClub.name,league:"Expansion Club",status:"Expansion Draft Selection"};
   const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
   if(club){
     if((club.gLeagueRoster||[]).some(x=>x.id===p.id))return{club:"Development Affiliate",league:"Development League",status:"Developmental"};
@@ -15201,6 +15525,8 @@ function finalizeDraftBoard(G){
   G.upcomingDraftClass=null;
   logEvent(G,`Draft complete: ${ds.queue.length} picks made across two rounds; ${undrafted} prospects went undrafted.`);
   G.phase='SUMMER_LEAGUE';
+  const expansionActivation=maybeActivateExpansionAfterDraft(G);
+  if(expansionActivation?.ok)logEvent(G,`Expansion activation complete: ${leagueClubCount(G)} active clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}.`);
   return true;
 }
 function advanceDraftOneControlledPick(G){
@@ -15383,7 +15709,7 @@ function draftBoardSnapshot(G, limit=60) {
   const completedUserPicks=(G.draftPicks||[]).filter(p=>p.year===G.season&&p.consumed&&p.ownerClubId===clubId&&p.selectedPlayerId).sort((a,b)=>(a.pickNumber||99)-(b.pickNumber||99)).map(p=>{const pl=playerLookup.get(p.selectedPlayerId);return {pickNumber:p.pickNumber,round:p.round,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,playerId:p.selectedPlayerId,playerName:pl?.name||p.selectedPlayerId,position:pl?.position||'',ovr:pl?.ovr??null,potential:pl?.potential??null};});
   const prospects=draftClassScoutBoard(G,limit);
   const draftYear=(ds&&!ds.complete)?G.season:(G.upcomingDraftClass?.season||upcomingDraftYear(G));
-  return {mode:G.userDraftMode||'manual',pending,ownedPicks,completedUserPicks,prospects,draftYear,picksMade:ds?.index||0,totalPicks:ds?.queue?.length||60};
+  return {mode:G.userDraftMode||'manual',pending,ownedPicks,completedUserPicks,prospects,draftYear,picksMade:ds?.index||0,totalPicks:ds?.queue?.length||(leagueClubCount(G)*2)};
 }
 
 function runDraftNight(G) {
@@ -17891,7 +18217,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.141 Expansion Draft Foundation",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.144 Expansion Activation & Realignment",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -23927,21 +24253,54 @@ function expansionFranchiseSettingsHtml(state){
   if(!expansionFranchisesPublic(state))return "";
   const plan=ensureExpansionFranchisePlan(state,true);
   if(!plan?.clubs?.length)return "";
-  return `<div class="sectionTitle">Expansion Franchises</div><div class="card">${plan.clubs.map(c=>`<div class="more"><div style="display:flex;align-items:center;gap:10px;min-width:0"><span class="teamMiniCrest" style="flex:0 0 42px;width:42px;height:48px">${crestSVG(c)}</span><div style="min-width:0"><b>${c.name}</b><small>${c.city} · ${c.conference} · Future ${c.division} Division</small></div></div><b>${c.active?"ACTIVE":"AWARDED"}</b></div>`).join("")}<div class="smallcopy" style="margin-top:10px">These clubs have permanent identities in this career but are not yet active league members.</div></div>`;
+  return `<div class="sectionTitle">Expansion Franchises</div><div class="card">${plan.clubs.map(c=>`<div class="more"><div style="display:flex;align-items:center;gap:10px;min-width:0"><span class="teamMiniCrest" style="flex:0 0 42px;width:42px;height:48px">${crestSVG(c)}</span><div style="min-width:0"><b>${c.name}</b><small>${c.city} · ${c.conference} · Future ${c.division} Division</small></div></div><b>${c.active?"ACTIVE":"AWARDED"}</b></div>`).join("")}<div class="smallcopy" style="margin-top:10px">${leagueClubCount(state)>=32?"Both expansion clubs are active league members in the 32-team structure.":"These clubs have permanent identities in this career but are not yet active league members."}</div></div>`;
 }
 function expansionDraftSettingsHtml(state){
   if(state?.expansionState?.stage!=="preparation"&&state?.expansionState?.stage!=="implemented")return "";
   const draft=ensureExpansionDraftState(state,true),summary=expansionDraftSummary(state);
   if(!draft||!summary)return "";
-  const first=expansionFranchiseBySlot(state,draft.firstSlot);
+  const first=expansionFranchiseBySlot(state,draft.firstSlot),club=clubById(state,state?.userClubGM?.clubId);
+  const protection=userExpansionProtection(state),required=userExpansionProtectionRequired(state);
+  const selected=new Set(protection?.protectedIds||[]);
+  const players=(club?.roster||[]).filter(expansionDraftEligiblePlayer).slice().sort((a,b)=>(+b.ovr||0)-(+a.ovr||0)||(+b.potential||0)-(+a.potential||0)||(+a.age||99)-(+b.age||99));
+  const complete=draft.status==="complete";
+  const list=protection&&!complete?`<div class="sectionTitle" style="margin-top:18px">Protect Your Players</div>
+    <div class="card">
+      <div class="more"><div><b>${club?.name||"Your Club"}</b><small>Select exactly ${required} players to protect. Everyone else in the standard roster is exposed.</small></div><b>${selected.size}/${required}</b></div>
+      <div style="margin-top:8px">${players.map(p=>{
+        const on=selected.has(p.id);
+        const contract=(+p.contractYearsLeft||0)===1?"1 yr":`${+p.contractYearsLeft||0} yrs`;
+        return `<div class="more" style="align-items:center">
+          <div style="min-width:0"><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · Age ${p.age} · ${p.ovr} OVR · POT ${p.potential||p.ovr} · ${contract}</small></div>
+          <button type="button" class="pick ${on?"active":""}" data-exp-protect="${p.id}" ${protection.locked?"disabled":""} style="${on?"border-color:#c9953d;color:#f4b04d":""}">${on?"Protected":"Expose"}</button>
+        </div>`;
+      }).join("")}</div>
+      <div class="smallcopy" style="margin-top:10px">Two-way players are excluded automatically. Each existing club can lose at most one player in the Expansion Draft.</div>
+      <div class="actionRow" style="margin-top:12px">
+        ${protection.locked?`<button id="editExpansionProtection" class="btn ghost">Edit Protection List</button>`:`<button id="lockExpansionProtection" class="btn primary" ${selected.size===required?"":"disabled"}>Lock Protection List</button>`}
+      </div>
+    </div>`:"";
+
+  const canRun=expansionDraftCanExecute(state);
+  const execution=!complete?`<div class="sectionTitle">Draft Execution</div><div class="card">
+    <div class="more"><div><b>Expansion Draft Ready</b><small>${canRun.ok?"All protection lists are locked. Seattle and Las Vegas can now build their inactive expansion rosters.":canRun.reason}</small></div><b>${canRun.ok?"READY":"WAITING"}</b></div>
+    <div class="smallcopy" style="margin-top:10px">Running the draft will remove selected players from their existing clubs and place them on inactive Seattle/Las Vegas holding rosters. The league will still remain at 30 active clubs until the next activation update.</div>
+    <div class="actionRow" style="margin-top:12px"><button id="runExpansionDraft" class="btn primary" ${canRun.ok?"":"disabled"}>Run Expansion Draft</button></div>
+  </div>`:"";
+
+  const results=complete?`<div class="sectionTitle">Expansion Draft Results</div><div class="card">
+    <div class="more"><div><b>Draft Complete</b><small>${draft.selections.length} players selected · one player maximum lost by each existing club</small></div><b>${basketballSeasonLabel(draft.completedSeason||state.season)}</b></div>
+    ${(draft.selections||[]).map(s=>`<div class="more"><div><b>#${s.pickNo} · ${s.playerName}</b><small>${s.position} · ${s.ovr} OVR · ${s.sourceClubName}</small></div><b>${s.expansionClubName}</b></div>`).join("")}
+    <div class="smallcopy" style="margin-top:10px">${leagueClubCount(state)>=32?"Seattle and Las Vegas are now active league clubs under the 32-team alignment.":"Seattle and Las Vegas now hold these contracts, but neither club is active in league scheduling or standings yet. League activation will occur automatically after Draft Night."}</div>
+  </div>`:"";
+
   return `<div class="sectionTitle">Expansion Draft</div><div class="card gameConfigCard">
-    <div class="more"><div><b>Protection Rule</b><small>Each existing club protects up to ${draft.rules.protectionLimit} standard-roster players</small></div><b>${draft.rules.protectionLimit} PROTECTED</b></div>
+    <div class="more"><div><b>Protection Rule</b><small>Each existing club protects ${draft.rules.protectionLimit} standard-roster players</small></div><b>${draft.rules.protectionLimit} PROTECTED</b></div>
     <div class="more"><div><b>Eligible Pool</b><small>Two-way players are excluded · one player maximum can be lost by any existing club</small></div><b>${summary.exposedPlayers} EXPOSED</b></div>
     <div class="more"><div><b>Draft Size</b><small>${draft.rules.selectionsPerExpansionClub} selections for Seattle and ${draft.rules.selectionsPerExpansionClub} for Las Vegas</small></div><b>${draft.rules.totalSelections} PICKS</b></div>
     <div class="more"><div><b>Selection Order</b><small>Expansion clubs alternate selections throughout the draft</small></div><b>${first?.name||"Seattle"} FIRST</b></div>
-    <div class="more"><div><b>Your Protection List</b><small>${summary.userProtectionComplete?"Protection foundation prepared":"Manual protection selection will be required before the Expansion Draft can begin"}</small></div><b>${summary.userProtected}/${draft.rules.protectionLimit}</b></div>
-    <div class="smallcopy" style="margin-top:10px">This build prepares the protection and eligibility model only. No player is moved and the league remains at 30 clubs until the Expansion Draft execution and activation stages are completed.</div>
-  </div>`;
+    <div class="more"><div><b>Your Protection List</b><small>${complete?"Protection list used in completed draft":protection?.locked?"Locked and ready for the Expansion Draft":"Select and lock your protected players before the draft can begin"}</small></div><b>${selected.size}/${required}</b></div>
+  </div>${list}${execution}${results}`;
 }
 function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
@@ -24094,7 +24453,7 @@ function draft(){
   let completedLeague=[];if(ds?.queue?.length){for(let i=0;i<(ds.index||0);i++){let entry=ds.queue[i],asset=entry.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null;if(!asset?.selectedPlayerId)continue;let owner=c(asset.ownerClubId||entry.originalClubId),pl=allPlayers(G).find(x=>x.id===asset.selectedPlayerId);completedLeague.push({pick:entry.overallPickNum,round:entry.round,club:owner?.name||asset.ownerClubId,player:pl})}}
   let liveCard="";
   if(G.phase==="DRAFT_NIGHT"){
-    if(ds?.complete)liveCard=`<div class="card draftLive"><h3>Draft Complete</h3><p>60 selections completed. Your new rookies have been added to the roster.</p></div>`;
+    if(ds?.complete)liveCard=`<div class="card draftLive"><h3>Draft Complete</h3><p>${G.draftState?.queue?.length||leagueClubCount(G)*2} selections completed. Your new rookies have been added to the roster.</p></div>`;
     else if(p&&currentOwner===clubId)liveCard=`<div class="card draftLive"><div class="draftLiveTop"><div><h3>Pick #${p.overallPickNum} · ${me().name}</h3></div><div class="draftClock">YOU'RE ON THE CLOCK</div></div><p>Select any remaining prospect below. Other clubs will draft automatically until your next owned selection.</p></div>`;
     else liveCard=`<div class="card draftLive"><h3>${currentClub?`${currentClub.name} is on the clock`:"Draft Board"}</h3><p>${ds?`${s.picksMade}/${s.totalPicks} selections completed.`:"Draft order will populate when Draft Night begins."}</p></div>`;
   }
@@ -26527,6 +26886,30 @@ function bind(){
     await save();
     toast(G.settings.injuries?"Injuries enabled":"New injuries disabled; current injuries will recover normally");
     render();
+  };
+  $$("[data-exp-protect]").forEach(b=>b.onclick=async()=>{
+    const r=toggleUserExpansionProtection(G,b.dataset.expProtect);
+    if(!r.ok){toast(r.reason);return}
+    await save();render();
+  });
+  if($("#lockExpansionProtection"))$("#lockExpansionProtection").onclick=async()=>{
+    const r=lockUserExpansionProtection(G);
+    if(!r.ok){toast(r.reason);return}
+    if(typeof logEvent==="function")logEvent(G,"Expansion Draft protection list locked.");
+    await save();toast("Expansion protection list locked");render();
+  };
+  if($("#editExpansionProtection"))$("#editExpansionProtection").onclick=async()=>{
+    const r=unlockUserExpansionProtection(G);
+    if(!r.ok){toast(r.reason);return}
+    await save();toast("Expansion protection list reopened");render();
+  };
+  if($("#runExpansionDraft"))$("#runExpansionDraft").onclick=async()=>{
+    const check=expansionDraftCanExecute(G);
+    if(!check.ok){toast(check.reason);return}
+    if(!confirm("Run the Expansion Draft now? Selected players will leave their existing clubs and move to inactive Seattle/Las Vegas expansion rosters."))return;
+    const r=executeExpansionDraft(G);
+    if(!r.ok){toast(r.reason);return}
+    await save();toast(`Expansion Draft complete · ${r.selections.length} players selected`);render();
   };
   $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-gmhistorytab]`).forEach(b=>b.onclick=()=>{ui.gmHistoryTab=b.dataset.gmhistorytab;ui.gmProfileTab="history";ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
   if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
