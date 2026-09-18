@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.118 New Season Offseason Hub</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.119 League Experience Integrity</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2911,6 +2911,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .legacyFranchiseMetric small{font-size:8px!important}
 }
 
+/* v0.1.49.77.5.5.5.119 — League Experience Integrity */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
 .newSeasonHead{padding:16px 16px 13px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(241,168,77,.10),rgba(241,168,77,.025))}
@@ -2926,7 +2927,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.118 New Season Offseason Hub</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.119 League Experience Integrity</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -13424,6 +13425,15 @@ function resolveStaleLateCareerFreeAgents(G,{allowMidseason=false}={}){
   G.freeAgents=keep;
   return{retired:retired.length,moved:moved.length};
 }
+function plausibleLeagueExperienceCeiling(p){
+  if(!p)return 0;
+  const age=Number.isFinite(+p.age)?Math.max(0,+p.age):18;
+  // A player cannot have more completed league seasons than years lived beyond
+  // the youngest plausible professional entry age. This deliberately allows an
+  // age-18 rookie season while preventing legacy/save corruption such as 31 YRS
+  // experience for a 31-year-old player.
+  return Math.max(0,Math.floor(age-18));
+}
 function inferredNbaExperienceYears(G,p){
   if(!p)return 0;
   const stored=Number.isFinite(+p.experienceYears)?Math.max(0,+p.experienceYears):0;
@@ -13433,17 +13443,34 @@ function inferredNbaExperienceYears(G,p){
   if(Number.isFinite(+p.undraftedSeason))derived=Math.max(derived,activeSeason-(+p.undraftedSeason));
   if(Array.isArray(p.seasonHistory))derived=Math.max(derived,p.seasonHistory.length);
 
-  // Established launch players have a verified 2026/27 NBA service baseline.
+  // Established launch players have a verified 2026/27 league-service baseline.
   // Older saves created before experience rollover was fixed may contain a stale
   // stored value, so never allow them to fall below launch service + elapsed seasons.
   const sourceName=p.sourceTemplateName||p.sourceName||null;
   const launchBio=verifiedProductionBioRecord(sourceName);
   if(launchBio){
-    // Verified 2026/27 NBA service is authoritative for launch players.
-    // Historical draft metadata must never reset or bypass established service.
     derived=Math.max(derived,Math.max(0,+launchBio.experienceYears||0)+Math.max(0,activeSeason-1));
   }
-  return Math.max(stored,derived);
+  const raw=Math.max(stored,derived);
+  return Math.min(raw,plausibleLeagueExperienceCeiling(p));
+}
+function repairImpossibleLeagueExperience(G){
+  if(!G)return{checked:0,repaired:0};
+  const pool=[...allPlayers(G),...retiredPlayerPool(G)];
+  const seen=new Set();let checked=0,repaired=0;
+  for(const p of pool){
+    if(!p||seen.has(p.id))continue;seen.add(p.id);checked++;
+    const ceiling=plausibleLeagueExperienceCeiling(p);
+    if(Number.isFinite(+p.experienceYears)&&+p.experienceYears>ceiling){
+      p.experienceYears=ceiling;repaired++;
+    }
+    if(Number.isFinite(+p.professionalExperienceYears)&&+p.professionalExperienceYears<+p.experienceYears){
+      p.professionalExperienceYears=+p.experienceYears;
+    }
+  }
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.leagueExperienceIntegrity={version:"LEX1",season:G.season,checked,repaired};
+  return{checked,repaired};
 }
 function creditNbaExperienceForCompletedSeason(G,p,completedSeason){
   if(!p||!Number.isFinite(+completedSeason)||completedSeason<1)return false;
@@ -17425,7 +17452,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.118 New Season Offseason Hub",ENGINE_VERSION="E2.26-PROD168";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.119 League Experience Integrity",ENGINE_VERSION="E2.26-PROD169";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -18500,6 +18527,7 @@ async function loadSlot(slot,options={}){
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
     repairGeneratedMensLeagueNames(G);
+    repairImpossibleLeagueExperience(G);
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
@@ -19839,7 +19867,7 @@ function playerProfile(){
   const seededTimeline=historicalClubTimeline.map(h=>{const yrs=h.from===h.to?`${h.from}`:`${h.from}–${h.to}`;return `<div class="timelineRow"><div class="season">${yrs}</div><div><b>${h.clubName}</b><small>${h.gp} GP · ${h.ppg.toFixed(1)} PPG · ${h.rpg.toFixed(1)} RPG · ${h.apg.toFixed(1)} APG</small></div><div class="right">Career</div></div>`}).join("");
   const timeline=(futureTimeline+seededTimeline)||`<div class="empty">Career club history will appear as verified source data or future seasons are completed.</div>`;
   const overview=`
-    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>NBA Experience</small></div></div>
+    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>League Experience</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
     <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${p.origin||p.entryPath||"NBA"}</b></div></div></div></div>
     <div class="sectionTitle">Development Outlook</div>${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel"><div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div><div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${Number(d.avgMin||0).toFixed(1)}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}</div>`})()}`;
@@ -22417,7 +22445,7 @@ function offseasonDraftPickCount(clubId){
   return picks.length;
 }
 function offseasonCapSummary(club){
-  if(G.settings?.salaryCap===false)return "Cap Off";
+  if(G.settings?.salaryCap===false)return "Off";
   const cap=clubCapPosition?.(G,club?.id);
   if(!cap)return "—";
   if((+cap.capSpaceM||0)>0)return `$${Math.max(0,+cap.capSpaceM||0).toFixed(1)}M space`;
@@ -23745,7 +23773,7 @@ function playerExperienceLabel(p){
 function playerServiceContextLabel(p){
   const nba=playerExperienceYears(p),pro=Number.isFinite(+p?.professionalExperienceYears)?Math.max(nba,+p.professionalExperienceYears):nba;
   const bg=p?.developmentBackground||p?.entryPath||p?.origin||"";
-  if((p?.contractType==="International"||p?.contractStatus==="External League")&&pro>nba)return`NBA ${nba} · PRO ${pro} YRS`;
+  if((p?.contractType==="International"||p?.contractStatus==="External League")&&pro>nba)return`LEAGUE ${nba} · PRO ${pro} YRS`;
   if(bg&&["Undrafted Rookie","Former Two-Way","Released League Player","G League / League Veteran","Young League Free Agent"].includes(bg))return`${playerExperienceLabel(p)} · ${bg}`;
   return playerExperienceLabel(p);
 }
