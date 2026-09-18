@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.146 Season 2 Expansion Vote</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.147 Expansion Vote Catch-Up</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.146 — Season 2 Expansion Vote: first vote occurs before Season 2 opening night for Season 3 entry; approval prepares the expansion draft at the next offseason and activates the 32-team league after Season 3 Draft Night. */
+/* v0.1.49.77.5.5.5.147 — Expansion Vote Catch-Up: Season 2 expansion vote remains targeted before opening night, with a catch-up window through Round 40 so migrated/test careers cannot miss the vote before All-Star Weekend. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.146 Season 2 Expansion Vote</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.147 Expansion Vote Catch-Up</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -3073,7 +3073,7 @@ function ensureLeagueStructureState(state){
 }
 const CAREER_CONTROL_VERSION="CC2";
 const COMMISSIONER_FRAMEWORK_VERSION="CM1";
-const EXPANSION_EVENT_VERSION="EX4";
+const EXPANSION_EVENT_VERSION="EX5";
 const EXPANSION_FRANCHISE_VERSION="EF2";
 const EXPANSION_DRAFT_VERSION="ED3";
 const EXPANSION_DRAFT_RULES={
@@ -3532,7 +3532,7 @@ function ensureExpansionEventState(state){
   // entry at the start of Season 3. A No vote defers the proposal one season.
   const firstVoteSeason=2;
   let nextVoteSeason=Number.isFinite(+prior.nextVoteSeason)?+prior.nextVoteSeason:firstVoteSeason;
-  if(stage==="dormant"&&prior.version!=="EX4"){
+  if(stage==="dormant"&&prior.version!=="EX5"){
     // Current Season 1 careers wait for Season 2. Current Season 2 careers
     // become eligible immediately. Mature dormant careers are never rewound.
     nextVoteSeason=Math.max(firstVoteSeason,Math.min(+state.season||firstVoteSeason,Math.max(firstVoteSeason,+state.season||firstVoteSeason)));
@@ -3576,13 +3576,15 @@ function expansionVoteWindowOpen(state){
   if(["SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS","PRESEASON"].includes(state.phase))return true;
   if(state.phase==="REGULAR_SEASON"){
     const live=state.regularSeasonLive;
-    const games=Array.isArray(live?.games)?live.games.length:0;
     const round=Math.max(0,+live?.roundIndex||0);
-    return games===0&&round===0;
+    // Normal target is before Game 1. The Round < 41 catch-up window exists for
+    // migrated/test careers so a missed opening-night trigger can still surface
+    // before the All-Star Weekend pause.
+    return round<41 && !state.allStarDone && !state.allStarLive;
   }
   return false;
 }
-function maybeQueueExpansionVoteBeforeOpeningNight(state){
+function maybeQueueExpansionVote(state){
   const ex=ensureExpansionEventState(state);
   if(!ex||!ex.enabled||ex.stage!=="dormant"||ex.votePending)return false;
   const due=Math.max(2,+ex.nextVoteSeason||2);
@@ -3590,6 +3592,7 @@ function maybeQueueExpansionVoteBeforeOpeningNight(state){
   if(!expansionVoteWindowOpen(state))return false;
   return queueExpansionVote(state);
 }
+function maybeQueueExpansionVoteBeforeOpeningNight(state){return maybeQueueExpansionVote(state)}
 function queueExpansionVote(state){
   const ex=ensureExpansionEventState(state);
   if(!ex||!ex.enabled||ex.stage!=="dormant")return false;
@@ -3680,7 +3683,7 @@ function ensureCareerControlState(state){
   ensureExpansionEventState(state);
   ensureExpansionFranchisePlan(state);
   ensureExpansionDraftState(state);
-  maybeQueueExpansionVoteBeforeOpeningNight(state);
+  maybeQueueExpansionVote(state);
   return state.careerControl;
 }
 function leagueExpansionReadinessAudit(state){
@@ -10777,7 +10780,7 @@ function makeCareer() {
     leagueStructure:{...leagueStructureSnapshot({clubs}),expansionEnabled:false,commissionerEnabled:false},
     careerControl:{version:"CC2",leagueExpansion:false,commissionerMode:false,injuriesMutable:true,lockedAtCareerStart:["salaryCap","leagueExpansion","commissionerMode"]},
     commissionerState:{version:"CM1",enabled:false,log:[]},
-    expansionState:{version:"EX4",enabled:false,stage:"disabled",considerationSeason:2,firstVoteSeason:2,nextVoteSeason:2,entrySeason:null,votePending:false,votes:[],timingModel:"League vote from Season 2 for next-season entry",lastProcessedSeason:null,stageSeason:null,slots:["EXP_SEATTLE","EXP_VEGAS"],history:[]},
+    expansionState:{version:"EX5",enabled:false,stage:"disabled",considerationSeason:2,firstVoteSeason:2,nextVoteSeason:2,entrySeason:null,votePending:false,votes:[],timingModel:"Season 2 pre-opening vote with pre-All-Star catch-up",lastProcessedSeason:null,stageSeason:null,slots:["EXP_SEATTLE","EXP_VEGAS"],history:[]},
     expansionFranchisePlan:null,
     freeAgents,
     externalProfessionals,
@@ -18322,7 +18325,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.146 Season 2 Expansion Vote",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.147 Expansion Vote Catch-Up",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -24411,7 +24414,7 @@ function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
   const sw=saveWritePerformanceStats(G);
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
-    <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`League vote from Season 2 · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
+    <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · catch-up available before All-Star · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
 }
 function gameSettings(){
@@ -24422,10 +24425,10 @@ function gameSettings(){
   if(mode==="data")return `${header("Game Settings","Game Data",false,false)}${tabs}${gameDataSettingsContent()}`;
   return `${header("Game Settings","League & Career Controls",false,false)}${tabs}
     <div class="gameDataHero"><div class="eyebrow">GAME SETTINGS</div><h3>Career Configuration</h3><p>Core career rules. Structural settings are selected at creation; injuries can be changed during the career.</p></div>
-    <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Career-start setting</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"New injuries and recovery system active":"New injuries disabled; existing injuries recover normally"} · Can be changed during the career</small></div><button id="careerInjurySwitch" class="switch ${G.settings.injuries?"on":""}" aria-label="Toggle injuries"><span></span></button></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"30-to-32 club pathway enabled · league vote begins Season 2 for Season 3 entry":"League remains at the original 30 clubs"} · Career-start setting</small></div><b>${expansionOn?"ON":"OFF"}</b></div><div class="more"><div><b>Commissioner Mode</b><small>${commissionerOn?"Optional league-control framework enabled":"Commissioner controls disabled"} · Career-start setting</small></div><b>${commissionerOn?"ON":"OFF"}</b></div></div>
+    <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Career-start setting</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"New injuries and recovery system active":"New injuries disabled; existing injuries recover normally"} · Can be changed during the career</small></div><button id="careerInjurySwitch" class="switch ${G.settings.injuries?"on":""}" aria-label="Toggle injuries"><span></span></button></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"30-to-32 club pathway enabled · Season 2 vote for Season 3 entry":"League remains at the original 30 clubs"} · Career-start setting</small></div><b>${expansionOn?"ON":"OFF"}</b></div><div class="more"><div><b>Commissioner Mode</b><small>${commissionerOn?"Optional league-control framework enabled":"Commissioner controls disabled"} · Career-start setting</small></div><b>${commissionerOn?"ON":"OFF"}</b></div></div>
     ${expansionFranchiseSettingsHtml(G)}
     ${expansionDraftSettingsHtml(G)}
-    <div class="sectionTitle">Commissioner</div><div class="card"><div class="eyebrow">${commissionerOn?"COMMISSIONER FRAMEWORK ACTIVE":"COMMISSIONER MODE OFF"}</div><div class="commissionerSummary"><b>${commissionerOn?"League Control":"Standard Career"}</b><small>${commissionerOn?"Commissioner Mode is enabled for this career. Structural actions such as expansion, realignment and league-rule changes remain restricted to safe offseason windows.":"This career continues under ordinary simulation control. Organic expansion can still progress when League Expansion was enabled at career creation."}</small></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"Permitted by career settings":"Disabled for this career"}</small></div><b>${expansionOn?"ENABLED":"OFF"}</b></div><div class="more"><div><b>Expansion Status</b><small>${expansionOn?(G.expansionState?.stage==="dormant"?`League vote from Season 2 · next vote Season ${G.expansionState?.nextVoteSeason||2}`:(G.expansionState?.history?.slice(-1)[0]?.detail||"Expansion lifecycle active")):"No expansion events will occur"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Current League</b><small>${leagueClubCount(G)>=32?"Expansion implemented":"Existing competition remains unchanged"}</small></div><b>${leagueClubCount(G)} CLUBS</b></div><div class="more"><div><b>Framework</b><small>Career-control, expansion-event, franchise and draft foundation</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div></div>`;
+    <div class="sectionTitle">Commissioner</div><div class="card"><div class="eyebrow">${commissionerOn?"COMMISSIONER FRAMEWORK ACTIVE":"COMMISSIONER MODE OFF"}</div><div class="commissionerSummary"><b>${commissionerOn?"League Control":"Standard Career"}</b><small>${commissionerOn?"Commissioner Mode is enabled for this career. Structural actions such as expansion, realignment and league-rule changes remain restricted to safe offseason windows.":"This career continues under ordinary simulation control. Organic expansion can still progress when League Expansion was enabled at career creation."}</small></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"Permitted by career settings":"Disabled for this career"}</small></div><b>${expansionOn?"ENABLED":"OFF"}</b></div><div class="more"><div><b>Expansion Status</b><small>${expansionOn?(G.expansionState?.stage==="dormant"?`Season 2 vote for next-season entry · next vote Season ${G.expansionState?.nextVoteSeason||2}`:(G.expansionState?.history?.slice(-1)[0]?.detail||"Expansion lifecycle active")):"No expansion events will occur"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Current League</b><small>${leagueClubCount(G)>=32?"Expansion implemented":"Existing competition remains unchanged"}</small></div><b>${leagueClubCount(G)} CLUBS</b></div><div class="more"><div><b>Framework</b><small>Career-control, expansion-event, franchise and draft foundation</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div></div>`;
 }
 function gmProfile(){
   const club=me(),gm=gmCareerState(G),history=[...(G.seasonSummaries||[])].slice().reverse();
