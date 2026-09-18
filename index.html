@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.151 Expansion Gameplay Flow</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.151 — Expansion Gameplay Flow: moves protection and Expansion Draft actions out of Settings and into a dedicated Home/league-event checkpoint; Settings becomes informational only. */
+/* v0.1.49.77.5.5.5.152 — Expansion Summer League Timing Fix: stops expansion interruptions once Summer League has started, fixes checkpoint acknowledgement, and moves missed expansion recovery to the Summer League-to-preseason boundary. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.151 Expansion Gameplay Flow</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -3288,8 +3288,10 @@ function expansionDraftCanExecute(state){
   const phaseReady=
     state.phase==="OFFSEASON"||
     (state.phase==="DRAFT_NIGHT"&&(!state.draftState||(+state.draftState.index||0)===0))||
-    expansionSummerRecoveryAvailable(state);
-  if(!phaseReady)return{ok:false,reason:`The Expansion Draft must be completed before Draft Night or before Summer League starts.`};
+    expansionSummerRecoveryAvailable(state)||
+    state.phase==="SUMMER_LEAGUE_COMPLETE"||
+    state.phase==="PRESEASON_READINESS";
+  if(!phaseReady)return{ok:false,reason:`The Expansion Draft will resume after Summer League finishes, before preseason.`};
   if(ex?.entrySeason&&state.season<ex.entrySeason)return{ok:false,reason:`The Expansion Draft is scheduled for the Season ${ex.entrySeason} offseason.`};
   const protections=Object.values(draft.protectionByClub||{});
   const incomplete=protections.filter(p=>!p.complete);
@@ -3369,11 +3371,12 @@ function executeExpansionDraft(state){
   if(typeof pushNews==="function")pushNews(state,`The Expansion Draft is complete. ${plan.clubs.map(c=>`${c.name} selected ${(c.roster||[]).length} players`).join("; ")}.`,"Expansion",2);
 
   let activation=null;
-  if(expansionSummerRecoveryAvailable(state)){
+  const beforeSummer=expansionSummerRecoveryAvailable(state);
+  const afterSummer=state.phase==="SUMMER_LEAGUE_COMPLETE"||state.phase==="PRESEASON_READINESS";
+  if(beforeSummer||afterSummer){
     activation=activateExpansionLeague(state);
-    if(activation?.ok){
-      // The Summer League object may already have been prepared for 30 teams,
-      // but no games have begun. Clear it so the next open regenerates all 32.
+    if(activation?.ok&&beforeSummer){
+      // Summer League was not started, so regenerate it with all 32 clubs.
       state.summerLeagueLive=null;
       state.summerLeague=null;
     }
@@ -3458,7 +3461,11 @@ function seedExpansionFutureDraftAssets(state,clubIds,seasonsAhead=5){
 function expansionActivationCanRun(state){
   if(!state)return{ok:false,reason:"Career state unavailable."};
   if(leagueClubCount(state)>=32)return{ok:false,reason:"The 32-team league is already active."};
-  if(state.phase!=="SUMMER_LEAGUE")return{ok:false,reason:"Expansion activation occurs after Draft Night and before Summer League begins."};
+  const safePhase=
+    (state.phase==="SUMMER_LEAGUE"&&!expansionSummerLeagueHasStarted(state))||
+    state.phase==="SUMMER_LEAGUE_COMPLETE"||
+    state.phase==="PRESEASON_READINESS";
+  if(!safePhase)return{ok:false,reason:"Expansion activation occurs at a safe boundary before Summer League starts or after Summer League completes, before preseason."};
   const draft=ensureExpansionDraftState(state,true);
   if(draft?.status!=="complete")return{ok:false,reason:"The Expansion Draft must be completed first."};
   const plan=ensureExpansionFranchisePlan(state,true);
@@ -3710,6 +3717,21 @@ function expansionSummerRecoveryAvailable(state){
   const live=state.summerLeagueLive;
   return !live || (!live.started && !(live.games||[]).length && (+live.roundIndex||0)===0);
 }
+function expansionSummerLeagueHasStarted(state){
+  if(!state||state.phase!=="SUMMER_LEAGUE")return false;
+  const live=state.summerLeagueLive;
+  return !!live&&(
+    live.started===true||
+    (+live.roundIndex||0)>0||
+    (live.games||[]).some(g=>g.played||Number.isFinite(+g.homeScore)||Number.isFinite(+g.awayScore))
+  );
+}
+function expansionActionWindowOpen(state){
+  if(!state)return false;
+  if(["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS"].includes(state.phase))return true;
+  if(state.phase==="SUMMER_LEAGUE")return !expansionSummerLeagueHasStarted(state);
+  return false;
+}
 function expansionDraftBlocksLeagueDraft(state){
   const ex=ensureExpansionEventState(state);
   if(!ex?.enabled||ex.stage!=="preparation")return false;
@@ -3718,6 +3740,8 @@ function expansionDraftBlocksLeagueDraft(state){
 }
 function queueExpansionPreparationCheckpoint(state){
   if(!state||state.expansionState?.stage!=="preparation")return false;
+  if(!expansionActionWindowOpen(state))return false;
+  if(+state.expansionCheckpointAcknowledgedSeason===+state.season)return false;
   const draft=ensureExpansionDraftState(state,true);
   if(!draft||draft.status==="complete")return false;
   const alreadyLive=state.newsFlashPending?.type==="expansion_checkpoint";
@@ -3740,7 +3764,7 @@ function ensureExpansionEntryPreparationState(state){
   const ex=ensureExpansionEventState(state);
   if(!ex?.enabled)return ex;
   const entry=Math.max(3,+ex.entrySeason||999);
-  const recoverablePhase=["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE"].includes(state.phase);
+  const recoverablePhase=["OFFSEASON","DRAFT_NIGHT","SUMMER_LEAGUE","SUMMER_LEAGUE_COMPLETE","PRESEASON_READINESS"].includes(state.phase);
   if(state.season>=entry&&recoverablePhase){
     if(ex.stage==="approved"){
       const plan=ensureExpansionFranchisePlan(state,true);
@@ -3750,17 +3774,22 @@ function ensureExpansionEntryPreparationState(state){
     }
     if(ex.stage==="franchises_announced"){
       recordExpansionStage(state,"preparation","Expansion preparation period begins","Roster protection and the Expansion Draft must now be completed before Seattle and Las Vegas can enter league competition.");
+      state.expansionCheckpointAcknowledgedSeason=null;
     }
     if(ex.stage==="preparation"){
       ensureExpansionDraftState(state,true);
       queueExpansionPreparationCheckpoint(state);
     }
   }
-  if(ex.stage==="preparation"&&state.expansionDraftState?.status==="complete"&&expansionSummerRecoveryAvailable(state)){
-    const activated=activateExpansionLeague(state);
-    if(activated?.ok){
-      state.summerLeagueLive=null;
-      state.summerLeague=null;
+  if(ex.stage==="preparation"&&state.expansionDraftState?.status==="complete"){
+    const beforeSummer=expansionSummerRecoveryAvailable(state);
+    const afterSummer=state.phase==="SUMMER_LEAGUE_COMPLETE"||state.phase==="PRESEASON_READINESS";
+    if(beforeSummer||afterSummer){
+      const activated=activateExpansionLeague(state);
+      if(activated?.ok&&beforeSummer){
+        state.summerLeagueLive=null;
+        state.summerLeague=null;
+      }
     }
   }
   return ex;
@@ -11721,7 +11750,7 @@ function newsFlashHtml(){
         <div><b>Seattle</b><small>New Club</small></div>
         <div><b>Las Vegas</b><small>New Club</small></div>
       </div>
-      <div class="gmOfferNote">This is a required league event. Normal progression pauses until the Expansion Draft checkpoint is complete.</div>
+      <div class="gmOfferNote">This is a required league event. If Summer League is already underway, finish it first; expansion will resume before preseason.</div>
       <div class="newsFlashActions"><button id="openExpansionCheckpoint">Continue to Expansion</button></div>
     </div></div>`;
   }
@@ -18446,7 +18475,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.151 Expansion Gameplay Flow",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.152 Expansion Summer League Timing Fix",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -23524,7 +23553,7 @@ function newSeasonOffseasonHubHtml(){
 
 function home(){
   if(G.phase==="CHAMPION")return seasonSummaryHtml();
-  if(G.expansionState?.stage==="preparation"&&G.expansionDraftState?.status!=="complete")return expansionDraftHomeHtml(G);
+  if(G.expansionState?.stage==="preparation"&&G.expansionDraftState?.status!=="complete"&&expansionActionWindowOpen(G))return expansionDraftHomeHtml(G);
   if(G.phase==="DRAFT_NIGHT"&&G.retirementReviewPending?.season===G.season&&!G.retirementReviewPending?.acknowledged&&G.retirementReviewPending?.total)return retirementReviewHtml();
   const worldCupRecap=worldCupRecapPendingTournament();
   if(worldCupRecap)return worldCupTournamentRecapHtml(worldCupRecap);
@@ -27119,6 +27148,7 @@ function bind(){
     G.newsFlashPending=null;ui.page="news";const ok=await save();if(ok)clearAwardPresentationCheckpoint();render();
   };
   if($("#openExpansionCheckpoint"))$("#openExpansionCheckpoint").onclick=async()=>{
+    G.expansionCheckpointAcknowledgedSeason=G.season;
     G.newsFlashPending=null;promoteQueuedNewsFlash(G);
     ui.page="home";
     await save();render();
