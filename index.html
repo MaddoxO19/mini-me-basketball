@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.119 League Experience Integrity</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.121 Career Control Framework</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2911,7 +2911,8 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .legacyFranchiseMetric small{font-size:8px!important}
 }
 
-/* v0.1.49.77.5.5.5.119 — League Experience Integrity */
+/* v0.1.49.77.5.5.5.120 — 32-Team Competition Architecture */
+/* v0.1.49.77.5.5.5.121 — Career Control Framework: Expansion / Commissioner career settings and GM Profile Settings layer. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
 .newSeasonHead{padding:16px 16px 13px;border-bottom:1px solid var(--line);background:linear-gradient(135deg,rgba(241,168,77,.10),rgba(241,168,77,.025))}
@@ -2927,14 +2928,14 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.119 League Experience Integrity</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.121 Career Control Framework</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
 <section id="setup" class="screen"><div class="setup"><div class="setupHead"><button id="backBtn" class="back">‹</button><div><div class="eyebrow">New Career</div><h2 id="setupTitle">Create Your GM</h2></div></div><div class="steps"><i class="on"></i><i></i><i></i></div>
 <div id="s1" class="card"><h3>Who are you?</h3><div class="smallcopy">Your GM name is carried through the club dashboard, career history and future international appointments.</div><label>GM NAME</label><input id="gmName" type="text" maxlength="28" value="" placeholder="Enter GM name"><button id="next1" class="btn primary" style="margin-top:14px">Choose Team</button></div>
 <div id="s2" class="card" style="display:none"><h3>Choose your club</h3><div class="smallcopy">Choose a club from the current league structure.</div><div class="confTabs"><button class="active" data-conf="East">Eastern Conference</button><button data-conf="West">Western Conference</button></div><div id="teamGrid" class="teamGrid"></div><button id="next2" class="btn primary" style="margin-top:14px">Career Settings</button></div>
-<div id="s3" class="card" style="display:none"><h3>Career settings</h3><div class="smallcopy">These settings are stored with this career and applied to the simulation.</div><div class="setting"><div><b>Salary Cap</b><small>Enforce cap space and salary matching for signings and trades.</small></div><button id="capSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>Injuries</b><small>Players can miss games based on fatigue, age and workload.</small></div><button id="injSwitch" class="switch on"><span></span></button></div><div id="summary" class="card"></div><button id="startBtn" class="btn primary">Start Career</button></div>
+<div id="s3" class="card" style="display:none"><h3>Career settings</h3><div class="smallcopy">These settings are stored with this career and applied to the simulation.</div><div class="setting"><div><b>Salary Cap</b><small>Enforce cap space and salary matching for signings and trades.</small></div><button id="capSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>Injuries</b><small>Players can miss games based on fatigue, age and workload.</small></div><button id="injSwitch" class="switch on"><span></span></button></div><div class="setting"><div><b>League Expansion</b><small>Allow the league to consider a future move from 30 to 32 clubs during a long career.</small></div><button id="expansionSwitch" class="switch"><span></span></button></div><div class="setting"><div><b>Commissioner Mode</b><small>Enable the optional league-control framework without forcing expansion or structural changes.</small></div><button id="commissionerSwitch" class="switch"><span></span></button></div><div id="summary" class="card"></div><button id="startBtn" class="btn primary">Start Career</button></div>
 </div></section>
 
 <section id="game" class="screen"><div class="game"><div class="status"><div class="statusTop"><div class="statusIdentity"><div class="statusBrand">H³O BASKETBALL</div><div id="statusClub" class="statusClub"></div></div><div class="statusPhase"><div id="phaseBadge" class="phaseBadge"></div><div id="statusDate" class="statusDate"></div></div></div><div class="globalTabs"><button data-global="news">News</button><button data-global="gmProfile" class="gmProfileTab"><span class="gmNavAvatar" aria-hidden="true"><i></i></span><span>GM Profile</span></button><button id="globalExit" class="globalExitTab" type="button">Exit</button></div></div><main id="host" class="page"></main><div id="action" class="action"></div><nav class="nav footballNav"><button class="active" data-page="home"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></button><button data-page="team"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></button><button data-page="club"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></button><button data-page="league"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></button><button data-page="international"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></button><button data-page="facilities"><span class="navIcon"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/><path d="M4 21h16"/></svg></span><b>Facilities</b></button></nav></div></section>
@@ -3001,16 +3002,39 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 // states. That is intentional and matches the plan.
 
 const CONFERENCES = ["East", "West"];
-const DIVISIONS = {
-  East: ["Atlantic", "Central", "Southeast"],
-  West: ["Northwest", "Pacific", "Southwest"],
+const DIVISION_MODELS = {
+  30: {
+    East: ["Atlantic", "Central", "Southeast"],
+    West: ["Northwest", "Pacific", "Southwest"],
+  },
+  // Provisional 32-team architecture: 8 divisions × 4 clubs. The two expansion
+  // identities are deliberately abstract slots until the franchise package is approved.
+  32: {
+    East: ["Atlantic", "Great Lakes", "Heartland", "Southeast"],
+    West: ["Northwest", "Pacific", "Southwest", "Frontier"],
+  },
+};
+// Backward-compatible launch model used by all existing 30-team careers.
+const DIVISIONS = DIVISION_MODELS[30];
+const EXPANSION_ALIGNMENT_32 = {
+  East: {
+    Atlantic: ["BOS","BKN","NYE","PHI"],
+    "Great Lakes": ["TOR","CLE","DET","MIL"],
+    Heartland: ["CHI","IND","WAS","EXP_EAST"],
+    Southeast: ["ATL","CHA","MIA","ORL"],
+  },
+  West: {
+    Northwest: ["DEN","MIN","POR","UTA"],
+    Pacific: ["GSB","LAC","LAG","SAC"],
+    Southwest: ["DAL","HOU","NOP","SAS"],
+    Frontier: ["OKC","MEM","PHX","EXP_WEST"],
+  },
 };
 
-// v0.1.49.77.5.5.5.117 — Native Save Storage.
-// These helpers make the mature engine read the active career structure rather
-// than assuming 30 clubs / 15 per conference. Expansion remains disabled in this
-// build; 32-team competition rules are deliberately introduced in later phases.
-const LEAGUE_STRUCTURE_VERSION="LS1-30-32";
+// v0.1.49.77.5.5.5.120 — 30/32-team competition architecture.
+// Expansion is still disabled. These helpers define the future 16/16 conference,
+// 8×4 division and Cup rules without mutating a live 30-team career.
+const LEAGUE_STRUCTURE_VERSION="LS2-30-32";
 const SUPPORTED_LEAGUE_SIZES=[30,32];
 const DEFAULT_DIRECT_PLAYOFF_SEEDS=6;
 const DEFAULT_PLAY_IN_START_SEED=7;
@@ -3019,12 +3043,20 @@ function leagueClubCount(state){return Array.isArray(state?.clubs)?state.clubs.l
 function leagueConferenceClubs(state,conf){return (state?.clubs||[]).filter(c=>c.conference===conf);}
 function leagueConferenceSize(state,conf){return leagueConferenceClubs(state,conf).length;}
 function leagueDivisionClubs(state,conf,division){return leagueConferenceClubs(state,conf).filter(c=>c.division===division);}
+function divisionModelForTeamCount(teamCount){return DIVISION_MODELS[+teamCount]||DIVISION_MODELS[30];}
+function leagueDivisionNames(state,conf){return divisionModelForTeamCount(leagueClubCount(state))[conf]||[];}
+function cupFormatForLeague(state){
+  const teamCount=leagueClubCount(state);
+  if(teamCount===32)return{version:"CUP32-4X4",teamCount,groupsPerConference:4,teamsPerGroup:4,groupStageRounds:3,qualifiersPerConference:4,wildcardSlotsPerConference:0};
+  return{version:"CUP30-3X5",teamCount:30,groupsPerConference:3,teamsPerGroup:5,groupStageRounds:5,qualifiersPerConference:4,wildcardSlotsPerConference:1};
+}
 function leagueStructureSnapshot(state){
   const teamCount=leagueClubCount(state),conferenceSizes={};
   for(const conf of CONFERENCES)conferenceSizes[conf]=leagueConferenceSize(state,conf);
-  const divisionSizes={};
-  for(const conf of CONFERENCES)for(const div of (DIVISIONS[conf]||[]))divisionSizes[`${conf}:${div}`]=leagueDivisionClubs(state,conf,div).length;
-  return{version:LEAGUE_STRUCTURE_VERSION,teamCount,conferenceSizes,divisionSizes,directPlayoffSeeds:DEFAULT_DIRECT_PLAYOFF_SEEDS,playInStartSeed:DEFAULT_PLAY_IN_START_SEED,playInEndSeed:DEFAULT_PLAY_IN_END_SEED};
+  const divisionModel=divisionModelForTeamCount(teamCount),divisionSizes={};
+  for(const conf of CONFERENCES)for(const div of (divisionModel[conf]||[]))divisionSizes[`${conf}:${div}`]=leagueDivisionClubs(state,conf,div).length;
+  const cupFormat=cupFormatForLeague(state);
+  return{version:LEAGUE_STRUCTURE_VERSION,teamCount,conferenceSizes,divisionSizes,divisionModel:teamCount===32?"8x4":"6x5",cupFormat:cupFormat.version,directPlayoffSeeds:DEFAULT_DIRECT_PLAYOFF_SEEDS,playInStartSeed:DEFAULT_PLAY_IN_START_SEED,playInEndSeed:DEFAULT_PLAY_IN_END_SEED};
 }
 function ensureLeagueStructureState(state){
   if(!state||typeof state!=="object")return null;
@@ -3032,24 +3064,39 @@ function ensureLeagueStructureState(state){
   state.leagueStructure={...prior,...snap,expansionEnabled:!!prior.expansionEnabled,commissionerEnabled:!!prior.commissionerEnabled};
   return state.leagueStructure;
 }
+const CAREER_CONTROL_VERSION="CC1";
+const COMMISSIONER_FRAMEWORK_VERSION="CM1";
+function ensureCareerControlState(state){
+  if(!state||typeof state!=="object")return null;
+  state.settings=state.settings||{};
+  if(typeof state.settings.leagueExpansion!=="boolean")state.settings.leagueExpansion=!!state.leagueStructure?.expansionEnabled;
+  if(typeof state.settings.commissionerMode!=="boolean")state.settings.commissionerMode=!!state.leagueStructure?.commissionerEnabled;
+  const structure=ensureLeagueStructureState(state);
+  structure.expansionEnabled=!!state.settings.leagueExpansion;
+  structure.commissionerEnabled=!!state.settings.commissionerMode;
+  state.careerControl={...(state.careerControl||{}),version:CAREER_CONTROL_VERSION,leagueExpansion:!!state.settings.leagueExpansion,commissionerMode:!!state.settings.commissionerMode};
+  state.commissionerState={...(state.commissionerState||{}),version:COMMISSIONER_FRAMEWORK_VERSION,enabled:!!state.settings.commissionerMode,log:Array.isArray(state.commissionerState?.log)?state.commissionerState.log:[]};
+  return state.careerControl;
+}
 function leagueExpansionReadinessAudit(state){
   const structure=ensureLeagueStructureState(state),issues=[],blockers=[];
   if(!structure)return{version:LEAGUE_STRUCTURE_VERSION,issues:["Career state unavailable"],blockers:["Career state unavailable"],readyForExpansion:false};
   if(!SUPPORTED_LEAGUE_SIZES.includes(structure.teamCount))issues.push(`Unsupported team count ${structure.teamCount}`);
   if(structure.conferenceSizes.East!==structure.conferenceSizes.West)issues.push("Conferences are not balanced");
+  const divisionModel=divisionModelForTeamCount(structure.teamCount);
   for(const c of state.clubs||[]){
     if(!CONFERENCES.includes(c.conference))issues.push(`${c.id}: unknown conference ${c.conference}`);
-    if(!(DIVISIONS[c.conference]||[]).includes(c.division))issues.push(`${c.id}: unknown division ${c.division}`);
+    if(!(divisionModel[c.conference]||[]).includes(c.division))issues.push(`${c.id}: unknown division ${c.division}`);
   }
-  // Known future-work gates. They are explicit so a 32-team save cannot be
-  // activated accidentally before these competition systems are redesigned.
   if(structure.teamCount===32){
-    blockers.push("The Cup group format requires a 32-team draw design");
-    blockers.push("Division realignment requires an approved 32-team structure");
+    for(const conf of CONFERENCES){
+      if(structure.conferenceSizes[conf]!==16)issues.push(`${conf} conference must contain 16 clubs`);
+      for(const div of divisionModel[conf]||[])if((structure.divisionSizes[`${conf}:${div}`]||0)!==4)issues.push(`${conf} ${div} must contain 4 clubs`);
+    }
     blockers.push("Expansion franchise identities and logos are not installed");
     blockers.push("Expansion Draft and GM opportunity systems are not installed");
   }
-  return{version:LEAGUE_STRUCTURE_VERSION,teamCount:structure.teamCount,conferenceSizes:structure.conferenceSizes,divisionSizes:structure.divisionSizes,issues,blockers,readyForExpansion:structure.teamCount===32&&issues.length===0&&blockers.length===0,foundationReady:issues.length===0};
+  return{version:LEAGUE_STRUCTURE_VERSION,teamCount:structure.teamCount,conferenceSizes:structure.conferenceSizes,divisionSizes:structure.divisionSizes,divisionArchitecture:"8x4-ready",cupArchitecture:cupFormatForLeague(state).version,expansionEnabled:!!structure.expansionEnabled,commissionerEnabled:!!structure.commissionerEnabled,issues,blockers,readyForExpansion:structure.teamCount===32&&issues.length===0&&blockers.length===0,foundationReady:issues.length===0};
 }
 const POSITIONS = ["PG", "SG", "SF", "PF", "C"];
 const SECONDARY_POSITION_OPTIONS = {
@@ -10044,9 +10091,11 @@ function makeCareer() {
     launchRosterAudit,
     contractEconomyVersion:"CE2",
     gmName: "GM",
-    settings: { salaryCap:true, injuries:true },
+    settings: { salaryCap:true, injuries:true, leagueExpansion:false, commissionerMode:false },
     clubs,
     leagueStructure:{...leagueStructureSnapshot({clubs}),expansionEnabled:false,commissionerEnabled:false},
+    careerControl:{version:"CC1",leagueExpansion:false,commissionerMode:false},
+    commissionerState:{version:"CM1",enabled:false,log:[]},
     freeAgents,
     externalProfessionals,
     playerMarketVersion:"PM2",
@@ -16305,31 +16354,33 @@ function clubStrengthForCup(club){
 }
 function initializeNBACup(G){
   if(G.inSeasonCup?.season===G.season) return G.inSeasonCup;
-  const groups=[];
+  const format=cupFormatForLeague(G),groups=[];
   for(const conf of CONFERENCES){
     const clubs=G.clubs.filter(c=>c.conference===conf).sort((a,b)=>{
       const ga=(a.standings?.w||0)+(a.standings?.l||0), gb=(b.standings?.w||0)+(b.standings?.l||0);
       const pa=ga?(a.standings.w/ga):clubStrengthForCup(a)/100, pb=gb?(b.standings.w/gb):clubStrengthForCup(b)/100;
       return pb-pa;
     });
-    const pots=[clubs.slice(0,3),clubs.slice(3,6),clubs.slice(6,9),clubs.slice(9,12),clubs.slice(12,15)].map(p=>[...p].sort(()=>Math.random()-0.5));
-    for(let gi=0;gi<3;gi++){
+    if(clubs.length!==format.groupsPerConference*format.teamsPerGroup)throw new Error(`The Cup ${format.version} expected ${format.groupsPerConference*format.teamsPerGroup} ${conf} clubs; found ${clubs.length}`);
+    const pots=[];
+    for(let pi=0;pi<format.teamsPerGroup;pi++)pots.push(clubs.slice(pi*format.groupsPerConference,(pi+1)*format.groupsPerConference).sort(()=>Math.random()-0.5));
+    for(let gi=0;gi<format.groupsPerConference;gi++){
       const id=`${conf}_CUP_${String.fromCharCode(65+gi)}`;
-      const teamIds=pots.map(p=>p[gi].id);
+      const teamIds=pots.map(p=>p[gi]?.id).filter(Boolean);
       groups.push({id,conference:conf,label:`${conf} Group ${String.fromCharCode(65+gi)}`,teamIds});
     }
   }
   const standings={};
   for(const g of groups) for(const id of g.teamIds) standings[id]={clubId:id,groupId:g.id,gp:0,w:0,l:0,pf:0,pa:0,diff:0};
-  G.inSeasonCup={season:G.season,stage:'GROUP_PLAY',groups,standings,games:[],groupRound:0,qualifiers:[],quarterfinals:[],semifinals:[],final:null,winnerClubId:null,finalPending:false,complete:false};
+  G.inSeasonCup={season:G.season,format,stage:'GROUP_PLAY',groups,standings,games:[],groupRound:0,qualifiers:[],quarterfinals:[],semifinals:[],final:null,winnerClubId:null,finalPending:false,complete:false};
   return G.inSeasonCup;
 }
 function cupRoundPairs(teamIds, roundIndex){
-  const arr=[...teamIds,null], n=arr.length, rounds=n-1;
+  const arr=teamIds.length%2?[...teamIds,null]:[...teamIds], n=arr.length, rounds=Math.max(1,n-1);
   let work=[...arr];
   for(let r=0;r<roundIndex%rounds;r++) work=[work[0],work[n-1],...work.slice(1,n-1)];
   const pairs=[],byes=[];
-  for(let i=0;i<n/2;i++){
+  for(let i=0;i<Math.floor(n/2);i++){
     const a=work[i],b=work[n-1-i];
     if(a===null||b===null){byes.push(a===null?b:a);continue;}
     const flip=((roundIndex+i)%2)===1; pairs.push(flip?[b,a]:[a,b]);
@@ -16357,18 +16408,25 @@ function cupGroupTable(G,groupId){
 }
 function resolveCupGroupPlay(G){
   const cup=G.inSeasonCup;if(!cup||cup.qualifiers.length)return cup;
-  const qualifiers=[];
+  const format=cup.format||cupFormatForLeague(G),qualifiers=[];
   for(const conf of CONFERENCES){
     const cgroups=cup.groups.filter(g=>g.conference===conf), winners=[];
     for(const g of cgroups){const t=cupGroupTable(G,g.id);if(t[0])winners.push(t[0]);}
     const runnerUps=cgroups.map(g=>cupGroupTable(G,g.id)[1]).filter(Boolean).sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);
-    const seeded=[...winners,runnerUps[0]].sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf);
+    const wildcards=runnerUps.slice(0,format.wildcardSlotsPerConference||0);
+    const seeded=[...winners,...wildcards].sort((a,b)=>b.w-a.w||b.diff-a.diff||b.pf-a.pf).slice(0,format.qualifiersPerConference);
     seeded.forEach((x,i)=>qualifiers.push({clubId:x.clubId,conference:conf,seed:i+1,w:x.w,l:x.l,diff:x.diff,wildCard:!winners.some(y=>y.clubId===x.clubId)}));
   }
   cup.qualifiers=qualifiers;cup.stage='QUARTERFINALS';
   cup.quarterfinals=[];
-  for(const conf of CONFERENCES){const q=qualifiers.filter(x=>x.conference===conf).sort((a,b)=>a.seed-b.seed);cup.quarterfinals.push({conference:conf,aId:q[0].clubId,bId:q[3].clubId,complete:false,winnerClubId:null,gameId:null});cup.quarterfinals.push({conference:conf,aId:q[1].clubId,bId:q[2].clubId,complete:false,winnerClubId:null,gameId:null});}
-  logEvent(G,'The Cup Group Play complete; six group winners and two wild cards advanced.');return cup;
+  for(const conf of CONFERENCES){
+    const q=qualifiers.filter(x=>x.conference===conf).sort((a,b)=>a.seed-b.seed);
+    if(q.length!==4)throw new Error(`The Cup requires four ${conf} quarterfinalists; found ${q.length}`);
+    cup.quarterfinals.push({conference:conf,aId:q[0].clubId,bId:q[3].clubId,complete:false,winnerClubId:null,gameId:null});
+    cup.quarterfinals.push({conference:conf,aId:q[1].clubId,bId:q[2].clubId,complete:false,winnerClubId:null,gameId:null});
+  }
+  const groupWinners=format.groupsPerConference*CONFERENCES.length,wildcards=(format.wildcardSlotsPerConference||0)*CONFERENCES.length;
+  logEvent(G,`The Cup Group Play complete; ${groupWinners} group winners${wildcards?` and ${wildcards} best runner-up${wildcards===1?'':'s'}`:''} advanced.`);return cup;
 }
 function cupKnockoutPairingsForRound(G,round){
   const cup=G.inSeasonCup;if(!cup)return null;
@@ -16586,12 +16644,12 @@ function initializeRegularSeasonLive(G) {
       p.recentForm = [];
     }
   }
-  initializeNBACup(G);
+  const cup=initializeNBACup(G),cupGroupRounds=cup?.format?.groupStageRounds||cupFormatForLeague(G).groupStageRounds;
   const rounds=[];
   const clubIds=G.clubs.map(c=>c.id);
   for(let round=1; round<=82; round++){
     let pairings=[];
-    if(round<=5){
+    if(round<=cupGroupRounds){
       pairings=cupGroupNightPairings(G,round-1).map(x=>[x.homeId,x.awayId,x.cupGroupId]);
     } else {
       const shuffled=[...clubIds].sort(()=>Math.random()-0.5);
@@ -16670,7 +16728,8 @@ function advanceRegularSeasonRound(G) {
   }
   live.roundIndex++;
 
-  if(round===5 && G.inSeasonCup?.stage==='GROUP_PLAY') resolveCupGroupPlay(G);
+  const cupGroupRounds=G.inSeasonCup?.format?.groupStageRounds||cupFormatForLeague(G).groupStageRounds;
+  if(round===cupGroupRounds && G.inSeasonCup?.stage==='GROUP_PLAY') resolveCupGroupPlay(G);
   if(round===12 || round===15) completeCupKnockoutRound(G,round,roundGames);
   if(round===41 && !G.allStarDone && !G.allStarLive){
     initializeAllStarLive(G);
@@ -17452,9 +17511,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.119 League Experience Integrity",ENGINE_VERSION="E2.26-PROD169";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.121 Career Control Framework",ENGINE_VERSION="E2.26-PROD171";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -18523,6 +18582,7 @@ async function loadSlot(slot,options={}){
     const loadMaintenanceVersion="LOAD-PROD142-OLYMPIC-ALL-TOURNAMENT-2";
     G.runtimeMeta=G.runtimeMeta||{};
     ensureLeagueStructureState(G);
+    ensureCareerControlState(G);
     G.runtimeMeta.expansionReadinessAudit=leagueExpansionReadinessAudit(G);
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
@@ -18715,10 +18775,10 @@ async function beginNewCareerInSlot(slot,replace=false){
   clearAwardPresentationCheckpoint(slot);
   clearSessionGuard(slot);
   activeSlot=slot;
-  setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,previewCareer:makeCareer()};
+  setup={step:1,name:"",team:"BOS",conf:"East",cap:true,inj:true,expansion:false,commissioner:false,previewCareer:makeCareer()};
   show("setup");setStep(1);
 }
-function setStep(n){setup.step=n;[1,2,3].forEach(i=>$("#s"+i).style.display=i===n?"block":"none");$$(".steps i").forEach((x,i)=>x.classList.toggle("on",i<n));$("#setupTitle").textContent=n===1?"Create Your GM":n===2?"Choose Your Team":"Career Settings";if(n===2)drawTeams();if(n===3)drawSummary()}
+function setStep(n){setup.step=n;[1,2,3].forEach(i=>$("#s"+i).style.display=i===n?"block":"none");$$(".steps i").forEach((x,i)=>x.classList.toggle("on",i<n));$("#setupTitle").textContent=n===1?"Create Your GM":n===2?"Choose Your Team":"Career Settings";if(n===2)drawTeams();if(n===3){if($("#capSwitch"))$("#capSwitch").classList.toggle("on",setup.cap);if($("#injSwitch"))$("#injSwitch").classList.toggle("on",setup.inj);if($("#expansionSwitch"))$("#expansionSwitch").classList.toggle("on",setup.expansion);if($("#commissionerSwitch"))$("#commissionerSwitch").classList.toggle("on",setup.commissioner);drawSummary()}}
 function drawTeams(){
   if(!setup.previewCareer)setup.previewCareer=makeCareer();
   let arr=CLUB_IDENTITIES.filter(x=>x.conference===setup.conf);
@@ -18728,7 +18788,7 @@ function drawTeams(){
   }).join("");
   $$("[data-team]").forEach(b=>b.onclick=()=>{setup.team=b.dataset.team;drawTeams()})
 }
-function drawSummary(){let t=CLUB_IDENTITIES.find(x=>x.id===setup.team);$("#summary").innerHTML=`<div class="eyebrow">Career Summary</div><div style="display:flex;gap:10px;align-items:center;margin-top:9px"><span class="mark" style="background:transparent;display:block">${crestSVG(t)}</span><div><b>${setup.name}</b><div class="smallcopy">${t.name}</div></div></div><div class="metrics" style="margin-top:11px"><div class="metric"><b>${setup.cap?"ON":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${setup.inj?"ON":"OFF"}</b><small>Injuries</small></div><div class="metric"><b>${t.conference}</b><small>${t.division}</small></div></div>`}
+function drawSummary(){let t=CLUB_IDENTITIES.find(x=>x.id===setup.team);$("#summary").innerHTML=`<div class="eyebrow">Career Summary</div><div style="display:flex;gap:10px;align-items:center;margin-top:9px"><span class="mark" style="background:transparent;display:block">${crestSVG(t)}</span><div><b>${setup.name}</b><div class="smallcopy">${t.name}</div></div></div><div class="metrics" style="margin-top:11px"><div class="metric"><b>${setup.cap?"ON":"OFF"}</b><small>Salary Cap</small></div><div class="metric"><b>${setup.inj?"ON":"OFF"}</b><small>Injuries</small></div><div class="metric"><b>${t.conference}</b><small>${t.division}</small></div></div><div class="metrics" style="margin-top:8px"><div class="metric"><b>${setup.expansion?"ON":"OFF"}</b><small>Expansion</small></div><div class="metric"><b>${setup.commissioner?"ON":"OFF"}</b><small>Commissioner</small></div><div class="metric"><b>30</b><small>Starting Clubs</small></div></div>`}
 async function startCareer(){
   try{
     if(!activeSlot)throw new Error("No save slot has been selected.");
@@ -18736,7 +18796,8 @@ async function startCareer(){
     setup.previewCareer=null;
     G.gmName=setup.name||"GM";G.createdAt=Date.now();G.saveSlot=activeSlot;
     G.careerOriginBuild=BUILD_ID;G.careerOriginEngine=ENGINE_VERSION;G.careerOriginGlobalNames=GLOBAL_NAME_DATABASE_VERSION;
-    G.settings={salaryCap:setup.cap,injuries:setup.inj};
+    G.settings={salaryCap:setup.cap,injuries:setup.inj,leagueExpansion:setup.expansion,commissionerMode:setup.commissioner};
+    ensureCareerControlState(G);
     applyReleaseIdentityLayer(G);
     if(!appointClubGM(G,setup.team)) throw new Error("Selected club could not be assigned.");
     const uc=me();if(!uc)throw new Error("Club GM appointment did not resolve.");
@@ -20877,7 +20938,7 @@ function upcomingFixturesHtml(){
   if(authoritative&&!G.internationalWindowLive){
     const oppId=authoritative.opponentClubId;
     const expectedComp=authoritative.competition||"League";
-    const expectedLabel=authoritative.cupStage||((expectedComp==="The Cup"&&authoritative.round<=5)?"Group Play":`Game ${authoritative.round}`);
+    const expectedLabel=authoritative.cupStage||((expectedComp==="The Cup"&&authoritative.round<=(G.inSeasonCup?.format?.groupStageRounds||cupFormatForLeague(G).groupStageRounds))?"Group Play":`Game ${authoritative.round}`);
     const expectedVenue=authoritative.homeClubId===G.userClubGM?.clubId?"vs":"@";
     const expectedOpp=c(oppId)?.name||oppId;
     const idx=fixtures.findIndex(x=>x.competition===expectedComp&&x.opponent===expectedOpp&&x.venue===expectedVenue&&
@@ -23445,7 +23506,7 @@ function gmProfile(){
   const winPct=(gm.careerW+gm.careerL)?(gm.careerW/(gm.careerW+gm.careerL)*100).toFixed(1):"—";
   const national=G.userNationalGM?.nationCode?nat(G.userNationalGM.nationCode):null;
   const mode=ui.gmProfileTab||"profile";
-  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="profile"?"active":""}" data-gmprofiletab="profile">Profile</button><button class="${mode==="history"?"active":""}" data-gmprofiletab="history">GM History</button><button class="${mode==="data"?"active":""}" data-gmprofiletab="data">Game Data</button></div>`;
+  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="profile"?"active":""}" data-gmprofiletab="profile">Profile</button><button class="${mode==="history"?"active":""}" data-gmprofiletab="history">GM History</button><button class="${mode==="settings"?"active":""}" data-gmprofiletab="settings">Settings</button><button class="${mode==="data"?"active":""}" data-gmprofiletab="data">Game Data</button></div>`;
   const hero=`<div class="gmProfileHero"><div class="gmSilhouette" aria-hidden="true"></div><div><div class="eyebrow">GENERAL MANAGER</div><h2>${G.gmName||"GM"}</h2><p>${gmReputationBand(gm.reputation)} · ${gm.reputation} reputation · ${basketballSeasonLabel(G.season)}</p><p>Club: ${club?.name||"—"}${national?` · National: ${national.name}`:""}</p></div></div>`;
   if(mode==="history"){
     const sub=ui.gmHistoryTab||"club";
@@ -23455,11 +23516,19 @@ function gmProfile(){
       <div class="sectionTitle">Club Appointments</div><div class="card">${(gm.jobs||[]).length?(gm.jobs||[]).slice().reverse().map(j=>`<div class="seasonHistoryRow"><b>${j.clubName}</b><small>${basketballSeasonLabel(j.startSeason)}${j.endSeason==null?" – Present":` – ${basketballSeasonLabel(Math.max(j.startSeason,j.endSeason-1))}`}</small></div>`).join(""):`<div class="empty">Your first club appointment is active.</div>`}</div>`;
     return `${header("GM Profile",`${G.gmName||"GM"} · GM History`,false,false)}${tabs}<div class="tabs subTabs gmHistorySubTabs"><button class="${sub==="club"?"active":""}" data-gmhistorytab="club">Club</button><button class="${sub==="nation"?"active":""}" data-gmhistorytab="nation">Nation</button></div><div class="gmHistoryIntro"><div class="eyebrow">GM HISTORY</div><h3>${sub==="nation"?"National Career":"Club Career"}</h3><p>${sub==="nation"?"International honours, tournament results and national-team appointment history.":"Club honours, completed seasons and GM appointment history."}</p></div>${sub==="nation"?gmNationalHistoryHtml(national):clubHistory}`;
   }
+  if(mode==="settings"){
+    ensureCareerControlState(G);
+    const expansionOn=!!G.settings?.leagueExpansion,commissionerOn=!!G.settings?.commissionerMode;
+    return `${header("GM Profile",`${G.gmName||"GM"} · Settings`,false,false)}${tabs}
+      <div class="gameDataHero"><div class="eyebrow">CAREER SETTINGS</div><h3>League & Career Controls</h3><p>Career-level rules selected at creation. Structural league changes are not activated by this framework build.</p></div>
+      <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"Future organic expansion may occur once the expansion system is activated":"League remains at the original 30 clubs"} · Locked for this career</small></div><b>${expansionOn?"ON":"OFF"}</b></div><div class="more"><div><b>Commissioner Mode</b><small>${commissionerOn?"Optional league-control framework enabled":"Commissioner controls disabled"} · Locked for this career</small></div><b>${commissionerOn?"ON":"OFF"}</b></div></div>
+      <div class="sectionTitle">Commissioner</div><div class="card"><div class="eyebrow">${commissionerOn?"COMMISSIONER FRAMEWORK ACTIVE":"COMMISSIONER MODE OFF"}</div><h3>${commissionerOn?"League Control":"Standard Career"}</h3><p>${commissionerOn?"Commissioner Mode is enabled for this career. Structural actions such as expansion, realignment and league-rule changes will only become available in safe offseason windows as those systems are implemented.":"This career will continue under ordinary simulation control. League Expansion can still operate organically in a future build if it was enabled at career creation."}</p><div class="more"><div><b>League Expansion</b><small>${expansionOn?"Permitted by career settings":"Disabled for this career"}</small></div><b>${expansionOn?"ENABLED":"OFF"}</b></div><div class="more"><div><b>Current League</b><small>Expansion has not been triggered</small></div><b>${leagueClubCount(G)} CLUBS</b></div><div class="more"><div><b>Framework</b><small>Career-control foundation</small></div><b>${G.commissionerState?.version||COMMISSIONER_FRAMEWORK_VERSION}</b></div></div>`;
+  }
   if(mode==="data"){
     const rows=gameDataManifestRows();
     return `${header("GM Profile",`${G.gmName||"GM"} · Game Data`,false,false)}${tabs}
       <div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Career Configuration & Runtime</h3><p>Locked career settings and the technical systems active in this build.</p></div>
-      <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div>
+      <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div><div class="more"><div><b>League Expansion</b><small>${G.settings.leagueExpansion?"Expansion framework enabled":"30-team league locked"} · Locked for this career</small></div><b>${G.settings.leagueExpansion?"ON":"OFF"}</b></div><div class="more"><div><b>Commissioner Mode</b><small>${G.settings.commissionerMode?"Commissioner framework enabled":"Commissioner controls disabled"} · Locked for this career</small></div><b>${G.settings.commissionerMode?"ON":"OFF"}</b></div></div>
       <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
   }
   const expect=boardExpectation(club),rank=leaguePowerRank(club),ovr=squadOvr(club);
@@ -24178,7 +24247,7 @@ function standings(){
   const switcher=`<div class="standingSwitch leagueSlimSwitch"><button data-standingview="conference" class="${ui.standingsView==="conference"?"active":""}">Conference</button><button data-standingview="division" class="${ui.standingsView==="division"?"active":""}">Division</button></div>`;
   if(ui.standingsView==="division"){
     const myDiv=me()?.division;
-    const divisions=[myDiv,...Object.values(DIVISIONS).flat().filter(d=>d!==myDiv)];
+    const divisions=[myDiv,...CONFERENCES.flatMap(conf=>leagueDivisionNames(G,conf)).filter(d=>d!==myDiv)];
     return switcher+divisions.map(div=>standingTable(rows.filter(x=>x.division===div),`${div} Division`,false,rows)).join("");
   }
   const zoneLegend=`<div class="standingsZoneLegend"><span><i class="playoff"></i>1–6 Guaranteed Playoffs</span><span><i class="playin"></i>7–10 Play-In</span></div>`;
@@ -24244,7 +24313,7 @@ function nbaCupPage(){
       (cup.games||[]).slice().reverse().find(g=>String(g.phaseTag||"").toLowerCase()==="nba_cup_championship")||null;
     const runnerId=final?(final.winnerClubId===final.homeClubId?final.awayClubId:final.homeClubId):null,runner=c(runnerId);
     const mvp=allPlayers(G).find(p=>p.id===cup.mvpPlayerId);
-    return `<div class="cupChampionBanner">${teamMark(winner,"cupChampionCrest")}<div><small>NBA CUP CHAMPION</small><b>${winner?.name||"Champion"}</b><span>${runner?`Defeated ${runner.name}${final?` · ${final.homeScore}–${final.awayScore}`:""}`:"Tournament complete."}</span></div></div>${eventSummaryCard({label:"The Cup · Final Summary",title:`${winner?.name||"Champion"} win the The Cup`,subtitle:runner?`${runner.name} finished runner-up.`:"Tournament complete.",metrics:[{label:"Champion",value:winner?.mark||"—"},{label:"Final",value:final?`${final.homeScore}–${final.awayScore}`:"—"},{label:"Cup MVP",value:mvp?.name||"—"}]})}
+    return `<div class="cupChampionBanner">${teamMark(winner,"cupChampionCrest")}<div><small>THE CUP CHAMPION</small><b>${winner?.name||"Champion"}</b><span>${runner?`Defeated ${runner.name}${final?` · ${final.homeScore}–${final.awayScore}`:""}`:"Tournament complete."}</span></div></div>${eventSummaryCard({label:"The Cup · Final Summary",title:`${winner?.name||"Champion"} win the The Cup`,subtitle:runner?`${runner.name} finished runner-up.`:"Tournament complete.",metrics:[{label:"Champion",value:winner?.mark||"—"},{label:"Final",value:final?`${final.homeScore}–${final.awayScore}`:"—"},{label:"Cup MVP",value:mvp?.name||"—"}]})}
       <div class="sectionTitle">Knockout Results</div><div class="cupStageCard"><h4>Quarterfinals</h4>${(cup.quarterfinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
       <div class="cupStageCard" style="margin-top:9px"><h4>Semifinals</h4>${(cup.semifinals||[]).map(t=>cupTieHtml(t,t.conference)).join("")}</div>
       <div class="cupStageCard" style="margin-top:9px"><h4>Championship</h4>${cupTieHtml(cup.final,"The Cup Final")}</div>
@@ -24259,7 +24328,7 @@ function nbaCupPage(){
   if((cup.quarterfinals||[]).length)knockout+=`<div class="sectionTitle">Quarterfinals</div><div class="cupStageCard">${cup.quarterfinals.map(t=>cupTieHtml(t,t.conference)).join("")}</div>`;
   if((cup.semifinals||[]).length)knockout+=`<div class="sectionTitle">Semifinals</div><div class="cupStageCard">${cup.semifinals.map(t=>cupTieHtml(t,t.conference)).join("")}</div>`;
   if(cup.final)knockout+=`<div class="sectionTitle">Championship</div><div class="cupStageCard">${cupTieHtml(cup.final,"The Cup Final")}</div>`;
-  return `${eventSummaryCard({label:"The Cup",title:cupStageName(cup.stage),subtitle:"Cup games are integrated into the regular-season calendar. Group winners and wild cards progress to the knockout stage.",metrics:[{label:"Stage",value:cupStageName(cup.stage)},{label:"Your Group",value:userGroup?.label?.replace(/East |West /,"")||"—"},{label:"Your Cup Record",value:userGroup?`${cup.standings[me().id]?.w||0}–${cup.standings[me().id]?.l||0}`:"—"}]})}${groupOrder.map(groupTable).join("")}${knockout}`;
+  return `${eventSummaryCard({label:"The Cup",title:cupStageName(cup.stage),subtitle:`Cup games are integrated into the regular-season calendar. ${((cup.format||cupFormatForLeague(G)).wildcardSlotsPerConference||0)>0?"Group winners and the best runner-up in each conference advance.":"Each group winner advances to the quarterfinals."}`,metrics:[{label:"Stage",value:cupStageName(cup.stage)},{label:"Your Group",value:userGroup?.label?.replace(/East |West /,"")||"—"},{label:"Your Cup Record",value:userGroup?`${cup.standings[me().id]?.w||0}–${cup.standings[me().id]?.l||0}`:"—"}]})}${groupOrder.map(groupTable).join("")}${knockout}`;
 }
 function postseasonStageKey(stage){if(stage==="FINALS")return"finals";return({R1:"r1",SF:"sf",CF:"cf"})[String(stage||"").split("_").pop()]||"r1"}
 function postseasonStageTitle(key){return({playin:"Play-In",r1:"Round 1",sf:"Conference Semifinals",cf:"Conference Finals",finals:"Finals"})[key]||key}
@@ -25731,7 +25800,7 @@ function scoutingPage(embedded=false){
 function more(){
   let gm=gmCareerState(G),rb=basketballRecordBook(G),history=[...(G.seasonSummaries||[])].slice().reverse();
   const historyHtml=history.length?`<div class="sectionTitle">Season History</div><div class="card">${history.map(s=>`<div class="seasonHistoryRow"><b>${basketballSeasonLabel(s.season)} · ${s.championName}</b><small>${s.user?.clubName||"Your club"}: ${s.user?.record||"—"} · ${s.user?.postseasonFinish||"—"}${s.worldCup?` · World Cup: ${summaryNationName(s.worldCup.championCode)}`:""}</small></div>`).join("")}</div>`:"";
-  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>League Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>The Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")} · expansion foundation only</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Roster Foundation</b><small>2027 launch player universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button></div>`;
+  return header("More","Career, records, settings and save controls")+`<div class="moreLaunchGrid"><button id="openFrontOffice" class="moreLaunch"><b>Front Office</b><small>Club departments</small></button><button class="moreLaunch" data-go="league"><b>League</b><small>Standings & records</small></button><button class="moreLaunch" data-go="international"><b>International</b><small>National program</small></button></div><div class="card"><div class="eyebrow">GM Career</div><h3>${gmReputationBand(gm.reputation)} · ${gm.reputation} Reputation</h3><div class="metrics"><div class="metric"><b>${gm.careerW}–${gm.careerL}</b><small>Career Record</small></div><div class="metric"><b>${gm.championships}</b><small>League Titles</small></div><div class="metric"><b>${gm.cupTitles}</b><small>The Cups</small></div></div></div>${historyHtml}<div class="sectionTitle">Career Settings</div><div class="card"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Locked for this career</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery active":"Injuries disabled"} · Locked for this career</small></div><b>${G.settings.injuries?"ON":"OFF"}</b></div></div><div class="sectionTitle">Record Book</div><div class="card"><div class="more"><div><b>Career Points</b><small>${rb.points?.name||"—"}</small></div><b>${rb.points?.value||0}</b></div><div class="more"><div><b>Career Rebounds</b><small>${rb.rebounds?.name||"—"}</small></div><b>${rb.rebounds?.value||0}</b></div><div class="more"><div><b>Career Assists</b><small>${rb.assists?.name||"—"}</small></div><b>${rb.assists?.value||0}</b></div></div><div class="sectionTitle">Build</div><div class="card"><div class="more"><div><b>Version</b><small>Current test build · Engine ${ENGINE_VERSION}</small></div><b>${BUILD_ID}</b></div><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")} · 32-team target: 8×4 divisions · ${cupFormatForLeague(G).version}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Roster Foundation</b><small>2027 launch player universe</small></div><b>${G.rosterFoundation?.version||"Generated"}</b></div>${(()=>{const bc=careerBaselineCoverage(G);return `<div class="more"><div><b>Career Baseline</b><small>${bc.verified||0} established career baselines · ${bc.rookies} launch rookies</small></div><b>${CAREER_BASELINE_VERSION}</b></div><div class="more"><div><b>Pending Verification</b><small>Historical totals are never estimated or fabricated</small></div><b>${bc.contextual+(bc.elitePending||0)}</b></div>`})()}</div><div class="sectionTitle">League Talent Health</div><div class="card"><div class="more"><div><b>${G.talentHealth?.score??100}/100</b><small>Baseline stability score · ${G.talentHealth?.era?.type||"NORMAL"} era</small></div><b>${G.talentHealth?.current?.avg??"—"} AVG</b></div><div class="more"><div><b>${G.talentHealth?.current?.elite90??0} Elite 90+</b><small>Baseline ${G.talentHealth?.baseline?.elite90??0} · 85+ ${G.talentHealth?.current?.stars85??0}</small></div><b>${G.talentHealth?.current?.starters80??0} 80+</b></div><div class="more"><div><b>${G.talentHealth?.current?.avgAge??"—"} Avg Age</b><small>Guards ${G.talentHealth?.current?.guards??0} · Forwards ${G.talentHealth?.current?.forwards??0} · Centers ${G.talentHealth?.current?.centers??0}</small></div><b>TL2</b></div></div><div class="sectionTitle">Career</div><div class="card"><button id="saveNow" class="btn secondary">Save Career</button></div>`;
 }
 let _renderPrepSignature="";
 function renderPrepSignature(){
@@ -26266,7 +26335,7 @@ function refreshLandingSaveCount(){
 }
 refreshLandingSaveCount();
 
-$("#newBtn").onclick=()=>openSaveManager("new");$("#resumeBtn").onclick=async()=>{const g=sessionRecoveryCandidate();if(g)await loadSlot(+g.slot,{sessionRecovery:true});else openSaveManager("load")};$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>{_saveManagerOpenToken++;show("landing")};$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
+$("#newBtn").onclick=()=>openSaveManager("new");$("#resumeBtn").onclick=async()=>{const g=sessionRecoveryCandidate();if(g)await loadSlot(+g.slot,{sessionRecovery:true});else openSaveManager("load")};$("#loadBtn").onclick=()=>openSaveManager("load");$("#saveBack").onclick=()=>{_saveManagerOpenToken++;show("landing")};$("#backBtn").onclick=()=>setup.step===1?show("saveManager"):setStep(setup.step-1);$("#draftWindowClose").onclick=()=>{if(G?.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){ensureDraftControl(G).paused=true;stopDraftAutoTimer();save()}ui.page="home";show("game");render()};$("#next1").onclick=()=>{setup.name=($("#gmName").value||"GM").trim();setStep(2)};$$("[data-conf]").forEach(b=>b.onclick=()=>{setup.conf=b.dataset.conf;$$("[data-conf]").forEach(x=>x.classList.toggle("active",x===b));if(!CLUB_IDENTITIES.some(x=>x.id===setup.team&&x.conference===setup.conf))setup.team=CLUB_IDENTITIES.find(x=>x.conference===setup.conf).id;drawTeams()});$("#next2").onclick=()=>setStep(3);$("#capSwitch").onclick=e=>{setup.cap=!setup.cap;e.currentTarget.classList.toggle("on",setup.cap);drawSummary()};$("#injSwitch").onclick=e=>{setup.inj=!setup.inj;e.currentTarget.classList.toggle("on",setup.inj);drawSummary()};$("#expansionSwitch").onclick=e=>{setup.expansion=!setup.expansion;e.currentTarget.classList.toggle("on",setup.expansion);drawSummary()};$("#commissionerSwitch").onclick=e=>{setup.commissioner=!setup.commissioner;e.currentTarget.classList.toggle("on",setup.commissioner);drawSummary()};$("#startBtn").onclick=startCareer;$$(".nav button").forEach(b=>b.onclick=()=>{ui.page=b.dataset.page;render()});$$("[data-global]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.global;if(ui.page==="gmProfile")ui.gmProfileTab="profile";render()});
 drawTeams();
 updateResumeButton();
 setTimeout(()=>attemptUnexpectedSessionRecovery().catch(err=>console.warn("Session recovery",err)),0);
