@@ -2979,7 +2979,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 211</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 212</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -19295,9 +19295,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 211",ENGINE_VERSION="E2.26-PROD211";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 212",ENGINE_VERSION="E2.26-PROD212";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerTeamId:null,commissionerPlayerId:null,commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -21701,15 +21701,15 @@ function clubRecordSummary(club){
   return{...total,best};
 }
 function teamIdentityEditor(club){
-  if(club.id!==me()?.id)return"";
+  const editable=club?.id===me()?.id||!!G?.settings?.commissionerMode;
+  if(!club||!editable)return"";
+  const commissioner=!!G?.settings?.commissionerMode&&club.id!==me()?.id;
   return `<div id="teamIdentityEditor" class="teamIdentityEditor" style="display:none">
-    <div class="sectionTitle">Edit Team Identity</div>
+    <div class="sectionTitle">Edit Team</div>
     <div class="profilePanel"><div class="profilePanelBody">
-      <label>Club Name<input id="editClubName" maxlength="32" value="${club.name}"></label>
-      <label>City<input id="editClubCity" maxlength="24" value="${club.city||club.name}"></label>
-      <label>Mark / Abbreviation<input id="editClubMark" maxlength="4" value="${club.mark||club.name.slice(0,3).toUpperCase()}"></label>
-      <label>Basketball Style<select id="editClubStyle">${["Balanced","Fast Pace","Defensive","Inside-Out","Perimeter","Physical"].map(x=>`<option ${club.style===x?"selected":""}>${x}</option>`).join("")}</select></label>
-      <div class="profileActions"><button id="saveTeamIdentity" class="btn primary">Save Team Identity</button><button id="cancelTeamIdentity" class="btn secondary">Cancel</button></div>
+      <div class="inlineEditNotice"><b>${commissioner?"Commissioner Team Edit":"Team Edit"}</b><span>Change the team's displayed name. Franchise history and records remain attached to the same club.</span></div>
+      <label>Team Name<input id="editClubName" maxlength="40" value="${club.name}"></label>
+      <div class="profileActions"><button id="saveTeamIdentity" class="btn primary">Save Team Name</button><button id="cancelTeamIdentity" class="btn secondary">Cancel</button></div>
     </div></div>
   </div>`;
 }
@@ -21808,7 +21808,7 @@ function clubProfile(){
   const groups=["Guards","Forwards","Centers"].map(name=>[name,roster.filter(p=>clubRosterGroup(p)===name)]),archive=clubSeasonArchive(club),honours=clubHonourTotals(club),franchiseRecord=clubRecordSummary(club),franchiseBest=franchiseRecord.best||null;
   const seasons=archive.length?archive.map(h=>`<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.champion?"League Champion":h.cup?"The Cup Winner":h.best?"League-Best Record":"Season"}</b><small>${h.champion||h.cup||h.best?[h.champion?"NBA Title":"",h.cup?"Cup":"",h.best?"League-Best Record":""].filter(Boolean).join(" · "):"Archived result"}</small></div><div class="finish">${h.finish}</div></div>`).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`;
   return `<div class="profilePageHead compact"><div><h2>Team Profile</h2><p>${club.conference}ern Conference · ${club.division}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close team profile">×</button></div></div>
-    <div class="profileHero"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge teamProfileCrest">${crestSVG(club)}</div><div class="profileHeroText"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.conference}ern Conference · ${club.division} Division</p><div class="identityLine"><span class="identityChip">#${rank>0?rank:"—"} ${club.conference}</span><span class="identityChip">${r.w||0}–${r.l||0}</span><span class="identityChip">${roster.length} Players</span></div></div>${club.id===me()?.id?`<button id="editTeamIdentityBtn" class="heroEditBtn" aria-label="Edit team">✎</button>`:""}</div></div>
+    <div class="profileHero"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge teamProfileCrest">${crestSVG(club)}</div><div class="profileHeroText"><div class="eyebrow">${club.style||"Balanced"} Basketball</div><h2>${club.name}</h2><p>${club.city||club.name} · ${club.conference}ern Conference · ${club.division} Division</p><div class="identityLine"><span class="identityChip">#${rank>0?rank:"—"} ${club.conference}</span><span class="identityChip">${r.w||0}–${r.l||0}</span><span class="identityChip">${roster.length} Players</span></div></div>${(club.id===me()?.id||G.settings?.commissionerMode)?`<button id="editTeamIdentityBtn" class="heroEditBtn" aria-label="Edit team name">✎</button>`:""}</div></div>
     ${club.id===me()?.id?`<div class="teamProfileTopActions"><button id="clubScheduleBtn" class="btn primary">View Fixtures</button></div>`:""}
     <div class="profileMetricGrid"><div class="profileMetric2"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric2"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric2"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric2"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
 
@@ -25513,59 +25513,32 @@ function commissionerControlCentreHtml(state){
   if(!state?.settings?.commissionerMode)return `<div class="settingsHero"><div class="eyebrow">COMMISSIONER</div><h3>Commissioner Mode Off</h3><p>This career was created without Commissioner Mode.</p></div>`;
 
   const clubs=[...(state.clubs||[])].sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base"}));
-  const players=commissionerActivePlayers(state);
-  const teamId=ui.commissionerTeamId&&clubs.some(c=>c.id===ui.commissionerTeamId)?ui.commissionerTeamId:(me()?.id||clubs[0]?.id);
-  const playerId=ui.commissionerPlayerId&&players.some(p=>p.id===ui.commissionerPlayerId)?ui.commissionerPlayerId:(players[0]?.id||null);
   const gmId=ui.commissionerGMClubId&&clubs.some(c=>c.id===ui.commissionerGMClubId)?ui.commissionerGMClubId:(me()?.id||clubs[0]?.id);
-  ui.commissionerTeamId=teamId;ui.commissionerPlayerId=playerId;ui.commissionerGMClubId=gmId;
-
-  const team=clubById(state,teamId),p=playerByAnyId(playerId),pClub=p?playerClub(p.id):null;
-  const logs=[...(state.commissionerState?.log||[])].slice().reverse().slice(0,40);
-
-  const nationOptions=NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${p?.nationality===n.code?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join("");
-  const clubOptions=clubs.map(c=>`<option value="${c.id}" ${c.id===teamId?"selected":""}>${c.name}</option>`).join("");
+  ui.commissionerGMClubId=gmId;
   const gmOptions=clubs.map(c=>`<option value="${c.id}" ${c.id===gmId?"selected":""}>${c.name}</option>`).join("");
-  const playerOptions=players.map(x=>`<option value="${x.id}" ${x.id===playerId?"selected":""}>${x.name} · ${playerAffiliation(x)} · ${positionLabel(x)} · ${x.ovr} OVR</option>`).join("");
+  const logs=[...(state.commissionerState?.log||[])].slice().reverse().slice(0,50);
 
   return `<div class="settingsHero">
       <div class="eyebrow">COMMISSIONER MODE</div>
       <h3>Commissioner Control Centre</h3>
-      <p>Manual league controls. Every change is recorded in the Commissioner Log.</p>
+      <p>Direct GM control and a permanent audit trail. Team and player editing are handled from their profile pages.</p>
     </div>
+
     <div class="commissionerControlGrid">
       <div class="commissionerControlCard">
-        <h4>Team Editing</h4>
-        <p>Rename a team. The club identity and history remain attached to the same underlying team.</p>
-        <label class="commissionerField"><span>Team</span><select id="commissionerTeamSelect">${clubOptions}</select></label>
-        <label class="commissionerField"><span>Team Name</span><input id="commissionerTeamName" maxlength="40" value="${team?.name||""}"></label>
-        <div class="commissionerActions"><button id="commissionerSaveTeamName" class="btn primary">Save Team Name</button></div>
-      </div>
-
-      <div class="commissionerControlCard">
         <h4>GM / Team Control</h4>
-        <p>Move your GM directly to another club. Career record, reputation and appointment history continue.</p>
+        <p>Take direct control of another club while preserving your GM career record, reputation and appointment history.</p>
         <label class="commissionerField"><span>Controlled Team</span><select id="commissionerGMTeamSelect">${gmOptions}</select></label>
         <div class="commissionerActions"><button id="commissionerSwitchGMTeam" class="btn primary" ${gmId===me()?.id?"disabled":""}>Take Control of Team</button></div>
       </div>
 
       <div class="commissionerControlCard">
-        <h4>Player Editing</h4>
-        <p>Edit the core player record. Roster movement, retirement and injury forcing are not included in this first release.</p>
-        <label class="commissionerField"><span>Player</span><select id="commissionerPlayerSelect">${playerOptions}</select></label>
-        ${p?`<div class="commissionerFormGrid">
-          <label class="commissionerField"><span>Name</span><input id="cmPlayerName" maxlength="40" value="${p.name||""}"></label>
-          <label class="commissionerField"><span>Age</span><input id="cmPlayerAge" type="number" min="18" max="45" value="${p.age||18}"></label>
-          <label class="commissionerField"><span>Overall</span><input id="cmPlayerOvr" type="number" min="40" max="99" value="${p.ovr||40}"></label>
-          <label class="commissionerField"><span>Potential</span><input id="cmPlayerPot" type="number" min="40" max="99" value="${p.potential??p.ovr??40}"></label>
-          <label class="commissionerField"><span>Primary Position</span><select id="cmPlayerPos">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label>
-          <label class="commissionerField"><span>Secondary Position</span><select id="cmPlayerPos2">${commissionerSecondaryOptions(p.position,p.secondaryPosition)}</select></label>
-          <label class="commissionerField"><span>Nationality</span><select id="cmPlayerNation">${nationOptions}</select></label>
-          <label class="commissionerField"><span>Height (cm)</span><input id="cmPlayerHeight" type="number" min="160" max="231" value="${p.heightCm||200}"></label>
-          <label class="commissionerField"><span>Salary ($M)</span><input id="cmPlayerSalary" type="number" min="0" max="100" step="0.1" value="${(+p.salaryM||0).toFixed(1)}"></label>
-          <label class="commissionerField"><span>Contract Years</span><input id="cmPlayerYears" type="number" min="0" max="6" value="${Math.max(0,+p.contractYearsLeft||0)}"></label>
+        <h4>Editing Access</h4>
+        <p>Use the pencil icon on any Team Profile to rename that team, or on any Player Profile to edit that player.</p>
+        <div class="settingsMiniGrid">
+          <div class="settingsMiniStat"><small>Team Editing</small><b>Team Profile ✎</b></div>
+          <div class="settingsMiniStat"><small>Player Editing</small><b>Player Profile ✎</b></div>
         </div>
-        <div class="smallcopy" style="margin-top:9px">Current affiliation: ${pClub?.name||publicCompetitionLabel(p.externalLeague||"Free Agency")}</div>
-        <div class="commissionerActions"><button id="commissionerSavePlayer" class="btn primary">Save Player Changes</button><button id="commissionerOpenPlayer" class="btn secondary">Open Profile</button></div>`:`<div class="empty">No editable players are available.</div>`}
       </div>
 
       <div class="commissionerControlCard">
@@ -28255,22 +28228,6 @@ function bind(){
     await save();ui.page="home";render();
   };
   
-  if($("#commissionerTeamSelect"))$("#commissionerTeamSelect").onchange=e=>{ui.commissionerTeamId=e.target.value;render()};
-  if($("#commissionerSaveTeamName"))$("#commissionerSaveTeamName").onclick=async()=>{
-    if(!G.settings?.commissionerMode)return;
-    const club=clubById(G,ui.commissionerTeamId),input=$("#commissionerTeamName");
-    if(!club||!input)return;
-    const next=String(input.value||"").trim().replace(/\s+/g," ");
-    if(next.length<3){toast("Enter a team name of at least 3 characters");return}
-    if((G.clubs||[]).some(c=>c.id!==club.id&&String(c.name).toLowerCase()===next.toLowerCase())){toast("Another team already uses that name");return}
-    if(next===club.name){toast("Team name is unchanged");return}
-    const oldName=club.name;
-    club.name=next.slice(0,40);
-    const plan=G.expansionFranchisePlan?.clubs?.find(c=>c.id===club.id);if(plan)plan.name=club.name;
-    for(const j of gmCareerState(G).jobs||[])if(j.clubId===club.id&&j.endSeason==null)j.clubName=club.name;
-    commissionerLogAction(G,"Team Edit",`${oldName} renamed to ${club.name}`,{clubId:club.id,from:oldName,to:club.name});
-    await save();toast("Team name updated");render();
-  };
 
   if($("#commissionerGMTeamSelect"))$("#commissionerGMTeamSelect").onchange=e=>{ui.commissionerGMClubId=e.target.value;render()};
   if($("#commissionerSwitchGMTeam"))$("#commissionerSwitchGMTeam").onclick=async()=>{
@@ -28286,49 +28243,6 @@ function bind(){
     await save();toast(`Now controlling ${target.name}`);ui.page="home";render();
   };
 
-  if($("#commissionerPlayerSelect"))$("#commissionerPlayerSelect").onchange=e=>{ui.commissionerPlayerId=e.target.value;render()};
-  if($("#cmPlayerPos"))$("#cmPlayerPos").onchange=()=>{
-    const p=$("#cmPlayerPos"),s=$("#cmPlayerPos2");if(!p||!s)return;
-    const current=s.value;
-    s.innerHTML=commissionerSecondaryOptions(p.value,current);
-  };
-  if($("#commissionerOpenPlayer"))$("#commissionerOpenPlayer").onclick=()=>{
-    const p=playerByAnyId(ui.commissionerPlayerId);if(!p)return;
-    ui.playerProfileId=p.id;ui.playerProfileTab="overview";ui.playerEditMode=p.id;ui.profileReturnPage="settings";ui.page="playerProfile";render();
-  };
-  if($("#commissionerSavePlayer"))$("#commissionerSavePlayer").onclick=async()=>{
-    if(!G.settings?.commissionerMode)return;
-    const p=playerByAnyId(ui.commissionerPlayerId);if(!p)return;
-    const club=playerClub(p.id),before={name:p.name,age:p.age,ovr:p.ovr,potential:p.potential,position:p.position,secondaryPosition:p.secondaryPosition,nationality:p.nationality,heightCm:p.heightCm,salaryM:+p.salaryM||0,contractYearsLeft:+p.contractYearsLeft||0};
-    const nextName=String($("#cmPlayerName")?.value||p.name).trim().replace(/\s+/g," ");
-    if(nextName.length<2){toast("Enter a valid player name");return}
-    const nextAge=Math.max(18,Math.min(45,+$("#cmPlayerAge")?.value||p.age));
-    const nextOvr=Math.max(40,Math.min(99,+$("#cmPlayerOvr")?.value||p.ovr));
-    const nextPot=Math.max(nextOvr,Math.max(40,Math.min(99,+$("#cmPlayerPot")?.value||p.potential||nextOvr)));
-    const nextHeight=Math.max(160,Math.min(231,+$("#cmPlayerHeight")?.value||p.heightCm||200));
-    const nextSalary=Math.max(0,Math.min(100,+$("#cmPlayerSalary")?.value||0));
-    const nextYears=Math.max(0,Math.min(6,+$("#cmPlayerYears")?.value||0));
-    const nextPos=$("#cmPlayerPos")?.value||p.position;
-    const secAllowed=SECONDARY_POSITION_OPTIONS[nextPos]||[];
-    const nextSec=secAllowed.includes($("#cmPlayerPos2")?.value)?$("#cmPlayerPos2").value:null;
-    const nextNation=$("#cmPlayerNation")?.value||p.nationality;
-
-    p.name=nextName;p.nameOrigin="manual";p.manualNameOverride=nextName;p.manualNameEditedSeason=G.season;
-    p.age=nextAge;p.ovr=nextOvr;p.peakOvr=Math.max(+p.peakOvr||0,nextOvr);p.potential=nextPot;
-    p.position=nextPos;p.secondaryPosition=nextSec;p.nationality=nextNation;p.heightCm=nextHeight;
-    p.salaryM=Math.round(nextSalary*10)/10;p.contractYearsLeft=nextYears;
-    if(nextYears<=0&&club)p.contractStatus="Expiring";
-    else if(club)p.contractStatus="Under Contract";
-    if(!p.sourceBuild)p.playerBuild=derivePlayerBuild(p);
-    assignEngineStatisticalIdentity(p);
-    if(club){recalcClubCap(club);refreshClubRotation(club);if(G.phase==="SUMMER_LEAGUE")syncSummerLeagueRosterForClub(G,club.id)}
-    const changes=[];
-    for(const [k,v] of Object.entries({name:p.name,age:p.age,ovr:p.ovr,potential:p.potential,position:p.position,secondaryPosition:p.secondaryPosition||"",nationality:p.nationality,heightCm:p.heightCm,salaryM:p.salaryM,contractYearsLeft:p.contractYearsLeft})){
-      if(String(before[k]??"")!==String(v??""))changes.push(`${k}: ${before[k]??"—"} → ${v??"—"}`);
-    }
-    commissionerLogAction(G,"Player Edit",`${p.name}${changes.length?` · ${changes.join(" · ")}`:" · no material change"}`,{playerId:p.id,changes});
-    await save();toast("Player updated");render();
-  };
 
 $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-gmhistorytab]`).forEach(b=>b.onclick=()=>{ui.gmHistoryTab=b.dataset.gmhistorytab;ui.gmProfileTab="history";ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
   if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
@@ -28352,12 +28266,19 @@ $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gm
   if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
 if($("#editTeamIdentityBtn"))$("#editTeamIdentityBtn").onclick=()=>{const e=$("#teamIdentityEditor");if(e){e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"start"})}};
 if($("#cancelTeamIdentity"))$("#cancelTeamIdentity").onclick=()=>{const e=$("#teamIdentityEditor");if(e)e.style.display="none"};
-if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
-  const club=me();if(!club)return;
-  const name=($("#editClubName").value||club.name).trim(),city=($("#editClubCity").value||club.city||club.name).trim();
-  const mark=($("#editClubMark").value||club.mark||club.name.slice(0,3)).trim().toUpperCase().slice(0,4);
-  club.name=name.slice(0,32);club.city=city.slice(0,24);club.mark=mark||club.mark;club.style=$("#editClubStyle").value||club.style;
-  save();toast("Team identity updated");render();
+if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
+  const club=c(ui.clubProfileId)||me();if(!club)return;
+  if(!(club.id===me()?.id||G.settings?.commissionerMode))return;
+  const next=String($("#editClubName")?.value||club.name).trim().replace(/\s+/g," ");
+  if(next.length<3){toast("Enter a team name of at least 3 characters");return}
+  if((G.clubs||[]).some(x=>x.id!==club.id&&String(x.name||"").toLowerCase()===next.toLowerCase())){toast("Another team already uses that name");return}
+  if(next===club.name){toast("Team name is unchanged");return}
+  const oldName=club.name;
+  club.name=next.slice(0,40);
+  const plan=G.expansionFranchisePlan?.clubs?.find(x=>x.id===club.id);if(plan)plan.name=club.name;
+  for(const j of gmCareerState(G).jobs||[])if(j.clubId===club.id&&j.endSeason==null)j.clubName=club.name;
+  if(G.settings?.commissionerMode)commissionerLogAction(G,"Team Edit",`${oldName} renamed to ${club.name}`,{clubId:club.id,from:oldName,to:club.name});
+  await save();toast("Team name updated");render();
 };
   $$("[data-schedulefilter]").forEach(b=>b.onclick=()=>{ui.scheduleFilter=b.dataset.schedulefilter;render()});
   $$("[data-schedulegame]").forEach(b=>b.onclick=e=>{if(e.target.closest("[data-clubprofile]"))return;const g=gameById(b.dataset.schedulegame);if(g)openResultWindow(g,"schedule")});
