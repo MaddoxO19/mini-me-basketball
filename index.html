@@ -2979,7 +2979,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 212</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 213</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -16011,9 +16011,23 @@ function ensureTwoWayDevelopmentPool(G,minSize=42){
     p.entryPath=path;p.developmentEntrySeason=G.season;p.nbaAvailability="Available";
     G.freeAgents.push(p);
   }
+  // New developmental players are created after the initial career naming pass.
+  // Run the identity repair immediately so no internal "Player ####" placeholder
+  // can reach the Two-Way Market.
+  ensureCountryBasedPlayerNames();
   G.twoWayPoolSeason=G.season;
   return allPlayers(G).filter(p=>twoWayEligible(p)).length;
 }
+function publicTwoWayPathLabel(value){
+  const raw=String(value||"");
+  if(raw==="G League")return"Development League";
+  if(raw==="Young FA")return"Young FA";
+  if(raw==="Undrafted")return"Undrafted";
+  if(raw==="International")return"International";
+  if(raw==="Recent Draft")return"Recent Draft";
+  return publicCompetitionLabel(raw);
+}
+
 function twoWayDevelopmentScore(player){
   const upside=Math.max(0,(player.potential||player.ovr)-player.ovr);
   const ageBonus=Math.max(0,24-player.age)*1.2;
@@ -19295,7 +19309,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 212",ENGINE_VERSION="E2.26-PROD212";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 213",ENGINE_VERSION="E2.26-PROD213";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25968,6 +25982,9 @@ function roleGroupDescription(name){
 
 function twoWayCandidates(){
   const club=me();ensurePersistentGLeague(club);ensureTwoWayDevelopmentPool(G,42);
+  // Existing saves may already contain developmental placeholders generated by
+  // an older build. Repair them before the market is rendered.
+  ensureCountryBasedPlayerNames();
   const pool=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])],seen=new Set();
   const all=pool.filter(p=>{if(!twoWayEligible(p)||seen.has(p.id))return false;seen.add(p.id);return true});
   const pathFilter=ui.twoWayPathFilter||"all",posFilter=ui.twoWayPosFilter||"all";
@@ -25996,13 +26013,13 @@ function twoWayContractsHtml(){
   const club=me(),d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3;
   const cands=(club.twoWayRoster||[]).length<twLimit?twoWayCandidates():[];
   const allDev=[...(G.freeAgents||[]),...(club.gLeagueRoster||[])].filter(twoWayEligible);
-  const pathOptions=[["all","All"],["Undrafted","Undrafted"],["G League","G League"],["Young FA","Young FA"],["International","International"]];
+  const pathOptions=[["all","All"],["Undrafted","Undrafted"],["G League","Development"],["Young FA","Young FA"],["International","International"]];
   const posOptions=[["all","All Positions"],["guards","Guards"],["forwards","Forwards"],["centers","Centers"]];
   const signed=d.twoWay.map(p=>{
     const live=playerByAnyId(p.id)||p,convertDisabled=d.nba.length>=15?"disabled":"";
     return `<div class="more"><div><b>${playerNameLink(live)}</b><small>${nationDisplay(live.nationality)} · ${positionLabel(live)} · Age ${p.age} · ${playerExperienceLabel(live)} · ${p.ovr} OVR · POT ${live.potential||p.ovr}</small><small class="twoWayConversionHint">Conversion: 1 yr · $${twoWayConversionSalaryM(live).toFixed(1)}M standard contract</small></div><div class="pickrow"><button class="pick" data-twoway-convert="${p.id}" ${convertDisabled}>Convert</button><button class="pick" data-twoway-waive="${p.id}" style="border-color:#5a2d34;color:#f0a4a8">Waive</button></div></div>`;
   }).join("");
-  const market=cands.map(p=>`<div class="twCandidate"><div class="meta"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${positionLabel(p)} · Age ${p.age}</small><small class="twPath">${twoWayPath(p)} · ${playerExperienceLabel(p)}</small></div><div class="num"><b class="twCurrent">${p.ovr}</b><small>OVR</small></div><div class="num"><b class="twPotential">${p.potential||p.ovr}</b><small>POT</small></div><button class="pick" data-twoway-sign="${p.id}">Sign Two-Way</button></div>`).join("");
+  const market=cands.map(p=>`<div class="twCandidate"><div class="meta"><b>${playerNameLink(p)}</b><small>${nationDisplay(p.nationality)} · ${positionLabel(p)} · Age ${p.age}</small><small class="twPath">${publicTwoWayPathLabel(twoWayPath(p))} · ${playerExperienceLabel(p)}</small></div><div class="num"><b class="twCurrent">${p.ovr}</b><small>OVR</small></div><div class="num"><b class="twPotential">${p.potential||p.ovr}</b><small>POT</small></div><button class="pick" data-twoway-sign="${p.id}">Sign Two-Way</button></div>`).join("");
   return `<div class="sectionTitle">Two-Way Contracts</div>
     <div class="faIntro"><b>${d.twoWay.length}/${twLimit} Two-Way Slots</b><small>Manage developmental contracts alongside the rest of your cap sheet and player signings.</small></div>
     <div class="card">${signed||'<div class="empty">No two-way players signed.</div>'}</div>
