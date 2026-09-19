@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#090c11">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>H³O Basketball — v0.1.49.77.5.5.5.154 Expansion Draft One-Shot Recovery</title>
+<title>H³O Basketball — v0.1.49.77.5.5.5.155 30-Team NBA Schedule Model</title>
 <style>
 /* v0.1.47.8 — Readability & Touch Target Pass. Work carried out:
    1) Typography floor: every font-size declaration below 9px raised to a
@@ -2921,7 +2921,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 /* v0.1.49.77.5.5.5.125 — Career Rules & Expansion Timing: locks cap/expansion/Commissioner at career creation, allows injuries to be toggled during a career, and shifts organic expansion consideration to a 75% early (S2–5) / 25% late (S15–18) model. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents flex compression of career-setting switches on narrow screens and long descriptions. */
 /* v0.1.49.77.5.5.5.128 — National Management Onboarding: makes the optional national-team GM pathway explicit during new-career setup while retaining later appointment through Intl. */
-/* v0.1.49.77.5.5.5.154 — Expansion Draft One-Shot Recovery: makes Expansion Draft execution idempotent, repairs accidental repeat batches, disables re-entry immediately, and adds a clear post-draft recap before progression resumes. */
+/* v0.1.49.77.5.5.5.155 — 30-Team NBA Schedule Model: replaces random 30-team regular-season pairings with an NBA-style 82-game opponent matrix while leaving all 32-team scheduling behaviour untouched. */
 /* v0.1.49.77.5.5.5.127 — Career Settings Toggle Alignment: prevents launch/offseason setup from ageing, developing/declining or retiring players before the first completed H³O season; preserves launch contract terms and clarifies new-career Commissioner/Expansion descriptions. */
 /* v0.1.49.77.5.5.5.118 — New Season / Offseason Hub */
 .newSeasonHub{border:1px solid var(--line);background:linear-gradient(145deg,var(--panel),var(--panel2));border-radius:18px;overflow:hidden}
@@ -2938,7 +2938,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 </style></head>
 <body>
 <div class="app">
-<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.154 Expansion Draft One-Shot Recovery</span></div></div></div></section>
+<section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build">H³O Basketball<br><span>v0.1.49.77.5.5.5.155 30-Team NBA Schedule Model</span></div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -17803,6 +17803,250 @@ function advanceAllStarEvent(G){
   return{ok:true,type:"ALL_STAR",games:game?[game]:[],complete:false,reviewStage:live.reviewStage};
 }
 
+const REGULAR_SCHEDULE_30_VERSION="RS30-NBA-82-1";
+
+function schedulePairKey(a,b){return `${a}|${b}`}
+function scheduleDirectedGet(map,h,a){return map.get(schedulePairKey(h,a))||0}
+function scheduleDirectedAdd(map,h,a,n=1){
+  const k=schedulePairKey(h,a);
+  map.set(k,(map.get(k)||0)+n);
+}
+function scheduleDirectedTake(map,h,a){
+  const k=schedulePairKey(h,a),n=map.get(k)||0;
+  if(n<=0)return false;
+  map.set(k,n-1);
+  return true;
+}
+function scheduleSeededRng(seed){
+  let s=(Math.abs(stableTemplateHash(String(seed)))||1)>>>0;
+  return ()=>{
+    s=(Math.imul(1664525,s)+1013904223)>>>0;
+    return s/4294967296;
+  };
+}
+
+function buildThirtyTeamOpponentTargets(G){
+  if(leagueClubCount(G)!==30)return null;
+  const clubs=[...(G.clubs||[])];
+  const byConf={};
+  for(const c of clubs)(byConf[c.conference]||(byConf[c.conference]=[])).push(c);
+
+  const directed=new Map();
+
+  // NBA baseline: every opponent at least twice, once home and once away.
+  for(let i=0;i<clubs.length;i++)for(let j=i+1;j<clubs.length;j++){
+    scheduleDirectedAdd(directed,clubs[i].id,clubs[j].id,1);
+    scheduleDirectedAdd(directed,clubs[j].id,clubs[i].id,1);
+  }
+
+  for(const [conference,confClubs] of Object.entries(byConf)){
+    if(confClubs.length!==15)throw new Error(`30-team schedule expected 15 ${conference} clubs; found ${confClubs.length}`);
+
+    const divNames=[...new Set(confClubs.map(c=>c.division))].sort();
+    if(divNames.length!==3)throw new Error(`30-team schedule expected 3 ${conference} divisions; found ${divNames.length}`);
+
+    const divMembers={};
+    for(const div of divNames){
+      divMembers[div]=confClubs.filter(c=>c.division===div).sort((a,b)=>String(a.id).localeCompare(String(b.id)));
+      if(divMembers[div].length!==5)throw new Error(`30-team schedule expected 5 clubs in ${conference} ${div}; found ${divMembers[div].length}`);
+    }
+
+    // Division opponents: baseline 2 + one additional home and away = 4.
+    for(const div of divNames){
+      const members=divMembers[div];
+      for(let i=0;i<members.length;i++)for(let j=i+1;j<members.length;j++){
+        scheduleDirectedAdd(directed,members[i].id,members[j].id,1);
+        scheduleDirectedAdd(directed,members[j].id,members[i].id,1);
+      }
+    }
+
+    // Non-division conference opponents:
+    // 6 opponents x4 and 4 opponents x3. The 4-game set rotates by season.
+    const shift=((+G.season||1)-1)%5;
+    const fourOffsets=new Set([shift,(shift+1)%5,(shift+2)%5]);
+    const threeOffsets=[0,1,2,3,4].filter(x=>!fourOffsets.has(x)).sort((a,b)=>a-b);
+
+    for(let da=0;da<divNames.length;da++)for(let db=da+1;db<divNames.length;db++){
+      const A=divMembers[divNames[da]],B=divMembers[divNames[db]];
+      for(let i=0;i<5;i++)for(let j=0;j<5;j++){
+        const delta=(j-i+5)%5;
+        if(fourOffsets.has(delta)){
+          // Baseline 2 + one home and away = 4.
+          scheduleDirectedAdd(directed,A[i].id,B[j].id,1);
+          scheduleDirectedAdd(directed,B[j].id,A[i].id,1);
+        }else{
+          // Baseline 2 + one extra game = 3. Orient the two 3-game offsets
+          // evenly so every club finishes with exactly 41 home / 41 away.
+          if(delta===threeOffsets[0])scheduleDirectedAdd(directed,A[i].id,B[j].id,1);
+          else scheduleDirectedAdd(directed,B[j].id,A[i].id,1);
+        }
+      }
+    }
+  }
+
+  return directed;
+}
+
+function thirtyTeamScheduleAudit(G,rounds){
+  if(leagueClubCount(G)!==30)return{ok:false,reason:"Not a 30-team league"};
+  const clubs=G.clubs||[],byId=new Map(clubs.map(c=>[c.id,c]));
+  const stats={};
+  for(const c of clubs)stats[c.id]={games:0,home:0,away:0,opp:{}};
+
+  for(const rd of rounds||[])for(const p of rd.pairings||[]){
+    const h=p[0],a=p[1];
+    if(!stats[h]||!stats[a])continue;
+    stats[h].games++;stats[h].home++;
+    stats[a].games++;stats[a].away++;
+    stats[h].opp[a]=(stats[h].opp[a]||0)+1;
+    stats[a].opp[h]=(stats[a].opp[h]||0)+1;
+  }
+
+  const issues=[];
+  for(const c of clubs){
+    const s=stats[c.id];
+    if(s.games!==82)issues.push(`${c.id}: ${s.games} games`);
+    if(s.home!==41||s.away!==41)issues.push(`${c.id}: ${s.home}H/${s.away}A`);
+    if(Object.keys(s.opp).length!==29)issues.push(`${c.id}: ${Object.keys(s.opp).length} opponents`);
+
+    let div4=0,conf4=0,conf3=0,cross2=0,bad=0;
+    for(const o of clubs){
+      if(o.id===c.id)continue;
+      const n=s.opp[o.id]||0;
+      if(o.conference!==c.conference){
+        if(n===2)cross2++;else bad++;
+      }else if(o.division===c.division){
+        if(n===4)div4++;else bad++;
+      }else{
+        if(n===4)conf4++;
+        else if(n===3)conf3++;
+        else bad++;
+      }
+    }
+    if(div4!==4||conf4!==6||conf3!==4||cross2!==15||bad)
+      issues.push(`${c.id}: D4=${div4}, C4=${conf4}, C3=${conf3}, X2=${cross2}, bad=${bad}`);
+  }
+
+  return{
+    ok:issues.length===0,
+    version:REGULAR_SCHEDULE_30_VERSION,
+    teamCount:30,
+    rounds:(rounds||[]).length,
+    issues:issues.slice(0,20),
+    stats
+  };
+}
+
+function buildThirtyTeamRegularSeasonRounds(G,cup,cupGroupRounds){
+  const clubIds=(G.clubs||[]).map(c=>c.id);
+  const baseTargets=buildThirtyTeamOpponentTargets(G);
+  if(!baseTargets)return null;
+
+  // First preserve the Cup group nights exactly as generated. These games count
+  // toward the same 82-game regular-season opponent matrix.
+  const fixedRounds=[];
+  const remaining=new Map(baseTargets);
+  for(let r=0;r<cupGroupRounds;r++){
+    const raw=cupGroupNightPairings(G,r).map(x=>[x.homeId,x.awayId,x.cupGroupId]);
+    if(raw.length!==15)throw new Error(`Cup round ${r+1} expected 15 games; found ${raw.length}`);
+    for(const [h,a] of raw){
+      if(!scheduleDirectedTake(remaining,h,a))
+        throw new Error(`Cup pairing ${h}-${a} exceeds the 30-team NBA schedule target`);
+    }
+    fixedRounds.push({round:r+1,pairings:raw});
+  }
+
+  const remainingRoundCount=82-fixedRounds.length;
+
+  function tryDecompose(restart){
+    const counts=new Map(remaining);
+    const rng=scheduleSeededRng(`${G.season}|${restart}|${clubIds.join(",")}`);
+    const made=[];
+
+    function undirectedCount(a,b){
+      return scheduleDirectedGet(counts,a,b)+scheduleDirectedGet(counts,b,a);
+    }
+    function remainingDegree(id,available){
+      let n=0;
+      for(const o of available)if(o!==id)n+=undirectedCount(id,o);
+      return n;
+    }
+    function findMatching(){
+      const unmatched=new Set(clubIds);
+      const pairs=[];
+
+      function walk(){
+        if(unmatched.size===0)return true;
+
+        let chosen=null,chosenCandidates=null;
+        for(const u of unmatched){
+          const cands=[];
+          for(const v of unmatched)if(v!==u&&undirectedCount(u,v)>0)cands.push(v);
+          if(!cands.length)return false;
+          if(chosen===null||cands.length<chosenCandidates.length){
+            chosen=u;chosenCandidates=cands;
+            if(cands.length===1)break;
+          }
+        }
+
+        chosenCandidates.sort((a,b)=>{
+          const ma=undirectedCount(chosen,a),mb=undirectedCount(chosen,b);
+          if(mb!==ma)return mb-ma;
+          const da=remainingDegree(a,unmatched),db=remainingDegree(b,unmatched);
+          if(da!==db)return da-db;
+          return rng()<.5?-1:1;
+        });
+
+        unmatched.delete(chosen);
+        for(const v of chosenCandidates){
+          if(!unmatched.has(v))continue;
+          unmatched.delete(v);pairs.push([chosen,v]);
+          if(walk())return true;
+          pairs.pop();unmatched.add(v);
+        }
+        unmatched.add(chosen);
+        return false;
+      }
+
+      return walk()?pairs:null;
+    }
+
+    for(let rr=0;rr<remainingRoundCount;rr++){
+      const pairs=findMatching();
+      if(!pairs)return null;
+
+      const directed=[];
+      for(const [a,b] of pairs){
+        const ab=scheduleDirectedGet(counts,a,b),ba=scheduleDirectedGet(counts,b,a);
+        let h,aWay;
+        if(ab>ba){h=a;aWay=b}
+        else if(ba>ab){h=b;aWay=a}
+        else if(ab>0){
+          if(rng()<.5){h=a;aWay=b}else{h=b;aWay=a}
+        }else return null;
+
+        if(!scheduleDirectedTake(counts,h,aWay)){
+          if(!scheduleDirectedTake(counts,aWay,h))return null;
+          [h,aWay]=[aWay,h];
+        }
+        directed.push([h,aWay,null]);
+      }
+      made.push({round:fixedRounds.length+rr+1,pairings:directed});
+    }
+
+    for(const n of counts.values())if(n!==0)return null;
+    return [...fixedRounds,...made];
+  }
+
+  let rounds=null;
+  for(let restart=0;restart<40&&!rounds;restart++)rounds=tryDecompose(restart);
+  if(!rounds)throw new Error("Unable to decompose the 30-team NBA opponent matrix into 82 playable rounds");
+
+  const audit=thirtyTeamScheduleAudit(G,rounds);
+  if(!audit.ok)throw new Error(`30-team schedule audit failed: ${audit.issues.slice(0,3).join(" | ")}`);
+  return{rounds,audit};
+}
+
 function initializeRegularSeasonLive(G) {
   if(G.regularSeasonLive?.season===G.season && !G.regularSeasonLive.complete) return G.regularSeasonLive;
   for (const c of G.clubs) {
@@ -17813,19 +18057,31 @@ function initializeRegularSeasonLive(G) {
     }
   }
   const cup=initializeNBACup(G),cupGroupRounds=cup?.format?.groupStageRounds||cupFormatForLeague(G).groupStageRounds;
-  const rounds=[];
+  let rounds=[],scheduleModel="LEGACY",scheduleAudit=null;
   const clubIds=G.clubs.map(c=>c.id);
-  for(let round=1; round<=82; round++){
-    let pairings=[];
-    if(round<=cupGroupRounds){
-      pairings=cupGroupNightPairings(G,round-1).map(x=>[x.homeId,x.awayId,x.cupGroupId]);
-    } else {
-      const shuffled=[...clubIds].sort(()=>Math.random()-0.5);
-      for(let i=0;i<shuffled.length;i+=2) pairings.push([shuffled[i],shuffled[i+1],null]);
+
+  if(clubIds.length===30){
+    const built=buildThirtyTeamRegularSeasonRounds(G,cup,cupGroupRounds);
+    rounds=built.rounds;
+    scheduleModel=REGULAR_SCHEDULE_30_VERSION;
+    scheduleAudit=built.audit;
+  }else{
+    // IMPORTANT: v155 deliberately leaves the existing 32-team scheduler
+    // untouched. A separate 32-team NBA-style model will replace this branch
+    // only after the 30-team model has been validated.
+    for(let round=1; round<=82; round++){
+      let pairings=[];
+      if(round<=cupGroupRounds){
+        pairings=cupGroupNightPairings(G,round-1).map(x=>[x.homeId,x.awayId,x.cupGroupId]);
+      } else {
+        const shuffled=[...clubIds].sort(()=>Math.random()-0.5);
+        for(let i=0;i<shuffled.length;i+=2) pairings.push([shuffled[i],shuffled[i+1],null]);
+      }
+      rounds.push({round,pairings});
     }
-    rounds.push({round,pairings});
   }
-  G.regularSeasonLive={season:G.season,roundIndex:0,rounds,games:[],callUpsThisSeason:0,allStarDone:false,complete:false,lastUserGameId:null};
+
+  G.regularSeasonLive={season:G.season,roundIndex:0,rounds,games:[],callUpsThisSeason:0,allStarDone:false,complete:false,lastUserGameId:null,scheduleModel,scheduleAudit};
   G.allStarDone=false; G.allStar=null; G.allStarLive=null;
   refreshRegularSeasonSnapshot(G);
   if(typeof publishPreseasonForecast==="function")publishPreseasonForecast(G,{forceArticle:true});
@@ -18679,7 +18935,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.1.49.77.5.5.5.154 Expansion Draft One-Shot Recovery",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.1.49.77.5.5.5.155 30-Team NBA Schedule Model",ENGINE_VERSION="E2.26-PROD179";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
