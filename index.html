@@ -2619,6 +2619,24 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .gmHistoryIntro{padding:13px 14px;margin-bottom:10px;border:1px solid #66502c;border-radius:14px;background:linear-gradient(135deg,rgba(241,168,77,.06),var(--panel))}
 .gmHistoryIntro h3{margin:3px 0 4px;font-size:18px}.gmHistoryIntro p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
 .gameConfigCard .more:last-child{border-bottom:0}
+
+.settingsHero{padding:14px 16px;margin-bottom:12px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#151d26,#10161d)}
+.settingsHero .eyebrow{margin-bottom:5px}.settingsHero h3{margin:0;font-size:18px;line-height:1.15}.settingsHero p{margin:6px 0 0;color:var(--muted);font-size:11px;line-height:1.45}
+.settingsSection{margin-top:18px}.settingsSectionTitle{font-size:15px;font-weight:800;margin:0 0 8px 2px}
+.settingsCard{padding:2px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.settingsRow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid #25303b}.settingsRow:first-child{border-top:0}
+.settingsRowText{min-width:0;flex:1}.settingsRowText b{display:block;font-size:12px;line-height:1.25}.settingsRowText small{display:block;margin-top:4px;color:var(--muted);font-size:10.5px;line-height:1.4}
+.settingsValue{flex:0 0 auto;font-size:11px;font-weight:800;letter-spacing:.04em;text-align:right}
+.settingsValue.on{color:var(--gold)}.settingsValue.muted{color:var(--muted)}
+.settingsStatusCard{padding:15px 16px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,#151b23,#11171f)}
+.settingsStatusTop{display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+.settingsStatusTop b{font-size:13px}.settingsStatusTop small{display:block;margin-top:4px;color:var(--muted);font-size:10.5px;line-height:1.45}
+.settingsStatusBadge{flex:0 0 auto;padding:6px 9px;border:1px solid #384451;border-radius:999px;font-size:10px;font-weight:800;letter-spacing:.04em;white-space:nowrap}
+.settingsStatusBadge.active{border-color:#72551f;background:#2a2415;color:#f1b04a}
+.settingsMiniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.settingsMiniStat{padding:10px 11px;border:1px solid #293440;border-radius:10px;background:#111821}.settingsMiniStat small{display:block;color:var(--muted);font-size:9.5px}.settingsMiniStat b{display:block;margin-top:3px;font-size:11px}
+@media(max-width:520px){.settingsMiniGrid{grid-template-columns:1fr 1fr}.settingsStatusTop{gap:8px}.settingsRow{padding:13px 0}}
+
 @media(max-width:430px){.globalTabs button{font-size:9px}.gmProfileSubTabs button{font-size:9px}.gmHistorySubTabs button{font-size:9px}}
 
 /* v0.1.49.77.5.5.3 Home upcoming-fixtures cleanup */
@@ -2943,7 +2961,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 209</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 210</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -19259,7 +19277,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 209",ENGINE_VERSION="E2.26-PROD209";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 210",ENGINE_VERSION="E2.26-PROD210";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25390,23 +25408,69 @@ function expansionDraftHomeHtml(state){
 
 function expansionSettingsStatusHtml(state){
   if(!state?.settings?.leagueExpansion)return "";
+  const count=leagueClubCount(state);
   const stage=state.expansionState?.stage||"disabled";
-  const draft=state.expansionDraftState;
-  const status=leagueClubCount(state)>=32
-    ?"32-team league active"
-    :stage==="preparation"
-      ?(draft?.status==="complete"?"Expansion Draft complete · awaiting activation":"Expansion process active in the main career flow")
-      :expansionStageLabel(stage);
-  return `<div class="sectionTitle">Expansion Status</div><div class="card">
-    <div class="more"><div><b>League Expansion</b><small>Gameplay decisions and draft actions appear through Home/league events, not Settings.</small></div><b>${status}</b></div>
-    <div class="more"><div><b>Current League</b><small>${leagueClubCount(state)>=32?"Expansion implemented":"Existing competition remains active until the expansion checkpoint is completed"}</small></div><b>${leagueClubCount(state)} CLUBS</b></div>
+  const implemented=count>=32||stage==="implemented";
+  let title="Expansion";
+  let subtitle="Expansion is enabled for this career.";
+  let badge=expansionStageLabel(stage);
+
+  if(implemented){
+    title="32-Team League";
+    subtitle="Seattle Cascades and Las Vegas Neon are active league clubs.";
+    badge="ACTIVE";
+  }else if(stage==="preparation"){
+    subtitle="Expansion preparation is underway through the main career flow.";
+    badge="IN PROGRESS";
+  }else if(stage==="approved"||stage==="franchises_announced"){
+    subtitle="Expansion has been approved and is progressing toward activation.";
+    badge="APPROVED";
+  }else if(stage==="dormant"){
+    subtitle="Expansion is enabled and will progress through league events.";
+    badge="ENABLED";
+  }
+
+  return `<div class="settingsSection">
+    <div class="settingsSectionTitle">Expansion</div>
+    <div class="settingsStatusCard">
+      <div class="settingsStatusTop">
+        <div><b>${title}</b><small>${subtitle}</small></div>
+        <span class="settingsStatusBadge ${implemented?"active":""}">${badge}</span>
+      </div>
+      <div class="settingsMiniGrid">
+        <div class="settingsMiniStat"><small>League Size</small><b>${count} Clubs</b></div>
+        <div class="settingsMiniStat"><small>Structure</small><b>${implemented?"4 Divisions · 8 Clubs":"30-Team League"}</b></div>
+      </div>
+    </div>
   </div>`;
 }
+
+function commissionerSettingsHtml(state){
+  const on=!!state?.settings?.commissionerMode;
+  return `<div class="settingsSection">
+    <div class="settingsSectionTitle">Commissioner</div>
+    <div class="settingsStatusCard">
+      <div class="settingsStatusTop">
+        <div>
+          <b>${on?"Commissioner Mode":"Standard Career"}</b>
+          <small>${on?"League-level controls are enabled. Structural actions occur through the normal career flow at safe transition points.":"Commissioner controls are disabled for this career."}</small>
+        </div>
+        <span class="settingsStatusBadge ${on?"active":""}">${on?"ACTIVE":"OFF"}</span>
+      </div>
+      ${on?`<div class="settingsMiniGrid">
+        <div class="settingsMiniStat"><small>League Control</small><b>Enabled</b></div>
+        <div class="settingsMiniStat"><small>Expansion Authority</small><b>${state.settings?.leagueExpansion?"Enabled":"Disabled"}</b></div>
+      </div>`:""}
+    </div>
+  </div>`;
+}
+
 function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
   const sw=saveWritePerformanceStats(G);
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
-    <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div><div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
+    <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
+    <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div><div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
 }
 function gameSettings(){
@@ -25415,11 +25479,40 @@ function gameSettings(){
   const mode=ui.settingsTab==="data"?"data":"career";
   const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="career"?"active":""}" data-settingstab="career">Career Settings</button><button class="${mode==="data"?"active":""}" data-settingstab="data">Game Data</button></div>`;
   if(mode==="data")return `${header("Game Settings","Game Data",false,false)}${tabs}${gameDataSettingsContent()}`;
-  return `${header("Game Settings","League & Career Controls",false,false)}${tabs}
-    <div class="gameDataHero"><div class="eyebrow">GAME SETTINGS</div><h3>Career Configuration</h3><p>Core career rules. Structural settings are selected at creation; injuries can be changed during the career.</p></div>
-    <div class="sectionTitle">Career Configuration</div><div class="card gameConfigCard"><div class="more"><div><b>Salary Cap</b><small>${G.settings.salaryCap?"Cap and salary-matching rules active":"Cap restrictions disabled"} · Career-start setting</small></div><b>${G.settings.salaryCap?"ON":"OFF"}</b></div><div class="more"><div><b>Injuries</b><small>${G.settings.injuries?"New injuries and recovery system active":"New injuries disabled; existing injuries recover normally"} · Can be changed during the career</small></div><button id="careerInjurySwitch" class="switch ${G.settings.injuries?"on":""}" aria-label="Toggle injuries"><span></span></button></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"30-to-32 club pathway enabled · Season 2 vote for Season 3 entry":"League remains at the original 30 clubs"} · Career-start setting</small></div><b>${expansionOn?"ON":"OFF"}</b></div><div class="more"><div><b>Commissioner Mode</b><small>${commissionerOn?"Optional league-control framework enabled":"Commissioner controls disabled"} · Career-start setting</small></div><b>${commissionerOn?"ON":"OFF"}</b></div></div>
+  const expansionSummary=leagueClubCount(G)>=32
+    ?"32-team league active"
+    :(expansionOn?"Enabled for this career":"30-team league");
+  return `${header("Game Settings","Career & League Controls",false,false)}${tabs}
+    <div class="settingsHero">
+      <div class="eyebrow">GAME SETTINGS</div>
+      <h3>Career Settings</h3>
+      <p>Core career rules and league controls.</p>
+    </div>
+
+    <div class="settingsSection">
+      <div class="settingsSectionTitle">Career Configuration</div>
+      <div class="settingsCard">
+        <div class="settingsRow">
+          <div class="settingsRowText"><b>Salary Cap</b><small>${G.settings.salaryCap?"Salary cap and matching rules are active.":"Salary cap restrictions are disabled."}</small></div>
+          <div class="settingsValue ${G.settings.salaryCap?"on":"muted"}">${G.settings.salaryCap?"ON":"OFF"}</div>
+        </div>
+        <div class="settingsRow">
+          <div class="settingsRowText"><b>Injuries</b><small>${G.settings.injuries?"Injuries and recovery are active.":"New injuries are disabled; existing injuries still recover."}</small></div>
+          <button id="careerInjurySwitch" class="switch ${G.settings.injuries?"on":""}" aria-label="Toggle injuries"><span></span></button>
+        </div>
+        <div class="settingsRow">
+          <div class="settingsRowText"><b>League Expansion</b><small>${expansionSummary}</small></div>
+          <div class="settingsValue ${expansionOn?"on":"muted"}">${expansionOn?"ON":"OFF"}</div>
+        </div>
+        <div class="settingsRow">
+          <div class="settingsRowText"><b>Commissioner Mode</b><small>${commissionerOn?"League-control framework enabled.":"Commissioner controls are disabled."}</small></div>
+          <div class="settingsValue ${commissionerOn?"on":"muted"}">${commissionerOn?"ON":"OFF"}</div>
+        </div>
+      </div>
+    </div>
+
     ${expansionSettingsStatusHtml(G)}
-    <div class="sectionTitle">Commissioner</div><div class="card"><div class="eyebrow">${commissionerOn?"COMMISSIONER FRAMEWORK ACTIVE":"COMMISSIONER MODE OFF"}</div><div class="commissionerSummary"><b>${commissionerOn?"League Control":"Standard Career"}</b><small>${commissionerOn?"Commissioner Mode is enabled for this career. Structural league events occur through the normal career flow at safe transition points.":"This career continues under ordinary simulation control. Organic expansion can still progress when League Expansion was enabled at career creation."}</small></div><div class="more"><div><b>League Expansion</b><small>${expansionOn?"Permitted by career settings":"Disabled for this career"}</small></div><b>${expansionOn?"ENABLED":"OFF"}</b></div><div class="more"><div><b>Expansion Status</b><small>${expansionOn?(G.expansionState?.stage==="dormant"?`Season 2 vote for next-season entry · next vote Season ${G.expansionState?.nextVoteSeason||2}`:(G.expansionState?.history?.slice(-1)[0]?.detail||"Expansion lifecycle active")):"No expansion events will occur"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Current League</b><small>${leagueClubCount(G)>=32?"Expansion implemented":"Existing competition remains unchanged"}</small></div><b>${leagueClubCount(G)} CLUBS</b></div><div class="more"><div><b>Framework</b><small>Career-control, expansion-event, franchise and draft foundation</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div></div>`;
+    ${commissionerSettingsHtml(G)}`;
 }
 function gmProfile(){
   const club=me(),gm=gmCareerState(G),history=[...(G.seasonSummaries||[])].slice().reverse();
