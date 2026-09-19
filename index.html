@@ -2635,6 +2635,24 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .settingsStatusBadge.active{border-color:#72551f;background:#2a2415;color:#f1b04a}
 .settingsMiniGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
 .settingsMiniStat{padding:10px 11px;border:1px solid #293440;border-radius:10px;background:#111821}.settingsMiniStat small{display:block;color:var(--muted);font-size:9.5px}.settingsMiniStat b{display:block;margin-top:3px;font-size:11px}
+
+.commissionerPanel{margin-top:14px}
+.commissionerControlGrid{display:grid;gap:12px}
+.commissionerControlCard{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
+.commissionerControlCard h4{margin:0 0 4px;font-size:13px}
+.commissionerControlCard>p{margin:0 0 12px;color:var(--muted);font-size:10.5px;line-height:1.45}
+.commissionerField{display:block;margin-top:10px}
+.commissionerField>span{display:block;margin-bottom:5px;color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+.commissionerField input,.commissionerField select{width:100%}
+.commissionerFormGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.commissionerActions{display:flex;gap:8px;margin-top:12px}
+.commissionerActions .btn{flex:1}
+.commissionerLogRow{padding:11px 0;border-top:1px solid #25303b}
+.commissionerLogRow:first-child{border-top:0}
+.commissionerLogRow b{display:block;font-size:10.5px}
+.commissionerLogRow small{display:block;margin-top:3px;color:var(--muted);font-size:9.5px;line-height:1.4}
+@media(max-width:520px){.commissionerFormGrid{grid-template-columns:1fr}}
+
 @media(max-width:520px){.settingsMiniGrid{grid-template-columns:1fr 1fr}.settingsStatusTop{gap:8px}.settingsRow{padding:13px 0}}
 
 @media(max-width:430px){.globalTabs button{font-size:9px}.gmProfileSubTabs button{font-size:9px}.gmHistorySubTabs button{font-size:9px}}
@@ -2961,7 +2979,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 210</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 211</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -19277,9 +19295,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 210",ENGINE_VERSION="E2.26-PROD210";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 211",ENGINE_VERSION="E2.26-PROD211";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerTeamId:null,commissionerPlayerId:null,commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -21698,12 +21716,14 @@ function teamIdentityEditor(club){
 
 function userCanEditPlayerProfile(p){
   if(!p)return false;
+  if(G?.settings?.commissionerMode)return true;
   const club=playerClub(p.id);
   const clubEditable=club?.id===me()?.id;
   const nationalEditable=!!G.userNationalGM?.nationCode&&p.nationality===G.userNationalGM.nationCode;
   return !!(clubEditable||nationalEditable);
 }
 function playerEditContextLabel(p){
+  if(G?.settings?.commissionerMode)return"Commissioner Player";
   const club=playerClub(p?.id),clubEditable=club?.id===me()?.id,nationalEditable=!!G.userNationalGM?.nationCode&&p?.nationality===G.userNationalGM.nationCode;
   if(clubEditable&&nationalEditable)return"Club + National Player";
   if(nationalEditable)return"National Team Player";
@@ -25465,6 +25485,97 @@ function commissionerSettingsHtml(state){
   </div>`;
 }
 
+
+function commissionerLogAction(state,action,detail,data={}){
+  if(!state)return null;
+  ensureCareerControlState(state);
+  const log=state.commissionerState.log=Array.isArray(state.commissionerState.log)?state.commissionerState.log:[];
+  const entry={
+    id:`CMLOG_${Date.now()}_${Math.floor(Math.random()*100000)}`,
+    season:state.season,
+    seasonLabel:basketballSeasonLabel(state.season),
+    phase:state.phase||"Career",
+    action,
+    detail,
+    data
+  };
+  log.push(entry);
+  if(log.length>250)state.commissionerState.log=log.slice(-250);
+  return entry;
+}
+function commissionerActivePlayers(state){
+  return allPlayers(state).filter(p=>p&&!p.retired).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base"}));
+}
+function commissionerSecondaryOptions(pos,current){
+  return `<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[pos]||[]).map(x=>`<option value="${x}" ${x===current?"selected":""}>${x}</option>`).join("")}`;
+}
+function commissionerControlCentreHtml(state){
+  if(!state?.settings?.commissionerMode)return `<div class="settingsHero"><div class="eyebrow">COMMISSIONER</div><h3>Commissioner Mode Off</h3><p>This career was created without Commissioner Mode.</p></div>`;
+
+  const clubs=[...(state.clubs||[])].sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base"}));
+  const players=commissionerActivePlayers(state);
+  const teamId=ui.commissionerTeamId&&clubs.some(c=>c.id===ui.commissionerTeamId)?ui.commissionerTeamId:(me()?.id||clubs[0]?.id);
+  const playerId=ui.commissionerPlayerId&&players.some(p=>p.id===ui.commissionerPlayerId)?ui.commissionerPlayerId:(players[0]?.id||null);
+  const gmId=ui.commissionerGMClubId&&clubs.some(c=>c.id===ui.commissionerGMClubId)?ui.commissionerGMClubId:(me()?.id||clubs[0]?.id);
+  ui.commissionerTeamId=teamId;ui.commissionerPlayerId=playerId;ui.commissionerGMClubId=gmId;
+
+  const team=clubById(state,teamId),p=playerByAnyId(playerId),pClub=p?playerClub(p.id):null;
+  const logs=[...(state.commissionerState?.log||[])].slice().reverse().slice(0,40);
+
+  const nationOptions=NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${p?.nationality===n.code?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join("");
+  const clubOptions=clubs.map(c=>`<option value="${c.id}" ${c.id===teamId?"selected":""}>${c.name}</option>`).join("");
+  const gmOptions=clubs.map(c=>`<option value="${c.id}" ${c.id===gmId?"selected":""}>${c.name}</option>`).join("");
+  const playerOptions=players.map(x=>`<option value="${x.id}" ${x.id===playerId?"selected":""}>${x.name} · ${playerAffiliation(x)} · ${positionLabel(x)} · ${x.ovr} OVR</option>`).join("");
+
+  return `<div class="settingsHero">
+      <div class="eyebrow">COMMISSIONER MODE</div>
+      <h3>Commissioner Control Centre</h3>
+      <p>Manual league controls. Every change is recorded in the Commissioner Log.</p>
+    </div>
+    <div class="commissionerControlGrid">
+      <div class="commissionerControlCard">
+        <h4>Team Editing</h4>
+        <p>Rename a team. The club identity and history remain attached to the same underlying team.</p>
+        <label class="commissionerField"><span>Team</span><select id="commissionerTeamSelect">${clubOptions}</select></label>
+        <label class="commissionerField"><span>Team Name</span><input id="commissionerTeamName" maxlength="40" value="${team?.name||""}"></label>
+        <div class="commissionerActions"><button id="commissionerSaveTeamName" class="btn primary">Save Team Name</button></div>
+      </div>
+
+      <div class="commissionerControlCard">
+        <h4>GM / Team Control</h4>
+        <p>Move your GM directly to another club. Career record, reputation and appointment history continue.</p>
+        <label class="commissionerField"><span>Controlled Team</span><select id="commissionerGMTeamSelect">${gmOptions}</select></label>
+        <div class="commissionerActions"><button id="commissionerSwitchGMTeam" class="btn primary" ${gmId===me()?.id?"disabled":""}>Take Control of Team</button></div>
+      </div>
+
+      <div class="commissionerControlCard">
+        <h4>Player Editing</h4>
+        <p>Edit the core player record. Roster movement, retirement and injury forcing are not included in this first release.</p>
+        <label class="commissionerField"><span>Player</span><select id="commissionerPlayerSelect">${playerOptions}</select></label>
+        ${p?`<div class="commissionerFormGrid">
+          <label class="commissionerField"><span>Name</span><input id="cmPlayerName" maxlength="40" value="${p.name||""}"></label>
+          <label class="commissionerField"><span>Age</span><input id="cmPlayerAge" type="number" min="18" max="45" value="${p.age||18}"></label>
+          <label class="commissionerField"><span>Overall</span><input id="cmPlayerOvr" type="number" min="40" max="99" value="${p.ovr||40}"></label>
+          <label class="commissionerField"><span>Potential</span><input id="cmPlayerPot" type="number" min="40" max="99" value="${p.potential??p.ovr??40}"></label>
+          <label class="commissionerField"><span>Primary Position</span><select id="cmPlayerPos">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select></label>
+          <label class="commissionerField"><span>Secondary Position</span><select id="cmPlayerPos2">${commissionerSecondaryOptions(p.position,p.secondaryPosition)}</select></label>
+          <label class="commissionerField"><span>Nationality</span><select id="cmPlayerNation">${nationOptions}</select></label>
+          <label class="commissionerField"><span>Height (cm)</span><input id="cmPlayerHeight" type="number" min="160" max="231" value="${p.heightCm||200}"></label>
+          <label class="commissionerField"><span>Salary ($M)</span><input id="cmPlayerSalary" type="number" min="0" max="100" step="0.1" value="${(+p.salaryM||0).toFixed(1)}"></label>
+          <label class="commissionerField"><span>Contract Years</span><input id="cmPlayerYears" type="number" min="0" max="6" value="${Math.max(0,+p.contractYearsLeft||0)}"></label>
+        </div>
+        <div class="smallcopy" style="margin-top:9px">Current affiliation: ${pClub?.name||publicCompetitionLabel(p.externalLeague||"Free Agency")}</div>
+        <div class="commissionerActions"><button id="commissionerSavePlayer" class="btn primary">Save Player Changes</button><button id="commissionerOpenPlayer" class="btn secondary">Open Profile</button></div>`:`<div class="empty">No editable players are available.</div>`}
+      </div>
+
+      <div class="commissionerControlCard">
+        <h4>Commissioner Log</h4>
+        <p>Permanent audit trail of manual Commissioner actions.</p>
+        ${logs.length?logs.map(x=>`<div class="commissionerLogRow"><b>${x.action}</b><small>${x.seasonLabel||basketballSeasonLabel(x.season)} · ${String(x.phase||"Career").replaceAll("_"," ")} · ${x.detail}</small></div>`).join(""):`<div class="empty">No Commissioner actions recorded yet.</div>`}
+      </div>
+    </div>`;
+}
+
 function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
   const sw=saveWritePerformanceStats(G);
@@ -25476,9 +25587,10 @@ function gameDataSettingsContent(){
 function gameSettings(){
   ensureCareerControlState(G);
   const expansionOn=!!G.settings?.leagueExpansion,commissionerOn=!!G.settings?.commissionerMode;
-  const mode=ui.settingsTab==="data"?"data":"career";
-  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="career"?"active":""}" data-settingstab="career">Career Settings</button><button class="${mode==="data"?"active":""}" data-settingstab="data">Game Data</button></div>`;
+  const mode=ui.settingsTab==="data"?"data":ui.settingsTab==="commissioner"?"commissioner":"career";
+  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="career"?"active":""}" data-settingstab="career">Career Settings</button>${commissionerOn?`<button class="${mode==="commissioner"?"active":""}" data-settingstab="commissioner">Commissioner</button>`:""}<button class="${mode==="data"?"active":""}" data-settingstab="data">Game Data</button></div>`;
   if(mode==="data")return `${header("Game Settings","Game Data",false,false)}${tabs}${gameDataSettingsContent()}`;
+  if(mode==="commissioner")return `${header("Game Settings","Commissioner Control Centre",false,false)}${tabs}${commissionerControlCentreHtml(G)}`;
   const expansionSummary=leagueClubCount(G)>=32
     ?"32-team league active"
     :(expansionOn?"Enabled for this career":"30-team league");
@@ -28142,7 +28254,83 @@ function bind(){
     G.expansionCheckpointAcknowledgedSeason=G.season;
     await save();ui.page="home";render();
   };
-  $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-gmhistorytab]`).forEach(b=>b.onclick=()=>{ui.gmHistoryTab=b.dataset.gmhistorytab;ui.gmProfileTab="history";ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
+  
+  if($("#commissionerTeamSelect"))$("#commissionerTeamSelect").onchange=e=>{ui.commissionerTeamId=e.target.value;render()};
+  if($("#commissionerSaveTeamName"))$("#commissionerSaveTeamName").onclick=async()=>{
+    if(!G.settings?.commissionerMode)return;
+    const club=clubById(G,ui.commissionerTeamId),input=$("#commissionerTeamName");
+    if(!club||!input)return;
+    const next=String(input.value||"").trim().replace(/\s+/g," ");
+    if(next.length<3){toast("Enter a team name of at least 3 characters");return}
+    if((G.clubs||[]).some(c=>c.id!==club.id&&String(c.name).toLowerCase()===next.toLowerCase())){toast("Another team already uses that name");return}
+    if(next===club.name){toast("Team name is unchanged");return}
+    const oldName=club.name;
+    club.name=next.slice(0,40);
+    const plan=G.expansionFranchisePlan?.clubs?.find(c=>c.id===club.id);if(plan)plan.name=club.name;
+    for(const j of gmCareerState(G).jobs||[])if(j.clubId===club.id&&j.endSeason==null)j.clubName=club.name;
+    commissionerLogAction(G,"Team Edit",`${oldName} renamed to ${club.name}`,{clubId:club.id,from:oldName,to:club.name});
+    await save();toast("Team name updated");render();
+  };
+
+  if($("#commissionerGMTeamSelect"))$("#commissionerGMTeamSelect").onchange=e=>{ui.commissionerGMClubId=e.target.value;render()};
+  if($("#commissionerSwitchGMTeam"))$("#commissionerSwitchGMTeam").onclick=async()=>{
+    if(!G.settings?.commissionerMode)return;
+    const target=clubById(G,ui.commissionerGMClubId),oldClub=me();
+    if(!target||target.id===oldClub?.id)return;
+    if(!confirm(`Take control of ${target.name}? Your GM career record and history will continue from ${oldClub?.name||"the current club"}.`))return;
+    const from=oldClub?.name||"No Club";
+    appointClubGM(G,target.id);
+    G.frontOffice=ensureClubFrontOfficeState(G,target.id);
+    ui.tradePartner=null;ui.tradeOut=null;ui.tradeIn=null;ui.tradeEval=null;
+    commissionerLogAction(G,"GM / Team Control",`${G.gmName||"GM"} moved from ${from} to ${target.name}`,{fromClubId:oldClub?.id||null,toClubId:target.id});
+    await save();toast(`Now controlling ${target.name}`);ui.page="home";render();
+  };
+
+  if($("#commissionerPlayerSelect"))$("#commissionerPlayerSelect").onchange=e=>{ui.commissionerPlayerId=e.target.value;render()};
+  if($("#cmPlayerPos"))$("#cmPlayerPos").onchange=()=>{
+    const p=$("#cmPlayerPos"),s=$("#cmPlayerPos2");if(!p||!s)return;
+    const current=s.value;
+    s.innerHTML=commissionerSecondaryOptions(p.value,current);
+  };
+  if($("#commissionerOpenPlayer"))$("#commissionerOpenPlayer").onclick=()=>{
+    const p=playerByAnyId(ui.commissionerPlayerId);if(!p)return;
+    ui.playerProfileId=p.id;ui.playerProfileTab="overview";ui.playerEditMode=p.id;ui.profileReturnPage="settings";ui.page="playerProfile";render();
+  };
+  if($("#commissionerSavePlayer"))$("#commissionerSavePlayer").onclick=async()=>{
+    if(!G.settings?.commissionerMode)return;
+    const p=playerByAnyId(ui.commissionerPlayerId);if(!p)return;
+    const club=playerClub(p.id),before={name:p.name,age:p.age,ovr:p.ovr,potential:p.potential,position:p.position,secondaryPosition:p.secondaryPosition,nationality:p.nationality,heightCm:p.heightCm,salaryM:+p.salaryM||0,contractYearsLeft:+p.contractYearsLeft||0};
+    const nextName=String($("#cmPlayerName")?.value||p.name).trim().replace(/\s+/g," ");
+    if(nextName.length<2){toast("Enter a valid player name");return}
+    const nextAge=Math.max(18,Math.min(45,+$("#cmPlayerAge")?.value||p.age));
+    const nextOvr=Math.max(40,Math.min(99,+$("#cmPlayerOvr")?.value||p.ovr));
+    const nextPot=Math.max(nextOvr,Math.max(40,Math.min(99,+$("#cmPlayerPot")?.value||p.potential||nextOvr)));
+    const nextHeight=Math.max(160,Math.min(231,+$("#cmPlayerHeight")?.value||p.heightCm||200));
+    const nextSalary=Math.max(0,Math.min(100,+$("#cmPlayerSalary")?.value||0));
+    const nextYears=Math.max(0,Math.min(6,+$("#cmPlayerYears")?.value||0));
+    const nextPos=$("#cmPlayerPos")?.value||p.position;
+    const secAllowed=SECONDARY_POSITION_OPTIONS[nextPos]||[];
+    const nextSec=secAllowed.includes($("#cmPlayerPos2")?.value)?$("#cmPlayerPos2").value:null;
+    const nextNation=$("#cmPlayerNation")?.value||p.nationality;
+
+    p.name=nextName;p.nameOrigin="manual";p.manualNameOverride=nextName;p.manualNameEditedSeason=G.season;
+    p.age=nextAge;p.ovr=nextOvr;p.peakOvr=Math.max(+p.peakOvr||0,nextOvr);p.potential=nextPot;
+    p.position=nextPos;p.secondaryPosition=nextSec;p.nationality=nextNation;p.heightCm=nextHeight;
+    p.salaryM=Math.round(nextSalary*10)/10;p.contractYearsLeft=nextYears;
+    if(nextYears<=0&&club)p.contractStatus="Expiring";
+    else if(club)p.contractStatus="Under Contract";
+    if(!p.sourceBuild)p.playerBuild=derivePlayerBuild(p);
+    assignEngineStatisticalIdentity(p);
+    if(club){recalcClubCap(club);refreshClubRotation(club);if(G.phase==="SUMMER_LEAGUE")syncSummerLeagueRosterForClub(G,club.id)}
+    const changes=[];
+    for(const [k,v] of Object.entries({name:p.name,age:p.age,ovr:p.ovr,potential:p.potential,position:p.position,secondaryPosition:p.secondaryPosition||"",nationality:p.nationality,heightCm:p.heightCm,salaryM:p.salaryM,contractYearsLeft:p.contractYearsLeft})){
+      if(String(before[k]??"")!==String(v??""))changes.push(`${k}: ${before[k]??"—"} → ${v??"—"}`);
+    }
+    commissionerLogAction(G,"Player Edit",`${p.name}${changes.length?` · ${changes.join(" · ")}`:" · no material change"}`,{playerId:p.id,changes});
+    await save();toast("Player updated");render();
+  };
+
+$$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-gmhistorytab]`).forEach(b=>b.onclick=()=>{ui.gmHistoryTab=b.dataset.gmhistorytab;ui.gmProfileTab="history";ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
   if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
     ui.page="home";ui.leagueTab="standings";show("game");save();render();
   };
@@ -28250,6 +28438,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=()=>{
       if(newTeam&&newTeam.nationalSquadMode==="manual"&&(newTeam.selectedSquadPlayerIds||[]).length<12)newTeam.selectedSquadPlayerIds.push(p.id);
     }
 
+    if(G.settings?.commissionerMode)commissionerLogAction(G,"Player Edit",`${p.name} edited from Player Profile`,{playerId:p.id});
     ui.playerEditMode=null;
     save();
     toast(nextAge!==oldAge?"Player updated · history reset":nextExp!==oldExp?"Player profile & league experience updated":"Player profile updated");
