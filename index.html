@@ -2980,7 +2980,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 228</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 229</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -4350,7 +4350,7 @@ const HISTORICAL_INTERNATIONAL_HONOURS_2026={
 };
 
 function applyHistoricalPlayerIdentity2026(p,sourceName){
-  if(!p||!sourceName)return p;
+  if(!p||!sourceName||p.careerHistoryReset)return p;
   const d=HISTORICAL_DRAFT_IDENTITY_2026[sourceName];
   if(d){
     p.historicalDraftYear=d.year;
@@ -4377,6 +4377,7 @@ function applyHistoricalPlayerIdentityAudit(G){
   if(!G)return 0;
   let changed=0;
   for(const p of allTalentPlayers(G)){
+    if(p.careerHistoryReset)continue;
     const source=p.sourceTemplateName||p.sourceName;
     if(!source)continue;
     const before=`${p.historicalDraftYear||""}|${p.historicalDraftPick||""}|${(p.awardHistory||[]).length}`;
@@ -4389,6 +4390,7 @@ function applyHistoricalPlayerIdentityAudit(G){
 }
 
 function applyActiveCareerBaseline(p,sourceName){
+  if(p?.careerHistoryReset)return p;
   const b=ACTIVE_CAREER_BASELINES[sourceName];
   const summary=ELITE_LEGACY_SUMMARY_BASELINES[sourceName];
   if(!b&&!summary)return p;
@@ -4525,6 +4527,18 @@ function careerBaselineCoverage(G){
 // every completed H³O season plus the live season. The baseline/live split is
 // internal accounting only and prevents rollover double-counting.
 function unifiedCareerStats(p){
+  if(p?.careerHistoryReset){
+    const total={...emptyRegularStats()};
+    for(const h of visibleCareerSeasonRows(p)){
+      const st=h?.stats||{};
+      for(const k of Object.keys(total))total[k]=(+total[k]||0)+(+st[k]||0);
+    }
+    if(!p?.retired){
+      const live=p?.seasonStats||{};
+      for(const k of Object.keys(total))total[k]=(+total[k]||0)+(+live[k]||0);
+    }
+    return total;
+  }
   const total={...emptyRegularStats(),...(p?.careerStats||{})};
   if(p?.retired)return total;
   const live=p?.seasonStats||{};
@@ -20119,7 +20133,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 228",ENGINE_VERSION="E2.26-PROD228";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 229",ENGINE_VERSION="E2.26-PROD229";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21608,6 +21622,19 @@ function resetPlayerHistoryAfterAgeEdit(p){
   p.ageHistoryResetSeason=resetSeason;
   p.careerHistoryResetTransactionIndex=(G.transactions||[]).length;
 
+  // Draft identity belongs to the superseded career and should no longer be
+  // presented for the edited player.
+  p.historicalDraftYear=null;
+  p.historicalDraftRound=null;
+  p.historicalDraftPick=null;
+  p.historicalDraftClubId=null;
+  p.historicalDraftVerified=false;
+  p.historicalDraftSource=null;
+  p.draftYear=null;
+  p.draftRound=null;
+  p.draftPick=null;
+  p.draftedByClubId=null;
+
   // Source-backed history is hidden by the reset flag; H³O season rows are kept
   // intact and filtered by the boundary rather than deleted.
   applyCareerResetVisibility(p,resetSeason);
@@ -22368,7 +22395,7 @@ function clubRosterGroup(p){
   return"Forwards";
 }
 function playerDraftLabel(p){
-  if(p?.careerHistoryReset&&!p?.draftYear)return"Career Reset";
+  if(p?.careerHistoryReset)return"N/A";
   if(p.historicalDraftPick)return `#${p.historicalDraftPick} · R${p.historicalDraftRound||Math.ceil(p.historicalDraftPick/30)}`;
   if(p.draftPick)return `#${p.draftPick} · R${p.draftRound||Math.ceil(p.draftPick/30)}`;
   const entry=String(p.entryPath||p.origin||"").trim();
@@ -22445,7 +22472,7 @@ function isCumulativeCareerAwardFamily(family){
   return CUMULATIVE_CAREER_AWARD_FAMILIES.has(String(family||""));
 }
 function integratedCareerAwardRows(p){
-  const awards=p?.awardHistory||[],groups=new Map();
+  const awards=visiblePlayerAwardHistory(p),groups=new Map();
   for(const a of awards){
     const display=displayAwardName(a.award),family=careerAwardFamily(display),count=careerAwardCount(a);
     if(!family)continue;
@@ -22649,14 +22676,24 @@ function playerCareerTeams(p){
   const live=playerClub(p.id);if(live)push(live.id,live.name,G.season);
   return seen;
 }
+function visiblePlayerAwardHistory(p){
+  const awards=p?.awardHistory||[];
+  if(!p?.careerHistoryReset)return awards;
+  const boundary=+p.careerHistoryResetSeason||1;
+  return awards.filter(a=>{
+    if(a?.historicalSeed)return false;
+    const season=+a?.season||0;
+    return season>=boundary;
+  });
+}
 function playerInternationalSummary(p){
   const team=nat(p.nationality);
   const games=team?.games?.filter(g=>g.teamA===p.nationality||g.teamB===p.nationality).length||0;
-  const nationalAwards=(p.awardHistory||[]).filter(a=>String(a.award).includes("World Cup")||String(a.award).includes("World")).length;
+  const nationalAwards=visiblePlayerAwardHistory(p).filter(a=>String(a.award).includes("World Cup")||String(a.award).includes("World")).length;
   return{team,games,nationalAwards};
 }
 function playerHonourCounts(p){
-  const awards=p.awardHistory||[];
+  const awards=visiblePlayerAwardHistory(p);
   const weight=a=>Math.max(1,+a.count||(+String(a.award||"").match(/^(\d+)×/)?.[1]||1));
   const count=term=>awards.filter(a=>String(a.award).replace(/[-\s]/g,"").toLowerCase().includes(String(term).replace(/[-\s]/g,"").toLowerCase())).reduce((n,a)=>n+weight(a),0);
   return{
@@ -23042,14 +23079,13 @@ function playerProfile(){
   const buildOptionsHtml=editing?buildOptions.map(x=>`<option value="${x.build}" ${x.build===(p.playerBuild||derivePlayerBuild(p))?"selected":""}>${x.build}</option>`).join(""):"";
   const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p),worldLoc=playerBasketballLocation(p);
   const abilityMetric=playerProfileAbilityMetric(p);
-  const draftLabel=playerDraftLabel(p),draftSeason=p.careerHistoryReset?"Career Reset":p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=p.careerHistoryReset?`Career begins ${basketballSeasonLabel(p.careerHistoryResetSeason||1)}`:(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
+  const draftLabel=playerDraftLabel(p),draftSeason=p.careerHistoryReset?"N/A":p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=p.careerHistoryReset?"N/A":(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
   const careerStints=playerCareerTimelineStints(p);
   const timeline=careerStints.length?careerStints.map(stint=>{
     const av=careerStintAverages(stint);
     const right=stint.ongoing?(p.rotationRole||"Current"):stint.kind==="historical"?"Career":(stint.role||"Career");
     return `<div class="timelineRow"><div class="season">${careerStintYearLabel(stint)}</div><div><b>${stint.clubName||clubById(G,stint.clubId)?.name||"Club"}</b><small>${stint.gp||0} GP · ${av.ppg.toFixed(1)} PPG · ${av.rpg.toFixed(1)} RPG · ${av.apg.toFixed(1)} APG</small></div><div class="right">${right}</div></div>`;
   }).join(""):`<div class="empty">Career club history will appear as verified source data or future seasons are completed.</div>`;
-  const historyIntegrityNotice=p.careerHistoryIntegrityGap?`<div class="inlineEditNotice"><b>Career history integrity notice</b><span>${p.careerHistoryIntegrityGap.missingCompletedSeasons} completed H³O season${p.careerHistoryIntegrityGap.missingCompletedSeasons===1?" is":"s are"} missing from the saved player-season history after an earlier career-reset migration. The game will not invent replacement statistics.</span></div>`:"";
   const overview=`
     <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>League Experience</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
@@ -23061,7 +23097,7 @@ function playerProfile(){
     ${p.retired?`<div class="retirementBanner"><div><small>CAREER COMPLETE</small><b>Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} · Age ${p.retirementAge||p.age}</b><span>Last affiliation: ${p.retiredFromClubName||"Free Agency"}</span></div></div>`:""}
     <div class="sectionTitle">All-Time League Standing</div><div class="careerRankGrid">${allTimeRanks.length?allTimeRanks.slice(0,6).map(r=>`<div class="careerRankCard"><small>${r.label}</small><b>#${r.rank}</b><span>${Math.round(+r.value||0).toLocaleString()}</span></div>`).join(""):`<div class="profilePanel" style="grid-column:1/-1"><div class="empty">All-time rankings will appear as career history builds.</div></div>`}</div>
     <div class="sectionTitle">Career Peak</div>${peak?`<div class="careerPeakCard"><div><small>SEASON ${peak.season}</small><b>${peak.clubName||clubById(G,peak.clubId)?.name||"Club"}</b><span>${peak.ppg.toFixed(1)} PPG · ${peak.rpg.toFixed(1)} RPG · ${peak.apg.toFixed(1)} APG</span></div><strong>OVR ${peak.ovr??"—"}</strong></div>`:`<div class="profilePanel"><div class="empty">Career peak will populate from recorded season history as the career continues.</div></div>`}
-    <div class="sectionTitle">Career Timeline</div>${historyIntegrityNotice}<div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${(()=>{
+    <div class="sectionTitle">Career Timeline</div><div class="profileTimeline">${timeline}</div><div class="sectionTitle">Honours</div><div class="historyCard">${(()=>{
       const rows=integratedCareerAwardRows(p);
       if(!rows.length)return `<div class="empty">No recorded honours yet.</div>`;
       return rows.slice(0,28).map(a=>{
@@ -26893,7 +26929,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Olympic Bracket Integrity</b><small>Same-group QF rematches avoided · group winner/runner-up separated across bracket halves where possible · scheduled semifinals safely repairable</small></div><b>${OLYMPIC_BRACKET_INTEGRITY_VERSION}</b></div>
     <div class="more"><div><b>Commissioner Career Reset</b><small>One-time season boundary · pre-reset/source history suppressed · current and subsequent H³O seasons preserved · no destructive load replay</small></div><b>${COMMISSIONER_CAREER_RESET_VERSION}</b></div>
     <div class="more"><div><b>Career Timeline</b><small>Legacy + H³O same-club service integrated · ongoing stints use an open-ended year · compact 50-season ledger protects long-career continuity</small></div><b>${CAREER_TIMELINE_LEDGER_VERSION}</b></div>
-    <div class="more"><div><b>Career History Integrity</b><small>Non-destructive commissioner reset · archived pre-reset data · duplicate/gap audit · missing statistics are never fabricated</small></div><b>${G.runtimeMeta?.careerHistoryIntegrity?.gaps||0} gaps</b></div>
+    <div class="more"><div><b>Career History Integrity</b><small>Commissioner reset boundary · pre-edit history excluded · post-edit H³O seasons retained · mapped history cannot reapply after reset</small></div><b>${CAREER_TIMELINE_LEDGER_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -29671,7 +29707,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
     const nextJersey=Math.max(0,Math.min(99,Number.isFinite(+$("#epJersey")?.value)?+$("#epJersey").value:(oldJersey??0)));
 
-    if(nextAge!==oldAge&&!confirm(`Changing ${p.name}'s age from ${oldAge} to ${nextAge} creates a new public career starting point this season. Earlier history will be hidden and archived rather than deleted; current-season statistics and future H³O seasons will remain. Continue?`))return;
+    if(nextAge!==oldAge&&!confirm(`Changing ${p.name}'s age from ${oldAge} to ${nextAge} will reset the player's previous career history. Current-season statistics and all seasons from this point onward will be retained. Continue?`))return;
 
     if(club){
       const jerseyConflict=[...(club.roster||[]),...(club.twoWayRoster||[])]
