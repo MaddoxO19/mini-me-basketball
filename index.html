@@ -2980,7 +2980,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 219</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 220</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -8816,6 +8816,171 @@ function mappedEngineArchetype(t){
   if(pos==='PF')return defend||rim?'Rim Protector':play?'Playmaking Forward':shooter?'Stretch Four':'Playmaking Forward';
   return defend?'Rim Protector':shooter?'Stretch Five':'Traditional Big';
 }
+
+const HIDDEN_STYLE_PROFILE_VERSION="HSP1";
+const BUILD_MAPPING_VERSION="PBM1";
+
+function playerBuildFamily(label){
+  const s=String(label||"").toLowerCase();
+  if(/defend|lock|hawk|clamp|erase|guardian|anchor|2-way|two-way/.test(s))return"Two-Way / Defensive";
+  if(/playmak|dime|engine|table setter|creator|maestro|point forward|point center|distributor/.test(s))return"Creator / Playmaker";
+  if(/shoot|snip|3pt|stretch|pick & pop|perimeter|shot hunter/.test(s))return"Shooter / Spacer";
+  if(/slash|fly|blow-by|finisher|rocker|wrecker|dunk|rim runner|lob threat/.test(s))return"Slasher / Finisher";
+  if(/post|paint|masher|bully|crasher/.test(s))return"Interior Scorer";
+  if(/board|glass|rebound|cleaner/.test(s))return"Rebound / Interior";
+  return"Versatile";
+}
+
+let _playerBuildLibrary=null;
+function playerBuildLibrary(){
+  if(_playerBuildLibrary)return _playerBuildLibrary;
+  const rows=[],seen=new Set();
+
+  for(const list of Object.values(SEASON1_ROSTER_TEMPLATES||{})){
+    for(const t of list||[]){
+      const build=String(t?.sourceArchetype||"").trim();
+      if(!build)continue;
+      const arch=mappedEngineArchetype(t);
+      const key=`${arch}|${build}|${t.position}`;
+      if(seen.has(key))continue;
+      seen.add(key);
+      rows.push({
+        build,archetype:arch,position:t.position,secondaryPosition:t.secondaryPosition||null,
+        heightCm:+t.heightCm||0,family:playerBuildFamily(build)
+      });
+    }
+  }
+
+  // Generic generated-player fallbacks are part of the vocabulary too.
+  const fallbackByArch={
+    "Floor General":"Pass-First Playmaker",
+    "Combo Guard":"Three-Level Combo Creator",
+    "3-and-D Guard":"Two-Way Perimeter Guard",
+    "Sharpshooter":"Movement Shooter",
+    "Slasher":"Downhill Rim Attacker",
+    "3-and-D Wing":"Two-Way Perimeter Wing",
+    "Playmaking Forward":"Point Forward",
+    "Stretch Four":"Pick-and-Pop Forward",
+    "Rim Protector":"Interior Defensive Anchor",
+    "Stretch Five":"Floor-Spacing Big",
+    "Traditional Big":"Interior Glass Cleaner"
+  };
+  for(const [arch,build] of Object.entries(fallbackByArch)){
+    for(const position of POSITIONS){
+      if(!(ARCHETYPES_BY_POSITION[position]||[]).includes(arch))continue;
+      const key=`${arch}|${build}|${position}`;
+      if(seen.has(key))continue;
+      seen.add(key);
+      rows.push({build,archetype:arch,position,secondaryPosition:null,heightCm:0,family:playerBuildFamily(build)});
+    }
+  }
+
+  _playerBuildLibrary=rows;
+  return rows;
+}
+
+function ensureHiddenPlayerStyle(player){
+  if(!player)return null;
+  if(player.hiddenStyleProfile?.version===HIDDEN_STYLE_PROFILE_VERSION)return player.hiddenStyleProfile;
+
+  const currentBuild=player.playerBuild||player.sourceBuild||derivePlayerBuild(player);
+  const family=playerBuildFamily(currentBuild);
+  const seed=stableTemplateHash(`${player.id}|${player.position}|${player.archetype}|${currentBuild}|hidden-style`);
+  const compatibleFamilies={
+    "Two-Way / Defensive":["Versatile","Slasher / Finisher"],
+    "Creator / Playmaker":["Shooter / Spacer","Versatile"],
+    "Shooter / Spacer":["Creator / Playmaker","Versatile"],
+    "Slasher / Finisher":["Two-Way / Defensive","Interior Scorer"],
+    "Interior Scorer":["Rebound / Interior","Slasher / Finisher"],
+    "Rebound / Interior":["Interior Scorer","Two-Way / Defensive"],
+    "Versatile":["Creator / Playmaker","Two-Way / Defensive"]
+  };
+
+  player.hiddenStyleProfile={
+    version:HIDDEN_STYLE_PROFILE_VERSION,
+    seed,
+    family,
+    secondaryFamilies:compatibleFamilies[family]||["Versatile"],
+    establishedArchetype:player.archetype||null,
+    createdSeason:Number.isFinite(+G?.season)?+G.season:null
+  };
+  return player.hiddenStyleProfile;
+}
+
+function plausiblePlayerBuilds(player,{position=null,archetype=null,heightCm=null,limit=8}={}){
+  if(!player)return[];
+  const pos=position||player.position||"SF";
+  const arch=archetype||player.archetype||(ARCHETYPES_BY_POSITION[pos]?.[0])||"3-and-D Wing";
+  const height=Number.isFinite(+heightCm)?+heightCm:(+player.heightCm||0);
+  const hidden=ensureHiddenPlayerStyle(player);
+  const current=player.playerBuild||player.sourceBuild||derivePlayerBuild(player);
+
+  const unique=new Map();
+  for(const row of playerBuildLibrary()){
+    if(row.archetype!==arch)continue;
+    const posCompatible=row.position===pos||row.secondaryPosition===pos||
+      (player.secondaryPosition&&(row.position===player.secondaryPosition||row.secondaryPosition===player.secondaryPosition));
+    let score=0;
+    if(row.build===current)score+=1000;
+    if(posCompatible)score+=45;
+    else score-=18;
+    if(row.family===hidden.family)score+=36;
+    else if(hidden.secondaryFamilies?.includes(row.family))score+=16;
+    if(height&&row.heightCm)score+=Math.max(-18,18-Math.abs(height-row.heightCm)*1.5);
+    score+=(stableTemplateHash(`${hidden.seed}|${row.build}|${arch}|${pos}`)%1000)/1000;
+
+    const prior=unique.get(row.build);
+    if(!prior||score>prior.score)unique.set(row.build,{...row,score});
+  }
+
+  let ranked=[...unique.values()].sort((a,b)=>b.score-a.score||a.build.localeCompare(b.build));
+  if(!ranked.length){
+    const fallback={...player,position:pos,archetype:arch,sourceBuild:null,playerBuild:null};
+    ranked=[{build:derivePlayerBuild(fallback),archetype:arch,position:pos,family:playerBuildFamily(derivePlayerBuild(fallback)),score:1}];
+  }
+
+  // Keep the current build available when it remains compatible with the chosen
+  // archetype, but never expose a 268-item unrestricted list.
+  const currentRow=playerBuildLibrary().find(r=>r.build===current&&r.archetype===arch);
+  if(currentRow&&!ranked.some(r=>r.build===current))ranked.unshift({...currentRow,score:999});
+
+  const max=Math.max(4,Math.min(10,+limit||8));
+  return ranked.slice(0,max);
+}
+
+function ensurePlayerBuildIdentity(player){
+  if(!player)return player;
+  ensureHiddenPlayerStyle(player);
+
+  // Source/mapped players retain their detailed supplied build. Procedural
+  // players discover a detailed build from their hidden profile instead of
+  // permanently using only the generic fallback.
+  if(!player.sourceBuild&&!player.playerBuild){
+    const options=plausiblePlayerBuilds(player,{limit:8});
+    if(options.length){
+      const idx=player.hiddenStyleProfile.seed%Math.min(4,options.length);
+      player.playerBuild=options[idx].build;
+      player.generatedBuildVersion=BUILD_MAPPING_VERSION;
+    }else player.playerBuild=derivePlayerBuild(player);
+  }else if(!player.playerBuild){
+    player.playerBuild=player.sourceBuild||derivePlayerBuild(player);
+  }
+  return player;
+}
+
+function scoutingBuildIntel(player,state,estimate=null){
+  if(!player)return"Build read unavailable";
+  ensurePlayerBuildIdentity(player);
+  const e=estimate||scoutingEstimate(player,state);
+  const hidden=ensureHiddenPlayerStyle(player);
+  const options=plausiblePlayerBuilds(player,{limit:6});
+  if(e.level<=1)return`Build read: ${hidden.family}`;
+  if(e.level===2)return`Build family: ${hidden.family} · developing read`;
+  if(e.level===3)return`Likely builds: ${options.slice(0,2).map(x=>x.build).join(" / ")}`;
+  if(e.level===4)return`Likely builds: ${options.slice(0,3).map(x=>x.build).join(" / ")}`;
+  return`Build: ${player.playerBuild||options[0]?.build||derivePlayerBuild(player)} · verified read`;
+}
+
 function mappedRoleForRank(rank,ovr){
   if(rank<5)return 'Primary Starter';
   if(rank===5)return 'Sixth Player';
@@ -15826,6 +15991,7 @@ function enrichDraftProspect(p,G,index=0){
       ["Shooting consistency","Physical development","Defensive discipline"];
     p.prospectRisk=risks[(p.scoutingSeed>>>4)%risks.length];
   }
+  ensurePlayerBuildIdentity(p);
   return p;
 }
 const REFERENCE_2027_DRAFT=[{"rank":1,"name":"Jordan Smith Jr.","position":"SG","origin":"Arkansas","nationality":"USA","height":"6-2"},{"rank":2,"name":"Tyran Stokes","position":"SF","origin":"Kansas","nationality":"USA","height":"6-7"},{"rank":3,"name":"Stefan Joksimovic","position":"SF","origin":"Slovenia","nationality":"Slovenia","height":"6-7"},{"rank":4,"name":"Bruce Branch","position":"SF","origin":"BYU","nationality":"USA","height":"6-7"},{"rank":5,"name":"Caleb Holt","position":"SG","origin":"Arizona","nationality":"USA","height":"6-5"},{"rank":6,"name":"Thomas Haugh","position":"PF","origin":"Florida","nationality":"USA","height":"6-9"},{"rank":7,"name":"Hugo Yimga Moukouri","position":"SF","origin":"France","nationality":"France","height":"6-8"},{"rank":8,"name":"Braylon Mullins","position":"SG","origin":"UConn","nationality":"USA","height":"6-6"},{"rank":9,"name":"Motiejus Krivas","position":"C","origin":"Arizona","nationality":"Lithuania","height":"7-2"},{"rank":10,"name":"Luigi Suigo","position":"C","origin":"Villanova","nationality":"Italy","height":"7-4"},{"rank":11,"name":"Cameron Williams","position":"PF","origin":"Duke","nationality":"USA","height":"6-11"},{"rank":12,"name":"Cameron Houindo","position":"PF","origin":"France","nationality":"France","height":"6-10"},{"rank":13,"name":"Alijah Arenas","position":"SG","origin":"USC","nationality":"USA","height":"6-6"},{"rank":14,"name":"Malachi Moreno","position":"C","origin":"Kentucky","nationality":"USA","height":"7-0"},{"rank":15,"name":"Abdou Toure","position":"SF","origin":"Arkansas","nationality":"USA","height":"6-6"},{"rank":16,"name":"Amari Allen","position":"SF","origin":"Alabama","nationality":"USA","height":"6-6"},{"rank":17,"name":"Christian Collins","position":"SF","origin":"USC","nationality":"USA","height":"6-8"},{"rank":18,"name":"Anthony Thompson","position":"SF","origin":"Ohio State","nationality":"USA","height":"6-8"},{"rank":19,"name":"Pavle Backo","position":"C","origin":"Serbia","nationality":"Serbia","height":"6-11"},{"rank":20,"name":"Dylan Mingo","position":"PG","origin":"Baylor","nationality":"USA","height":"6-5"},{"rank":21,"name":"Rueben Chinyelu","position":"C","origin":"Florida","nationality":"Senegal","height":"6-10"},{"rank":22,"name":"Dame Sarr","position":"SG","origin":"Duke","nationality":"Italy","height":"6-8"},{"rank":23,"name":"Sayon Keita","position":"C","origin":"North Carolina","nationality":"Mali","height":"7-0"},{"rank":24,"name":"Tounde Yessoufou","position":"SF","origin":"St. John's","nationality":"Benin","height":"6-5"},{"rank":25,"name":"Cheickh Niang","position":"SF","origin":"Italy","nationality":"Senegal","height":"6-5"},{"rank":26,"name":"Moustapha Thiam","position":"C","origin":"Michigan","nationality":"Senegal","height":"7-1"},{"rank":27,"name":"Trey McKenney","position":"SG","origin":"Michigan","nationality":"USA","height":"6-4"},{"rank":28,"name":"Mor Massamba Diop","position":"C","origin":"Gonzaga","nationality":"Senegal","height":"7-1"},{"rank":29,"name":"Shelton Henderson","position":"SF","origin":"Miami","nationality":"USA","height":"6-6"},{"rank":30,"name":"Baba Oladotun","position":"SF","origin":"Maryland","nationality":"USA","height":"6-10"},{"rank":31,"name":"Paul Mbiya","position":"C","origin":"Kansas","nationality":"Congo","height":"7-0"},{"rank":32,"name":"Quentin Coleman","position":"SG","origin":"Illinois","nationality":"USA","height":"6-4"},{"rank":33,"name":"Klark Riethauser","position":"SF","origin":"Chalon","nationality":"Switzerland","height":"6-8"},{"rank":34,"name":"Milon Momcilovic","position":"SF","origin":"Kentucky","nationality":"USA","height":"6-9"},{"rank":35,"name":"Brandon McCoy Jr.","position":"PG","origin":"Michigan","nationality":"USA","height":"6-5"},{"rank":36,"name":"Arafan Diane","position":"C","origin":"Houston","nationality":"USA","height":"7-0"},{"rank":37,"name":"David Mirkovic","position":"PF","origin":"Illinois","nationality":"Montenegro","height":"6-9"},{"rank":38,"name":"Matas Vokietaitis","position":"C","origin":"Texas","nationality":"Lithuania","height":"7-0"},{"rank":39,"name":"Neoklis Avdalas","position":"SF","origin":"North Carolina","nationality":"Greece","height":"6-9"},{"rank":40,"name":"Ivan Kharchenkov","position":"SF","origin":"Arizona","nationality":"Germany","height":"6-7"},{"rank":41,"name":"Alex Condon","position":"C","origin":"Florida","nationality":"Australia","height":"7-0"},{"rank":42,"name":"Tyler Tanner","position":"PG","origin":"Vanderbilt","nationality":"USA","height":"5-11"},{"rank":43,"name":"Matt Able","position":"SG","origin":"North Carolina","nationality":"USA","height":"6-5"},{"rank":44,"name":"Billy Richmond","position":"SG","origin":"Arkansas","nationality":"USA","height":"6-5"},{"rank":45,"name":"Cayden Boozer","position":"PG","origin":"Duke","nationality":"USA","height":"6-4"},{"rank":46,"name":"Coen Carr","position":"SF","origin":"Michigan State","nationality":"USA","height":"6-7"},{"rank":47,"name":"John Blackwell","position":"SG","origin":"Duke","nationality":"USA","height":"6-4"},{"rank":48,"name":"Adam Atamna","position":"SG","origin":"Ratiopharm Ulm","nationality":"France","height":"6-5"},{"rank":49,"name":"Andrej Stojakovic","position":"SF","origin":"Illinois","nationality":"USA","height":"6-7"},{"rank":50,"name":"Paul McNeil Jr.","position":"SG","origin":"NC State","nationality":"USA","height":"6-5"},{"rank":51,"name":"Jacob Cofie","position":"PF","origin":"USC","nationality":"USA","height":"6-10"},{"rank":52,"name":"JJ Andrews","position":"PG","origin":"Arkansas","nationality":"USA","height":"6-5"},{"rank":53,"name":"Juke Harris","position":"SF","origin":"Tennessee","nationality":"USA","height":"6-7"},{"rank":54,"name":"Flory Bidunga","position":"C","origin":"Louisville","nationality":"Congo","height":"6-9"},{"rank":55,"name":"Alex Wilkins","position":"PG","origin":"Kentucky","nationality":"USA","height":"6-5"},{"rank":56,"name":"Anton Bonke","position":"C","origin":"Michigan State","nationality":"Vanuatu","height":"7-2"},{"rank":57,"name":"Oscar Wembanyama","position":"SF","origin":"France","nationality":"France","height":"6-8"},{"rank":58,"name":"Patrick Ngongba II","position":"C","origin":"Duke","nationality":"USA","height":"6-10"},{"rank":59,"name":"Tomislav Ivisic","position":"C","origin":"Illinois","nationality":"Croatia","height":"7-1"},{"rank":60,"name":"Kanon Catchings","position":"SF","origin":"Georgia","nationality":"USA","height":"6-9"}];
@@ -15972,8 +16138,34 @@ function fixedProspectProjection(p,G){
   p.draftProjectionLabel=label;
   return label;
 }
+function scoutProjectionBandForRank(rank){
+  const r=Math.max(1,+rank||999);
+  if(r<=5)return 0;
+  if(r<=14)return 1;
+  if(r<=30)return 2;
+  if(r<=60)return 3;
+  return 4;
+}
+const SCOUT_PROJECTION_BANDS=["Top 5","Lottery","1st Round","2nd Round","Undrafted / Two-Way"];
+function scoutProjectionForRank(p,G,rank,estimate=null){
+  const e=estimate||scoutingEstimate(p,G);
+  let band=scoutProjectionBandForRank(rank);
+
+  // Rank remains the department's authoritative recommendation. At low/fair
+  // confidence the projection can shade one adjacent band, never more.
+  if(e.level<=2){
+    const n=prospectStableNoise(p,`projection-L${e.level}-R${rank}`,1);
+    band=Math.max(0,Math.min(4,band+n));
+  }else if(e.level===3){
+    const n=prospectStableNoise(p,`projection-L3-R${rank}`,5);
+    if(Math.abs(n)>=5)band=Math.max(0,Math.min(4,band+(n>0?1:-1)));
+  }
+  return SCOUT_PROJECTION_BANDS[band];
+}
 function prospectProjection(p,G,rank=null){
-  return fixedProspectProjection(p,G);
+  const e=scoutingEstimate(p,G);
+  const r=Number.isFinite(+rank)?+rank:(Number.isFinite(+p.draftProjectionRank)?+p.draftProjectionRank:999);
+  return scoutProjectionForRank(p,G,r,e);
 }
 function prospectScoutView(p,G,rank){
   const e=scoutingEstimate(p,G);
@@ -15982,8 +16174,8 @@ function prospectScoutView(p,G,rank){
     // Public scouting values. These are estimated midpoints, not hidden true ratings.
     ovr:e.oMid,potential:e.pMid,
     ovrRange:`${e.oMin}–${e.oMax}`,potRange:`${e.pMin}–${e.pMax}`,confidence:e.confidence,
-    projection:fixedProspectProjection(p,G),originalRank:p.draftProjectionRank||rank,strength:p.prospectStrength,risk:p.prospectRisk,
-    athleticism:p.athleticism||70,scoutScore:e.scoutScore
+    projection:scoutProjectionForRank(p,G,rank,e),originalRank:p.draftProjectionRank||rank,strength:p.prospectStrength,risk:p.prospectRisk,
+    buildIntel:scoutingBuildIntel(p,G,e),athleticism:p.athleticism||70,scoutScore:e.scoutScore
   };
 }
 function gmDraftFitBoard(G,board){
@@ -19505,7 +19697,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 219",ENGINE_VERSION="E2.26-PROD219";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 220",ENGINE_VERSION="E2.26-PROD220";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -22105,6 +22297,7 @@ function playerProfile(){
   const p=playerByAnyId(ui.playerProfileId);
   if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
   const club=playerClub(p.id);if(club)ensurePlayerJerseys(club);
+  ensurePlayerBuildIdentity(p);
   p.peakOvr=Math.max(+p.peakOvr||0,playerRecordedPeakOvr(p),+p.ovr||0);
   const s=p.seasonStats||{},cs=unifiedCareerStats(p),pos=positionLabel?positionLabel(p):(p.secondaryPosition?`${p.position}/${p.secondaryPosition}`:p.position);
   const injury=p.retired?"Retired":p.injured?`${p.injury?.label||"Injured"} · ${injuryReturnEstimate(p).short}`:"Available",awards=(p.awardHistory||[]).slice().reverse(),history=(p.seasonHistory||[]).slice().reverse();
@@ -22113,6 +22306,8 @@ function playerProfile(){
   const nationOptions=editing?NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code===p.nationality?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join(""):"";
   const secOptions=editing?`<option value="">None</option>${(SECONDARY_POSITION_OPTIONS[p.position]||[]).map(x=>`<option value="${x}" ${x===p.secondaryPosition?"selected":""}>${x}</option>`).join("")}`:"";
   const archOptions=editing?validArchetypesForPosition(p.position).map(a=>`<option value="${a}" ${a===p.archetype?"selected":""}>${a}</option>`).join(""):"";
+  const buildOptions=editing?plausiblePlayerBuilds(p,{position:p.position,archetype:p.archetype,heightCm:p.heightCm,limit:8}):[];
+  const buildOptionsHtml=editing?buildOptions.map(x=>`<option value="${x.build}" ${x.build===(p.playerBuild||derivePlayerBuild(p))?"selected":""}>${x.build}</option>`).join(""):"";
   const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p),worldLoc=playerBasketballLocation(p);
   const abilityMetric=playerProfileAbilityMetric(p);
   const draftLabel=playerDraftLabel(p),draftSeason=p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
@@ -22123,7 +22318,7 @@ function playerProfile(){
   const overview=`
     <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerServiceContextLabel(p)}</b>`}<small>League Experience</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:`<div class="sectionTitle">Current Season</div><div class="profilePanel"><div class="profileStatsGrid playerCurrentStats"><div class="profileStat"><b>${s.gp||0}</b><small>GP</small></div><div class="profileStat"><b>${perGame(s,"pts")}</b><small>PPG</small></div><div class="profileStat"><b>${perGame(s,"reb")}</b><small>RPG</small></div><div class="profileStat"><b>${perGame(s,"ast")}</b><small>APG</small></div><div class="profileStat"><b>${perGame(s,"stl")}</b><small>SPG</small></div><div class="profileStat"><b>${perGame(s,"blk")}</b><small>BPG</small></div><div class="profileStat"><b>${statPct(s,"fgm","fga")}</b><small>FG%</small></div><div class="profileStat"><b>${statPct(s,"tpm","tpa")}</b><small>3PT%</small></div><div class="profileStat"><b>${statPct(s,"ftm","fta")}</b><small>FT%</small></div></div></div>`}
-    <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small><b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b></div><div class="profileDataRow"><small>Origin</small><b>${publicPlayerOriginLabel(p.origin||p.entryPath||"League")}</b></div></div></div></div>
+    <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small>${editing?`<div style="min-width:0"><select id="epBuild" class="inlineProfileControl">${buildOptionsHtml}</select><small class="fieldHint">Build choices are limited to this player's underlying identity.</small></div>`:`<b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b>`}</div><div class="profileDataRow"><small>Origin</small><b>${publicPlayerOriginLabel(p.origin||p.entryPath||"League")}</b></div></div></div></div>
     <div class="sectionTitle">Development Outlook</div>${(()=>{const tl=club?.id===me()?.id?ensureFrontOfficeState(G).departments.training:1,d=developmentOutlook(p,{trainingLevel:tl}),last=p.lastDevelopment;return `<div class="developmentPanel"><div class="developmentHeadline"><div><small>PROJECTED PATH</small><b>${d.label}</b><span>${d.gap>0?`${d.gap} OVR between current rating and ceiling`:"Current OVR has reached listed potential"}</span></div><strong>${p.ovr}<i>→</i>${p.potential}</strong></div><div class="developmentDrivers"><div><b>${p.age}</b><small>Age</small></div><div><b>${Number(d.avgMin||0).toFixed(1)}</b><small>Last Yr MPG</small></div><div><b>LV ${d.trainingLevel}</b><small>Training</small></div><div><b>${d.role}</b><small>Role</small></div></div>${last?`<div class="developmentLast"><span>Last progression</span><b>${last.fromOvr} → ${last.toOvr} ${last.delta>0?`(+${last.delta})`:last.delta}</b></div>`:""}</div>`})()}`;
   const career=`
     <div class="sectionTitle">Draft & Career Identity</div><div class="draftIdentity compact3"><div><b>${draftSeason}</b><small>Draft Class</small></div><div><b>${draftDetail}</b><small>Entry</small></div><div><b>${teams.length}</b><small>NBA Clubs</small></div></div>
@@ -22163,7 +22358,7 @@ function playerProfile(){
     <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
   return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${club?.name||"Free Agent"} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
     <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
-    ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. League experience is separate from contract type. Changing age will reset recorded career history after confirmation. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; it deactivates below 97 OVR.</span></div>`:""}
+    ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. League experience is separate from contract type. Changing age will reset recorded career history after confirmation. Player Build choices are constrained by the player's underlying identity, position, size and archetype rather than exposing the full build library. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; Generational Builds cannot be selected manually and deactivate below 97 OVR.</span></div>`:""}
     <div class="profileTabs profileTabs4"><button data-playerprofiletab="overview" class="${tab==="overview"?"active":""}">Overview</button><button data-playerprofiletab="career" class="${tab==="career"?"active":""}">Career</button><button data-playerprofiletab="contract" class="${tab==="contract"?"active":""}">Contract</button><button data-playerprofiletab="gameshealth" class="${tab==="gameshealth"?"active":""}">Games & Health</button></div>
     ${tab==="career"?career:tab==="contract"?contract:tab==="gameshealth"?gamesHealth:overview}`;
 }
@@ -25927,6 +26122,7 @@ function gameDataSettingsContent(){
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
     <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
+    <div class="more"><div><b>Player Build Model</b><small>Hidden identity · constrained editor shortlist · scout discovery · generational builds emergent only</small></div><b>${BUILD_MAPPING_VERSION} · ${HIDDEN_STYLE_PROFILE_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -26122,7 +26318,7 @@ function draft(){
   const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
   const scoutPickNumber=p?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||1;
   const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
-  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">+ ${x.strength} · Risk: ${x.risk} · ${x.confidence} confidence</small><small class="prospectIntel">${x.buildIntel}</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"class";
   const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
@@ -28250,7 +28446,7 @@ function frontOfficePage(embedded=false){
 
 function scoutingPage(embedded=false){
   const scout=scoutingLevelInfo(G),focus=scoutingFocusInfo(G),board=draftClassScoutBoard(G,20),era=G.upcomingDraftClass?.era||G.talentHealth?.era?.type||"NORMAL",draftSource=G.upcomingDraftClass?.source||"";
-  const topBoard=board.length?`<div class="scoutDraftBoard">${board.map(x=>`<div class="scoutProspect"><div class="scoutProspectRank">#${x.rank}</div><div class="scoutProspectMain"><b>${x.name}</b><small>${x.position} · Age ${x.age} · ${x.archetype} · ${x.origin}</small><span>${x.strength} · Risk: ${x.risk}</span></div><div class="scoutProspectRatings"><b>${x.ovrRange}</b><small>OVR EST</small><b>${x.potRange}</b><small>POT EST</small></div><div class="scoutProspectProj"><b>${x.projection}</b><small>${x.confidence} CONF.</small></div></div>`).join("")}</div>`:"";
+  const topBoard=board.length?`<div class="scoutDraftBoard">${board.map(x=>`<div class="scoutProspect"><div class="scoutProspectRank">#${x.rank}</div><div class="scoutProspectMain"><b>${x.name}</b><small>${x.position} · Age ${x.age} · ${x.archetype} · ${x.origin}</small><span>${x.strength} · Risk: ${x.risk}</span><span>${x.buildIntel}</span></div><div class="scoutProspectRatings"><b>${x.ovrRange}</b><small>OVR EST</small><b>${x.potRange}</b><small>POT EST</small></div><div class="scoutProspectProj"><b>${x.projection}</b><small>${x.confidence} CONF.</small></div></div>`).join("")}</div>`:"";
   const focusButtons=["Balanced","Guard","Forward","Center"].map(k=>`<button data-scoutfocus="${k}" class="${focus.focus===k?"active":""}" ${focus.locked?"disabled":""}>${k}${k==="Balanced"?"":"s"}</button>`).join("");
   const focusEffect=focus.focus==="Balanced"
     ?`Balanced coverage keeps Level ${scout.level} evaluation across every position group.`
@@ -28667,6 +28863,15 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     ui.playerEditMode=p.id;render();
   };
   if($("#cancelPlayerEdit"))$("#cancelPlayerEdit").onclick=()=>{ui.playerEditMode=null;render()};
+  const refreshPlayerBuildChoices=()=>{
+    const p=playerByAnyId(ui.playerProfileId),sel=$("#epBuild");if(!p||!sel)return;
+    const pos=$("#epPos")?.value||p.position,arch=$("#epArch")?.value||p.archetype;
+    const height=Number.isFinite(+$("#epHeight")?.value)?+$("#epHeight").value:p.heightCm;
+    const current=sel.value||p.playerBuild||derivePlayerBuild(p);
+    const options=plausiblePlayerBuilds(p,{position:pos,archetype:arch,heightCm:height,limit:8});
+    sel.innerHTML=options.map(x=>`<option value="${x.build}">${x.build}</option>`).join("");
+    sel.value=options.some(x=>x.build===current)?current:(options[0]?.build||"");
+  };
   if($("#epPos"))$("#epPos").onchange=()=>{
     const pos=$("#epPos").value,oldSec=$("#epPos2")?.value||"",oldArch=$("#epArch")?.value||"";
     const seconds=SECONDARY_POSITION_OPTIONS[pos]||[];
@@ -28679,7 +28884,10 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
       $("#epArch").innerHTML=arches.map(a=>`<option value="${a}">${a}</option>`).join("");
       $("#epArch").value=arches.includes(oldArch)?oldArch:(arches[0]||"");
     }
+    refreshPlayerBuildChoices();
   };
+  if($("#epArch"))$("#epArch").onchange=refreshPlayerBuildChoices;
+  if($("#epHeight"))$("#epHeight").onchange=refreshPlayerBuildChoices;
   if($("#savePlayerEdit"))$("#savePlayerEdit").onclick=async()=>{
     const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||!userCanEditPlayerProfile(p))return;
     const oldAge=+p.age,oldNation=p.nationality,oldName=p.name,oldExp=playerExperienceYears(p),oldJersey=normalizeJerseyNumber(p.jerseyNumber),lockedStatIdentity=p.statisticalIdentity?JSON.parse(JSON.stringify(p.statisticalIdentity)):null;
@@ -28738,7 +28946,14 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     p.heightCm=nextHeight;
     const arches=validArchetypesForPosition(p.position);
     p.archetype=arches.includes($("#epArch").value)?$("#epArch").value:(arches[0]||p.archetype);
-    if(!p.sourceBuild)p.playerBuild=derivePlayerBuild(p);
+    const allowedBuilds=plausiblePlayerBuilds(p,{position:p.position,archetype:p.archetype,heightCm:p.heightCm,limit:8});
+    const requestedBuild=$("#epBuild")?.value||p.playerBuild||derivePlayerBuild(p);
+    const nextBuild=allowedBuilds.some(x=>x.build===requestedBuild)?requestedBuild:(allowedBuilds[0]?.build||derivePlayerBuild(p));
+    if(!p.originalSourceBuild&&p.sourceBuild)p.originalSourceBuild=p.sourceBuild;
+    p.playerBuild=nextBuild;
+    p.sourceBuild=nextBuild;
+    p.manualBuildOverride=true;
+    p.playerBuildMappingVersion=BUILD_MAPPING_VERSION;
     if(lockedStatIdentity)p.statisticalIdentity=lockedStatIdentity;
     else assignEngineStatisticalIdentity(p);
     if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
@@ -28756,7 +28971,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
       if(newTeam&&newTeam.nationalSquadMode==="manual"&&(newTeam.selectedSquadPlayerIds||[]).length<12)newTeam.selectedSquadPlayerIds.push(p.id);
     }
 
-    if(G.settings?.commissionerMode)commissionerLogAction(G,"Player Edit",`${p.name} edited from Player Profile`,{playerId:p.id});
+    if(G.settings?.commissionerMode)commissionerLogAction(G,"Player Edit",`${p.name} edited from Player Profile`,{playerId:p.id,archetype:p.archetype,playerBuild:p.playerBuild});
     ui.playerEditMode=null;
     await save();
     const changedParts=[];
