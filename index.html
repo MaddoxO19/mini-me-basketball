@@ -2980,7 +2980,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 222</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 224</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -14132,11 +14132,98 @@ function olympicFieldFromWorldCup(G,year=olympicYearForSeason(G.season)){
   if(idx>=0)G.olympicQualificationHistory[idx]=plan;else G.olympicQualificationHistory.push(plan);
   return [...plan.qualifiedTeamCodes];
 }
+const OLYMPIC_GROUP_DRAW_VERSION="OGD2";
 function olympicSeededGroups(G,field){
   const ranked=[...field].sort((a,b)=>(nationalWorldRank(a)||999)-(nationalWorldRank(b)||999));
-  const groups=[[],[],[]];
-  ranked.forEach((c,i)=>groups[i%3].push(c));
-  return groups.map((teamCodes,i)=>({id:`OLY-${String.fromCharCode(65+i)}`,label:`Group ${String.fromCharCode(65+i)}`,teamCodes}));
+  const pots=[
+    ranked.slice(0,3), ranked.slice(3,6), ranked.slice(6,9), ranked.slice(9,12)
+  ];
+  const groupIds=["A","B","C"];
+  const perms=a=>[
+    [a[0],a[1],a[2]],[a[0],a[2],a[1]],[a[1],a[0],a[2]],
+    [a[1],a[2],a[0]],[a[2],a[0],a[1]],[a[2],a[1],a[0]]
+  ];
+  const potPerms=pots.map(perms);
+  let best=null;
+
+  // Rankings are primary: one nation from each ranking pot per group.
+  // Geography is secondary: among valid pot draws, minimise repeated regions
+  // (Europe / Americas / AsiaOceania / Africa) within each group.
+  for(const p1 of potPerms[0])for(const p2 of potPerms[1])for(const p3 of potPerms[2])for(const p4 of potPerms[3]){
+    const groups=[
+      [p1[0],p2[0],p3[0],p4[0]],
+      [p1[1],p2[1],p3[1],p4[1]],
+      [p1[2],p2[2],p3[2],p4[2]]
+    ];
+    let geoPenalty=0, concentrationPenalty=0;
+    for(const codes of groups){
+      const counts={};
+      for(const code of codes){
+        const region=nat(code)?.region||"Unknown";
+        counts[region]=(counts[region]||0)+1;
+      }
+      for(const n of Object.values(counts)){
+        if(n>1)geoPenalty+=(n*(n-1))/2;
+        if(n>2)concentrationPenalty+=(n-2)*10;
+      }
+    }
+
+    // Pot construction already controls strength. This light secondary term
+    // avoids avoidable rank-sum imbalance without overriding geography.
+    const rankSums=groups.map(codes=>codes.reduce((s,c)=>s+(nationalWorldRank(c)||999),0));
+    const mean=rankSums.reduce((a,b)=>a+b,0)/3;
+    const balancePenalty=rankSums.reduce((s,v)=>s+Math.abs(v-mean),0);
+
+    // Deterministic save/year tie-break prevents every Olympics using the same
+    // alphabetical solution while keeping reloads stable.
+    const signature=groups.map(g=>g.join("-")).join("|");
+    const tie=(stableTemplateHash(`${olympicYearForSeason(G.season)}|${signature}|OGD2`)%100000)/100000;
+
+    const score=concentrationPenalty*100000+geoPenalty*1000+balancePenalty+tie;
+    if(!best||score<best.score)best={score,groups,geoPenalty,rankSums};
+  }
+
+  const chosen=best?.groups||[ranked.slice(0,4),ranked.slice(4,8),ranked.slice(8,12)];
+  return chosen.map((teamCodes,i)=>({
+    id:`OLY-${groupIds[i]}`,label:`Group ${groupIds[i]}`,teamCodes,
+    drawVersion:OLYMPIC_GROUP_DRAW_VERSION,
+    potRanks:teamCodes.map(c=>nationalWorldRank(c)||999),
+    regions:teamCodes.map(c=>nat(c)?.region||"Unknown")
+  }));
+}
+function olympicGroupDrawIntegrity(G,groups){
+  const issues=[];
+  if(!Array.isArray(groups)||groups.length!==3)return["Olympic draw does not contain 3 groups"];
+  const seen=new Set();
+  for(const gr of groups){
+    if(!Array.isArray(gr.teamCodes)||gr.teamCodes.length!==4)issues.push(`${gr.label||gr.id} does not contain 4 nations`);
+    for(const c of gr.teamCodes||[]){
+      if(seen.has(c))issues.push(`${c} appears in multiple Olympic groups`);
+      seen.add(c);
+    }
+  }
+  const ranked=[...seen].sort((a,b)=>(nationalWorldRank(a)||999)-(nationalWorldRank(b)||999));
+  const potIndex=Object.fromEntries(ranked.map((c,i)=>[c,Math.floor(i/3)]));
+  for(const gr of groups){
+    const pots=(gr.teamCodes||[]).map(c=>potIndex[c]);
+    if(new Set(pots).size!==4)issues.push(`${gr.label||gr.id} does not contain one nation from each ranking pot`);
+  }
+  return issues;
+}
+function repairLiveOlympicGroupDrawIntegrity(G){
+  const live=G?.olympicLive;
+  if(!live||live.complete||live.stage!=="OLYMPIC_GROUP")return false;
+  if((live.games||[]).length)return false; // never rewrite a competition already underway
+  const next=olympicSeededGroups(G,live.field||[]);
+  const current=JSON.stringify((live.groups||[]).map(g=>g.teamCodes||[]));
+  const proposed=JSON.stringify(next.map(g=>g.teamCodes||[]));
+  if(current===proposed&&!(olympicGroupDrawIntegrity(G,live.groups||[]).length))return false;
+  live.groups=next;
+  live.groupState=Object.fromEntries(next.map(gr=>[gr.id,Object.fromEntries(gr.teamCodes.map(c=>[c,{code:c,gp:0,w:0,l:0,pf:0,pa:0,points:0}]))]));
+  live.groupTables={};
+  if(G.olympics?.status==="LIVE"&&+G.olympics.year===+live.year)G.olympics.groups=live.groups;
+  logEvent(G,`${live.year} Olympic group draw repaired using ranking pots and regional separation.`);
+  return true;
 }
 function initializeOlympics(G){
   const year=olympicYearForSeason(G.season);
@@ -14150,7 +14237,8 @@ function initializeOlympics(G){
   const groups=olympicSeededGroups(G,field);
   const groupState=Object.fromEntries(groups.map(gr=>[gr.id,Object.fromEntries(gr.teamCodes.map(c=>[c,{code:c,gp:0,w:0,l:0,pf:0,pa:0,points:0}]))]));
   G.olympicLive={year,season:G.season,host,field,qualification,groups,groupState,groupTables:{},games:[],tournamentStats:{},
-    stage:"OLYMPIC_GROUP",eventIndex:0,qfPairs:[],qfWinners:[],semiWinners:[],semiLosers:[],complete:false,lastUserGameId:null};
+    stage:"OLYMPIC_GROUP",eventIndex:0,qfPairs:[],qfWinners:[],semiPairs:[],semiWinners:[],semiLosers:[],complete:false,lastUserGameId:null,
+    groupDrawVersion:OLYMPIC_GROUP_DRAW_VERSION,bracketIntegrityVersion:OLYMPIC_BRACKET_INTEGRITY_VERSION};
   G.olympics={year,season:G.season,host:host?`${host.city}, ${host.country}`:"Olympic Host",hostCode:host?.code||null,status:"LIVE",field,qualification,groups,games:G.olympicLive.games,stage:"OLYMPIC_GROUP"};
   G.phase="OLYMPICS";
   logEvent(G,`${year} Olympic Basketball opened in ${host?.city||"the host city"}.`);
@@ -14162,6 +14250,58 @@ function olympicStageLabel(stage){
 function olympicRecordGame(G,live,a,b,stage){
   const tmp=[];const g=worldCupGame(G,a,b,stage,live.tournamentStats,tmp,"olympics");g.competition="olympics";g.olympicYear=live.year;live.games.push(g);return g;
 }
+const OLYMPIC_BRACKET_INTEGRITY_VERSION="OBI2";
+
+function olympicGroupPlacementMap(live){
+  const tables=live.groupTables&&Object.keys(live.groupTables).length
+    ?live.groupTables
+    :Object.fromEntries((live.groups||[]).map(gr=>[gr.id,wcTableSort(live.groupState?.[gr.id]||{})]));
+  const out=new Map();
+  for(const gr of live.groups||[]){
+    (tables[gr.id]||[]).forEach((row,i)=>out.set(row.code,{groupId:gr.id,place:i+1}));
+  }
+  return out;
+}
+function olympicSameGroup(a,b,placement){
+  return !!(a&&b&&placement.get(a)?.groupId&&placement.get(a)?.groupId===placement.get(b)?.groupId);
+}
+function olympicSemifinalPairingPenalty(pairs,live){
+  const placement=olympicGroupPlacementMap(live);
+  let score=0,rematches=0,topTwoRematches=0;
+  for(const [a,b] of pairs){
+    if(!a||!b)continue;
+    if(olympicSameGroup(a,b,placement)){
+      rematches++;
+      const pa=placement.get(a)?.place||99,pb=placement.get(b)?.place||99;
+      if(pa<=2&&pb<=2){topTwoRematches++;score+=100000}
+      else score+=10000;
+    }
+  }
+  return {score,rematches,topTwoRematches};
+}
+function olympicSemifinalPairings(live){
+  const w=[...(live?.qfWinners||[])].filter(Boolean);
+  if(w.length!==4)return[];
+  const candidates=[
+    [[w[0],w[1]],[w[2],w[3]]],
+    [[w[0],w[2]],[w[1],w[3]]],
+    [[w[0],w[3]],[w[1],w[2]]]
+  ];
+  let best=null;
+  candidates.forEach((pairs,i)=>{
+    const p=olympicSemifinalPairingPenalty(pairs,live);
+    const score=p.score+i*.01;
+    if(!best||score<best.score)best={pairs,score,...p,index:i};
+  });
+  live.semiIntegrity={
+    version:OLYMPIC_BRACKET_INTEGRITY_VERSION,
+    sameGroupRematches:best?.rematches||0,
+    topTwoGroupRematches:best?.topTwoRematches||0,
+    crossedPath:(best?.index||0)!==0
+  };
+  return best?.pairs||candidates[0];
+}
+
 function olympicQuarterfinalPairings(live){
   const tables=live.groupTables&&Object.keys(live.groupTables).length
     ?live.groupTables
@@ -14174,22 +14314,20 @@ function olympicQuarterfinalPairings(live){
   const eight=ranked.map(x=>x.code);
   if(eight.length<8)return[];
 
-  // Keep the established bracket halves: 1/4 on one side and 2/3 on the other,
-  // with seeds 5-8 assigned as opponents. Search the 24 possible lower-seed
-  // assignments and choose the closest match to the original 1v8, 4v5, 2v7,
-  // 3v6 structure that does not immediately repeat a group-stage matchup.
   const groupByCode=new Map();
   for(const gr of live.groups||[])for(const code of gr.teamCodes||[])groupByCode.set(code,gr.id);
   const seedByCode=new Map(eight.map((code,i)=>[code,i+1]));
   const top=[eight[0],eight[3],eight[1],eight[2]];
   const lower=[eight[4],eight[5],eight[6],eight[7]];
   const desiredOpponentSeed=[8,5,7,6];
+
   const perms=[];
   const permute=(arr,prefix=[])=>{
     if(!arr.length){perms.push(prefix);return;}
     for(let i=0;i<arr.length;i++)permute([...arr.slice(0,i),...arr.slice(i+1)],[...prefix,arr[i]]);
   };
   permute(lower);
+
   let best=null,bestScore=Infinity,bestConflicts=Infinity;
   for(const opp of perms){
     let conflicts=0,displacement=0;
@@ -14200,12 +14338,55 @@ function olympicQuarterfinalPairings(live){
     const score=conflicts*1000+displacement;
     if(score<bestScore){bestScore=score;bestConflicts=conflicts;best=opp;}
   }
-  const pairs=top.map((code,i)=>[code,best?.[i]||lower[i]]);
+  const basePairs=top.map((code,i)=>[code,best?.[i]||lower[i]]);
+
+  // Reorder the already-selected quarterfinal ties into bracket halves.
+  // Opponents do not change. This protects the group winner/runner-up pathways.
+  const placement=olympicGroupPlacementMap(live);
+  const pairPerms=[];
+  const permutePairs=(arr,prefix=[])=>{
+    if(!arr.length){pairPerms.push(prefix);return;}
+    for(let i=0;i<arr.length;i++)permutePairs([...arr.slice(0,i),...arr.slice(i+1)],[...prefix,arr[i]]);
+  };
+  permutePairs(basePairs);
+
+  let bracketBest=null;
+  for(let pi=0;pi<pairPerms.length;pi++){
+    const pairs=pairPerms[pi];
+    const halves=[[...pairs[0],...pairs[1]],[...pairs[2],...pairs[3]]];
+    let topTwoHalfConflicts=0,allGroupHalfConflicts=0;
+
+    for(const gr of live.groups||[]){
+      const qualified=(gr.teamCodes||[]).filter(code=>eight.includes(code));
+      const topTwo=qualified.filter(code=>(placement.get(code)?.place||99)<=2);
+      if(topTwo.length>=2&&halves.some(h=>topTwo.every(code=>h.includes(code))))topTwoHalfConflicts++;
+
+      for(const h of halves){
+        const n=qualified.filter(code=>h.includes(code)).length;
+        if(n>1)allGroupHalfConflicts+=(n*(n-1))/2;
+      }
+    }
+
+    let orderPenalty=0;
+    for(let i=0;i<4;i++){
+      const originalIndex=basePairs.findIndex(p=>p[0]===pairs[i][0]&&p[1]===pairs[i][1]);
+      if(originalIndex!==i)orderPenalty++;
+    }
+
+    const score=topTwoHalfConflicts*100000+allGroupHalfConflicts*1000+orderPenalty+pi*.0001;
+    if(!bracketBest||score<bracketBest.score){
+      bracketBest={pairs,score,topTwoHalfConflicts,allGroupHalfConflicts};
+    }
+  }
+
+  const pairs=bracketBest?.pairs||basePairs;
   live.qfIntegrity={
-    version:"OQF1",
-    sameGroupRematches:bestConflicts,
+    version:OLYMPIC_BRACKET_INTEGRITY_VERSION,
+    sameGroupQuarterfinalRematches:bestConflicts,
+    topTwoSameHalfConflicts:bracketBest?.topTwoHalfConflicts||0,
+    sameGroupHalfConflicts:bracketBest?.allGroupHalfConflicts||0,
     seedOrder:[...eight],
-    repaired:bestConflicts===0
+    repaired:bestConflicts===0&&(bracketBest?.topTwoHalfConflicts||0)===0
   };
   return pairs;
 }
@@ -14224,9 +14405,32 @@ function repairLiveOlympicQuarterfinalIntegrity(G){
   if(JSON.stringify(prev)===JSON.stringify(next))return false;
   live.qfPairs=next;
   if(G.olympics?.status==="LIVE"&&+G.olympics.year===+live.year)G.olympics.stage=live.stage;
-  logEvent(G,`${live.year} Olympic quarterfinal draw repaired to prevent an avoidable group-stage rematch.`);
+  logEvent(G,`${live.year} Olympic bracket path repaired to separate prior group opponents where possible.`);
   return true;
 }
+function repairLiveOlympicSemifinalIntegrity(G){
+  const live=G?.olympicLive;
+  if(!live||live.complete||live.stage!=="OLYMPIC_SEMIFINAL")return false;
+  if((live.games||[]).some(g=>g.stage==="OLYMPIC_SEMIFINAL"))return false;
+  if((live.qfWinners||[]).filter(Boolean).length!==4)return false;
+
+  const current=(Array.isArray(live.semiPairs)&&live.semiPairs.length===2)
+    ?live.semiPairs
+    :[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]];
+  const currentPenalty=olympicSemifinalPairingPenalty(current,live);
+  const next=olympicSemifinalPairings(live);
+  const nextPenalty=olympicSemifinalPairingPenalty(next,live);
+
+  live.semiPairs=next;
+  live.bracketIntegrityVersion=OLYMPIC_BRACKET_INTEGRITY_VERSION;
+
+  if(JSON.stringify(current)===JSON.stringify(next))return false;
+  if(nextPenalty.score>=currentPenalty.score)return false;
+
+  logEvent(G,`${live.year} Olympic semifinal path repaired to avoid an avoidable group-stage rematch.`);
+  return true;
+}
+
 function olympicFinishBonusMap(games,championCode,runnerUpCode,bronzeCode){
   const bonus=new Map(),set=(code,value)=>{if(code)bonus.set(code,Math.max(value,bonus.get(code)||0));};
   set(championCode,7.0);
@@ -14363,9 +14567,11 @@ function advanceOlympicEvent(G){
     live.eventIndex++;if(live.eventIndex>=3)olympicBuildQuarterfinals(live);
   }else if(live.stage==="OLYMPIC_QUARTERFINAL"){
     for(const [a,b] of live.qfPairs){const g=olympicRecordGame(G,live,a,b,"OLYMPIC_QUARTERFINAL");games.push(g);live.qfWinners.push(g.winner)}
+    live.semiPairs=olympicSemifinalPairings(live);
+    live.bracketIntegrityVersion=OLYMPIC_BRACKET_INTEGRITY_VERSION;
     live.stage="OLYMPIC_SEMIFINAL";
   }else if(live.stage==="OLYMPIC_SEMIFINAL"){
-    const pairs=[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]];
+    const pairs=(Array.isArray(live.semiPairs)&&live.semiPairs.length===2)?live.semiPairs:olympicSemifinalPairings(live);
     for(const [a,b] of pairs){const g=olympicRecordGame(G,live,a,b,"OLYMPIC_SEMIFINAL");games.push(g);live.semiWinners.push(g.winner);live.semiLosers.push(g.winner===g.teamA?g.teamB:g.teamA)}
     live.stage="OLYMPIC_MEDAL_GAMES";
   }else if(live.stage==="OLYMPIC_MEDAL_GAMES"){
@@ -14381,7 +14587,7 @@ function advanceOlympicEvent(G){
 function olympicUserNextFixture(live=G.olympicLive){
   const code=G.userNationalGM?.nationCode;if(!code||!live||live.complete)return null;
   if(live.stage==="OLYMPIC_GROUP"){const gr=live.groups.find(g=>g.teamCodes.includes(code));if(!gr)return null;return roundRobinPairs(gr.teamCodes,live.eventIndex).map(([a,b])=>({a,b,stage:"OLYMPIC_GROUP"})).find(x=>x.a===code||x.b===code)||null}
-  const pairs=live.stage==="OLYMPIC_QUARTERFINAL"?live.qfPairs:live.stage==="OLYMPIC_SEMIFINAL"?[[live.qfWinners[0],live.qfWinners[1]],[live.qfWinners[2],live.qfWinners[3]]]:live.stage==="OLYMPIC_MEDAL_GAMES"?[[live.semiLosers[0],live.semiLosers[1]],[live.semiWinners[0],live.semiWinners[1]]]:[];
+  const pairs=live.stage==="OLYMPIC_QUARTERFINAL"?live.qfPairs:live.stage==="OLYMPIC_SEMIFINAL"?((Array.isArray(live.semiPairs)&&live.semiPairs.length===2)?live.semiPairs:olympicSemifinalPairings(live)):live.stage==="OLYMPIC_MEDAL_GAMES"?[[live.semiLosers[0],live.semiLosers[1]],[live.semiWinners[0],live.semiWinners[1]]]:[];
   const p=pairs.find(([a,b])=>a===code||b===code);return p?{a:p[0],b:p[1],stage:live.stage}:null;
 }
 function olympicNationRecord(live,code){
@@ -19899,7 +20105,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 222",ENGINE_VERSION="E2.26-PROD222";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 224",ENGINE_VERSION="E2.26-PROD224";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21006,7 +21212,9 @@ async function loadSlot(slot,options={}){
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
     G.runtimeMeta.lateCareerPopulationAudit=lateCareerPopulationAudit(G);
-    G.runtimeMeta.olympicQuarterfinalIntegrityRepair={version:"OQF1",season:G.season,changed:repairLiveOlympicQuarterfinalIntegrity(G)};
+    G.runtimeMeta.olympicGroupDrawIntegrityRepair={version:OLYMPIC_GROUP_DRAW_VERSION,season:G.season,changed:repairLiveOlympicGroupDrawIntegrity(G)};
+    G.runtimeMeta.olympicQuarterfinalIntegrityRepair={version:OLYMPIC_BRACKET_INTEGRITY_VERSION,season:G.season,changed:repairLiveOlympicQuarterfinalIntegrity(G)};
+    G.runtimeMeta.olympicSemifinalIntegrityRepair={version:OLYMPIC_BRACKET_INTEGRITY_VERSION,season:G.season,changed:repairLiveOlympicSemifinalIntegrity(G)};
     G.olympicRecapAcknowledgedYears=Array.isArray(G.olympicRecapAcknowledgedYears)?G.olympicRecapAcknowledgedYears:[];
     const latestCompletedOlympics=[...(G.olympicHistory||[])].reverse().find(o=>o?.status==="COMPLETE");
     if(latestCompletedOlympics){
@@ -26356,6 +26564,8 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
     <div class="more"><div><b>Player Build Model</b><small>61 curated H³O builds · hidden source identity · modest specialist simulation layer · generational builds emergent only</small></div><b>${BUILD_MAPPING_VERSION} · ${HIDDEN_STYLE_PROFILE_VERSION}</b></div>
     <div class="more"><div><b>Play-In Flow</b><small>Pre-game seed/fixture confirmation · completed-game separation · opponent-wait state · bracket-synchronised progression</small></div><b>PIF2</b></div>
+    <div class="more"><div><b>Olympic Group Draw</b><small>Four ranking pots · one nation per pot in each group · regional duplication minimised · completed tournaments never rewritten</small></div><b>${OLYMPIC_GROUP_DRAW_VERSION}</b></div>
+    <div class="more"><div><b>Olympic Bracket Integrity</b><small>Same-group QF rematches avoided · group winner/runner-up separated across bracket halves where possible · scheduled semifinals safely repairable</small></div><b>${OLYMPIC_BRACKET_INTEGRITY_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -28575,7 +28785,8 @@ function intlOlympicScheduledPairsForStage(live,stage){
   }
   if(stage==="OLYMPIC_QUARTERFINAL")return (live.qfPairs||[]).filter(p=>p?.[0]&&p?.[1]).map(([a,b])=>({a,b,stage:"OLYMPIC_QUARTERFINAL"}));
   if(stage==="OLYMPIC_SEMIFINAL"){
-    return [[live.qfWinners?.[0],live.qfWinners?.[1]],[live.qfWinners?.[2],live.qfWinners?.[3]]].filter(p=>p[0]&&p[1]).map(([a,b])=>({a,b,stage:"OLYMPIC_SEMIFINAL"}));
+    const pairs=(Array.isArray(live.semiPairs)&&live.semiPairs.length===2)?live.semiPairs:olympicSemifinalPairings(live);
+    return pairs.filter(p=>p[0]&&p[1]).map(([a,b])=>({a,b,stage:"OLYMPIC_SEMIFINAL"}));
   }
   if(stage==="OLYMPIC_MEDAL_GAMES"){
     return [
