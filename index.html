@@ -2980,7 +2980,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 220</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 221</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -7684,6 +7684,7 @@ function _ensureLeagueStatisticalIdentitiesFull(G){
   // when its calibrated identity changes so older saves receive the new profile.
   for(const p of unique){
     elitePotentialFloorForSource(p);
+    ensurePlayerBuildIdentity(p);
     const seed=STAT_IDENTITY_SEEDS[statisticalIdentitySourceName(p)];
     if(seed){
       if(!p.statisticalIdentity?.locked||p.statisticalIdentity.type!==seed.type){
@@ -7696,12 +7697,65 @@ function _ensureLeagueStatisticalIdentitiesFull(G){
   for(const p of unique)syncGenerationalBuild(p,G.season);
   G.statisticalIdentityAudit={season:G.season,counts,caps:{...STAT_IDENTITY_RARITY_CAPS},generational:unique.filter(p=>p.generationalBuild).length};
 }
+function publicBuildStatModifiers(player){
+  ensurePlayerBuildIdentity(player);
+  const b=String(player?.playerBuild||"");
+  const mods={usage:1,assist:1,rebound:1,steal:1,block:1,foulDraw:1,volatility:1,defensiveImpact:1,threeRate:0,threeAccuracy:0};
+
+  // Shooting specialists: more shots come from three, not a wholesale scoring boost.
+  if(/Sharpshooter|Sniper|Shooter|Three-Point|Deep-Range|Floor-Spacing|Pick-and-Pop|Stretch Scorer/.test(b)){
+    mods.threeRate+=.018;mods.threeAccuracy+=.006;mods.volatility*=1.035;
+  }
+  if(/Movement|Off-Screen/.test(b)){mods.threeRate+=.010;mods.volatility*=1.025;}
+  if(/Spot-Up|Defensive Shooter/.test(b)){mods.usage*=.97;mods.threeRate+=.012;}
+  if(/Shot-Creating Shooter|Three-Point Scoring Wing|Stretch Scorer/.test(b)){mods.usage*=1.015;}
+
+  // Creation/playmaking specialists.
+  if(/Playmaker|Floor General|Point Forward|Playmaking Center|Playmaking Stretch|Pick-and-Roll|Tempo|Jumbo/.test(b)){
+    mods.assist*=1.055;
+  }
+  if(/Isolation Creator|Three-Level Combo Guard|Inside-Out Creator|Scoring Playmaker|Shot-Creating Forward|Shot-Creating Stretch/.test(b)){
+    mods.usage*=1.025;mods.volatility*=1.02;
+  }
+
+  // Slashers/finishers: modest rim pressure, not a blanket efficiency increase.
+  if(/Slasher|Finisher|Rim-Attacking|Rim Runner|Power Finisher|Downhill/.test(b)){
+    mods.foulDraw*=1.055;mods.threeRate-=.010;mods.volatility*=1.02;
+  }
+
+  // Perimeter defensive specialists can be valuable without high scoring usage.
+  if(/Perimeter Stopper|Point-of-Attack Defender|Defensive Wing|Switchable Wing|Two-Way Perimeter Guard|Two-Way Perimeter Wing|Athletic 3-and-D Wing/.test(b)){
+    mods.steal*=1.075;mods.defensiveImpact*=1.055;mods.usage*=.975;
+  }
+
+  // Interior defensive specialists.
+  if(/Defensive Anchor|Rim Protector|Rim-Protecting Stretch Five|Rebounding Anchor|Two-Way Interior Big|Two-Way Interior Center/.test(b)){
+    mods.block*=1.075;mods.defensiveImpact*=1.06;mods.usage*=.975;
+  }
+  if(/Rebounding Anchor|Glass Cleaner|Stretch Rebounder|Stretch Glass Cleaner/.test(b)){
+    mods.rebound*=1.075;mods.usage*=.985;
+  }
+
+  // Two-way labels retain balanced usefulness rather than becoming pure scorers.
+  if(/Two-Way/.test(b)){mods.defensiveImpact*=1.025;}
+
+  return mods;
+}
+
 function playerStatIdentity(player) {
   if(!player?.statisticalIdentity?.locked)assignEngineStatisticalIdentity(player);
   const base=baseIdentityFromArchetype(player),mods=player?.statisticalIdentity?.mods||{};
   for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+mods[k]))base[k]*=+mods[k];}
   if(Number.isFinite(+mods.threeRate))base.threeRate+=+mods.threeRate;
   if(Number.isFinite(+mods.threeAccuracy))base.threeAccuracy+=+mods.threeAccuracy;
+
+  // Public build is a specialist refinement only. Archetype, OVR, role and the
+  // established statistical identity remain the dominant simulation layers.
+  const buildMods=publicBuildStatModifiers(player);
+  for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+buildMods[k]))base[k]*=+buildMods[k];}
+  if(Number.isFinite(+buildMods.threeRate))base.threeRate+=+buildMods.threeRate;
+  if(Number.isFinite(+buildMods.threeAccuracy))base.threeAccuracy+=+buildMods.threeAccuracy;
+
   const gen=generationalBuildDefinition(player),genMods=gen?.mods||{};
   for(const k of ["usage","assist","rebound","steal","block","foulDraw","volatility","defensiveImpact"]){if(Number.isFinite(+genMods[k]))base[k]*=+genMods[k];}
   if(Number.isFinite(+genMods.threeRate))base.threeRate+=+genMods.threeRate;
@@ -7749,6 +7803,24 @@ function playerGamePulse(player) {
   if(creator&&elite>0){const r=Math.random();if(r<.006*elite)pulse.assist*=1.62;else if(r<.045*elite)pulse.assist*=1.28;}
   if(rebounder&&elite>0){const r=Math.random();if(r<.006*elite)pulse.rebound*=1.50;else if(r<.045*elite)pulse.rebound*=1.25;}
   if(defender&&elite>0){const r=Math.random();if(r<.006*elite)pulse.defense*=1.50;else if(r<.045*elite)pulse.defense*=1.22;}
+
+  // Specialist sparks are available to rotation/depth players too. These are
+  // deliberately modest and do not replace the elite scoring-night system above.
+  const build=String(player?.playerBuild||publicBuildForPlayer(player));
+  if((+ovr||0)>=68){
+    if(/Sharpshooter|Sniper|Shooter|Three-Point|Deep-Range|Spot-Up|Off-Screen/.test(build)){
+      const r=Math.random();
+      if(r<.045){pulse.usage*=1.10;pulse.efficiency+=.018;pulse.label="Shooting spark";}
+    }
+    if(/Perimeter Stopper|Point-of-Attack Defender|Defensive Wing|Switchable Wing/.test(build)){
+      const r=Math.random();
+      if(r<.045){pulse.defense*=1.28;pulse.label="Defensive spark";}
+    }
+    if(/Rim Protector|Defensive Anchor|Rebounding Anchor/.test(build)){
+      const r=Math.random();
+      if(r<.040){pulse.defense*=1.25;pulse.rebound*=1.10;pulse.label="Interior defensive spark";}
+    }
+  }
   return pulse;
 }
 
@@ -8818,63 +8890,178 @@ function mappedEngineArchetype(t){
 }
 
 const HIDDEN_STYLE_PROFILE_VERSION="HSP1";
-const BUILD_MAPPING_VERSION="PBM1";
+const BUILD_MAPPING_VERSION="PBM2";
+
+const H3O_PUBLIC_BUILDS={
+  "Floor General":[
+    "Pass-First Playmaker","Pick-and-Roll Maestro","Tempo Controller",
+    "Deep-Range Playmaker","Two-Way Floor General"
+  ],
+  "Combo Guard":[
+    "Isolation Creator","Three-Level Combo Guard","Inside-Out Creator",
+    "Scoring Playmaker","Two-Way Combo Guard"
+  ],
+  "3-and-D Guard":[
+    "Perimeter Stopper","Two-Way Perimeter Guard","Point-of-Attack Defender",
+    "3-and-D Playmaker","Defensive Shooter"
+  ],
+  "Sharpshooter":[
+    "Movement Sharpshooter","Spot-Up Sniper","Deep-Range Shooter",
+    "Off-Screen Shooter","Shot-Creating Shooter"
+  ],
+  "Slasher":[
+    "Downhill Slasher","Athletic Finisher","Shooting Slasher",
+    "Two-Way Slasher","Rim-Attacking Scorer","Mid-Range Slasher"
+  ],
+  "3-and-D Wing":[
+    "Two-Way Perimeter Wing","Three-Point Scoring Wing","Defensive Wing",
+    "Two-Way Sharpshooter","Athletic 3-and-D Wing","Switchable Wing"
+  ],
+  "Playmaking Forward":[
+    "Point Forward","Two-Way Point Forward","Inside-Out Forward",
+    "Shot-Creating Forward","Slashing Playmaker","Jumbo Playmaker"
+  ],
+  "Stretch Four":[
+    "Pick-and-Pop Forward","Stretch Scorer","Two-Way Stretch Four",
+    "Stretch Rebounder","Shot-Creating Stretch Four"
+  ],
+  "Rim Protector":[
+    "Interior Defensive Anchor","Mobile Rim Protector","Rebounding Anchor",
+    "Two-Way Interior Big","Stretch Rim Protector","Switchable Rim Protector"
+  ],
+  "Stretch Five":[
+    "Floor-Spacing Big","Pick-and-Pop Center","Two-Way Stretch Five",
+    "Stretch Glass Cleaner","Playmaking Stretch Five","Rim-Protecting Stretch Five"
+  ],
+  "Traditional Big":[
+    "Interior Glass Cleaner","Rim Runner","Post Scorer",
+    "Power Finisher","Playmaking Center","Two-Way Interior Center"
+  ]
+};
+const H3O_PUBLIC_BUILD_SET=new Set(Object.values(H3O_PUBLIC_BUILDS).flat());
+
+function isH3OPublicBuild(value){return H3O_PUBLIC_BUILD_SET.has(String(value||""))}
+
+function sourceBuildToH3OPublicBuild(sourceBuild,archetype,position="SF"){
+  const s=String(sourceBuild||"").toLowerCase(),arch=archetype||"";
+  const has=(rx)=>rx.test(s);
+
+  if(arch==="Floor General"){
+    if(has(/2-way|two-way|defen|hawk|lock|clamp/))return"Two-Way Floor General";
+    if(has(/3pt|snip|deep|shot/))return"Deep-Range Playmaker";
+    if(has(/tempo|table setter/))return"Tempo Controller";
+    if(has(/pick|roll/))return"Pick-and-Roll Maestro";
+    return"Pass-First Playmaker";
+  }
+  if(arch==="Combo Guard"){
+    if(has(/2-way|two-way|defen|hawk|lock|clamp/))return"Two-Way Combo Guard";
+    if(has(/inside-out/))return"Inside-Out Creator";
+    if(has(/iso|ankle|savant|shot-creat/))return"Isolation Creator";
+    if(has(/3-level|mid-range|mid-paint/))return"Three-Level Combo Guard";
+    return"Scoring Playmaker";
+  }
+  if(arch==="3-and-D Guard"){
+    if(has(/point|attack|clamp/))return"Point-of-Attack Defender";
+    if(has(/play|dime|creator/))return"3-and-D Playmaker";
+    if(has(/shoot|snip|3pt/))return"Defensive Shooter";
+    if(has(/2-way|two-way/))return"Two-Way Perimeter Guard";
+    return"Perimeter Stopper";
+  }
+  if(arch==="Sharpshooter"){
+    if(has(/off-screen|movement/))return"Off-Screen Shooter";
+    if(has(/creator|shot hunter|iso/))return"Shot-Creating Shooter";
+    if(has(/deep|3pt/))return"Deep-Range Shooter";
+    if(has(/catch|spot/))return"Spot-Up Sniper";
+    return"Movement Sharpshooter";
+  }
+  if(arch==="Slasher"){
+    if(has(/2-way|two-way|defen|disrupt/))return"Two-Way Slasher";
+    if(has(/3pt|shoot|snip/))return"Shooting Slasher";
+    if(has(/mid-range|middy/))return"Mid-Range Slasher";
+    if(has(/high fly|athletic|bouncy/))return"Athletic Finisher";
+    if(has(/rim|inside-out|paint/))return"Rim-Attacking Scorer";
+    return"Downhill Slasher";
+  }
+  if(arch==="3-and-D Wing"){
+    if(has(/switch|versatile defender/))return"Switchable Wing";
+    if(has(/2-way.*shoot|2-way.*snip|shot-erasing.*shoot|sharpshoot/))return"Two-Way Sharpshooter";
+    if(has(/athletic|high fly|blow-by/))return"Athletic 3-and-D Wing";
+    if(has(/defen|lock|hawk|clamp|shot-erasing/))return"Defensive Wing";
+    if(has(/3pt|snip|shoot|stretch/))return"Three-Point Scoring Wing";
+    return"Two-Way Perimeter Wing";
+  }
+  if(arch==="Playmaking Forward"){
+    if(has(/2-way|two-way|defen/))return"Two-Way Point Forward";
+    if(has(/inside-out/))return"Inside-Out Forward";
+    if(has(/shot-creat|3-level|mid-range|middy/))return"Shot-Creating Forward";
+    if(has(/slash|finisher|blow-by/))return"Slashing Playmaker";
+    if(has(/point four|jumbo|bully/))return"Jumbo Playmaker";
+    return"Point Forward";
+  }
+  if(arch==="Stretch Four"){
+    if(has(/2-way|two-way|defen|shot-erasing/))return"Two-Way Stretch Four";
+    if(has(/rebound|board|cleaner|crasher/))return"Stretch Rebounder";
+    if(has(/shot-creat|crafty/))return"Shot-Creating Stretch Four";
+    if(has(/pick|pop/))return"Pick-and-Pop Forward";
+    return"Stretch Scorer";
+  }
+  if(arch==="Rim Protector"){
+    if(has(/stretch|3pt|popper/))return"Stretch Rim Protector";
+    if(has(/switch|perimeter|mobile|hawk/))return"Switchable Rim Protector";
+    if(has(/rebound|board|glass|cleaner/))return"Rebounding Anchor";
+    if(has(/2-way|two-way|scor|finisher|bully/))return"Two-Way Interior Big";
+    if(has(/mobile|athletic/))return"Mobile Rim Protector";
+    return"Interior Defensive Anchor";
+  }
+  if(arch==="Stretch Five"){
+    if(has(/2-way|two-way|defen|shot-erasing/))return"Two-Way Stretch Five";
+    if(has(/play|dime|creator/))return"Playmaking Stretch Five";
+    if(has(/glass|board|cleaner|crasher/))return"Stretch Glass Cleaner";
+    if(has(/rim protect|eraser|anchor/))return"Rim-Protecting Stretch Five";
+    if(has(/pick|pop/))return"Pick-and-Pop Center";
+    return"Floor-Spacing Big";
+  }
+  if(arch==="Traditional Big"){
+    if(has(/2-way|two-way|defen|eraser|protect/))return"Two-Way Interior Center";
+    if(has(/play|dime|point center|distributor|break starter/))return"Playmaking Center";
+    if(has(/post|paint|masher|bully/))return"Post Scorer";
+    if(has(/rim run|lob|rocker|wrecker/))return"Rim Runner";
+    if(has(/power|finisher|dunk/))return"Power Finisher";
+    return"Interior Glass Cleaner";
+  }
+  return H3O_PUBLIC_BUILDS[arch]?.[0]||derivePlayerBuild({position,archetype:arch,sourceBuild:null});
+}
+
+function publicBuildForPlayer(player,sourceOverride=null){
+  if(!player)return"Basketball Player";
+  if(isH3OPublicBuild(player.playerBuild))return player.playerBuild;
+  const raw=sourceOverride||player.originalSourceBuild||player.internalSourceBuild||player.sourceBuild||player.playerBuild||"";
+  return sourceBuildToH3OPublicBuild(raw,player.archetype,player.position);
+}
 
 function playerBuildFamily(label){
   const s=String(label||"").toLowerCase();
-  if(/defend|lock|hawk|clamp|erase|guardian|anchor|2-way|two-way/.test(s))return"Two-Way / Defensive";
-  if(/playmak|dime|engine|table setter|creator|maestro|point forward|point center|distributor/.test(s))return"Creator / Playmaker";
-  if(/shoot|snip|3pt|stretch|pick & pop|perimeter|shot hunter/.test(s))return"Shooter / Spacer";
-  if(/slash|fly|blow-by|finisher|rocker|wrecker|dunk|rim runner|lob threat/.test(s))return"Slasher / Finisher";
-  if(/post|paint|masher|bully|crasher/.test(s))return"Interior Scorer";
-  if(/board|glass|rebound|cleaner/.test(s))return"Rebound / Interior";
+  if(/defend|stopper|point-of-attack|lock|hawk|clamp|erase|guardian|anchor|rim protector|two-way|2-way|switchable/.test(s))return"Two-Way / Defensive";
+  if(/playmak|dime|engine|table setter|creator|maestro|point forward|point center|distributor|floor general|pick-and-roll|tempo|jumbo/.test(s))return"Creator / Playmaker";
+  if(/shoot|snip|3pt|three-point|stretch|pick-and-pop|floor-spacing|deep-range|off-screen|spot-up/.test(s))return"Shooter / Spacer";
+  if(/slash|fly|athletic finisher|finisher|rim-attacking|rim runner|power finisher|downhill/.test(s))return"Slasher / Finisher";
+  if(/post|paint|interior scorer/.test(s))return"Interior Scorer";
+  if(/board|glass|rebound/.test(s))return"Rebound / Interior";
   return"Versatile";
 }
 
 let _playerBuildLibrary=null;
 function playerBuildLibrary(){
   if(_playerBuildLibrary)return _playerBuildLibrary;
-  const rows=[],seen=new Set();
-
-  for(const list of Object.values(SEASON1_ROSTER_TEMPLATES||{})){
-    for(const t of list||[]){
-      const build=String(t?.sourceArchetype||"").trim();
-      if(!build)continue;
-      const arch=mappedEngineArchetype(t);
-      const key=`${arch}|${build}|${t.position}`;
-      if(seen.has(key))continue;
-      seen.add(key);
-      rows.push({
-        build,archetype:arch,position:t.position,secondaryPosition:t.secondaryPosition||null,
-        heightCm:+t.heightCm||0,family:playerBuildFamily(build)
-      });
+  const rows=[];
+  for(const [archetype,builds] of Object.entries(H3O_PUBLIC_BUILDS)){
+    for(const build of builds){
+      for(const position of POSITIONS){
+        if(!(ARCHETYPES_BY_POSITION[position]||[]).includes(archetype))continue;
+        rows.push({build,archetype,position,secondaryPosition:null,heightCm:0,family:playerBuildFamily(build)});
+      }
     }
   }
-
-  // Generic generated-player fallbacks are part of the vocabulary too.
-  const fallbackByArch={
-    "Floor General":"Pass-First Playmaker",
-    "Combo Guard":"Three-Level Combo Creator",
-    "3-and-D Guard":"Two-Way Perimeter Guard",
-    "Sharpshooter":"Movement Shooter",
-    "Slasher":"Downhill Rim Attacker",
-    "3-and-D Wing":"Two-Way Perimeter Wing",
-    "Playmaking Forward":"Point Forward",
-    "Stretch Four":"Pick-and-Pop Forward",
-    "Rim Protector":"Interior Defensive Anchor",
-    "Stretch Five":"Floor-Spacing Big",
-    "Traditional Big":"Interior Glass Cleaner"
-  };
-  for(const [arch,build] of Object.entries(fallbackByArch)){
-    for(const position of POSITIONS){
-      if(!(ARCHETYPES_BY_POSITION[position]||[]).includes(arch))continue;
-      const key=`${arch}|${build}|${position}`;
-      if(seen.has(key))continue;
-      seen.add(key);
-      rows.push({build,archetype:arch,position,secondaryPosition:null,heightCm:0,family:playerBuildFamily(build)});
-    }
-  }
-
   _playerBuildLibrary=rows;
   return rows;
 }
@@ -8883,8 +9070,9 @@ function ensureHiddenPlayerStyle(player){
   if(!player)return null;
   if(player.hiddenStyleProfile?.version===HIDDEN_STYLE_PROFILE_VERSION)return player.hiddenStyleProfile;
 
-  const currentBuild=player.playerBuild||player.sourceBuild||derivePlayerBuild(player);
-  const family=playerBuildFamily(currentBuild);
+  const sourceDetail=player.originalSourceBuild||player.internalSourceBuild||player.sourceBuild||player.playerBuild||derivePlayerBuild(player);
+  const currentBuild=publicBuildForPlayer(player,sourceDetail);
+  const family=playerBuildFamily(sourceDetail||currentBuild);
   const seed=stableTemplateHash(`${player.id}|${player.position}|${player.archetype}|${currentBuild}|hidden-style`);
   const compatibleFamilies={
     "Two-Way / Defensive":["Versatile","Slasher / Finisher"],
@@ -8913,7 +9101,7 @@ function plausiblePlayerBuilds(player,{position=null,archetype=null,heightCm=nul
   const arch=archetype||player.archetype||(ARCHETYPES_BY_POSITION[pos]?.[0])||"3-and-D Wing";
   const height=Number.isFinite(+heightCm)?+heightCm:(+player.heightCm||0);
   const hidden=ensureHiddenPlayerStyle(player);
-  const current=player.playerBuild||player.sourceBuild||derivePlayerBuild(player);
+  const current=publicBuildForPlayer(player);
 
   const unique=new Map();
   for(const row of playerBuildLibrary()){
@@ -8950,21 +9138,27 @@ function plausiblePlayerBuilds(player,{position=null,archetype=null,heightCm=nul
 
 function ensurePlayerBuildIdentity(player){
   if(!player)return player;
+
+  // Preserve the original/source build vocabulary internally for hidden identity,
+  // migration and scouting depth. The public playerBuild is H³O-curated.
+  if(!player.internalSourceBuild){
+    player.internalSourceBuild=player.originalSourceBuild||player.sourceBuild||
+      (!isH3OPublicBuild(player.playerBuild)?player.playerBuild:null)||null;
+  }
   ensureHiddenPlayerStyle(player);
 
-  // Source/mapped players retain their detailed supplied build. Procedural
-  // players discover a detailed build from their hidden profile instead of
-  // permanently using only the generic fallback.
-  if(!player.sourceBuild&&!player.playerBuild){
-    const options=plausiblePlayerBuilds(player,{limit:8});
-    if(options.length){
-      const idx=player.hiddenStyleProfile.seed%Math.min(4,options.length);
-      player.playerBuild=options[idx].build;
-      player.generatedBuildVersion=BUILD_MAPPING_VERSION;
-    }else player.playerBuild=derivePlayerBuild(player);
-  }else if(!player.playerBuild){
-    player.playerBuild=player.sourceBuild||derivePlayerBuild(player);
+  if(!isH3OPublicBuild(player.playerBuild)){
+    player.playerBuild=sourceBuildToH3OPublicBuild(
+      player.internalSourceBuild||player.sourceBuild||player.playerBuild||"",
+      player.archetype,
+      player.position
+    );
   }
+  if(!player.playerBuild||!H3O_PUBLIC_BUILDS[player.archetype]?.includes(player.playerBuild)){
+    const options=plausiblePlayerBuilds(player,{limit:8});
+    player.playerBuild=options[0]?.build||H3O_PUBLIC_BUILDS[player.archetype]?.[0]||derivePlayerBuild(player);
+  }
+  player.playerBuildMappingVersion=BUILD_MAPPING_VERSION;
   return player;
 }
 
@@ -19697,7 +19891,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 220",ENGINE_VERSION="E2.26-PROD220";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 221",ENGINE_VERSION="E2.26-PROD221";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26122,7 +26316,7 @@ function gameDataSettingsContent(){
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
     <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
-    <div class="more"><div><b>Player Build Model</b><small>Hidden identity · constrained editor shortlist · scout discovery · generational builds emergent only</small></div><b>${BUILD_MAPPING_VERSION} · ${HIDDEN_STYLE_PROFILE_VERSION}</b></div>
+    <div class="more"><div><b>Player Build Model</b><small>61 curated H³O builds · hidden source identity · modest specialist simulation layer · generational builds emergent only</small></div><b>${BUILD_MAPPING_VERSION} · ${HIDDEN_STYLE_PROFILE_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -28949,9 +29143,8 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     const allowedBuilds=plausiblePlayerBuilds(p,{position:p.position,archetype:p.archetype,heightCm:p.heightCm,limit:8});
     const requestedBuild=$("#epBuild")?.value||p.playerBuild||derivePlayerBuild(p);
     const nextBuild=allowedBuilds.some(x=>x.build===requestedBuild)?requestedBuild:(allowedBuilds[0]?.build||derivePlayerBuild(p));
-    if(!p.originalSourceBuild&&p.sourceBuild)p.originalSourceBuild=p.sourceBuild;
+    if(!p.internalSourceBuild)p.internalSourceBuild=p.originalSourceBuild||p.sourceBuild||null;
     p.playerBuild=nextBuild;
-    p.sourceBuild=nextBuild;
     p.manualBuildOverride=true;
     p.playerBuildMappingVersion=BUILD_MAPPING_VERSION;
     if(lockedStatIdentity)p.statisticalIdentity=lockedStatIdentity;
