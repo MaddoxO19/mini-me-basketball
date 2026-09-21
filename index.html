@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 248</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 249</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12452,6 +12452,8 @@ function makeHistoricalRecordState(){
 }
 function ensureHistoricalRecords(G){
   if(!G.historicalRecords||typeof G.historicalRecords!=="object")G.historicalRecords=makeHistoricalRecordState();
+  const fastReady=G.historicalRecords._runtimeEnsuredVersion===HISTORICAL_RECORD_PERFORMANCE_VERSION;
+  if(fastReady)return G.historicalRecords;
   restoreHistoricalRecordRealNames(G.historicalRecords);
   G.historicalRecords.league=G.historicalRecords.league||{singleGame:{},teamGame:{},seasonRates:{},career:{}};
   G.historicalRecords.league.singleGame=G.historicalRecords.league.singleGame||{};
@@ -12480,6 +12482,7 @@ function ensureHistoricalRecords(G){
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.career))G.historicalRecords.league.career[k]=mergeHistoricalTop(G.historicalRecords.league.career[k],list);
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.seasonRates))G.historicalRecords.league.seasonRates[k]=mergeHistoricalTop(G.historicalRecords.league.seasonRates[k],list,"season");
   restoreHistoricalRecordRealNames(G.historicalRecords);
+  G.historicalRecords._runtimeEnsuredVersion=HISTORICAL_RECORD_PERFORMANCE_VERSION;
   return G.historicalRecords;
 }
 function recordValueBetter(next,cur){return !cur || (+next.value||0)>(+cur.value||0)}
@@ -12497,9 +12500,32 @@ function mergeSingleGameTopFive(seed,current){
   }
   return out.sort((a,b)=>(+b.value||0)-(+a.value||0)).slice(0,5);
 }
-function recordSingleGameTopFiveEntry(G,key,value,meta){
+const HISTORICAL_RECORD_PERFORMANCE_VERSION="HRP2";
+
+function prepareHistoricalRecordIngestContext(G){
+  const started=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
+  const hr=ensureHistoricalRecords(G);
+  const playerMap=new Map();
+  for(const p of allPlayers(G)||[])if(p?.id&&!playerMap.has(String(p.id)))playerMap.set(String(p.id),p);
+  const clubMap=new Map((G.clubs||[]).map(c=>[String(c.id),c]));
+  const ended=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
+  return{
+    version:HISTORICAL_RECORD_PERFORMANCE_VERSION,
+    hr,playerMap,clubMap,
+    prepareMs:Math.max(0,ended-started)
+  };
+}
+
+function preparedClubHistoricalBucket(G,clubId,ctx=null){
+  const hr=ctx?.hr||ensureHistoricalRecords(G);
+  hr.clubs=hr.clubs||{};
+  if(!hr.clubs[clubId])hr.clubs[clubId]={singleGame:{},teamGame:{},seasonRates:{},career:{}};
+  return hr.clubs[clubId];
+}
+
+function recordSingleGameTopFiveEntry(G,key,value,meta,ctx=null){
   if(value==null||!isFinite(+value))return;
-  const hr=ensureHistoricalRecords(G),entry={key,value:+value,season:G.season,...meta};
+  const hr=ctx?.hr||ensureHistoricalRecords(G),entry={key,value:+value,season:G.season,...meta};
   hr.league.singleGameTop5[key]=mergeSingleGameTopFive(hr.league.singleGameTop5[key]||[],[entry]);
 }
 function clubHistoricalBucket(G,clubId){
@@ -12509,9 +12535,12 @@ function historicalRecordOfficialGame(game){
   const tag=String(game?.phaseTag||"").toLowerCase();
   return tag==="regular" || tag==="nba_cup_group" || tag==="nba_cup_regular" || (tag.includes("cup")&&tag.includes("group"));
 }
-function ingestHistoricalGameRecords(G,game){
+function ingestHistoricalGameRecords(G,game,ctx=null){
   if(!G||!game?.id||!game.boxScore||!historicalRecordOfficialGame(game))return game;
-  const hr=ensureHistoricalRecords(G);if(hr.processedGameIds[game.id])return game;hr.processedGameIds[game.id]=1;
+  const localCtx=ctx||prepareHistoricalRecordIngestContext(G);
+  const hr=localCtx.hr;
+  if(hr.processedGameIds[game.id])return game;
+  hr.processedGameIds[game.id]=1;
   const league=hr.league;
   if(!hr.currentSeason||+hr.currentSeason.season!==+G.season){
     hr.currentSeason={season:G.season,singleGame:{},teamGame:{}};
@@ -12522,18 +12551,28 @@ function ingestHistoricalGameRecords(G,game){
     {clubId:game.awayClubId,oppId:game.homeClubId,score:+game.awayScore||0,oppScore:+game.homeScore||0,lines:game.boxScore.away||[]}
   ];
   for(const side of sides){
-    const club=clubById(G,side.clubId),opp=clubById(G,side.oppId),bucket=clubHistoricalBucket(G,side.clubId);
+    const club=localCtx.clubMap?.get(String(side.clubId))||clubById(G,side.clubId);
+    const opp=localCtx.clubMap?.get(String(side.oppId))||clubById(G,side.oppId);
+    const bucket=preparedClubHistoricalBucket(G,side.clubId,localCtx);
     const teamMeta={clubId:side.clubId,clubName:club?.name||side.clubId,opponentClubId:side.oppId,opponentName:opp?.name||side.oppId,gameId:game.id,round:game.round||null};
-    recordSingleGameEntry(G,league.teamGame,"teamScore",side.score,teamMeta);recordSingleGameEntry(G,bucket.teamGame,"teamScore",side.score,teamMeta);recordSingleGameEntry(G,currentSeason.teamGame,"teamScore",side.score,teamMeta);
-    if(side.score>side.oppScore){recordSingleGameEntry(G,league.teamGame,"winMargin",side.score-side.oppScore,teamMeta);recordSingleGameEntry(G,bucket.teamGame,"winMargin",side.score-side.oppScore,teamMeta);recordSingleGameEntry(G,currentSeason.teamGame,"winMargin",side.score-side.oppScore,teamMeta);}
+    recordSingleGameEntry(G,league.teamGame,"teamScore",side.score,teamMeta);
+    recordSingleGameEntry(G,bucket.teamGame,"teamScore",side.score,teamMeta);
+    recordSingleGameEntry(G,currentSeason.teamGame,"teamScore",side.score,teamMeta);
+    if(side.score>side.oppScore){
+      const margin=side.score-side.oppScore;
+      recordSingleGameEntry(G,league.teamGame,"winMargin",margin,teamMeta);
+      recordSingleGameEntry(G,bucket.teamGame,"winMargin",margin,teamMeta);
+      recordSingleGameEntry(G,currentSeason.teamGame,"winMargin",margin,teamMeta);
+    }
     for(const line of side.lines){
-      const p=allPlayers(G).find(x=>x.id===line.playerId);const meta={playerId:line.playerId,playerName:line.name||p?.name||"Player",clubId:side.clubId,clubName:club?.name||side.clubId,opponentClubId:side.oppId,opponentName:opp?.name||side.oppId,gameId:game.id,round:game.round||null};
+      const p=localCtx.playerMap?.get(String(line.playerId))||null;
+      const meta={playerId:line.playerId,playerName:line.name||p?.name||"Player",clubId:side.clubId,clubName:club?.name||side.clubId,opponentClubId:side.oppId,opponentName:opp?.name||side.oppId,gameId:game.id,round:game.round||null};
       for(const [key,field] of [["points","pts"],["rebounds","reb"],["assists","ast"],["steals","stl"],["blocks","blk"],["threes","tpm"]]){
         const value=+line[field]||0;
         recordSingleGameEntry(G,league.singleGame,key,value,meta);
         recordSingleGameEntry(G,bucket.singleGame,key,value,meta);
         recordSingleGameEntry(G,currentSeason.singleGame,key,value,meta);
-        recordSingleGameTopFiveEntry(G,key,value,meta);
+        recordSingleGameTopFiveEntry(G,key,value,meta,localCtx);
       }
       const fga=+line.fga||0,fgm=+line.fgm||0;
       if(fga>=10)recordSingleGameEntry(G,currentSeason.singleGame,"fgPct",100*fgm/fga,{...meta,attempts:fga,makes:fgm});
@@ -19003,7 +19042,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
     playoffRotationIntelligence:playoffMode,
     homeScore:scoreA, awayScore:scoreB, winnerClubId:winner, possessions:{home:pace,away:pace}, overtime,
     quarters:{home:qA,away:qB}, overtimePeriods:{home:otA,away:otB}, boxScore:{home:boxA,away:boxB} };
-  if(options.gameState)ingestHistoricalGameRecords(options.gameState,gameResult);
+  if(options.gameState)ingestHistoricalGameRecords(options.gameState,gameResult,options.historicalRecordContext||null);
   const perfEnded=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
   if(options.gameState&&phaseTag==="regular"){
     const rt=options.gameState.runtimeMeta||(options.gameState.runtimeMeta={});
@@ -19022,11 +19061,15 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   return gameResult;
 }
 
-function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
-  return simulatePossessionGame(clubA, clubB, { round, phaseTag, updateStandings: true, statsField: "seasonStats", trackForm: true, allowInjuries:true, gameState: CURRENT_GAME_STATE, season: CURRENT_GAME_STATE?.season||0, statisticalIdentitiesReady:true });
+function simulateRegularGame(clubA, clubB, round, phaseTag = "regular", roundContext=null) {
+  return simulatePossessionGame(clubA, clubB, {
+    round,phaseTag,updateStandings:true,statsField:"seasonStats",trackForm:true,allowInjuries:true,
+    gameState:CURRENT_GAME_STATE,season:CURRENT_GAME_STATE?.season||0,statisticalIdentitiesReady:true,
+    historicalRecordContext:roundContext?.historicalRecordContext||null
+  });
 }
 
-const REGULAR_SEASON_PERFORMANCE_VERSION="RSP3";
+const REGULAR_SEASON_PERFORMANCE_VERSION="RSP4";
 const SCORE_MARGIN_AUDIT_VERSION="SMA1";
 
 function perfNow(){
@@ -20149,11 +20192,14 @@ function advanceRegularSeasonRound(G) {
   ensureLeagueStatisticalIdentities(G);
   G.runtimeMeta=G.runtimeMeta||{};
   G.runtimeMeta._regularGamePerfAccumulator={games:0,prepMs:0,possessionsMs:0,postgameMs:0,totalMs:0,maxGameMs:0};
+  const recordContextStarted=perfNow();
+  const roundContext={historicalRecordContext:prepareHistoricalRecordIngestContext(G)};
+  const recordContextEnded=perfNow();
   const simulationStarted=perfNow();
   for(const item of gamePairings){
     const home=G.clubs.find(c=>c.id===item.homeId), away=G.clubs.find(c=>c.id===item.awayId);
     const phaseTag=item.cupGroupId?'nba_cup_group':item.cupKnockout?(round===12?'nba_cup_quarterfinal':'nba_cup_semifinal'):'regular';
-    const game=simulateRegularGame(home,away,round,phaseTag);
+    const game=simulateRegularGame(home,away,round,phaseTag,roundContext);
     live.games.push(game);roundGames.push(game);
     if(item.cupGroupId)recordCupGame(G,game,item.cupGroupId);
     if(G.userClubGM?.clubId&&(item.homeId===G.userClubGM.clubId||item.awayId===G.userClubGM.clubId))live.lastUserGameId=game.id;
@@ -20210,6 +20256,7 @@ function advanceRegularSeasonRound(G) {
     season:G.season,
     round,
     games:roundGames.length,
+    recordContextMs:roundPerfMs(recordContextEnded-recordContextStarted),
     simulationMs:roundPerfMs(simulationEnded-simulationStarted),
     postSimulationMs:roundPerfMs(roundEnded-simulationEnded),
     totalMs:roundPerfMs(roundEnded-roundStarted),
@@ -20982,7 +21029,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 248",ENGINE_VERSION="E2.26-PROD248";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 249",ENGINE_VERSION="E2.26-PROD249";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -22167,6 +22214,8 @@ async function loadSlot(slot,options={}){
     }
 
     G.runtimeMeta=G.runtimeMeta||{};
+    if(G.historicalRecords)delete G.historicalRecords._runtimeEnsuredVersion;
+    ensureHistoricalRecords(G);
     applyPersonalSourceIdentityLayer(G);
     ensureScoreMarginAudit(G);
 
@@ -28132,12 +28181,13 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
     <div class="more"><div><b>Mapped Record Profile Links</b><small>Historical records for launch/prospect players resolve to the same active or retired H³O profile · source fields preferred · source-mapped real-name recovery for older saves</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
-    <div class="more"><div><b>Regular Season Performance</b><small>Per-game statistical/build inputs cached · weighted pick tables prepared once per side · statistical identity sweep once per round · detailed prep/possession/postgame telemetry</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
+    <div class="more"><div><b>Regular Season Performance</b><small>Historical record maintenance prepared once per round · record player/club indexes reused across all 16 games · no repeated full record merge per player/stat · detailed timing retained</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
+    <div class="more"><div><b>Historical Record Performance</b><small>Record baseline/name migration runs once per loaded runtime · regular-season game ingestion writes directly to a prepared context</small></div><b>${HISTORICAL_RECORD_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Score Margin Audit</b><small>Current retained season backfilled · future seasons tracked persistently at 20+/30+/40+/50+/60+ thresholds · no scoring balance change</small></div><b>${SCORE_MARGIN_AUDIT_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div>
     <div class="more"><div><b>Last Next-Game Total</b><small>${perf?`${String(perf.phase||"Career").replaceAll("_"," ")} · advance ${perf.advanceMs} ms · save ${perf.saveMs} ms`:"Collected after the next playable event"}</small></div><b>${perf?`${perf.totalMs} ms`:"—"}</b></div>
-    <div class="more"><div><b>Last League Simulation</b><small>${roundPerf?`${roundPerf.games} games · simulation ${roundPerf.simulationMs} ms · post-round ${roundPerf.postSimulationMs} ms`:"Collected after the next regular-season round"}</small></div><b>${roundPerf?`${roundPerf.totalMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Last League Simulation</b><small>${roundPerf?`${roundPerf.games} games · records prep ${roundPerf.recordContextMs||0} ms · simulation ${roundPerf.simulationMs} ms · post-round ${roundPerf.postSimulationMs} ms`:"Collected after the next regular-season round"}</small></div><b>${roundPerf?`${roundPerf.totalMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Simulation Breakdown</b><small>${gamePerf?`game prep ${gamePerf.prepMs} ms · possessions ${gamePerf.possessionsMs} ms · postgame ${gamePerf.postgameMs} ms · avg/game ${gamePerf.averageGameMs} ms`:"Collected after the next regular-season round"}</small></div><b>${gamePerf?`MAX ${gamePerf.maxGameMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Last Save Preparation</b><small>Compaction + metadata${G.runtimeMeta?.lastSaveIntegrityRan?` + boundary integrity ${G.runtimeMeta.lastSaveIntegrityMs} ms`:" · no full-career integrity traversal"}</small></div><b>${G.runtimeMeta?.lastSavePrepMs!=null?`${G.runtimeMeta.lastSavePrepMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Current Season Margins</b><small>${curMargin.games} games · 20+ ${curMargin.twentyPlus} · 30+ ${curMargin.thirtyPlus} · 40+ ${curMargin.fortyPlus} · 50+ ${curMargin.fiftyPlus} · 60+ ${curMargin.sixtyPlus}</small></div><b>${curMargin.games?`MAX ${curMargin.largestMargin}`:"—"}</b></div>
