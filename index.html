@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 242</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 244</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -7095,6 +7095,78 @@ function repairManualPlayerNameOverrides(G){
   G.runtimeMeta.manualPlayerNameRepair={version:"MPN1",season:G.season,repaired};
   return repaired;
 }
+const PERSONAL_SOURCE_IDENTITY_VERSION="PSI1";
+
+function mappedSourceIdentityName(p){
+  if(!p)return"";
+  return String(p.sourceTemplateName||p.sourceName||p.sourcePlayerName||"").trim();
+}
+function isMappedSourceIdentityPlayer(p){
+  if(!p)return false;
+  const source=mappedSourceIdentityName(p);
+  if(!source)return false;
+
+  // sourceTemplateName/sourceName/sourcePlayerName are only attached to
+  // real-world mapped launch, developmental, prospect or record identities.
+  // Future procedural players are intentionally generated without these fields.
+  return true;
+}
+function applyPersonalSourceIdentityLayer(G){
+  if(!G)return 0;
+  const pools=[
+    ...allPlayers(G),
+    ...retiredPlayerPool(G),
+    ...(G.freeAgents||[]),
+    ...(G.gLeaguePlayers||[]),
+    ...(G.upcomingDraftClass?.prospects||[]),
+    ...(G.draftClass?.prospects||[]),
+    ...(G.summerLeagueLive?.invitees||[])
+  ];
+  const seen=new Set();
+  let changed=0;
+
+  for(const p of pools){
+    if(!p||seen.has(p))continue;
+    seen.add(p);
+
+    // Explicit GM/Commissioner naming always wins.
+    if(p.manualNameOverride||p.nameOrigin==="manual"){
+      if(p.manualNameOverride&&p.name!==p.manualNameOverride){
+        p.name=p.manualNameOverride;
+        changed++;
+      }
+      continue;
+    }
+
+    if(!isMappedSourceIdentityPlayer(p))continue;
+    const source=mappedSourceIdentityName(p);
+    if(!source)continue;
+
+    if(p.name!==source){
+      p.name=source;
+      changed++;
+    }
+    p.nameOrigin="source_mapped";
+    p.personalSourceIdentityVersion=PERSONAL_SOURCE_IDENTITY_VERSION;
+
+    // Keep family display metadata aligned with the restored public identity.
+    if(source==="LeBron James"){
+      p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"father",relatedSourceName:"Bronny James",relatedDisplayName:"Bronny James"};
+    }else if(source==="Bronny James"){
+      p.familyIdentity={relationshipGroup:"HALE_FAMILY",relation:"son",relatedSourceName:"LeBron James",relatedDisplayName:"LeBron James"};
+    }
+  }
+
+  G.personalSourceIdentityVersion=PERSONAL_SOURCE_IDENTITY_VERSION;
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.personalSourceIdentity={
+    version:PERSONAL_SOURCE_IDENTITY_VERSION,
+    season:G.season,
+    changed
+  };
+  return changed;
+}
+
 function applyReleaseIdentityLayer(G){
   if(!G)return 0;
   let changed=0;
@@ -9536,6 +9608,9 @@ function makeOfficial2026DraftProspect(row,G){
   const sourceOvr=Number.isFinite(+t.ovr)?+t.ovr:null;
   if(sourceOvr===null)t.ovr=est.ovr;
   const p=makeMappedPlayer(t,row.pick-1,null);
+  p.name=row.sourceName;
+  p.nameOrigin="source_mapped";
+  p.personalSourceIdentityVersion=PERSONAL_SOURCE_IDENTITY_VERSION;
   const officialBio=OFFICIAL_2026_DRAFT_BIO[row.sourceName]||null;
   p.age=officialBio?.age??official2026DraftAge(row);
   if(officialBio?.heightCm)p.heightCm=officialBio.heightCm;
@@ -12021,7 +12096,7 @@ function logEvent(G, msg) {
 const HISTORICAL_SINGLE_GAME_TOP5_2026={
   points:[
     {key:"points",value:100,season:"1961-62",playerId:"LEG_WILT",playerName:"Walter Mercer",clubName:"Philadelphia legacy",historical:true},
-    {key:"points",value:83,season:"2025-26",playerId:"BAM_ADEBAYO_83",sourcePlayerName:"Bam Adebayo",playerName:"Bam Adabayo",clubName:"Miami legacy",historical:true},
+    {key:"points",value:83,season:"2025-26",playerId:"BAM_ADEBAYO_83",sourcePlayerName:"Bam Adebayo",playerName:"Bam Adebayo",clubName:"Miami legacy",historical:true},
     {key:"points",value:81,season:"2005-06",playerId:"LEG_KOBE",playerName:"Damon Vale",clubName:"Los Angeles legacy",historical:true},
     {key:"points",value:78,season:"1961-62",playerId:"LEG_WILT_78",playerName:"Walter Mercer",clubName:"Philadelphia legacy",historical:true},
     {key:"points",value:73,season:"2023-24",playerId:"LEG_LUKA73",sourcePlayerName:"Luka Doncic",playerName:"Niko Varen",clubName:"Dallas legacy",historical:true}
@@ -12474,10 +12549,18 @@ function historicalRecordHolderMeta(r){
   if(!r)return null;
   return HISTORICAL_RECORD_HOLDER_META[String(r.playerId||"")]||null;
 }
+const RECORD_SOURCE_IDENTITY_VERSION="RSI3";
+
+function recordSourceIdentityKey(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[’']/g,"")
+    .replace(/[^a-z0-9]/gi,"")
+    .toLowerCase();
+}
+
 function recordHolderHeroText(G,r){
-  // v70: all seeded/pre-career benchmark records use one public presentation.
-  // Historical seasons, clubs and retirement dates remain internal calibration data.
-  if(r?.historical)return "League legacy";
   const p=G?historicalRecordProfilePlayer(G,r):null;
   if(p?.retired){
     return `${positionLabel(p)} · Retired ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"}`;
@@ -12486,6 +12569,10 @@ function recordHolderHeroText(G,r){
     const club=clubForPlayer(G,p);
     return `${positionLabel(p)}${club?.name?` · ${club.name}`:""}`;
   }
+
+  // Historical-only benchmarks remain deliberately generic. Their real-world
+  // source data is calibration, not a public game identity.
+  if(r?.historical)return "League legacy";
   if(r?.season)return basketballSeasonLabel(r.season);
   return r?.clubName||"League record";
 }
@@ -12494,22 +12581,26 @@ function recordHolderProfilePlayer(G,r){
   if(!G||!r)return null;
   const pool=[...allPlayers(G),...retiredPlayerPool(G)];
 
-  // Historical benchmark identities are not live game players. Never resolve
-  // them by fictional display name, because names can legitimately recur.
-  if(r.historical||String(r.playerId||"").startsWith("LEG_"))return null;
-
+  // First honour a real game-player ID when the record was created in H³O.
   if(r.playerId){
     const direct=pool.find(p=>String(p.id)===String(r.playerId));
     if(direct)return direct;
   }
 
-  // Source matching is permitted only when it uniquely identifies a
-  // career-era game player.
-  const source=String(r.sourcePlayerName||"").trim();
-  if(source){
-    const matches=pool.filter(p=>String(p.sourceTemplateName||"").trim()===source||String(p.sourceName||"").trim()===source);
+  // Seeded historical benchmarks can still belong to a player who exists in
+  // the launch/current H³O player pool. Resolve ONLY by the preserved source
+  // identity, never by the fictional public display name.
+  const sourceKey=recordSourceIdentityKey(r.sourcePlayerName);
+  if(sourceKey){
+    const matches=pool.filter(p=>{
+      const templateKey=recordSourceIdentityKey(p.sourceTemplateName);
+      const sourceNameKey=recordSourceIdentityKey(p.sourceName);
+      return templateKey===sourceKey||sourceNameKey===sourceKey;
+    });
     if(matches.length===1)return matches[0];
   }
+
+  // A pure legacy benchmark has no corresponding game player.
   return null;
 }
 function historicalRecordProfilePlayer(G,r){
@@ -12517,7 +12608,10 @@ function historicalRecordProfilePlayer(G,r){
 }
 function recordHolderNameHtml(G,r){
   const p=historicalRecordProfilePlayer(G,r);
-  if(!p)return `<span class="recordPlayerIdentity"><span class="recordPlayerNameText">${r?.playerName||"Player"}</span></span>`;
+  if(!p){
+    const source=String(r?.sourcePlayerName||r?.playerName||"Player").trim();
+    return `<span class="recordPlayerIdentity"><span class="recordPlayerNameText">${source}</span></span>`;
+  }
   const flag=p.nationality?nationalFlagMark(p.nationality,"small"):"";
   return `<span class="recordPlayerIdentity">${flag}${compactPlayerNameLink(p,20)}</span>`;
 }
@@ -12683,7 +12777,7 @@ function leagueHistoryAllTimeHtml(G){
   const titleMeta=titleLeader.historical?"League legacy":titlePlayer?(titlePlayer.retired?`${positionLabel(titlePlayer)} · Retired ${titlePlayer.retirementSeason?basketballSeasonLabel(titlePlayer.retirementSeason):"—"}`:`${positionLabel(titlePlayer)} · ${clubForPlayer(G,titlePlayer)?.name||"Active"}`):"Career record";
   const threeMeta=threeLeader.historical?"League legacy":threePlayer?(threePlayer.retired?`${positionLabel(threePlayer)} · Retired ${threePlayer.retirementSeason?basketballSeasonLabel(threePlayer.retirementSeason):"—"}`:`${positionLabel(threePlayer)} · ${clubForPlayer(G,threePlayer)?.name||"Active"}`):"Career achievement";
   const liveDynastyWins=(dynasty.bestRun?.value||0)>(run?.value||8);
-  const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLeader.value}</strong><b>${titleLeader.playerName}</b><span>${titleMeta}</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${threeLeader.value}</strong><b>${threeLeader.playerName}</b><span>${threeMeta}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${liveDynastyWins?dynasty.bestRun.clubName:(run?.playerName||"Caleb Mercer")}</b><span>${liveDynastyWins?"Consecutive championships":"League legacy"}</span></div></div></div>`;
+  const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLeader.value}</strong><b>${titleLeader.sourcePlayerName||titleLeader.playerName}</b><span>${titleMeta}</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${threeLeader.value}</strong><b>${threeLeader.sourcePlayerName||threeLeader.playerName}</b><span>${threeMeta}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${liveDynastyWins?dynasty.bestRun.clubName:(run?.sourcePlayerName||run?.playerName||"Player")}</b><span>${liveDynastyWins?"Consecutive championships":"League legacy"}</span></div></div></div>`;
   return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}`;
 }
 function leagueHistoricalRecordsHtml(G){
@@ -20448,7 +20542,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 242",ENGINE_VERSION="E2.26-PROD242";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 244",ENGINE_VERSION="E2.26-PROD244";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21605,6 +21699,8 @@ async function loadSlot(slot,options={}){
     }
 
     G.runtimeMeta=G.runtimeMeta||{};
+    applyPersonalSourceIdentityLayer(G);
+
     if(Array.isArray(G.runtimeMeta.newsFlashQueue)&&G.runtimeMeta.newsFlashQueue.length>8)G.runtimeMeta.newsFlashQueue=G.runtimeMeta.newsFlashQueue.slice(-8);
 
     // v57 migration: milestone achievements are career-global, not seasonal.
@@ -21773,7 +21869,7 @@ async function startCareer(){
     G.settings={salaryCap:setup.cap,injuries:setup.inj,leagueExpansion:setup.expansion,commissionerMode:setup.commissioner};
     G.careerControl={...(G.careerControl||{}),version:CAREER_CONTROL_VERSION,leagueExpansion:!!setup.expansion,commissionerMode:!!setup.commissioner,injuriesMutable:true,lockedAtCareerStart:["salaryCap","leagueExpansion","commissionerMode"]};
     ensureCareerControlState(G);
-    applyReleaseIdentityLayer(G);applyNewCareerComponentIdentities(G);
+    applyReleaseIdentityLayer(G);applyNewCareerComponentIdentities(G);applyPersonalSourceIdentityLayer(G);
     if(!appointClubGM(G,setup.team)) throw new Error("Selected club could not be assigned.");
     const uc=me();if(!uc)throw new Error("Club GM appointment did not resolve.");
     pushNews(G,`${G.gmName} begins a new career as GM of ${uc.name}.`,"GM",2);
@@ -23237,7 +23333,7 @@ function clubHistoricalNotableStatus(row){
 }
 function clubHistoricalNotableName(row){
   const p=historicalRecordProfilePlayer(G,row);
-  return p?playerNameLink(p):(row.name||row.playerName||"Player");
+  return p?playerNameLink(p):(row.sourcePlayerName||row.name||row.playerName||"Player");
 }
 function clubHistoricalNotableRows(club){
   const rankings=franchiseHistoricalRankings(club.id),curated=historicalFranchiseNotables(club.id),rows=[],used=new Set();
@@ -23354,7 +23450,7 @@ function clubNotableDisplayName(row){
   if(row?.kind==="active")return playerNameLink(row.p);
   const p=historicalRecordProfilePlayer(G,row);
   if(p)return playerNameLink(p);
-  return row?.displayName||row?.name||row?.playerName||"Player";
+  return row?.sourcePlayerName||row?.displayName||row?.name||row?.playerName||"Player";
 }
 
 // League-wide mirror of franchiseHistoricalRankings/clubNotablePlayers/
@@ -27544,6 +27640,8 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Club Notable Players</b><small>Legacy + H³O identities consolidated by source identity · unrelated historical alias collisions receive stable unique display names</small></div><b>${CLUB_NOTABLE_INTEGRITY_VERSION}</b></div>
     <div class="more"><div><b>Play-In Results Recap</b><small>Direct qualifiers pause once after Play-In completion to review all six results, #7/#8 qualifiers and their Round 1 opponent before continuing</small></div><b>${PLAYIN_RESULTS_RECAP_VERSION}</b></div>
     <div class="more"><div><b>Season Leader Qualification</b><small>NBA-style dynamic minimums applied at snapshot source and Club Leaders · 70% team games for per-game leaders · 300 FGM / 125 FTM / 82 3PM scaled to team games</small></div><b>${SEASON_LEADER_QUALIFICATION_VERSION}</b></div>
+    <div class="more"><div><b>Record Source Identity</b><small>Historical benchmarks with a current/mapped source player resolve to that H³O profile · pure legacy records remain non-linking · fictional-name fallback remains disabled</small></div><b>${RECORD_SOURCE_IDENTITY_VERSION}</b></div>
+    <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
