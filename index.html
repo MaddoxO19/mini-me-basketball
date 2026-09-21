@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 246</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 247</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -18929,6 +18929,138 @@ function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
   return simulatePossessionGame(clubA, clubB, { round, phaseTag, updateStandings: true, statsField: "seasonStats", trackForm: true, allowInjuries:true, gameState: CURRENT_GAME_STATE, season: CURRENT_GAME_STATE?.season||0 });
 }
 
+const REGULAR_SEASON_PERFORMANCE_VERSION="RSP2";
+const SCORE_MARGIN_AUDIT_VERSION="SMA1";
+
+function perfNow(){
+  return (typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
+}
+function roundPerfMs(v){
+  return Math.max(0,Math.round((+v||0)*10)/10);
+}
+function emptyScoreMarginAudit(season){
+  return {
+    version:SCORE_MARGIN_AUDIT_VERSION,
+    season:+season||0,
+    games:0,
+    totalMargin:0,
+    twentyPlus:0,
+    thirtyPlus:0,
+    fortyPlus:0,
+    fiftyPlus:0,
+    sixtyPlus:0,
+    largestMargin:0,
+    largestGameId:null,
+    largestMatchup:null,
+    updatedAtRound:0
+  };
+}
+function scoreMarginAuditForGames(G,games,season=G?.season){
+  const audit=emptyScoreMarginAudit(season);
+  for(const g of games||[]){
+    if(!g||!Number.isFinite(+g.homeScore)||!Number.isFinite(+g.awayScore))continue;
+    const margin=Math.abs((+g.homeScore)-(+g.awayScore));
+    audit.games++;
+    audit.totalMargin+=margin;
+    if(margin>=20)audit.twentyPlus++;
+    if(margin>=30)audit.thirtyPlus++;
+    if(margin>=40)audit.fortyPlus++;
+    if(margin>=50)audit.fiftyPlus++;
+    if(margin>=60)audit.sixtyPlus++;
+    if(margin>audit.largestMargin){
+      audit.largestMargin=margin;
+      audit.largestGameId=g.id||null;
+      const h=clubById(G,g.homeClubId),a=clubById(G,g.awayClubId);
+      audit.largestMatchup=`${h?.name||g.homeClubId||"Home"} ${g.homeScore}–${g.awayScore} ${a?.name||g.awayClubId||"Away"}`;
+    }
+  }
+  return audit;
+}
+function ensureScoreMarginAudit(G){
+  if(!G)return null;
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.scoreMarginAuditBySeason=G.runtimeMeta.scoreMarginAuditBySeason||{};
+  const key=`S${G.season}`;
+  const currentGames=G.regularSeasonLive?.games||G.regularSeason?.games||[];
+  let audit=G.runtimeMeta.scoreMarginAuditBySeason[key];
+
+  // Existing saves are backfilled once from retained current-season score data.
+  // We do not invent prior-season distributions if their game rows are no longer stored.
+  if(!audit||audit.version!==SCORE_MARGIN_AUDIT_VERSION||(+audit.games||0)>currentGames.length){
+    audit=scoreMarginAuditForGames(G,currentGames,G.season);
+    audit.updatedAtRound=G.regularSeasonLive?.roundIndex||G.regularSeason?.currentRound||0;
+    G.runtimeMeta.scoreMarginAuditBySeason[key]=audit;
+  }
+
+  const keys=Object.keys(G.runtimeMeta.scoreMarginAuditBySeason)
+    .sort((a,b)=>(+a.slice(1)||0)-(+b.slice(1)||0));
+  while(keys.length>50){
+    delete G.runtimeMeta.scoreMarginAuditBySeason[keys.shift()];
+  }
+  return audit;
+}
+function recordScoreMarginAuditGames(G,games,round){
+  if(!G||!(games||[]).length)return ensureScoreMarginAudit(G);
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.scoreMarginAuditBySeason=G.runtimeMeta.scoreMarginAuditBySeason||{};
+  const key=`S${G.season}`;
+  let audit=G.runtimeMeta.scoreMarginAuditBySeason[key];
+
+  // If this season was already partially played before this build, rebuild once
+  // from the complete retained slate so the incremental baseline is correct.
+  const retained=G.regularSeasonLive?.games||G.regularSeason?.games||[];
+  const expectedBefore=Math.max(0,retained.length-(games||[]).length);
+  if(!audit||audit.version!==SCORE_MARGIN_AUDIT_VERSION||(+audit.games||0)!==expectedBefore){
+    audit=scoreMarginAuditForGames(G,retained,G.season);
+    audit.updatedAtRound=round||G.regularSeasonLive?.roundIndex||0;
+    G.runtimeMeta.scoreMarginAuditBySeason[key]=audit;
+    return audit;
+  }
+
+  for(const g of games){
+    if(!g||!Number.isFinite(+g.homeScore)||!Number.isFinite(+g.awayScore))continue;
+    const margin=Math.abs((+g.homeScore)-(+g.awayScore));
+    audit.games++;
+    audit.totalMargin+=margin;
+    if(margin>=20)audit.twentyPlus++;
+    if(margin>=30)audit.thirtyPlus++;
+    if(margin>=40)audit.fortyPlus++;
+    if(margin>=50)audit.fiftyPlus++;
+    if(margin>=60)audit.sixtyPlus++;
+    if(margin>audit.largestMargin){
+      audit.largestMargin=margin;
+      audit.largestGameId=g.id||null;
+      const h=clubById(G,g.homeClubId),a=clubById(G,g.awayClubId);
+      audit.largestMatchup=`${h?.name||g.homeClubId||"Home"} ${g.homeScore}–${g.awayScore} ${a?.name||g.awayClubId||"Away"}`;
+    }
+  }
+  audit.updatedAtRound=round||G.regularSeasonLive?.roundIndex||0;
+  return audit;
+}
+function scoreMarginAuditSummary(G){
+  ensureScoreMarginAudit(G);
+  const bySeason=G?.runtimeMeta?.scoreMarginAuditBySeason||{};
+  const audits=Object.values(bySeason).filter(a=>a&&a.version===SCORE_MARGIN_AUDIT_VERSION);
+  const total=audits.reduce((z,a)=>{
+    z.games+=+a.games||0;
+    z.totalMargin+=+a.totalMargin||0;
+    z.twentyPlus+=+a.twentyPlus||0;
+    z.thirtyPlus+=+a.thirtyPlus||0;
+    z.fortyPlus+=+a.fortyPlus||0;
+    z.fiftyPlus+=+a.fiftyPlus||0;
+    z.sixtyPlus+=+a.sixtyPlus||0;
+    if((+a.largestMargin||0)>z.largestMargin){
+      z.largestMargin=+a.largestMargin||0;
+      z.largestMatchup=a.largestMatchup||null;
+      z.largestSeason=a.season||null;
+    }
+    return z;
+  },{games:0,totalMargin:0,twentyPlus:0,thirtyPlus:0,fortyPlus:0,fiftyPlus:0,sixtyPlus:0,largestMargin:0,largestMatchup:null,largestSeason:null});
+  total.avgMargin=total.games?Math.round((total.totalMargin/total.games)*10)/10:0;
+  total.seasons=audits.length;
+  return {current:bySeason[`S${G.season}`]||emptyScoreMarginAudit(G.season),career:total};
+}
+
 function regularSeasonLeadersSnapshot(G) {
   const players = G.clubs.flatMap(c => c.roster).filter(p => p.seasonStats?.gp > 0);
   const clubIdFor=p=>G.clubs.find(c=>c.roster.includes(p))?.id||null;
@@ -18979,11 +19111,12 @@ function regularSeasonLeadersSnapshot(G) {
   };
 }
 
-function refreshRegularSeasonSnapshot(G) {
+function refreshRegularSeasonSnapshot(G,{refreshLeaders=false}={}) {
   const live=G.regularSeasonLive;
+  const priorLeaders=G.regularSeason?.leaders||null;
   G.regularSeason = {
     games: live?.games || G.regularSeason?.games || [],
-    leaders: regularSeasonLeadersSnapshot(G),
+    leaders: refreshLeaders?regularSeasonLeadersSnapshot(G):priorLeaders,
     standings: G.clubs.map(c => ({ clubId:c.id, conference:c.conference, division:c.division, w:c.standings.w, l:c.standings.l, pf:c.standings.pf, pa:c.standings.pa, diff:c.standings.pf-c.standings.pa }))
       .sort((a,b) => b.w-a.w || b.diff-a.diff),
     currentRound: live?.roundIndex || 82,
@@ -19896,6 +20029,7 @@ function userNextFixture(G) {
 }
 
 function advanceRegularSeasonRound(G) {
+  const roundStarted=perfNow();
   if(G.phase!=="REGULAR_SEASON") return {ok:false,reason:"Regular season is not active"};
   if(G.internationalWindowLive && !G.internationalWindowLive.complete) return {ok:false,reason:"FIBA qualification window is active"};
   if(G.inSeasonCup?.finalPending) return {ok:false,reason:"The Cup Championship is active"};
@@ -19915,6 +20049,7 @@ function advanceRegularSeasonRound(G) {
     const others=G.clubs.map(c=>c.id).filter(id=>!used.has(id)).sort(()=>Math.random()-0.5);
     gamePairings=[...knockout];for(let i=0;i<others.length;i+=2)gamePairings.push({homeId:others[i],awayId:others[i+1],cupGroupId:null,cupKnockout:null});
   }
+  const simulationStarted=perfNow();
   for(const item of gamePairings){
     const home=G.clubs.find(c=>c.id===item.homeId), away=G.clubs.find(c=>c.id===item.awayId);
     const phaseTag=item.cupGroupId?'nba_cup_group':item.cupKnockout?(round===12?'nba_cup_quarterfinal':'nba_cup_semifinal'):'regular';
@@ -19923,7 +20058,9 @@ function advanceRegularSeasonRound(G) {
     if(item.cupGroupId)recordCupGame(G,game,item.cupGroupId);
     if(G.userClubGM?.clubId&&(item.homeId===G.userClubGM.clubId||item.awayId===G.userClubGM.clubId))live.lastUserGameId=game.id;
   }
+  const simulationEnded=perfNow();
   live.roundIndex++;
+  recordScoreMarginAuditGames(G,roundGames,round);
 
   const cupGroupRounds=G.inSeasonCup?.format?.groupStageRounds||cupFormatForLeague(G).groupStageRounds;
   if(round===cupGroupRounds && G.inSeasonCup?.stage==='GROUP_PLAY') resolveCupGroupPlay(G);
@@ -19941,15 +20078,32 @@ function advanceRegularSeasonRound(G) {
   // FO4 market checkpoints: AI clubs may make a small number of needs-driven
   // trades during the season. The user club is never auto-traded.
   if([18,36,54,72].includes(round))runAiTradeMarket(G,{checkpoint:`Round ${round}`,maxTrades:1});
-  refreshRegularSeasonSnapshot(G);
+  // Standings/current-round state must remain immediate, but full leader-table
+  // sorting is deferred until the user opens League Leaders.
+  refreshRegularSeasonSnapshot(G,{refreshLeaders:false});
   if(typeof ensureMediaForecastMilestones==="function")ensureMediaForecastMilestones(G);
   if(typeof courtsideAnalystTick==="function")courtsideAnalystTick(G);
   if(live.roundIndex>=82){
     live.complete=true; G.regularSeason.complete=true;
+    // Capture a final qualified leader snapshot once at the season boundary.
+    refreshRegularSeasonSnapshot(G,{refreshLeaders:true});
+    ensureScoreMarginAudit(G);
     logEvent(G,`Regular season complete: ${live.games.length} games with player box scores, live standings and player leaders.`);
     CURRENT_GAME_STATE=null; G.phase="PLAY_IN";
   } else CURRENT_GAME_STATE=null;
-  return {ok:true,round,roundGames,userGame:roundGames.find(g=>G.userClubGM?.clubId && (g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete};
+
+  const roundEnded=perfNow();
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.lastRegularSeasonRoundPerformance={
+    version:REGULAR_SEASON_PERFORMANCE_VERSION,
+    season:G.season,
+    round,
+    games:roundGames.length,
+    simulationMs:roundPerfMs(simulationEnded-simulationStarted),
+    postSimulationMs:roundPerfMs(roundEnded-simulationEnded),
+    totalMs:roundPerfMs(roundEnded-roundStarted)
+  };
+  return {ok:true,round,roundGames,userGame:roundGames.find(g=>G.userClubGM?.clubId && (g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete,performance:G.runtimeMeta.lastRegularSeasonRoundPerformance};
 }
 
 function advanceUserGames(G,count=1){
@@ -20716,7 +20870,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 246",ENGINE_VERSION="E2.26-PROD246";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 247",ENGINE_VERSION="E2.26-PROD247";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21692,6 +21846,7 @@ function refreshAwardPresentationOnly(){
 
 let _ordinarySaveCounter=0;
 const SAVE_WRITE_HISTORY_LIMIT=12;
+const SAVE_PERFORMANCE_VERSION="SPF2";
 function recordSaveWritePerformance(ms){
   if(!G)return;
   G.runtimeMeta=G.runtimeMeta||{};
@@ -21713,17 +21868,34 @@ function saveWritePerformanceStats(state=G){
 }
 function shouldRunPeriodicIntegrityCheck(){
   _ordinarySaveCounter++;
-  // Full repair/validation remains available through QA and still runs during
-  // load maintenance. Ordinary game-by-game saves use it only periodically so
-  // a mature career is not fully traversed immediately before every stringify.
-  return _ordinarySaveCounter===1||(_ordinarySaveCounter%20)===0||["OFFSEASON","CHAMPION"].includes(G?.phase);
+  // Full repair/validation remains available through QA and load maintenance.
+  // Do not traverse the entire career on ordinary game saves. At lifecycle
+  // boundaries, run once per season/phase.
+  if(!["OFFSEASON","CHAMPION"].includes(G?.phase))return false;
+  G.runtimeMeta=G.runtimeMeta||{};
+  const key=`S${G.season}:${G.phase}`;
+  if(G.runtimeMeta.lastBoundaryIntegritySaveKey===key)return false;
+  G.runtimeMeta.lastBoundaryIntegritySaveKey=key;
+  return true;
 }
 async function performCareerSave(silent=true){
   if(!G||!activeSlot)return false;
+  const totalStarted=perfNow();
+
   // Release obsolete AI regular-season detail before any expensive career walk
-  // or JSON serialization so the peak-memory operation sees the compact state.
+  // or IndexedDB structured clone so the peak-memory operation sees compact state.
+  const compactStarted=perfNow();
   compactRegularSeasonRuntime(G);
-  if(shouldRunPeriodicIntegrityCheck())reportCareerIntegrity("periodic-save");
+  const compactEnded=perfNow();
+
+  let integrityMs=0,integrityRan=false;
+  if(shouldRunPeriodicIntegrityCheck()){
+    const integrityStarted=perfNow();
+    reportCareerIntegrity("boundary-save");
+    integrityMs=roundPerfMs(perfNow()-integrityStarted);
+    integrityRan=true;
+  }
+
   G.runtimeMeta=G.runtimeMeta||{};
   G.runtimeMeta.nextIdCounter=typeof _idCounter!=="undefined"?_idCounter:(+G.runtimeMeta.nextIdCounter||1);
   G.saveSlot=activeSlot;G.lastSavedAt=Date.now();
@@ -21733,13 +21905,23 @@ async function performCareerSave(silent=true){
   G.runtimeMeta.lastSaveSerializeMs=0;
   G.runtimeMeta.lastSavePayloadBytes=null;
   G.runtimeMeta.saveStorageModel="IDB-NATIVE-STATE1";
-  const writeStarted=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
+
+  const prepEnded=perfNow();
+  const writeStarted=perfNow();
   const ok=await writeSlot(slot,G,meta);
-  const writeEnded=(typeof performance!=="undefined"&&performance.now)?performance.now():Date.now();
+  const writeEnded=perfNow();
+
   if(G?.runtimeMeta){
+    const writeMs=roundPerfMs(writeEnded-writeStarted);
     G.runtimeMeta.lastCompletedSaveSerial=serial;
-    G.runtimeMeta.lastSaveWriteMs=Math.max(0,Math.round((writeEnded-writeStarted)*10)/10);
-    recordSaveWritePerformance(G.runtimeMeta.lastSaveWriteMs);
+    G.runtimeMeta.lastSaveWriteMs=writeMs;
+    G.runtimeMeta.lastSaveCompactMs=roundPerfMs(compactEnded-compactStarted);
+    G.runtimeMeta.lastSaveIntegrityMs=integrityMs;
+    G.runtimeMeta.lastSaveIntegrityRan=integrityRan;
+    G.runtimeMeta.lastSavePrepMs=roundPerfMs(prepEnded-totalStarted);
+    G.runtimeMeta.lastSaveTotalMs=roundPerfMs(writeEnded-totalStarted);
+    G.runtimeMeta.savePerformanceVersion=SAVE_PERFORMANCE_VERSION;
+    recordSaveWritePerformance(writeMs);
     G.runtimeMeta.saveMemoryModel="IDB-NATIVE-STATE1";
     G.runtimeMeta.saveQueueDepth=0;
     G.runtimeMeta.saveRequests=+_saveRequestSerial||0;
@@ -21874,6 +22056,7 @@ async function loadSlot(slot,options={}){
 
     G.runtimeMeta=G.runtimeMeta||{};
     applyPersonalSourceIdentityLayer(G);
+    ensureScoreMarginAudit(G);
 
     if(Array.isArray(G.runtimeMeta.newsFlashQueue)&&G.runtimeMeta.newsFlashQueue.length>8)G.runtimeMeta.newsFlashQueue=G.runtimeMeta.newsFlashQueue.slice(-8);
 
@@ -24487,6 +24670,7 @@ async function advanceFromUi(n){
   // simulation paths anymore. A one-game action advances one career event,
   // extracts the user's game, and opens the universal result screen.
   if(Math.max(1,Math.floor(+n||1))===1 && ["SUMMER_LEAGUE","PRESEASON","REGULAR_SEASON","PLAY_IN","PLAYOFFS","WORLD_CUP","OLYMPICS"].includes(G.phase)){
+    const actionStarted=perfNow();
     if(G.phase==="SUMMER_LEAGUE"){
       ui.resultGameId=null;
       ui.resultReturn=null;
@@ -24511,6 +24695,7 @@ async function advanceFromUi(n){
       return;
     }
     if(!r?.ok){toast(r?.reason||"Unable to advance career");return;}
+    const advanceEnded=perfNow();
     let userGame=extractUserGameFromAdvance(r);
     if(!userGame&&userCupFinalPendingBeforeAdvance&&G.inSeasonCup?.complete&&G.inSeasonCup?.final?.gameId){
       const cupFinal=gameById(G.inSeasonCup.final.gameId),userId=G.userClubGM?.clubId;
@@ -24523,7 +24708,19 @@ async function advanceFromUi(n){
     // All single user-game advances receive a durable checkpoint before the
     // result screen. This prevents a Safari process failure during the next
     // action from rolling the career back several games.
+    const saveStarted=perfNow();
     await save();
+    const saveEnded=perfNow();
+    G.runtimeMeta=G.runtimeMeta||{};
+    G.runtimeMeta.lastCareerAdvancePerformance={
+      version:REGULAR_SEASON_PERFORMANCE_VERSION,
+      phase:phaseBefore,
+      season:G.season,
+      advanceMs:roundPerfMs(advanceEnded-actionStarted),
+      saveMs:roundPerfMs(saveEnded-saveStarted),
+      totalMs:roundPerfMs(saveEnded-actionStarted),
+      regularSeasonRound:r?.performance||null
+    };
     if(userGame){openResultWindow(userGame,resultReturnModeForAdvance(phaseBefore,userGame));return;}
     // Event may have been an observer/background transition. In particular,
     // Summer League Final Four rounds where the user's team is not involved
@@ -27792,6 +27989,10 @@ function commissionerControlCentreHtml(state){
 function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
   const sw=saveWritePerformanceStats(G);
+  const perf=G.runtimeMeta?.lastCareerAdvancePerformance||null;
+  const roundPerf=G.runtimeMeta?.lastRegularSeasonRoundPerformance||null;
+  const marginAudit=scoreMarginAuditSummary(G);
+  const curMargin=marginAudit.current,careerMargin=marginAudit.career;
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
     <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
@@ -27818,8 +28019,16 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
     <div class="more"><div><b>Mapped Record Profile Links</b><small>Historical records for launch/prospect players resolve to the same active or retired H³O profile · source fields preferred · source-mapped real-name recovery for older saves</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
+    <div class="more"><div><b>Regular Season Performance</b><small>League leaders deferred to on-demand view · routine game saves skip full-career traversal · next-game timing split into simulation, preparation and IndexedDB write</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
+    <div class="more"><div><b>Score Margin Audit</b><small>Current retained season backfilled · future seasons tracked persistently at 20+/30+/40+/50+/60+ thresholds · no scoring balance change</small></div><b>${SCORE_MARGIN_AUDIT_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
-    ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
+    ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div>
+    <div class="more"><div><b>Last Next-Game Total</b><small>${perf?`${String(perf.phase||"Career").replaceAll("_"," ")} · advance ${perf.advanceMs} ms · save ${perf.saveMs} ms`:"Collected after the next playable event"}</small></div><b>${perf?`${perf.totalMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Last League Simulation</b><small>${roundPerf?`${roundPerf.games} games · simulation ${roundPerf.simulationMs} ms · post-round ${roundPerf.postSimulationMs} ms`:"Collected after the next regular-season round"}</small></div><b>${roundPerf?`${roundPerf.totalMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Last Save Preparation</b><small>Compaction + metadata${G.runtimeMeta?.lastSaveIntegrityRan?` + boundary integrity ${G.runtimeMeta.lastSaveIntegrityMs} ms`:" · no full-career integrity traversal"}</small></div><b>${G.runtimeMeta?.lastSavePrepMs!=null?`${G.runtimeMeta.lastSavePrepMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Current Season Margins</b><small>${curMargin.games} games · 20+ ${curMargin.twentyPlus} · 30+ ${curMargin.thirtyPlus} · 40+ ${curMargin.fortyPlus} · 50+ ${curMargin.fiftyPlus} · 60+ ${curMargin.sixtyPlus}</small></div><b>${curMargin.games?`MAX ${curMargin.largestMargin}`:"—"}</b></div>
+    <div class="more"><div><b>Tracked Margin Audit</b><small>${careerMargin.seasons} season${careerMargin.seasons===1?"":"s"} with retained/tracked data · ${careerMargin.games} games · avg margin ${careerMargin.avgMargin} · 40+ ${careerMargin.fortyPlus} · 50+ ${careerMargin.fiftyPlus} · 60+ ${careerMargin.sixtyPlus}${careerMargin.largestMatchup?` · largest ${careerMargin.largestMatchup}`:""}</small></div><b>${careerMargin.games?`MAX ${careerMargin.largestMargin}`:"—"}</b></div>
+    <div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
 }
 function gameSettings(){
