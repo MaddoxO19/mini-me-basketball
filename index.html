@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 244</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 245</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12138,8 +12138,160 @@ const HISTORICAL_SINGLE_GAME_TOP5_2026={
   ]
 };
 
+const HISTORICAL_RECORD_REAL_NAME_VERSION="HRN1";
+const HISTORICAL_LEGACY_SOURCE_PREFIXES=[
+  ["LEG_WILT","Wilt Chamberlain"],
+  ["LEG_RUSSELL","Bill Russell"],
+  ["LEG_KAREEM","Kareem Abdul-Jabbar"],
+  ["LEG_KOBE","Kobe Bryant"],
+  ["LEG_JORDAN","Michael Jordan"],
+  ["LEG_MAGIC","Magic Johnson"],
+  ["LEG_HAKEEM","Hakeem Olajuwon"],
+  ["LEG_STOCKTON","John Stockton"],
+  ["LEG_SKILES","Scott Skiles"],
+  ["LEG_SHAQ","Shaquille O'Neal"],
+  ["LEG_BOL","Manute Bol"],
+  ["LEG_EATON","Mark Eaton"],
+  ["LEG_SMITH","Elmore Smith"],
+  ["LEG_GILL","Kendall Gill"],
+  ["LEG_STEALS","Larry Kenon / Kendall Gill"],
+  ["LEG_RONDO","Rajon Rondo"],
+  ["LEG_LOU","Lou Williams"],
+  ["LEG_ROY","Brandon Roy"],
+  ["LEG_KLAY","Klay Thompson"],
+  ["LEG_LILLARD","Damian Lillard"],
+  ["LEG_LAVINE","Zach LaVine"],
+  ["LEG_CURRY","Stephen Curry"],
+  ["LEG_MURPHY","Trey Murphy III"],
+  ["LEG_MCCONNELL","T.J. McConnell"],
+  ["LEG_DRAY","Draymond Green"],
+  ["LEG_LUKA","Luka Doncic"],
+  ["LEG_HARDEN","James Harden"],
+  ["LEG_DURANT","Kevin Durant"],
+  ["LEG_WESTBROOK","Russell Westbrook"],
+  ["LEG_PAUL","Chris Paul"],
+  ["LEG_ALLEN","Ray Allen"],
+  ["LEG_BARRY","Rick Barry"],
+  ["LEG_BUSE","Don Buse"],
+  ["LEG_CARMELO","Carmelo Anthony"],
+  ["LEG_CARTER","Vince Carter"],
+  ["LEG_DIRK","Dirk Nowitzki"],
+  ["LEG_DUNCAN","Tim Duncan"],
+  ["LEG_HAVLICEK","John Havlicek"],
+  ["LEG_HAYES","Elvin Hayes"],
+  ["LEG_ISIAH","Isiah Thomas"],
+  ["LEG_KIDD","Jason Kidd"],
+  ["LEG_KJ","Kevin Johnson"],
+  ["LEG_LUCAS","Jerry Lucas"],
+  ["LEG_MALONE","Karl Malone"],
+  ["LEG_MOSES","Moses Malone"],
+  ["LEG_MUTOMBO","Dikembe Mutombo"],
+  ["LEG_PARISH","Robert Parish"],
+  ["LEG_PAYTON","Gary Payton"],
+  ["LEG_PETTIT","Bob Pettit"],
+  ["LEG_PIERCE","Paul Pierce"],
+  ["LEG_PORTER","Kevin Porter"],
+  ["LEG_RICHARDSON","Micheal Ray Richardson"],
+  ["LEG_ROBERTSON","Alvin Robertson"],
+  ["LEG_THURMOND","Nate Thurmond"],
+  ["LEG_WEST","Jerry West"]
+];
+
+const HISTORICAL_ALIAS_TO_SOURCE={
+  "Walter Mercer":"Wilt Chamberlain",
+  "Caleb Mercer":"Bill Russell",
+  "Malik Rahman":"Kareem Abdul-Jabbar",
+  "Damon Vale":"Kobe Bryant",
+  "Darius Cole":"Michael Jordan",
+  "Marcus Johnson":"Magic Johnson",
+  "Hakim Alarin":"Hakeem Olajuwon",
+  "Caleb Stone":"John Stockton",
+  "Elliot Shaw":"Scott Skiles",
+  "Malik Oren":"Shaquille O'Neal",
+  "Musa Bolen":"Manute Bol",
+  "Gavin Eaton":"Mark Eaton",
+  "Elias Mercer":"Elmore Smith",
+  "Kellan Hart":"Kendall Gill",
+  "Ramon Vale":"Rajon Rondo",
+  "Louis Warren":"Lou Williams",
+  "Brandon Rayne":"Brandon Roy",
+  "Kellan Thompson":"Klay Thompson",
+  "Damien Laird":"Damian Lillard",
+  "Zane Levin":"Zach LaVine",
+  "Evan Cross":"Stephen Curry",
+  "Trey Murray III":"Trey Murphy III",
+  "T.J. Mercer":"T.J. McConnell",
+  "Darren Greenway":"Draymond Green",
+  "Niko Varen":"Luka Doncic",
+  "Andre Mercer":"James Harden",
+  "Kevin Durrant":"Kevin Durant",
+  "Russell Westbrooke":"Russell Westbrook",
+  "Chris Pall":"Chris Paul",
+  "Ray Allan":"Ray Allen",
+  "Rick Barrow":"Rick Barry",
+  "Don Brewer":"Don Buse",
+  "Carmelo Anthonie":"Carmelo Anthony",
+  "Vince Carterr":"Vince Carter",
+  "Dirk Nowitzkii":"Dirk Nowitzki",
+  "Tim Duncann":"Tim Duncan",
+  "John Havlichek":"John Havlicek",
+  "Elvin Hayess":"Elvin Hayes",
+  "Isaiah Thomasen":"Isiah Thomas",
+  "Jason Kydd":"Jason Kidd",
+  "Kevin Johnston":"Kevin Johnson",
+  "Jerry Lucasen":"Jerry Lucas",
+  "Karl Maloney":"Karl Malone",
+  "Moses Maloney":"Moses Malone",
+  "Demba Mutombo":"Dikembe Mutombo",
+  "Robert Parishh":"Robert Parish",
+  "Gary Paytonn":"Gary Payton",
+  "Robert Pettis":"Bob Pettit",
+  "Paul Pearce":"Paul Pierce",
+  "Kevin Porterfield":"Kevin Porter",
+  "Michael Ray Rivers":"Micheal Ray Richardson",
+  "Alvin Rowan":"Alvin Robertson",
+  "Nate Thurman":"Nate Thurmond",
+  "Jerry Weste":"Jerry West",
+  "Larry Keane / Kellan Hart":"Larry Kenon / Kendall Gill"
+};
+
+function historicalRealSourceName(record){
+  if(!record)return"";
+  const explicit=String(record.sourcePlayerName||"").trim();
+  if(explicit)return explicit;
+
+  const id=String(record.playerId||"");
+  for(const [prefix,name] of HISTORICAL_LEGACY_SOURCE_PREFIXES){
+    if(id.startsWith(prefix))return name;
+  }
+
+  return HISTORICAL_ALIAS_TO_SOURCE[String(record.playerName||"").trim()]||"";
+}
+
+function restoreHistoricalRecordRealNames(root){
+  const seen=new Set();
+  let changed=0;
+  const walk=v=>{
+    if(!v||typeof v!=="object"||seen.has(v))return;
+    seen.add(v);
+
+    if(v.historical===true){
+      const source=historicalRealSourceName(v);
+      if(source){
+        if(v.sourcePlayerName!==source){v.sourcePlayerName=source;changed++;}
+        if(v.playerName!==source){v.playerName=source;changed++;}
+      }
+    }
+
+    if(Array.isArray(v))v.forEach(walk);
+    else Object.values(v).forEach(walk);
+  };
+  walk(root);
+  return changed;
+}
+
 const HISTORICAL_LEGACY_BASELINE={
-  snapshot:"2026 production baseline",source:"professional basketball historical benchmarks · fictionalised identities",
+  snapshot:"2026 production baseline",source:"professional basketball historical benchmarks · source identities",
   singleGame:{
     points:{key:"points",value:100,season:"1961-62",playerId:"LEG_WILT",playerName:"Walter Mercer",clubName:"Philadelphia legacy",historical:true},
     rebounds:{key:"rebounds",value:55,season:"1960-61",playerId:"LEG_WILT",playerName:"Walter Mercer",clubName:"Philadelphia legacy",historical:true},
@@ -12251,7 +12403,7 @@ const HISTORICAL_LEGACY_BASELINE={
       {playerId:"LEG_DIRK_G",playerName:"Dirk Nowitzkii",clubName:"League legacy",value:1522,historical:true}
     ]
   },
-  honours:{playerChampionships:[{playerName:"Caleb Mercer",value:11},{playerName:"Sam Jonez",value:10},{playerName:"John Havlichek",value:8}],consecutiveTitles:{playerName:"Caleb Mercer",value:8,label:"Eight straight championships"},threePeats:[{playerName:"Darius Cole",value:2,label:"Two career three-peats"},{playerName:"Damon Vale",value:1,label:"2000–02 style three-peat benchmark"}]}
+  honours:{playerChampionships:[{sourcePlayerName:"Bill Russell",playerName:"Bill Russell",value:11},{sourcePlayerName:"Sam Jones",playerName:"Sam Jones",value:10},{sourcePlayerName:"John Havlicek",playerName:"John Havlicek",value:8}],consecutiveTitles:{sourcePlayerName:"Bill Russell",playerName:"Bill Russell",value:8,label:"Eight straight championships"},threePeats:[{sourcePlayerName:"Michael Jordan",playerName:"Michael Jordan",value:2,label:"Two career three-peats"},{sourcePlayerName:"Kobe Bryant",playerName:"Kobe Bryant",value:1,label:"2000–02 style three-peat benchmark"}]}
 };
 
 // v0.1.49.77.5.5.5.26 — authoritative league-legend resume baseline.
@@ -12259,15 +12411,15 @@ const HISTORICAL_LEGACY_BASELINE={
 // notables and from the live career awardHistory.  The values below are limited
 // to major NBA resume markers that are deliberately used by the legend model.
 const HISTORICAL_LEGEND_RESUMES=[
-  {playerName:"Darius Cole",sourcePlayerName:"Michael Jordan",pos:"SG",championships:6,mvps:5,finalsMvps:6,allNbaFirst:10,dpoys:1,scoringTitles:10},
-  {playerName:"Malik Rahman",sourcePlayerName:"Kareem Abdul-Jabbar",pos:"C",championships:6,mvps:6,finalsMvps:2,allNbaFirst:10,scoringTitles:2},
-  {playerName:"Caleb Mercer",sourcePlayerName:"Bill Russell",pos:"C",championships:11,mvps:5,finalsMvps:0,allNbaFirst:3},
-  {playerName:"Marcus Johnson",sourcePlayerName:"Magic Johnson",pos:"PG",championships:5,mvps:3,finalsMvps:3,allNbaFirst:9},
-  {playerName:"Larry Byrd",sourcePlayerName:"Larry Bird",pos:"SF/PF",championships:3,mvps:3,finalsMvps:2,allNbaFirst:9},
-  {playerName:"Tim Duncann",sourcePlayerName:"Tim Duncan",pos:"PF/C",championships:5,mvps:2,finalsMvps:3,allNba:15},
-  {playerName:"Walter Mercer",sourcePlayerName:"Wilt Chamberlain",pos:"C",championships:2,mvps:4,finalsMvps:1,allNbaFirst:7,scoringTitles:7},
-  {playerName:"Damon Vale",sourcePlayerName:"Kobe Bryant",pos:"SG",championships:5,mvps:1,finalsMvps:2},
-  {playerName:"Hakim Alarin",sourcePlayerName:"Hakeem Olajuwon",pos:"C",championships:2,mvps:1,finalsMvps:2,dpoys:2}
+  {playerName:"Michael Jordan",sourcePlayerName:"Michael Jordan",pos:"SG",championships:6,mvps:5,finalsMvps:6,allNbaFirst:10,dpoys:1,scoringTitles:10},
+  {playerName:"Kareem Abdul-Jabbar",sourcePlayerName:"Kareem Abdul-Jabbar",pos:"C",championships:6,mvps:6,finalsMvps:2,allNbaFirst:10,scoringTitles:2},
+  {playerName:"Bill Russell",sourcePlayerName:"Bill Russell",pos:"C",championships:11,mvps:5,finalsMvps:0,allNbaFirst:3},
+  {playerName:"Magic Johnson",sourcePlayerName:"Magic Johnson",pos:"PG",championships:5,mvps:3,finalsMvps:3,allNbaFirst:9},
+  {playerName:"Larry Bird",sourcePlayerName:"Larry Bird",pos:"SF/PF",championships:3,mvps:3,finalsMvps:2,allNbaFirst:9},
+  {playerName:"Tim Duncan",sourcePlayerName:"Tim Duncan",pos:"PF/C",championships:5,mvps:2,finalsMvps:3,allNba:15},
+  {playerName:"Wilt Chamberlain",sourcePlayerName:"Wilt Chamberlain",pos:"C",championships:2,mvps:4,finalsMvps:1,allNbaFirst:7,scoringTitles:7},
+  {playerName:"Kobe Bryant",sourcePlayerName:"Kobe Bryant",pos:"SG",championships:5,mvps:1,finalsMvps:2},
+  {playerName:"Hakeem Olajuwon",sourcePlayerName:"Hakeem Olajuwon",pos:"C",championships:2,mvps:1,finalsMvps:2,dpoys:2}
 ];
 function historicalLegendResumeText(r){
   const bits=[];
@@ -12288,13 +12440,9 @@ function historicalLegendResumeScore(r){
 // public holder identities use deterministic fictional aliases. Developer-only source
 // identity keys remain available for reconciliation and are not presented to the user.
 function sanitizeHistoricalRecordIdentities(root){
-  const seen=new Set();
-  const walk=v=>{
-    if(!v||typeof v!=="object"||seen.has(v))return;seen.add(v);
-    if(v.historical===true&&v.playerName)v.playerName=releaseHistoricalAlias(v.sourcePlayerName||v.playerName);
-    if(Array.isArray(v))v.forEach(walk);else Object.values(v).forEach(walk);
-  };
-  walk(root);
+  // Personal-use build: historical record identities display their preserved
+  // real source names. The commercial alias helper remains available elsewhere.
+  return restoreHistoricalRecordRealNames(root);
 }
 sanitizeHistoricalRecordIdentities(HISTORICAL_SINGLE_GAME_TOP5_2026);
 sanitizeHistoricalRecordIdentities(HISTORICAL_LEGACY_BASELINE);
@@ -12304,6 +12452,7 @@ function makeHistoricalRecordState(){
 }
 function ensureHistoricalRecords(G){
   if(!G.historicalRecords||typeof G.historicalRecords!=="object")G.historicalRecords=makeHistoricalRecordState();
+  restoreHistoricalRecordRealNames(G.historicalRecords);
   G.historicalRecords.league=G.historicalRecords.league||{singleGame:{},teamGame:{},seasonRates:{},career:{}};
   G.historicalRecords.league.singleGame=G.historicalRecords.league.singleGame||{};
   G.historicalRecords.league.singleGameTop5=G.historicalRecords.league.singleGameTop5||{};
@@ -12330,6 +12479,7 @@ function ensureHistoricalRecords(G){
   }
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.career))G.historicalRecords.league.career[k]=mergeHistoricalTop(G.historicalRecords.league.career[k],list);
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.seasonRates))G.historicalRecords.league.seasonRates[k]=mergeHistoricalTop(G.historicalRecords.league.seasonRates[k],list,"season");
+  restoreHistoricalRecordRealNames(G.historicalRecords);
   return G.historicalRecords;
 }
 function recordValueBetter(next,cur){return !cur || (+next.value||0)>(+cur.value||0)}
@@ -20542,7 +20692,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 244",ENGINE_VERSION="E2.26-PROD244";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 245",ENGINE_VERSION="E2.26-PROD245";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -27642,6 +27792,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Season Leader Qualification</b><small>NBA-style dynamic minimums applied at snapshot source and Club Leaders · 70% team games for per-game leaders · 300 FGM / 125 FTM / 82 3PM scaled to team games</small></div><b>${SEASON_LEADER_QUALIFICATION_VERSION}</b></div>
     <div class="more"><div><b>Record Source Identity</b><small>Historical benchmarks with a current/mapped source player resolve to that H³O profile · pure legacy records remain non-linking · fictional-name fallback remains disabled</small></div><b>${RECORD_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
+    <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
