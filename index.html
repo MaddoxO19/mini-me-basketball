@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 247</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 248</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -8101,8 +8101,8 @@ function playerStatIdentity(player) {
 }
 function statisticalIdentityLabel(player){const s=player?.statisticalIdentity;return s?.tier&&s.tier!=="Standard"?`${s.tier} · ${s.type}`:(s?.type||player?.archetype||"Balanced");}
 // One pulse per player per game. Most nights stay close to expectation; rare elite nights widen the tail.
-function playerGamePulse(player) {
-  const statId=playerStatIdentity(player),ovr=player?.ovr||70;
+function playerGamePulse(player, identityOverride=null) {
+  const statId=identityOverride||playerStatIdentity(player),ovr=player?.ovr||70;
   const scorer=["Combo Guard","Sharpshooter","Slasher","3-and-D Wing","Playmaking Forward","Stretch Four","Stretch Five"].includes(player?.archetype);
   const creator=["Floor General","Combo Guard","Playmaking Forward"].includes(player?.archetype);
   const rebounder=["Rim Protector","Traditional Big","Stretch Five","Stretch Four"].includes(player?.archetype);
@@ -18537,7 +18537,7 @@ function buildRegularRotation(club) {
   return rotation.slice(0, 10);
 }
 
-function playerUsageWeight(player) {
+function playerUsageWeight(player, identityOverride=null) {
   const role = player.rotationRole || "Rotation";
   let roleBoost = role === "Primary Starter" ? 1.58 : role === "Starter" ? 1.16 : role === "Sixth Man" ? 1.08 : 0.90;
   const ovr=Math.max(50,Math.min(99,+player.ovr||70));
@@ -18558,7 +18558,7 @@ function playerUsageWeight(player) {
   else if(ovr>=85) eliteBoost=1.00+(ovr-85)*0.006;
   else if(ovr<80) eliteBoost=Math.max(.92,1-(80-ovr)*.008);
 
-  const identity=playerStatIdentity(player);
+  const identity=identityOverride||playerStatIdentity(player);
   return Math.max(1, Math.pow(quality, 1.22) * roleBoost * identity.usage * eliteBoost);
 }
 
@@ -18571,6 +18571,26 @@ function weightedPick(items, weightFn) {
     if (r <= 0) return items[i];
   }
   return items[items.length - 1];
+}
+
+function prepareWeightedPick(items,weightFn){
+  const weights=new Array(items.length);
+  let total=0;
+  for(let i=0;i<items.length;i++){
+    const w=Math.max(0.01,weightFn(items[i],i));
+    weights[i]=w;total+=w;
+  }
+  return{items,weights,total};
+}
+function weightedPickPrepared(prepared){
+  const items=prepared?.items||[];
+  if(!items.length)return null;
+  let r=Math.random()*Math.max(.01,+prepared.total||0);
+  for(let i=0;i<items.length;i++){
+    r-=prepared.weights[i];
+    if(r<=0)return items[i];
+  }
+  return items[items.length-1];
 }
 
 
@@ -18674,14 +18694,14 @@ function allocateGameMinutes(rotation) {
 const SIM_TUNING={
   shotProfile:{threeArchetype:0.58,rimArchetype:0.24,defaultThreeRate:0.45,guardBonus:0.04,centerPenalty:0.06,minThreeRate:0.05,maxThreeRate:0.75}
 };
-function shotProfile(player) {
+function shotProfile(player, identityOverride=null) {
   const threeArches = ["Sharpshooter", "Stretch Four", "Stretch Five", "3-and-D Guard", "3-and-D Wing"];
   const rimArches = ["Slasher", "Traditional Big", "Rim Protector"];
   const t=SIM_TUNING.shotProfile;
   let threeRate = threeArches.includes(player.archetype) ? t.threeArchetype : rimArches.includes(player.archetype) ? t.rimArchetype : t.defaultThreeRate;
   if (player.position === "PG" || player.position === "SG") threeRate += t.guardBonus;
   if (player.position === "C") threeRate -= t.centerPenalty;
-  threeRate += playerStatIdentity(player).threeRate;
+  threeRate += (identityOverride||playerStatIdentity(player)).threeRate;
   return Math.max(t.minThreeRate, Math.min(t.maxThreeRate, threeRate));
 }
 
@@ -18709,8 +18729,9 @@ function assistOpportunityByMinutes(minutes){
 }
 
 function simulatePossessionGame(clubA, clubB, options = {}) {
-  if(options.gameState)ensureLeagueStatisticalIdentities(options.gameState);
-  else {for(const p of [...(clubA?.roster||[]),...(clubB?.roster||[])])if(!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p);}
+  const perfStarted=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
+  if(options.gameState&&!options.statisticalIdentitiesReady)ensureLeagueStatisticalIdentities(options.gameState);
+  else if(!options.gameState){for(const p of [...(clubA?.roster||[]),...(clubB?.roster||[])])if(!p.statisticalIdentity?.locked)assignEngineStatisticalIdentity(p);}
   const phaseTag = options.phaseTag || "regular";
   const round = options.round || 0;
   const updateStandings = options.updateStandings !== false;
@@ -18728,8 +18749,31 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pf: 0, plusMinus: 0 }
   }));
   const linesA = initLines(slotsA), linesB = initLines(slotsB);
-  const gamePulses=new Map([...linesA,...linesB].map(x=>[x.player.id,playerGamePulse(x.player)]));
-  const pulseFor=(p)=>gamePulses.get(p.id)||{usage:1,efficiency:0,assist:1,rebound:1,defense:1,label:"Normal"};
+  const allLines=[...linesA,...linesB];
+
+  // Build expensive, deterministic player simulation inputs once per game.
+  // Previously these were recomputed hundreds of times inside possession-weight
+  // callbacks (build regexes, generational/legacy layers, statistical identity).
+  const statIds=new Map();
+  const simProfiles=new Map();
+  const statFor=(p)=>{
+    let s=statIds.get(p.id);
+    if(!s){s=playerStatIdentity(p);statIds.set(p.id,s);}
+    return s;
+  };
+  for(const x of allLines){
+    const p=x.player,stat=statFor(p);
+    const pulse=playerGamePulse(p,stat);
+    simProfiles.set(p.id,{
+      stat,pulse,
+      usageWeight:playerUsageWeight(p,stat),
+      threeRate:shotProfile(p,stat),
+      legacyEff:eliteLegacyEfficiency(p),
+      assistOpportunity:assistOpportunityByMinutes(x.line.min)
+    });
+  }
+  const profileFor=(p)=>simProfiles.get(p.id);
+  const pulseFor=(p)=>profileFor(p)?.pulse||{usage:1,efficiency:0,assist:1,rebound:1,defense:1,label:"Normal"};
   linesA._pulseFor=pulseFor;linesB._pulseFor=pulseFor;
   const qA = [0,0,0,0], qB = [0,0,0,0];
   const teamRating = (slots) => slots.reduce((a,x)=>a+x.player.ovr*x.minutes,0)/240;
@@ -18751,7 +18795,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   }
   function defensiveIdentityImpact(defLines){
     const pool=onCourtPool(defLines),mins=Math.max(1,pool.reduce((a,x)=>a+x.line.min,0));
-    return pool.reduce((a,x)=>a+playerStatIdentity(x.player).defensiveImpact*x.line.min,0)/mins;
+    return pool.reduce((a,x)=>a+statFor(x.player).defensiveImpact*x.line.min,0)/mins;
   }
   function playSide(offLines, defLines, possessions, quarterScores, offenseClub, defenseClub) {
     const offPool = onCourtPool(offLines), defPool = onCourtPool(defLines);
@@ -18762,41 +18806,84 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
       ?(sideIsA?playoffStrengthEdge:-playoffStrengthEdge)
       :(sideIsA?externalStrengthEdge:-externalStrengthEdge);
     const homeAdj=playoffMode&&options.homeCourtAdvantage?(sideIsA?playoffHomeEdge:-playoffHomeEdge):0;
+
+    // Club context does not change during a game.
+    const coachingLevel=frontOfficeLevelForClub(offenseClub,"coaching",options.gameState||null);
+    const chemistry=(offenseClub.chemistry||65)+coachingChemistryBonus(coachingLevel);
+    const chemAdj=(chemistry-65)*0.00055;
+    const turnoverCoachingBonus=coachingTurnoverBonus(coachingLevel);
+    const assistProb=Math.max(0.61,Math.min(0.87,0.735+(chemistry-65)*0.0018));
+    const offBigCount=offPool.reduce((n,x)=>n+(x.player.position==="C"||x.player.position==="PF"?1:0),0);
+    const offRebChance=0.245+(offBigCount-2)*0.012;
+
+    // All weighted-pick inputs are static for the duration of this side.
+    const shooterPick=prepareWeightedPick(offPool,x=>{
+      const prof=profileFor(x.player),pulse=prof.pulse;
+      const postseason=playoffMode?playoffUsageMultiplier(offPool,x.player,pulse):1;
+      return prof.usageWeight*pulse.usage*(0.55+x.line.min/35)*postseason;
+    });
+    const stealPick=prepareWeightedPick(defPool,x=>{
+      const prof=profileFor(x.player);
+      return (0.5+(x.player.ovr-50)/35+(x.player.position==="PG"||x.player.position==="SG"?0.25:0))*prof.stat.steal*prof.pulse.defense;
+    });
+    const foulPick=prepareWeightedPick(defPool,x=>1+x.line.min/36);
+    const offReboundPick=prepareWeightedPick(offPool,x=>{
+      const prof=profileFor(x.player);
+      return (0.72+(x.player.position==="C"?3.55:x.player.position==="PF"?2.25:x.player.position==="SF"?1.15:0.55)+Math.max(0,(x.player.ovr-68)/16)+(["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.5:0))*prof.stat.rebound*prof.pulse.rebound;
+    });
+    const defReboundPick=prepareWeightedPick(defPool,x=>{
+      const prof=profileFor(x.player);
+      return (0.78+(x.player.position==="C"?3.75:x.player.position==="PF"?2.35:x.player.position==="SF"?1.20:0.55)+Math.max(0,(x.player.ovr-68)/15)+(["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.7:0))*prof.stat.rebound*prof.pulse.rebound;
+    });
+    const putbackBlockPick=prepareWeightedPick(defPool,x=>{
+      const prof=profileFor(x.player);
+      return (0.25+(x.player.position==="C"?5.0:x.player.position==="PF"?2.2:0.25)+(x.player.archetype==="Rim Protector"?3.5:0)+Math.max(0,(x.player.ovr-70)/16))*prof.stat.block*prof.pulse.defense;
+    });
+    const closeBlockPick=prepareWeightedPick(defPool,x=>{
+      const prof=profileFor(x.player);
+      return (0.25+(x.player.position==="C"?5.5:x.player.position==="PF"?2.4:x.player.position==="SF"?0.55:0.12)+Math.max(0,(x.player.ovr-70)/15)+(x.player.archetype==="Rim Protector"?3.6:x.player.archetype==="Traditional Big"?1.3:0))*prof.stat.block*prof.pulse.defense;
+    });
+    const assistPicks=new Map();
+    for(const shooterLine of offPool){
+      const mates=offPool.filter(x=>x.player.id!==shooterLine.player.id);
+      assistPicks.set(shooterLine.player.id,prepareWeightedPick(mates,x=>{
+        const prof=profileFor(x.player);
+        const pos=x.player.position==="PG"?4.8:x.player.position==="SG"?1.75:x.player.position==="SF"?1.05:0.65;
+        const arch=x.player.archetype==="Floor General"?4.5:x.player.archetype==="Playmaking Forward"?3.2:x.player.archetype==="Combo Guard"?1.0:0;
+        const quality=Math.max(0,(x.player.ovr-72)*0.075);
+        return (0.35+pos+arch+quality)*prof.assistOpportunity*prof.stat.assist*prof.pulse.assist;
+      }));
+    }
+
     for (let poss = 0; poss < possessions; poss++) {
       const q = Math.min(3, Math.floor(poss / Math.max(1, possessions / 4)));
-      const shooter = weightedPick(offPool, x => {
-        const pulse=pulseFor(x.player);
-        const postseason=playoffMode?playoffUsageMultiplier(offPool,x.player,pulse):1;
-        return playerUsageWeight(x.player)*pulse.usage*(0.55+x.line.min/35)*postseason;
-      });
-      const p = shooter.player;
+      const shooter = weightedPickPrepared(shooterPick);
+      const p = shooter.player,prof=profileFor(p);
       const fatigue = p.fatigue || 0;
-      const coachingLevel=frontOfficeLevelForClub(offenseClub,"coaching",options.gameState||null);
-      const chemistry = (offenseClub.chemistry || 65) + coachingChemistryBonus(coachingLevel);
       const handling = (p.position === "PG" ? 0.018 : 0) + (["Floor General","Playmaking Forward"].includes(p.archetype) ? 0.012 : 0);
-      const turnoverProb = Math.max(0.082, Math.min(0.19, 0.132 - (p.ovr-70)*0.0013 - handling - coachingTurnoverBonus(coachingLevel) + fatigue*0.00045 + (defImpact-1)*0.030 - (strengthAdj+homeAdj)*0.35));
+      const turnoverProb = Math.max(0.082, Math.min(0.19, 0.132 - (p.ovr-70)*0.0013 - handling - turnoverCoachingBonus + fatigue*0.00045 + (defImpact-1)*0.030 - (strengthAdj+homeAdj)*0.35));
       if (Math.random() < turnoverProb) {
         shooter.line.tov++;
-        if (Math.random() < 0.82) weightedPick(defPool, x => (0.5 + (x.player.ovr-50)/35 + (x.player.position === "PG" || x.player.position === "SG" ? 0.25 : 0)) * playerStatIdentity(x.player).steal * pulseFor(x.player).defense).line.stl++;
+        if (Math.random() < 0.82) weightedPickPrepared(stealPick).line.stl++;
         continue;
       }
 
       // Shooting foul possessions. These generate real FTA/FTM rather than points being patched later.
-      const foulDraw = Math.max(0.065, Math.min(0.22, (0.102 + (p.archetype === "Slasher" ? 0.028 : 0) + (p.ovr-70)*0.0009) * playerStatIdentity(p).foulDraw));
+      const foulDraw = Math.max(0.065, Math.min(0.22, (0.102 + (p.archetype === "Slasher" ? 0.028 : 0) + (p.ovr-70)*0.0009) * prof.stat.foulDraw));
       if (Math.random() < foulDraw) {
-        const isThreeFoul = Math.random() < shotProfile(p) * 0.08;
+        const isThreeFoul = Math.random() < prof.threeRate * 0.08;
         const attempts = isThreeFoul ? 3 : 2;
         shooter.line.fta += attempts;
-        const legacyEff=eliteLegacyEfficiency(p);
+        const legacyEff=prof.legacyEff;
         const ftPct = Math.max(0.58, Math.min(0.92, 0.70 + (p.ovr-60)*0.0032 + (["Sharpshooter","Floor General"].includes(p.archetype) ? 0.035 : 0) + legacyEff.ft));
         let made = 0;
         for (let i=0;i<attempts;i++) if (Math.random() < ftPct) made++;
         shooter.line.ftm += made; shooter.line.pts += made; quarterScores[q] += made;
-        weightedPick(defPool, x => 1 + x.line.min/36).line.pf++;
+        weightedPickPrepared(foulPick).line.pf++;
         continue;
       }
 
-      const isThree = Math.random() < shotProfile(p);
+      const isThree = Math.random() < prof.threeRate;
       shooter.line.fga++; if (isThree) shooter.line.tpa++;
       const chemAdj = (chemistry - 65) * 0.00055;
       const fatigueAdj = fatigue * 0.00055;
@@ -18805,51 +18892,46 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
         const rawShootRating=Number.isFinite(+p.sourceThreePt)?+p.sourceThreePt:(62+(p.ovr-60)*0.62);
         const shootRating=Math.max(rawShootRating,generationalShootRatingFloor(p));
         const shootArchBonus=["Sharpshooter","Stretch Four","Stretch Five","3-and-D Guard","3-and-D Wing"].includes(p.archetype)?0.020:0;
-        pct = 0.285 + (shootRating-60)*0.0030 + shootArchBonus + (playerStatIdentity(p).threeAccuracy||0);
+        pct = 0.285 + (shootRating-60)*0.0030 + shootArchBonus + (prof.stat.threeAccuracy||0);
         pct -= (defQ-70)*0.0007 + (defImpact-1)*0.035;
       } else {
-        pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0) + eliteLegacyEfficiency(p).two;
+        pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0) + prof.legacyEff.two;
         pct -= (defQ-70)*0.0008 + (defImpact-1)*0.042;
       }
-      pct = Math.max(isThree ? 0.235 : 0.375, Math.min(isThree ? 0.475 : 0.695, pct + chemAdj - fatigueAdj + pulseFor(p).efficiency + strengthAdj + homeAdj));
+      pct = Math.max(isThree ? 0.235 : 0.375, Math.min(isThree ? 0.475 : 0.695, pct + chemAdj - fatigueAdj + prof.pulse.efficiency + strengthAdj + homeAdj));
       const made = Math.random() < pct;
       if (made) {
         shooter.line.fgm++; if (isThree) shooter.line.tpm++;
         const pts = isThree ? 3 : 2; shooter.line.pts += pts; quarterScores[q] += pts;
-        const assistProb = Math.max(0.61, Math.min(0.87, 0.735 + (chemistry-65)*0.0018));
         if (Math.random() < assistProb) {
-          const mates = offPool.filter(x => x.player.id !== p.id);
-          if (mates.length) weightedPick(mates, x => {
-            const pos=x.player.position==="PG"?4.8:x.player.position==="SG"?1.75:x.player.position==="SF"?1.05:0.65;
-            const arch=x.player.archetype==="Floor General"?4.5:x.player.archetype==="Playmaking Forward"?3.2:x.player.archetype==="Combo Guard"?1.0:0;
-            const quality=Math.max(0,(x.player.ovr-72)*0.075);
-            const minutesOpportunity=assistOpportunityByMinutes(x.line.min);
-            return (0.35+pos+arch+quality) * minutesOpportunity * playerStatIdentity(x.player).assist * pulseFor(x.player).assist;
-          }).line.ast++;
+          const assistPick=assistPicks.get(p.id);
+          if(assistPick?.items?.length)weightedPickPrepared(assistPick).line.ast++;
         }
       } else {
         // Missed shots resolve to a rebound, with a realistic offensive rebound chance.
-        const offRebChance = 0.245 + (offPool.filter(x=>x.player.position==="C"||x.player.position==="PF").length-2)*0.012;
         if (Math.random() < offRebChance) {
-          const rebounder = weightedPick(offPool, x => (0.72 + (x.player.position === "C" ? 3.55 : x.player.position === "PF" ? 2.25 : x.player.position === "SF" ? 1.15 : 0.55) + Math.max(0,(x.player.ovr-68)/16) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.5:0)) * playerStatIdentity(x.player).rebound * pulseFor(x.player).rebound);
+          const rebounder = weightedPickPrepared(offReboundPick);
           rebounder.line.reb++;
           // Second-chance attempt: offensive rebounds create extra offence rather than ending the possession.
           if (Math.random() < 0.68) {
             rebounder.line.fga++;
             const putbackPct = Math.max(0.42, Math.min(0.67, 0.50 + (rebounder.player.ovr-65)*0.003));
             if (Math.random() < putbackPct) { rebounder.line.fgm++; rebounder.line.pts += 2; quarterScores[q] += 2; }
-            else if (Math.random() < 0.20) weightedPick(defPool, x => (0.25 + (x.player.position === "C" ? 5.0 : x.player.position === "PF" ? 2.2 : 0.25) + (x.player.archetype==="Rim Protector"?3.5:0) + Math.max(0,(x.player.ovr-70)/16)) * playerStatIdentity(x.player).block * pulseFor(x.player).defense).line.blk++;
+            else if (Math.random() < 0.20) weightedPickPrepared(putbackBlockPick).line.blk++;
           }
         } else {
-          weightedPick(defPool, x => (0.78 + (x.player.position === "C" ? 3.75 : x.player.position === "PF" ? 2.35 : x.player.position === "SF" ? 1.20 : 0.55) + Math.max(0,(x.player.ovr-68)/15) + (["Traditional Big","Rim Protector"].includes(x.player.archetype)?1.7:0)) * playerStatIdentity(x.player).rebound * pulseFor(x.player).rebound).line.reb++;
-          if (!isThree && Math.random() < 0.27) weightedPick(defPool, x => (0.25 + (x.player.position === "C" ? 5.5 : x.player.position === "PF" ? 2.4 : x.player.position === "SF" ? 0.55 : 0.12) + Math.max(0,(x.player.ovr-70)/15) + (x.player.archetype==="Rim Protector"?3.6:x.player.archetype==="Traditional Big"?1.3:0)) * playerStatIdentity(x.player).block * pulseFor(x.player).defense).line.blk++;
+          weightedPickPrepared(defReboundPick).line.reb++;
+          if (!isThree && Math.random() < 0.27) weightedPickPrepared(closeBlockPick).line.blk++;
         }
       }
     }
   }
 
+  const prepEnded=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
+  const possessionsStarted=prepEnded;
   playSide(linesA, linesB, pace, qA, clubA, clubB);
   playSide(linesB, linesA, pace, qB, clubB, clubA);
+  const regulationPossessionsEnded=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
 
   // Guardrail for extreme low-minute assist outliers. A short bench stint can
   // still produce a brilliant passing game, but cannot routinely generate
@@ -18922,14 +19004,29 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
     homeScore:scoreA, awayScore:scoreB, winnerClubId:winner, possessions:{home:pace,away:pace}, overtime,
     quarters:{home:qA,away:qB}, overtimePeriods:{home:otA,away:otB}, boxScore:{home:boxA,away:boxB} };
   if(options.gameState)ingestHistoricalGameRecords(options.gameState,gameResult);
+  const perfEnded=typeof perfNow==="function"?perfNow():((typeof performance!=="undefined"&&performance.now)?performance.now():Date.now());
+  if(options.gameState&&phaseTag==="regular"){
+    const rt=options.gameState.runtimeMeta||(options.gameState.runtimeMeta={});
+    const acc=rt._regularGamePerfAccumulator||(rt._regularGamePerfAccumulator={games:0,prepMs:0,possessionsMs:0,postgameMs:0,totalMs:0,maxGameMs:0});
+    const prepMs=prepEnded-perfStarted;
+    const possessionsMs=regulationPossessionsEnded-possessionsStarted;
+    const postgameMs=perfEnded-regulationPossessionsEnded;
+    const totalMs=perfEnded-perfStarted;
+    acc.games++;
+    acc.prepMs+=prepMs;
+    acc.possessionsMs+=possessionsMs;
+    acc.postgameMs+=postgameMs;
+    acc.totalMs+=totalMs;
+    acc.maxGameMs=Math.max(acc.maxGameMs,totalMs);
+  }
   return gameResult;
 }
 
 function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
-  return simulatePossessionGame(clubA, clubB, { round, phaseTag, updateStandings: true, statsField: "seasonStats", trackForm: true, allowInjuries:true, gameState: CURRENT_GAME_STATE, season: CURRENT_GAME_STATE?.season||0 });
+  return simulatePossessionGame(clubA, clubB, { round, phaseTag, updateStandings: true, statsField: "seasonStats", trackForm: true, allowInjuries:true, gameState: CURRENT_GAME_STATE, season: CURRENT_GAME_STATE?.season||0, statisticalIdentitiesReady:true });
 }
 
-const REGULAR_SEASON_PERFORMANCE_VERSION="RSP2";
+const REGULAR_SEASON_PERFORMANCE_VERSION="RSP3";
 const SCORE_MARGIN_AUDIT_VERSION="SMA1";
 
 function perfNow(){
@@ -20049,6 +20146,9 @@ function advanceRegularSeasonRound(G) {
     const others=G.clubs.map(c=>c.id).filter(id=>!used.has(id)).sort(()=>Math.random()-0.5);
     gamePairings=[...knockout];for(let i=0;i<others.length;i+=2)gamePairings.push({homeId:others[i],awayId:others[i+1],cupGroupId:null,cupKnockout:null});
   }
+  ensureLeagueStatisticalIdentities(G);
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta._regularGamePerfAccumulator={games:0,prepMs:0,possessionsMs:0,postgameMs:0,totalMs:0,maxGameMs:0};
   const simulationStarted=perfNow();
   for(const item of gamePairings){
     const home=G.clubs.find(c=>c.id===item.homeId), away=G.clubs.find(c=>c.id===item.awayId);
@@ -20094,6 +20194,17 @@ function advanceRegularSeasonRound(G) {
 
   const roundEnded=perfNow();
   G.runtimeMeta=G.runtimeMeta||{};
+  const gamePerf=G.runtimeMeta._regularGamePerfAccumulator||{};
+  G.runtimeMeta.lastRegularSeasonGamePerformanceBreakdown={
+    version:"RGP1",
+    games:+gamePerf.games||0,
+    prepMs:roundPerfMs(gamePerf.prepMs),
+    possessionsMs:roundPerfMs(gamePerf.possessionsMs),
+    postgameMs:roundPerfMs(gamePerf.postgameMs),
+    averageGameMs:roundPerfMs((+gamePerf.totalMs||0)/Math.max(1,+gamePerf.games||0)),
+    maxGameMs:roundPerfMs(gamePerf.maxGameMs)
+  };
+  delete G.runtimeMeta._regularGamePerfAccumulator;
   G.runtimeMeta.lastRegularSeasonRoundPerformance={
     version:REGULAR_SEASON_PERFORMANCE_VERSION,
     season:G.season,
@@ -20101,7 +20212,8 @@ function advanceRegularSeasonRound(G) {
     games:roundGames.length,
     simulationMs:roundPerfMs(simulationEnded-simulationStarted),
     postSimulationMs:roundPerfMs(roundEnded-simulationEnded),
-    totalMs:roundPerfMs(roundEnded-roundStarted)
+    totalMs:roundPerfMs(roundEnded-roundStarted),
+    gameBreakdown:G.runtimeMeta.lastRegularSeasonGamePerformanceBreakdown
   };
   return {ok:true,round,roundGames,userGame:roundGames.find(g=>G.userClubGM?.clubId && (g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))||null,complete:live.complete,performance:G.runtimeMeta.lastRegularSeasonRoundPerformance};
 }
@@ -20870,7 +20982,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 247",ENGINE_VERSION="E2.26-PROD247";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 248",ENGINE_VERSION="E2.26-PROD248";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -27991,6 +28103,7 @@ function gameDataSettingsContent(){
   const sw=saveWritePerformanceStats(G);
   const perf=G.runtimeMeta?.lastCareerAdvancePerformance||null;
   const roundPerf=G.runtimeMeta?.lastRegularSeasonRoundPerformance||null;
+  const gamePerf=G.runtimeMeta?.lastRegularSeasonGamePerformanceBreakdown||roundPerf?.gameBreakdown||null;
   const marginAudit=scoreMarginAuditSummary(G);
   const curMargin=marginAudit.current,careerMargin=marginAudit.career;
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
@@ -28019,12 +28132,13 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
     <div class="more"><div><b>Mapped Record Profile Links</b><small>Historical records for launch/prospect players resolve to the same active or retired H³O profile · source fields preferred · source-mapped real-name recovery for older saves</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
-    <div class="more"><div><b>Regular Season Performance</b><small>League leaders deferred to on-demand view · routine game saves skip full-career traversal · next-game timing split into simulation, preparation and IndexedDB write</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
+    <div class="more"><div><b>Regular Season Performance</b><small>Per-game statistical/build inputs cached · weighted pick tables prepared once per side · statistical identity sweep once per round · detailed prep/possession/postgame telemetry</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Score Margin Audit</b><small>Current retained season backfilled · future seasons tracked persistently at 20+/30+/40+/50+/60+ thresholds · no scoring balance change</small></div><b>${SCORE_MARGIN_AUDIT_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div>
     <div class="more"><div><b>Last Next-Game Total</b><small>${perf?`${String(perf.phase||"Career").replaceAll("_"," ")} · advance ${perf.advanceMs} ms · save ${perf.saveMs} ms`:"Collected after the next playable event"}</small></div><b>${perf?`${perf.totalMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Last League Simulation</b><small>${roundPerf?`${roundPerf.games} games · simulation ${roundPerf.simulationMs} ms · post-round ${roundPerf.postSimulationMs} ms`:"Collected after the next regular-season round"}</small></div><b>${roundPerf?`${roundPerf.totalMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Simulation Breakdown</b><small>${gamePerf?`game prep ${gamePerf.prepMs} ms · possessions ${gamePerf.possessionsMs} ms · postgame ${gamePerf.postgameMs} ms · avg/game ${gamePerf.averageGameMs} ms`:"Collected after the next regular-season round"}</small></div><b>${gamePerf?`MAX ${gamePerf.maxGameMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Last Save Preparation</b><small>Compaction + metadata${G.runtimeMeta?.lastSaveIntegrityRan?` + boundary integrity ${G.runtimeMeta.lastSaveIntegrityMs} ms`:" · no full-career integrity traversal"}</small></div><b>${G.runtimeMeta?.lastSavePrepMs!=null?`${G.runtimeMeta.lastSavePrepMs} ms`:"—"}</b></div>
     <div class="more"><div><b>Current Season Margins</b><small>${curMargin.games} games · 20+ ${curMargin.twentyPlus} · 30+ ${curMargin.thirtyPlus} · 40+ ${curMargin.fortyPlus} · 50+ ${curMargin.fiftyPlus} · 60+ ${curMargin.sixtyPlus}</small></div><b>${curMargin.games?`MAX ${curMargin.largestMargin}`:"—"}</b></div>
     <div class="more"><div><b>Tracked Margin Audit</b><small>${careerMargin.seasons} season${careerMargin.seasons===1?"":"s"} with retained/tracked data · ${careerMargin.games} games · avg margin ${careerMargin.avgMargin} · 40+ ${careerMargin.fortyPlus} · 50+ ${careerMargin.fiftyPlus} · 60+ ${careerMargin.sixtyPlus}${careerMargin.largestMatchup?` · largest ${careerMargin.largestMatchup}`:""}</small></div><b>${careerMargin.games?`MAX ${careerMargin.largestMargin}`:"—"}</b></div>
