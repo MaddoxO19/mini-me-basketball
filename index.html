@@ -3096,11 +3096,72 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 @media(max-width:560px){
   .leagueHistoryArchiveTabs.historyFourTabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
+
+/* Build 235 — generated name component integrity */
+.draftTracker table td:nth-child(2),
+.draftTracker .pname,
+.draftTracker td b{
+  white-space:normal!important;
+  overflow-wrap:anywhere!important;
+}
+
+/* Build 236 — live Draft Night scout recommendation */
+.scoutTakeTag{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:42px;
+  padding:5px 7px;
+  border:1px solid var(--accent);
+  border-radius:7px;
+  color:var(--accent2);
+  background:rgba(244,164,58,.08);
+  font-size:9px;
+  line-height:1;
+  font-weight:950;
+  letter-spacing:.06em;
+  white-space:nowrap;
+}
+.scoutTakeTag.large{min-width:54px;padding:7px 9px;font-size:10px}
+.liveScoutRecommendation{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:10px 0 12px;
+  padding:11px 12px;
+  border:1px solid rgba(244,164,58,.55);
+  border-radius:12px;
+  background:rgba(244,164,58,.055);
+}
+.liveScoutRecommendation>div{min-width:0}
+.liveScoutRecommendation small{
+  display:block;
+  color:var(--accent2);
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.liveScoutRecommendation b{
+  display:block;
+  margin-top:3px;
+  font-size:14px;
+}
+.liveScoutRecommendation span:not(.scoutTakeTag){
+  display:block;
+  margin-top:3px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.35;
+}
+.prospectTable tr.scoutRecommended{
+  background:rgba(244,164,58,.045)!important;
+}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 234</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 236</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -20268,7 +20329,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 234",ENGINE_VERSION="E2.26-PROD234";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 236",ENGINE_VERSION="E2.26-PROD236";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -21371,6 +21432,7 @@ async function loadSlot(slot,options={}){
     repairManualPlayerNameOverrides(G);
     standardiseExistingGeneratedPlayerNamesToLatinScript(G);
     repairGeneratedMensLeagueNames(G);
+    repairMalformedGeneratedPlayerNames(G);
     repairImpossibleLeagueExperience(G);
     G.runtimeMeta=G.runtimeMeta||{};
     G.runtimeMeta.generatedNameDepthAudit=generatedNameDepthAudit();
@@ -22045,11 +22107,76 @@ function registerGeneratedNameUsage(player,name){
     reg.country[nat][kind][key]=(reg.country[nat][kind][key]||0)+1;
   }
 }
+const GENERATED_NAME_COMPONENT_VERSION="GNC2";
+function generatedNameComponentAllowed(value,kind="last"){
+  const v=String(value||"").trim();
+  if(!v)return false;
+  const parts=v.split(/\s+/).filter(Boolean);
+
+  // Basketball source ingestion previously allowed some entire source fields to
+  // leak into surname slots (e.g. "Sharp Emanuel Sharp Israel"). Legitimate
+  // compound surnames remain valid; 4+ whitespace-separated tokens are rejected.
+  if(kind==="last"&&parts.length>=4)return false;
+  if(kind==="first"&&parts.length>=3)return false;
+
+  // Known source-contamination patterns: repeated component plus a trailing
+  // country/nationality word. Keep this generic rather than hard-coding players.
+  const norm=parts.map(x=>newIdentityKey(x)).filter(Boolean);
+  if(new Set(norm).size<norm.length&&parts.length>=3)return false;
+
+  return true;
+}
+function generatedPlayerNameLooksMalformed(name){
+  const raw=String(name||"").trim();
+  if(!raw)return true;
+  const parts=raw.split(/\s+/).filter(Boolean);
+  if(parts.length>=5)return true;
+
+  // Suffixes do not count as contamination.
+  const suffix=/^(jr\.?|sr\.?|ii|iii|iv)$/i;
+  const core=parts.filter(x=>!suffix.test(x));
+  const norm=core.map(x=>newIdentityKey(x)).filter(Boolean);
+  if(core.length>=4&&new Set(norm).size<norm.length)return true;
+  return false;
+}
+function repairMalformedGeneratedPlayerNames(G){
+  if(!G)return 0;
+  const players=[...allPlayerObjectsForNaming(),...retiredPlayerPool(G)];
+  const seen=new Set(),used=new Set(players.map(p=>p?.name).filter(Boolean));
+  let changed=0;
+
+  for(const p of players){
+    if(!p?.id||seen.has(String(p.id)))continue;
+    seen.add(String(p.id));
+    if(p.manualNameOverride||p.nameOrigin==="manual")continue;
+    if(!generatedPlayerNameLooksMalformed(p.name))continue;
+
+    const old=p.name;
+    let salt=1,next=generatedCountryName(p,salt);
+    while((!next||generatedPlayerNameLooksMalformed(next)||used.has(next)||bundledSourceFullNameKeys().has(newIdentityKey(next)))&&salt<180){
+      salt++;
+      next=generatedCountryName(p,salt);
+    }
+    if(!next||next===old||generatedPlayerNameLooksMalformed(next))continue;
+
+    used.delete(old);used.add(next);
+    p.previousMalformedGeneratedName=p.previousMalformedGeneratedName||old;
+    p.name=next;
+    p.nameOrigin="country_generated";
+    p.generatedNameCountry=p.nationality;
+    changed++;
+  }
+
+  G.runtimeMeta=G.runtimeMeta||{};
+  G.runtimeMeta.generatedNameComponentRepair={version:GENERATED_NAME_COMPONENT_VERSION,season:G.season,changed};
+  return changed;
+}
+
 function expandedGeneratedNamePool(profile,kind,player){
   const entries=[],seen=new Map();
   const add=(value,group="Expanded",weight=1)=>{
     const v=String(value||"").trim(),k=newIdentityKey(v);
-    if(!v||!k)return;
+    if(!v||!k||!generatedNameComponentAllowed(v,kind))return;
     const w=Math.max(1,Math.min(3,+weight||1));
     if(!seen.has(k)){seen.set(k,entries.length);entries.push([v,group,w]);}
     else{
@@ -22212,8 +22339,8 @@ function generatedCountryName(player,salt=0){
   // pool and usage-aware selection rather than a tiny fixed list.
   const style=NAME_POOLS[nameStyleForCountry(player.nationality)]||NAME_POOLS.anglo;
   const source=SOURCE_NAME_SEEDS[player.nationality]||{first:[],last:[]};
-  const first=[...new Set([...(style.first||[]),...(source.first||[])])].map(v=>[v,"Fallback",1]);
-  const last=[...new Set([...(style.last||[]),...(source.last||[])])].map(v=>[v,"Fallback",1]);
+  const first=[...new Set([...(style.first||[]),...(source.first||[])])].filter(v=>generatedNameComponentAllowed(v,"first")).map(v=>[v,"Fallback",1]);
+  const last=[...new Set([...(style.last||[]),...(source.last||[])])].filter(v=>generatedNameComponentAllowed(v,"last")).map(v=>[v,"Fallback",1]);
   const firstEntry=diversityAwareNameEntry(first,player,"first",salt);
   const lastEntry=diversityAwareNameEntry(last,player,"last",salt);
   let name=`${firstEntry?.[0]||"Adrian"} ${lastEntry?.[0]||"Mercer"}`;
@@ -27070,6 +27197,8 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Record Identity</b><small>Legacy record holders are non-linking historical identities · career-era records resolve by unique player ID only</small></div><b>RID2</b></div>
     <div class="more"><div><b>League History Overview</b><small>Recent Seasons + Franchise Honours moved from Records into History Overview · five-season snapshot with detailed archive tabs</small></div><b>LHO1</b></div>
     <div class="more"><div><b>Offseason Contract Resolution</b><small>Home summary and Squad negotiation use one unresolved-expiring definition · agreed pending extensions excluded</small></div><b>OCR2</b></div>
+    <div class="more"><div><b>Name Component Integrity</b><small>Malformed source components excluded from generated identities · existing generated contamination repaired on load</small></div><b>${GENERATED_NAME_COMPONENT_VERSION}</b></div>
+    <div class="more"><div><b>Live Draft Scout Pick</b><small>Projection retained before Draft Night · live board recommends one remaining prospect for the user's next owned pick and updates after selections</small></div><b>DSP2</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -27231,6 +27360,17 @@ function futureDraftAssetsHtml(G,clubId){
   }).join("")}</div>`;
 }
 
+function nextUserOwnedDraftEntry(G,clubId){
+  const ds=G?.draftState;
+  if(!ds||ds.complete||!Array.isArray(ds.queue))return null;
+  for(let i=Math.max(0,+ds.index||0);i<ds.queue.length;i++){
+    const entry=ds.queue[i];
+    const asset=entry?.pickId?(G.draftPicks||[]).find(x=>x.id===entry.pickId):null;
+    const owner=asset?.ownerClubId||entry?.originalClubId||null;
+    if(owner===clubId)return entry;
+  }
+  return null;
+}
 function draft(){
   ensureUpcomingDraftClass(G);
   ensureCountryBasedPlayerNames();
@@ -27262,10 +27402,16 @@ function draft(){
   </div>`:"";
   let yourPicks=s.completedUserPicks?.length?`<div class="sectionTitle">Your Selections</div><div class="card">${s.completedUserPicks.map(x=>`<div class="draftSelection"><div><b>Pick #${x.pickNumber} · ${x.playerName}</b><small>${x.position} · OVR ${x.ovr} · POT ${x.potential}</small></div><strong>R${x.round}</strong></div>`).join("")}</div>`:"";
   let recent=completedLeague.length?`<div class="sectionTitle">Draft Tracker · All Picks</div><div class="draftAudit"><table><thead><tr><th>PICK</th><th>RND</th><th>TEAM</th><th>PLAYER</th><th>POS</th><th>OVR</th><th>POT</th></tr></thead><tbody>${completedLeague.map(x=>`<tr><td>#${x.pick}</td><td>R${x.round}</td><td>${x.club}</td><td class="pname"><b>${x.player?.name||"Unknown Prospect"}</b></td><td>${x.player?.position||"—"}</td><td>${x.player?.ovr??"—"}</td><td>${x.player?.potential??"—"}</td></tr>`).join("")}</tbody></table></div>`:"";
-  const scout=scoutingLevelInfo(G),futureBoard=!(ds&&!ds.complete);
-  const scoutPickNumber=p?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||1;
-  const scoutRecommendedId=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]?.id:null;
-  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div><div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>PROJ</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${x.origin} · Age ${x.age}</small><small class="prospectIntel">Pro: ${x.strength} · Con: ${x.risk}</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td><span class="projectionTag">${x.projection}</span></td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  const scout=scoutingLevelInfo(G),liveDraftBoard=G.phase==="DRAFT_NIGHT"&&ds&&!ds.complete,futureBoard=!liveDraftBoard;
+  const nextUserEntry=liveDraftBoard?nextUserOwnedDraftEntry(G,clubId):null;
+  const scoutPickNumber=nextUserEntry?.overallPickNum||s.ownedPicks?.[0]?.overallPickNum||p?.overallPickNum||1;
+  const scoutRec=s.prospects.length?draftScoutRecommendations(s.prospects,scoutPickNumber).recommendations?.[0]||null:null;
+  const scoutRecommendedId=scoutRec?.id||null;
+  const scoutRecommendationBanner=liveDraftBoard&&scoutRec
+    ?`<div class="liveScoutRecommendation"><div><small>SCOUT PICK · NEXT OWNED PICK #${scoutPickNumber}</small><b>${scoutRec.name}</b><span>${draftRecommendationTag(scoutRec,draftScoutRecommendations(s.prospects,scoutPickNumber).needs)} · Board #${scoutRec.boardRank||"—"} · updates as selections are made</span></div><span class="scoutTakeTag large">TAKE</span></div>`
+    :"";
+  const liveColumnHead=liveDraftBoard?"SCOUT":"PROJ";
+  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>${scoutRecommendationBanner}<div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>${liveColumnHead}</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${publicPlayerOriginLabel(x.origin)} · Age ${x.age}</small><small class="prospectIntel">Pro: ${x.strength} · Con: ${x.risk}</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td>${liveDraftBoard?(x.id===scoutRecommendedId?`<span class="scoutTakeTag">TAKE</span>`:""):`<span class="projectionTag">${x.projection}</span>`}</td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"class";
   const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
