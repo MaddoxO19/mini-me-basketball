@@ -3090,11 +3090,17 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   .legacySeasonHonour:last-child{border-bottom:0!important}
   .legacySeasonAwards{grid-template-columns:1fr 1fr!important}
 }
+
+/* Build 233 — League History overview reorganisation */
+.leagueHistoryArchiveTabs.historyFourTabs{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media(max-width:560px){
+  .leagueHistoryArchiveTabs.historyFourTabs{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 232</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 233</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12555,9 +12561,14 @@ function dynastyLegacySnapshot(G){
   return{bestRun:best.clubId?{...best,clubName:clubById(G,best.clubId)?.name||best.clubId}:null,threePeatLeader:tripleLeader};
 }
 function leagueHistoryAllTimeHtml(G){
-  ingestCurrentSeasonRecordBackfill(G); const x=historicalRecordSnapshot(G),hist=(G.leagueHistory||[]).slice().sort((a,b)=>b.season-a.season),clubs=G.clubs||[];
-  const titleCounts=clubs.map(club=>({club,nba:hist.filter(h=>h.championClubId===club.id).length,cup:hist.filter(h=>h.cupChampionClubId===club.id).length,best:hist.filter(h=>h.bestRecordClubId===club.id).length})).filter(x=>x.nba||x.cup||x.best).sort((a,b)=>b.nba-a.nba||b.cup-a.cup||b.best-a.best).slice(0,10),seasons=hist.slice(0,12);
-  const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,ring=legacy.honours?.playerChampionships?.[0],run=legacy.honours?.consecutiveTitles,titleLegacy=playerTitleLegacySnapshot(G),dynasty=dynastyLegacySnapshot(G),three=titleLegacy.threePeats?.[0];
+  ingestCurrentSeasonRecordBackfill(G);
+  const x=historicalRecordSnapshot(G);
+  const legacy=x.legacy||HISTORICAL_LEGACY_BASELINE,
+    ring=legacy.honours?.playerChampionships?.[0],
+    run=legacy.honours?.consecutiveTitles,
+    titleLegacy=playerTitleLegacySnapshot(G),
+    dynasty=dynastyLegacySnapshot(G),
+    three=titleLegacy.threePeats?.[0];
   const liveSingleGamePoints=x.league?.singleGame?.points||legacy.singleGame?.points;
   const liveCareerScoring=x.career?.points?.[0]||legacy.career?.points?.[0];
   const titleLeader=titleLegacy.championships?.[0]||ring||{value:11,playerName:"Caleb Mercer",historical:true};
@@ -12568,7 +12579,7 @@ function leagueHistoryAllTimeHtml(G){
   const threeMeta=threeLeader.historical?"League legacy":threePlayer?(threePlayer.retired?`${positionLabel(threePlayer)} · Retired ${threePlayer.retirementSeason?basketballSeasonLabel(threePlayer.retirementSeason):"—"}`:`${positionLabel(threePlayer)} · ${clubForPlayer(G,threePlayer)?.name||"Active"}`):"Career achievement";
   const liveDynastyWins=(dynasty.bestRun?.value||0)>(run?.value||8);
   const legacyHtml=`<div class="recordCategory"><div class="recordCategoryHead"><b>League Record Benchmarks</b><small>ALL-TIME</small></div><div class="recordGrid">${recordCard("Single-Game Points",liveSingleGamePoints,"",0,G)}${recordCard("Career Scoring",liveCareerScoring,"",0,G)}<div class="recordCard"><small>Player Championships</small><strong>${titleLeader.value}</strong><b>${titleLeader.playerName}</b><span>${titleMeta}</span></div><div class="recordCard"><small>Career Three-Peats</small><strong>${threeLeader.value}</strong><b>${threeLeader.playerName}</b><span>${threeMeta}</span></div><div class="recordCard"><small>Longest Title Run</small><strong>${Math.max(run?.value||8,dynasty.bestRun?.value||0)}</strong><b>${liveDynastyWins?dynasty.bestRun.clubName:(run?.playerName||"Caleb Mercer")}</b><span>${liveDynastyWins?"Consecutive championships":"League legacy"}</span></div></div></div>`;
-  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}<div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${seasons.length?seasons.map(h=>{const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);return `<div class="legacySeasonRow"><div class="legacySeasonHead"><small>SEASON</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div class="legacySeasonHonour"><small>LEAGUE CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div class="legacySeasonHonour"><small>THE CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div class="legacySeasonHonour"><small>LEAGUE-BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;}).join(""):`<div class="card empty">League history begins after your first completed season.</div>`}</div><div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div class="legacyFranchiseMetric"><strong>${x.nba}</strong><small>LEAGUE<br>TITLES</small></div><div class="legacyFranchiseMetric"><strong>${x.cup}</strong><small>CUP<br>TITLES</small></div><div class="legacyFranchiseMetric"><strong>${x.best}</strong><small>LEAGUE<br>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`}</div>`;
+  return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}`;
 }
 function leagueHistoricalRecordsHtml(G){
   const tabs=[["game","Game Records"],["season","Season Records"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
@@ -20248,9 +20259,9 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 232",ENGINE_VERSION="E2.26-PROD232";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 233",ENGINE_VERSION="E2.26-PROD233";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"leaguewinners",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -27048,7 +27059,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Experience Display</b><small>Player Profile shows league experience as a numeric service metric only · developmental background remains contextual elsewhere</small></div><b>EXP2</b></div>
     <div class="more"><div><b>Draft Scout Row</b><small>Draft board shows Pro + Con only · scouting confidence and hidden build-read logic remain internal to department quality</small></div><b>DSR2</b></div>
     <div class="more"><div><b>Record Identity</b><small>Legacy record holders are non-linking historical identities · career-era records resolve by unique player ID only</small></div><b>RID2</b></div>
-    <div class="more"><div><b>Recent Seasons</b><small>Season header · separate honours blocks · MVP footer · mobile-first layout</small></div><b>RSH2</b></div>
+    <div class="more"><div><b>League History Overview</b><small>Recent Seasons + Franchise Honours moved from Records into History Overview · five-season snapshot with detailed archive tabs</small></div><b>LHO1</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -28019,9 +28030,34 @@ function leagueInjuries(){
     <div class="metrics injuryMetrics"><div class="metric"><b>${rows.length}</b><small>League Injuries</small></div><div class="metric"><b>${eliteCount}</b><small>85+ OVR Out</small></div><div class="metric"><b>${longTerm}</b><small>Long-Term</small></div><div class="metric"><b>${userCount}</b><small>Your Club</small></div></div>
     <div class="leagueInjuryList">${rows.length?rows.map(x=>`<div class="leagueInjuryRow ${x.club.id===userClubId?"userClub":""}"><div class="leagueInjuryPlayer"><b>${playerNameLink(x.player)}</b><small>${x.player.position}${x.player.secondaryPosition?`/${x.player.secondaryPosition}`:""} · OVR ${x.player.ovr} · ${clubNameLink(x.club)}</small></div><div class="leagueInjuryType"><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.stage}</small></div><div class="leagueInjuryReturn"><b>${basketballDateLabel(x.returnSerial)}</b><small>${x.returnLabel}</small></div></div>`).join(""):`<div class="card empty">No players are currently unavailable through injury.</div>`}</div>`;
 }
+function leagueHistoryOverviewHtml(G){
+  const hist=(G.leagueHistory||[]).slice().sort((a,b)=>(+b.season||0)-(+a.season||0));
+  const clubs=G.clubs||[];
+  const seasons=hist.slice(0,5);
+  const titleCounts=clubs.map(club=>({
+    club,
+    league:hist.filter(h=>h.championClubId===club.id).length,
+    cup:hist.filter(h=>h.cupChampionClubId===club.id).length,
+    best:hist.filter(h=>h.bestRecordClubId===club.id).length
+  })).filter(x=>x.league||x.cup||x.best)
+    .sort((a,b)=>b.league-a.league||b.cup-a.cup||b.best-a.best||a.club.name.localeCompare(b.club.name))
+    .slice(0,10);
+
+  const recent=seasons.length?seasons.map(h=>{
+    const champ=c(h.championClubId),cup=c(h.cupChampionClubId),best=c(h.bestRecordClubId);
+    return `<div class="legacySeasonRow"><div class="legacySeasonHead"><small>SEASON</small><b>${basketballSeasonLabel(h.season)}</b></div><div class="legacySeasonHonours"><div class="legacySeasonHonour"><small>LEAGUE CHAMPION</small>${champ?teamIdentityCompact(champ):`<b>${h.championName||"—"}</b>`}</div><div class="legacySeasonHonour"><small>THE CUP</small>${cup?teamIdentityCompact(cup):"<b>—</b>"}</div><div class="legacySeasonHonour"><small>LEAGUE-BEST RECORD</small>${best?teamIdentityCompact(best,h.bestRecord||""):`<b>${h.bestRecord||"—"}</b>`}</div></div><div class="legacySeasonAwards"><span><small>MVP</small><b>${linkedPlayerLabelByName(G,h.mvpName)}</b></span><span><small>FINALS MVP</small><b>${linkedPlayerLabelByName(G,h.finalsMvpName)}</b></span></div></div>`;
+  }).join(""):`<div class="card empty">League history begins after your first completed season.</div>`;
+
+  const honours=titleCounts.length?titleCounts.map((x,i)=>`<div class="legacyFranchiseRow"><span>${i+1}</span>${teamMark(x.club,"teamMiniCrest")}<b>${x.club.name}</b><div class="legacyFranchiseMetric"><strong>${x.league}</strong><small>LEAGUE<br>TITLES</small></div><div class="legacyFranchiseMetric"><strong>${x.cup}</strong><small>CUP<br>TITLES</small></div><div class="legacyFranchiseMetric"><strong>${x.best}</strong><small>LEAGUE<br>BEST</small></div></div>`).join(""):`<div class="card empty">No franchise honours have been recorded yet.</div>`;
+
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>Overview</h3><p>A snapshot of recent champions, major awards and franchise honours. Use the tabs for the complete historical lists.</p></div>
+    <div class="sectionTitle">Recent Seasons</div><div class="legacySeasonList">${recent}</div>
+    <div class="sectionTitle">Franchise Honours</div><div class="legacyFranchiseList">${honours}</div>`;
+}
+
 function leagueLegacy(){
-  const allowed=new Set(["leaguewinners","cupwinners","awards"]);
-  if(!allowed.has(ui.leagueHistoryTab))ui.leagueHistoryTab="leaguewinners";
+  const allowed=new Set(["overview","leaguewinners","cupwinners","awards"]);
+  if(!allowed.has(ui.leagueHistoryTab))ui.leagueHistoryTab="overview";
 
   const history=(G.leagueHistory||[]).slice().sort((a,b)=>(+b.season||0)-(+a.season||0));
   const seasonLabel=s=>basketballSeasonLabel(+s||1);
@@ -28088,12 +28124,15 @@ function leagueLegacy(){
   }
   awardRows.sort((a,b)=>(+b.season||0)-(+a.season||0)||a.label.localeCompare(b.label));
 
-  const tabs=`<div class="leagueHistoryArchiveTabs globalLevel2Tabs">
+  const tabs=`<div class="leagueHistoryArchiveTabs globalLevel2Tabs historyFourTabs">
+    <button data-leaguehistory="overview" class="${ui.leagueHistoryTab==="overview"?"active":""}">Overview</button>
     <button data-leaguehistory="leaguewinners" class="${ui.leagueHistoryTab==="leaguewinners"?"active":""}">League Winners</button>
     <button data-leaguehistory="cupwinners" class="${ui.leagueHistoryTab==="cupwinners"?"active":""}">The Cup Winners</button>
     <button data-leaguehistory="awards" class="${ui.leagueHistoryTab==="awards"?"active":""}">Award Winners</button>
   </div>`;
 
+
+  if(ui.leagueHistoryTab==="overview")return `${tabs}${leagueHistoryOverviewHtml(G)}`;
 
   if(ui.leagueHistoryTab==="cupwinners"){
     return `${tabs}<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League History</div><h3>The Cup Winners</h3><p>Completed The Cup champions across your career.</p></div>
