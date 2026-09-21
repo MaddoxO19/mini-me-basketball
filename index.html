@@ -3100,7 +3100,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 233</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 234</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -15007,15 +15007,24 @@ function repairRosterContractContainerIntegrity(state=G){
   }
   return repairs;
 }
+function isUnresolvedExpiringContract(player){
+  if(!player)return false;
+  const type=String(player.contractType||"Standard").toLowerCase();
+  if(type==="two-way"||type==="twoway"||type==="unsigned"||type==="international")return false;
+  return (+player.contractYearsLeft||0)<=1 && !player.pendingExtension;
+}
+function unresolvedExpiringContracts(club){
+  return (club?.roster||[]).filter(isUnresolvedExpiringContract);
+}
 function contractView(player) {
   const band=salaryBandForPlayer(player),value=contractValueStatus(player),calibrated=contractSalaryBandFromOvr(player);
   const actual=+player.salaryM||0,legacyOverpay=actual>calibrated.hi*1.08;
-  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,secondaryPosition:player.secondaryPosition||null,positionLabel:positionLabel(player),positionGroup:positionGroupForPlayer(player),rotationRole:player.rotationRole||"Depth",yearsLeft:player.contractYearsLeft||0,salaryM:actual,marketSalaryM:value.market,valueStatus:legacyOverpay?"Above Calibrated Market":value.label,salaryBand:band.label,salaryBandRange:band.range,type:player.contractType||"Standard",legacyOverpay,pendingExtension:player.pendingExtension?{...player.pendingExtension}:null,extensionEligible:!player.pendingExtension&&(player.contractYearsLeft||0)<=1};
+  return {playerId:player.id,name:player.name,age:player.age,ovr:player.ovr,position:player.position,secondaryPosition:player.secondaryPosition||null,positionLabel:positionLabel(player),positionGroup:positionGroupForPlayer(player),rotationRole:player.rotationRole||"Depth",yearsLeft:player.contractYearsLeft||0,salaryM:actual,marketSalaryM:value.market,valueStatus:legacyOverpay?"Above Calibrated Market":value.label,salaryBand:band.label,salaryBandRange:band.range,type:player.contractType||"Standard",legacyOverpay,pendingExtension:player.pendingExtension?{...player.pendingExtension}:null,extensionEligible:isUnresolvedExpiringContract(player)};
 }
 function offseasonRosterState(G, clubId) {
   const club=clubById(G,clubId); if(!club) return null;
   const roster=club.roster.map(contractView).sort((a,b)=>b.ovr-a.ovr);
-  return {clubId:club.id,clubName:club.name,rosterCount:club.roster.length,offseasonLimit:club.offseasonRosterLimit||20,regularLimit:club.regularRosterLimit||15,capUsed:recalcClubCap(club),cap:clubCapPosition(G,club.id),expiring:roster.filter(p=>p.yearsLeft<=1),roster};
+  return {clubId:club.id,clubName:club.name,rosterCount:club.roster.length,offseasonLimit:club.offseasonRosterLimit||20,regularLimit:club.regularRosterLimit||15,capUsed:recalcClubCap(club),cap:clubCapPosition(G,club.id),expiring:roster.filter(p=>p.extensionEligible),roster};
 }
 function extendPlayerContract(G, clubId, playerId, years=2) {
   return !!negotiateExtension(G,clubId,playerId,years).accepted;
@@ -20259,7 +20268,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 233",ENGINE_VERSION="E2.26-PROD233";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 234",ENGINE_VERSION="E2.26-PROD234";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25836,7 +25845,7 @@ function newSeasonOffseasonHubHtml(){
   // stale metadata and make the Home hub disagree with Squad.
   const standard=club.roster||[];
   const twoWay=club.twoWayRoster||[];
-  const expiring=standard.filter(p=>(+p.contractYearsLeft||0)<=1).length;
+  const expiring=unresolvedExpiringContracts(club).length;
   const rosterOpen=Math.max(0,(club.regularRosterLimit||15)-standard.length);
   const twoWayOpen=Math.max(0,(club.twoWayLimit||3)-twoWay.length);
   const draftPicks=offseasonDraftPickCount(club.id);
@@ -25844,7 +25853,7 @@ function newSeasonOffseasonHubHtml(){
   const priorOutcome=prev.finish||"Season complete";
   const cupTag=prev.cup?" · The Cup Champion":"";
   const priorities=[
-    {label:"Contracts",value:expiring?`${expiring} contract${expiring===1?"":"s"} to resolve`:"No contracts to resolve"},
+    {label:"Contracts",value:expiring?`${expiring} expiring contract${expiring===1?"":"s"} unresolved`:"No unresolved expiring contracts"},
     {label:"Roster",value:rosterOpen?`${rosterOpen} standard spot${rosterOpen===1?"":"s"} open`:"Standard roster full"},
     {label:"Two-Way",value:twoWayOpen?`${twoWayOpen} spot${twoWayOpen===1?"":"s"} open`:"3/3 filled"},
     {label:"Draft Assets",value:`${draftPicks} pick${draftPicks===1?"":"s"} owned`}
@@ -25862,7 +25871,7 @@ function newSeasonOffseasonHubHtml(){
       <div class="newSeasonMetric"><b>${capText}</b><small>Cap Position</small></div>
     </div>
     <div class="newSeasonPriorities"><h3>Offseason Priorities</h3>${priorities.map(x=>`<div class="newSeasonPriority"><span>${x.label}</span><b>${x.value}</b></div>`).join("")}</div>
-    <div class="smallcopy" style="margin:10px 2px 0">Current roster shown before offseason contract processing. Unresolved expiring deals leave the roster when you begin the offseason.</div>
+    <div class="smallcopy" style="margin:10px 2px 0">Current roster shown before offseason contract processing. Agreed extensions are already secured; only unresolved expiring deals leave the roster when you begin the offseason.</div>
     ${homeActionHtml()}
   </div>`;
 }
@@ -27060,6 +27069,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Draft Scout Row</b><small>Draft board shows Pro + Con only · scouting confidence and hidden build-read logic remain internal to department quality</small></div><b>DSR2</b></div>
     <div class="more"><div><b>Record Identity</b><small>Legacy record holders are non-linking historical identities · career-era records resolve by unique player ID only</small></div><b>RID2</b></div>
     <div class="more"><div><b>League History Overview</b><small>Recent Seasons + Franchise Honours moved from Records into History Overview · five-season snapshot with detailed archive tabs</small></div><b>LHO1</b></div>
+    <div class="more"><div><b>Offseason Contract Resolution</b><small>Home summary and Squad negotiation use one unresolved-expiring definition · agreed pending extensions excluded</small></div><b>OCR2</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
