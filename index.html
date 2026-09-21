@@ -3163,11 +3163,46 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
   opacity:.62;
   border-style:dashed;
 }
+
+/* Build 240 — one-time Play-In results recap for direct qualifiers */
+.playInRecapList{display:grid;gap:8px;margin:14px 0}
+.playInRecapRow{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;
+  align-items:center;padding:10px 12px;border:1px solid var(--line);
+  border-radius:10px;background:var(--panel2)
+}
+.playInRecapStage{grid-column:1/-1}
+.playInRecapStage small{color:var(--accent2);font-weight:900;letter-spacing:.05em}
+.playInRecapTeams span{display:block;color:var(--muted);line-height:1.45}
+.playInRecapTeams span.winner{color:var(--text);font-weight:850}
+.playInRecapRow strong{font-size:15px;white-space:nowrap}
+.playInQualifierGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.playInQualifier{
+  padding:11px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)
+}
+.playInQualifier small{display:block;color:var(--accent2);font-weight:900;letter-spacing:.06em}
+.playInQualifier b,.playInQualifier span{display:block;margin-top:4px}
+.playInQualifier span{color:var(--muted)}
+.playInRoundOneOpp{
+  margin:12px 0;padding:12px;border:1px solid rgba(244,164,58,.55);
+  border-radius:10px;background:rgba(244,164,58,.055)
+}
+.playInRoundOneOpp small{display:block;color:var(--accent2);font-weight:900;letter-spacing:.06em}
+.playInRoundOneOpp b{display:block;margin-top:4px;font-size:17px}
+@media(max-width:520px){.playInQualifierGrid{grid-template-columns:1fr}}
+
+/* Build 241 — official-style season leader qualification */
+.leaderQualificationNote{
+  margin:-4px 0 12px;
+  color:var(--muted);
+  font-size:10px;
+  line-height:1.4;
+}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 239</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 242</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -18629,29 +18664,50 @@ function simulateRegularGame(clubA, clubB, round, phaseTag = "regular") {
 function regularSeasonLeadersSnapshot(G) {
   const players = G.clubs.flatMap(c => c.roster).filter(p => p.seasonStats?.gp > 0);
   const clubIdFor=p=>G.clubs.find(c=>c.roster.includes(p))?.id||null;
+
+  const categoryForKey={
+    pts:"ppg",reb:"rpg",ast:"apg",stl:"spg",blk:"bpg"
+  };
+
   const leadersBy = (key, n=10) => [...players]
+    .filter(p=>seasonLeaderEligibility(p,categoryForKey[key]||key))
     .sort((a,b) => (b.seasonStats[key]/b.seasonStats.gp) - (a.seasonStats[key]/a.seasonStats.gp))
     .slice(0,n).map(p => ({
       playerId:p.id,name:p.name,position:p.position,secondaryPosition:p.secondaryPosition||null,age:p.age,ovr:p.ovr,
       gp:p.seasonStats.gp,value:Math.round((p.seasonStats[key]/p.seasonStats.gp)*10)/10,clubId:clubIdFor(p)
     }));
-  const pctLeaders=(made,att,minPerGame,n=10)=>players
-    .filter(p=>p.seasonStats.gp>=5 && (p.seasonStats[att]||0)/p.seasonStats.gp>=minPerGame)
+
+  const pctLeaders=(made,att,category,n=10)=>players
+    .filter(p=>seasonLeaderEligibility(p,category))
     .sort((a,b)=>(b.seasonStats[made]/Math.max(1,b.seasonStats[att]))-(a.seasonStats[made]/Math.max(1,a.seasonStats[att])))
     .slice(0,n).map(p=>({
       playerId:p.id,name:p.name,position:p.position,secondaryPosition:p.secondaryPosition||null,age:p.age,ovr:p.ovr,gp:p.seasonStats.gp,
       value:Math.round((p.seasonStats[made]/Math.max(1,p.seasonStats[att]))*1000)/10,clubId:clubIdFor(p)
     }));
-  const allAround = [...players].sort((a,b) => summerPerformanceScore(b.seasonStats)-summerPerformanceScore(a.seasonStats)).slice(0,20).map(p => ({
-    playerId:p.id,name:p.name,clubId:clubIdFor(p),
-    ppg:Math.round(p.seasonStats.pts/p.seasonStats.gp*10)/10,
-    rpg:Math.round(p.seasonStats.reb/p.seasonStats.gp*10)/10,
-    apg:Math.round(p.seasonStats.ast/p.seasonStats.gp*10)/10,
-    form:p.recentForm?.length ? Math.round(p.recentForm.reduce((a,b)=>a+b,0)/p.recentForm.length*10)/10 : 0,
-  }));
+
+  // All-around is not an official leader category, but require the same
+  // appearance threshold so tiny samples do not dominate this supporting list.
+  const allAround = [...players]
+    .filter(p=>seasonLeaderEligibility(p,"ppg"))
+    .sort((a,b) => summerPerformanceScore(b.seasonStats)-summerPerformanceScore(a.seasonStats))
+    .slice(0,20).map(p => ({
+      playerId:p.id,name:p.name,clubId:clubIdFor(p),
+      ppg:Math.round(p.seasonStats.pts/p.seasonStats.gp*10)/10,
+      rpg:Math.round(p.seasonStats.reb/p.seasonStats.gp*10)/10,
+      apg:Math.round(p.seasonStats.ast/p.seasonStats.gp*10)/10,
+      form:p.recentForm?.length ? Math.round(p.recentForm.reduce((a,b)=>a+b,0)/p.recentForm.length*10)/10 : 0,
+    }));
+
   return {
-    points:leadersBy("pts"),rebounds:leadersBy("reb"),assists:leadersBy("ast"),steals:leadersBy("stl"),blocks:leadersBy("blk"),
-    fgPct:pctLeaders("fgm","fga",4),threePct:pctLeaders("tpm","tpa",2),ftPct:pctLeaders("ftm","fta",1.5),allAround
+    points:leadersBy("pts"),
+    rebounds:leadersBy("reb"),
+    assists:leadersBy("ast"),
+    steals:leadersBy("stl"),
+    blocks:leadersBy("blk"),
+    fgPct:pctLeaders("fgm","fga","fgpct"),
+    threePct:pctLeaders("tpm","tpa","3ptpct"),
+    ftPct:pctLeaders("ftm","fta","ftpct"),
+    allAround
   };
 }
 
@@ -20392,7 +20448,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 239",ENGINE_VERSION="E2.26-PROD239";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 242",ENGINE_VERSION="E2.26-PROD242";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -24024,6 +24080,114 @@ function advanceUserPostseasonGame(){
   }
   return{ok:true,userGame,results:r.results||[],result:r};
 }
+const PLAYIN_RESULTS_RECAP_VERSION="PIR2";
+
+function playInGameFromEntry(entry){
+  if(!entry?.gameId)return null;
+  return (G.playIn?.games||G.playInLive?.games||[]).find(g=>g.id===entry.gameId)||gameById(entry.gameId)||null;
+}
+function playInRecapGameRow(entry){
+  if(!entry?.complete)return null;
+  const g=playInGameFromEntry(entry);
+  if(!g)return null;
+  const a=c(entry.teamAId),b=c(entry.teamBId);
+  const aScore=g.homeClubId===entry.teamAId?g.homeScore:g.awayScore;
+  const bScore=g.homeClubId===entry.teamBId?g.homeScore:g.awayScore;
+  const winnerId=g.winnerClubId;
+  return{
+    conference:entry.conference,
+    stage:playInFixtureStageLabel(entry),
+    teamAId:entry.teamAId,teamBId:entry.teamBId,
+    teamAName:a?.name||"TBD",teamBName:b?.name||"TBD",
+    seedA:entry.seedA||"—",seedB:entry.seedB||"—",
+    scoreA:Number.isFinite(+aScore)?+aScore:null,
+    scoreB:Number.isFinite(+bScore)?+bScore:null,
+    winnerClubId:winnerId
+  };
+}
+function buildPlayInResultsRecap(){
+  const pi=G.playIn;
+  if(!pi?.complete||pi.season!==G.season)return null;
+
+  const games=[...(pi.initial||[]),...(pi.finals||[])]
+    .map(playInRecapGameRow).filter(Boolean);
+
+  const st=userPostseasonState();
+  const series=st?.series||null;
+  let opponentId=null;
+  if(series){
+    opponentId=series.teamAId===G.userClubGM?.clubId?series.teamBId:series.teamAId;
+  }
+  const opp=opponentId?c(opponentId):null;
+
+  return{
+    version:PLAYIN_RESULTS_RECAP_VERSION,
+    season:G.season,
+    pending:true,
+    games,
+    East:{seed7:pi.East?.seed7||null,seed8:pi.East?.seed8||null},
+    West:{seed7:pi.West?.seed7||null,seed8:pi.West?.seed8||null},
+    opponentClubId:opponentId,
+    opponentName:opp?.name||null
+  };
+}
+function ensurePlayInResultsRecapForDirectQualifier(){
+  if(G.phase!=="PLAYOFFS")return false;
+  if(G.playInResultsRecap?.pending)return true;
+  if(G.playInResultsRecapAcknowledgedSeason===G.season)return false;
+  if(!G.playIn?.complete||G.playIn?.season!==G.season)return false;
+
+  const seed=conferenceSeedForClub(me());
+  if(!seed||seed>6)return false;
+
+  // Safe recovery for a save that already jumped to Round 1: only restore the
+  // recap before any playoff game has been played.
+  const playoffGames=G.playoffsLive?.games||G.playoffs?.games||[];
+  if(playoffGames.length)return false;
+
+  const recap=buildPlayInResultsRecap();
+  if(!recap)return false;
+  G.playInResultsRecap=recap;
+  return true;
+}
+function playInResultsRecapHtml(){
+  const recap=G.playInResultsRecap;
+  if(!recap?.pending)return"";
+
+  const rows=(recap.games||[]).map(g=>{
+    const score=g.scoreA!=null&&g.scoreB!=null?`${g.scoreA}–${g.scoreB}`:"FINAL";
+    const aWon=g.winnerClubId===g.teamAId,bWon=g.winnerClubId===g.teamBId;
+    return `<div class="playInRecapRow">
+      <div class="playInRecapStage"><small>${String(g.conference||"").toUpperCase()} · ${g.stage}</small></div>
+      <div class="playInRecapTeams">
+        <span class="${aWon?"winner":""}">#${g.seedA} ${g.teamAName}</span>
+        <span class="${bWon?"winner":""}">#${g.seedB} ${g.teamBName}</span>
+      </div>
+      <strong>${score}</strong>
+    </div>`;
+  }).join("");
+
+  const qualifier=(conf,obj)=>{
+    const s7=obj?.seed7?c(obj.seed7):null,s8=obj?.seed8?c(obj.seed8):null;
+    return `<div class="playInQualifier"><small>${conf.toUpperCase()}</small><b>#7 ${s7?.name||"—"}</b><span>#8 ${s8?.name||"—"}</span></div>`;
+  };
+
+  return `<div class="postseasonHome playInResultsHome">
+    <div class="postseasonHomeTop"><b>League Play-In · Courtside Network</b><span>Complete</span></div>
+    <div class="postseasonHomeBody">
+      <h3>Play-In Results</h3>
+      <p>The Play-In Tournament is complete. Review the final results and qualifiers before moving into Round 1.</p>
+      <div class="playInRecapList">${rows||`<div class="empty">Play-In complete.</div>`}</div>
+      <div class="playInQualifierGrid">${qualifier("East",recap.East)}${qualifier("West",recap.West)}</div>
+      ${recap.opponentName?`<div class="playInRoundOneOpp"><small>YOUR ROUND 1 OPPONENT</small><b>${recap.opponentName}</b></div>`:""}
+      <div class="postHomeActions">
+        <button id="continuePlayInRecap" class="primaryProgress">Continue to Playoffs</button>
+        <button id="viewPostseason" class="btn secondary">View Postseason</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 function completePlayInForDirectQualifier(){
   const st=userPostseasonState();
   if(G.phase!=="PLAY_IN"||!st.directQualified)return{ok:false,reason:"Direct qualifier completion is not available."};
@@ -24037,7 +24201,8 @@ function completePlayInForDirectQualifier(){
   if(G.phase!=="PLAYOFFS")return{ok:false,reason:"Play-In did not complete correctly.",games};
   initializePlayoffsLive(G);
   repairPlayoffSaveState();
-  return{ok:true,games,phase:"PLAYOFFS"};
+  G.playInResultsRecap=buildPlayInResultsRecap();
+  return{ok:true,games,phase:"PLAYOFFS",recap:G.playInResultsRecap};
 }
 
 async function advanceFromUi(n){
@@ -24062,7 +24227,7 @@ async function advanceFromUi(n){
       if(pst.directQualified){
         const qr=completePlayInForDirectQualifier();
         if(!qr.ok){toast(qr.reason||"Unable to complete Play-In");return;}
-        recordPostseasonCheckpoint("play-in-complete");await save();ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;show("game");render();return;
+        recordPostseasonCheckpoint("play-in-complete");await save();ui.page="home";ui.postSeriesId=null;show("game");render();return;
       }
     }
     const phaseBefore=G.phase;
@@ -24106,9 +24271,8 @@ async function advanceFromUi(n){
       if(!r.ok){toast(r.reason||"Unable to complete Play-In");return}
       recordPostseasonCheckpoint("play-in-complete");
       await save();
-      ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;
+      ui.page="home";ui.postSeriesId=null;
       show("game");render();
-      toast(`Play-In complete. #${pst.seed} seed enters Round 1.`);
       return;
     }
   }
@@ -26182,6 +26346,10 @@ function home(){
   if(G.phase==="OLYMPICS")return olympicHomeHtml();
   if(G.allStarLive&&!G.allStarLive.complete)return allStarHomeHtml();
   if(G.phase==="OFFSEASON")return newSeasonOffseasonHubHtml();
+  if(G.phase==="PLAYOFFS"){
+    ensurePlayInResultsRecapForDirectQualifier();
+    if(G.playInResultsRecap?.pending)return playInResultsRecapHtml();
+  }
   if(G.phase==="PLAYOFFS"&&!G.playoffsLive){
     initializePlayoffsLive(G);
     save();
@@ -26895,20 +27063,27 @@ function clubCurrentRecordsHtml(G,club){
 function clubSeasonLeaderTablesHtml(G,club){
   const players=(club.roster||[]).filter(p=>(+p.seasonStats?.gp||0)>0);
   if(!players.length)return `<div class="card empty">Club leaders will populate once regular-season games are played.</div>`;
-  const rate=(key)=>[...players].sort((a,b)=>(+perGame(b.seasonStats,key)||0)-(+perGame(a.seasonStats,key)||0));
-  const pct=(made,att,minPG)=>players.filter(p=>{const s=p.seasonStats||{},gp=+s.gp||0;return gp>0&&(+s[att]||0)>=Math.max(1,gp*minPG)}).sort((a,b)=>((+b.seasonStats[made]||0)/Math.max(1,+b.seasonStats[att]||0))-((+a.seasonStats[made]||0)/Math.max(1,+a.seasonStats[att]||0)));
+
+  const rate=(key,category)=>[...players]
+    .filter(p=>seasonLeaderEligibility(p,category))
+    .sort((a,b)=>(+perGame(b.seasonStats,key)||0)-(+perGame(a.seasonStats,key)||0));
+
+  const pct=(made,att,category)=>players
+    .filter(p=>seasonLeaderEligibility(p,category))
+    .sort((a,b)=>((+b.seasonStats[made]||0)/Math.max(1,+b.seasonStats[att]||0))-((+a.seasonStats[made]||0)/Math.max(1,+a.seasonStats[att]||0)));
+
   const cats=[
-    ["Points",rate("pts"),p=>perGame(p.seasonStats,"pts")],
-    ["Rebounds",rate("reb"),p=>perGame(p.seasonStats,"reb")],
-    ["Assists",rate("ast"),p=>perGame(p.seasonStats,"ast")],
-    ["Steals",rate("stl"),p=>perGame(p.seasonStats,"stl")],
-    ["Blocks",rate("blk"),p=>perGame(p.seasonStats,"blk")],
-    ["Field Goal %",pct("fgm","fga",2),p=>`${((+p.seasonStats.fgm||0)/Math.max(1,+p.seasonStats.fga||0)*100).toFixed(1)}%`],
-    ["Three Point %",pct("tpm","tpa",1),p=>`${((+p.seasonStats.tpm||0)/Math.max(1,+p.seasonStats.tpa||0)*100).toFixed(1)}%`],
-    ["Free Throw %",pct("ftm","fta",.75),p=>`${((+p.seasonStats.ftm||0)/Math.max(1,+p.seasonStats.fta||0)*100).toFixed(1)}%`]
+    ["Points",rate("pts","ppg"),p=>perGame(p.seasonStats,"pts")],
+    ["Rebounds",rate("reb","rpg"),p=>perGame(p.seasonStats,"reb")],
+    ["Assists",rate("ast","apg"),p=>perGame(p.seasonStats,"ast")],
+    ["Steals",rate("stl","spg"),p=>perGame(p.seasonStats,"stl")],
+    ["Blocks",rate("blk","bpg"),p=>perGame(p.seasonStats,"blk")],
+    ["Field Goal %",pct("fgm","fga","fgpct"),p=>`${((+p.seasonStats.fgm||0)/Math.max(1,+p.seasonStats.fga||0)*100).toFixed(1)}%`],
+    ["Three Point %",pct("tpm","tpa","3ptpct"),p=>`${((+p.seasonStats.tpm||0)/Math.max(1,+p.seasonStats.tpa||0)*100).toFixed(1)}%`],
+    ["Free Throw %",pct("ftm","fta","ftpct"),p=>`${((+p.seasonStats.ftm||0)/Math.max(1,+p.seasonStats.fta||0)*100).toFixed(1)}%`]
   ];
   const quick=cats.map(([title,rows,value])=>{const p=rows[0]||null;const lab=title==="Points"?"PPG":title==="Rebounds"?"RPG":title==="Assists"?"APG":title==="Steals"?"SPG":title==="Blocks"?"BPG":title==="Field Goal %"?"FG%":title==="Three Point %"?"3PT%":"FT%";return `<div class="clubSeasonLeader"><small>${lab}</small><strong>${p?value(p):"—"}</strong><b>${p?playerNameLink(p):"No qualifier"}</b><span>${p?`${positionLabel(p)} · ${p.rotationRole||"Depth"} · ${p.ovr} OVR`:"No qualifying player"}</span></div>`}).join("");
-  return `<div class="clubRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">Club Leaders</div><h3>${basketballSeasonLabel(G.season)} Club Leaders</h3><p>Current-season statistical leaders for ${club.name}, followed by the full top-five leader tables.</p></div><div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${quick}</div><div class="sectionTitle">Leader Tables</div>${cats.map(([title,rows,value])=>`<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.slice(0,5).map((p,i)=>`<div class="recordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${p.rotationRole||"Depth"} · ${p.ovr} OVR</small></div><strong>${value(p)}</strong></div>`).join("")}</div></div>`).join("")}</div>`;
+  return `<div class="clubRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">Club Leaders</div><h3>${basketballSeasonLabel(G.season)} Club Leaders</h3><p>Current-season statistical leaders for ${club.name}. The same league qualification minimums apply to avoid small-sample leaders.</p></div><div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${quick}</div><div class="sectionTitle">Leader Tables</div>${cats.map(([title,rows,value])=>`<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.slice(0,5).map((p,i)=>`<div class="recordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${p.rotationRole||"Depth"} · ${p.ovr} OVR</small></div><strong>${value(p)}</strong></div>`).join("")}</div></div>`).join("")}</div>`;
 }
 
 function leagueRecordSnapshotSignature(G){
@@ -27367,6 +27542,8 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Summer League Performance</b><small>Roster source signatures · one roster preparation pass per round · one player lookup per slate · league snapshot once after simulation</small></div><b>${SUMMER_LEAGUE_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Postseason Series Summary</b><small>Completed-series matchup row shows teams and seeds only · final score/status remains in the summary tiles below</small></div><b>PSS2</b></div>
     <div class="more"><div><b>Club Notable Players</b><small>Legacy + H³O identities consolidated by source identity · unrelated historical alias collisions receive stable unique display names</small></div><b>${CLUB_NOTABLE_INTEGRITY_VERSION}</b></div>
+    <div class="more"><div><b>Play-In Results Recap</b><small>Direct qualifiers pause once after Play-In completion to review all six results, #7/#8 qualifiers and their Round 1 opponent before continuing</small></div><b>${PLAYIN_RESULTS_RECAP_VERSION}</b></div>
+    <div class="more"><div><b>Season Leader Qualification</b><small>NBA-style dynamic minimums applied at snapshot source and Club Leaders · 70% team games for per-game leaders · 300 FGM / 125 FTM / 82 3PM scaled to team games</small></div><b>${SEASON_LEADER_QUALIFICATION_VERSION}</b></div>
     ${G.runtimeMeta?.launchNameDiversity?`<div class="more"><div><b>Launch Name Diversity</b><small>${G.runtimeMeta.launchNameDiversity.uniqueFullNames}/${G.runtimeMeta.launchNameDiversity.players} unique full names · ${G.runtimeMeta.launchNameDiversity.uniqueFirstNames} first names · ${G.runtimeMeta.launchNameDiversity.uniqueSurnames} surnames</small></div><b>${G.runtimeMeta.launchNameDiversity.duplicateFullNames===0?"VALID":"CHECK"}</b></div>`:""}
     ${G.runtimeMeta?.nameDiversityModel?`<div class="more"><div><b>Name Generation</b><small>Expanded country/regional/source pools · career usage weighting · real/full-name collision guard</small></div><b>${G.runtimeMeta.nameDiversityModel.version}</b></div>`:""}<div class="more"><div><b>Expansion Lifecycle</b><small>${G.settings?.leagueExpansion?(G.expansionState?.stage==="dormant"?`Season 2 vote · target before Game 1 · legacy-state repair + missed-vote recovery active · next vote Season ${G.expansionState?.nextVoteSeason||2} · ${G.expansionState?.votes?.length||0} vote${(G.expansionState?.votes?.length||0)===1?"":"s"} cast`:`${G.expansionState?.history?.length||0} recorded milestones`):"Disabled for this career"}</small></div><b>${expansionStageLabel(G.expansionState?.stage||"disabled")}</b></div><div class="more"><div><b>Save Storage</b><small>Active career persistence model</small></div><b>${G.runtimeMeta?.saveMemoryModel||"IDB-NATIVE-STATE1"}</b></div><div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
     <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
@@ -28176,7 +28353,103 @@ function standings(){
   const clinchLegend=lateSeasonClinchActive(rows)?`<div class="standingsClinchLegend"><span><b>z</b> Conference #1 seed</span><span><b>y</b> Division winner</span><span><b>x</b> Clinched postseason</span><span><b>p</b> Clinched Play-In</span></div>`:"";
   return switcher+zoneLegend+clinchLegend+["East","West"].map(conf=>standingTable(rows.filter(x=>x.conference===conf),`${conf}ern Conference`,true,rows)).join("");
 }
+
+const SEASON_LEADER_QUALIFICATION_VERSION="SLQ3";
+
+/*
+  NBA-style leader qualification:
+  - Rate-counting stats: 70% of team games played.
+  - FG%: 300 FGM over 82 team games.
+  - FT%: 125 FTM over 82 team games.
+  - 3PT%: 82 3PM over 82 team games.
+  Thresholds scale during the season according to team games played.
+*/
+function teamGamesPlayedForLeaderQualification(player){
+  const club=clubForPlayer(G,player);
+  if(!club)return Math.max(0,+player?.seasonStats?.gp||0);
+
+  // Club standings are the authoritative regular-season team GP.
+  const cgp=(+club.standings?.w||0)+(+club.standings?.l||0);
+  if(cgp>0)return cgp;
+
+  const standing=(G.regularSeason?.standings||G.standings||[]).find?.(s=>s.clubId===club.id);
+  const sgp=(+standing?.w||0)+(+standing?.l||0);
+  if(sgp>0)return sgp;
+
+  return Math.max(0,+player?.seasonStats?.gp||0);
+}
+function scaledSeasonLeaderMinimum(fullSeasonMinimum,teamGames){
+  if(teamGames<=0)return 0;
+  return Math.max(1,Math.ceil(fullSeasonMinimum*(teamGames/82)));
+}
+function seasonLeaderEligibility(player,category){
+  const st=player?.seasonStats||{};
+  const teamGames=teamGamesPlayedForLeaderQualification(player);
+  const gp=+st.gp||0;
+
+  switch(String(category||"").toLowerCase()){
+    case "ppg":
+    case "rpg":
+    case "apg":
+    case "spg":
+    case "bpg":
+    case "mpg":
+    case "points":
+    case "rebounds":
+    case "assists":
+    case "steals":
+    case "blocks":
+    case "minutes":
+      return gp>=Math.max(1,Math.ceil(teamGames*0.70));
+
+    case "fgpct":
+    case "fg%":
+      return (+st.fgm||0)>=scaledSeasonLeaderMinimum(300,teamGames);
+
+    case "ftpct":
+    case "ft%":
+      return (+st.ftm||0)>=scaledSeasonLeaderMinimum(125,teamGames);
+
+    case "tppct":
+    case "3ppct":
+    case "3ptpct":
+    case "3p%":
+    case "3pt%":
+      return (+st.tpm||0)>=scaledSeasonLeaderMinimum(82,teamGames);
+
+    default:
+      return gp>0;
+  }
+}
+function seasonLeaderQualificationText(category,player){
+  const teamGames=teamGamesPlayedForLeaderQualification(player);
+  const cat=String(category||"").toLowerCase();
+  if(["fgpct","fg%"].includes(cat))return `${scaledSeasonLeaderMinimum(300,teamGames)} FGM min`;
+  if(["ftpct","ft%"].includes(cat))return `${scaledSeasonLeaderMinimum(125,teamGames)} FTM min`;
+  if(["tppct","3ppct","3ptpct","3p%","3pt%"].includes(cat))return `${scaledSeasonLeaderMinimum(82,teamGames)} 3PM min`;
+  return `${Math.max(1,Math.ceil(teamGames*0.70))} GP min`;
+}
+
+function seasonLeaderCategoryKey(label){
+  const s=String(label||"").toLowerCase();
+  if(s.includes("field goal"))return"fgpct";
+  if(s.includes("3pt")||s.includes("3-point"))return"3ptpct";
+  if(s.includes("free throw"))return"ftpct";
+  if(s.includes("points")||s==="ppg")return"ppg";
+  if(s.includes("rebounds")||s==="rpg")return"rpg";
+  if(s.includes("assists")||s==="apg")return"apg";
+  if(s.includes("steals")||s==="spg")return"spg";
+  if(s.includes("blocks")||s==="bpg")return"bpg";
+  if(s.includes("minutes")||s==="mpg")return"mpg";
+  return null;
+}
+function qualifiedSeasonLeaderPool(players,label){
+  const key=seasonLeaderCategoryKey(label);
+  if(!key)return players||[];
+  return (players||[]).filter(p=>seasonLeaderEligibility(p,key));
+}
 function leagueLeaders(){
+  if(G.regularSeason)G.regularSeason.leaders=regularSeasonLeadersSnapshot(G);
   const l=G.regularSeason?.leaders;
   if(!l?.points?.length)return `<div class="card empty">League leaders will populate once regular-season games are played.</div>`;
   const cats=[
@@ -28184,7 +28457,7 @@ function leagueLeaders(){
     ["fgPct","Field Goal %","FG%"],["threePct","Three Point %","3PT%"],["ftPct","Free Throw %","FT%"]
   ];
   const quick=cats.map(([key,title,label])=>{const q=(l[key]||[])[0]||null,p=q?playerByAnyId(q.playerId):null;return `<div class="clubSeasonLeader"><small>${label}</small><strong>${q?`${q.value}${key.includes("Pct")?"%":""}`:"—"}</strong><b>${p?playerNameLink(p):"No qualifier"}</b><span>${p?`${positionLabel(p)} · ${clubNameLink(c(q.clubId))} · ${p.ovr} OVR`:"No qualifying player"}</span></div>`}).join("");
-  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">League Leaders</div><h3>${basketballSeasonLabel(G.season)} League Leaders</h3><p>Current-season statistical leaders across the league, followed by the full top-five leader tables.</p></div><div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${quick}</div><div class="sectionTitle">Leader Tables</div>${cats.map(([key,title])=>`<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${(l[key]||[]).slice(0,5).map((q,i)=>{const p=playerByAnyId(q.playerId)||q;return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${clubNameLink(c(q.clubId))} · ${p.ovr||"—"} OVR</small></div><strong>${q.value}${key.includes("Pct")?"%":""}</strong></div>`}).join("")}</div></div>`).join("")}</div>`;
+  return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">League Leaders</div><h3>${basketballSeasonLabel(G.season)} League Leaders</h3><p>Current-season statistical leaders across the league. Official-style minimums apply: 70% of team games for per-game categories, with made-shot minimums for shooting percentages.</p></div><div class="sectionTitle">Current Season Leaders</div><div class="clubSeasonLeaders clubSeasonLeadersEight">${quick}</div><div class="sectionTitle">Leader Tables</div>${cats.map(([key,title])=>`<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${(l[key]||[]).slice(0,5).map((q,i)=>{const p=playerByAnyId(q.playerId)||q;return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${playerNameLink(p)}</b><small>${positionLabel(p)} · ${clubNameLink(c(q.clubId))} · ${p.ovr||"—"} OVR</small></div><strong>${q.value}${key.includes("Pct")?"%":""}</strong></div>`}).join("")}</div></div>`).join("")}</div>`;
 }
 function awardRace(){
   const round=G.regularSeasonLive?.roundIndex||G.regularSeason?.currentRound||0;
@@ -30288,6 +30561,12 @@ if($("#continueOlympicRecap"))$("#continueOlympicRecap").onclick=()=>{G.olympicR
 if($("#continueRetirementReview"))$("#continueRetirementReview").onclick=()=>{if(G.retirementReviewPending)G.retirementReviewPending.acknowledged=true;save();render()};
 if($("#startNewSeason"))$("#startNewSeason").onclick=startNewSeason;
 if($("#continuePostseason"))$("#continuePostseason").onclick=advancePostseasonObserver;
+if($("#continuePlayInRecap"))$("#continuePlayInRecap").onclick=async()=>{
+  if(G.playInResultsRecap)G.playInResultsRecap.pending=false;
+  G.playInResultsRecapAcknowledgedSeason=G.season;
+  ui.page="home";ui.postseasonStage="r1";ui.postSeriesId=null;
+  await save();render();
+};
 if($("#viewPostseason"))$("#viewPostseason").onclick=()=>{ui.page="league";ui.leagueTab="post";ui.postSeriesId=null;ui.postseasonStage="bracket";render()};
 $$("[data-poststage]").forEach(b=>b.onclick=()=>{ui.postseasonStage=b.dataset.poststage;ui.postSeriesId=null;render()});
 $$("[data-postconf]").forEach(b=>b.onclick=()=>{ui.postConference=b.dataset.postconf;ui.postSeriesId=null;render()});
