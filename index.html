@@ -3202,7 +3202,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 251</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 252</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -14064,7 +14064,7 @@ function assignExternalClub(player,league,seed="",force=false){
   const destination=league||player.externalLeague||"International Basketball";
   const pool=externalClubPoolForLeague(destination);
   if(!force&&player.externalTeamName&&player.externalTeamLeague===destination&&pool.includes(player.externalTeamName))return player.externalTeamName;
-  const idx=Math.abs(stableHash(`${player.id||player.name}|${destination}|${seed||"club"}`))%pool.length;
+  const idx=Math.abs(stableStringHash(`${player.id||player.name}|${destination}|${seed||"club"}`))%pool.length;
   const name=pool[idx];
   player.externalTeamName=name;
   player.externalTeamLeague=destination;
@@ -14088,7 +14088,7 @@ function externalSeasonGamesForLeague(league){
   })[league]||30;
 }
 function externalDeterministic01(seed){
-  return (Math.abs(stableHash(seed))%100000)/100000;
+  return (Math.abs(stableStringHash(seed))%100000)/100000;
 }
 function externalClamp(v,min,max){return Math.max(min,Math.min(max,v));}
 function externalRoleForPlayer(p,league){
@@ -14141,6 +14141,7 @@ function ensureExternalCurrentSeasonRow(G,p){
   p.externalCareerHistory=Array.isArray(p.externalCareerHistory)?p.externalCareerHistory:[];
   const completed=p.externalCareerHistory.find(x=>+x.season===+G.season);
   if(completed)return completed;
+  if(p.externalCurrentSeason&&+p.externalCurrentSeason.season===+G.season&&p.externalCurrentSeason.league===league)return p.externalCurrentSeason;
   const progress=externalSeasonProgress(G);
   p.externalCurrentSeason={
     season:G.season,league,clubId:p.externalTeamId,clubName,role:externalRoleForPlayer(p,league),
@@ -14185,7 +14186,7 @@ function ensureExternalProfessionalWorldState(G){
   if(!G)return;
   for(const p of G.externalProfessionals||[]){
     if(!p)continue;
-    const league=p.externalLeague||p.externalClub||externalLeagueForPlayer(p,nat(p.nationality),p.id||p.name,false);
+    const league=p.externalLeague||p.externalClub||externalLeagueForPlayer(p,p.nationality,p.id||p.name,false);
     p.externalLeague=league;
     assignExternalClub(p,league,`S${G.season}`,false);
     ensureExternalCurrentSeasonRow(G,p);
@@ -21243,7 +21244,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 251",ENGINE_VERSION="E2.26-PROD251";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 252",ENGINE_VERSION="E2.26-PROD252";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
