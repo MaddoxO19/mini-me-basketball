@@ -207,6 +207,24 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .postUpdateSeries{margin-top:9px;background:#10161e;border:1px solid #29343f;border-radius:12px;padding:10px}
 .postUpdateSeries b{font-size:10px}.postUpdateSeries small{display:block;color:var(--muted);font-size:10px;margin-top:3px;line-height:1.35}
 .postUpdateNext{margin-top:13px}
+/* Build 254 — postseason round-complete presentation polish */
+.postRoundSummaryHero{border:1px solid #4e4330;background:linear-gradient(135deg,#171e28,#11171f);border-radius:18px;overflow:hidden;margin-bottom:12px}
+.postRoundSummaryTop{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid var(--line);background:#0f151c}
+.postRoundSummaryTop b{font-size:10px;color:var(--accent2);letter-spacing:.8px;text-transform:uppercase}.postRoundSummaryTop small{font-size:9px;color:var(--muted)}
+.postRoundSummaryBody{padding:15px}.postRoundSummaryBody h3{margin:0 0 5px;font-size:21px;line-height:1.15}.postRoundSummaryBody p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+.finalsPreview{margin-top:12px;border:1px solid #65502c;background:rgba(241,168,77,.045);border-radius:13px;padding:11px}
+.finalsPreviewLabel{font-size:9px;color:var(--accent2);font-weight:950;letter-spacing:.7px;text-transform:uppercase;margin-bottom:9px}
+.finalsPreviewMatch{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:8px;align-items:center}
+.finalsPreviewTeam{display:flex;align-items:center;gap:8px;min-width:0}.finalsPreviewTeam.right{justify-content:flex-end;text-align:right}.finalsPreviewTeam b{font-size:10px;line-height:1.2;overflow-wrap:anywhere}
+.finalsPreviewVs{text-align:center;color:var(--muted);font-size:9px;font-weight:950}
+.postConferenceSection{margin:14px 0 0}.postConferenceSection>h3{margin:0 2px 7px;font-size:16px}
+.postRoundWinnerCard{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;cursor:pointer}
+.postRoundWinnerCard:hover{border-color:#526170}.postRoundWinnerCard .teamMiniCrest{width:40px;height:40px;flex-basis:40px}
+.postRoundWinnerMain{min-width:0}.postRoundWinnerMain small{display:block;color:var(--accent2);font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.55px}
+.postRoundWinnerMain b{display:block;font-size:12px;margin-top:3px;line-height:1.2}.postRoundWinnerMain span{display:block;color:var(--muted);font-size:9px;margin-top:4px;line-height:1.35}
+.postRoundWinnerAction{text-align:right;color:var(--accent2);font-size:9px;font-weight:900;line-height:1.3;white-space:nowrap}
+.postRoundTransition{margin-top:12px;border:1px solid #34414d;background:#10161e;border-radius:13px;padding:11px 12px}.postRoundTransition small{display:block;color:var(--accent2);font-size:9px;font-weight:950;text-transform:uppercase;letter-spacing:.55px}.postRoundTransition b{display:block;font-size:11px;margin-top:3px}.postRoundTransition span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
+@media(max-width:500px){.postRoundWinnerCard{grid-template-columns:38px minmax(0,1fr)}.postRoundWinnerCard .teamMiniCrest{width:34px;height:34px;flex-basis:34px}.postRoundWinnerAction{grid-column:2;text-align:left;white-space:normal}.finalsPreviewMatch{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)}}
 .seasonSummary{padding-bottom:18px}
 .seasonSummaryHero{background:linear-gradient(135deg,#1b222c,#11171f);border:1px solid #3a4653;border-radius:18px;overflow:hidden;margin-bottom:14px}
 .seasonSummaryTop{display:flex;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);background:#0f151c}
@@ -3202,7 +3220,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 253</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 254</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -21353,7 +21371,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 253",ENGINE_VERSION="E2.26-PROD253";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 254",ENGINE_VERSION="E2.26-PROD254";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all"};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25657,7 +25675,7 @@ function upcomingFixturesHtml(){
   // Defensive alignment check: during the regular season, the first club
   // fixture displayed here must match the same event used by the Home hero.
   // National windows remain separate because they can pause the club calendar.
-  const authoritative=userNextFixture(G);
+  const authoritative=nextFixture();
   if(authoritative&&!G.internationalWindowLive){
     const oppId=authoritative.opponentClubId;
     const expectedComp=authoritative.competition||"League";
@@ -26802,21 +26820,73 @@ function postseasonUserHome(){
 function renderPostseasonUpdate(){
   const d=ui.postUpdate;if(!d){show("game");ui.page="home";render();return}
   $("#postseasonUpdateTitle").textContent=d.roundChanged?`${d.roundBefore} Complete`:`${d.roundBefore} Update`;
+
   const grouped={East:[],West:[],Finals:[]};
-  for(const s of(d.completedSeries||[])){const key=s.conference==="Finals"?"Finals":s.conference;(grouped[key]||(grouped[key]=[])).push(s)}
-  const seriesHtml=["East","West","Finals"].map(conf=>{
-    const rows=grouped[conf]||[];if(!rows.length)return"";
-    return `<div class="sectionTitle">${conf==="Finals"?"Finals":`${conf}ern Conference`}</div><div class="postUpdateSeriesGrid">${rows.map(s=>{
-      const aSeed=s.seedA?`(${s.seedA}) `:"",bSeed=s.seedB?`(${s.seedB}) `:"";
-      const headline=conf==="Finals"?`${c(s.winnerClubId)?.name||"Winner"} are League Champions`:`${c(s.winnerClubId)?.name||"Winner"} advances`;
-      return `<div class="postUpdateSeries compact" data-update-series="${s.id}" data-update-stage="${postseasonStageKey(s.stage)}" data-update-conf="${s.conference||""}"><b>${headline}</b><small>${aSeed}${c(s.teamAId)?.name} ${s.winsA}–${s.winsB} ${bSeed}${c(s.teamBId)?.name}</small><span class="reviewCue">View series & game box scores ›</span></div>`;
-    }).join("")}</div>`;
-  }).join("");
-  const transition=d.roundChanged?`<div class="postUpdateSeries"><b>${d.roundBefore} complete</b><small>${d.phaseAfter==="CHAMPION"?"The League Champion has been crowned.":`The bracket has advanced to ${d.roundAfter}.`}</small></div>`:"";
+  for(const s of(d.completedSeries||[])){
+    const key=s.conference==="Finals"?"Finals":s.conference;
+    (grouped[key]||(grouped[key]=[])).push(s);
+  }
+
   const expectedSeries=d.roundBefore==="Round 1"?8:d.roundBefore==="Conference Semifinals"?4:d.roundBefore==="Conference Finals"?2:d.roundBefore==="Finals"?1:null;
   const recapCount=d.completedSeries.length;
   const recapCopy=d.roundChanged&&expectedSeries?`${recapCount} of ${expectedSeries} series concluded.`:recapCount?`${recapCount} series concluded.`:`The postseason advanced.`;
-  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap"><div class="postUpdateHero"><h3>${d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`}</h3><p>${recapCopy} Select a series below for its game history and full box scores.</p></div>${seriesHtml}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${d.phaseAfter==="CHAMPION"?"View Season Complete":"Return to Home"}</button></div></div>`;
+
+  const finalsSeries=(G.playoffsLive?.series||G.playoffs?.series||[]).find(s=>s?.stage==="FINALS"&&!s.complete)
+    ||(G.playoffsLive?.series||G.playoffs?.series||[]).find(s=>s?.stage==="FINALS")
+    ||null;
+  const finalsA=finalsSeries?c(finalsSeries.teamAId):null;
+  const finalsB=finalsSeries?c(finalsSeries.teamBId):null;
+  const isConferenceFinalsComplete=d.roundChanged&&d.roundBefore==="Conference Finals"&&finalsA&&finalsB;
+
+  const finalsPreview=isConferenceFinalsComplete?`<div class="finalsPreview">
+    <div class="finalsPreviewLabel">Finals Preview</div>
+    <div class="finalsPreviewMatch">
+      <div class="finalsPreviewTeam">${teamMark(finalsA,"teamMiniCrest")}<b>${finalsA.name}</b></div>
+      <div class="finalsPreviewVs">VS</div>
+      <div class="finalsPreviewTeam right"><b>${finalsB.name}</b>${teamMark(finalsB,"teamMiniCrest")}</div>
+    </div>
+  </div>`:"";
+
+  const heroTitle=d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`;
+  const heroCopy=isConferenceFinalsComplete
+    ?`${recapCopy} ${finalsA.name} and ${finalsB.name} advance to the Finals.`
+    :d.phaseAfter==="CHAMPION"
+      ?`${recapCopy} The League Champion has been crowned.`
+      :`${recapCopy} Select a series below for its game history and full box scores.`;
+
+  const hero=`<div class="postRoundSummaryHero">
+    <div class="postRoundSummaryTop"><b>Courtside Network</b><small>${basketballSeasonLabel(G.season)}</small></div>
+    <div class="postRoundSummaryBody"><h3>${heroTitle}</h3><p>${heroCopy}</p>${finalsPreview}</div>
+  </div>`;
+
+  const seriesHtml=["East","West","Finals"].map(conf=>{
+    const rows=grouped[conf]||[];if(!rows.length)return"";
+    const sectionTitle=conf==="Finals"?"Finals":`${conf}ern Conference`;
+    const cards=rows.map(s=>{
+      const winner=c(s.winnerClubId),teamA=c(s.teamAId),teamB=c(s.teamBId);
+      const loser=String(s.winnerClubId)===String(s.teamAId)?teamB:teamA;
+      const winnerWins=String(s.winnerClubId)===String(s.teamAId)?s.winsA:s.winsB;
+      const loserWins=String(s.winnerClubId)===String(s.teamAId)?s.winsB:s.winsA;
+      const winnerSeed=String(s.winnerClubId)===String(s.teamAId)?s.seedA:s.seedB;
+      const loserSeed=String(s.winnerClubId)===String(s.teamAId)?s.seedB:s.seedA;
+      const champLabel=conf==="Finals"?"League Champion":`${conf==="East"?"Eastern":"Western"} Conference Champion`;
+      const resultLine=`${winnerSeed?`#${winnerSeed} `:""}${winner?.name||"Winner"} def. ${loserSeed?`#${loserSeed} `:""}${loser?.name||"Opponent"}, ${winnerWins}–${loserWins}`;
+      return `<div class="postRoundWinnerCard" data-update-series="${s.id}" data-update-stage="${postseasonStageKey(s.stage)}" data-update-conf="${s.conference||""}">
+        ${winner?teamMark(winner,"teamMiniCrest"):""}
+        <div class="postRoundWinnerMain"><small>${champLabel}</small><b>${winner?.name||"Winner"}</b><span>${resultLine}</span></div>
+        <div class="postRoundWinnerAction">View series &<br>box scores ›</div>
+      </div>`;
+    }).join("");
+    return `<div class="postConferenceSection"><h3>${sectionTitle}</h3>${cards}</div>`;
+  }).join("");
+
+  const transition=d.roundChanged&&!isConferenceFinalsComplete
+    ?`<div class="postRoundTransition"><small>${d.phaseAfter==="CHAMPION"?"Season Complete":"Next Up"}</small><b>${d.phaseAfter==="CHAMPION"?"League Champion crowned":d.roundAfter}</b><span>${d.phaseAfter==="CHAMPION"?"The postseason is complete and the season summary is ready.":`The bracket has advanced to ${d.roundAfter}.`}</span></div>`
+    :"";
+
+  const buttonLabel=d.phaseAfter==="CHAMPION"?"View Season Complete":isConferenceFinalsComplete?"Continue to Finals":"Return to Home";
+  $("#postseasonUpdateHost").innerHTML=`<div class="postUpdateWrap">${hero}${seriesHtml}${transition}<div class="postUpdateNext"><button id="postUpdateContinue" class="primaryProgress">${buttonLabel}</button></div></div>`;
+
   $$("[data-update-series]").forEach(el=>el.onclick=()=>{
     const id=el.dataset.updateSeries,stage=el.dataset.updateStage,conf=el.dataset.updateConf;
     ui.postUpdate=null;ui.page="league";ui.leagueTab="post";ui.postseasonStage=stage;ui.postSeriesId=id;
@@ -29462,9 +29532,11 @@ function awardRace(){
   const round=G.regularSeasonLive?.roundIndex||G.regularSeason?.currentRound||0;
   if(round<41 && !G.allStarDone)return `<div class="card awardsRaceIntro"><div class="eyebrow">Awards Race</div><h3>Opens after the All-Star period</h3><div class="smallcopy">MVP, Rookie of the Year and Defensive Player of the Year shortlists become meaningful once the season has enough games behind it.</div></div>`;
   const minGp=awardProjectionEligibility(round);
-  const players=G.clubs.flatMap(cl=>cl.roster.map(p=>({p,club:cl}))).filter(x=>(+x.p.seasonStats?.gp||0)>=minGp);
+  const allPlayers=G.clubs.flatMap(cl=>cl.roster.map(p=>({p,club:cl}))).filter(x=>(+x.p.seasonStats?.gp||0)>0);
+  const players=allPlayers.filter(x=>(+x.p.seasonStats?.gp||0)>=minGp);
+  const rookieMinGp=Math.min(minGp,30);
   const mvp=[...players].sort(awardRaceComparator(awardProjectionScore,round)).slice(0,5);
-  const rookies=players.filter(x=>x.p.draftYear===G.season).sort(awardRaceComparator(awardProjectionScore,round)).slice(0,5);
+  const rookies=allPlayers.filter(x=>x.p.draftYear===G.season&&(+x.p.seasonStats?.gp||0)>=rookieMinGp).sort(awardRaceComparator(awardProjectionScore,round)).slice(0,5);
   const dpoy=[...players].sort(awardRaceComparator(defensiveProjectionScore,round)).slice(0,5);
 
   const pct=(made,att)=>att?`${(made/att*100).toFixed(1)}%`:"—";
@@ -29476,7 +29548,7 @@ function awardRace(){
   };
   const race=(title,list,type="off")=>`<div class="leaderCard"><h4>${title}</h4>${list.length?list.map((x,i)=>`<div class="leaderRow"><span>${i+1}</span><div><b>${playerNameLink(x.p)}</b><small>${x.p.position}${x.p.secondaryPosition?`/${x.p.secondaryPosition}`:""} · ${clubNameLink(x.club)}</small><small>${statLine(x,type)}</small></div></div>`).join(""):`<div class="empty">No eligible candidates yet.</div>`}</div>`;
 
-  return `<div class="card awardsRaceIntro"><div class="eyebrow">${basketballSeasonLabel(G.season)}</div><h3>Awards Race</h3><div class="smallcopy">Media award watch based on recorded season performance. Current projection threshold: ${minGp} GP. Final honours are decided from the official season-end ballot.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player of the Year",dpoy,"def")}</div>`;
+  return `<div class="card awardsRaceIntro"><div class="eyebrow">${basketballSeasonLabel(G.season)}</div><h3>Awards Race</h3><div class="smallcopy">Media award watch based on recorded season performance. Current projection threshold: ${minGp} GP; Rookie of the Year uses the 30-game award minimum once that threshold is reached. Final honours are decided from the official season-end ballot.</div></div><div class="awardsRaceGrid">${race("MVP",mvp)}${race("Rookie of the Year",rookies)}${race("Defensive Player of the Year",dpoy,"def")}</div>`;
 }
 function cupStageName(stage){
   return ({GROUP_PLAY:"Group Play",QUARTERFINALS:"Quarterfinals",SEMIFINALS:"Semifinals",CHAMPIONSHIP:"Championship",COMPLETE:"Complete"})[stage]||String(stage||"Group Play").replaceAll("_"," ");
