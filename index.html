@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 258</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 259</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12817,7 +12817,7 @@ function recordHolderHeroText(G,r){
   return r?.clubName||"League record";
 }
 
-const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL3";
+const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL4";
 
 function launchClubIdForRecordSource(sourceName){
   const key=recordSourceIdentityKey(sourceName);
@@ -12829,22 +12829,48 @@ function launchClubIdForRecordSource(sourceName){
   }
   return null;
 }
+function recordPlayerLaunchClubEvidence(p,launchClubId){
+  if(!p||!launchClubId)return false;
+  if(String(p.rosterFoundationClubId||"")===String(launchClubId))return true;
+  if((p.historicalClubIds||[]).some(id=>String(id)===String(launchClubId)))return true;
+  if((p.historicalClubHistory2026||[]).some(x=>String(x?.clubId||"")===String(launchClubId)))return true;
+  if((p.seasonHistory||[]).some(x=>String(x?.clubId||"")===String(launchClubId)))return true;
+  if((p.careerTimelineLedger||[]).some(x=>String(x?.clubId||"")===String(launchClubId)))return true;
+  return false;
+}
+function recordPlayerExplicitAliasMatchesSource(p,sourceName){
+  const aliasSource=HISTORICAL_ALIAS_TO_SOURCE?.[String(p?.name||"").trim()]||"";
+  return !!aliasSource && recordSourceIdentityKey(aliasSource)===recordSourceIdentityKey(sourceName);
+}
 function legacyMappedRecordIdentityFallback(pool,sourceName){
   const sourceKey=recordSourceIdentityKey(sourceName);
   const launchClubId=launchClubIdForRecordSource(sourceName);
   if(!sourceKey||!launchClubId)return null;
-  const matches=(pool||[]).filter(p=>
-    p?.rosterFoundationVersion &&
-    String(p.rosterFoundationClubId||"")===String(launchClubId) &&
-    recordSourceIdentityKey(p.name)===sourceKey
-  );
-  if(matches.length!==1)return null;
-  const p=matches[0];
+
+  const candidates=(pool||[]).filter(p=>{
+    const exactDisplay=recordSourceIdentityKey(p?.name)===sourceKey;
+    const explicitAlias=recordPlayerExplicitAliasMatchesSource(p,sourceName);
+    if(!(exactDisplay||explicitAlias))return false;
+    return recordPlayerLaunchClubEvidence(p,launchClubId);
+  });
+  if(!candidates.length)return null;
+
+  const score=p=>
+    (p?.retired?1000000:0) +
+    (p?.careerTimelineLedger?.length||0)*10000 +
+    (p?.seasonHistory?.length||0)*1000 +
+    (+p?.careerStats?.gp||0);
+
+  candidates.sort((a,b)=>score(b)-score(a));
+  if(candidates.length>1 && score(candidates[0])===score(candidates[1]))return null;
+
+  const p=candidates[0];
   if(!p.sourceTemplateName)p.sourceTemplateName=sourceName;
+  if(!p.sourceName)p.sourceName=sourceName;
   p.personalSourceIdentityVersion=p.personalSourceIdentityVersion||PERSONAL_SOURCE_IDENTITY_VERSION;
+  p.recordIdentityRecoveredVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
   return p;
 }
-
 function recordHolderProfilePlayer(G,r){
   if(!G||!r)return null;
 
@@ -12894,7 +12920,7 @@ function recordHolderProfilePlayer(G,r){
     // Procedurally generated players never qualify for this fallback.
     const mappedNameMatches=pool.filter(p=>{
       if(!(p.nameOrigin==="source_mapped"||p.personalSourceIdentityVersion||isMappedSourceIdentityPlayer(p)))return false;
-      return recordSourceIdentityKey(p.name)===sourceKey;
+      return recordSourceIdentityKey(p.name)===sourceKey||recordPlayerExplicitAliasMatchesSource(p,source);
     });
     if(mappedNameMatches.length===1)return mappedNameMatches[0];
 
@@ -12904,6 +12930,26 @@ function recordHolderProfilePlayer(G,r){
 
   // Pure historical-only benchmarks remain non-linking.
   return null;
+}
+function repairMappedHistoricalRecordProfileLinks(G){
+  if(!G)return 0;
+  G.runtimeMeta=G.runtimeMeta||{};
+  if(G.runtimeMeta.mappedRecordProfileRepairVersion===MAPPED_RECORD_PROFILE_LINK_VERSION)return 0;
+  let repaired=0;
+  const hr=ensureHistoricalRecords(G);
+  const rows=[];
+  for(const list of Object.values(hr?.gameRecords||{}))if(Array.isArray(list))rows.push(...list);
+  for(const list of Object.values(hr?.careerRecords||{}))if(Array.isArray(list))rows.push(...list);
+  for(const list of Object.values(hr?.seasonRecords||{}))if(Array.isArray(list))rows.push(...list);
+
+  for(const r of rows){
+    if(!r?.sourcePlayerName)continue;
+    const resolved=recordHolderProfilePlayer(G,r);
+    if(resolved?.recordIdentityRecoveredVersion===MAPPED_RECORD_PROFILE_LINK_VERSION)repaired++;
+  }
+  G.runtimeMeta.mappedRecordProfileRepairVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
+  G.runtimeMeta.mappedRecordProfileRepairCount=repaired;
+  return repaired;
 }
 function historicalRecordProfilePlayer(G,r){
   return recordHolderProfilePlayer(G,r);
@@ -13083,6 +13129,7 @@ function leagueHistoryAllTimeHtml(G){
   return `<div class="leagueHistoryIntro"><b>All-Time</b><small>League history and career records.</small></div>${legacyHtml}${recordLeaderList("All-Time Career Points",x.career.points,"",0,G)}${recordLeaderList("All-Time Career Assists",x.career.assists,"",0,G)}${recordLeaderList("All-Time Career Rebounds",x.career.rebounds,"",0,G)}${recordLeaderList("All-Time Career Steals",x.career.steals,"",0,G)}${recordLeaderList("All-Time Career Blocks",x.career.blocks,"",0,G)}${recordLeaderList("All-Time Career 3-Pointers",x.career.threes,"",0,G)}${recordLeaderList("All-Time Games Played",x.career.games,"",0,G)}`;
 }
 function leagueHistoricalRecordsHtml(G){
+  repairMappedHistoricalRecordProfileLinks(G);
   const tabs=[["game","Game Records"],["season","Season Records"],["alltime","Career Records"]],mode=ui.leagueHistoryTab||"game";
   const body=mode==="season"?leagueHistorySeasonRecordsHtml(G):mode==="alltime"?leagueHistoryAllTimeHtml(G):leagueHistoryGameRecordsHtml(G);
   return `<div class="leagueRecordsUnified recordsVisualSystem"><div class="recordBookIntro"><div class="eyebrow">All-Time</div><h3>League Record Book</h3><p>Permanent league records across the career. Pre-career benchmark records are presented as League legacy; career-era records retain their actual season history.</p></div><div class="leagueHistoryTabs">${tabs.map(([k,l])=>`<button data-leaguehistory="${k}" class="${mode===k?"active":""}">${l}</button>`).join("")}</div>${body}</div>`;
@@ -21612,7 +21659,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 258",ENGINE_VERSION="E2.26-PROD258";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 259",ENGINE_VERSION="E2.26-PROD259";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
