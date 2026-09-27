@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 264</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 265</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -21547,14 +21547,22 @@ function playoffSeriesAwardKey(G,s){
   if(s.stage==="FINALS")return`S${G.season}_FinalsMVP`;
   return null;
 }
-function ensurePlayoffSeriesRecognition(G,s,{recordAward=true}={}){
+function ensurePlayoffSeriesRecognition(G,s,{recordAward=true,forceRefresh=false}={}){
   if(!s?.complete||!s.winnerClubId)return s;
-  if(!s.seriesStandoutPlayerId){
+  const expectedSeriesGames=(+s.winsA||0)+(+s.winsB||0);
+  const storedSeriesGames=Math.max(
+    +s.seriesStandoutStats?.seriesGames||0,
+    +s.mvpStats?.seriesGames||0
+  );
+  const needsRefresh=forceRefresh||!s.seriesStandoutPlayerId||storedSeriesGames!==expectedSeriesGames;
+
+  if(needsRefresh){
     const standout=playoffSeriesPlayerSummary(G,s,{winnerOnly:false});
     if(standout){
       s.seriesStandoutPlayerId=standout.playerId;
       s.seriesStandoutStats={
         gp:standout.gp,
+        seriesGames:expectedSeriesGames,
         pts:+standout.avg.pts.toFixed(1),
         reb:+standout.avg.reb.toFixed(1),
         ast:+standout.avg.ast.toFixed(1),
@@ -21563,13 +21571,15 @@ function ensurePlayoffSeriesRecognition(G,s,{recordAward=true}={}){
       };
     }
   }
+
   const awardLabel=playoffSeriesHonourLabel(s);
-  if(awardLabel&&!s.mvpPlayerId){
+  if(awardLabel&&(forceRefresh||!s.mvpPlayerId||(+s.mvpStats?.seriesGames||0)!==expectedSeriesGames)){
     const mvp=playoffSeriesPlayerSummary(G,s,{winnerOnly:true});
     if(mvp){
       s.mvpPlayerId=mvp.playerId;
       s.mvpStats={
         gp:mvp.gp,
+        seriesGames:expectedSeriesGames,
         pts:+mvp.avg.pts.toFixed(1),
         reb:+mvp.avg.reb.toFixed(1),
         ast:+mvp.avg.ast.toFixed(1),
@@ -21578,6 +21588,7 @@ function ensurePlayoffSeriesRecognition(G,s,{recordAward=true}={}){
       };
     }
   }
+
   if(recordAward&&awardLabel&&s.mvpPlayerId&&!s.mvpAwardRecorded){
     G.awards=G.awards||{};
     const key=playoffSeriesAwardKey(G,s);
@@ -21603,7 +21614,6 @@ function simulatePlayoffSeriesGame(G,s){
   if(g.winnerClubId===s.teamAId)s.winsA++;else s.winsB++;
   if(s.winsA===4||s.winsB===4){
     s.complete=true;s.winnerClubId=s.winsA===4?s.teamAId:s.teamBId;
-    ensurePlayoffSeriesRecognition(G,s,{recordAward:true});
   }
   return g;
 }
@@ -21694,7 +21704,12 @@ function advancePlayoffEvent(G){
   }
   const games=[];
   for(const s of active){
-    const g=simulatePlayoffSeriesGame(G,s);live.games.push(g);games.push(g);
+    const g=simulatePlayoffSeriesGame(G,s);
+    live.games.push(g);games.push(g);
+    // Series recognition must be calculated only after the game is part of
+    // the authoritative playoff game pool, otherwise the clinching game is
+    // omitted from the series averages.
+    if(s.complete)ensurePlayoffSeriesRecognition(G,s,{recordAward:true,forceRefresh:true});
     if(G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))live.lastUserGameId=g.id;
   }
   if(active.every(s=>s.complete))buildNextPlayoffRound(G);
@@ -21828,7 +21843,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 264",ENGINE_VERSION="E2.26-PROD264";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 265",ENGINE_VERSION="E2.26-PROD265";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -27189,7 +27204,8 @@ function playoffSeriesRecognitionHtml(series){
   if(!p)return"";
   const label=series.stage==="FINALS"?"Finals MVP":series.stage==="East_CF"?"Eastern Conference Finals MVP":series.stage==="West_CF"?"Western Conference Finals MVP":"Series Standout";
   const stats=isMajor?(series.mvpStats||series.seriesStandoutStats):series.seriesStandoutStats;
-  return `<div class="seriesRecognition"><div><small>${label}</small><b>${p.name}</b><span>${playoffRecognitionStatsText(stats)}</span></div><strong>${stats?.gp||series.gameNo||""}${stats?.gp?" GAMES":""}</strong></div>`;
+  const seriesGames=(+series.winsA||0)+(+series.winsB||0);
+  return `<div class="seriesRecognition"><div><small>${label}</small><b>${p.name}</b><span>${playoffRecognitionStatsText(stats)}</span></div><strong>${seriesGames} GAME${seriesGames===1?"":"S"}</strong></div>`;
 }
 function postseasonCelebrationHtml(){
   const id=ui.postSeriesCelebrationId;
@@ -27439,7 +27455,11 @@ function renderPostseasonUpdate(){
       const loserWins=String(s.winnerClubId)===String(s.teamAId)?s.winsB:s.winsA;
       const winnerSeed=String(s.winnerClubId)===String(s.teamAId)?s.seedA:s.seedB;
       const loserSeed=String(s.winnerClubId)===String(s.teamAId)?s.seedB:s.seedA;
-      const champLabel=conf==="Finals"?"League Champion":`${conf==="East"?"Eastern":"Western"} Conference Champion`;
+      const champLabel=
+        conf==="Finals"?"League Champion":
+        String(s.stage||"").endsWith("_CF")?`${conf==="East"?"Eastern":"Western"} Conference Champion`:
+        String(s.stage||"").endsWith("_SF")?"Conference Semifinals Winner":
+        "Round 1 Winner";
       const resultLine=`${winnerSeed?`#${winnerSeed} `:""}${winner?.name||"Winner"} def. ${loserSeed?`#${loserSeed} `:""}${loser?.name||"Opponent"}, ${winnerWins}–${loserWins}`;
       return `<div class="postRoundWinnerCard" data-update-series="${s.id}" data-update-stage="${postseasonStageKey(s.stage)}" data-update-conf="${s.conference||""}">
         ${winner?teamMark(winner,"teamMiniCrest"):""}
