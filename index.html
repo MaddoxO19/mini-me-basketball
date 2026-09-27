@@ -810,14 +810,20 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .asContestWinner small{display:block;color:var(--accent2);font-size:9px;font-weight:950}.asContestWinner b{display:block;font-size:20px;margin-top:3px}.asContestWinner span{display:block;color:var(--muted);font-size:10px;margin-top:2px}
 .asContestRanking{border:1px solid var(--line);border-radius:13px;background:var(--panel);overflow:hidden}
 
-.asContestFormatNote{margin:0 0 9px;padding:8px 10px;border:1px solid #34414d;background:#10161d;border-radius:10px;color:var(--muted);font-size:9px;line-height:1.4}
-.asContestScoreRow{display:grid;grid-template-columns:28px minmax(0,1fr) 78px 78px;gap:8px;align-items:center;padding:9px 10px;border-top:1px solid var(--line)}
-.asContestScoreRow:first-child{border-top:0}.asContestScoreRow.winner{background:rgba(241,168,77,.06)}
-.asContestScoreRow>strong{font-size:11px;color:var(--muted);text-align:center}.asContestScoreRow.winner>strong{color:var(--accent)}
-.asContestScoreMain b{display:block;font-size:10px}.asContestScoreMain small{display:block;color:var(--muted);font-size:9px;margin-top:2px}
-.asContestRound{text-align:right}.asContestRound small{display:block;color:var(--muted);font-size:8px;text-transform:uppercase}.asContestRound b{display:block;font-size:11px;margin-top:2px;color:var(--text)}
-.asContestRound.final b{color:var(--accent2)}
-@media(max-width:520px){.asContestScoreRow{grid-template-columns:24px minmax(0,1fr) 64px 64px;gap:6px;padding:9px 8px}.asContestRound b{font-size:10px}}
+.asContestTable{width:100%;border-collapse:collapse;table-layout:fixed}
+.asContestTable th,.asContestTable td{padding:11px 9px;border-top:1px solid var(--line);font-size:10px;text-align:center}
+.asContestTable thead th{border-top:0;background:#111820;color:var(--muted);font-size:9px;text-transform:uppercase;letter-spacing:.45px}
+.asContestTable th:first-child,.asContestTable td:first-child{width:36px}
+.asContestTable th:nth-child(2),.asContestTable td:nth-child(2){text-align:left;width:auto}
+.asContestTable th:nth-child(n+3),.asContestTable td:nth-child(n+3){width:72px}
+.asContestTable tbody tr.winner{background:rgba(241,168,77,.06)}
+.asContestTable .rank{font-weight:950;color:var(--muted)}
+.asContestTable tr.winner .rank,.asContestTable tr.winner .contestant,.asContestTable tr.winner .total{color:var(--accent2)}
+.asContestTable .contestant{font-weight:900;font-size:11px}
+.asContestTable .roundScore{font-weight:850;color:var(--text)}
+.asContestTable .total{font-weight:950;font-size:11px}
+.asContestTable .na{color:var(--muted);font-weight:700}
+@media(max-width:520px){.asContestTable th,.asContestTable td{padding:10px 6px}.asContestTable th:nth-child(1),.asContestTable td:nth-child(1){width:30px}.asContestTable th:nth-child(n+3),.asContestTable td:nth-child(n+3){width:58px}.asContestTable .contestant{font-size:10px}}
 .asRankRow{display:grid;grid-template-columns:28px minmax(0,1fr) 42px;gap:8px;align-items:center;padding:9px 10px;border-top:1px solid var(--line)}.asRankRow:first-child{border-top:0}.asRankRow.winner{background:rgba(241,168,77,.06)}
 .asRankRow>strong{font-size:11px;color:var(--muted);text-align:center}.asRankRow.winner>strong{color:var(--accent)}
 .asRankRow b{font-size:10px}.asRankRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.asRankRow>span{font-size:12px;font-weight:950;text-align:right;color:var(--accent2)}
@@ -3247,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 256</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 257</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -19916,16 +19922,16 @@ function simulateAllStarContest(G,kind){
     }).sort((a,b)=>b.round1-a.round1||b.tieBreak-a.tieBreak);
     const finalistIds=new Set(qualifying.slice(0,3).map(x=>x.playerId));
     const finals=qualifying.filter(x=>finalistIds.has(x.playerId)).map(x=>{
-      const p=lookup.get(x.playerId),finalRound=threePointContestRoundScore(p,G);
-      return{...x,final:finalRound.score,finalMakes:finalRound.makes,finalShots:finalRound.shots,finalDetail:finalRound};
-    }).sort((a,b)=>b.final-a.final||b.round1-a.round1||b.tieBreak-a.tieBreak);
-    const nonFinalists=qualifying.filter(x=>!finalistIds.has(x.playerId));
-    const scores=[...finals,...nonFinalists].map((x,i)=>({...x,score:Number.isFinite(+x.final)?+x.final:+x.round1,place:i+1}));
+      const p=lookup.get(x.playerId),round2=threePointContestRoundScore(p,G);
+      return{...x,round2:round2.score,round2Makes:round2.makes,round2Shots:round2.shots,round2Detail:round2,total:x.round1+round2.score};
+    }).sort((a,b)=>b.total-a.total||b.round2-a.round2||b.round1-a.round1||b.tieBreak-a.tieBreak);
+    const nonFinalists=qualifying.filter(x=>!finalistIds.has(x.playerId)).sort((a,b)=>b.round1-a.round1||b.tieBreak-a.tieBreak).map(x=>({...x,round2:null,total:x.round1}));
+    const scores=[...finals,...nonFinalists].map((x,i)=>({...x,score:x.total,place:i+1}));
     return{
-      kind,formatVersion:"3PT-40-R2-1",maxRoundScore:40,advancers:3,
+      kind,formatVersion:"3PT-40-R2-2",maxRoundScore:40,maxTotalScore:80,advancers:3,
       scores,qualifying,finals,
       winnerPlayerId:finals[0]?.playerId||null,winnerName:finals[0]?.name||"—",
-      winningScore:finals[0]?.final||0
+      winningScore:finals[0]?.total||0
     };
   }
   const qualifying=ids.map(id=>{
@@ -19934,16 +19940,16 @@ function simulateAllStarContest(G,kind){
   }).sort((a,b)=>b.round1-a.round1||b.tieBreak-a.tieBreak);
   const finalistIds=new Set(qualifying.slice(0,4).map(x=>x.playerId));
   const finals=qualifying.filter(x=>finalistIds.has(x.playerId)).map(x=>{
-    const p=lookup.get(x.playerId),finalRound=dunkContestRoundScore(p,G,2);
-    return{...x,final:finalRound.score,finalDunks:finalRound.dunks};
-  }).sort((a,b)=>b.final-a.final||b.round1-a.round1||b.tieBreak-a.tieBreak);
-  const nonFinalists=qualifying.filter(x=>!finalistIds.has(x.playerId));
-  const scores=[...finals,...nonFinalists].map((x,i)=>({...x,score:Number.isFinite(+x.final)?+x.final:+x.round1,place:i+1}));
+    const p=lookup.get(x.playerId),round2=dunkContestRoundScore(p,G,2);
+    return{...x,round2:round2.score,round2Dunks:round2.dunks,total:x.round1+round2.score};
+  }).sort((a,b)=>b.total-a.total||b.round2-a.round2||b.round1-a.round1||b.tieBreak-a.tieBreak);
+  const nonFinalists=qualifying.filter(x=>!finalistIds.has(x.playerId)).sort((a,b)=>b.round1-a.round1||b.tieBreak-a.tieBreak).map(x=>({...x,round2:null,total:x.round1}));
+  const scores=[...finals,...nonFinalists].map((x,i)=>({...x,score:x.total,place:i+1}));
   return{
-    kind,formatVersion:"DUNK-5J-2D-R2-1",maxRoundScore:100,advancers:4,
+    kind,formatVersion:"DUNK-5J-2D-R2-2",maxRoundScore:100,maxTotalScore:200,advancers:4,
     scores,qualifying,finals,
     winnerPlayerId:finals[0]?.playerId||null,winnerName:finals[0]?.name||"—",
-    winningScore:finals[0]?.final||0
+    winningScore:finals[0]?.total||0
   };
 }
 function advanceAllStarEvent(G){
@@ -21568,7 +21574,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 256",ENGINE_VERSION="E2.26-PROD256";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 257",ENGINE_VERSION="E2.26-PROD257";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26353,10 +26359,10 @@ function allStarEventIntro(live){
     return `<div class="asMatchup"><div class="asTeamBlock"><small>RISING STARS A</small><b>${allStarTeamPreview(live.teams.RISING_A,3)}</b></div><div class="asVs">VS</div><div class="asTeamBlock"><small>RISING STARS B</small><b>${allStarTeamPreview(live.teams.RISING_B,3)}</b></div></div>`;
   }
   if(live.stage===2){
-    return `<div class="asContest"><div class="asContestHead"><b>3-Point Contest</b><small>8 shooters · 40-point rounds · top 3 advance</small></div><div class="asPlayerGrid">${(live.threePointEntrants||[]).map(id=>allStarPlayerCard(id)).join("")}</div></div>`;
+    return `<div class="asContest"><div class="asContestHead"><b>3-Point Contest</b><small>8 shooters · 2 rounds</small></div><div class="asPlayerGrid">${(live.threePointEntrants||[]).map(id=>allStarPlayerCard(id)).join("")}</div></div>`;
   }
   if(live.stage===3){
-    return `<div class="asContest"><div class="asContestHead"><b>Dunk Contest</b><small>8 contestants · 2 dunks/round · 5 judges · top 4 advance</small></div><div class="asPlayerGrid">${(live.dunkEntrants||[]).map(id=>allStarPlayerCard(id)).join("")}</div></div>`;
+    return `<div class="asContest"><div class="asContestHead"><b>Dunk Contest</b><small>8 contestants · 2 rounds</small></div><div class="asPlayerGrid">${(live.dunkEntrants||[]).map(id=>allStarPlayerCard(id)).join("")}</div></div>`;
   }
   if(live.stage===4){
     return `<div class="asMatchup"><div class="asTeamBlock"><small>EASTERN CONFERENCE</small>${allStarTeamPreview(live.teams.EAST,4)}</div><div class="asVs">VS</div><div class="asTeamBlock"><small>WESTERN CONFERENCE</small>${allStarTeamPreview(live.teams.WEST,4)}</div></div>`;
@@ -26396,30 +26402,40 @@ function allStarGameRecap(game){
 function allStarContestRecap(result,kind){
   if(!result)return `<div class="card empty">Contest result unavailable.</div>`;
   const is3=kind==="THREE_POINT";
-  const structured=is3?result.formatVersion==="3PT-40-R2-1":result.formatVersion==="DUNK-5J-2D-R2-1";
-  if(!structured){
-    const unit=is3?"PTS":"SCORE";
-    return `<div class="asContestResult"><div class="asContestWinner"><small>${is3?"3-POINT CHAMPION":"DUNK CHAMPION"}</small><b>${result.winnerName}</b><span>${result.winningScore} ${unit}</span></div><div class="asContestFormatNote">Legacy contest result from an older save. New contests use explicit round maximums and advancement scoring.</div><div class="asContestRanking">${(result.scores||[]).map((r,i)=>{const p=allPlayers(G).find(x=>x.id===r.playerId);return `<div class="asRankRow ${i===0?"winner":""}"><strong>${i+1}</strong><div><b>${r.name}</b><small>${p?`${positionLabel(p)} · ${p.ovr} OVR · ${playerAffiliation(p)}`:""}</small></div><span>${r.score}</span></div>`}).join("")}</div></div>`;
+  const maxRound=is3?40:100;
+  const currentFormat=is3?result.formatVersion==="3PT-40-R2-2":result.formatVersion==="DUNK-5J-2D-R2-2";
+
+  if(currentFormat){
+    const rows=(result.scores||[]).map((r,i)=>{
+      const r1=Number.isFinite(+r.round1)?`${+r.round1}/${maxRound}`:"—";
+      const r2=Number.isFinite(+r.round2)?`${+r.round2}/${maxRound}`:"—";
+      const total=Number.isFinite(+r.total)?`${+r.total}/${Number.isFinite(+r.round2)?maxRound*2:maxRound}`:"—";
+      return `<tr class="${i===0?"winner":""}">
+        <td class="rank">${i+1}</td>
+        <td class="contestant">${r.name}</td>
+        <td class="roundScore">${r1}</td>
+        <td class="roundScore ${Number.isFinite(+r.round2)?"":"na"}">${r2}</td>
+        <td class="total">${total}</td>
+      </tr>`;
+    }).join("");
+    return `<div class="asContestRanking"><table class="asContestTable">
+      <thead><tr><th>#</th><th>Player</th><th>Round 1</th><th>Round 2</th><th>Total</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
   }
-  const max=is3?40:100;
-  const formatNote=is3
-    ?"Each round is scored out of 40. The top three shooters from Round 1 advance to a fresh 40-point Final."
-    :"Five judges score each dunk out of 10. Two dunks create a 100-point round; the top four contestants advance to a fresh two-dunk Final.";
-  const winner=result.finals?.[0]||result.scores?.[0]||null;
-  const winnerDetail=is3
-    ?`${winner?.final||result.winningScore||0}/${max} · Final Round`
-    :`${winner?.final||result.winningScore||0}/${max} · Final Round${winner?.finalDunks?.length===2?` · Dunks ${winner.finalDunks[0].score}+${winner.finalDunks[1].score}`:""}`;
-  const rows=(result.scores||[]).map((r,i)=>{
-    const p=allPlayers(G).find(x=>x.id===r.playerId);
-    const qualified=Number.isFinite(+r.final);
-    const r1=is3?`${+r.round1||0}/40`:`${+r.round1||0}/100`;
-    const fin=qualified?(is3?`${+r.final||0}/40`:`${+r.final||0}/100`):"—";
-    let detail=p?`${positionLabel(p)} · ${p.ovr} OVR · ${playerAffiliation(p)}`:"";
-    if(!is3&&qualified&&r.finalDunks?.length===2)detail+=` · Final dunks ${r.finalDunks[0].score}+${r.finalDunks[1].score}`;
-    if(!is3&&!qualified&&r.round1Dunks?.length===2)detail+=` · Dunks ${r.round1Dunks[0].score}+${r.round1Dunks[1].score}`;
-    return `<div class="asContestScoreRow ${i===0?"winner":""}"><strong>${i+1}</strong><div class="asContestScoreMain"><b>${r.name}</b><small>${detail}</small></div><div class="asContestRound"><small>Round 1</small><b>${r1}</b></div><div class="asContestRound final"><small>Final</small><b>${fin}</b></div></div>`;
-  }).join("");
-  return `<div class="asContestResult"><div class="asContestWinner"><small>${is3?"3-POINT CHAMPION":"DUNK CHAMPION"}</small><b>${result.winnerName}</b><span>${winnerDetail}</span></div><div class="asContestFormatNote">${formatNote}</div><div class="asContestRanking">${rows}</div></div>`;
+
+  // Older save results: preserve their recorded score without inventing a second round.
+  const rows=(result.scores||[]).map((r,i)=>`<tr class="${i===0?"winner":""}">
+    <td class="rank">${i+1}</td>
+    <td class="contestant">${r.name}</td>
+    <td class="roundScore">${r.score}</td>
+    <td class="na">—</td>
+    <td class="total">${r.score}</td>
+  </tr>`).join("");
+  return `<div class="asContestRanking"><table class="asContestTable">
+    <thead><tr><th>#</th><th>Player</th><th>Round 1</th><th>Round 2</th><th>Total</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
 }
 function allStarReviewHtml(live){
   const stage=live.reviewStage;
@@ -26427,8 +26443,8 @@ function allStarReviewHtml(live){
     const g=allStarGameById(live.results?.rising?.gameId);
     return `<div class="asReviewHead"><div class="eyebrow">EVENT 1 RESULT</div><h2>Sophomores v Rookies Final</h2><p>Review the full game result before advancing to the 3-Point Contest.</p></div>${allStarGameRecap(g)}`;
   }
-  if(stage===2)return `<div class="asReviewHead"><div class="eyebrow">EVENT 2 RESULT</div><h2>3-Point Contest Results</h2><p>Round 1 is scored out of 40; the top three advance to a fresh 40-point Final.</p></div>${allStarContestRecap(live.results?.threePoint,"THREE_POINT")}`;
-  if(stage===3)return `<div class="asReviewHead"><div class="eyebrow">EVENT 3 RESULT</div><h2>Dunk Contest Results</h2><p>Five judges score two dunks per round for a maximum of 100; the top four advance to the Final.</p></div>${allStarContestRecap(live.results?.dunk,"DUNK")}`;
+  if(stage===2)return `<div class="asReviewHead"><div class="eyebrow">EVENT 2 RESULT</div><h2>3-Point Contest Results</h2></div>${allStarContestRecap(live.results?.threePoint,"THREE_POINT")}`;
+  if(stage===3)return `<div class="asReviewHead"><div class="eyebrow">EVENT 3 RESULT</div><h2>Dunk Contest Results</h2></div>${allStarContestRecap(live.results?.dunk,"DUNK")}`;
   if(stage===4){
     const g=allStarGameById(live.results?.allStarGame?.gameId);
     return `<div class="asReviewHead"><div class="eyebrow">EVENT 4 RESULT</div><h2>All-Star Game Final</h2><p>Review the complete box score before closing All-Star Weekend.</p></div>${allStarGameRecap(g)}${live.mvpPlayerId?`<div class="asMvpCard"><small>ALL-STAR MVP</small><b>${allStarPlayerName(live.mvpPlayerId)}</b></div>`:""}`;
