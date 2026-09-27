@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 259</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 261</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12521,14 +12521,14 @@ function ensureHistoricalRecords(G){
   if(!G.historicalRecords.legacy){G.historicalRecords.legacy=JSON.parse(JSON.stringify(HISTORICAL_LEGACY_BASELINE));G.historicalRecords.version=2;}
   for(const [k,v] of Object.entries(HISTORICAL_LEGACY_BASELINE.singleGame)){
     const existing=G.historicalRecords.league.singleGame[k];
-    if(
-      recordValueBetter(v,existing) ||
-      (
-        existing?.historical &&
-        +existing.value===+v.value &&
-        String(existing.playerId||"")===String(v.playerId||"")
-      )
-    )G.historicalRecords.league.singleGame[k]={...v};
+    const sameHistoricalIdentity=
+      existing?.historical &&
+      +existing.value===+v.value &&
+      recordSourceIdentityKey(existing.sourcePlayerName||existing.playerName||"")===
+        recordSourceIdentityKey(v.sourcePlayerName||v.playerName||"");
+    if(recordValueBetter(v,existing)||(!sameHistoricalIdentity&&existing?.historical&&+existing.value===+v.value&&String(existing.playerId||"")===String(v.playerId||""))){
+      G.historicalRecords.league.singleGame[k]={...v};
+    }
   }
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.career))G.historicalRecords.league.career[k]=mergeHistoricalTop(G.historicalRecords.league.career[k],list);
   for(const [k,list] of Object.entries(HISTORICAL_LEGACY_BASELINE.seasonRates))G.historicalRecords.league.seasonRates[k]=mergeHistoricalTop(G.historicalRecords.league.seasonRates[k],list,"season");
@@ -12543,9 +12543,16 @@ function recordSingleGameEntry(G,scope,key,value,meta){
 }
 function mergeSingleGameTopFive(seed,current){
   const seen=new Set(),out=[];
-  for(const r of [...(seed||[]),...(current||[])]){
+  // Current saved rows go first so a migrated/bound playerId is retained when
+  // the immutable historical seed is merged back in.
+  for(const r of [...(current||[]),...(seed||[])]){
     if(!r||!Number.isFinite(+r.value))continue;
-    const identity=r.gameId?`G|${r.gameId}|${r.playerId||r.playerName}|${r.key||""}`:`H|${r.playerId||r.playerName}|${r.value}|${r.season||""}`;
+    const sourceKey=recordSourceIdentityKey(r.sourcePlayerName||r.playerName||"");
+    const identity=r.gameId
+      ?`G|${r.gameId}|${r.playerId||sourceKey||r.playerName}|${r.key||""}`
+      :r.historical
+        ?`H|${sourceKey||r.playerName}|${r.value}|${r.season||""}|${r.key||""}`
+        :`H|${r.playerId||r.playerName}|${r.value}|${r.season||""}|${r.key||""}`;
     if(seen.has(identity))continue;
     seen.add(identity);out.push({...r});
   }
@@ -12817,7 +12824,7 @@ function recordHolderHeroText(G,r){
   return r?.clubName||"League record";
 }
 
-const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL4";
+const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL6";
 
 function launchClubIdForRecordSource(sourceName){
   const key=recordSourceIdentityKey(sourceName);
@@ -12842,26 +12849,62 @@ function recordPlayerExplicitAliasMatchesSource(p,sourceName){
   const aliasSource=HISTORICAL_ALIAS_TO_SOURCE?.[String(p?.name||"").trim()]||"";
   return !!aliasSource && recordSourceIdentityKey(aliasSource)===recordSourceIdentityKey(sourceName);
 }
+function recordPlayerSourceIdentityKeys(p){
+  if(!p)return[];
+  const values=[
+    p.sourceTemplateName,
+    p.sourceName,
+    p.sourcePlayerName,
+    p.productionContractSourceName,
+    p.historicalSourceName,
+    p.originalSourceName
+  ];
+  const alias=HISTORICAL_ALIAS_TO_SOURCE?.[String(p.name||"").trim()];
+  if(alias)values.push(alias);
+  return [...new Set(values.map(recordSourceIdentityKey).filter(Boolean))];
+}
 function legacyMappedRecordIdentityFallback(pool,sourceName){
   const sourceKey=recordSourceIdentityKey(sourceName);
-  const launchClubId=launchClubIdForRecordSource(sourceName);
-  if(!sourceKey||!launchClubId)return null;
+  if(!sourceKey)return null;
 
-  const candidates=(pool||[]).filter(p=>{
+  const launchClubId=launchClubIdForRecordSource(sourceName);
+
+  // Strong path: exact canonical/explicit alias plus launch-history evidence.
+  let candidates=(pool||[]).filter(p=>{
     const exactDisplay=recordSourceIdentityKey(p?.name)===sourceKey;
     const explicitAlias=recordPlayerExplicitAliasMatchesSource(p,sourceName);
     if(!(exactDisplay||explicitAlias))return false;
-    return recordPlayerLaunchClubEvidence(p,launchClubId);
+    return launchClubId?recordPlayerLaunchClubEvidence(p,launchClubId):false;
   });
+
+  // Old long-save recovery path:
+  // some retired launch players pre-date rosterFoundation/source metadata.
+  // For an explicitly mapped historical record only, allow a UNIQUE retired
+  // player whose current display name is the canonical source name OR whose
+  // display name is an explicit curated legacy alias for that source.
+  // Future/generated players are protected by the global source-name collision
+  // guard, and ambiguity returns null rather than guessing.
+  if(!candidates.length){
+    candidates=(pool||[]).filter(p=>{
+      if(!p?.retired)return false;
+      const exactDisplay=recordSourceIdentityKey(p?.name)===sourceKey;
+      const explicitAlias=recordPlayerExplicitAliasMatchesSource(p,sourceName);
+      return exactDisplay||explicitAlias;
+    });
+  }
+
   if(!candidates.length)return null;
 
   const score=p=>
+    (recordPlayerLaunchClubEvidence(p,launchClubId)?10000000:0) +
     (p?.retired?1000000:0) +
     (p?.careerTimelineLedger?.length||0)*10000 +
     (p?.seasonHistory?.length||0)*1000 +
     (+p?.careerStats?.gp||0);
 
   candidates.sort((a,b)=>score(b)-score(a));
+
+  // Never guess between equally plausible identities.
   if(candidates.length>1 && score(candidates[0])===score(candidates[1]))return null;
 
   const p=candidates[0];
@@ -12871,7 +12914,7 @@ function legacyMappedRecordIdentityFallback(pool,sourceName){
   p.recordIdentityRecoveredVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
   return p;
 }
-function recordHolderProfilePlayer(G,r){
+function recordHolderProfilePlayerUnbound(G,r){
   if(!G||!r)return null;
 
   // Deduplicate by game-player ID so the same player cannot be counted twice if
@@ -12897,12 +12940,7 @@ function recordHolderProfilePlayer(G,r){
   if(sourceKey){
     // Preferred path: preserved source fields from the mapped launch/prospect
     // data. This remains independent of fictional/generated display names.
-    const sourceMatches=pool.filter(p=>{
-      const templateKey=recordSourceIdentityKey(p.sourceTemplateName);
-      const sourceNameKey=recordSourceIdentityKey(p.sourceName);
-      const sourcePlayerKey=recordSourceIdentityKey(p.sourcePlayerName);
-      return templateKey===sourceKey||sourceNameKey===sourceKey||sourcePlayerKey===sourceKey;
-    });
+    const sourceMatches=pool.filter(p=>recordPlayerSourceIdentityKeys(p).includes(sourceKey));
     if(sourceMatches.length===1)return sourceMatches[0];
     if(sourceMatches.length>1){
       const ranked=[...sourceMatches].sort((a,b)=>
@@ -12924,6 +12962,19 @@ function recordHolderProfilePlayer(G,r){
     });
     if(mappedNameMatches.length===1)return mappedNameMatches[0];
 
+    const retiredIdentityMatches=pool.filter(p=>
+      p?.retired &&
+      (recordSourceIdentityKey(p.name)===sourceKey||recordPlayerExplicitAliasMatchesSource(p,source))
+    );
+    if(retiredIdentityMatches.length===1){
+      const p=retiredIdentityMatches[0];
+      if(!p.sourceTemplateName)p.sourceTemplateName=source;
+      if(!p.sourceName)p.sourceName=source;
+      p.personalSourceIdentityVersion=p.personalSourceIdentityVersion||PERSONAL_SOURCE_IDENTITY_VERSION;
+      p.recordIdentityRecoveredVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
+      return p;
+    }
+
     const repaired=legacyMappedRecordIdentityFallback(pool,source);
     if(repaired)return repaired;
   }
@@ -12931,25 +12982,97 @@ function recordHolderProfilePlayer(G,r){
   // Pure historical-only benchmarks remain non-linking.
   return null;
 }
+
+function historicalRecordPlayerPool(G){
+  const pool=[],seen=new Set();
+  const add=p=>{
+    if(!p?.id)return;
+    const id=String(p.id);
+    if(seen.has(id))return;
+    seen.add(id);pool.push(p);
+  };
+  allPlayers(G).forEach(add);
+  retiredPlayerPool(G).forEach(add);
+  return pool;
+}
+function historicalRecordBoundPlayer(G,r){
+  if(!r?.playerId)return null;
+  return historicalRecordPlayerPool(G).find(p=>String(p.id)===String(r.playerId))||null;
+}
+function bindHistoricalRecordPlayerId(G,r){
+  if(!G||!r)return null;
+
+  // Permanent ID binding is authoritative once established.
+  const bound=historicalRecordBoundPlayer(G,r);
+  if(bound)return bound;
+
+  // Old historical rows contain legacy placeholder IDs (LEG_*, HIST_* etc).
+  // Resolve them once using source provenance, then persist the actual H³O ID.
+  const resolved=recordHolderProfilePlayerUnbound(G,r);
+  if(resolved?.id){
+    if(r.playerId && String(r.playerId)!==String(resolved.id) && !r.legacyPlayerId){
+      r.legacyPlayerId=r.playerId;
+    }
+    r.playerId=resolved.id;
+    r.playerBindingVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
+    r.playerBindingSource="historical_identity_migration";
+    return resolved;
+  }
+  return null;
+}
+function recordHolderProfilePlayer(G,r){
+  return bindHistoricalRecordPlayerId(G,r);
+}
+
+function historicalRecordRowsForBinding(G){
+  const hr=ensureHistoricalRecords(G),rows=[],seen=new Set();
+  const add=r=>{
+    if(!r||typeof r!=="object")return;
+    const token=r;
+    if(seen.has(token))return;
+    seen.add(token);rows.push(r);
+  };
+  const addBucket=b=>{
+    if(!b||typeof b!=="object")return;
+    for(const v of Object.values(b)){
+      if(Array.isArray(v))v.forEach(add);
+      else if(v&&typeof v==="object"&&("value" in v||"playerName" in v||"sourcePlayerName" in v))add(v);
+    }
+  };
+
+  addBucket(hr.league?.singleGame);
+  addBucket(hr.league?.singleGameTop5);
+  addBucket(hr.league?.seasonRates);
+  addBucket(hr.league?.career);
+
+  for(const clubBucket of Object.values(hr.clubs||{})){
+    addBucket(clubBucket?.singleGame);
+    addBucket(clubBucket?.seasonRates);
+    addBucket(clubBucket?.career);
+  }
+  return rows;
+}
 function repairMappedHistoricalRecordProfileLinks(G){
   if(!G)return 0;
   G.runtimeMeta=G.runtimeMeta||{};
   if(G.runtimeMeta.mappedRecordProfileRepairVersion===MAPPED_RECORD_PROFILE_LINK_VERSION)return 0;
-  let repaired=0;
-  const hr=ensureHistoricalRecords(G);
-  const rows=[];
-  for(const list of Object.values(hr?.gameRecords||{}))if(Array.isArray(list))rows.push(...list);
-  for(const list of Object.values(hr?.careerRecords||{}))if(Array.isArray(list))rows.push(...list);
-  for(const list of Object.values(hr?.seasonRecords||{}))if(Array.isArray(list))rows.push(...list);
 
-  for(const r of rows){
-    if(!r?.sourcePlayerName)continue;
-    const resolved=recordHolderProfilePlayer(G,r);
-    if(resolved?.recordIdentityRecoveredVersion===MAPPED_RECORD_PROFILE_LINK_VERSION)repaired++;
+  let bound=0,unbound=0;
+  for(const r of historicalRecordRowsForBinding(G)){
+    if(!r?.historical && !r?.sourcePlayerName)continue;
+    const before=historicalRecordBoundPlayer(G,r);
+    const resolved=bindHistoricalRecordPlayerId(G,r);
+    if(resolved){
+      if(!before)bound++;
+    }else if(r?.sourcePlayerName){
+      unbound++;
+    }
   }
+
   G.runtimeMeta.mappedRecordProfileRepairVersion=MAPPED_RECORD_PROFILE_LINK_VERSION;
-  G.runtimeMeta.mappedRecordProfileRepairCount=repaired;
-  return repaired;
+  G.runtimeMeta.mappedRecordProfileRepairCount=bound;
+  G.runtimeMeta.mappedRecordProfileUnboundCount=unbound;
+  return bound;
 }
 function historicalRecordProfilePlayer(G,r){
   return recordHolderProfilePlayer(G,r);
@@ -21659,7 +21782,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 259",ENGINE_VERSION="E2.26-PROD259";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 261",ENGINE_VERSION="E2.26-PROD261";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -28983,7 +29106,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Record Source Identity</b><small>Historical benchmarks with a current/mapped source player resolve to that H³O profile · pure legacy records remain non-linking · fictional-name fallback remains disabled</small></div><b>${RECORD_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
-    <div class="more"><div><b>Mapped Record Profile Links</b><small>Historical records for launch/prospect players resolve to the same active or retired H³O profile · source fields preferred · source-mapped real-name recovery for older saves</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
+    <div class="more"><div><b>Historical Record Player IDs</b><small>Mapped historical records bind once to the permanent H³O player ID; source identity is used only for old-save migration and legacy-only holders remain unbound.</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
     <div class="more"><div><b>Regular Season Performance</b><small>Historical record maintenance prepared once per round · record player/club indexes reused across all 16 games · no repeated full record merge per player/stat · detailed timing retained</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Performance</b><small>Record baseline/name migration runs once per loaded runtime · regular-season game ingestion writes directly to a prepared context</small></div><b>${HISTORICAL_RECORD_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>All-Star Contest Merit</b><small>3-Point entrants prioritize current-season accuracy + volume · underlying shooting skill supports specialist slots · Dunk entrants use athletic/build suitability with reduced repeat penalty</small></div><b>${ALL_STAR_CONTEST_MERIT_VERSION}</b></div>
