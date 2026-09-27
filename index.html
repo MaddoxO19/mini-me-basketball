@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 261</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 262</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12824,7 +12824,7 @@ function recordHolderHeroText(G,r){
   return r?.clubName||"League record";
 }
 
-const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL6";
+const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL7";
 
 function launchClubIdForRecordSource(sourceName){
   const key=recordSourceIdentityKey(sourceName);
@@ -12856,6 +12856,7 @@ function recordPlayerSourceIdentityKeys(p){
     p.sourceName,
     p.sourcePlayerName,
     p.productionContractSourceName,
+    p.preCareerContext?.sourceName,
     p.historicalSourceName,
     p.originalSourceName
   ];
@@ -12917,21 +12918,12 @@ function legacyMappedRecordIdentityFallback(pool,sourceName){
 function recordHolderProfilePlayerUnbound(G,r){
   if(!G||!r)return null;
 
-  // Deduplicate by game-player ID so the same player cannot be counted twice if
-  // referenced by more than one runtime pool.
-  const pool=[],seenIds=new Set();
-  const add=p=>{
-    if(!p?.id)return;
-    const id=String(p.id);
-    if(seenIds.has(id))return;
-    seenIds.add(id);pool.push(p);
-  };
-  allPlayers(G).forEach(add);
-  retiredPlayerPool(G).forEach(add);
+  const identityIndex=historicalRecordIdentityIndex(G);
+  const pool=identityIndex.pool;
 
   // First honour a real H³O player ID for records created during the career.
   if(r.playerId){
-    const direct=pool.find(p=>String(p.id)===String(r.playerId));
+    const direct=identityIndex.idMap.get(String(r.playerId));
     if(direct)return direct;
   }
 
@@ -12940,7 +12932,7 @@ function recordHolderProfilePlayerUnbound(G,r){
   if(sourceKey){
     // Preferred path: preserved source fields from the mapped launch/prospect
     // data. This remains independent of fictional/generated display names.
-    const sourceMatches=pool.filter(p=>recordPlayerSourceIdentityKeys(p).includes(sourceKey));
+    const sourceMatches=identityIndex.sourceMap.get(sourceKey)||[];
     if(sourceMatches.length===1)return sourceMatches[0];
     if(sourceMatches.length>1){
       const ranked=[...sourceMatches].sort((a,b)=>
@@ -12983,21 +12975,45 @@ function recordHolderProfilePlayerUnbound(G,r){
   return null;
 }
 
-function historicalRecordPlayerPool(G){
-  const pool=[],seen=new Set();
+let _historicalRecordIdentityCache={signature:null,pool:[],idMap:new Map(),sourceMap:new Map()};
+function historicalRecordIdentitySignature(G){
+  const retired=retiredPlayerPool(G);
+  const active=allPlayers(G);
+  return [
+    +G?.season||0,
+    active.length,
+    retired.length,
+    active.map(p=>p?.id||"").join("|"),
+    retired.map(p=>p?.id||"").join("|")
+  ].join("::");
+}
+function historicalRecordIdentityIndex(G){
+  const signature=historicalRecordIdentitySignature(G);
+  if(_historicalRecordIdentityCache.signature===signature)return _historicalRecordIdentityCache;
+
+  const pool=[],seen=new Set(),idMap=new Map(),sourceMap=new Map();
   const add=p=>{
     if(!p?.id)return;
     const id=String(p.id);
     if(seen.has(id))return;
-    seen.add(id);pool.push(p);
+    seen.add(id);pool.push(p);idMap.set(id,p);
+    for(const key of recordPlayerSourceIdentityKeys(p)){
+      if(!sourceMap.has(key))sourceMap.set(key,[]);
+      sourceMap.get(key).push(p);
+    }
   };
   allPlayers(G).forEach(add);
   retiredPlayerPool(G).forEach(add);
-  return pool;
+
+  _historicalRecordIdentityCache={signature,pool,idMap,sourceMap};
+  return _historicalRecordIdentityCache;
+}
+function historicalRecordPlayerPool(G){
+  return historicalRecordIdentityIndex(G).pool;
 }
 function historicalRecordBoundPlayer(G,r){
   if(!r?.playerId)return null;
-  return historicalRecordPlayerPool(G).find(p=>String(p.id)===String(r.playerId))||null;
+  return historicalRecordIdentityIndex(G).idMap.get(String(r.playerId))||null;
 }
 function bindHistoricalRecordPlayerId(G,r){
   if(!G||!r)return null;
@@ -13027,10 +13043,8 @@ function recordHolderProfilePlayer(G,r){
 function historicalRecordRowsForBinding(G){
   const hr=ensureHistoricalRecords(G),rows=[],seen=new Set();
   const add=r=>{
-    if(!r||typeof r!=="object")return;
-    const token=r;
-    if(seen.has(token))return;
-    seen.add(token);rows.push(r);
+    if(!r||typeof r!=="object"||seen.has(r))return;
+    seen.add(r);rows.push(r);
   };
   const addBucket=b=>{
     if(!b||typeof b!=="object")return;
@@ -13040,16 +13054,12 @@ function historicalRecordRowsForBinding(G){
     }
   };
 
+  // League Records is the immediate migration target. Do not sweep every
+  // franchise archive on page-open; those rows resolve lazily if viewed.
   addBucket(hr.league?.singleGame);
   addBucket(hr.league?.singleGameTop5);
   addBucket(hr.league?.seasonRates);
   addBucket(hr.league?.career);
-
-  for(const clubBucket of Object.values(hr.clubs||{})){
-    addBucket(clubBucket?.singleGame);
-    addBucket(clubBucket?.seasonRates);
-    addBucket(clubBucket?.career);
-  }
   return rows;
 }
 function repairMappedHistoricalRecordProfileLinks(G){
@@ -13100,9 +13110,9 @@ function recordLeaderList(title,list,unit="",decimals=0,Gctx=null){
   return `<div class="recordCategory"><div class="recordCategoryHead"><b>${title}</b><small>TOP 5</small></div><div class="recordLeaderList">${rows.length?rows.map((r,i)=>{
     const p=Gctx?historicalRecordProfilePlayer(Gctx,r):null;
     let meta="";
-    if(r.historical)meta="League legacy";
-    else if(Gctx&&p?.retired)meta=recordHolderHeroText(Gctx,r);
+    if(Gctx&&p?.retired)meta=recordHolderHeroText(Gctx,r);
     else if(Gctx&&p){const club=clubForPlayer(Gctx,p);meta=`${positionLabel(p)}${club?.name?` · ${club.name}`:""}`;}
+    else if(r.historical)meta="League legacy";
     else meta=r.season?basketballSeasonLabel(r.season):(r.clubName||"");
     return `<div class="recordLeaderRow"><span>${i+1}</span><div><b>${Gctx?recordHolderNameHtml(Gctx,r):(r.playerName||"Player")}</b><small>${meta}</small></div><strong>${formatRecordValue(r.value,decimals)}${unit}</strong></div>`;
   }).join(""):`<div class="empty">No qualifying record yet.</div>`}</div></div>`;
@@ -21782,7 +21792,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 261",ENGINE_VERSION="E2.26-PROD261";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 262",ENGINE_VERSION="E2.26-PROD262";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -29106,7 +29116,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Record Source Identity</b><small>Historical benchmarks with a current/mapped source player resolve to that H³O profile · pure legacy records remain non-linking · fictional-name fallback remains disabled</small></div><b>${RECORD_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
-    <div class="more"><div><b>Historical Record Player IDs</b><small>Mapped historical records bind once to the permanent H³O player ID; source identity is used only for old-save migration and legacy-only holders remain unbound.</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
+    <div class="more"><div><b>Historical Record Player IDs</b><small>Mapped historical records bind once to the permanent H³O player ID; old saves also recover from the preserved pre-career source identity. Legacy-only holders remain unbound.</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
     <div class="more"><div><b>Regular Season Performance</b><small>Historical record maintenance prepared once per round · record player/club indexes reused across all 16 games · no repeated full record merge per player/stat · detailed timing retained</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Performance</b><small>Record baseline/name migration runs once per loaded runtime · regular-season game ingestion writes directly to a prepared context</small></div><b>${HISTORICAL_RECORD_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>All-Star Contest Merit</b><small>3-Point entrants prioritize current-season accuracy + volume · underlying shooting skill supports specialist slots · Dunk entrants use athletic/build suitability with reduced repeat penalty</small></div><b>${ALL_STAR_CONTEST_MERIT_VERSION}</b></div>
