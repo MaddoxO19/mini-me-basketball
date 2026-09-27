@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 262</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 264</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12824,7 +12824,7 @@ function recordHolderHeroText(G,r){
   return r?.clubName||"League record";
 }
 
-const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL7";
+const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL8";
 
 function launchClubIdForRecordSource(sourceName){
   const key=recordSourceIdentityKey(sourceName);
@@ -12857,6 +12857,7 @@ function recordPlayerSourceIdentityKeys(p){
     p.sourcePlayerName,
     p.productionContractSourceName,
     p.preCareerContext?.sourceName,
+    p.sourceIdentityName,
     p.historicalSourceName,
     p.originalSourceName
   ];
@@ -13062,6 +13063,37 @@ function historicalRecordRowsForBinding(G){
   addBucket(hr.league?.career);
   return rows;
 }
+function initializeNewCareerHistoricalRecordBindings(G){
+  if(!G)return{bound:0,unbound:0};
+
+  // Historical records are seeded before the career begins. Once launch
+  // identities have been created, bind every mapped record to the live H³O
+  // player object immediately. From this point onward the record follows the
+  // immutable playerId through trades, renames and retirement.
+  ensureHistoricalRecords(G);
+
+  // Identity layers may have changed source/display fields after the preview
+  // career was built, so force a fresh index for this one-time binding pass.
+  if(typeof _historicalRecordIdentityCache!=="undefined"){
+    _historicalRecordIdentityCache={signature:null,pool:[],idMap:new Map(),sourceMap:new Map()};
+  }
+
+  G.runtimeMeta=G.runtimeMeta||{};
+  delete G.runtimeMeta.mappedRecordProfileRepairVersion;
+  const bound=repairMappedHistoricalRecordProfileLinks(G);
+
+  const rows=historicalRecordRowsForBinding(G);
+  const unbound=rows.filter(r=>r?.sourcePlayerName&&!historicalRecordBoundPlayer(G,r)).length;
+
+  G.runtimeMeta.newCareerHistoricalRecordBinding={
+    version:MAPPED_RECORD_PROFILE_LINK_VERSION,
+    season:G.season,
+    bound,
+    unbound
+  };
+  return{bound,unbound};
+}
+
 function repairMappedHistoricalRecordProfileLinks(G){
   if(!G)return 0;
   G.runtimeMeta=G.runtimeMeta||{};
@@ -14664,6 +14696,10 @@ function ensureInternationalAffiliation(p){
 }
 function playerBasketballLocation(p){
   if(!p)return{club:"—",league:"—",status:"—"};
+  if(p.retired){
+    const lastClub=p.retiredFromClubName&&p.retiredFromClubName!=="Free Agency"?p.retiredFromClubName:"Career Complete";
+    return{club:lastClub,league:"Retired",status:"Retired"};
+  }
   const expansionClub=(G?.expansionFranchisePlan?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
   if(expansionClub)return{club:expansionClub.name,league:"Expansion Club",status:"Expansion Draft Selection"};
   const club=(G?.clubs||[]).find(cl=>(cl.roster||[]).some(x=>x.id===p.id)||(cl.twoWayRoster||[]).some(x=>x.id===p.id)||(cl.gLeagueRoster||[]).some(x=>x.id===p.id));
@@ -14679,7 +14715,6 @@ function playerBasketballLocation(p){
     return{club:team,league:label,status:p.professionalStatus==="G League"?"Developmental":p.professionalStatus||"International Professional"};
   }
   if((G?.freeAgents||[]).some(x=>x.id===p.id))return{club:"Free Agent",league:"Free Agency",status:"Available"};
-  if(p.retired)return{club:p.retiredFromClubName||"Career Complete",league:"Retired",status:"Retired"};
   return{club:playerAffiliation(p),league:p.externalLeague||"—",status:p.contractStatus||"—"};
 }
 function playerAffiliation(p){return p?.retired?`Retired · ${p.retiredFromClubName||"Career Complete"}`:ensureInternationalAffiliation(p)}
@@ -17115,6 +17150,7 @@ function runOffseason(G) {
     p.contractYearsLeft=0; p.contractStatus="Free Agent"; p.contractType="Unsigned"; p.extensionEligible=false; faSurvivors.push(p);
   }
   G.freeAgents=faSurvivors;
+  cleanRetiredPlayerActiveReferences(G);
   ensureTwoWayDevelopmentPool(G,42);
   ensureAITwoWayRosters(G,{force:true});
   recordTalentHealthSeason(G,'post-offseason');
@@ -21792,7 +21828,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 262",ENGINE_VERSION="E2.26-PROD262";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 264",ENGINE_VERSION="E2.26-PROD264";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -23152,6 +23188,7 @@ async function startCareer(){
     G.careerControl={...(G.careerControl||{}),version:CAREER_CONTROL_VERSION,leagueExpansion:!!setup.expansion,commissionerMode:!!setup.commissioner,injuriesMutable:true,lockedAtCareerStart:["salaryCap","leagueExpansion","commissionerMode"]};
     ensureCareerControlState(G);
     applyReleaseIdentityLayer(G);applyNewCareerComponentIdentities(G);applyPersonalSourceIdentityLayer(G);ensureExternalProfessionalWorldState(G);
+    initializeNewCareerHistoricalRecordBindings(G);
     if(!appointClubGM(G,setup.team)) throw new Error("Selected club could not be assigned.");
     const uc=me();if(!uc)throw new Error("Club GM appointment did not resolve.");
     pushNews(G,`${G.gmName} begins a new career as GM of ${uc.name}.`,"GM",2);
@@ -23920,10 +23957,26 @@ function retiredPlayerPool(G){
   if(!Array.isArray(G.retiredPlayers))G.retiredPlayers=[];
   return G.retiredPlayers;
 }
+function cleanRetiredPlayerActiveReferences(G){
+  if(!G)return;
+  const retiredIds=new Set(retiredPlayerPool(G).filter(p=>p?.retired&&p?.id).map(p=>String(p.id)));
+  if(!retiredIds.size)return;
+  G.freeAgents=(G.freeAgents||[]).filter(p=>!retiredIds.has(String(p?.id)));
+  G.externalProfessionals=(G.externalProfessionals||[]).filter(p=>!retiredIds.has(String(p?.id)));
+}
+
 function archiveRetiredPlayer(G,p,club=null){
   if(!p)return null;
   const pool=retiredPlayerPool(G);
   const existing=pool.find(x=>String(x.id)===String(p.id));
+
+  // Player identity is immutable. Retirement archives the same player object
+  // under the same ID; it must never create a replacement identity.
+  if(!p.id)throw new Error("Cannot archive retired player without permanent player ID.");
+  p.permanentPlayerId=p.permanentPlayerId||p.id;
+  if(p.preCareerContext?.sourceName&&!p.sourceIdentityName)p.sourceIdentityName=p.preCareerContext.sourceName;
+  else if(p.sourceTemplateName&&!p.sourceIdentityName)p.sourceIdentityName=p.sourceTemplateName;
+
   p.retired=true;
   p.retirementSeason=G.season;
   p.retirementAge=p.age;
@@ -24943,6 +24996,7 @@ function playerEditContextLabel(p){
 function playerProfile(){
   const p=playerByAnyId(ui.playerProfileId);
   if(!p)return header("Player Profile","Player could not be located")+`<div class="card empty">This player is no longer in the active universe.</div>`;
+  if(p.retired)cleanRetiredPlayerActiveReferences(G);
   const club=playerClub(p.id);if(club)ensurePlayerJerseys(club);
   ensurePlayerBuildIdentity(p);
   p.peakOvr=Math.max(+p.peakOvr||0,playerRecordedPeakOvr(p),+p.ovr||0);
@@ -25008,7 +25062,8 @@ function playerProfile(){
   return String(g.phase).replaceAll("_"," ").toLowerCase();
 })()} · ${g.line.pts||0} PTS · ${g.line.reb||0} REB · ${g.line.ast||0} AST</small></div><div class="right">${g.line.min||0} MIN</div></div>`).join(""):`<div class="empty">No recent games recorded for this player.</div>`}</div>
     <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
-  return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${club?.name||"Free Agent"} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
+  const profileAffiliationLabel=p.retired?"Retired":(club?.name||worldLoc.club||"Free Agent");
+  return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${profileAffiliationLabel} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
     <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
     ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. League experience is separate from contract type. Changing age will reset recorded career history after confirmation. Player Build choices are constrained by the player's underlying identity, position, size and archetype rather than exposing the full build library. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; Generational Builds cannot be selected manually and deactivate below 97 OVR.</span></div>`:""}
     <div class="profileTabs profileTabs4"><button data-playerprofiletab="overview" class="${tab==="overview"?"active":""}">Overview</button><button data-playerprofiletab="career" class="${tab==="career"?"active":""}">Career</button><button data-playerprofiletab="contract" class="${tab==="contract"?"active":""}">Contract</button><button data-playerprofiletab="gameshealth" class="${tab==="gameshealth"?"active":""}">Games & Health</button></div>
@@ -29116,7 +29171,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Record Source Identity</b><small>Historical benchmarks with a current/mapped source player resolve to that H³O profile · pure legacy records remain non-linking · fictional-name fallback remains disabled</small></div><b>${RECORD_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Personal Source Identities</b><small>Real names restored only for source-mapped 2K, Development League, prospect and record identities · future procedural players remain fictional · manual edits preserved</small></div><b>${PERSONAL_SOURCE_IDENTITY_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Names</b><small>Seeded legacy record holders display preserved real source identities · existing saves migrated by legacy ID/alias · future generated players unchanged</small></div><b>${HISTORICAL_RECORD_REAL_NAME_VERSION}</b></div>
-    <div class="more"><div><b>Historical Record Player IDs</b><small>Mapped historical records bind once to the permanent H³O player ID; old saves also recover from the preserved pre-career source identity. Legacy-only holders remain unbound.</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
+    <div class="more"><div><b>Historical Record Player IDs</b><small>New careers pre-bind mapped historical records to permanent player IDs before the first save. The same ID survives trades and retirement; legacy-only holders remain intentionally unbound.</small></div><b>${MAPPED_RECORD_PROFILE_LINK_VERSION}</b></div>
     <div class="more"><div><b>Regular Season Performance</b><small>Historical record maintenance prepared once per round · record player/club indexes reused across all 16 games · no repeated full record merge per player/stat · detailed timing retained</small></div><b>${REGULAR_SEASON_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>Historical Record Performance</b><small>Record baseline/name migration runs once per loaded runtime · regular-season game ingestion writes directly to a prepared context</small></div><b>${HISTORICAL_RECORD_PERFORMANCE_VERSION}</b></div>
     <div class="more"><div><b>All-Star Contest Merit</b><small>3-Point entrants prioritize current-season accuracy + volume · underlying shooting skill supports specialist slots · Dunk entrants use athletic/build suitability with reduced repeat penalty</small></div><b>${ALL_STAR_CONTEST_MERIT_VERSION}</b></div>
