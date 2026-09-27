@@ -3253,7 +3253,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 257</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 258</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -12817,7 +12817,33 @@ function recordHolderHeroText(G,r){
   return r?.clubName||"League record";
 }
 
-const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL2";
+const MAPPED_RECORD_PROFILE_LINK_VERSION="MRL3";
+
+function launchClubIdForRecordSource(sourceName){
+  const key=recordSourceIdentityKey(sourceName);
+  if(!key)return null;
+  for(const [clubId,rows] of Object.entries(SEASON1_ROSTER_TEMPLATES||{})){
+    for(const row of rows||[]){
+      if(recordSourceIdentityKey(row?.sourceName)===key)return clubId;
+    }
+  }
+  return null;
+}
+function legacyMappedRecordIdentityFallback(pool,sourceName){
+  const sourceKey=recordSourceIdentityKey(sourceName);
+  const launchClubId=launchClubIdForRecordSource(sourceName);
+  if(!sourceKey||!launchClubId)return null;
+  const matches=(pool||[]).filter(p=>
+    p?.rosterFoundationVersion &&
+    String(p.rosterFoundationClubId||"")===String(launchClubId) &&
+    recordSourceIdentityKey(p.name)===sourceKey
+  );
+  if(matches.length!==1)return null;
+  const p=matches[0];
+  if(!p.sourceTemplateName)p.sourceTemplateName=sourceName;
+  p.personalSourceIdentityVersion=p.personalSourceIdentityVersion||PERSONAL_SOURCE_IDENTITY_VERSION;
+  return p;
+}
 
 function recordHolderProfilePlayer(G,r){
   if(!G||!r)return null;
@@ -12852,6 +12878,15 @@ function recordHolderProfilePlayer(G,r){
       return templateKey===sourceKey||sourceNameKey===sourceKey||sourcePlayerKey===sourceKey;
     });
     if(sourceMatches.length===1)return sourceMatches[0];
+    if(sourceMatches.length>1){
+      const ranked=[...sourceMatches].sort((a,b)=>
+        ((b.retired?1:0)-(a.retired?1:0)) ||
+        ((b.seasonHistory?.length||0)-(a.seasonHistory?.length||0)) ||
+        ((+b.careerStats?.gp||0)-(+a.careerStats?.gp||0))
+      );
+      const score=p=>(p?.retired?100000:0)+(p?.seasonHistory?.length||0)*1000+(+p?.careerStats?.gp||0);
+      if(ranked[0]&&score(ranked[0])>score(ranked[1]))return ranked[0];
+    }
 
     // Personal-source builds restore mapped players to their real names. Some
     // older saves may have lost the source field before retirement, so allow
@@ -12862,6 +12897,9 @@ function recordHolderProfilePlayer(G,r){
       return recordSourceIdentityKey(p.name)===sourceKey;
     });
     if(mappedNameMatches.length===1)return mappedNameMatches[0];
+
+    const repaired=legacyMappedRecordIdentityFallback(pool,source);
+    if(repaired)return repaired;
   }
 
   // Pure historical-only benchmarks remain non-linking.
@@ -21574,7 +21612,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 257",ENGINE_VERSION="E2.26-PROD257";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 258",ENGINE_VERSION="E2.26-PROD258";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -30266,11 +30304,37 @@ function seasonRecordLeader(G,def){
   for(const club of G.clubs||[])for(const p of club.roster||[]){const st=p?.seasonStats||{},v=+st[def.key]||0,gp=+st.gp||0;if(!gp)continue;if(!best||v>best.value)best={player:p,club,value:v,gp,pace:v/gp*82}}
   return best||{player:null,club:null,value:0,gp:0,pace:0};
 }
-function seasonRecordHistoryLeader(G,def){
+function seasonRecordCompletedHistoryLeader(G,def){
   let best={player:null,club:null,value:0,season:null};
-  for(const p of milestoneAllCareerPlayers(G))for(const h of p?.seasonHistory||[]){const v=+h?.stats?.[def.key]||0;if(v>best.value)best={player:p,club:clubById(G,h.clubId),value:v,season:h.season}}
-  const live=seasonRecordLeader(G,def);if(live.value>best.value)best={player:live.player,club:live.club,value:live.value,season:G.season};
+  for(const p of milestoneAllCareerPlayers(G)){
+    for(const h of p?.seasonHistory||[]){
+      if(+h?.season===+G.season)continue;
+      const v=+h?.stats?.[def.key]||0;
+      if(v>best.value)best={player:p,club:clubById(G,h.clubId),value:v,season:h.season};
+    }
+  }
   return best;
+}
+function seasonRecordHistoryLeader(G,def){
+  const best=seasonRecordCompletedHistoryLeader(G,def);
+  const live=seasonRecordLeader(G,def);
+  if(live.value>best.value)return{player:live.player,club:live.club,value:live.value,season:G.season};
+  return best;
+}
+function activeSeasonRecordBenchmark(G,def){
+  const completed=seasonRecordCompletedHistoryLeader(G,def);
+  if(completed.value>def.value){
+    return{
+      ...def,
+      value:completed.value,
+      holder:completed.player?.name||def.holder,
+      playerId:completed.player?.id||null,
+      season:completed.season,
+      historical:false,
+      source:"career"
+    };
+  }
+  return{...def,historical:true,source:"legacy"};
 }
 function regularSeasonGamesPlayedForClub(G,club){
   if(!club)return Math.max(0,+G?.regularSeasonLive?.roundIndex||0);
@@ -30283,7 +30347,14 @@ function regularSeasonGamesPlayedForClub(G,club){
   return Math.min(82,games||Math.max(0,+G?.regularSeasonLive?.roundIndex||0));
 }
 function seasonRecordWatchSnapshot(G){
-  const out={};for(const [k,def] of Object.entries(HISTORICAL_SEASON_RECORDS)){const live=seasonRecordLeader(G,def),career=seasonRecordHistoryLeader(G,def);out[k]={def,live,career};}return out;
+  const out={};
+  for(const [k,seed] of Object.entries(HISTORICAL_SEASON_RECORDS)){
+    const live=seasonRecordLeader(G,seed);
+    const career=seasonRecordHistoryLeader(G,seed);
+    const def=activeSeasonRecordBenchmark(G,seed);
+    out[k]={def,seed,live,career};
+  }
+  return out;
 }
 function gmPlayoffWinsFromHistory(G){
   const gm=gmCareerState(G);let wins=0,knownGames=0;
@@ -30363,7 +30434,7 @@ function seasonMilestoneWatches(G){
       eligible=remaining>0&&perGame<=currentRate*1.35;
       if(eligible){detail=`${live.player.name} needs ${milestoneFmt(diff)} ${def.key==='tpm'?'three-pointers':def.label.replace(' in a Season','').toLowerCase()} over the final ${remaining} game${remaining===1?'':'s'} to break ${def.holder}'s mark of ${milestoneFmt(def.value)}.`;state=`${milestoneFmt(diff)} NEEDED`;priority=94;}
     }else if(pacePct>=.95){
-      eligible=true;detail=`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Historical mark: ${milestoneFmt(def.value)} by ${def.holder}.`;state=`${Math.round(pacePct*100)}% PACE`;priority=78+Math.min(12,(pacePct-.95)*100);
+      eligible=true;detail=`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Current record: ${milestoneFmt(def.value)} by ${def.holder}.`;state=`${Math.round(pacePct*100)}% PACE`;priority=78+Math.min(12,(pacePct-.95)*100);
     }
     if(eligible)w.push({id:`SEASON_${key}_${live.player.id}`,playerId:live.player.id,type:'RECORD WATCH',priority,headline:`${live.player.name} · ${def.label}`,detail,state,kind:'season',pacePct});
   }
@@ -30432,7 +30503,7 @@ function milestoneSeasonWatchRows(G){
         headline:`${live.player.name} · ${def.label}`,
         detail:late&&plausibleLate
           ?`${live.player.name} needs ${milestoneFmt(diff)} more over the final ${remaining} game${remaining===1?"":"s"} to break ${def.holder}'s mark of ${milestoneFmt(def.value)}.`
-          :`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Historical mark: ${milestoneFmt(def.value)} by ${def.holder}.`,
+          :`${live.player.name} has ${milestoneFmt(live.value)} through ${live.gp} games and is on pace for ${milestoneFmt(Math.round(live.pace))}. Current record: ${milestoneFmt(def.value)} by ${def.holder}.`,
         state:late&&plausibleLate?`${milestoneFmt(diff)} NEEDED`:`${Math.round(pacePct*100)}% PACE`,
         imminent:plausibleLate,priority:plausibleLate?108:72+Math.min(20,(pacePct-.90)*100)
       });
@@ -30591,7 +30662,7 @@ function courtsideMilestoneWatchHtml(G){
   return `<div class="milestoneWatch"><div class="milestoneWatchHead"><div><small>COURTSIDE NETWORK</small><b>Milestone Watch</b></div><span>Records · Players · GM</span></div><div class="milestoneWatchRows">${rows.map(x=>`<div class="milestoneWatchRow"><div><small>${x.type}</small><b>${x.playerId?`<a class="profileLink" data-playerprofile="${x.playerId}" href="#player-profile/${encodeURIComponent(String(x.playerId))}">${x.headline}</a>`:x.headline}</b><p>${x.detail}</p></div><div class="milestoneWatchState">${x.state}</div></div>`).join('')}</div></div>`;
 }
 function seasonRecordWatchHtml(G){
-  const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'HISTORICAL MARK PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · historical benchmark</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Career best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
+  const snap=seasonRecordWatchSnapshot(G);return `<div class="sectionTitle">Season Records & Pace</div><div class="seasonRecordWatchGrid">${Object.entries(snap).map(([k,x])=>{const l=x.live,d=x.def,history=x.career,broken=l.value>d.value,status=broken?'RECORD PASSED':l.player&&l.gp>=8&&l.pace>=d.value*.9?`ON PACE · ${milestoneFmt(Math.round(l.pace))}`:'RECORD WATCH';return `<div class="seasonRecordWatchCard"><small>${d.label}</small><strong>${milestoneFmt(d.value)}</strong><span>${d.holder} · ${d.historical?'historical benchmark':'current record'}</span><b>${l.player?`${l.player.name} · ${milestoneFmt(l.value)}`:'No current leader'}</b><span>${l.player?`${l.gp} GP${l.gp?` · pace ${milestoneFmt(Math.round(l.pace))}`:''}`:''}${history.value>d.value?` · Career best ${milestoneFmt(history.value)}`:''}</span><em>${status}</em></div>`}).join('')}</div>`;
 }
 function courtsideCheckMilestoneWatches(G,round){
   if(round<8)return;
