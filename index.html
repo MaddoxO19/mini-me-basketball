@@ -252,27 +252,36 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .championshipHero h2{margin:5px 0 3px;font-size:27px;line-height:1.05}
 .championshipHero span{color:var(--muted);font-size:9px}
 .champPixelScene{position:relative;height:226px;margin:8px 14px 12px;border:1px solid #3b4857;border-radius:16px;overflow:hidden;background:radial-gradient(circle at 50% 37%,rgba(255,207,112,.16),transparent 25%),linear-gradient(#0b1118 0 68%,#101820 68% 100%)}
-.champArenaLights{position:absolute;top:9px;left:11px;right:11px;display:flex;justify-content:space-between}.champArenaLights i{width:72px;height:7px;background:repeating-linear-gradient(90deg,#f7d58a 0 7px,#5f4a2b 7px 10px);opacity:.28}
-.champGlow{position:absolute;inset:0;background:radial-gradient(circle at 50% 47%,rgba(255,207,112,.22),transparent 27%);animation:champPulse 1.15s infinite}
-.champCrowd{position:absolute;left:0;right:0;bottom:0;height:55px;background:repeating-linear-gradient(90deg,#18202a 0 7px,#101720 7px 14px);opacity:.8;border-top:1px solid #23303d}
-.champStage{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);width:82%;height:31px;border:1px solid #4b5b6e;border-radius:8px 8px 0 0;background:linear-gradient(#1b2531,#151d27)}
-.champSprite{--delay:0s;position:absolute;bottom:57px;width:25px;height:39px;animation:champBounce 1s infinite ease-in-out;animation-delay:var(--delay)}
-.champSprite .head{position:absolute;top:0;left:7px;width:11px;height:11px;background:#8893a0;border-radius:50%}
-.champSprite .body{position:absolute;top:11px;left:4px;width:17px;height:18px;background:#8893a0;border:0;border-radius:4px 4px 2px 2px}
-.champSprite .arm{position:absolute;top:14px;width:4px;height:14px;background:#8893a0}.champSprite .arm.left{left:0;transform:rotate(10deg)}.champSprite .arm.right{right:0;transform:rotate(-10deg)}
-.champSprite .leg{position:absolute;top:29px;width:6px;height:10px;background:#8893a0}.champSprite .leg.left{left:5px}.champSprite .leg.right{right:5px}
-.champSprite1{left:14%}.champSprite2{left:26%}.champSprite3{left:38%}.champSprite4{right:38%}.champSprite5{right:26%}.champSprite6{right:14%}
-.champSprite{filter:drop-shadow(0 1px 1px rgba(0,0,0,.55))}
-.champCaptain{left:50%;transform:translateX(-50%);bottom:61px;animation:champCaptain 1.15s infinite ease-in-out}.champCaptain .arm.left{transform:rotate(-42deg);transform-origin:bottom}.champCaptain .arm.right{transform:rotate(42deg);transform-origin:bottom}
-.champTrophy{position:absolute;left:50%;transform:translateX(-50%);bottom:104px;width:36px;height:40px;animation:champLift 1.15s infinite ease-in-out;filter:drop-shadow(0 0 12px rgba(241,168,77,.5))}
-.champTrophy .cup{position:absolute;left:7px;top:7px;width:22px;height:14px;background:linear-gradient(#ffd16e,#e39a2e);border:3px solid #c57f1f;border-radius:0 0 9px 9px}.champTrophy .cup:before,.champTrophy .cup:after{content:"";position:absolute;top:0;width:9px;height:9px;border:3px solid #d78e24;border-radius:50%}.champTrophy .cup:before{left:-11px}.champTrophy .cup:after{right:-11px}
-.champTrophy .stem{position:absolute;left:15px;top:21px;width:6px;height:10px;background:#d78e24}.champTrophy .base{position:absolute;left:9px;top:31px;width:18px;height:6px;background:#d78e24;border-radius:2px}
+.champArenaLights{position:absolute;top:9px;left:11px;right:11px;display:flex;justify-content:space-between}.champArenaLights i{width:27%;height:7px;background:repeating-linear-gradient(90deg,#f7d58a 0 7px,#5f4a2b 7px 10px);opacity:.30}
+.champSpotlight{position:absolute;top:-20px;width:120px;height:220px;background:linear-gradient(180deg,rgba(255,220,150,.13),rgba(255,220,150,0));clip-path:polygon(42% 0,58% 0,100% 100%,0 100%);filter:blur(2px);pointer-events:none}.champSpotlight.left{left:4%;transform:rotate(10deg)}.champSpotlight.right{right:4%;transform:rotate(-10deg)}
+.champGlow{position:absolute;inset:0;background:radial-gradient(circle at 50% 43%,rgba(255,207,112,.26),transparent 26%);animation:champPulse 1.15s infinite}
+.champCrowd{position:absolute;left:0;right:0;bottom:0;height:58px;background:repeating-linear-gradient(90deg,#18202a 0 7px,#101720 7px 14px);opacity:.82;border-top:1px solid #23303d}
+.champStage{position:absolute;left:50%;bottom:27px;transform:translateX(-50%);width:84%;height:37px;border:1px solid #4b5b6e;border-radius:9px 9px 0 0;background:linear-gradient(#202b38,#151d27);box-shadow:0 7px 0 #0a0f15,0 10px 16px rgba(0,0,0,.35)}
+.champStage:before{content:"";position:absolute;left:8%;right:8%;top:4px;height:1px;background:rgba(255,255,255,.08)}.podiumMark{position:absolute;left:50%;top:9px;transform:translateX(-50%);font-style:normal;font-size:8px;font-weight:950;letter-spacing:1px;color:#667384}
+.champSprite{--delay:0s;--silHeight:44px;position:absolute;bottom:64px;width:26px;height:var(--silHeight);animation:champBounce 1s infinite ease-in-out;animation-delay:var(--delay);filter:drop-shadow(0 1px 1px rgba(0,0,0,.55))}
+.champSprite .head{position:absolute;top:0;left:7px;width:12px;height:12px;background:#8e99a6;border-radius:50%}
+.champSprite .body{position:absolute;top:11px;left:4px;width:18px;height:21px;background:#8e99a6;border-radius:5px 5px 3px 3px}
+.champSprite .arm{position:absolute;top:15px;width:5px;height:16px;background:#8e99a6;border-radius:3px;transform-origin:top center}.champSprite .arm.left{left:0;transform:rotate(10deg)}.champSprite .arm.right{right:0;transform:rotate(-10deg)}
+.champSprite .leg{position:absolute;top:31px;width:6px;height:calc(var(--silHeight) - 31px);min-height:10px;background:#8e99a6;border-radius:0 0 2px 2px}.champSprite .leg.left{left:5px}.champSprite .leg.right{right:5px}
+.champSprite1{left:11%}.champSprite2{left:22%}.champSprite3{left:33%}.champSprite4{right:33%}.champSprite5{right:22%}.champSprite6{right:11%}
+.pose-cheer .arm.left{transform:rotate(-55deg)}.pose-cheer .arm.right{transform:rotate(55deg)}
+.pose-raise .arm.left{transform:rotate(-35deg)}.pose-raise .arm.right{transform:rotate(35deg)}
+.pose-clap .arm.left{left:7px;transform:rotate(-22deg)}.pose-clap .arm.right{right:7px;transform:rotate(22deg)}
+.champLifter{bottom:66px;z-index:4}.leftLifter{left:43%;transform:translateX(-50%);animation:champLifterLeft 1.2s infinite ease-in-out}.rightLifter{left:57%;transform:translateX(-50%);animation:champLifterRight 1.2s infinite ease-in-out}
+.leftLifter .arm.right,.rightLifter .arm.left{top:8px;height:22px}.leftLifter .arm.right{right:-2px;transform:rotate(-42deg)}.rightLifter .arm.left{left:-2px;transform:rotate(42deg)}
+.leftLifter .arm.left{transform:rotate(-28deg)}.rightLifter .arm.right{transform:rotate(28deg)}
+.champTrophy{position:absolute;left:50%;transform:translateX(-50%);bottom:119px;width:52px;height:60px;z-index:6;animation:champLift 1.2s infinite ease-in-out;filter:drop-shadow(0 0 16px rgba(241,168,77,.58))}
+.champTrophy .lid{position:absolute;left:13px;top:5px;width:26px;height:5px;background:linear-gradient(90deg,#c47a18,#ffd77b,#c47a18);border-radius:4px}.champTrophy .lid:before{content:"";position:absolute;left:10px;top:-5px;width:6px;height:5px;background:#e9a83e;border-radius:3px 3px 0 0}
+.champTrophy .cup{position:absolute;left:10px;top:10px;width:32px;height:22px;background:linear-gradient(90deg,#c98220 0%,#ffd77b 45%,#e5a13c 72%,#b96d15 100%);border:2px solid #c57f1f;border-radius:4px 4px 13px 13px}.champTrophy .cup:before,.champTrophy .cup:after{content:"";position:absolute;top:3px;width:14px;height:14px;border:4px solid #d99128;border-radius:50%}.champTrophy .cup:before{left:-15px}.champTrophy .cup:after{right:-15px}
+.champTrophy .neck{position:absolute;left:20px;top:31px;width:12px;height:5px;background:#e2a03a;border-radius:2px}.champTrophy .stem{position:absolute;left:22px;top:35px;width:8px;height:11px;background:linear-gradient(90deg,#b96d15,#f6bd58,#b96d15)}
+.champTrophy .plinth{position:absolute;left:13px;top:45px;width:26px;height:6px;background:linear-gradient(#ecae47,#bd741a);border-radius:2px}.champTrophy .base{position:absolute;left:8px;top:51px;width:36px;height:7px;background:linear-gradient(#d68a27,#8e5314);border-radius:2px}
+.champTrophy .shine{position:absolute;left:13px;top:9px;width:8px;height:24px;background:linear-gradient(180deg,rgba(255,255,255,.75),rgba(255,255,255,0));transform:skewX(-16deg);opacity:.7;z-index:8;animation:champTrophyShine 1.8s infinite ease-in-out}
 .champConfetti{position:absolute;inset:0;pointer-events:none;overflow:hidden}.champConfettiPiece{position:absolute;top:-16px;animation:champFall linear infinite}
 .championshipResult{margin:0 16px 10px;text-align:center}.championshipResult b{font-size:12px}
 .championshipMvp{margin:0 16px 10px;border:1px solid #65502c;background:rgba(241,168,77,.055);border-radius:13px;padding:11px}.championshipMvp small,.champRunCard>small{display:block;color:var(--accent2);font-size:8px;font-weight:950;text-transform:uppercase;letter-spacing:.6px}.championshipMvp b{display:block;font-size:16px;margin-top:3px}.championshipMvp span{display:block;color:var(--muted);font-size:9px;margin-top:3px}
 .champRunCard{margin:0 16px 12px;border:1px solid #34414d;border-radius:13px;background:#10161d;padding:10px}.champRunGrid{display:grid;grid-template-columns:repeat(4,1fr);margin-top:8px}.champRunItem{text-align:center;padding:4px 5px;border-left:1px solid var(--line)}.champRunItem:first-child{border-left:0}.champRunItem b{display:block;font-size:11px}.champRunItem span{display:block;color:var(--muted);font-size:7px;line-height:1.2;margin-top:2px}
 .championshipActions button{background:var(--accent)}
-@keyframes champFall{to{transform:translateY(270px) rotate(600deg)}}@keyframes champBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes champCaptain{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-5px)}}@keyframes champLift{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-20px)}}@keyframes champPulse{0%,100%{opacity:.45}50%{opacity:1}}
+@keyframes champFall{to{transform:translateY(270px) rotate(600deg)}}@keyframes champBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}@keyframes champLifterLeft{0%,100%{transform:translateX(-50%) translateY(0) rotate(-1deg)}50%{transform:translateX(-50%) translateY(-5px) rotate(1deg)}}@keyframes champLifterRight{0%,100%{transform:translateX(-50%) translateY(0) rotate(1deg)}50%{transform:translateX(-50%) translateY(-5px) rotate(-1deg)}}@keyframes champLift{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-15px)}}@keyframes champTrophyShine{0%,35%{opacity:.12;transform:translateX(-5px) skewX(-16deg)}55%{opacity:.85;transform:translateX(16px) skewX(-16deg)}75%,100%{opacity:.12;transform:translateX(24px) skewX(-16deg)}}@keyframes champPulse{0%,100%{opacity:.45}50%{opacity:1}}
 @media(max-width:430px){.championshipHero h2{font-size:24px}.champPixelScene{height:208px}.champRunGrid{grid-template-columns:repeat(2,1fr)}.champRunItem:nth-child(3){border-left:0;border-top:1px solid var(--line);padding-top:7px;margin-top:4px}.champRunItem:nth-child(4){border-top:1px solid var(--line);padding-top:7px;margin-top:4px}}
 .seasonSummary{padding-bottom:18px}
 .seasonSummaryHero{background:linear-gradient(135deg,#1b222c,#11171f);border:1px solid #3a4653;border-radius:18px;overflow:hidden;margin-bottom:14px}
@@ -3313,7 +3322,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. H³O Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 271</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 274</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -9961,6 +9970,89 @@ function clubDraftAssets(G, clubId) {
   return assets.sort((a,b) => a.year-b.year || a.round-b.round || a.originalClubId.localeCompare(b.originalClubId));
 }
 
+const AI_FUTURE_PICK_PROJECTION_VERSION="PICK-PROJ-1";
+
+function clubRecentWinPctForPickProjection(G,club){
+  if(!club)return .5;
+  const gp=(+club.standings?.w||0)+(+club.standings?.l||0);
+  const current=gp>=8?(+club.standings.w||0)/gp:null;
+  const historical=[];
+  for(const season of [...(G.leagueHistory||[])].slice(-3)){
+    const row=season?.clubRecords?.[club.id];
+    if(row&&Number.isFinite(+row.w)&&Number.isFinite(+row.l)&&(+row.w+ +row.l)>0){
+      historical.push((+row.w)/(+row.w+ +row.l));
+    }
+  }
+  if(current!=null)historical.unshift(current);
+  if(!historical.length)return .5;
+  const weights=[.5,.25,.15,.10];
+  let sum=0,w=0;
+  historical.slice(0,4).forEach((pct,i)=>{const wt=weights[i]||.1;sum+=pct*wt;w+=wt;});
+  return w?sum/w:.5;
+}
+function clubRosterFutureStrengthForPickProjection(club,yearsOut){
+  const roster=[...(club?.roster||[])].sort((a,b)=>(b.ovr||0)-(a.ovr||0)).slice(0,10);
+  if(!roster.length)return 50;
+  let total=0,weight=0;
+  roster.forEach((p,i)=>{
+    const base=+p.ovr||60;
+    const ageFuture=(+p.age||25)+yearsOut;
+    const decline=ageFuture>=35?(ageFuture-34)*1.8:ageFuture>=32?(ageFuture-31)*.9:0;
+    const growth=ageFuture<=25?Math.min(4,Math.max(0,(+p.potential||base)-base)*.28):0;
+    const contractContinuity=(+p.contractYearsLeft||0)>yearsOut?1:.82;
+    const projected=Math.max(55,Math.min(99,base+growth-decline));
+    const slotWeight=(i<3?1.35:i<6?1:.72)*contractContinuity;
+    total+=projected*slotWeight;weight+=slotWeight;
+  });
+  const avg=weight?total/weight:75;
+  // Map an NBA-style rotation OVR range into a 0–100 strength index.
+  return Math.max(0,Math.min(100,(avg-68)*3.15));
+}
+function clubFuturePickProjectionScore(G,club,yearsOut){
+  if(!club)return 50;
+  const recordIndex=clubRecentWinPctForPickProjection(G,club)*100;
+  const rosterIndex=clubRosterFutureStrengthForPickProjection(club,yearsOut);
+  const top=[...(club.roster||[])].sort((a,b)=>(b.ovr||0)-(a.ovr||0)).slice(0,8);
+  const elite=top.filter(p=>(+p.ovr||0)>=88).length;
+  const youngCore=top.filter(p=>(+p.age||25)<=27&&(+p.ovr||0)>=82).length;
+  const continuity=Math.max(0,Math.min(100,50+elite*12+youngCore*5));
+  const horizonConfidence=Math.max(.46,.88-yearsOut*.12);
+  const raw=recordIndex*.38+rosterIndex*.47+continuity*.15;
+  return 50+(raw-50)*horizonConfidence;
+}
+function projectedFuturePickSlot(G,pickAsset){
+  if(!pickAsset)return null;
+  const n=leagueClubCount(G);
+  const yearsOut=Math.max(1,(+pickAsset.year||G.season)-G.season);
+  const original=clubById(G,pickAsset.originalClubId);
+  if(!original)return Math.ceil(n/2);
+
+  const scored=G.clubs.map(club=>({
+    club,
+    score:clubFuturePickProjectionScore(G,club,yearsOut)
+  })).sort((a,b)=>b.score-a.score||String(a.club.id).localeCompare(String(b.club.id)));
+
+  const strengthRank=scored.findIndex(x=>x.club.id===original.id);
+  const rawFirstSlot=strengthRank>=0?n-strengthRank:Math.ceil(n/2);
+
+  // Future outcomes are uncertain. Regress farther-out picks toward the middle,
+  // while preserving a strong late-pick signal for dominant teams one year out.
+  const midpoint=(n+1)/2;
+  const confidence=Math.max(.48,.90-yearsOut*.13);
+  const regressed=Math.round(midpoint+(rawFirstSlot-midpoint)*confidence);
+  const firstSlot=Math.max(1,Math.min(n,regressed));
+  return pickAsset.round===2?n+firstSlot:firstSlot;
+}
+function projectedPickBandLabel(G,pickAsset){
+  if(!pickAsset||pickAsset.year<=G.season)return "";
+  const slot=projectedFuturePickSlot(G,pickAsset),n=leagueClubCount(G);
+  const first=pickAsset.round===2?slot-n:slot;
+  if(first<=5)return"Projected early";
+  if(first<=12)return"Projected lottery";
+  if(first<=22)return"Projected mid";
+  return"Projected late";
+}
+
 function expectedPickSlot(G, pickAsset) {
   if(!pickAsset)return null;
 
@@ -9979,8 +10071,12 @@ function expectedPickSlot(G, pickAsset) {
   // A consumed current-season pick also stores its exact number on the asset.
   if(pickAsset.year===G.season && pickAsset.pickNumber)return +pickAsset.pickNumber;
 
+  // Future-season assets are projected from the originating club's recent
+  // performance, roster strength, age/continuity and horizon uncertainty.
+  if(pickAsset.year>G.season)return projectedFuturePickSlot(G,pickAsset);
+
   // Before Draft Night, current-season slots remain estimates based on the
-  // completed standings order. Future-season assets are projections only.
+  // completed standings order.
   const full=(G.pendingFullStandingsOrder||[]);
   const idx=full.indexOf(pickAsset.originalClubId);
 
@@ -10025,7 +10121,7 @@ function draftPickTradeValue(G, pickAsset) {
 // apply different philosophies to the same player or pick. This deliberately
 // allows contenders, rebuilding teams and different front offices to disagree.
 // ---------------------------------------------------------------------
-const AI_FRONT_OFFICE_MARKET_VERSION="FO4-SUBJECTIVE";
+const AI_FRONT_OFFICE_MARKET_VERSION="FO5-PICK-PROJECTION";
 
 function stableClubHash(text){
   let h=2166136261>>>0;
@@ -10107,7 +10203,21 @@ function subjectivePickTradeValue(G,club,asset){
   let mult=.88+profile.pickBias*.28;
   if(direction==="DEVELOP")mult*=1.08+profile.prospectBias*.10;
   if(direction==="CONTEND")mult*=.94-profile.aggression*.05;
-  if(yearsOut>=2)mult*=.96+profile.riskTolerance*.06;
+
+  if(yearsOut>=1){
+    const slot=expectedPickSlot(G,asset);
+    const n=leagueClubCount(G);
+    const firstSlot=asset.round===2?slot-n:slot;
+    const lateFirst=asset.round===1&&firstSlot>=Math.max(24,n-7);
+    const earlyFirst=asset.round===1&&firstSlot<=8;
+
+    // Smart offices explicitly discount projected late firsts from dominant
+    // teams and protect projected premium picks. Farther-out picks retain some
+    // uncertainty based on the office's risk tolerance.
+    if(lateFirst)mult*=.90-.05*profile.certaintyBias;
+    if(earlyFirst)mult*=1.05+.08*profile.pickBias;
+    if(yearsOut>=2)mult*=.94+profile.riskTolerance*.08;
+  }
   return Math.round(Math.max(1,base*mult)*10)/10;
 }
 function aiTradeAcceptanceThreshold(club){
@@ -10335,7 +10445,7 @@ function tradeCenterSnapshot(G, clubId, partnerClubId=null) {
   const assetView=(c)=>({
     clubId:c.id, clubName:c.name, rosterCount:c.roster.length, payrollM:recalcClubCap(c),
     players:[...c.roster].sort((a,b)=>b.ovr-a.ovr).map(p=>({id:p.id,name:p.name,position:p.position,age:p.age,ovr:p.ovr,yearsLeft:p.contractYearsLeft||0,salaryM:p.salaryM||0,value:playerTradeValue(p)})),
-    picks:clubDraftAssets(G,c.id).map(p=>({id:p.id,year:p.year,round:p.round,overallPickNum:(p.year===G.season&&G.phase==="DRAFT_NIGHT")?expectedPickSlot(G,p):null,originalClubId:p.originalClubId,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,value:draftPickTradeValue(G,p)})),
+    picks:clubDraftAssets(G,c.id).map(p=>({id:p.id,year:p.year,round:p.round,overallPickNum:(p.year===G.season&&G.phase==="DRAFT_NIGHT")?expectedPickSlot(G,p):null,projectedPickNum:p.year>G.season?expectedPickSlot(G,p):null,projectedBand:p.year>G.season?projectedPickBandLabel(G,p):"",originalClubId:p.originalClubId,originalClubName:clubById(G,p.originalClubId)?.name||p.originalClubId,value:draftPickTradeValue(G,p)})),
   });
   return {club:assetView(club),partner:partnerClubId?assetView(clubById(G,partnerClubId)):null};
 }
@@ -21963,7 +22073,7 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 271",ENGINE_VERSION="E2.26-PROD271";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 274",ENGINE_VERSION="E2.26-PROD274";console.info("H³O Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26862,14 +26972,19 @@ function allStarContestRecap(result,kind){
 
   if(currentFormat){
     const rows=(result.scores||[]).map((r,i)=>{
-      const r1=Number.isFinite(+r.round1)?`${+r.round1}/${maxRound}`:"—";
-      const r2=Number.isFinite(+r.round2)?`${+r.round2}/${maxRound}`:"—";
-      const total=Number.isFinite(+r.total)?`${+r.total}/${Number.isFinite(+r.round2)?maxRound*2:maxRound}`:"—";
+      const hasRound1=r.round1!==null&&r.round1!==undefined&&Number.isFinite(+r.round1);
+      const hasRound2=r.round2!==null&&r.round2!==undefined&&Number.isFinite(+r.round2);
+      const hasTotal=r.total!==null&&r.total!==undefined&&Number.isFinite(+r.total);
+      const r1=hasRound1?`${+r.round1}/${maxRound}`:"—";
+      const r2=hasRound2?`${+r.round2}/${maxRound}`:"—";
+      // Eliminated players only completed Round 1, so their total is out of
+      // one round rather than the two-round maximum.
+      const total=hasTotal?`${+r.total}/${hasRound2?maxRound*2:maxRound}`:"—";
       return `<tr class="${i===0?"winner":""}">
         <td class="rank">${i+1}</td>
         <td class="contestant">${r.name}</td>
         <td class="roundScore">${r1}</td>
-        <td class="roundScore ${Number.isFinite(+r.round2)?"":"na"}">${r2}</td>
+        <td class="roundScore ${hasRound2?"":"na"}">${r2}</td>
         <td class="total">${total}</td>
       </tr>`;
     }).join("");
@@ -27470,15 +27585,25 @@ function championshipTitleOrdinal(club){
   return `${total}${suffix} League Title`;
 }
 function championshipPixelSceneHtml(){
+  const teammate=(n,pose,height,delay)=>`<div class="champSprite champSprite${n} pose-${pose}" style="--silHeight:${height}px;--delay:${delay}s"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="leg left"></i><i class="leg right"></i></div>`;
   return `<div class="champPixelScene">
-    <div class="champArenaLights"><i></i><i></i></div>
+    <div class="champArenaLights"><i></i><i></i><i></i></div>
+    <div class="champSpotlight left"></div><div class="champSpotlight right"></div>
     <div class="champGlow"></div>
     <div id="champConfetti" class="champConfetti" aria-hidden="true"></div>
     <div class="champCrowd"></div>
-    <div class="champStage"></div>
-    ${[1,2,3,4,5,6].map((n,i)=>`<div class="champSprite champSprite${n}" style="--delay:${(i%3)*.11}s"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="leg left"></i><i class="leg right"></i></div>`).join("")}
-    <div class="champSprite champCaptain"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="leg left"></i><i class="leg right"></i></div>
-    <div class="champTrophy"><i class="cup"></i><i class="stem"></i><i class="base"></i></div>
+    <div class="champStage"><i class="podiumMark">H³O</i></div>
+    ${teammate(1,"cheer",43,.02)}
+    ${teammate(2,"clap",48,.16)}
+    ${teammate(3,"raise",45,.08)}
+    ${teammate(4,"raise",47,.20)}
+    ${teammate(5,"clap",44,.11)}
+    ${teammate(6,"cheer",49,.05)}
+    <div class="champSprite champLifter leftLifter" style="--silHeight:49px;--delay:.05s"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="leg left"></i><i class="leg right"></i></div>
+    <div class="champSprite champLifter rightLifter" style="--silHeight:50px;--delay:.12s"><i class="head"></i><i class="body"></i><i class="arm left"></i><i class="arm right"></i><i class="leg left"></i><i class="leg right"></i></div>
+    <div class="champTrophy">
+      <i class="shine"></i><i class="lid"></i><i class="cup"></i><i class="neck"></i><i class="stem"></i><i class="plinth"></i><i class="base"></i>
+    </div>
   </div>`;
 }
 function startChampionshipConfetti(){
@@ -29792,7 +29917,7 @@ function tradeClubSummary(club){
 }
 
 function trades(){let myId=me().id;if(!ui.tradePartner||ui.tradePartner===myId)ui.tradePartner=tradePartners()[0]?.id;ui.tradeOut=ui.tradeOut||{players:[],picks:[]};ui.tradeIn=ui.tradeIn||{players:[],picks:[]};let snap=tradeCenterSnapshot(G,myId,ui.tradePartner);if(!snap||!snap.partner)return `<div class="card empty">No trade partner available.</div>`;
-let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>${a.overallPickNum?`#${a.overallPickNum} · R${a.round}`:`${gameYearForSeason(a.year)} Draft · Round ${a.round}`}</b><small>Originally ${a.originalClubName} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
+let assetRows=(list,side,type)=>{if(!list.length)return `<div class="empty" style="padding:14px 0">No assets available.</div>`;let sel=(side==="out"?ui.tradeOut:ui.tradeIn)[type];return list.map(a=>{let checked=sel.includes(a.id);let projection=a.projectedPickNum?` · ${a.projectedBand} #${a.projectedPickNum}`:"";let label=type==="players"?`<b>${a.name}</b><small>${a.position} · OVR ${a.ovr} · Age ${a.age} · ${a.yearsLeft}yr $${(+a.salaryM).toFixed(1)}M · Val ${a.value}</small>`:`<b>${a.overallPickNum?`#${a.overallPickNum} · R${a.round}`:`${gameYearForSeason(a.year)} Draft · Round ${a.round}`}</b><small>Originally ${a.originalClubName}${projection} · Val ${a.value}</small>`;return `<label class="assetrow"><input type="checkbox" data-tradeasset data-side="${side}" data-type="${type}" data-id="${a.id}" ${checked?"checked":""}><span>${label}</span></label>`}).join("")};
 let ev=ui.tradeEval;let evalHtml=ev?(ev.valid?`<div class="card evalcard ${ev.accepted?"":"rej"}"><div class="eyebrow">${ev.accepted?"AI ACCEPTS":"AI REJECTS"}</div><div class="smallcopy">${ev.reason}</div><div class="metrics" style="margin-top:9px"><div class="metric"><b>${ev.aSendsValue}</b><small>You Send</small></div><div class="metric"><b>${ev.bSendsValue}</b><small>They Send</small></div><div class="metric"><b>${ev.ratio}</b><small>Value Ratio</small></div></div></div>`:`<div class="card evalcard rej"><div class="eyebrow">INVALID</div><div class="smallcopy">${ev.reason}</div></div>`):"";
 const draftTradeReturn=G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete?`<div class="draftTradeReturn"><div><b>Draft Night Trade Room</b><small>The live draft remains paused while you negotiate.</small></div><button id="returnDraftBoard" class="btn secondary">Return to Draft Board</button></div>`:"";
 return `${draftTradeReturn}<div class="card"><label>TRADE PARTNER</label><select id="tradePartnerSel">${tradePartners().map(x=>`<option value="${x.id}" ${x.id===ui.tradePartner?"selected":""}>${x.name}</option>`).join("")}</select></div><div class="sectionTitle">${c(myId).name} Sends</div><div class="card">${assetRows(snap.club.players,"out","players")}${assetRows(snap.club.picks,"out","picks")}</div><div class="sectionTitle">${snap.partner.clubName} Sends</div><div class="card">${assetRows(snap.partner.players,"in","players")}${assetRows(snap.partner.picks,"in","picks")}</div>${evalHtml}<div class="quick" style="margin-top:10px"><button id="evalTradeBtn" class="btn secondary" style="margin:0">Evaluate</button><button id="execTradeBtn" class="btn primary" style="margin:0">Execute</button></div>`}
@@ -31083,6 +31208,43 @@ function milestoneSeasonWatchRows(G){
   }
   return rows;
 }
+function milestoneAwardSeasons(p,bucket){
+  const seasons=new Set();
+  for(const a of p?.awardHistory||[]){
+    if(canonicalLeagueHonourBucket(a)!==bucket)continue;
+    const s=honoursAwardSeason(a);
+    if(s!=null)seasons.add(+s);
+  }
+  return [...seasons].sort((a,b)=>a-b);
+}
+function milestoneBenchmarkCrossingSeason(p,id,target){
+  let seasons=[];
+  if(id==="TITLES")seasons=honoursChampionshipSeasons(p);
+  else if(id==="MVP")seasons=milestoneAwardSeasons(p,"mvp");
+  else if(id==="FMVP")seasons=milestoneAwardSeasons(p,"finals mvp");
+  else if(id==="DPOY")seasons=milestoneAwardSeasons(p,"dpoy");
+  return seasons.length>=target?seasons[target-1]:null;
+}
+function milestoneAchievementLedger(G){
+  G.milestoneAchievementLedger=G.milestoneAchievementLedger||{};
+  return G.milestoneAchievementLedger;
+}
+function milestoneAchievementWasRetroactive(G,row){
+  if(!row?.achieved)return false;
+  if(row.crossingSeason==null)return false;
+  return +row.crossingSeason < +G.season;
+}
+function markRetroactiveMilestoneAcknowledged(G,row){
+  if(!row?.id)return;
+  const ledger=milestoneAchievementLedger(G);
+  ledger[row.id]=ledger[row.id]||{
+    acknowledgedSeason:+G.season||0,
+    crossingSeason:row.crossingSeason??null,
+    retroactive:true,
+    playerId:row.playerId||null
+  };
+}
+
 function milestoneCareerNewsRows(G){
   const players=milestoneAllCareerPlayers(G),rows=[];
   let points=null;for(const p of players){const v=currentCareerTotal(p,"pts");if(!points||v>points.value)points={p,value:v}}
@@ -31108,7 +31270,8 @@ function milestoneCareerNewsRows(G){
     if(!best)continue;
     const diff=target-best.value;
     if(diff<=0){
-      rows.push({id:`PLAYER_${id}`,playerId:best.p.id,type:"CAREER ACHIEVEMENT",headline:`${best.p.name} ${historicalMarkVerb(best.value,target)} the ${label.toLowerCase()} benchmark`,detail:`${best.p.name} has ${best.value} ${label.toLowerCase()}, ${best.value===target?"matching":"passing"} the historical mark of ${target}.`,state:historicalMarkState(best.value,target),achieved:true,priority:118});
+      const crossingSeason=milestoneBenchmarkCrossingSeason(best.p,id,target);
+      rows.push({id:`PLAYER_${id}`,playerId:best.p.id,type:"CAREER ACHIEVEMENT",headline:`${best.p.name} ${historicalMarkVerb(best.value,target)} the ${label.toLowerCase()} benchmark`,detail:`${best.p.name} has ${best.value} ${label.toLowerCase()}, ${best.value===target?"matching":"passing"} the historical mark of ${target}.`,state:historicalMarkState(best.value,target),achieved:true,crossingSeason,priority:118});
     }else if(diff===1){
       const pst=G.phase==="PLAYOFFS"&&typeof userPostseasonState==="function"?userPostseasonState():null;
       const titleChase=id==="TITLES"&&pst?.series&&String(pst.series.stage||"").toUpperCase().includes("FINAL");
@@ -31164,11 +31327,27 @@ function milestoneSyncSignature(G){
     +(G.gmCareer?.playoffWins||0)
   ].join("|");
 }
+function cleanRetroactiveMilestoneFlashQueue(G){
+  if(!Array.isArray(G?.newsFlashQueue)||!G.newsFlashQueue.length)return 0;
+  const before=G.newsFlashQueue.length;
+  G.newsFlashQueue=G.newsFlashQueue.filter(item=>{
+    const article=typeof item==="object"?item:null;
+    if(!article?.achieved)return true;
+    const crossing=+article.milestoneCrossingSeason;
+    if(Number.isFinite(crossing)&&crossing<+G.season)return false;
+    // Legacy achievement articles without crossing metadata are retained;
+    // the durable seen-key still prevents them from being requeued.
+    return true;
+  });
+  return before-G.newsFlashQueue.length;
+}
+
 function syncMilestoneNewsIfNeeded(G,{allowFlash=true,force=false}={}){
   if(!G)return[];
   G.runtimeMeta=G.runtimeMeta||{};
   const sig=milestoneSyncSignature(G);
   if(!force&&G.runtimeMeta.lastMilestoneSyncSignature===sig)return[];
+  cleanRetroactiveMilestoneFlashQueue(G);
   const rows=syncMilestoneNews(G,{allowFlash});
   G.runtimeMeta.lastMilestoneSyncSignature=sig;
   return rows;
@@ -31204,6 +31383,18 @@ function syncMilestoneNews(G,{allowFlash=true}={}){
       }
     }
 
+    const retroactive=milestoneAchievementWasRetroactive(G,row);
+
+    // Deep-save migration guard: if the milestone was actually crossed in a
+    // prior season, acknowledge it silently instead of publishing it now as
+    // breaking news. This is what prevents Game 8/9 from suddenly announcing
+    // a player's 17th Finals MVP as though the old mark of 6 was just passed.
+    if(row.achieved&&retroactive&&!article){
+      markRetroactiveMilestoneAcknowledged(G,row);
+      continue;
+    }
+
+    const existedBefore=!!article;
     if(!article){
       article=pushNewsArticle(G,row.headline,row.detail,category,row.achieved?4:2,tag,false);
     }else if(!row.achieved){
@@ -31214,14 +31405,19 @@ function syncMilestoneNews(G,{allowFlash=true}={}){
     article.milestoneState=row.state;
     article.playerId=row.playerId||null;
     article.achieved=!!row.achieved;
+    if(row.crossingSeason!=null)article.milestoneCrossingSeason=row.crossingSeason;
 
-    // Only genuinely new achievements should ever flash. Watches can still
-    // surface when imminent, but completed achievements never re-fire merely
-    // because the season number changed.
-    const alreadyHistorical=row.achieved && feed.some(n=>n===article || n?.tag===tag);
+    // Only an achievement first observed in the season it was actually crossed
+    // is eligible to interrupt play.
+    const genuinelyNewAchievement=
+      row.achieved &&
+      !existedBefore &&
+      !retroactive &&
+      (row.crossingSeason==null || +row.crossingSeason===+G.season);
+
     const shouldFlash=allowFlash&&(
       (!row.achieved&&row.imminent) ||
-      (row.achieved&&!alreadyHistorical)
+      genuinelyNewAchievement
     );
     const flashKey=row.achieved?tag:`${tag}_${row.state}`;
     if(shouldFlash&&milestoneNewsCanFlash(G,flashKey))queueNewsFlash(G,article);
