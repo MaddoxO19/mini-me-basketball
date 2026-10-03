@@ -24964,14 +24964,17 @@ function clubNotablePlayers(club){
   const seasonAtClub=(p,season)=>clubForPlayer(G,p)?.id===club.id&&season===G.season||(p.seasonHistory||[]).some(h=>h.season===season&&(h.clubId===club.id||h.clubName===club.name));
   return unique.map(p=>{
     const awardRows=(p.awardHistory||[]).filter(a=>seasonAtClub(p,a.season));
-    const honours=awardRows.length;
+    // Shared honour model: same classification, de-duplication and exclusion of
+    // developmental honours as League and International.
+    const hb=leagueHonourBreakdown(awardRows);
+    const honours=hb.count;
     const ident=normalizedHistoricalPlayerIdentity({sourcePlayerName:p.sourceTemplateName||p.sourceName||null,playerName:p.name,playerId:p.id});
     const ranks=(rankingMap.get(ident)?.ranks||[]).slice().sort((a,b)=>a.rank-b.rank);
     const rankScore=ranks.reduce((sum,r)=>sum+Math.max(0,26-r.rank)*2,0);
     const seasons=(p.seasonHistory||[]).filter(h=>h.clubId===club.id||h.clubName===club.name).length+(clubForPlayer(G,p)?.id===club.id?1:0);
     const top1=ranks.filter(r=>r.rank===1).length,top3=ranks.filter(r=>r.rank<=3).length;
-    const major=awardRows.filter(a=>/MVP|Most Valuable|Finals MVP|Defensive Player|Rookie of the Year|All-NBA|All League/i.test(String(a.name||a.award||a.title||""))).length;
-    const championships=awardRows.filter(a=>/Champion|Championship|NBA Title|Finals Winner/i.test(String(a.name||a.award||a.title||""))).length;
+    const major=hb.major;
+    const championships=hb.championships;
     const score=honours*14+major*18+championships*24+rankScore+top1*28+top3*8+seasons*3+(p.ovr||0)*.08;
     let legacyTier=0,legacyLabel="Notable Player";
     if(honours>=24||major>=5||championships>=2||(top1>=2&&honours>=10)){legacyTier=2;legacyLabel="Franchise Icon";}
@@ -25128,9 +25131,13 @@ function leagueHistoricalRankings(){
 // v0.1.49.77.5.5.5.29 — canonical award classification for Writers' Top 50 integrity.
 // League championships are intentionally strict: a scoring title, The Cup title,
 // international title or Summer League title must never be interpreted as an NBA ring.
-function leagueAwardName(row){return String(row?.name||row?.award||row?.title||"").trim();}
+function leagueAwardName(row){return displayAwardName(String(row?.name||row?.award||row?.title||"").trim());}
+// Classification name: strips a leading count ("4× MVP" -> "MVP") so summary honours
+// carried over from real pre-career records are recognised by the same patterns.
+function leagueAwardBaseName(row){return leagueAwardName(row).replace(/^\d+\s*×\s*/,"");}
+function leagueAwardMultiplier(row){const m=leagueAwardName(row).match(/^(\d+)\s*×\s*/);return m?Math.max(1,+m[1]):1;}
 function isDevelopmentalHonourName(n){return /Summer League|All-Summer/i.test(String(n||""));}
-function isNbaCupHonourName(n){return /The Cup|Cup Champion|Cup MVP/i.test(String(n||""));}
+function isNbaCupHonourName(n){n=String(n||"");return !/World Cup/i.test(n)&&/The Cup|Cup Champion|Cup MVP/i.test(n);}
 function isScoringTitleHonourName(n){return /Scoring (Champion|Title)|Scoring Champ/i.test(String(n||""));}
 function isInternationalHonourName(n){return /World Cup|Olympic|FIBA|All-World Cup|All-Olympic/i.test(String(n||""));}
 function isNbaChampionshipHonourName(n){
@@ -25139,7 +25146,7 @@ function isNbaChampionshipHonourName(n){
   return /^(?:NBA\s+|League\s+)?Champion(?:ship)?(?:\s+Winner)?$/i.test(n)||/^(?:NBA\s+|League\s+)?Title$/i.test(n)||/^Finals Winner$/i.test(n);
 }
 function canonicalLeagueHonourBucket(row){
-  const raw=leagueAwardName(row);
+  const raw=leagueAwardBaseName(row);
   if(!raw)return"";
   if(isDevelopmentalHonourName(raw))return"developmental";
   if(isNbaCupHonourName(raw))return /MVP/i.test(raw)?"nba cup mvp":"nba cup champion";
@@ -25147,6 +25154,7 @@ function canonicalLeagueHonourBucket(row){
   if(isInternationalHonourName(raw))return raw.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
   if(isNbaChampionshipHonourName(raw))return"nba championship";
   if(/Finals MVP/i.test(raw))return"finals mvp";
+  if(/All-Star MVP/i.test(raw))return"all-star mvp";
   if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(raw))return"mvp";
   if(/Defensive Player|DPOY/i.test(raw))return"dpoy";
   if(/All-NBA First|All League First/i.test(raw))return"all nba first";
@@ -25162,13 +25170,18 @@ function canonicalLeagueHonourBucket(row){
   return raw.toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 }
 function leagueHonourWeight(row){
-  const n=leagueAwardName(row);
+  const n=leagueAwardBaseName(row);
   if(!n)return 0;
   if(isDevelopmentalHonourName(n))return 0;
   if(isNbaCupHonourName(n))return /MVP/i.test(n)?12:6;
+  // International honours (World Cup, Olympics) keep their low supporting weight and must be
+  // classified before the generic MVP/champion rules, which would otherwise read
+  // "World Cup MVP" or "Olympic Tournament MVP" as a league MVP.
+  if(isInternationalHonourName(n))return 4;
   if(isScoringTitleHonourName(n))return 24;
   if(isNbaChampionshipHonourName(n))return 28;
   if(/Finals MVP/i.test(n))return 76;
+  if(/All-Star MVP/i.test(n))return 18;
   if(/(^|\b)(NBA )?MVP\b|Most Valuable Player/i.test(n))return 92;
   if(/Defensive Player|DPOY/i.test(n))return 58;
   if(/All-NBA First|All League First/i.test(n))return 40;
@@ -25196,11 +25209,12 @@ function leagueHonourBreakdown(rows){
     if(seen.has(key))continue;
     seen.add(key);clean.push(a);
   }
-  const championshipSeasons=new Set(clean.filter(a=>isNbaChampionshipHonourName(leagueAwardName(a))).map(a=>String(a?.season??a?.year??"unknown")));
-  const championships=championshipSeasons.size;
-  const major=clean.filter(a=>/Finals MVP|(^|\b)(NBA )?MVP\b|Most Valuable Player|Defensive Player|DPOY|All-NBA|All League/i.test(leagueAwardName(a))).length;
-  const weight=clean.reduce((sum,a)=>sum+leagueHonourWeight(a),0);
-  return{clean,developmental,championships,major,weight};
+  const sumOf=(rows)=>rows.reduce((n,a)=>n+leagueAwardMultiplier(a),0);
+  const championships=sumOf(clean.filter(a=>isNbaChampionshipHonourName(leagueAwardBaseName(a))));
+  const major=sumOf(clean.filter(a=>!isInternationalHonourName(leagueAwardBaseName(a))&&!isNbaCupHonourName(leagueAwardBaseName(a))&&!/All-Star/i.test(leagueAwardBaseName(a))&&/Finals MVP|(^|\b)(NBA )?MVP\b|Most Valuable Player|Defensive Player|DPOY|All-NBA|All League/i.test(leagueAwardBaseName(a))));
+  const weight=clean.reduce((sum,a)=>sum+leagueHonourWeight(a)*leagueAwardMultiplier(a),0);
+  const count=sumOf(clean);
+  return{clean,developmental,championships,major,weight,count};
 }
 function leagueNotablePlayers(){
   const rankingMap=leagueHistoricalRankings();
@@ -31510,13 +31524,14 @@ const LEAGUE_HONOURS_BENCHMARKS={
 };
 function honoursAwardSeason(row){const n=+(row?.season??row?.year);return Number.isFinite(n)?n:null}
 function honoursCareerAwardCount(p,bucket){
-  const seen=new Set();
+  // Seasoned awards count once per season; summary rows ("4× MVP") count at their stated multiplicity.
+  const seen=new Map();
   for(const a of p?.awardHistory||[]){
     if(canonicalLeagueHonourBucket(a)!==bucket)continue;
     const s=honoursAwardSeason(a),key=s==null?`${bucket}|${leagueAwardName(a)}`:`${bucket}|${s}`;
-    seen.add(key);
+    seen.set(key,s==null?leagueAwardMultiplier(a):1);
   }
-  return seen.size;
+  return [...seen.values()].reduce((n,v)=>n+v,0);
 }
 function honoursChampionshipSeasons(p){
   const out=new Set();
@@ -31937,7 +31952,7 @@ function internationalRecordsPage(n){
     const rows=internationalSingleGameRecords(n);
     body=`<div class="sectionTitle">Single-Game Player Records</div><div class="intlRecordGrid">${rows.map(r=>r.value!=null?`<div class="intlRecordCard"><small>${r.label}</small><strong>${r.value}</strong><b>${r.line?.name||playerByAnyId(r.line?.playerId)?.name||'Unknown Player'}</b><span>vs ${nat(r.opp)?.name||r.opp}${r.g?.season?` · ${gameYearForSeason(r.g.season)}`:''}</span></div>`:`<div class="intlRecordCard"><small>${r.label}</small><strong>—</strong><b>No record yet</b><span>Recorded international games will populate this category.</span></div>`).join('')}</div>`;
   }else{
-    const tr=internationalTeamRecords(n),finish=internationalBestFinish(n),fmt=e=>e?`${e.pf}–${e.pa} vs ${nat(e.opp)?.name||e.opp}`:'—';
+    const tr=internationalTeamRecords(n),fmt=e=>e?`${e.pf}–${e.pa} vs ${nat(e.opp)?.name||e.opp}`:'—';
     body=`<div class="sectionTitle">Team Game Records</div><div class="intlTeamRecordGrid">
       <div class="intlRecordCard"><small>Largest Win</small><strong>${tr.biggestWin?`+${tr.biggestWin.margin}`:'—'}</strong><b>${fmt(tr.biggestWin)}</b><span>Biggest winning margin</span></div>
       <div class="intlRecordCard"><small>Largest Defeat</small><strong>${tr.biggestLoss?tr.biggestLoss.margin:'—'}</strong><b>${fmt(tr.biggestLoss)}</b><span>Largest losing margin</span></div>
@@ -31945,9 +31960,95 @@ function internationalRecordsPage(n){
       <div class="intlRecordCard"><small>Lowest Points Allowed</small><strong>${tr.lowAllowed?.pa??'—'}</strong><b>${fmt(tr.lowAllowed)}</b><span>Fewest opponent points conceded</span></div>
       <div class="intlRecordCard"><small>Longest Win Streak</small><strong>${tr.streak||'—'}</strong><b>${tr.streak?`${tr.streak} consecutive wins`:'No streak yet'}</b><span>Across recorded international games</span></div>
       <div class="intlRecordCard"><small>Program Games</small><strong>${Math.round(tr.games.length).toLocaleString('en-US')}</strong><b>${n.record.w}–${n.record.l} current career record</b><span>Recorded national-team games in this save</span></div>
-    </div><div class="sectionTitle">Major Tournament Best</div><div class="intlRecordGrid"><div class="intlRecordCard"><small>World Cup Best</small><strong>${finish.wc}</strong><b>${finish.wcMedals} medal${finish.wcMedals===1?'':'s'}</b><span>Best recorded World Cup finish</span></div><div class="intlRecordCard"><small>Olympic Best</small><strong>${finish.oly}</strong><b>${finish.olyMedals} medal${finish.olyMedals===1?'':'s'}</b><span>Historical seed plus career Olympic results</span></div></div>`;
+    </div><div class="smallcopy" style="margin:6px 2px 10px">World Cup and Olympic finishes are listed under Honours.</div>
+`;
   }
   return hero+tabs+body;
+}
+
+// ---- International History & Honours ------------------------------------
+// Built from stored tournament results (G.worldCupHistory, G.olympicHistory and the
+// documented pre-career Olympic medals) and players' recorded international awards.
+// Uses the same components and tier-first ordering as Club and League honours.
+function intlTournamentEvents(code){
+  const events=[];
+  for(const t of (G.worldCupHistory||[])){
+    if(t?.status&&t.status!=="COMPLETE")continue;
+    events.push({kind:"wc",label:"World Cup",year:gameYearForSeason(t.season),season:+t.season||0,t});
+  }
+  const careerOly=(G.olympicHistory||[]).filter(t=>!t?.status||t.status==="COMPLETE");
+  for(const t of careerOly)events.push({kind:"oly",label:"Olympic Games",year:+t.year||gameYearForSeason(t.season),season:+t.season||0,t});
+  const careerYears=new Set(careerOly.map(t=>+t.year));
+  for(const t of (G.olympicHistoricalMedals||HISTORICAL_OLYMPIC_MEDALS)){
+    if(careerYears.has(+t.year))continue;
+    if(![t.championCode,t.runnerUpCode,t.bronzeCode].includes(code))continue; // pre-career: only documented medals are known
+    events.push({kind:"oly",label:"Olympic Games",year:+t.year,season:-1,t,historical:true});
+  }
+  return events.sort((a,b)=>b.year-a.year||(a.kind==="oly"?-1:1));
+}
+function intlEventResult(e,code){
+  const t=e.t,games=(t.games||[]).filter(g=>g&&(g.teamA===code||g.teamB===code));
+  let w=0,l=0;for(const g of games){const us=g.teamA===code?+g.scoreA:+g.scoreB,them=g.teamA===code?+g.scoreB:+g.scoreA;if(us>them)w++;else if(them>us)l++;}
+  const played=games.length>0||(t.qualifiedTeamCodes||[]).includes(code)||(t.field||[]).some(x=>(x?.code||x)===code);
+  let finish,medal=null;
+  if(t.championCode===code){finish="Gold medal";medal="gold";}
+  else if(t.runnerUpCode===code){finish="Silver medal";medal="silver";}
+  else if(t.bronzeCode===code){finish="Bronze medal";medal="bronze";}
+  else if(e.kind==="wc"&&t.fifthCode===code)finish="Fifth place";
+  else if(e.kind==="wc"&&t.seventhCode===code)finish="Seventh place";
+  else finish=played?"No medal":"Did not qualify";
+  const mvp=t.mvpPlayerId?playerByAnyId(t.mvpPlayerId):null;
+  const mvpNote=mvp&&mvp.nationality===code?`Tournament MVP: ${mvp.name}`:"";
+  return{w,l,played,finish,medal,mvpNote};
+}
+function internationalHistoryPage(n){
+  const events=intlTournamentEvents(n.code);
+  const rows=events.map(e=>{
+    const r=intlEventResult(e,n.code);
+    const detail=e.historical?"Documented result":r.played?`${r.w}–${r.l}${e.t.host?` · ${e.t.host}`:""}`:(e.t.host||"");
+    return `<div class="teamSeasonRow"><div class="season">${e.year}</div><div><b>${e.label}</b>${detail?`<small>${detail}</small>`:""}</div><div><b>${r.finish}</b>${r.mvpNote?`<small>${r.mvpNote}</small>`:""}</div></div>`;
+  }).join("");
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${n.name.toUpperCase()} · PROGRAM ARCHIVE</div><h3>Tournament History</h3><p>Every World Cup and Olympic tournament in this career, with the national team's record and finish. Earlier Olympic medals are included where they are documented.</p></div><div class="profileTimeline clubHistoryClean">${rows||`<div class="empty">Tournament history will populate after the first World Cup or Olympic Games.</div>`}</div>`;
+}
+function intlPlayerHonours(p){
+  const seen=new Set(),out={titles:0,silver:0,bronze:0,mvps:0,allTournament:0};
+  for(const a of p?.awardHistory||[]){
+    const n=leagueAwardName(a),key=`${a?.season??a?.olympicYear??""}|${n}`;
+    if(seen.has(key))continue;seen.add(key);
+    if(/^World Cup Champion$|^Olympic Gold Medal$/i.test(n))out.titles++;
+    else if(/^Olympic Silver Medal$/i.test(n))out.silver++;
+    else if(/^Olympic Bronze Medal$/i.test(n))out.bronze++;
+    else if(/^World Cup MVP$|^Olympic Tournament MVP$/i.test(n))out.mvps++;
+    else if(/^All-World Cup Team$|^Olympic All-Tournament Team$/i.test(n))out.allTournament++;
+  }
+  return out;
+}
+function internationalGreats(n){
+  const caps=internationalCareerLeaders(n,"gp",60),pts=new Map(internationalCareerLeaders(n,"pts",60).map(x=>[String(x.p.id),x.value]));
+  return caps.map(x=>{
+    const h=intlPlayerHonours(x.p),points=pts.get(String(x.p.id))||0,honours=h.titles+h.silver+h.bronze+h.mvps+h.allTournament;
+    let tier=0,label="Notable International";
+    if(h.titles>=2||h.mvps>=2||(h.titles>=1&&h.mvps>=1)){tier=2;label="National Icon";}
+    else if(h.titles>=1||h.mvps>=1||h.silver+h.bronze>=2||h.allTournament>=2){tier=1;label="National Legend";}
+    const score=h.titles*30+h.silver*18+h.bronze*12+h.mvps*40+h.allTournament*15+x.gp*.6+points/50;
+    const ev=[h.titles?`${h.titles} title${h.titles===1?"":"s"}`:"",h.mvps?`${h.mvps} MVP`:"",h.silver+h.bronze?`${h.silver+h.bronze} medal${h.silver+h.bronze===1?"":"s"}`:""].filter(Boolean);
+    return{p:x.p,gp:x.gp,points,honours,tier,label,score,evidence:ev.length?ev.slice(0,2).join(" · "):`${Math.round(points).toLocaleString("en-US")} PTS`};
+  }).filter(x=>x.honours>0||x.gp>=8).sort((a,b)=>b.tier-a.tier||b.score-a.score).slice(0,10);
+}
+function internationalHonoursPage(n){
+  const events=intlTournamentEvents(n.code).map(e=>({e,r:intlEventResult(e,n.code)}));
+  const tally=(kind,medal)=>events.filter(x=>x.e.kind===kind&&x.r.medal===medal).length;
+  const wc={g:tally("wc","gold"),s:tally("wc","silver"),b:tally("wc","bronze")},oly={g:tally("oly","gold"),s:tally("oly","silver"),b:tally("oly","bronze")};
+  const medals=wc.g+wc.s+wc.b+oly.g+oly.s+oly.b;
+  const mvps=events.filter(x=>x.r.mvpNote).map(x=>`<div class="more"><div><b>${x.r.mvpNote.replace("Tournament MVP: ","")}</b><small>${x.e.year} ${x.e.label} MVP</small></div><b>${x.e.year}</b></div>`).join("");
+  const titleYears=events.filter(x=>x.r.medal==="gold").map(x=>`${x.e.year} ${x.e.kind==="wc"?"World Cup":"Olympics"}`);
+  const greats=internationalGreats(n);
+  return `<div class="clubHonourHero"><div><b>${wc.g}</b><small>World Cup Titles</small></div><div><b>${oly.g}</b><small>Olympic Gold Medals</small></div><div><b>${medals}</b><small>Major Medals</small></div></div>
+    <div class="smallcopy" style="margin:6px 2px 10px">Major Medals counts World Cup and Olympic podium finishes in this career, plus documented Olympic medals from before it.</div>
+    <div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No World Cup or Olympic titles yet"}</small></div><b>${titleYears.length} Total</b></div></div>
+    <div class="sectionTitle">Medal Table</div><div class="card"><div class="more"><div><b>World Cup</b><small>Gold · Silver · Bronze</small></div><b>${wc.g}–${wc.s}–${wc.b}</b></div><div class="more"><div><b>Olympic Games</b><small>Gold · Silver · Bronze</small></div><b>${oly.g}–${oly.s}–${oly.b}</b></div></div>
+    <div class="sectionTitle">Tournament MVPs</div><div class="card">${mvps||`<div class="empty">No ${n.name} player has been named a tournament MVP yet.</div>`}</div>
+    <div class="sectionTitle">National Team Greats</div><div class="clubLegendList">${greats.length?greats.map((x,i)=>{const live=playerByAnyId(x.p.id);return `<div class="clubLegendRow"><span>${i+1}</span><div><b>${live?playerNameLink(live):(x.p.name||"Player")}</b><small>${x.gp} cap${x.gp===1?"":"s"} · ${x.label}</small></div><strong>${x.evidence}</strong></div>`}).join(""):`<div class="empty">National team greats will appear once players build an international record.</div>`}</div>`;
 }
 
 function internationalSquad(n,code){
@@ -32238,8 +32339,8 @@ function internationalOlympics(n){
 function international(){
   let code=G.userNationalGM?.nationCode;
   if(!code){const options=G.nationalTeams.filter(n=>NATIONAL_GM_CONTROLLABLE.has(n.code)).sort((a,b)=>a.name.localeCompare(b.name));return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · Take your career onto the international stage</p></div><div class="card"><div class="eyebrow">National Team Management</div><h3>Manage a Basketball Nation</h3><div class="smallcopy">National GM control is limited to established programs with enough player depth to support meaningful squad selection. Other nations remain active in FIBA qualification and the World Cup.</div><label>NATION</label><select id="nation">${options.map(n=>`<option value="${n.code}">${flagEmoji(n.code)} ${n.name} · ${n.region}</option>`).join("")}</select><button id="acceptNation" class="btn primary" style="margin-top:10px">Accept National GM Role</button></div>`}
-  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["olympics","Olympics"],["rankings","World Rankings"],["records","Records"]],body;
-  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="olympics")body=internationalOlympics(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else if(ui.intlTab==="records")body=internationalRecordsPage(n);else body=internationalWorldCup();
+  ensureNationalDepth(G,code,24);let n=nat(code),tabs=[["home","Overview"],["squad","Squad"],["fixtures","Fixtures"],["qual","Qualification"],["wc","World Cup"],["olympics","Olympics"],["rankings","World Rankings"],["records","Records"],["history","History"],["honours","Honours"]],body;
+  if(ui.intlTab==="home")body=internationalOverview(n);else if(ui.intlTab==="squad")body=internationalSquad(n,code);else if(ui.intlTab==="fixtures")body=internationalFixtures(n);else if(ui.intlTab==="qual")body=internationalQualification(n);else if(ui.intlTab==="olympics")body=internationalOlympics(n);else if(ui.intlTab==="rankings")body=internationalWorldRankings();else if(ui.intlTab==="records")body=internationalRecordsPage(n);else if(ui.intlTab==="history")body=internationalHistoryPage(n);else if(ui.intlTab==="honours")body=internationalHonoursPage(n);else body=internationalWorldCup();
   return `<div class="clubPageTitle intlPageTitle"><h2>International</h2><p>National Team Hub · ${n.name} · World #${nationalWorldRank(code)||"—"}</p></div><div class="tabs compactTabRow intlMainTabs globalLevel1Tabs iconLevel1Tabs">${tabs.map(x=>compactMenuTab(x[0],x[1],ui.intlTab,"data-intltab")).join("")}</div>`+body;
 }
 
