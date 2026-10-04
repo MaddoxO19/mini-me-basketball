@@ -3381,7 +3381,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 285</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 286</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -21983,7 +21983,9 @@ function advancePlayoffEvent(G){
     return s.stage.endsWith(`_${live.round}`);
   }).filter(s=>!s.complete);
   if(!active.length){
-    const before=live.round,progressed=buildNextPlayoffRound(G);
+    const before=live.round;
+    queuePostseasonRoundRecapIfComplete(before);
+    const progressed=buildNextPlayoffRound(G);
     if(!progressed&&G.phase==="PLAYOFFS"&&live.round===before){
       ensurePlayoffRoundIntegrity(G,`stranded-${before}`);
       return{ok:false,reason:`Postseason bracket could not advance from ${before}`};
@@ -22001,7 +22003,11 @@ function advancePlayoffEvent(G){
     if(s.complete)ensurePlayoffSeriesRecognition(G,s,{recordAward:true,forceRefresh:true});
     if(G.userClubGM?.clubId&&(g.homeClubId===G.userClubGM.clubId||g.awayClubId===G.userClubGM.clubId))live.lastUserGameId=g.id;
   }
-  if(active.every(s=>s.complete))buildNextPlayoffRound(G);
+  if(active.every(s=>s.complete)){
+    const completedRound=live.round;
+    queuePostseasonRoundRecapIfComplete(completedRound);
+    buildNextPlayoffRound(G);
+  }
   if(G.phase==="PLAYOFFS"){
     G.playoffs={season:G.season,round:live.round,seedMap:{...(live.seedMap||{})},conferenceWinners:{...live.conferenceWinners},series:live.series.map(s=>({...s})),games:live.games,live:true,complete:false};
   }
@@ -22132,7 +22138,10 @@ if (typeof module !== "undefined") {
 // v0.1.49.77.5.5.5.23 — Former 97-99 OVR players retain a fading portion of
 // generational offensive craft after dropping below 97, avoiding an abrupt
 // statistical-efficiency cliff while still allowing genuine age decline.
-const BUILD_ID="v0.9.0 Stable · Build 285",ENGINE_VERSION="E2.26-PROD285";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// Build 286 — Club IA cleanup + postseason round-recap integrity.
+// Fixtures and Trades now live under Club; old Squad routes redirect safely.
+// Completed playoff rounds queue a mandatory recap before the next round is user-playable.
+const BUILD_ID="v0.9.0 Stable · Build 286",ENGINE_VERSION="E2.26-PROD286";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25778,7 +25787,7 @@ function renderResultWindow(){
     nextBtn.dataset.busy="1";nextBtn.disabled=true;
     try{
       if(historicalSeries){ui.resultReturn=null;ui.resultGameId=null;ui.page="league";ui.leagueTab="post";show("game");render();return;}
-      if(ui.resultReturn==="schedule"){ui.resultReturn=null;ui.resultGameId=null;ui.page="team";ui.teamTab="schedule";show("game");render();return;}
+      if(ui.resultReturn==="schedule"){ui.resultReturn=null;ui.resultGameId=null;ui.page="club";ui.clubTab="fixtures";show("game");render();return;}
       if(ui.resultReturn==="summer_summary"){closeResultToHome();return;}
       if(ui.resultReturn==="preseason_complete"){closeResultToHome();return;}
       if(ui.resultReturn==="cup_final"){
@@ -27421,8 +27430,31 @@ function markPostseasonRoundRecapSeen(roundCode){
   if(!key)return;
   G.postseasonRoundRecapSeen=G.postseasonRoundRecapSeen||{};
   G.postseasonRoundRecapSeen[key]=true;
+  if(G.postseasonRoundRecapPending?.roundCode===roundCode)G.postseasonRoundRecapPending=null;
+}
+function queuePostseasonRoundRecapIfComplete(roundCode){
+  if(!roundCode||roundCode==="FINALS"||postseasonRoundRecapSeen(roundCode))return false;
+  const roundSeries=postseasonRoundSeries(roundCode),expected=postseasonRoundExpectedSeries(roundCode);
+  if(!expected||roundSeries.length<expected||!roundSeries.every(s=>s.complete))return false;
+  const key=postseasonRoundRecapKey(roundCode);
+  if(G.postseasonRoundRecapPending?.key===key)return true;
+  G.postseasonRoundRecapPending={key,season:G.season,roundCode,seriesIds:roundSeries.map(s=>s.id),createdAt:Date.now()};
+  return true;
+}
+async function showPendingPostseasonRoundRecap(){
+  const pending=G?.postseasonRoundRecapPending;
+  if(!pending?.roundCode)return false;
+  const roundCode=pending.roundCode;
+  if(postseasonRoundRecapSeen(roundCode)){G.postseasonRoundRecapPending=null;return false;}
+  const roundSeries=postseasonRoundSeries(roundCode),expected=postseasonRoundExpectedSeries(roundCode);
+  if(!expected||roundSeries.length<expected||!roundSeries.every(s=>s.complete)){G.postseasonRoundRecapPending=null;return false;}
+  const roundBefore=postseasonRoundLabel(roundCode),nextCode=roundCode==="R1"?"SF":roundCode==="SF"?"CF":"FINALS";
+  ui.postUpdate={phaseBefore:"PLAYOFFS",phaseAfter:G.phase,roundBefore,roundAfter:postseasonRoundLabel(nextCode),roundChanged:true,games:[],completedSeries:roundSeries.map(s=>({...s})),observerMode:"round",recapRoundCode:roundCode};
+  recordPostseasonCheckpoint("pending-round-recap");
+  await save();show("postseasonUpdateWindow");renderPostseasonUpdate();return true;
 }
 async function maybeShowCompletedRoundRecapFromSeries(seriesId){
+  if(await showPendingPostseasonRoundRecap())return true;
   if(!seriesId)return false;
   const pool=G?.playoffsLive?.series||G?.playoffs?.series||[];
   const series=pool.find(s=>String(s.id)===String(seriesId));
@@ -27473,7 +27505,7 @@ async function advancePostseasonObserver(){
   // round is already complete but the round pointer never rolled forward.
   if(phaseBefore==="PLAYOFFS"&&G.playoffsLive){
     const roundSeries=G.playoffsLive.series.filter(s=>roundCodeBefore==="FINALS"?s.stage==="FINALS":s.stage.endsWith(`_${roundCodeBefore}`));
-    if(roundSeries.length&&roundSeries.every(s=>s.complete))buildNextPlayoffRound(G);
+    if(roundSeries.length&&roundSeries.every(s=>s.complete)){queuePostseasonRoundRecapIfComplete(roundCodeBefore);buildNextPlayoffRound(G);}
   }
 
   while(guard++<12){
@@ -27485,6 +27517,7 @@ async function advancePostseasonObserver(){
       if(live){
         const roundSeries=live.series.filter(s=>roundCodeBefore==="FINALS"?s.stage==="FINALS":s.stage.endsWith(`_${roundCodeBefore}`));
         if(roundSeries.length&&roundSeries.every(s=>s.complete)){
+          queuePostseasonRoundRecapIfComplete(roundCodeBefore);
           buildNextPlayoffRound(G);
           continue;
         }
@@ -27505,7 +27538,7 @@ async function advancePostseasonObserver(){
     const current=G.playoffsLive?.round||G.playoffs?.round||roundCodeBefore;
     if(current===roundCodeBefore){
       const rs=G.playoffsLive?.series?.filter(s=>roundCodeBefore==="FINALS"?s.stage==="FINALS":s.stage.endsWith(`_${roundCodeBefore}`))||[];
-      if(rs.length&&rs.every(s=>s.complete))buildNextPlayoffRound(G);
+      if(rs.length&&rs.every(s=>s.complete)){queuePostseasonRoundRecapIfComplete(roundCodeBefore);buildNextPlayoffRound(G);}
     }
   }
 
@@ -27820,6 +27853,10 @@ function playInFixturesHtml(){
   return `<div class="playInFixtures"><div class="playInFixturesHead"><b>Play-In Fixtures</b><small>${pending?`${pending} remaining`:"Complete"}</small></div>${rows}</div>`;
 }
 function postseasonObserverHome(){
+  const pendingRecap=G?.postseasonRoundRecapPending;
+  if(pendingRecap?.roundCode&&!postseasonRoundRecapSeen(pendingRecap.roundCode)){
+    return `<div class="postObserver"><div class="postObserverTop"><b>Postseason · Round Complete</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="postObserverBody"><h3>${postseasonRoundLabel(pendingRecap.roundCode)} recap ready</h3><p>The completed round must be reviewed before the next postseason round begins.</p></div><div class="transitionActions one"><button id="continuePostseason" class="transitionPrimary">Review ${postseasonRoundLabel(pendingRecap.roundCode)}</button></div></div>`;
+  }
   if(G?.phase==="PLAY_IN"){
     const st=userPostseasonState();
     const pending=[...(G.playInLive?.initial||[]),...(G.playInLive?.finals||[])].filter(e=>e&&!e.complete).length;
@@ -27844,6 +27881,11 @@ function postseasonRoundFromGame(g){
 }
 function postseasonRoundLabel(round){return({R1:"Round 1",SF:"Conference Semifinals",CF:"Conference Finals",FINALS:"Finals"})[round]||String(round||"Postseason").replaceAll("_"," ")}
 function postseasonUserHome(){
+  const pendingRecap=G?.postseasonRoundRecapPending;
+  if(pendingRecap?.roundCode&&!postseasonRoundRecapSeen(pendingRecap.roundCode)){
+    const label=postseasonRoundLabel(pendingRecap.roundCode);
+    return `<div class="postseasonHome seriesWonHome"><div class="postseasonHomeTop"><b>Courtside Network</b><span>Round Complete</span></div><div class="postseasonHomeBody"><h3>${label} recap ready</h3><p>Review every completed series before the next postseason round begins.</p><div class="postHomeActions"><button id="continuePostseason" class="primaryProgress">Review ${label}</button><button id="viewPostseason" class="btn secondary">View Postseason</button></div></div></div>`;
+  }
   const st=userPostseasonState(),x=me();
   if(G.phase==="PLAY_IN"){
     if(st.qualified){
@@ -29179,8 +29221,8 @@ function teamPerformance(){
 }
 
 function team(){
-  let tabs=[["squad","Squad"],["schedule","Fixtures"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"],["trades","Trades"]];
-  let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="schedule"?clubSchedule():ui.teamTab==="draft"?draft():ui.teamTab==="trades"?trades():freeagency();
+  let tabs=[["squad","Squad"],["performance","Performance"],["draft","Draft"],["contracts","Contracts"],["freeagency","Free Agents"]];
+  let body=ui.teamTab==="squad"?squad():ui.teamTab==="performance"?teamPerformance():ui.teamTab==="contracts"?contracts():ui.teamTab==="draft"?draft():freeagency();
   return `<div class="squadPageTitle"><h2>Squad</h2><p>Basketball Operations</p></div><div class="tabs teamTabs compactTabRow squadLevel1Tabs iconLevel1Tabs">${tabs.map(x=>compactMenuTab(x[0],x[1],ui.teamTab,"data-teamtab")).join("")}</div>`+body;
 }
 
@@ -29399,13 +29441,17 @@ function clubHub(archiveTab){
   const scoring=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"pts")-+perGame(a.seasonStats,"pts"))[0]||null;
   const playmaker=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"ast")-+perGame(a.seasonStats,"ast"))[0]||null;
   const rebounder=roster.filter(p=>p.seasonStats?.gp).sort((a,b)=>+perGame(b.seasonStats,"reb")-+perGame(a.seasonStats,"reb"))[0]||null;
-  const tabs=[["current","Overview"],["facilities","Facilities"]];
+  const tabs=[["current","Overview"],["fixtures","Fixtures"],["trades","Trades"],["facilities","Facilities"]];
   const tab=archiveTab||ui.clubTab;
   let body="";
   if(tab==="records"){
     body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubrecord="overview" class="${ui.clubRecordMode==="overview"?"active":""}">Club Records</button><button data-clubrecord="current" class="${ui.clubRecordMode==="current"?"active":""}">Club Leaders</button><button data-clubrecord="alltime" class="${ui.clubRecordMode==="alltime"?"active":""}">All-Time</button></div>${ui.clubRecordMode==="alltime"?clubHistoricalRecordsHtml(G,club):ui.clubRecordMode==="current"?clubSeasonLeaderTablesHtml(G,club):clubCurrentRecordsHtml(G,club)}`;
   }else if(tab==="history"){
     body=`<div class="clubRecordTabs globalLevel2Tabs"><button data-clubhistory="franchise" class="${ui.clubHistoryMode==="franchise"?"active":""}">Franchise</button><button data-clubhistory="h2h" class="${ui.clubHistoryMode==="h2h"?"active":""}">Head-to-Head</button></div>${ui.clubHistoryMode==="h2h"?h2hRecordsHtml(G,club):`<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">Franchise Archive</div><h3>Season History</h3><p>Every completed season remains part of the club's permanent career history.</p></div><div class="profileTimeline clubHistoryClean">${archive.length?archive.map(h=>{const extras=[h.cup?"The Cup Winner":"",h.best?"League-Best Record":""].filter(Boolean).join(" · ");return `<div class="teamSeasonRow"><div class="season">${basketballSeasonLabel(h.season)}</div><div><b>${h.record}</b><small>${h.conf}</small></div><div><b>${h.finish||"Season Complete"}</b>${extras?`<small>${extras}</small>`:""}</div></div>`}).join(""):`<div class="empty">Club history will populate after completed seasons.</div>`}</div>`}`;
+  }else if(tab==="fixtures"){
+    body=clubSchedule();
+  }else if(tab==="trades"){
+    body=trades();
   }else if(tab==="facilities"){
     const fo=ensureFrontOfficeState(G),scout=scoutingLevelInfo(G);
     body=`<div class="facilitiesHero"><div class="eyebrow">CLUB INFRASTRUCTURE</div><h3>Build the organisation behind the team</h3><p>Facilities brings together the departments and intelligence systems that improve long-term club capability.</p></div>
@@ -30101,7 +30147,7 @@ function bindDraftWindow(){
   if($("#quickDraft"))$("#quickDraft").onclick=quickDraftToNextUserPick;
   if($("#openDraftTradeCenter"))$("#openDraftTradeCenter").onclick=()=>{
     if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){const ctl=ensureDraftControl(G);ctl.started=ctl.started||false;ctl.paused=true;}
-    stopDraftAutoTimer();ui.page="team";ui.teamTab="trades";show("game");save();render();
+    stopDraftAutoTimer();ui.page="club";ui.clubTab="trades";show("game");save();render();
   };
   if($("#continueAfterDraft"))$("#continueAfterDraft").onclick=()=>{stopDraftAutoTimer();ui.page="home";show("game");render();save()};
   if(G.phase==="DRAFT_NIGHT"&&G.draftState&&!G.draftState.complete){
@@ -32630,6 +32676,11 @@ window.addEventListener("orientationchange",syncBarHeights);
 // Each view is the same renderer the sections used before, so content is unchanged.
 const LEGACY_HUB_TABS=["records","history","honours"],LEGACY_HUB_SCOPES=["club","league","international"];
 // Old destinations (saved UI state, shortcuts, profile back-links) are sent to their new home.
+function redirectOperationalTabsToClub(){
+  if(ui.page!=="team")return;
+  if(ui.teamTab==="schedule"){ui.page="club";ui.clubTab="fixtures";ui.teamTab="squad";}
+  else if(ui.teamTab==="trades"){ui.page="club";ui.clubTab="trades";ui.teamTab="squad";}
+}
 function redirectArchiveTabsToLegacyHub(){
   const go=(tab,scope)=>{ui.page="legacyHub";ui.archiveTab=tab;ui.archiveScope=scope;};
   if(ui.page==="club"&&LEGACY_HUB_TABS.includes(ui.clubTab)){go(ui.clubTab,"club");ui.clubTab="current";}
@@ -32679,7 +32730,7 @@ function render(){
   if(G.phase==="PRESEASON_READINESS"){
     for(const club of G.clubs||[])refreshClubRotation(club);
   }
-redirectArchiveTabsToLegacyHub();prepareRenderState();status();action();const pageHtml=(ui.page==="legacyHub"?legacyHub():ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmProfile():ui.page==="gmProfile"?gmProfile():ui.page==="settings"?gameSettings():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+newsFlashHtml()+postseasonCelebrationHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
+redirectOperationalTabsToClub();redirectArchiveTabsToLegacyHub();prepareRenderState();status();action();const pageHtml=(ui.page==="legacyHub"?legacyHub():ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmProfile():ui.page==="gmProfile"?gmProfile():ui.page==="settings"?gameSettings():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+newsFlashHtml()+postseasonCelebrationHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
 function bind(){
   if($("#champConfetti"))startChampionshipConfetti();
   if($("#closePostCelebration"))$("#closePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
@@ -32821,7 +32872,7 @@ $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gm
   $$(`[data-playerprofiletab]`).forEach(b=>b.onclick=()=>{ui.playerProfileTab=b.dataset.playerprofiletab;render()});
   $$(`[data-careersplit]`).forEach(b=>b.onclick=()=>{ui.playerCareerSplit=b.dataset.careersplit||"current";render()});
   if($("#profileNegotiateFA"))$("#profileNegotiateFA").onclick=()=>{ui.faTargetId=ui.playerProfileId;ui.faFeedback=null;ui.page="team";ui.teamTab="freeagency";render()};
-  if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="team";ui.teamTab="schedule";render()};
+  if($("#clubScheduleBtn"))$("#clubScheduleBtn").onclick=()=>{ui.page="club";ui.clubTab="fixtures";render()};
 if($("#editTeamIdentityBtn"))$("#editTeamIdentityBtn").onclick=()=>{const e=$("#teamIdentityEditor");if(e){e.style.display="block";e.scrollIntoView({behavior:"smooth",block:"start"})}};
 if($("#cancelTeamIdentity"))$("#cancelTeamIdentity").onclick=()=>{const e=$("#teamIdentityEditor");if(e)e.style.display="none"};
 if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
