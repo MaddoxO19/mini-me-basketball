@@ -3406,7 +3406,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .legacyHistoryList,.legacyHonourList{display:grid;gap:7px}
 .legacyHistoryRow,.legacyHonourRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .legacyHistoryRow>div:last-child{text-align:right}.legacyHistoryRow b,.legacyHistoryRow strong,.legacyHonourRow b,.legacyHonourRow strong{display:block;font-size:12px}.legacyHistoryRow small,.legacyHonourRow small{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.35}.legacyHonourRow{grid-template-columns:minmax(0,1fr) auto}.legacyHonourRow>strong{font-size:18px;color:var(--accent2);text-align:right}
-/* Build 298 — Club Honours groups individual honours by award type, then lists season and winner. */
+/* Build 299 — Club Honours groups individual honours by award type, then lists season and winner. */
 .legacyAwardGroups{display:grid;gap:12px;margin-top:10px}.legacyAwardGroup{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}.legacyAwardGroupHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}.legacyAwardGroupHead>b{font-size:16px;color:var(--text)}.legacyAwardGroupHead>strong{min-width:32px;text-align:center;font-size:15px;color:var(--accent2)}.legacyAwardWinner{display:grid;grid-template-columns:minmax(72px,.55fr) minmax(0,1.45fr);align-items:center;gap:12px;padding:11px 16px;border-top:1px solid var(--line)}.legacyAwardGroupHead+.legacyAwardWinner{border-top:0}.legacyAwardWinner>span{color:var(--muted);font-size:13px;font-weight:700}.legacyAwardWinner>b{font-size:14px;min-width:0}.legacyAwardWinner .playerLink{font-size:inherit}
 
 
@@ -3423,7 +3423,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 298</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 299</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22275,7 +22275,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 298",ENGINE_VERSION="E2.26-PROD298";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 299",ENGINE_VERSION="E2.26-PROD299";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26978,10 +26978,16 @@ function draftScoutRecommendations(prospects,nextPick){
   const pool=ranked.filter(p=>p.boardRank<=Math.max(18,(+nextPick||8)+10));
   const scored=pool.map(p=>{
     const primary=needScore[p.position]||0,secondary=p.secondaryPosition?needScore[p.secondaryPosition]||0:0;
-    const fit=primary+secondary*.45,talent=(+p.ovr||0)*1.15+(+p.potential||0)*.35;
-    const viability=Math.max(-12,8-Math.abs(p.boardRank-(+nextPick||p.boardRank))*.8);
-    return{...p,fit,score:talent+fit*5+viability};
-  }).sort((a,b)=>b.score-a.score).slice(0,3);
+    const fit=primary+secondary*.45;
+    // Build 299: the Scout Pick is a best-value recommendation first. Roster need
+    // informs close calls but can no longer lift a materially weaker prospect over
+    // superior estimated talent/upside. These are public/scouted estimates only.
+    const ovr=+p.ovr||0,pot=+p.potential||ovr,upside=Math.max(0,pot-ovr),age=+p.age||22;
+    const talent=ovr*1.65+pot*.72+upside*.42+Math.max(0,23-age)*.35;
+    const viability=Math.max(-5,4-Math.abs(p.boardRank-(+nextPick||p.boardRank))*.32);
+    const fitAdj=Math.min(8,fit*1.35);
+    return{...p,fit,score:talent+fitAdj+viability};
+  }).sort((a,b)=>b.score-a.score||a.boardRank-b.boardRank).slice(0,3);
   return{needs:needs.slice(0,3),recommendations:scored};
 }
 function draftRecommendationTag(p,needs){
@@ -27509,13 +27515,25 @@ function ensureSeasonSummary(){
   return summary;
 }
 
+function seasonSelectionTeamsHtml(season){
+  const defs=[["All-League First Team","AllNBAFirst"],["All-League Second Team","AllNBASecond"],["All-League Third Team","AllNBAThird"],["All-Defensive First Team","AllDefensiveFirst"],["All-Defensive Second Team","AllDefensiveSecond"]];
+  const blocks=[];
+  for(const [label,key] of defs){
+    const ids=G.awards?.[`S${season}_${key}`];if(!Array.isArray(ids)||!ids.length)continue;
+    const rows=ids.map(id=>{const p=playerByAnyId(id),club=p?clubForPlayer(G,p):null;return `<div class="seasonAwardRow"><small>${positionLabel(p)||"Player"}${club?.name?` · ${club.name}`:""}</small><b>${p?.name||summaryPlayerName(id)}</b></div>`}).join("");
+    blocks.push(`<div class="seasonSummarySection">${label}</div><div class="seasonAwardsList">${rows}</div>`);
+  }
+  return blocks.join("");
+}
 function seasonSummaryHtml(){
   const s=ensureSeasonSummary(),u=s.user;
   const competitionHtml=s.competitions.map(x=>`<div class="seasonHonour"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.value}</b>${x.detail?`<span>${x.detail}</span>`:""}</div>`).join("");
   const awardHtml=s.awards.map(x=>`<div class="seasonAwardRow"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.name}</b></div>`).join("");
+  const selectionTeamsHtml=seasonSelectionTeamsHtml(s.season);
   return `<div class="seasonSummary"><div class="seasonSummaryHero"><div class="seasonSummaryTop"><b>Season ${s.season} Complete</b><small>Legacy Basketball</small></div><div class="seasonSummaryBody"><h2>${s.championName} are League Champions</h2><p>The season is complete. Review the major competition winners, player honours and your club's final outcome before beginning the next season.</p><div class="seasonSummaryMetrics"><div class="seasonSummaryMetric"><b>${u.record}</b><small>Your Record</small></div><div class="seasonSummaryMetric"><b>${u.postseasonFinish}</b><small>Your Finish</small></div><div class="seasonSummaryMetric"><b>${u.conferenceFinish}</b><small>Conference</small></div></div></div></div>
     <div class="seasonSummarySection">Champions & Events</div><div class="seasonHonourGrid">${competitionHtml}</div>
     <div class="seasonSummarySection">Season Awards</div><div class="seasonAwardsList">${awardHtml||`<div class="seasonHistoryRow"><small>No season awards recorded.</small></div>`}</div>
+    ${selectionTeamsHtml}
     <div class="seasonSummarySection">Your Season</div><div class="seasonAwardsList"><div class="seasonAwardRow"><small>Club</small><b>${u.clubName}</b></div><div class="seasonAwardRow"><small>Regular Season</small><b>${u.record} · ${u.conferenceFinish} · ${u.divisionFinish}</b></div><div class="seasonAwardRow"><small>Postseason</small><b>${u.postseasonFinish}</b></div><div class="seasonAwardRow"><small>The Cup</small><b>${u.cupFinish}</b></div></div>
     <div class="seasonStartAction"><button id="startNewSeason" class="primaryProgress">Start New Season</button></div></div>`;
 }
@@ -32909,11 +32927,27 @@ function legacyAwardClubIdForSeason(p,a,season){
   }
   return null;
 }
+function isClubIndividualHonourName(name){
+  const n=displayAwardName(name||"");
+  // Club Individual Awards are league/player accolades earned while at the club.
+  // Team championships and every national-team honour live in their own Legacy scope.
+  if(/League Champion|League Championship|The Cup Champion|Cup Champion/i.test(n))return false;
+  if(/World Cup|Olympic|Gold Medal|Silver Medal|Bronze Medal|All-World|All World|National Team|International/i.test(n))return false;
+  return /Most Valuable Player|MVP|Defensive Player of the Year|Rookie of the Year|Sixth Man|Most Improved|All-Star|All-NBA|All League|All-League|All-Defensive|Scoring Champion|Rebounding Leader|Assist Leader|Blocks Leader|Steals Leader|Finals MVP|Conference Finals MVP|Cup MVP|Dunk Contest|Three-Point|3-Point/i.test(n);
+}
+function clubSelectionAwardRows(club,add){
+  const defs={AllNBAFirst:"All-NBA First Team",AllNBASecond:"All-NBA Second Team",AllNBAThird:"All-NBA Third Team",AllDefensiveFirst:"All-Defensive First Team",AllDefensiveSecond:"All-Defensive Second Team"};
+  for(const [key,value] of Object.entries(G.awards||{})){
+    const m=/^S(\d+)_(AllNBAFirst|AllNBASecond|AllNBAThird|AllDefensiveFirst|AllDefensiveSecond)$/.exec(key);if(!m||!Array.isArray(value))continue;
+    const season=+m[1],label=defs[m[2]];
+    for(const id of value){const p=playerByAnyId(id);if(p)add(p,label,season,legacyAwardClubIdForSeason(p,null,season));}
+  }
+}
 function legacyClubHonoursReference(club){
   const h=clubHonourTotals(club),archive=clubSeasonArchive(club),years=combinedFranchiseTitleYears(club,archive);
   const cells=[["League Championships",h.nba,years.length?years.join(" · "):"No titles recorded"],["Cup Titles",h.cup,"Accumulated club honours"],["League-Best Seasons",h.best,"Best regular-season record"]];
   const awardRows=[];const seen=new Set(),players=[...allPlayers(G),...retiredPlayerPool(G)];
-  const add=(p,name,season,clubId)=>{if(!p||!name||String(clubId)!==String(club.id))return;const key=`${p.id}|${season??""}|${name}`;if(seen.has(key))return;seen.add(key);awardRows.push({p,name,season});};
+  const add=(p,name,season,clubId)=>{name=displayAwardName(name);if(!p||!name||!isClubIndividualHonourName(name)||String(clubId)!==String(club.id))return;const key=`${p.id}|${season??""}|${name}`;if(seen.has(key))return;seen.add(key);awardRows.push({p,name,season});};
   for(const p of players)for(const a of (p?.awardHistory||[])){
     const season=a?.season??a?.year??null,name=leagueAwardName(a);
     add(p,name,season,legacyAwardClubIdForSeason(p,a,season));
@@ -32926,6 +32960,9 @@ function legacyClubHonoursReference(club){
     const labels={MVP:"Most Valuable Player",DPOY:"Defensive Player of the Year",ROY:"Rookie of the Year",SixthMan:"Sixth Man of the Year",MIP:"Most Improved Player",ScoringChampion:"Scoring Champion",ReboundingLeader:"Rebounding Leader",AssistLeader:"Assist Leader"};
     add(p,labels[m[2]]||m[2],season,legacyAwardClubIdForSeason(p,null,season));
   }
+  // Backfill tiered selection teams from G.awards so older saves show First/Second/Third
+  // Team selections even when awardHistory was incomplete.
+  clubSelectionAwardRows(club,add);
   const awardCategory=name=>{const n=String(name||"");if(/Most Valuable Player|Defensive Player|Rookie of the Year|Sixth Man|Most Improved|Finals MVP/i.test(n))return 0;if(/All-Star|All-Defensive|All-NBA|All League/i.test(n))return 1;if(/Scoring|Rebounding|Assist|Leader|Champion/i.test(n)&&!/Dunk|Three|3-Point/i.test(n))return 2;return 3;};
   const groups=new Map();
   for(const row of awardRows){const key=canonicalLeagueHonourBucket({name:row.name})||String(row.name).toLowerCase();if(!groups.has(key))groups.set(key,{name:row.name,rows:[]});groups.get(key).rows.push(row);}
