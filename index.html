@@ -3406,7 +3406,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .legacyHistoryList,.legacyHonourList{display:grid;gap:7px}
 .legacyHistoryRow,.legacyHonourRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .legacyHistoryRow>div:last-child{text-align:right}.legacyHistoryRow b,.legacyHistoryRow strong,.legacyHonourRow b,.legacyHonourRow strong{display:block;font-size:12px}.legacyHistoryRow small,.legacyHonourRow small{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.35}.legacyHonourRow{grid-template-columns:minmax(0,1fr) auto}.legacyHonourRow>strong{font-size:18px;color:var(--accent2);text-align:right}
-/* Build 299 — Club Honours groups individual honours by award type, then lists season and winner. */
+/* Build 300 — Club Honours groups individual honours by award type, then lists season and winner. */
 .legacyAwardGroups{display:grid;gap:12px;margin-top:10px}.legacyAwardGroup{border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden}.legacyAwardGroupHead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}.legacyAwardGroupHead>b{font-size:16px;color:var(--text)}.legacyAwardGroupHead>strong{min-width:32px;text-align:center;font-size:15px;color:var(--accent2)}.legacyAwardWinner{display:grid;grid-template-columns:minmax(72px,.55fr) minmax(0,1.45fr);align-items:center;gap:12px;padding:11px 16px;border-top:1px solid var(--line)}.legacyAwardGroupHead+.legacyAwardWinner{border-top:0}.legacyAwardWinner>span{color:var(--muted);font-size:13px;font-weight:700}.legacyAwardWinner>b{font-size:14px;min-width:0}.legacyAwardWinner .playerLink{font-size:inherit}
 
 
@@ -3423,7 +3423,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 299</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 300</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -13664,6 +13664,12 @@ function awardVotingPopupHtml(n){
     <div class="awardVoteFoot"><div class="awardVoteProgress">Award ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="awardResultsNext">${last?"Continue":"Next Award"}</button><button id="openAwardResultsNews">Open News</button></div></div>
   </div></div>`;
 }
+function draftLotteryPopupHtml(n){
+  const rows=n?.results||[],idx=Math.max(0,Math.min(rows.length-1,+n.index||rows.length-1)),revealed=rows.slice(idx);
+  const userId=G.userClubGM?.clubId,userRow=rows.find(r=>r.clubId===userId);
+  const list=revealed.map(r=>`<div style="display:grid;grid-template-columns:58px 1fr auto;gap:10px;padding:12px 4px;border-bottom:1px solid #2b3545"><strong style="color:#f3b04f">#${r.pick}</strong><b>${r.clubName}</b><small>${r.oddsLabel||"Lottery"}</small></div>`).join("");
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>DRAFT LOTTERY</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${idx>0?`Pick #${idx+1} is revealed`:`${rows[0]?.clubName||"A club"} wins the No. 1 pick`}</h3><p>${userRow?`Your club entered the lottery and has landed pick #${userRow.pick}.`:`The lottery determines the order of the lottery selections before Draft Night.`}</p></div><div style="padding:0 16px 12px;max-height:48vh;overflow:auto">${list}</div><div class="awardVoteFoot"><div class="awardVoteProgress">${rows.length-idx} of ${rows.length} picks revealed</div><div class="newsFlashActions"><button id="revealLotteryPick">${idx>0?"Reveal Next Pick":"Continue to Draft"}</button></div></div></div></div>`;
+}
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
   if(n.type==="expansion_checkpoint"){
@@ -13698,6 +13704,8 @@ function newsFlashHtml(){
       <div class="newsFlashActions"><button id="approveExpansionVote">Vote Yes · Approve</button><button id="rejectExpansionVote">Vote No · Defer</button></div>
     </div></div>`;
   }
+  if(n.type==="gm_award_ballot")return gmAwardBallotPopupHtml(n);
+  if(n.type==="draft_lottery")return draftLotteryPopupHtml(n);
   if(n.type==="award_results")return awardVotingPopupHtml(n);
   if(n.type==="gm_recruitment"&&n.offer){
     const o=n.offer;
@@ -17532,6 +17540,9 @@ function runDraftLottery(G) {
   }
 
   const round1Order = [...draw.map((d) => d.clubId), ...G.pendingNonLotteryOrder];
+  const lotteryResults=draw.map((d,i)=>({pick:i+1,clubId:d.clubId,clubName:G.clubs.find(c=>c.id===d.clubId)?.name||d.clubId,balls:d.balls,oddsLabel:`${d.balls} lottery chance${d.balls===1?"":"s"}`}));
+  G.draftLotteryHistory=G.draftLotteryHistory||[];G.draftLotteryHistory=G.draftLotteryHistory.filter(x=>+x.season!==+G.season);G.draftLotteryHistory.push({season:G.season,results:lotteryResults});
+  G.newsFlashPending={type:"draft_lottery",season:G.season,results:lotteryResults,index:Math.max(0,lotteryResults.length-1),category:"DRAFT LOTTERY"};
   logEvent(G, `3-2-1 Lottery drawn. Draft-relegated teams held to a floor of pick 12.`);
   return round1Order;
 }
@@ -20550,7 +20561,7 @@ function simulateAllStarGame(G,aKey,bKey,label){
 function threePointContestRoundScore(p,G){
   const prof=threePointContestProfile(p,G);
   const merit=Math.max(0,Math.min(100,+prof?.score||70));
-  const base=Math.max(.34,Math.min(.79,.49+(merit-70)*.0065));
+  const base=Math.max(.50,Math.min(.88,.64+(merit-70)*.0068));
   let score=0,makes=0,shots=0;
   const shoot=(value,modifier=0)=>{
     shots++;
@@ -21596,15 +21607,37 @@ function publishMajorAwardNews(G,votes){
 function queueMajorAwardResults(G){
   const seasonKey=`S${G.season}`;
   G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};
+  G.gmAwardBallots=G.gmAwardBallots||{};
   if(G.awardVotingPresentationSeen[seasonKey])return;
   if(G.newsFlashPending){
     const current=G.newsFlashPending;
-    if(current.type!=="award_results"){
+    if(!["award_results","gm_award_ballot"].includes(current.type)){
       const q=ensureNewsFlashQueue(G),key=String(current.tag||current.headline||"");
       if(!key||!q.some(x=>String(x.tag||x.headline||"")===key))q.unshift(current);
     }
   }
-  G.newsFlashPending={type:"award_results",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
+  if(!G.gmAwardBallots[seasonKey]?.submitted){
+    G.newsFlashPending={type:"gm_award_ballot",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
+  }else G.newsFlashPending={type:"award_results",season:G.season,awardKeys:["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};
+}
+function applyGMAwardBallot(G,season,key,rankedIds){
+  const vote=G.awardVoting?.[`S${season}_${key}`];if(!vote)return false;
+  const ids=[...new Set((rankedIds||[]).filter(Boolean))].slice(0,5);
+  const values=[10,7,5,3,1],fields=["first","second","third","fourth","fifth"];
+  ids.forEach((id,i)=>{let row=(vote.results||[]).find(r=>r.playerId===id);if(!row){row={playerId:id,first:0,second:0,third:0,fourth:0,fifth:0,points:0,baseScore:0};vote.results.push(row)}row[fields[i]]=(+row[fields[i]]||0)+1;row.points=(+row.points||0)+values[i];});
+  vote.voters=100;vote.results.sort((a,b)=>b.points-a.points||b.first-a.first||b.second-a.second||b.third-a.third||String(a.playerId).localeCompare(String(b.playerId)));vote.winnerId=vote.results[0]?.playerId||null;
+  const awardName=key;
+  for(const p of G.clubs.flatMap(c=>c.roster||[])){if(Array.isArray(p.awardHistory))p.awardHistory=p.awardHistory.filter(a=>!(+a.season===+season&&a.award===awardName));}
+  const winner=awardPlayerById(G,vote.winnerId);G.awards[`S${season}_${key}`]=winner?.id||null;if(winner)pushPlayerAwardRecord(winner,{season,award:awardName,clubId:clubForPlayer(G,winner)?.id||null,clubName:clubForPlayer(G,winner)?.name||null});
+  if(G.seasonAwards?.season===season){const prop={MVP:"mvp",ROY:"roy",DPOY:"dpoy",SixthMan:"sixthMan",MIP:"mip"}[key];if(prop)G.seasonAwards[prop]=winner?.id||null;}
+  return true;
+}
+function gmAwardBallotPopupHtml(n){
+  const keys=n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],idx=clampAward(+n.index||0,0,keys.length-1),key=keys[idx],vote=G.awardVoting?.[`S${n.season}_${key}`];if(!vote)return"";
+  const candidates=(vote.results||[]).slice(0,8).map(r=>awardPlayerById(G,r.playerId)).filter(Boolean);
+  const options=candidates.map(p=>`<option value="${p.id}">${p.name} · ${clubForPlayer(G,p)?.name||""}</option>`).join("");
+  const selects=[1,2,3,4,5].map(i=>`<label style="display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;margin:10px 0"><b>${i}${i===1?"st":i===2?"nd":i===3?"rd":"th"}</b><select id="gmAwardRank${i}" style="width:100%;padding:12px;border-radius:10px;background:#111823;color:#fff;border:1px solid #334155"><option value="">Select player</option>${options}</select></label>`).join("");
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM AWARDS BALLOT</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>Your ${awardVoteLabel(key)} Ballot</h3><p>You are one member of the 100-voter awards panel. Rank five candidates. Your ballot counts once alongside 99 media ballots.</p></div><div style="padding:8px 16px 16px">${selects}</div><div class="awardVoteFoot"><div class="awardVoteProgress">Ballot ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="submitGMAwardBallot">${idx===keys.length-1?"Submit Final Ballot":"Submit & Next"}</button><button id="skipGMAwardBallots">Abstain</button></div></div></div></div>`;
 }
 function ensurePlayerCoreHistory(p){
   if(!p)return p;
@@ -21629,11 +21662,11 @@ function settleSeasonAwards(G){
   const sixthPool=players.filter(p=>p.rotationRole==="Sixth Man"&&p.seasonStats.gp>=40);
   const mipPool=mipAwardCandidates(players,G);
   const votes={
-    MVP:generateAwardVoting(G,"MVP",eligible,p=>awardCandidateScore(G,p,50),{noise:3.5}),
-    DPOY:generateAwardVoting(G,"DPOY",eligible,p=>defensiveAwardScore(G,p,50),{noise:2.7}),
-    ROY:generateAwardVoting(G,"ROY",rookies,p=>awardCandidateScore(G,p,30),{noise:3.3}),
-    SixthMan:generateAwardVoting(G,"SixthMan",sixthPool,p=>awardCandidateScore(G,p,40),{noise:3.2}),
-    MIP:generateAwardVoting(G,"MIP",mipPool.map(x=>x.p),p=>mipPool.find(x=>x.p===p)?.score??-Infinity,{noise:1.7})
+    MVP:generateAwardVoting(G,"MVP",eligible,p=>awardCandidateScore(G,p,50),{voters:99,noise:3.5}),
+    DPOY:generateAwardVoting(G,"DPOY",eligible,p=>defensiveAwardScore(G,p,50),{voters:99,noise:2.7}),
+    ROY:generateAwardVoting(G,"ROY",rookies,p=>awardCandidateScore(G,p,30),{voters:99,noise:3.3}),
+    SixthMan:generateAwardVoting(G,"SixthMan",sixthPool,p=>awardCandidateScore(G,p,40),{voters:99,noise:3.2}),
+    MIP:generateAwardVoting(G,"MIP",mipPool.map(x=>x.p),p=>mipPool.find(x=>x.p===p)?.score??-Infinity,{voters:99,noise:1.7})
   };
   for(const [key,v] of Object.entries(votes))G.awardVoting[`S${G.season}_${key}`]=v;
   const mvp=awardPlayerById(G,votes.MVP.winnerId)||null,dpoy=awardPlayerById(G,votes.DPOY.winnerId)||null,roy=awardPlayerById(G,votes.ROY.winnerId)||null;
@@ -22275,7 +22308,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 299",ENGINE_VERSION="E2.26-PROD299";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 301",ENGINE_VERSION="E2.26-PROD300";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26979,7 +27012,7 @@ function draftScoutRecommendations(prospects,nextPick){
   const scored=pool.map(p=>{
     const primary=needScore[p.position]||0,secondary=p.secondaryPosition?needScore[p.secondaryPosition]||0:0;
     const fit=primary+secondary*.45;
-    // Build 299: the Scout Pick is a best-value recommendation first. Roster need
+    // Build 300: the Scout Pick is a best-value recommendation first. Roster need
     // informs close calls but can no longer lift a materially weaker prospect over
     // superior estimated talent/upside. These are public/scouted estimates only.
     const ovr=+p.ovr||0,pot=+p.potential||ovr,upside=Math.max(0,pot-ovr),age=+p.age||22;
@@ -33059,6 +33092,14 @@ function render(){
 redirectOperationalTabsToClub();redirectArchiveTabsToLegacyHub();prepareRenderState();status();action();const pageHtml=(ui.page==="legacyHub"?legacyHub():ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmProfile():ui.page==="gmProfile"?gmProfile():ui.page==="settings"?gameSettings():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+newsFlashHtml()+postseasonCelebrationHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
 function bind(){
   if($("#champConfetti"))startChampionshipConfetti();
+  if($("#submitGMAwardBallot"))$("#submitGMAwardBallot").onclick=async()=>{
+    const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;const keys=n.awardKeys||[],key=keys[+n.index||0];
+    const ids=[1,2,3,4,5].map(i=>$("#gmAwardRank"+i)?.value).filter(Boolean);if(new Set(ids).size<5){toast("Rank five different players before submitting");return;}
+    G.gmAwardBallots=G.gmAwardBallots||{};const sk=`S${n.season}`,rec=G.gmAwardBallots[sk]||(G.gmAwardBallots[sk]={season:n.season,ballots:{},submitted:false});rec.ballots[key]=ids;applyGMAwardBallot(G,n.season,key,ids);
+    if((+n.index||0)<keys.length-1){n.index=(+n.index||0)+1;await save();render();return;}rec.submitted=true;G.newsFlashPending={type:"award_results",season:n.season,awardKeys:keys,index:0,category:"AWARDS"};publishMajorAwardNews(G,Object.fromEntries(keys.map(k=>[k,G.awardVoting?.[`S${n.season}_${k}`]])));await save();render();
+  };
+  if($("#skipGMAwardBallots"))$("#skipGMAwardBallots").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;G.gmAwardBallots=G.gmAwardBallots||{};G.gmAwardBallots[`S${n.season}`]={season:n.season,ballots:{},submitted:true,abstained:true};G.newsFlashPending={type:"award_results",season:n.season,awardKeys:n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};await save();render();};
+  if($("#revealLotteryPick"))$("#revealLotteryPick").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="draft_lottery")return;if((+n.index||0)>0){n.index=(+n.index||0)-1;render();return;}G.newsFlashPending=null;promoteQueuedNewsFlash(G);await save();render();};
   if($("#closePostCelebration"))$("#closePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#continuePostCelebration"))$("#continuePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#awardResultsNext"))$("#awardResultsNext").onclick=async()=>{
