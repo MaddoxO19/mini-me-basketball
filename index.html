@@ -3381,7 +3381,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 286</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 287</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -13969,7 +13969,18 @@ function needAwareScore(club,player,options={}){
   const contract=options.ignoreContract?0:playerContractEfficiency(player);
   const versatility=secondary&&secondary!==primary?1.1:0;
 
-  return quality+need+future+ageFit+roleBonus+contract+versatility-injuryPenalty;
+  // Build 287 — protect legitimate draft investment during AI roster decisions.
+  // First-round rookies should not be treated as ordinary low-OVR depth players
+  // immediately after Draft Night. Protection deliberately fades with service.
+  const exp=Math.max(0,playerExperienceYears(player)||0);
+  const drafted=player.entryPath==="Drafted"||(+player.draftRound||0)>0;
+  let draftInvestment=0;
+  if(drafted&&exp<=3){
+    if((+player.draftRound||0)===1) draftInvestment=[12,8,5,2][exp]||0;
+    else if((+player.draftRound||0)===2) draftInvestment=[5,3,1,0][exp]||0;
+    if(age<=22&&pot>=80)draftInvestment+=2;
+  }
+  return quality+need+future+ageFit+roleBonus+contract+versatility+draftInvestment-injuryPenalty;
 }
 function aiRosterFitSummary(club){
   const direction=aiTeamDirection(club);
@@ -17340,7 +17351,8 @@ function runOffseason(G) {
       if(completedSeason)progressPlayerTalent(p,talentEraModifier(G),99,{clubId:club.id,trainingLevel,season:G.season-1});
       p.contractStatus="Under Contract"; survivors.push(p);
     }
-    survivors.sort((a,b)=>b.ovr-a.ovr);
+    const offseasonDirection=aiTeamDirection({...club,roster:survivors});
+    survivors.sort((a,b)=>needAwareScore({...club,roster:survivors},b,{excludePlayerId:b.id,direction:offseasonDirection})-needAwareScore({...club,roster:survivors},a,{excludePlayerId:a.id,direction:offseasonDirection}));
     while (survivors.length>(club.offseasonRosterLimit||20)) { const waived=survivors.pop(); waived.contractYearsLeft=0; waived.contractStatus="Free Agent"; waived.contractType="Unsigned"; waived.unsignedOffseasons=0; waived.freeAgentSinceSeason=G.season; G.freeAgents.push(waived); summary.waived++; G.transactions.push({type:"waive",season:G.season,clubId:club.id,playerId:waived.id}); }
     club.roster=survivors; recalcClubCap(club); club.standings={w:0,l:0,pf:0,pa:0};
     ensurePersistentGLeague(club);
@@ -22141,7 +22153,8 @@ if (typeof module !== "undefined") {
 // Build 286 — Club IA cleanup + postseason round-recap integrity.
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
-const BUILD_ID="v0.9.0 Stable · Build 286",ENGINE_VERSION="E2.26-PROD286";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
+const BUILD_ID="v0.9.0 Stable · Build 287",ENGINE_VERSION="E2.26-PROD287";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26868,7 +26881,7 @@ function draftScoutBriefHtml(prospects,nextPick){
     const tag=draftRecommendationTag(p,needs),viable=draftProspectViability(p,nextPick,p.boardRank);
     return `<div class="draftRec"><div class="draftRecRank">${i+1}</div><div class="draftRecMain"><b>${p.name} · ${positionLabel(p)}<span class="scoutMark small" title="Scout recommendation" aria-label="Scout recommendation">◎</span></b><small>Board #${p.boardRank} · OVR est ${p.ovr} · POT est ${p.potential} · ${viable}</small><small>${p.archetype||"Prospect"} · Age ${p.age||"—"}${p.origin?` · ${publicPlayerOriginLabel(p.origin)}`:""}</small><small class="draftBriefReason">${tag}</small></div></div>`;
   }).join("");
-  return `<div class="draftScoutBrief"><div class="draftScoutHead"><b>Scouting Department · Draft Brief</b><small>Baseline scouting</small></div><div class="draftScoutBody"><div class="draftNeedLine">${chips}</div><div class="draftRecList">${rows||`<div class="empty">No viable recommendations available.</div>`}</div><div class="draftScoutNote">Recommendations balance roster need, current talent, upside and likely availability near your next pick. Your Scouting Department controls confidence and accuracy without changing a player's true ability.</div></div></div>`;
+  return `<div class="draftScoutBrief"><div class="draftScoutHead"><b>Scouting Department · Draft Brief</b><small>Baseline scouting</small></div><div class="draftScoutBody"><div class="draftNeedLine">${chips}</div><div class="draftRecList">${rows||`<div class="empty">No viable recommendations available.</div>`}</div></div></div>`;
 }
 function draftHomeContext(){
   if(G.phase!=="DRAFT_NIGHT")return"";
@@ -26991,7 +27004,7 @@ function preseasonReadinessHtml(){
   const standardClass=standard===15?"rosterGood":standard>=12?"rosterWarn":"rosterBad";
   const twoWayClass=twoWay===3?"rosterGood":"rosterWarn";
   const canBegin=standard>=12&&standard<=15;
-  return `<div class="card transitionHero"><div class="transitionTop"><b>Preseason Readiness</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="transitionBody"><h3>Prepare your roster for preseason</h3><p>Review standard contracts, roster depth and two-way opportunities before the preseason schedule opens. A full 15-player standard roster is recommended, with up to three additional two-way players.</p><div class="transitionMetrics"><div class="transitionMetric"><b class="${standardClass}">${standard}/15</b><small>Standard Roster</small></div><div class="transitionMetric"><b class="${twoWayClass}">${twoWay}/3</b><small>Two-Way</small></div><div class="transitionMetric"><b>${totalOpen}</b><small>Open Spots</small></div></div><div class="readinessRecommendation"><b>GM Recommendation</b><span>${standard===15?"Standard roster is set.":`${openStandard} standard roster spot${openStandard===1?"":"s"} remain.`}</span><small>${twoWay<3?`Consider ${openTwoWay} two-way signing${openTwoWay===1?"":"s"} in Contracts & Cap.`:"Two-way roster full."}</small></div></div><div class="transitionActions"><button id="manageRosterReadiness" class="transitionSecondary">Manage Roster</button><button id="beginPreseasonReadiness" class="transitionPrimary" ${canBegin?"":"disabled"}>Begin Preseason</button></div></div>`;
+  return `<div class="card transitionHero"><div class="transitionTop"><b>Preseason Readiness</b><small>${basketballSeasonLabel(G.season)}</small></div><div class="transitionBody"><h3>Prepare your roster for preseason</h3><p>Finalise your 15-player standard roster and up to three two-way players before beginning preseason.</p><div class="transitionMetrics"><div class="transitionMetric"><b class="${standardClass}">${standard}/15</b><small>Standard Roster</small></div><div class="transitionMetric"><b class="${twoWayClass}">${twoWay}/3</b><small>Two-Way</small></div><div class="transitionMetric"><b>${totalOpen}</b><small>Open Spots</small></div></div><div class="readinessRecommendation"><b>GM Recommendation</b><span>${standard===15?"Roster ready for preseason.":`${openStandard} standard roster spot${openStandard===1?"":"s"} must be filled before preseason.`}</span><small>${standard===15?`${standard} standard · ${twoWay} two-way`:(twoWay<3?`${twoWay}/3 two-way filled`:"Two-way roster full")}</small></div></div><div class="transitionActions"><button id="manageRosterReadiness" class="transitionSecondary">Manage Roster</button><button id="beginPreseasonReadiness" class="transitionPrimary" ${canBegin?"":"disabled"}>Begin Preseason</button></div></div>`;
 }
 function allStarPlayerCard(id,label=""){
   const p=allPlayers(G).find(x=>x.id===id);
@@ -28508,7 +28521,7 @@ function newSeasonOffseasonHubHtml(){
   const priorOutcome=prev.finish||"Season complete";
   const cupTag=prev.cup?" · The Cup Champion":"";
   const priorities=[
-    {label:"Contracts",value:expiring?`${expiring} expiring contract${expiring===1?"":"s"} unresolved`:"No unresolved expiring contracts"},
+    {label:"Contracts",value:expiring?`${expiring} contract${expiring===1?"":"s"} expiring at end of ${basketballSeasonLabel(G.season)}`:"Not Applicable"},
     {label:"Roster",value:rosterOpen?`${rosterOpen} standard spot${rosterOpen===1?"":"s"} open`:"Standard roster full"},
     {label:"Two-Way",value:twoWayOpen?`${twoWayOpen} spot${twoWayOpen===1?"":"s"} open`:"3/3 filled"},
     {label:"Draft Assets",value:`${draftPicks} pick${draftPicks===1?"":"s"} owned`}
@@ -28526,7 +28539,7 @@ function newSeasonOffseasonHubHtml(){
       <div class="newSeasonMetric"><b>${capText}</b><small>Cap Position</small></div>
     </div>
     <div class="newSeasonPriorities"><h3>Offseason Priorities</h3>${priorities.map(x=>`<div class="newSeasonPriority"><span>${x.label}</span><b>${x.value}</b></div>`).join("")}</div>
-    <div class="smallcopy" style="margin:10px 2px 0">Current roster shown before offseason contract processing. Agreed extensions are already secured; only unresolved expiring deals leave the roster when you begin the offseason.</div>
+    
     ${homeActionHtml()}
   </div>`;
 }
@@ -29987,9 +30000,9 @@ function draft(){
     ?`<div class="liveScoutRecommendation"><div><small>SCOUT PICK · NEXT OWNED PICK #${scoutPickNumber}</small><b>${scoutRec.name}</b><span>${draftRecommendationTag(scoutRec,draftScoutRecommendations(s.prospects,scoutPickNumber).needs)} · Board #${scoutRec.boardRank||"—"} · updates as selections are made</span></div><span class="scoutTakeTag large">TAKE</span></div>`
     :"";
   const liveColumnHead=liveDraftBoard?"SCOUT":"PROJ";
-  let board=s.prospects.length?`<div class="draftClassSummary"><div><b>${gameYearForSeason(s.draftYear)} Draft Class</b><small>${s.prospects.length} prospects · 2 rounds</small></div><strong>Scouting LV ${scout.level}</strong></div>${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}<div class="draftScoutStatus"><div><small>SCOUTING DEPARTMENT</small><b>Level ${scout.level} · ${scout.name}</b><span>${scout.description}</span></div><strong>${scout.level>=5?"MAX":`${scout.xp}/${scout.nextXp} XP`}</strong></div>${scoutRecommendationBanner}<div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>${liveColumnHead}</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${publicPlayerOriginLabel(x.origin)} · Age ${x.age}</small><small class="prospectIntel">Pro: ${x.strength} · Con: ${x.risk}</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td>${liveDraftBoard?(x.id===scoutRecommendedId?`<span class="scoutTakeTag">TAKE</span>`:""):`<span class="projectionTag">${x.projection}</span>`}</td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
+  let board=s.prospects.length?`${futureBoard?`<div class="draftClassContext"><b>Persistent Class</b><small>This class remains in place as you scout it through the season.</small></div>`:""}${scoutRecommendationBanner}<div class="table prospectTable"><table><thead><tr><th>RK</th><th>PROSPECT</th><th>POS</th><th>OVR EST</th><th>POT EST</th><th>${liveColumnHead}</th><th></th></tr></thead><tbody>${s.prospects.map((x,i)=>`<tr class="${[i===0?"bestAvailable":"",x.gmFit==="Best Fit"?"gmBestFit":"",x.gmFit==="Strong Fit"?"gmStrongFit":"",x.id===scoutRecommendedId?"scoutRecommended":""].filter(Boolean).join(" ")}"><td>${x.rank}</td><td class="pname"><b>${x.name}${x.id===scoutRecommendedId?`<span class="scoutRecommendTag" title="Scout recommendation" aria-label="Scout recommendation">◎</span>`:""}${x.gmFit?`<span class="gmFitTag">${x.gmFit}</span>`:""}</b><small>${x.archetype} · ${publicPlayerOriginLabel(x.origin)} · Age ${x.age}</small><small class="prospectIntel">Pro: ${x.strength} · Con: ${x.risk}</small></td><td>${x.position}</td><td>${x.ovrRange}</td><td>${x.potRange}</td><td>${liveDraftBoard?(x.id===scoutRecommendedId?`<span class="scoutTakeTag">TAKE</span>`:""):`<span class="projectionTag">${x.projection}</span>`}</td><td>${p&&currentOwner===clubId?`<button class="pick" data-pick="${x.id}">Select</button>`:""}</td></tr>`).join("")}</tbody></table></div>`:`<div class="card empty">No prospects remain on the board.</div>`;
   const mode=ui.draftPlanningTab||"class";
-  const planning=`<div class="squadSectionHead"><h3>Draft</h3><small>Draft planning and assets</small></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
+  const planning=`<div class="squadSectionHead"><h3>Draft</h3></div><div class="draftPlanningTabs squadLevel2Tabs"><button data-draftplanning="class" class="${mode==="class"?"active":""}">Draft Class</button><button data-draftplanning="assets" class="${mode==="assets"?"active":""}">Draft Assets</button></div>${mode==="assets"?futureDraftAssetsHtml(G,clubId):board}`;
   return liveCard+controlCard+(strip?`<div class="sectionTitle">Live Draft Order</div><div class="draftStrip">${strip}</div>`:"")+yourPicks+recent+planning;
 }
 function freeagency(){
