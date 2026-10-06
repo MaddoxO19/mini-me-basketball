@@ -3388,7 +3388,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .legacyGreatsList{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel)}
 .legacyGreatRow{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 11px;border-bottom:1px solid var(--line)}.legacyGreatRow:last-child{border-bottom:0}.legacyGreatRow>strong{color:var(--accent2);text-align:center}.legacyGreatRow b{display:block;font-size:11px}.legacyGreatRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.legacyGreatScore{font-size:10px;color:var(--muted);font-weight:850;white-space:nowrap}
 .legacyV2 .leagueHistoryArchiveTabs{display:none}.legacyV2 .compactArchiveIntro{margin-top:0}
-/* Build 294 — Legacy honours fixes: League Winners and The Cup Winners navigation restored; International Greats now show the national flag. */
+/* Build 295 — International History visual archive polish; national flag consistency across International Greats. */
 .legacyRecordReference{display:grid;gap:9px;margin-top:10px}
 .legacyRecordStat{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
 .legacyRecordStatHead{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
@@ -3405,11 +3405,21 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .legacyHistoryList,.legacyHonourList{display:grid;gap:7px}
 .legacyHistoryRow,.legacyHonourRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;align-items:center;padding:11px 12px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
 .legacyHistoryRow>div:last-child{text-align:right}.legacyHistoryRow b,.legacyHistoryRow strong,.legacyHonourRow b,.legacyHonourRow strong{display:block;font-size:12px}.legacyHistoryRow small,.legacyHonourRow small{display:block;margin-top:3px;color:var(--muted);font-size:9px;line-height:1.35}.legacyHonourRow{grid-template-columns:minmax(0,1fr) auto}.legacyHonourRow>strong{font-size:18px;color:var(--accent2);text-align:right}
+
+/* Build 295 — International Legacy history polish and national flag consistency */
+.intlHistorySummary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0 12px}
+.intlHistorySummary>div{padding:10px 6px;border:1px solid var(--line);border-radius:12px;background:var(--panel);text-align:center}
+.intlHistorySummary b{display:block;font-size:17px;color:var(--text)}.intlHistorySummary small{display:block;margin-top:2px;color:var(--muted);font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.06em}
+.intlHistoryList{display:grid;gap:9px}.intlHistoryCard{display:grid;grid-template-columns:58px minmax(0,1fr);gap:11px;align-items:stretch;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.intlHistoryYear{display:flex;align-items:center;justify-content:center;padding:14px 7px;background:linear-gradient(180deg,rgba(244,169,63,.14),rgba(244,169,63,.04));border-right:1px solid rgba(244,169,63,.25);color:var(--accent2);font-size:13px;font-weight:950}
+.intlHistoryMain{padding:11px 12px 11px 0;min-width:0}.intlHistoryTitle{display:flex;align-items:center;justify-content:space-between;gap:8px}.intlHistoryTitle>b{font-size:12px}.intlHistoryFinish{font-size:9px;font-weight:900;color:var(--text);padding:4px 7px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}.intlHistoryFinish.medal-gold{color:var(--accent2);border-color:rgba(244,169,63,.5);background:rgba(244,169,63,.08)}
+.intlHistoryFinish.medal-silver{color:#d7dce5}.intlHistoryFinish.medal-bronze{color:#d6a06d}.intlHistoryMeta{display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:6px;color:var(--muted);font-size:9px}.intlHistoryMvp{margin-top:8px;padding-top:7px;border-top:1px solid var(--line);color:var(--accent2);font-size:9px;font-weight:850}.intlHistoryHistorical{margin-top:6px;color:var(--muted);font-size:8px;font-style:italic}
+@media(max-width:430px){.intlHistorySummary{gap:5px}.intlHistorySummary>div{padding:9px 3px}.intlHistoryCard{grid-template-columns:52px minmax(0,1fr);gap:9px}.intlHistoryYear{font-size:12px}.intlHistoryMain{padding:10px 10px 10px 0}.intlHistoryTitle{align-items:flex-start}.intlHistoryFinish{font-size:8px;padding:4px 6px}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 294</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 295</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22257,7 +22267,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 294",ENGINE_VERSION="E2.26-PROD294";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 295",ENGINE_VERSION="E2.26-PROD295";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -32176,12 +32186,23 @@ function intlEventResult(e,code){
 }
 function internationalHistoryPage(n){
   const events=intlTournamentEvents(n.code);
-  const rows=events.map(e=>{
-    const r=intlEventResult(e,n.code);
-    const detail=e.historical?"Documented result":r.played?`${r.w}–${r.l}${e.t.host?` · ${e.t.host}`:""}`:(e.t.host||"");
-    return `<div class="teamSeasonRow"><div class="season">${e.year}</div><div><b>${e.label}</b>${detail?`<small>${detail}</small>`:""}</div><div><b>${r.finish}</b>${r.mvpNote?`<small>${r.mvpNote}</small>`:""}</div></div>`;
+  const results=events.map(e=>({e,r:intlEventResult(e,n.code)}));
+  const gold=results.filter(x=>x.r.medal==="gold").length, silver=results.filter(x=>x.r.medal==="silver").length, bronze=results.filter(x=>x.r.medal==="bronze").length;
+  const played=results.filter(x=>x.r.played||x.e.historical).length;
+  const rows=results.map(({e,r})=>{
+    const host=e.t.host||"";
+    const record=e.historical?"Historical record":r.played?`${r.w}–${r.l} record`:"Did not compete";
+    const medalClass=r.medal?` medal-${r.medal}`:"";
+    return `<div class="intlHistoryCard">
+      <div class="intlHistoryYear">${e.year}</div>
+      <div class="intlHistoryMain"><div class="intlHistoryTitle"><b>${e.label}</b><span class="intlHistoryFinish${medalClass}">${r.finish}</span></div>
+      <div class="intlHistoryMeta"><span>${record}</span>${host?`<span>${host}</span>`:""}</div>
+      ${r.mvpNote?`<div class="intlHistoryMvp">★ ${r.mvpNote}</div>`:""}${e.historical?`<div class="intlHistoryHistorical">Documented pre-career result</div>`:""}</div>
+    </div>`;
   }).join("");
-  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${n.name.toUpperCase()} · PROGRAM ARCHIVE</div><h3>Tournament History</h3><p>Every World Cup and Olympic tournament in this career, with the national team's record and finish. Earlier Olympic medals are included where they are documented.</p></div><div class="profileTimeline clubHistoryClean">${rows||`<div class="empty">Tournament history will populate after the first World Cup or Olympic Games.</div>`}</div>`;
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${flagEmoji(n.code)} ${n.name.toUpperCase()} · PROGRAM ARCHIVE</div><h3>Tournament History</h3><p>World Cup and Olympic campaigns presented as a chronological national-team archive.</p></div>
+    <div class="intlHistorySummary"><div><b>${played}</b><small>Tournaments</small></div><div><b>${gold}</b><small>Gold</small></div><div><b>${silver}</b><small>Silver</small></div><div><b>${bronze}</b><small>Bronze</small></div></div>
+    <div class="intlHistoryList">${rows||`<div class="card empty">Tournament history will populate after the first World Cup or Olympic Games.</div>`}</div>`;
 }
 function intlPlayerHonours(p){
   const seen=new Set(),out={titles:0,silver:0,bronze:0,mvps:0,allTournament:0};
@@ -32221,7 +32242,7 @@ function internationalHonoursPage(n){
     <div class="card"><div class="more championshipHistoryRow"><div><b>Championship History</b><small>${titleYears.length?titleYears.join(" · "):"No World Cup or Olympic titles yet"}</small></div><b>${titleYears.length} Total</b></div></div>
     <div class="sectionTitle">Medal Table</div><div class="card"><div class="more"><div><b>World Cup</b><small>Gold · Silver · Bronze</small></div><b>${wc.g}–${wc.s}–${wc.b}</b></div><div class="more"><div><b>Olympic Games</b><small>Gold · Silver · Bronze</small></div><b>${oly.g}–${oly.s}–${oly.b}</b></div></div>
     <div class="sectionTitle">Tournament MVPs</div><div class="card">${mvps||`<div class="empty">No ${n.name} player has been named a tournament MVP yet.</div>`}</div>
-    <div class="sectionTitle">National Team Greats</div><div class="clubLegendList">${greats.length?greats.map((x,i)=>{const live=playerByAnyId(x.p.id);return `<div class="clubLegendRow"><span>${i+1}</span><div><b>${live?playerNameLink(live):(x.p.name||"Player")}</b><small>${x.gp} cap${x.gp===1?"":"s"} · ${x.label}</small></div><strong>${x.evidence}</strong></div>`}).join(""):`<div class="empty">National team greats will appear once players build an international record.</div>`}</div>`;
+    <div class="sectionTitle">National Team Greats</div><div class="clubLegendList">${greats.length?greats.map((x,i)=>{const live=playerByAnyId(x.p.id);return `<div class="clubLegendRow"><span>${i+1}</span><div><b>${live?playerNameLink(live):(x.p.name||"Player")}</b><small>${x.gp} cap${x.gp===1?"":"s"} · ${flagEmoji(n.code)} ${n.name}</small></div><strong>${x.evidence}</strong></div>`}).join(""):`<div class="empty">National team greats will appear once players build an international record.</div>`}</div>`;
 }
 
 function internationalSquad(n,code){
