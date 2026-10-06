@@ -3388,12 +3388,23 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .legacyGreatsList{border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel)}
 .legacyGreatRow{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:9px;align-items:center;padding:10px 11px;border-bottom:1px solid var(--line)}.legacyGreatRow:last-child{border-bottom:0}.legacyGreatRow>strong{color:var(--accent2);text-align:center}.legacyGreatRow b{display:block;font-size:11px}.legacyGreatRow small{display:block;color:var(--muted);font-size:9px;margin-top:2px}.legacyGreatScore{font-size:10px;color:var(--muted);font-weight:850;white-space:nowrap}
 .legacyV2 .leagueHistoryArchiveTabs{display:none}.legacyV2 .compactArchiveIntro{margin-top:0}
+/* Build 291 — Legacy Records reference design: one screen, shared Club/League/International standard. */
+.legacyRecordReference{display:grid;gap:9px;margin-top:10px}
+.legacyRecordStat{border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+.legacyRecordStatHead{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;border-bottom:1px solid var(--line)}
+.legacyRecordStatHead b{font-size:13px;letter-spacing:.02em}.legacyRecordStatHead small{font-size:9px;color:var(--muted);font-weight:850;letter-spacing:.08em}
+.legacyRecordTriplet{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.legacyRecordCell{min-width:0;padding:10px 8px;border-right:1px solid var(--line)}.legacyRecordCell:last-child{border-right:0}
+.legacyRecordCell small{display:block;color:var(--muted);font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.legacyRecordCell strong{display:block;margin-top:3px;font-size:17px;line-height:1.1}.legacyRecordCell b{display:block;margin-top:4px;font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.legacyRecordCell span{display:block;margin-top:2px;color:var(--muted);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.legacyRecordNote{color:var(--muted);font-size:10px;line-height:1.45;margin:0 2px 2px}.legacyRecordEmpty{color:var(--muted)}
+
 @media(max-width:560px){.legacyV2Tabs{grid-template-columns:repeat(5,minmax(58px,1fr));overflow-x:auto}.legacyV2Tabs button{font-size:9px}.legacyOverviewGrid{grid-template-columns:1fr 1fr}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 290</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 291</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22241,7 +22252,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 290",ENGINE_VERSION="E2.26-PROD290";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 291",ENGINE_VERSION="E2.26-PROD291";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -32809,11 +32820,47 @@ function legacyLeagueGreats(){
   const rows=writersTop50Rows().slice(0,25);
   return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League Greats</div><h3>Basketball Writers' Top 50</h3><p>A living historical ranking. Career-era players can rise into the list as their achievements accumulate.</p></div><div class="legacyGreatsList">${rows.map((x,i)=>`<div class="legacyGreatRow"><strong>${i+1}</strong><div><b>${writersRowName(x)}</b><small>${writersRowMeta(x)} · ${writersRowEvidence(x)}</small></div><span class="legacyGreatScore">${Math.round(x.score||0)} INDEX</span></div>`).join("")}</div>`;
 }
+
+function legacyRecordValue(r,decimals=0){return r&&Number.isFinite(+r.value)?formatRecordValue(r.value,decimals):"—";}
+function legacyRecordName(r){return r?.playerName||r?.name||"—";}
+function legacyRecordMeta(r,kind){if(!r)return"No record yet";if(kind==="season"&&r.season)return basketballSeasonLabel(r.season);if(kind==="game"){const bits=[];if(r.season)bits.push(basketballSeasonLabel(r.season));if(r.opponentName)bits.push(`vs ${r.opponentName}`);return bits.join(" · ")||(r.clubName||"League record");}return r.clubName||((r.historical)?"League legacy":"Career record");}
+function legacyRecordCard(label,game,season,career){
+  const cell=(title,r,kind)=>`<div class="legacyRecordCell"><small>${title}</small><strong>${legacyRecordValue(r)}</strong><b>${legacyRecordName(r)}</b><span>${legacyRecordMeta(r,kind)}</span></div>`;
+  return `<div class="legacyRecordStat"><div class="legacyRecordStatHead"><b>${label}</b><small>GAME · SEASON · CAREER</small></div><div class="legacyRecordTriplet">${cell("Game",game,"game")}${cell("Season",season,"season")}${cell("Career",career,"career")}</div></div>`;
+}
+function clubSeasonTotalRecordLeaders(G,clubId,key,limit=5){
+  const rows=[],seen=new Set(),players=[...allPlayers(G),...retiredPlayerPool(G)];
+  for(const p of players){if(!p?.id||seen.has(String(p.id)))continue;seen.add(String(p.id));
+    for(const h of p.seasonHistory||[]){if(h.clubId!==clubId)continue;const value=+h.stats?.[key]||0;if(value>0)rows.push({playerId:p.id,playerName:p.name,clubId,clubName:clubById(G,clubId)?.name||clubId,season:h.season,value});}
+    if(!p.retired&&clubForPlayer(G,p)?.id===clubId){const value=+p.seasonStats?.[key]||0;if((+p.seasonStats?.gp||0)>0&&value>0)rows.push({playerId:p.id,playerName:p.name,clubId,clubName:clubById(G,clubId)?.name||clubId,season:G.season,value});}
+  }
+  return rows.sort((a,b)=>b.value-a.value).slice(0,limit);
+}
+function legacyLeagueRecordsReference(){
+  ingestCurrentSeasonRecordBackfill(G);const x=historicalRecordSnapshot(G),sg=x.league?.singleGameTop5||{};
+  const defs=[["Points","points","pts"],["Rebounds","rebounds","reb"],["Assists","assists","ast"],["Steals","steals","stl"],["Blocks","blocks","blk"],["3-Pointers Made","threes","tpm"]];
+  const cards=defs.map(([label,k,key])=>legacyRecordCard(label,sg[k]?.[0]||x.league?.singleGame?.[k],leagueSeasonTotalRecordLeaders(G,HISTORICAL_SEASON_RECORDS[key],1)[0],x.career?.[k]?.[0])).join("");
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">LEAGUE · RECORDS</div><h3>Record Book</h3><p>Game, single-season and career benchmarks together. No extra record-type navigation.</p></div><div class="legacyRecordReference">${cards}</div><p class="legacyRecordNote">Regular-season records. Playoff records remain separate until the same historical standard is available across all three scopes.</p>`;
+}
+function legacyClubRecordsReference(club){
+  ingestCurrentSeasonRecordBackfill(G);const x=clubHistoricalSnapshot(G,club.id),sg=x.singleGame||{};
+  const defs=[["Points","points","pts"],["Rebounds","rebounds","reb"],["Assists","assists","ast"],["Steals","steals","stl"],["Blocks","blocks","blk"],["3-Pointers Made","threes","tpm"]];
+  const cards=defs.map(([label,k,key])=>legacyRecordCard(label,sg[k],clubSeasonTotalRecordLeaders(G,club.id,key,1)[0],x.career?.[k]?.[0])).join("");
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${club.name.toUpperCase()} · RECORDS</div><h3>Franchise Record Book</h3><p>The same Game, Season and Career standard used by the League record book.</p></div><div class="legacyRecordReference">${cards}</div><p class="legacyRecordNote">Regular-season franchise records. The data remains linked to the existing career history rather than a second Legacy-only calculation.</p>`;
+}
+function legacyInternationalRecordsReference(n){
+  const gameRows=internationalSingleGameRecords(n),gameMap={};for(const r of gameRows||[])gameMap[String(r.label||"").toLowerCase()]=r;
+  const game=(label)=>{const r=gameMap[label.toLowerCase()];return r?.value==null?null:{value:r.value,playerName:r.line?.name||playerByAnyId(r.line?.playerId)?.name||"Unknown Player",opponentName:nat(r.opp)?.name||r.opp,season:r.g?.season};};
+  const career=(key)=>{const r=internationalCareerLeaders(n,key,1)?.[0];return r?{value:r.value,playerName:r.p?.name||"Player",clubName:n.name}:null;};
+  const defs=[["Points","Points","pts"],["Rebounds","Rebounds","reb"],["Assists","Assists","ast"],["Steals","Steals","stl"],["Blocks","Blocks","blk"]];
+  const cards=defs.map(([label,g,k])=>legacyRecordCard(label,game(g),null,career(k))).join("");
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${n.name.toUpperCase()} · RECORDS</div><h3>National Program Record Book</h3><p>The same record layout used for Club and League. Categories only display where the international engine has authoritative data.</p></div><div class="legacyRecordReference">${cards}</div><p class="legacyRecordNote">Season totals are shown as — until tournament-season totals can be derived to the same standard as League and Club. This avoids inventing or mixing incompatible data.</p>`;
+}
 function legacyScopeBody(tab,scope){
   const club=me(),natCode=G.userNationalGM?.nationCode||null,n=natCode?nat(natCode):null;
   if(scope==="league"){
     if(tab==="overview")return legacyLeagueOverview();
-    if(tab==="records")return leagueRecordsPage();
+    if(tab==="records")return legacyLeagueRecordsReference();
     if(tab==="champions")return legacyLeagueChampions();
     if(tab==="awards")return legacyLeagueAwards();
     return legacyLeagueGreats();
@@ -32821,7 +32868,7 @@ function legacyScopeBody(tab,scope){
   if(scope==="club"){
     if(!club)return `<div class="card empty">No user club is active.</div>`;
     if(tab==="overview")return clubHub("history");
-    if(tab==="records")return clubHub("records");
+    if(tab==="records")return legacyClubRecordsReference(club);
     if(tab==="champions")return clubHub("history");
     if(tab==="awards")return clubHub("honours");
     return `<div class="card empty">League Greats is a league-wide archive. Switch scope to League.</div>`;
@@ -32829,7 +32876,7 @@ function legacyScopeBody(tab,scope){
   if(!n)return `<div class="card empty archiveEmpty"><div>International legacy opens once you take charge of a national team.</div><button class="btn secondary" data-go="international">Go to Intl</button></div>`;
   ensureNationalDepth(G,natCode,24);
   if(tab==="overview"||tab==="champions")return internationalHistoryPage(n);
-  if(tab==="records")return internationalRecordsPage(n);
+  if(tab==="records")return legacyInternationalRecordsReference(n);
   if(tab==="awards")return internationalHonoursPage(n);
   return `<div class="card empty">League Greats is a league-wide archive. Switch scope to League.</div>`;
 }
