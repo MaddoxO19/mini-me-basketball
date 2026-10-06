@@ -19748,7 +19748,7 @@ function eliteMinuteCeiling(p,script='NORMAL'){
 // future engine calibration can be changed without hunting through the
 // possession resolver. Values are probabilities, not rating boosts.
 const SIM_TUNING={
-  // Build 301: 3-point volume and accuracy are linked to shooting identity.
+  // Build 302: 3-point volume and accuracy are linked to shooting identity.
   // The previous 58% specialist base rate could push high-usage wings toward
   // 11-14 3PA/G even when their generated shooting rating was weak.
   shotProfile:{
@@ -22337,7 +22337,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 301",ENGINE_VERSION="E2.26-PROD300";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 303",ENGINE_VERSION="E2.26-PROD302";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26908,13 +26908,20 @@ function worldCupHomeHtml(){
   }
   const a=fibaNationByCode(next.a),b=fibaNationByCode(next.b);
   const aRec=worldCupNationRecord(live,next.a),bRec=worldCupNationRecord(live,next.b);
-  const eventNo=(live.stage==="FIRST_GROUP_STAGE"||live.stage==="SECOND_GROUP_STAGE")?`Matchday ${(live.eventIndex||0)+1}`:stage;
+  // Build 303: the tournament can be in its overall Finals event while a QF loser
+  // is playing the separate 5th-8th classification pathway. Always label the
+  // user's card from the actual fixture, never from the global tournament stage.
+  const fixtureStage=worldCupStageLabel(next.stage);
+  const eventNo=(next.stage==="FIRST_GROUP_STAGE"||next.stage==="SECOND_GROUP_STAGE")?`Matchday ${(live.eventIndex||0)+1}`:fixtureStage;
+  // Build 303: avoid duplicate/global-stage copy such as “Finals · Finals”.
+  // Placement games identify the actual pathway the nation is playing.
+  const fixtureMeta=next.stage==="FIFTH_PLACE"?"5th Place Playoff":next.stage==="SEVENTH_PLACE"?"7th Place Playoff":next.stage==="BRONZE"?"Bronze Medal Game":next.stage==="FINAL"?"World Cup Final":(next.stage==="FIRST_GROUP_STAGE"||next.stage==="SECOND_GROUP_STAGE")?`${fixtureStage} · ${eventNo}`:fixtureStage;
   return courtsideNextGameCard({
-    brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEUTRAL",meta:`${stage} · ${eventNo}`,
+    brand:"FIBA WORLD CUP · COURTSIDE NETWORK",live:"NEUTRAL",meta:fixtureMeta,
     leftMark:nationalFlagMark(next.a,"heroFlag"),leftName:a?.name||next.a,leftSub:`World #${nationalWorldRank(next.a)||"—"} · ${aRec.w}–${aRec.l}`,
     rightMark:nationalFlagMark(next.b,"heroFlag"),rightName:b?.name||next.b,rightSub:`World #${nationalWorldRank(next.b)||"—"} · ${bRec.w}–${bRec.l}`,
-    context:[{value:nation?.name||code||"—",label:"Your Nation"},{value:`${record.w}–${record.l}`,label:"World Cup Record"},{value:stage,label:"Stage"}],
-    actionHtml:`<button id="homeMainAction" class="primaryProgress">Play ${stage==="First Group Stage"||stage==="Second Group Stage"?"World Cup Game":stage.replace(/s$/,"")}</button>`,
+    context:[{value:nation?.name||code||"—",label:"Your Nation"},{value:`${record.w}–${record.l}`,label:"World Cup Record"},{value:fixtureStage,label:"Stage"}],
+    actionHtml:`<button id="homeMainAction" class="primaryProgress">Play ${fixtureStage==="First Group Stage"||fixtureStage==="Second Group Stage"?"World Cup Game":fixtureStage}</button>`,
     extraClass:"internationalCourtside"
   })+worldCupUpcomingFixturesHtml(live);
 }
@@ -32419,7 +32426,9 @@ function intlWorldCupStageNavHtml(live,selected){
 }
 function intlWorldCupCompletedGamesForStage(live,stage){
   const games=live?.games||[];
-  if(stage==="FINALS")return games.filter(g=>g.stage==="FINAL"||g.stage==="BRONZE");
+  // Finals view includes medal games plus the 5th-8th placement pathway so
+  // quarterfinal losers never appear to continue in a hidden/ghost bracket.
+  if(stage==="FINALS")return games.filter(g=>["FINAL","BRONZE","CLASSIFICATION_5_8","FIFTH_PLACE","SEVENTH_PLACE"].includes(g.stage));
   return games.filter(g=>g.stage===stage);
 }
 function intlWorldCupScheduledPairsForStage(live,stage){
@@ -32427,7 +32436,7 @@ function intlWorldCupScheduledPairsForStage(live,stage){
   const currentIndex=intlWorldCupProgressIndex(live.stage),requestedIndex=intlWorldCupProgressIndex(stage);
   if(requestedIndex!==currentIndex)return[];
   let pairs=worldCupNextEventPairs(live)||[];
-  if(stage==="FINALS")pairs=pairs.filter(x=>x.stage==="FINAL"||x.stage==="BRONZE");
+  if(stage==="FINALS")pairs=pairs.filter(x=>["FINAL","BRONZE","FIFTH_PLACE","SEVENTH_PLACE"].includes(x.stage));
   else pairs=pairs.filter(x=>x.stage===stage);
   const completed=intlWorldCupCompletedGamesForStage(live,stage);
   const played=new Set(completed.map(g=>[g.teamA,g.teamB].sort().join("|")));
