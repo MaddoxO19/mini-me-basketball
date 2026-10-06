@@ -19748,17 +19748,41 @@ function eliteMinuteCeiling(p,script='NORMAL'){
 // future engine calibration can be changed without hunting through the
 // possession resolver. Values are probabilities, not rating boosts.
 const SIM_TUNING={
-  shotProfile:{threeArchetype:0.58,rimArchetype:0.24,defaultThreeRate:0.45,guardBonus:0.04,centerPenalty:0.06,minThreeRate:0.05,maxThreeRate:0.75}
+  // Build 301: 3-point volume and accuracy are linked to shooting identity.
+  // The previous 58% specialist base rate could push high-usage wings toward
+  // 11-14 3PA/G even when their generated shooting rating was weak.
+  shotProfile:{
+    sharpshooterRate:0.48,threeAndDRate:0.43,stretchRate:0.40,
+    rimArchetype:0.20,defaultThreeRate:0.33,guardBonus:0.015,centerPenalty:0.045,
+    minThreeRate:0.03,maxThreeRate:0.60
+  }
 };
+function isThreePointSpecialist(player){
+  const arch=String(player?.archetype||"");
+  const build=String(player?.playerBuild||"");
+  return /Sharpshooter|3-and-D|Stretch/.test(arch)||/Sharpshooter|Sniper|Shooter|Three-Point|Deep-Range|Floor-Spacing|Pick-and-Pop|Stretch Scorer/.test(build);
+}
 function shotProfile(player, identityOverride=null) {
-  const threeArches = ["Sharpshooter", "Stretch Four", "Stretch Five", "3-and-D Guard", "3-and-D Wing"];
-  const rimArches = ["Slasher", "Traditional Big", "Rim Protector"];
+  const arch=String(player?.archetype||"");
+  const rimArches=["Slasher","Traditional Big","Rim Protector"];
   const t=SIM_TUNING.shotProfile;
-  let threeRate = threeArches.includes(player.archetype) ? t.threeArchetype : rimArches.includes(player.archetype) ? t.rimArchetype : t.defaultThreeRate;
-  if (player.position === "PG" || player.position === "SG") threeRate += t.guardBonus;
-  if (player.position === "C") threeRate -= t.centerPenalty;
-  threeRate += (identityOverride||playerStatIdentity(player)).threeRate;
-  return Math.max(t.minThreeRate, Math.min(t.maxThreeRate, threeRate));
+  let threeRate=/Sharpshooter/.test(arch)?t.sharpshooterRate:/3-and-D/.test(arch)?t.threeAndDRate:/Stretch/.test(arch)?t.stretchRate:rimArches.includes(arch)?t.rimArchetype:t.defaultThreeRate;
+  if(player?.position==="PG"||player?.position==="SG")threeRate+=t.guardBonus;
+  if(player?.position==="C")threeRate-=t.centerPenalty;
+  threeRate+=(identityOverride||playerStatIdentity(player)).threeRate;
+  return Math.max(t.minThreeRate,Math.min(t.maxThreeRate,threeRate));
+}
+function threePointAccuracyFloor(player){
+  const ovr=Math.max(50,Math.min(99,+player?.ovr||70));
+  const arch=String(player?.archetype||"");
+  const build=String(player?.playerBuild||"");
+  let floor=0;
+  if(/Sharpshooter/.test(arch)||/Sharpshooter|Sniper|Three-Point|Deep-Range/.test(build))floor=.345+(ovr-70)*.0020;
+  else if(/3-and-D/.test(arch)||/Defensive Shooter|3-and-D/.test(build))floor=.330+(ovr-70)*.0018;
+  else if(/Stretch/.test(arch)||/Floor-Spacing|Pick-and-Pop|Stretch Scorer/.test(build))floor=.325+(ovr-70)*.0017;
+  // These are identity floors, not guarantees. Elite specialists should not
+  // settle into 18-25% careers while retaining specialist-level volume.
+  return Math.max(0,Math.min(.415,floor));
 }
 
 function playoffTeamQuality(slots){
@@ -19949,6 +19973,11 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
         const shootRating=Math.max(rawShootRating,generationalShootRatingFloor(p));
         const shootArchBonus=["Sharpshooter","Stretch Four","Stretch Five","3-and-D Guard","3-and-D Wing"].includes(p.archetype)?0.020:0;
         pct = 0.285 + (shootRating-60)*0.0030 + shootArchBonus + (prof.stat.threeAccuracy||0);
+        // Specialist identity must carry an efficiency floor as well as volume.
+        // This prevents generated superstar shooters from taking elite volume
+        // while a low/missing sourceThreePt rating drives them to sub-NBA accuracy.
+        const identityFloor=threePointAccuracyFloor(p);
+        if(identityFloor>0)pct=Math.max(pct,identityFloor);
         pct -= (defQ-70)*0.0007 + (defImpact-1)*0.035;
       } else {
         pct = 0.485 + (p.ovr-60)*0.00255 + (["Slasher","Traditional Big"].includes(p.archetype) ? 0.022 : 0) + prof.legacyEff.two;
