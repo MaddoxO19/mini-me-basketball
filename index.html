@@ -3393,7 +3393,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 289</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 290</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22241,7 +22241,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 289",ENGINE_VERSION="E2.26-PROD289";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 290",ENGINE_VERSION="E2.26-PROD290";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -32775,6 +32775,13 @@ window.addEventListener("orientationchange",syncBarHeights);
 // Build 289 reorganises the existing historical data without changing the
 // underlying record, season-history, award or international save structures.
 const LEGACY_HUB_TABS=["overview","records","champions","awards","greats"],LEGACY_HUB_SCOPES=["club","league","international"];
+// Build 290 — restore the operational route redirect inadvertently removed during the Legacy redesign.
+// render() calls this on every game-shell render, so its absence prevented mature careers from opening.
+function redirectOperationalTabsToClub(){
+  if(ui.page!=="team")return;
+  if(ui.teamTab==="schedule"){ui.page="club";ui.clubTab="fixtures";ui.teamTab="squad";}
+  else if(ui.teamTab==="trades"){ui.page="club";ui.clubTab="trades";ui.teamTab="squad";}
+}
 function redirectArchiveTabsToLegacyHub(){
   const go=(tab,scope)=>{ui.page="legacyHub";ui.archiveTab=tab;ui.archiveScope=scope;};
   if(ui.page==="club"&&["records","history","honours"].includes(ui.clubTab)){go(ui.clubTab==="records"?"records":ui.clubTab==="history"?"champions":"awards","club");ui.clubTab="current";}
