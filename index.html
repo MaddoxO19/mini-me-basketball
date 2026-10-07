@@ -3449,7 +3449,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 309</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 313</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -8027,10 +8027,10 @@ const GENERATIONAL_BUILD_DEFS={
   "Complete Superstar":{positions:["PG","SG","SF","PF","C"],mods:{usage:1.15,assist:1.16,rebound:1.14,steal:1.14,block:1.12,foulDraw:1.10,defensiveImpact:1.12,threeAccuracy:.040},shootFloor:82},
   // Generational Builds 2.0: additional GOAT-tier identities diversify 97+ players
   // without changing the rarity or development threshold for reaching 97 OVR.
-  "Complete Force":{positions:["SF","PF"],mods:{usage:1.20,assist:1.38,rebound:1.18,steal:1.16,block:1.10,foulDraw:1.20,defensiveImpact:1.15,threeAccuracy:.018,volatility:1.04},shootFloor:80},
+  "Power Point Forward":{positions:["SF","PF"],mods:{usage:1.20,assist:1.38,rebound:1.18,steal:1.16,block:1.10,foulDraw:1.20,defensiveImpact:1.15,threeAccuracy:.018,volatility:1.04},shootFloor:80},
   "Triple-Double Engine":{positions:["PG","SG","SF"],mods:{usage:1.18,assist:1.50,rebound:1.27,steal:1.10,foulDraw:1.15,defensiveImpact:1.05,threeAccuracy:.008},shootFloor:78},
   "Point Center":{positions:["C"],mods:{usage:1.13,assist:1.78,rebound:1.20,steal:1.05,block:.94,foulDraw:1.08,defensiveImpact:1.02,threeAccuracy:.015,volatility:.96},shootFloor:82},
-  "Two-Way Scoring Machine":{positions:["SG","SF"],mods:{usage:1.24,assist:1.18,rebound:1.10,steal:1.38,block:1.08,foulDraw:1.18,defensiveImpact:1.23,threeAccuracy:.030,volatility:1.06},shootFloor:84},
+  "Scoring Apex":{positions:["SG","SF"],mods:{usage:1.24,assist:1.18,rebound:1.10,steal:1.38,block:1.08,foulDraw:1.18,defensiveImpact:1.23,threeAccuracy:.030,volatility:1.06},shootFloor:84},
   "Scoring Colossus":{positions:["C"],mods:{usage:1.30,assist:.98,rebound:1.30,steal:1.02,block:1.24,foulDraw:1.34,defensiveImpact:1.16,threeRate:-.14,volatility:1.04},shootFloor:66}
 };
 function generationalSourceBuild(player){
@@ -8041,9 +8041,9 @@ function generationalSourceBuild(player){
   if(source==="Nikola Jokic"||source==="Nikola Jokić")return"Point Center";
   if(source==="Giannis Antetokounmpo")return"Athletic Phenomenon";
   if(source==="Cooper Flagg")return"Two-Way Apex";
-  if(source==="LeBron James")return"Complete Force";
+  if(source==="LeBron James")return"Power Point Forward";
   if(source==="Oscar Robertson")return"Triple-Double Engine";
-  if(source==="Michael Jordan")return"Two-Way Scoring Machine";
+  if(source==="Michael Jordan")return"Scoring Apex";
   if(source==="Wilt Chamberlain"||source==="Shaquille O'Neal")return"Scoring Colossus";
   return null;
 }
@@ -8051,19 +8051,27 @@ function deriveGenerationalBuild(player){
   if(!player||(+player.ovr||0)<97)return null;
   const seeded=generationalSourceBuild(player);if(seeded)return seeded;
   const pos=player.position||"SF",arch=player.archetype||"",h=+player.heightCm||0;
-  if((pos==="PF"||pos==="C")&&h>=216&&["Stretch Five","Stretch Four","Rim Protector"].includes(arch))return"Unicorn";
-  if(["Floor General","Combo Guard"].includes(arch)&&["PG","SG"].includes(pos))return arch==="Floor General"?"Offensive Engine":"Three-Level Maestro";
-  if(arch==="Sharpshooter"&&["PG","SG","SF"].includes(pos))return"Gravity Shooter";
-  if(arch==="3-and-D Guard"||arch==="3-and-D Wing")return"Two-Way Apex";
-  if(arch==="Playmaking Forward"&&["SF","PF"].includes(pos)){
-    // Larger 97+ creators can resolve to the LeBron-style all-court build;
-    // smaller creators retain the existing Point Forward identity.
-    return h>=203?"Complete Force":"Point Forward";
+  const build=String(player.playerBuild||derivePlayerBuild(player)||"");
+  const has=(...terms)=>terms.some(term=>build.includes(term));
+
+  // Generational Builds 2.1: resolve identity from position + archetype + the
+  // player's persistent public build. This keeps 97+ rarity unchanged while
+  // allowing two players with the same archetype to express different peaks.
+  if((pos==="PF"||pos==="C")&&h>=216&&(["Stretch Five","Stretch Four","Rim Protector"].includes(arch)||has("Floor-Spacing","Pick-and-Pop","Interior Defensive")))return"Unicorn";
+  if(pos==="C"&&(arch==="Playmaking Forward"||has("Point Center","Playmaking","Passing")))return"Point Center";
+  if(["Floor General","Combo Guard"].includes(arch)&&["PG","SG"].includes(pos)){
+    if(has("Three-Level","Scoring","Combo"))return"Three-Level Maestro";
+    return"Offensive Engine";
   }
+  if((arch==="Sharpshooter"||has("Movement Shooter","Sharpshooter","Sniper","Shooter"))&&["PG","SG","SF"].includes(pos))return"Gravity Shooter";
+  if((arch==="3-and-D Guard"||arch==="3-and-D Wing")&&["SG","SF"].includes(pos)&&has("Scoring","Creator","Three-Level"))return"Scoring Apex";
+  if(arch==="3-and-D Guard"||arch==="3-and-D Wing")return"Two-Way Apex";
+  if((arch==="Playmaking Forward"||has("Point Forward"))&&["SF","PF"].includes(pos))return h>=203?"Power Point Forward":"Point Forward";
+  if(arch==="Slasher"&&["SG","SF"].includes(pos)&&has("Scoring","Creator","Three-Level"))return"Scoring Apex";
   if(arch==="Slasher"&&["SG","SF","PF"].includes(pos))return"Athletic Phenomenon";
-  if(arch==="Traditional Big")return"Paint Dominator";
-  if(arch==="Rim Protector")return"Defensive Anchor";
-  if(["Stretch Four","Stretch Five"].includes(arch))return pos==="C"&&h>=213?"Unicorn":"Complete Superstar";
+  if(arch==="Traditional Big"||has("Interior Glass Cleaner"))return"Paint Dominator";
+  if(arch==="Rim Protector"||has("Interior Defensive Anchor"))return"Defensive Anchor";
+  if(["Stretch Four","Stretch Five"].includes(arch)||has("Pick-and-Pop","Floor-Spacing"))return pos==="C"&&h>=213?"Unicorn":"Complete Superstar";
   return"Complete Superstar";
 }
 function syncGenerationalBuild(player,season=null){
@@ -13712,7 +13720,7 @@ function draftLotteryPopupHtml(n){
   const rows=n?.results||[],rawIdx=Number(n?.index),idx=Math.max(0,Math.min(rows.length-1,Number.isFinite(rawIdx)?rawIdx:Math.max(0,rows.length-1))),revealed=rows.slice(idx);
   const userId=G.userClubGM?.clubId,userRow=rows.find(r=>r.clubId===userId),userRevealed=revealed.some(r=>r.clubId===userId);
   const list=revealed.map(r=>`<div style="display:grid;grid-template-columns:58px 1fr auto;gap:10px;padding:12px 4px;border-bottom:1px solid #2b3545"><strong style="color:#f3b04f">#${r.pick}</strong><b>${r.clubName}</b><small>${r.oddsLabel||"Lottery"}</small></div>`).join("");
-  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>DRAFT LOTTERY</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${idx>0?`Pick #${idx+1} is revealed`:`${rows[0]?.clubName||"A club"} wins the No. 1 pick`}</h3><p>${userRow&&userRevealed?`Your club has been revealed at pick #${userRow.pick}.`:`The lottery order is being revealed from the final lottery pick through to No. 1.`}</p></div><div style="padding:0 16px 12px;max-height:48vh;overflow:auto">${list}</div><div class="awardVoteFoot"><div class="awardVoteProgress">${rows.length-idx} of ${rows.length} picks revealed</div><div class="newsFlashActions"><button id="revealLotteryPick">${idx>0?"Reveal Next Pick":"Continue to Draft"}</button></div></div></div></div>`;
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>DRAFT LOTTERY</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${idx>0?`Pick #${idx+1} is revealed`:`${rows[0]?.clubName||"A club"} wins the No. 1 pick`}</h3><p>${userRow&&userRevealed?`Your club has been revealed at pick #${userRow.pick}.`:`The lottery order is being revealed from the final lottery pick through to No. 1.`}</p></div><div style="padding:0 16px 12px;max-height:48vh;overflow:auto">${list}</div><div class="awardVoteFoot"><div class="awardVoteProgress">${rows.length-idx} of ${rows.length} picks revealed</div><div class="newsFlashActions"><button id="revealLotteryPick">${idx>0?"Reveal Next Pick":"Continue to Draft"}</button>${idx>0?`<button id="autoRevealLottery">Auto Reveal</button>`:""}</div></div></div></div>`;
 }
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
@@ -21737,7 +21745,7 @@ function gmAwardBallotPopupHtml(n){
   const candidates=(vote.results||[]).slice(0,8).map(r=>awardPlayerById(G,r.playerId)).filter(Boolean);
   const options=candidates.map(p=>`<option value="${p.id}">${p.name} · ${clubForPlayer(G,p)?.name||""}</option>`).join("");
   const selects=[1,2,3,4,5].map(i=>`<label style="display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;margin:10px 0"><b>${i}${i===1?"st":i===2?"nd":i===3?"rd":"th"}</b><select class="gmAwardRankSelect" id="gmAwardRank${i}" style="width:100%;padding:12px;border-radius:10px;background:#111823;color:#fff;border:1px solid #334155"><option value="">Select player</option>${options}</select></label>`).join("");
-  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM AWARDS BALLOT</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>Your ${awardVoteLabel(key)} Ballot</h3><p>You are one member of the 100-voter awards panel. Rank five candidates. Your ballot counts once alongside 99 media ballots.</p></div><div style="padding:8px 16px 16px">${selects}</div><div class="awardVoteFoot"><div class="awardVoteProgress">Ballot ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="submitGMAwardBallot">${idx===keys.length-1?"Submit Final Ballot":"Submit & Next"}</button><button id="skipGMAwardBallots">Abstain</button></div></div></div></div>`;
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM AWARDS BALLOT</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>Your ${awardVoteLabel(key)} Ballot</h3><p>You are one member of the 100-voter awards panel. Rank five candidates. Your ballot counts once alongside 99 media ballots.</p></div><div style="padding:8px 16px 16px">${selects}</div><div class="awardVoteFoot"><div class="awardVoteProgress">Ballot ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="submitGMAwardBallot">${idx===keys.length-1?"Submit Final Ballot":"Submit & Next"}</button><button id="autoPickGMAwardBallot">Auto Pick</button></div></div></div></div>`;
 }
 function ensurePlayerCoreHistory(p){
   if(!p)return p;
@@ -22408,9 +22416,11 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-// Build 310 — Generational Builds 2.0: adds Complete Force, Triple-Double Engine, Point Center, Two-Way Scoring Machine and Scoring Colossus; remaps Jokic and Flagg while preserving the 97+ eligibility threshold.
+// Build 310 — Generational Builds 2.0 expanded the GOAT-tier identity pool while preserving the 97+ eligibility threshold.
+// Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
+// Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 311",ENGINE_VERSION="E2.26-PROD311";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 313",ENGINE_VERSION="E2.26-PROD313";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -33263,8 +33273,9 @@ function bind(){
     G.gmAwardBallots=G.gmAwardBallots||{};const sk=`S${n.season}`,rec=G.gmAwardBallots[sk]||(G.gmAwardBallots[sk]={season:n.season,ballots:{},submitted:false});rec.ballots[key]=ids;applyGMAwardBallot(G,n.season,key,ids);
     if((+n.index||0)<keys.length-1){n.index=(+n.index||0)+1;await save();render();return;}rec.submitted=true;G.newsFlashPending={type:"award_results",season:n.season,awardKeys:keys,index:0,category:"AWARDS"};publishMajorAwardNews(G,Object.fromEntries(keys.map(k=>[k,G.awardVoting?.[`S${n.season}_${k}`]])));await save();render();
   };
-  if($("#skipGMAwardBallots"))$("#skipGMAwardBallots").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;G.gmAwardBallots=G.gmAwardBallots||{};G.gmAwardBallots[`S${n.season}`]={season:n.season,ballots:{},submitted:true,abstained:true};G.newsFlashPending={type:"award_results",season:n.season,awardKeys:n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};await save();render();};
+  if($("#autoPickGMAwardBallot"))$("#autoPickGMAwardBallot").onclick=()=>{const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;const keys=n.awardKeys||[],key=keys[+n.index||0],vote=G.awardVoting?.[`S${n.season}_${key}`];if(!vote)return;const ids=(vote.results||[]).slice(0,5).map(r=>r.playerId).filter(Boolean);for(let i=1;i<=5;i++){const sel=$("#gmAwardRank"+i);if(sel)sel.value=ids[i-1]||"";}refreshGMAwardChoices();toast("Ballot auto-picked. Review or submit when ready.");};
   if($("#revealLotteryPick"))$("#revealLotteryPick").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="draft_lottery")return;if((+n.index||0)>0){n.index=(+n.index||0)-1;await save();render();return;}G.draftLotteryPresentationSeen=G.draftLotteryPresentationSeen||{};G.draftLotteryPresentationSeen[`S${n.season}`]=true;G.draftLotteryHistory=G.draftLotteryHistory||[];const hist=G.draftLotteryHistory.find(x=>+x.season===+n.season);if(hist)hist.presentationComplete=true;else G.draftLotteryHistory.push({season:n.season,results:n.results||[],presentationComplete:true});const q=ensureNewsFlashQueue(G);for(let i=q.length-1;i>=0;i--)if(q[i]?.type==="draft_lottery"&&+q[i]?.season===+n.season)q.splice(i,1);G.newsFlashPending=null;promoteQueuedNewsFlash(G);await save();render();};
+  if($("#autoRevealLottery"))$("#autoRevealLottery").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="draft_lottery")return;n.index=0;await save();render();};
   if($("#closePostCelebration"))$("#closePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#continuePostCelebration"))$("#continuePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#awardResultsNext"))$("#awardResultsNext").onclick=async()=>{
