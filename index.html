@@ -3423,7 +3423,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 300</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 304</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -13666,9 +13666,9 @@ function awardVotingPopupHtml(n){
 }
 function draftLotteryPopupHtml(n){
   const rows=n?.results||[],idx=Math.max(0,Math.min(rows.length-1,+n.index||rows.length-1)),revealed=rows.slice(idx);
-  const userId=G.userClubGM?.clubId,userRow=rows.find(r=>r.clubId===userId);
+  const userId=G.userClubGM?.clubId,userRow=rows.find(r=>r.clubId===userId),userRevealed=revealed.some(r=>r.clubId===userId);
   const list=revealed.map(r=>`<div style="display:grid;grid-template-columns:58px 1fr auto;gap:10px;padding:12px 4px;border-bottom:1px solid #2b3545"><strong style="color:#f3b04f">#${r.pick}</strong><b>${r.clubName}</b><small>${r.oddsLabel||"Lottery"}</small></div>`).join("");
-  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>DRAFT LOTTERY</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${idx>0?`Pick #${idx+1} is revealed`:`${rows[0]?.clubName||"A club"} wins the No. 1 pick`}</h3><p>${userRow?`Your club entered the lottery and has landed pick #${userRow.pick}.`:`The lottery determines the order of the lottery selections before Draft Night.`}</p></div><div style="padding:0 16px 12px;max-height:48vh;overflow:auto">${list}</div><div class="awardVoteFoot"><div class="awardVoteProgress">${rows.length-idx} of ${rows.length} picks revealed</div><div class="newsFlashActions"><button id="revealLotteryPick">${idx>0?"Reveal Next Pick":"Continue to Draft"}</button></div></div></div></div>`;
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>DRAFT LOTTERY</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>${idx>0?`Pick #${idx+1} is revealed`:`${rows[0]?.clubName||"A club"} wins the No. 1 pick`}</h3><p>${userRow&&userRevealed?`Your club has been revealed at pick #${userRow.pick}.`:`The lottery order is being revealed from the final lottery pick through to No. 1.`}</p></div><div style="padding:0 16px 12px;max-height:48vh;overflow:auto">${list}</div><div class="awardVoteFoot"><div class="awardVoteProgress">${rows.length-idx} of ${rows.length} picks revealed</div><div class="newsFlashActions"><button id="revealLotteryPick">${idx>0?"Reveal Next Pick":"Continue to Draft"}</button></div></div></div></div>`;
 }
 function newsFlashHtml(){
   const n=G?.newsFlashPending;if(!n)return"";
@@ -17540,9 +17540,14 @@ function runDraftLottery(G) {
   }
 
   const round1Order = [...draw.map((d) => d.clubId), ...G.pendingNonLotteryOrder];
-  const lotteryResults=draw.map((d,i)=>({pick:i+1,clubId:d.clubId,clubName:G.clubs.find(c=>c.id===d.clubId)?.name||d.clubId,balls:d.balls,oddsLabel:`${d.balls} lottery chance${d.balls===1?"":"s"}`}));
+  const totalLotteryWeight=Math.max(1,draw.reduce((sum,d)=>sum+(+d.balls||0),0));
+  const lotteryResults=draw.map((d,i)=>({pick:i+1,clubId:d.clubId,clubName:G.clubs.find(c=>c.id===d.clubId)?.name||d.clubId,balls:d.balls,oddsLabel:`${((+d.balls||0)/totalLotteryWeight*100).toFixed(1)}% chance at #1`}));
   G.draftLotteryHistory=G.draftLotteryHistory||[];G.draftLotteryHistory=G.draftLotteryHistory.filter(x=>+x.season!==+G.season);G.draftLotteryHistory.push({season:G.season,results:lotteryResults});
-  G.newsFlashPending={type:"draft_lottery",season:G.season,results:lotteryResults,index:Math.max(0,lotteryResults.length-1),category:"DRAFT LOTTERY"};
+  G.draftLotteryPresentationSeen=G.draftLotteryPresentationSeen||{};
+  const lotterySeasonKey=`S${G.season}`;
+  const q=ensureNewsFlashQueue(G);
+  for(let i=q.length-1;i>=0;i--)if(q[i]?.type==="draft_lottery"&&+q[i]?.season===+G.season)q.splice(i,1);
+  if(!G.draftLotteryPresentationSeen[lotterySeasonKey])G.newsFlashPending={type:"draft_lottery",season:G.season,results:lotteryResults,index:Math.max(0,lotteryResults.length-1),category:"DRAFT LOTTERY"};
   logEvent(G, `3-2-1 Lottery drawn. Draft-relegated teams held to a floor of pick 12.`);
   return round1Order;
 }
@@ -20031,8 +20036,18 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
   let scoreA = qA.reduce((a,b)=>a+b,0), scoreB = qB.reduce((a,b)=>a+b,0);
   let overtime = 0;
   const otA=[], otB=[];
+  const addOvertimeMinutes=(lines)=>{
+    const closers=[...lines].sort((a,b)=>{
+      const role=x=>x.player?.rotationRole==="Primary Starter"?4:x.player?.rotationRole==="Starter"?3:x.player?.rotationRole==="Sixth Man"?2:1;
+      const score=x=>(+x.player?.ovr||70)*1.4+(+x.line?.min||0)*.18+role(x)*4-(+x.player?.fatigue||0)*.05;
+      return score(b)-score(a);
+    }).slice(0,5);
+    for(const x of closers)x.line.min=(+x.line.min||0)+5;
+  };
   while (scoreA === scoreB && overtime < 4) {
     overtime++;
+    // Every overtime is five real minutes for five players: +25 team player-minutes.
+    addOvertimeMinutes(linesA);addOvertimeMinutes(linesB);
     const beforeA = linesA.reduce((a,x)=>a+x.line.pts,0), beforeB = linesB.reduce((a,x)=>a+x.line.pts,0);
     const tmpA=[0,0,0,0], tmpB=[0,0,0,0];
     playSide(linesA, linesB, 10, tmpA, clubA, clubB);
@@ -20051,7 +20066,7 @@ function simulatePossessionGame(clubA, clubB, options = {}) {
 
   const applyStats = (club, lines, pm) => lines.map(({player,line,starter}) => {
     // Approximate individual +/- from share of team minutes; team sum remains near 5x game margin.
-    line.plusMinus = Math.round(pm * (line.min / 48));
+    line.plusMinus = Math.round(pm * (line.min / Math.max(48,48+overtime*5)));
     const st = player[statsField] || (player[statsField] = emptyRegularStats());
     st.gp++; if (starter) st.gs++;
     for (const key of ["min","pts","reb","ast","stl","blk","tov","fgm","fga","tpm","tpa","ftm","fta","pf","plusMinus"]) st[key] += line[key] || 0;
@@ -21545,9 +21560,11 @@ function defensiveAwardScore(G,p,minGp=50){
   const teamGp=club?(+club.standings?.w||0)+(+club.standings?.l||0):0;
   const teamPaPerGame=teamGp?(+club.standings?.pa||0)/teamGp:113;
   const teamDef=club?clampAward(113-teamPaPerGame,-4,4):0;
-  const bigBonus=(p.position==="C"||p.position==="PF")?rateStat(s,"blk")*.35:rateStat(s,"stl")*.30;
-  // Team defence matters, but individual defensive production and impact remain primary.
-  return rateStat(s,"stl")*3.0+rateStat(s,"blk")*2.8+rateStat(s,"reb")*.30+rateStat(s,"plusMinus")*.11+teamDef*.38+bigBonus;
+  // Build 304: All-Defensive teams are positionless. Do not award an extra
+  // frontcourt bonus merely for being a C/PF; steals, blocks, impact and team
+  // defence compete on the same scale for guards, wings and bigs. Rebounding
+  // remains useful evidence but is deliberately a secondary defensive signal.
+  return rateStat(s,"stl")*3.35+rateStat(s,"blk")*2.65+rateStat(s,"reb")*.18+rateStat(s,"plusMinus")*.13+teamDef*.40;
 }
 
 // v0.1.49.75.11 — Unicorn build calibration; elite two-way identity retained with reduced scoring/rebounding amplification.
@@ -21665,7 +21682,7 @@ function gmAwardBallotPopupHtml(n){
   const keys=n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],idx=clampAward(+n.index||0,0,keys.length-1),key=keys[idx],vote=G.awardVoting?.[`S${n.season}_${key}`];if(!vote)return"";
   const candidates=(vote.results||[]).slice(0,8).map(r=>awardPlayerById(G,r.playerId)).filter(Boolean);
   const options=candidates.map(p=>`<option value="${p.id}">${p.name} · ${clubForPlayer(G,p)?.name||""}</option>`).join("");
-  const selects=[1,2,3,4,5].map(i=>`<label style="display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;margin:10px 0"><b>${i}${i===1?"st":i===2?"nd":i===3?"rd":"th"}</b><select id="gmAwardRank${i}" style="width:100%;padding:12px;border-radius:10px;background:#111823;color:#fff;border:1px solid #334155"><option value="">Select player</option>${options}</select></label>`).join("");
+  const selects=[1,2,3,4,5].map(i=>`<label style="display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:center;margin:10px 0"><b>${i}${i===1?"st":i===2?"nd":i===3?"rd":"th"}</b><select class="gmAwardRankSelect" id="gmAwardRank${i}" style="width:100%;padding:12px;border-radius:10px;background:#111823;color:#fff;border:1px solid #334155"><option value="">Select player</option>${options}</select></label>`).join("");
   return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM AWARDS BALLOT</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} H³O BASKETBALL</div><h3>Your ${awardVoteLabel(key)} Ballot</h3><p>You are one member of the 100-voter awards panel. Rank five candidates. Your ballot counts once alongside 99 media ballots.</p></div><div style="padding:8px 16px 16px">${selects}</div><div class="awardVoteFoot"><div class="awardVoteProgress">Ballot ${idx+1} of ${keys.length}</div><div class="newsFlashActions"><button id="submitGMAwardBallot">${idx===keys.length-1?"Submit Final Ballot":"Submit & Next"}</button><button id="skipGMAwardBallots">Abstain</button></div></div></div></div>`;
 }
 function ensurePlayerCoreHistory(p){
@@ -22337,7 +22354,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 303",ENGINE_VERSION="E2.26-PROD302";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 304",ENGINE_VERSION="E2.26-PROD304";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -31265,7 +31282,7 @@ const WRITERS_TOP50_2026=[
   ["Dave Cowens","Dave Cowans","C"],
   ["Nate Archibald","Nate Archibold","PG"],
   ["Bob Cousy","Bob Cousey","PG"]
-].map((x,i)=>({sourcePlayerName:x[0],playerName:x[1],pos:x[2],seedRank:i+1,seedScore:1000-i*6}));
+].map((x,i)=>({sourcePlayerName:x[0],playerName:x[0],pos:x[2],seedRank:i+1,seedScore:1000-i*6}));
 function writersSourceNorm(v){return normalizeSourcePlayerName(String(v||""));}
 function writersLegacyEvidence(ranks,hb){
   const bits=[];
@@ -31331,12 +31348,12 @@ function writersRowEvidence(x){
 // Season marks are source-backed regular-season record totals supplied for PTS, 3P, TRB, AST, STL and BLK. Career scoring uses the combined
 // regular-season + playoff historical baseline already adopted by League Records.
 const HISTORICAL_SEASON_RECORDS={
-  pts:{label:"Points in a Season",holder:"Walter Mercer",value:4029,key:"pts"},
-  tpm:{label:"3-Pointers in a Season",holder:"Evan Cross",value:402,key:"tpm"},
-  reb:{label:"Rebounds in a Season",holder:"Walter Mercer",value:2149,key:"reb"},
-  ast:{label:"Assists in a Season",holder:"Caleb Stone",value:1164,key:"ast"},
+  pts:{label:"Points in a Season",holder:"Wilt Chamberlain",value:4029,key:"pts"},
+  tpm:{label:"3-Pointers in a Season",holder:"Stephen Curry",value:402,key:"tpm"},
+  reb:{label:"Rebounds in a Season",holder:"Wilt Chamberlain",value:2149,key:"reb"},
+  ast:{label:"Assists in a Season",holder:"John Stockton",value:1164,key:"ast"},
   stl:{label:"Steals in a Season",holder:"Alvin Robertson",value:301,key:"stl"},
-  blk:{label:"Blocks in a Season",holder:"Gavin Eaton",value:456,key:"blk"}
+  blk:{label:"Blocks in a Season",holder:"Mark Eaton",value:456,key:"blk"}
 };
 const EXECUTIVE_HISTORICAL_BENCHMARKS={
   wins:{label:"Regular-Season Wins",holder:"Arthur Redmond",value:1738},
@@ -33130,6 +33147,10 @@ function render(){
 redirectOperationalTabsToClub();redirectArchiveTabsToLegacyHub();prepareRenderState();status();action();const pageHtml=(ui.page==="legacyHub"?legacyHub():ui.page==="home"?home():ui.page==="team"?team():ui.page==="club"?clubHub():ui.page==="league"?league():ui.page==="international"?international():ui.page==="facilities"?facilitiesPage():ui.page==="gm"?gmProfile():ui.page==="gmProfile"?gmProfile():ui.page==="settings"?gameSettings():ui.page==="news"?newsPage():ui.page==="playerProfile"?playerProfile():ui.page==="clubProfile"?clubProfile():ui.page==="frontOffice"?frontOfficePage():ui.page==="scouting"?scoutingPage():home());$("#host").innerHTML=pageHtml+newsFlashHtml()+postseasonCelebrationHtml();$$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===ui.page||b.dataset.page==="facilities"&&["frontOffice","scouting"].includes(ui.page)));$$("[data-global]").forEach(b=>b.classList.toggle("active",b.dataset.global===ui.page));bind();syncBarHeights()}
 function bind(){
   if($("#champConfetti"))startChampionshipConfetti();
+  // Build 304: a player can occupy only one ranked slot on a GM ballot.
+  const gmRankSelects=[1,2,3,4,5].map(i=>$("#gmAwardRank"+i)).filter(Boolean);
+  const refreshGMAwardChoices=()=>{const chosen=gmRankSelects.map(x=>x.value).filter(Boolean);for(const sel of gmRankSelects){for(const opt of [...sel.options]){if(!opt.value)continue;const usedElsewhere=chosen.includes(opt.value)&&sel.value!==opt.value;opt.disabled=usedElsewhere;opt.hidden=usedElsewhere;}}};
+  for(const sel of gmRankSelects)sel.onchange=refreshGMAwardChoices;refreshGMAwardChoices();
   if($("#submitGMAwardBallot"))$("#submitGMAwardBallot").onclick=async()=>{
     const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;const keys=n.awardKeys||[],key=keys[+n.index||0];
     const ids=[1,2,3,4,5].map(i=>$("#gmAwardRank"+i)?.value).filter(Boolean);if(new Set(ids).size<5){toast("Rank five different players before submitting");return;}
@@ -33137,7 +33158,7 @@ function bind(){
     if((+n.index||0)<keys.length-1){n.index=(+n.index||0)+1;await save();render();return;}rec.submitted=true;G.newsFlashPending={type:"award_results",season:n.season,awardKeys:keys,index:0,category:"AWARDS"};publishMajorAwardNews(G,Object.fromEntries(keys.map(k=>[k,G.awardVoting?.[`S${n.season}_${k}`]])));await save();render();
   };
   if($("#skipGMAwardBallots"))$("#skipGMAwardBallots").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="gm_award_ballot")return;G.gmAwardBallots=G.gmAwardBallots||{};G.gmAwardBallots[`S${n.season}`]={season:n.season,ballots:{},submitted:true,abstained:true};G.newsFlashPending={type:"award_results",season:n.season,awardKeys:n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],index:0,category:"AWARDS"};await save();render();};
-  if($("#revealLotteryPick"))$("#revealLotteryPick").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="draft_lottery")return;if((+n.index||0)>0){n.index=(+n.index||0)-1;render();return;}G.newsFlashPending=null;promoteQueuedNewsFlash(G);await save();render();};
+  if($("#revealLotteryPick"))$("#revealLotteryPick").onclick=async()=>{const n=G.newsFlashPending;if(!n||n.type!=="draft_lottery")return;if((+n.index||0)>0){n.index=(+n.index||0)-1;await save();render();return;}G.draftLotteryPresentationSeen=G.draftLotteryPresentationSeen||{};G.draftLotteryPresentationSeen[`S${n.season}`]=true;const q=ensureNewsFlashQueue(G);for(let i=q.length-1;i>=0;i--)if(q[i]?.type==="draft_lottery"&&+q[i]?.season===+n.season)q.splice(i,1);G.newsFlashPending=null;promoteQueuedNewsFlash(G);await save();render();};
   if($("#closePostCelebration"))$("#closePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#continuePostCelebration"))$("#continuePostCelebration").onclick=()=>{ui.postSeriesCelebrationId=null;render()};
   if($("#awardResultsNext"))$("#awardResultsNext").onclick=async()=>{
