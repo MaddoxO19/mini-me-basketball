@@ -8019,15 +8019,27 @@ const GENERATIONAL_BUILD_DEFS={
   "Paint Dominator":{positions:["PF","C"],mods:{usage:1.18,rebound:1.24,foulDraw:1.24,block:1.08,defensiveImpact:1.08,threeRate:-.10},shootFloor:68},
   "Defensive Anchor":{positions:["PF","C"],mods:{usage:1.02,rebound:1.28,block:1.70,steal:1.08,defensiveImpact:1.32,threeRate:-.035},shootFloor:70},
   "Athletic Phenomenon":{positions:["SG","SF","PF","C"],mods:{usage:1.18,rebound:1.15,steal:1.14,block:1.16,foulDraw:1.24,defensiveImpact:1.10,threeAccuracy:.010,volatility:1.10},shootFloor:76},
-  "Complete Superstar":{positions:["PG","SG","SF","PF","C"],mods:{usage:1.15,assist:1.16,rebound:1.14,steal:1.14,block:1.12,foulDraw:1.10,defensiveImpact:1.12,threeAccuracy:.040},shootFloor:82}
+  "Complete Superstar":{positions:["PG","SG","SF","PF","C"],mods:{usage:1.15,assist:1.16,rebound:1.14,steal:1.14,block:1.12,foulDraw:1.10,defensiveImpact:1.12,threeAccuracy:.040},shootFloor:82},
+  // Generational Builds 2.0: additional GOAT-tier identities diversify 97+ players
+  // without changing the rarity or development threshold for reaching 97 OVR.
+  "Complete Force":{positions:["SF","PF"],mods:{usage:1.20,assist:1.38,rebound:1.18,steal:1.16,block:1.10,foulDraw:1.20,defensiveImpact:1.15,threeAccuracy:.018,volatility:1.04},shootFloor:80},
+  "Triple-Double Engine":{positions:["PG","SG","SF"],mods:{usage:1.18,assist:1.50,rebound:1.27,steal:1.10,foulDraw:1.15,defensiveImpact:1.05,threeAccuracy:.008},shootFloor:78},
+  "Point Center":{positions:["C"],mods:{usage:1.13,assist:1.78,rebound:1.20,steal:1.05,block:.94,foulDraw:1.08,defensiveImpact:1.02,threeAccuracy:.015,volatility:.96},shootFloor:82},
+  "Two-Way Scoring Machine":{positions:["SG","SF"],mods:{usage:1.24,assist:1.18,rebound:1.10,steal:1.38,block:1.08,foulDraw:1.18,defensiveImpact:1.23,threeAccuracy:.030,volatility:1.06},shootFloor:84},
+  "Scoring Colossus":{positions:["C"],mods:{usage:1.30,assist:.98,rebound:1.30,steal:1.02,block:1.24,foulDraw:1.34,defensiveImpact:1.16,threeRate:-.14,volatility:1.04},shootFloor:66}
 };
 function generationalSourceBuild(player){
   const source=statisticalIdentitySourceName(player);
   if(source==="Victor Wembanyama")return"Unicorn";
   if(source==="Luka Doncic"||source==="Luka Dončić")return"Offensive Engine";
   if(source==="Stephen Curry")return"Gravity Shooter";
-  if(source==="Nikola Jokic")return"Offensive Engine";
+  if(source==="Nikola Jokic"||source==="Nikola Jokić")return"Point Center";
   if(source==="Giannis Antetokounmpo")return"Athletic Phenomenon";
+  if(source==="Cooper Flagg")return"Two-Way Apex";
+  if(source==="LeBron James")return"Complete Force";
+  if(source==="Oscar Robertson")return"Triple-Double Engine";
+  if(source==="Michael Jordan")return"Two-Way Scoring Machine";
+  if(source==="Wilt Chamberlain"||source==="Shaquille O'Neal")return"Scoring Colossus";
   return null;
 }
 function deriveGenerationalBuild(player){
@@ -8038,7 +8050,11 @@ function deriveGenerationalBuild(player){
   if(["Floor General","Combo Guard"].includes(arch)&&["PG","SG"].includes(pos))return arch==="Floor General"?"Offensive Engine":"Three-Level Maestro";
   if(arch==="Sharpshooter"&&["PG","SG","SF"].includes(pos))return"Gravity Shooter";
   if(arch==="3-and-D Guard"||arch==="3-and-D Wing")return"Two-Way Apex";
-  if(arch==="Playmaking Forward"&&["SF","PF"].includes(pos))return"Point Forward";
+  if(arch==="Playmaking Forward"&&["SF","PF"].includes(pos)){
+    // Larger 97+ creators can resolve to the LeBron-style all-court build;
+    // smaller creators retain the existing Point Forward identity.
+    return h>=203?"Complete Force":"Point Forward";
+  }
   if(arch==="Slasher"&&["SG","SF","PF"].includes(pos))return"Athletic Phenomenon";
   if(arch==="Traditional Big")return"Paint Dominator";
   if(arch==="Rim Protector")return"Defensive Anchor";
@@ -22387,7 +22403,8 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 309",ENGINE_VERSION="E2.26-PROD309";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+// Build 310 — Generational Builds 2.0: adds Complete Force, Triple-Double Engine, Point Center, Two-Way Scoring Machine and Scoring Colossus; remaps Jokic and Flagg while preserving the 97+ eligibility threshold.
+const BUILD_ID="v0.9.0 Stable · Build 310",ENGINE_VERSION="E2.26-PROD310";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
