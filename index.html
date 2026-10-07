@@ -3445,11 +3445,18 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .playInRecapTeams span{font-size:12px!important;font-weight:650!important;line-height:1.38!important}
 .playInRecapTeams span.winner{color:var(--text)!important;font-weight:650!important}
 .playInRecapRow strong{font-size:12px!important;font-weight:650!important}
+
+/* Build 314 — Legacy season summary and compact honours typography */
+.legacySeasonSummary{grid-template-columns:minmax(120px,.9fr) minmax(0,1.2fr) minmax(0,1fr);gap:12px}
+.legacySeasonSummary>div:last-child{text-align:right}
+.legacySeasonOutcome{min-width:0;text-align:right}.legacySeasonOutcome>small{display:block;margin:0 0 3px;color:var(--muted);font-size:8px;font-weight:900;letter-spacing:.55px}.legacySeasonOutcome>strong{font-size:11px;line-height:1.25}.legacySeasonOutcome>strong.won{color:var(--accent2)}
+.legacyAwardGroups{gap:8px;margin-top:8px}.legacyAwardGroup{border-radius:12px}.legacyAwardGroupHead{padding:10px 12px}.legacyAwardGroupHead>b{font-size:12px}.legacyAwardGroupHead>strong{min-width:26px;font-size:12px}.legacyAwardWinner{grid-template-columns:76px minmax(0,1fr);gap:9px;padding:8px 12px}.legacyAwardWinner>span{font-size:10px}.legacyAwardWinner>b{font-size:11px}.legacyAwardWinner .playerLink{font-size:11px}
+@media(max-width:430px){.legacySeasonSummary{grid-template-columns:78px minmax(0,1fr);gap:7px 10px;padding:10px 11px}.legacySeasonIdentity{grid-row:1 / span 2}.legacySeasonOutcome{grid-column:2;text-align:right}.legacySeasonOutcome>strong{font-size:10px}.legacySeasonOutcome>small{font-size:7px}.legacyAwardGroupHead{padding:9px 11px}.legacyAwardGroupHead>b{font-size:11px}.legacyAwardWinner{grid-template-columns:72px minmax(0,1fr);padding:7px 11px}.legacyAwardWinner>span{font-size:9px}.legacyAwardWinner>b,.legacyAwardWinner .playerLink{font-size:10px}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 313</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 314</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22420,7 +22427,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 313",ENGINE_VERSION="E2.26-PROD313";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 314",ENGINE_VERSION="E2.26-PROD314";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25923,7 +25930,14 @@ function universalBoxScoreHtml(g){
 }
 function openResultWindow(game,returnMode=null){
   if(!game)return false;
-  if(!isNationalResultGame(game))repairLegacyGameBox(game);
+  if(!isNationalResultGame(game)){
+    repairLegacyGameBox(game);
+    // Build 314 — post-game box scores open on the user's club by default.
+    // The opponent tab remains available for review after the result opens.
+    const userClubId=G?.userClubGM?.clubId||me()?.id||null;
+    if(userClubId&&String(game.homeClubId)===String(userClubId))ui.boxSide="home";
+    else if(userClubId&&String(game.awayClubId)===String(userClubId))ui.boxSide="away";
+  }
   ui.resultGameId=game.id;
   ui.resultReturn=returnMode;
   show("resultWindow");renderResultWindow();return true;
@@ -33105,8 +33119,12 @@ function legacyInternationalRecordsReference(n){
 }
 function legacyClubHistoryReference(club){
   const archive=clubSeasonArchive(club).slice().sort((a,b)=>(+b.season||0)-(+a.season||0));
-  const rows=archive.map(h=>`<div class="legacyHistoryRow"><div><b>${basketballSeasonLabel(h.season)}</b><small>${h.record||"—"}${h.conf?` · ${h.conf}`:""}</small></div><div><strong>${h.finish||"Season Complete"}</strong><small>Season result</small></div></div>`).join("");
-  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${club.name.toUpperCase()} · HISTORY</div><h3>Season Archive</h3><p>The chronological story of the franchise: season record, standing context and postseason finish. Trophies and awards live only in Honours.</p></div><div class="legacyHistoryList">${rows||`<div class="card empty">Club history will populate after completed seasons.</div>`}</div>`;
+  const rows=archive.map(h=>{
+    const leagueResult=h.champion?"League Champion":(h.finish||"Season Complete");
+    const cupResult=h.cup?"The Cup Champion":"No Cup title";
+    return `<div class="legacyHistoryRow legacySeasonSummary"><div class="legacySeasonIdentity"><b>${basketballSeasonLabel(h.season)}</b><small>${h.record||"—"}${h.conf?` · ${h.conf}`:""}</small></div><div class="legacySeasonOutcome"><small>LEAGUE</small><strong>${leagueResult}</strong></div><div class="legacySeasonOutcome cup"><small>THE CUP</small><strong class="${h.cup?"won":""}">${cupResult}</strong></div></div>`;
+  }).join("");
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">${club.name.toUpperCase()} · HISTORY</div><h3>Season Archive</h3><p>Each completed season brings the regular-season record, League outcome and The Cup result together. Detailed trophies and individual awards remain in Honours.</p></div><div class="legacyHistoryList">${rows||`<div class="card empty">Club history will populate after completed seasons.</div>`}</div>`;
 }
 function legacyLeagueHistoryReference(){
   const hist=(G.leagueHistory||[]).slice().sort((a,b)=>(+b.season||0)-(+a.season||0));
