@@ -1339,6 +1339,24 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 }
 
 
+/* Build 309 — League Performance table alignment + LPR explainer */
+.leaguePerformancePage .performanceTable{min-width:780px}
+.leaguePerformancePage .performanceTable th:first-child,.leaguePerformancePage .performanceTable td:first-child{width:38px;min-width:38px;text-align:center}
+.leaguePerformancePage .performanceTable th:nth-child(2),.leaguePerformancePage .performanceTable td:nth-child(2){width:210px;min-width:210px;text-align:left}
+.leaguePerformancePage .performanceTable th:nth-child(n+3),.leaguePerformancePage .performanceTable td:nth-child(n+3){text-align:right}
+.leaguePerformancePage .performancePlayer{justify-content:flex-start;text-align:left}
+.leaguePerformancePage .performancePlayer>div{width:100%;text-align:left}
+.lprExplainer{margin:10px 2px 0;border:1px solid var(--line);border-radius:12px;background:var(--panel);overflow:hidden}
+.lprExplainer summary{cursor:pointer;padding:10px 12px;font-size:10px;font-weight:900;color:var(--accent2);list-style:none}
+.lprExplainer summary::-webkit-details-marker{display:none}
+.lprExplainer summary:after{content:'＋';float:right;color:var(--muted)}
+.lprExplainer[open] summary:after{content:'−'}
+.lprExplainer div{border-top:1px solid var(--line);padding:10px 12px}
+.lprExplainer p{margin:0 0 7px;font-size:9px;line-height:1.5;color:var(--muted)}
+.lprExplainer p:last-child{margin-bottom:0}
+.lprExplainer b{color:var(--text)}
+@media(max-width:600px){.leaguePerformancePage .performanceTable{min-width:760px}.leaguePerformancePage .performanceTable th:first-child,.leaguePerformancePage .performanceTable td:first-child{width:34px;min-width:34px}.leaguePerformancePage .performanceTable th:nth-child(2),.leaguePerformancePage .performanceTable td:nth-child(2){width:185px;min-width:185px}}
+
 /* v0.1.17.2 — career integrity hotfix */
 .teamIdentityProfileLink{appearance:none;-webkit-appearance:none;border:0;background:transparent;color:inherit;font:inherit;text-align:left;padding:0;margin:0;cursor:pointer;max-width:100%}
 .teamIdentityProfileLink:hover b,.teamIdentityProfileLink:hover>span:last-child{color:var(--accent2)}
@@ -3426,7 +3444,7 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 308</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 309</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22369,7 +22387,7 @@ if (typeof module !== "undefined") {
 // Fixtures and Trades now live under Club; old Squad routes redirect safely.
 // Completed playoff rounds queue a mandatory recap before the next round is user-playable.
 // Build 287 — Roster AI protection + offseason/draft/preseason UI cleanup.
-const BUILD_ID="v0.9.0 Stable · Build 308",ENGINE_VERSION="E2.26-PROD308";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 309",ENGINE_VERSION="E2.26-PROD309";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -32006,7 +32024,7 @@ function leagueTransactionsPage(){
 }
 
 
-// Build 308 — League Performance Top 50.
+// Build 309 — Legacy Performance Rating and League Performance alignment.
 // League-wide counterpart to Squad > Performance. PR is a current-season production
 // rating only: it never reads OVR, potential, role expectations or development labels.
 function leaguePerformancePlayers(){
@@ -32027,7 +32045,7 @@ function leaguePerformanceRankings(){
   const pct={};for(const [k,inv] of [['ppg',false],['rpg',false],['apg',false],['spg',false],['bpg',false],['tov',true],['fg',false],['three',false],['ft',false],['mpg',false]])pct[k]=leaguePerformancePercentiles(rows,k,inv);
   const q=(r,k)=>pct[k]?.get(String(r.p.id))??0;
   return{minGp:base.minGp,rows:rows.map(r=>{
-    // PR (0–100): balanced box-score production, shooting efficiency and workload.
+    // LPR (0–100): Legacy Performance Rating — balanced box-score production, shooting efficiency and workload.
     // Scoring/playmaking lead the weighting; rebounds and defensive events matter without
     // forcing a positional template. Turnovers are rewarded inversely. No ratings input.
     const pr=100*(.25*q(r,'ppg')+.12*q(r,'rpg')+.16*q(r,'apg')+.10*q(r,'spg')+.09*q(r,'bpg')+.07*q(r,'tov')+.08*q(r,'fg')+.06*q(r,'three')+.02*q(r,'ft')+.05*q(r,'mpg'));
@@ -32042,11 +32060,11 @@ function leaguePerformancePage(){
   top50.sort((a,b)=>{if(key==='player')return(dir==='asc'?1:-1)*a.p.name.localeCompare(b.p.name);const av=+a[key]||0,bv=+b[key]||0;return dir==='asc'?av-bv:bv-av});
   const fmt=(v,d=1)=>Number.isFinite(+v)?(+v).toFixed(d):'—',pct=v=>v==null?'—':`${(+v).toFixed(1)}%`;
   const sortButton=(k,l)=>`<button data-leagueperfsort="${k}" class="${key===k?'active':''}">${l}${key===k?` ${dir==='desc'?'↓':'↑'}`:''}</button>`;
-  return `<div class="leaguePerformancePage"><div class="performanceHero compactPerformanceHero"><div><div class="eyebrow">COURTSIDE NETWORK · PERFORMANCE</div><h3>${basketballSeasonLabel(G.season)} League Top 50</h3><p>League-wide current-season production. PR is calculated from recorded performance only; OVR, potential and Expected/Productive/High Impact assessments are excluded.</p></div><strong>50<small>TOP</small></strong></div>
-    <div class="performanceToolbar expandedFilters"><span>Sort Top 50 by</span><div>${sortButton('pr','PR')}${sortButton('mpg','MPG')}${sortButton('ppg','PPG')}${sortButton('rpg','RPG')}${sortButton('apg','APG')}${sortButton('spg','SPG')}${sortButton('bpg','BPG')}</div></div>
-    <div class="performanceIndexNote"><b>Performance Rating (PR)</b><span>Qualification: ${data.minGp} GP · 10.0 MPG minimum</span></div>
-    <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>RK</th><th>PLAYER</th><th>PR</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${top50.length?top50.map(r=>`<tr><td><b>${[...data.rows].sort((a,b)=>b.pr-a.pr).findIndex(x=>String(x.p.id)===String(r.p.id))+1}</b></td><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${clubNameLink(r.club)}</small></div></div></td><td><b>${fmt(r.pr)}</b></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join(''):`<tr><td colspan="13">Performance rankings will populate once regular-season statistics are available.</td></tr>`}</tbody></table></div>
-    <div class="performanceIndexNote"><span>PR is a Legacy Basketball all-in-one performance measure, not an NBA proprietary metric or a player rating.</span></div></div>`;
+  return `<div class="leaguePerformancePage"><div class="performanceHero compactPerformanceHero"><div><div class="eyebrow">COURTSIDE NETWORK · PERFORMANCE</div><h3>${basketballSeasonLabel(G.season)} League Top 50</h3><p>League-wide current-season production. LPR is calculated from recorded performance only; OVR, potential and Expected/Productive/High Impact assessments are excluded.</p></div><strong>50<small>TOP</small></strong></div>
+    <div class="performanceToolbar expandedFilters"><span>Sort Top 50 by</span><div>${sortButton('pr','LPR')}${sortButton('mpg','MPG')}${sortButton('ppg','PPG')}${sortButton('rpg','RPG')}${sortButton('apg','APG')}${sortButton('spg','SPG')}${sortButton('bpg','BPG')}</div></div>
+    <div class="performanceIndexNote"><b>Legacy Performance Rating (LPR)</b><span>Qualification: ${data.minGp} GP · 10.0 MPG minimum</span></div>
+    <div class="performanceTableWrap"><table class="performanceTable"><thead><tr><th>RK</th><th>PLAYER</th><th>LPR</th><th>GP</th><th>MPG</th><th>PPG</th><th>RPG</th><th>APG</th><th>SPG</th><th>BPG</th><th>FG%</th><th>3PT%</th><th>FT%</th></tr></thead><tbody>${top50.length?top50.map(r=>`<tr><td><b>${[...data.rows].sort((a,b)=>b.pr-a.pr).findIndex(x=>String(x.p.id)===String(r.p.id))+1}</b></td><td><div class="performancePlayer"><div><b>${playerNameLink(r.p)}</b><small>${positionLabel(r.p)} · ${clubNameLink(r.club)}</small></div></div></td><td><b>${fmt(r.pr)}</b></td><td>${r.gp}</td><td>${fmt(r.mpg)}</td><td><b>${fmt(r.ppg)}</b></td><td>${fmt(r.rpg)}</td><td>${fmt(r.apg)}</td><td>${fmt(r.spg)}</td><td>${fmt(r.bpg)}</td><td>${pct(r.fg)}</td><td>${pct(r.three)}</td><td>${pct(r.ft)}</td></tr>`).join(''):`<tr><td colspan="13">Performance rankings will populate once regular-season statistics are available.</td></tr>`}</tbody></table></div>
+    <details class="lprExplainer"><summary>How LPR is calculated</summary><div><p><b>Legacy Performance Rating (LPR)</b> is Legacy Basketball’s current-season all-in-one production measure. It is not an NBA proprietary metric and it does not use player OVR, potential, reputation, build or role.</p><p>LPR compares qualified league players using current-season percentiles: <b>25% scoring · 16% assists · 12% rebounds · 10% steals · 9% blocks · 8% FG% · 7% turnover control · 6% 3PT% · 5% minutes · 2% FT%</b>. The result is expressed on a 0–100 scale.</p></div></details></div>`;
 }
 
 function league(){
