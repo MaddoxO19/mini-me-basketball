@@ -3647,11 +3647,41 @@ table{
   }
 }
 
+
+/* Build 323: player-facing settings, compact honours, fixtures and overtime */
+.supportActions{display:flex;gap:8px;flex-wrap:wrap;padding:12px}
+.supportActions button{flex:1 1 145px;min-height:42px}
+.supportDetails{margin-top:12px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.supportDetails summary{padding:14px;cursor:pointer;font-weight:800;color:var(--muted)}
+.supportAdvanced{padding:0 10px 12px}
+.teamHonourGrid.compact3,.teamHonourGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important}
+.teamHonourGrid.compact3 .teamHonour,.teamHonourGrid .teamHonour{min-height:84px!important;height:auto!important;padding:11px 5px!important;display:flex!important;flex-direction:column!important;justify-content:center!important;align-items:center!important;text-align:center!important;gap:5px!important}
+.teamHonourGrid .teamHonour b{font-size:23px!important;line-height:1.1!important}
+.teamHonourGrid .teamHonour small{font-size:10px!important;line-height:1.3!important;margin:0!important;overflow-wrap:normal!important}
+.upcomingFixtures .unifiedFixtureSection .fixtureRow,.upcomingFixtures .fixtureRow{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:4px 10px!important;padding:12px 4px!important;align-items:center!important}
+.upcomingFixtures .fixtureRound{grid-column:1/-1!important;display:block!important;min-width:0!important}
+.upcomingFixtures .fixtureRound small{font-size:10px!important;line-height:1.4!important;letter-spacing:.055em!important}
+.upcomingFixtures .fixtureOpponent{grid-column:1!important;font-size:13px!important;line-height:1.35!important;min-width:0!important;overflow-wrap:break-word}
+.upcomingFixtures .fixtureVenue{grid-column:2!important;grid-row:2!important;text-align:right!important}
+.lineScore.hasOT{width:100%!important;min-width:0!important;table-layout:fixed!important}
+.lineScore.hasOT th,.lineScore.hasOT td{padding:9px 3px!important;font-size:10px!important;white-space:nowrap}
+.lineScore.hasOT .teamCol{width:26%!important}
+.lineScore.hasOT .teamCell{gap:3px!important;min-width:0}
+.lineScore.hasOT .teamCell .mark{width:19px!important;height:19px!important}
+.lineScore.hasOT .teamCell b{font-size:10px!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap!important}
+@media(max-width:410px){
+ .lineScore.hasOT th,.lineScore.hasOT td{padding:8px 1px!important;font-size:9px!important}
+ .lineScore.otCount2 .teamCol{width:23%!important}
+ .lineScore.otCount3 .teamCol{width:20%!important}
+ .lineScore.otCount3 .teamCell .mark{display:none!important}
+ .teamHonourGrid .teamHonour small{font-size:9px!important}
+}
+@media(max-width:340px){.lineScore.otCount3{min-width:360px!important}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 322</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 323</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22633,7 +22663,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 322",ENGINE_VERSION="E2.26-PROD322";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 323",ENGINE_VERSION="E2.26-PROD323";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25960,8 +25990,8 @@ function clubProfile(){
     ${club.id===me()?.id?`<div class="teamProfileTopActions"><button id="clubScheduleBtn" class="btn primary">View Fixtures</button></div>`:""}
     <div class="profileMetricGrid"><div class="profileMetric2"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric2"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric2"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric2"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
 
-    <div class="sectionTitle">Club Honours</div><div class="teamHonourGrid compact3 clubHonourAligned"><div class="teamHonour"><b>${honours.nba}</b><small>League Championships</small></div><div class="teamHonour"><b>${honours.cup}</b><small>The Cups</small></div><div class="teamHonour"><b>${honours.best}</b><small>League-Best Seasons</small></div></div>
-    <div class="profilePanel franchiseBestSeasonPanel" style="margin-top:10px"><h4>Franchise Regular Season</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Best Regular-Season Record</small><b>${franchiseBest?.record||"—"}</b></div><div class="profileDataRow"><small>Best Season</small><b>${franchiseBest?basketballSeasonLabel(franchiseBest.season):"No completed season yet"}</b></div><div class="profileDataRow"><small>League-Best Seasons</small><b>${honours.best}</b></div></div></div>
+    <div class="sectionTitle">Club Honours</div><div class="teamHonourGrid compact3 clubHonourAligned"><div class="teamHonour"><b>${honours.nba}</b><small>League Championships</small></div><div class="teamHonour"><b>${honours.cup}</b><small>Cup Titles</small></div><div class="teamHonour"><b>${honours.best}</b><small>League-Best Seasons</small></div></div>
+    <div class="profilePanel franchiseBestSeasonPanel" style="margin-top:10px"><h4>Franchise Regular Season</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Best Regular-Season Record</small><b>${franchiseBest?.record||"—"}</b></div><div class="profileDataRow"><small>Best Season</small><b>${franchiseBest?basketballSeasonLabel(franchiseBest.season):"No completed season yet"}</b></div></div></div>
 
     <div class="profileSectionGrid" style="margin-top:10px">
       <div class="profilePanel"><h4>Team Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Basketball Style</small><b>${club.style||"Balanced"}</b></div><div class="profileDataRow"><small>Division</small><b>${club.division}</b></div><div class="profileDataRow"><small>Chemistry</small><b>${club.chemistry||"—"}</b></div><div class="profileDataRow"><small>Roster</small><b>${roster.length}/${club.regularRosterLimit||15}</b></div><div class="profileDataRow"><small>Two-Way Players</small><b>${(club.twoWayRoster||[]).length}/${club.twoWayLimit||3}</b></div><div class="profileDataRow"><small>Draft Assets</small><b>${clubDraftAssets(G,club.id).length}</b></div></div></div>
@@ -26903,8 +26933,8 @@ function lineScoreHtml(g){
     aOT=[Math.max(0,(g.awayScore||0)-aReg)];hOT=[Math.max(0,(g.homeScore||0)-hReg)];
   }
   const periodHeads=["Q1","Q2","Q3","Q4",...Array.from({length:Math.max(aOT.length,hOT.length)},(_,i)=>`OT${i+1}`)];
-  const row=(club,qs,ots,total)=>`<tr><td class="teamCol"><div class="teamCell">${teamMark(club,"mark")}<b>${club?.name||""}</b></div></td>${[...qs,...ots].map(x=>`<td>${x??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
-  return `<div class="lineScoreWrap"><table class="lineScore ${otCount?"hasOT":""}"><thead><tr><th class="teamCol">TEAM</th>${periodHeads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(away,aq,aOT,g.awayScore)}${row(home,hq,hOT,g.homeScore)}</tbody></table></div>`;
+  const row=(club,qs,ots,total)=>`<tr><td class="teamCol"><div class="teamCell">${teamMark(club,"mark")}<b>${otCount?(club?.abbrev||club?.abbr||club?.shortName||club?.name||""):(club?.name||"")}</b></div></td>${[...qs,...ots].map(x=>`<td>${x??0}</td>`).join("")}<td class="total">${total}</td></tr>`;
+  return `<div class="lineScoreWrap"><table class="lineScore ${otCount?"hasOT otCount"+Math.min(otCount,3):""}"><thead><tr><th class="teamCol">TEAM</th>${periodHeads.map(h=>`<th>${h}</th>`).join("")}<th class="total">T</th></tr></thead><tbody>${row(away,aq,aOT,g.awayScore)}${row(home,hq,hOT,g.homeScore)}</tbody></table></div>`;
 }
 function latestResultHtml(g){
   if(!g)return"";
@@ -27002,7 +27032,7 @@ function summerLeagueUpcomingFixturesHtml(limit=3){
     fixtures.push({round:+rd.round,opponent:c(oppId)?.name||oppId});
   }
   if(!fixtures.length)return"";
-  const rows=fixtures.map((x,i)=>`<div class="fixtureRow"><span class="fixtureRound"><small>SUMMER LEAGUE</small>Game ${x.round}</span><b class="fixtureOpponent">vs ${x.opponent}</b><strong class="fixtureVenue">Neutral</strong></div>`).join("");
+  const rows=fixtures.map((x,i)=>`<div class="fixtureRow"><span class="fixtureRound"><small>SUMMER LEAGUE · Game ${x.round}</small></span><b class="fixtureOpponent">vs ${x.opponent}</b><strong class="fixtureVenue">Neutral</strong></div>`).join("");
   return `<div class="upcomingFixtures"><div class="upcomingFixturesHead"><b>Upcoming Fixtures</b><small>Next ${fixtures.length} · Summer League</small></div><div class="fixtureSection unifiedFixtureSection"><div class="fixtureRows">${rows}</div></div></div>`;
 }
 function upcomingFixturesHtml(){
@@ -30266,6 +30296,16 @@ function commissionerControlCentreHtml(state){
     </div>`;
 }
 
+function diagnosticReportText(){
+  const data={game:"Legacy Basketball",build:BUILD_ID,engine:ENGINE_VERSION,
+    season:G?.season??null,phase:G?.phase??null,saveSlot:G?.saveSlot??null,
+    leagueClubs:G?leagueClubCount(G):null,
+    lastSaveMs:G?.runtimeMeta?.lastSaveWriteMs??null,
+    lastAdvanceMs:G?.runtimeMeta?.lastCareerAdvancePerformance?.durationMs??null,
+    browser:typeof navigator!=="undefined"?navigator.userAgent:"unknown",
+    generatedAt:new Date().toISOString()};
+  return JSON.stringify(data,null,2);
+}
 function gameDataSettingsContent(){
   const rows=gameDataManifestRows();
   const sw=saveWritePerformanceStats(G);
@@ -30274,7 +30314,11 @@ function gameDataSettingsContent(){
   const gamePerf=G.runtimeMeta?.lastRegularSeasonGamePerformanceBreakdown||roundPerf?.gameBreakdown||null;
   const marginAudit=scoreMarginAuditSummary(G);
   const curMargin=marginAudit.current,careerMargin=marginAudit.career;
-  return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Runtime & Diagnostics</h3><p>Build, engine, save and league-structure information for the active career.</p></div>
+  const supportReport=diagnosticReportText();
+  return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Career & Support</h3></div>
+    <div class="card gameConfigCard"><div class="more"><div><b>Game Version</b></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Save Slot</b></div><b>${G.saveSlot?`Slot ${G.saveSlot}`:"—"}</b></div></div>
+    <div class="card gameConfigCard" style="margin-top:10px"><div class="more"><div><b>Diagnostics & Support</b><small>Open when reporting a problem</small></div></div><div class="supportActions"><button type="button" id="copyDiagnosticReport" class="btn">Copy Report</button><button type="button" id="downloadDiagnosticReport" class="btn">Download Report</button></div></div>
+    <details class="supportDetails"><summary>Advanced Diagnostics</summary><div class="supportAdvanced">
     <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
     <div class="more"><div><b>Player Build Model</b><small>61 curated H³O builds · hidden source identity · modest specialist simulation layer · generational builds emergent only</small></div><b>${BUILD_MAPPING_VERSION} · ${HIDDEN_STYLE_PROFILE_VERSION}</b></div>
@@ -30314,7 +30358,7 @@ function gameDataSettingsContent(){
     <div class="more"><div><b>Current Season Margins</b><small>${curMargin.games} games · 20+ ${curMargin.twentyPlus} · 30+ ${curMargin.thirtyPlus} · 40+ ${curMargin.fortyPlus} · 50+ ${curMargin.fiftyPlus} · 60+ ${curMargin.sixtyPlus}</small></div><b>${curMargin.games?`MAX ${curMargin.largestMargin}`:"—"}</b></div>
     <div class="more"><div><b>Tracked Margin Audit</b><small>${careerMargin.seasons} season${careerMargin.seasons===1?"":"s"} with retained/tracked data · ${careerMargin.games} games · avg margin ${careerMargin.avgMargin} · 40+ ${careerMargin.fortyPlus} · 50+ ${careerMargin.fiftyPlus} · 60+ ${careerMargin.sixtyPlus}${careerMargin.largestMatchup?` · largest ${careerMargin.largestMatchup}`:""}</small></div><b>${careerMargin.games?`MAX ${careerMargin.largestMargin}`:"—"}</b></div>
     <div class="more"><div><b>Last Save</b><small>Most recent completed IndexedDB write</small></div><b>${G.runtimeMeta?.lastSaveWriteMs!=null?`${G.runtimeMeta.lastSaveWriteMs} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Average</b><small>${sw.count?`Rolling average across ${sw.count} completed write${sw.count===1?"":"s"}`:"Build begins collecting this after your next save"}</small></div><b>${sw.avg!=null?`${sw.avg} ms`:"—"}</b></div><div class="more"><div><b>Recent Save Peak</b><small>Highest write time in the rolling diagnostic window</small></div><b>${sw.peak!=null?`${sw.peak} ms`:"—"}</b></div><div class="more"><div><b>Active Slot</b><small>Current career save slot</small></div><b>${G.saveSlot?`SLOT ${G.saveSlot}`:"—"}</b></div></div>
-    <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div>`;
+    <div class="sectionTitle">Technical Data</div><div class="card gameDataManifest">${rows.map(r=>`<div class="more gameDataRow"><div><b>${r.label}</b><small>${r.note}</small></div><b>${r.value}</b></div>`).join("")}</div></div></details>`;
 }
 function gameSettings(){
   ensureCareerControlState(G);
@@ -30330,7 +30374,7 @@ function gameSettings(){
     <div class="settingsHero">
       <div class="eyebrow">GAME SETTINGS</div>
       <h3>Career Settings</h3>
-      <p>Core career rules and league controls.</p>
+      
     </div>
 
     <div class="settingsSection">
@@ -30349,14 +30393,13 @@ function gameSettings(){
           <div class="settingsValue ${expansionOn?"on":"muted"}">${expansionOn?"ON":"OFF"}</div>
         </div>
         <div class="settingsRow">
-          <div class="settingsRowText"><b>Commissioner Mode</b><small>${commissionerOn?"League-control framework enabled.":"Commissioner controls are disabled."}</small></div>
+          <div class="settingsRowText"><b>Commissioner Mode</b><small>${commissionerOn?"Commissioner controls enabled.":"Commissioner controls are disabled."}</small></div>
           <div class="settingsValue ${commissionerOn?"on":"muted"}">${commissionerOn?"ON":"OFF"}</div>
         </div>
       </div>
     </div>
 
-    ${expansionSettingsStatusHtml(G)}
-    ${commissionerSettingsHtml(G)}`;
+    `;
 }
 function gmProfile(){
   const club=me(),gm=gmCareerState(G),history=[...(G.seasonSummaries||[])].slice().reverse();
@@ -33626,6 +33669,17 @@ function bind(){
 
 
 $$(`[data-gmprofiletab]`).forEach(b=>b.onclick=()=>{ui.gmProfileTab=b.dataset.gmprofiletab;ui.page="gmProfile";render()});$$(`[data-settingstab]`).forEach(b=>b.onclick=()=>{ui.settingsTab=b.dataset.settingstab;ui.page="settings";render()});
+  if($("#copyDiagnosticReport"))$("#copyDiagnosticReport").onclick=async()=>{
+    const report=diagnosticReportText();
+    try{await navigator.clipboard.writeText(report);toast("Diagnostic report copied")}
+    catch(e){toast("Clipboard unavailable. Use Download Report")}
+  };
+  if($("#downloadDiagnosticReport"))$("#downloadDiagnosticReport").onclick=()=>{
+    const blob=new Blob([diagnosticReportText()],{type:"application/json"});
+    const url=URL.createObjectURL(blob),a=document.createElement("a");
+    a.href=url;a.download="Legacy_Basketball_Diagnostics.json";document.body.appendChild(a);a.click();a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
   if($("#cupRecapContinue"))$("#cupRecapContinue").onclick=()=>{
     ui.page="home";ui.leagueTab="standings";show("game");save();render();
   };
