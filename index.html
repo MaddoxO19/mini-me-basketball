@@ -3464,11 +3464,37 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .teamHonourGrid.clubHonourAligned .teamHonour b{font-size:20px;line-height:1.15;margin:0 0 7px}
 .teamHonourGrid.clubHonourAligned .teamHonour small{font-size:11px;line-height:1.35;margin:0;overflow-wrap:break-word}
 @media(max-width:430px){.teamHonourGrid.clubHonourAligned .teamHonour{min-height:86px;padding:10px 8px}.teamHonourGrid.clubHonourAligned .teamHonour b{font-size:18px}.teamHonourGrid.clubHonourAligned .teamHonour small{font-size:10px}}
+
+/* Build 317 — contained mobile typography, spacing and touch-target pass.
+   Scoped to recurring page elements; no changes to gameplay or navigation structure. */
+:root{--ui-title:clamp(21px,5.3vw,24px);--ui-section:clamp(16px,4.2vw,19px);--ui-body:13px;--ui-detail:11px}
+.page .head h2{font-size:var(--ui-title);line-height:1.18;letter-spacing:-.025em}
+.page .sectionTitle{font-size:var(--ui-section);line-height:1.25;letter-spacing:-.015em;overflow-wrap:break-word}
+.page .head p{line-height:1.5}
+.page .card,.page .profilePanel,.page .historyCard{min-width:0}
+.page .profileHeroText,.page .profileIdentity{min-width:0;overflow-wrap:break-word}
+.page .teamHonourGrid.clubHonourAligned .teamHonour{justify-content:space-between;gap:7px}
+.page .teamHonourGrid.clubHonourAligned .teamHonour b{margin:0;font-variant-numeric:tabular-nums}
+.page .teamHonourGrid.clubHonourAligned .teamHonour small{margin:0;max-width:100%;hyphens:auto}
+.page .legacyAwardGroupHead{gap:8px;min-width:0}
+.page .legacyAwardGroupHead>b{line-height:1.35;overflow-wrap:break-word}
+.page .legacyAwardWinner{min-width:0}
+.page button,.page [role="button"]{touch-action:manipulation}
+.page button:focus-visible,.nav button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media(max-width:430px){
+ .page{padding-inline:12px}
+ .page .head{gap:8px}
+ .page .teamHonourGrid.clubHonourAligned{gap:7px}
+ .page .teamHonourGrid.clubHonourAligned .teamHonour{min-height:92px;padding:11px 8px}
+ .page .teamHonourGrid.clubHonourAligned .teamHonour small{font-size:10px;line-height:1.35}
+ .page .legacyAwardGroupHead>b{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){.page button,.page [role="button"]{scroll-behavior:auto}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 316</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 317</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22450,7 +22476,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 316",ENGINE_VERSION="E2.26-PROD316";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 317",ENGINE_VERSION="E2.26-PROD317";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
