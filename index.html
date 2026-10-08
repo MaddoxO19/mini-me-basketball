@@ -3457,11 +3457,18 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .contractModalBackdrop{position:fixed;inset:0;z-index:99990;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain}
 .contractModalBackdrop .contractNegotiation{width:min(100%,520px);max-height:calc(100dvh - 40px);overflow-y:auto;margin:0;box-shadow:0 18px 60px rgba(0,0,0,.65);-webkit-overflow-scrolling:touch}
 @media(max-width:440px){.contractModalBackdrop .contractNegotiation{padding:12px}.contractModalBackdrop .contractNegHead h3{font-size:18px}}
+
+/* Build 316: uniform honour tiles, stable baseline and readable multiline labels. */
+.teamHonourGrid.clubHonourAligned{grid-template-columns:repeat(3,minmax(0,1fr));align-items:stretch;gap:8px}
+.teamHonourGrid.clubHonourAligned .teamHonour{display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;min-width:0;min-height:92px;padding:12px 10px;box-sizing:border-box}
+.teamHonourGrid.clubHonourAligned .teamHonour b{font-size:20px;line-height:1.15;margin:0 0 7px}
+.teamHonourGrid.clubHonourAligned .teamHonour small{font-size:11px;line-height:1.35;margin:0;overflow-wrap:break-word}
+@media(max-width:430px){.teamHonourGrid.clubHonourAligned .teamHonour{min-height:86px;padding:10px 8px}.teamHonourGrid.clubHonourAligned .teamHonour b{font-size:18px}.teamHonourGrid.clubHonourAligned .teamHonour small{font-size:10px}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 315</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 316</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -16392,7 +16399,9 @@ function signFreeAgent(G, clubId, playerId, years=1) {
   if(p.contractStatus==="External League"||p.contractType==="International"||p.nbaAvailability==="External Contract")return false;
   const demand=freeAgentDemand(p); years=Math.max(1,Math.min(4,Number(years)||1));
   let annualM=demand.annualM, capCheck=canSignSalary(G,club,annualM);
-  if(!capCheck.ok && club.roster.length<15){ annualM=Math.min(3.5,Math.max(1.2,annualM*0.35)); capCheck=canSignSalary(G,club,annualM); }
+  // Build 316: never turn an AI market demand into an arbitrary 35% discount.
+  // Cap-disabled clubs can sign at the full market demand; cap-constrained clubs
+  // must find an affordable player rather than silently reducing their asking price.
   if(!capCheck.ok) return false;
   G.freeAgents.splice(idx,1); p.contractYearsLeft=years; p.salaryM=Math.round(annualM*10)/10; p.contractType='Standard'; p.contractStatus='Under Contract'; p.unsignedOffseasons=0; p.freeAgentSinceSeason=null; p.extensionEligible=years===1; p.pendingExtension=null; p.productionContractScheduleM=[]; club.roster.push(p); recalcClubCap(club);
   G.transactions.push({type:'sign',season:G.season,clubId,playerId,years,salaryM:p.salaryM,mechanism:capCheck.mechanism,ai:true}); return true;
@@ -16449,7 +16458,8 @@ function ensureRosterCompliance(G, club, isUser=false) {
     let best=null,bestScore=-Infinity;
     for(const p of G.freeAgents){
       const demand=freeAgentDemand(p),fit=needAwareScore(club,p,{direction});
-      const affordability=(cap.capRoom>=demand.annualM)?2:(club.roster.length<15&&demand.annualM<=3.5?0:-6);
+      const unrestricted=G?.settings?.salaryCap===false;
+      const affordability=unrestricted?2:(cap.capRoom>=demand.annualM?2:(canSignSalary(G,club,demand.annualM).ok?0:-12));
       const sc=fit+affordability;
       if(sc>bestScore){bestScore=sc;best=p;}
     }
@@ -16468,7 +16478,7 @@ function ensureRosterCompliance(G, club, isUser=false) {
       for(const p of G.freeAgents){
         if((+p.ovr||0)<75)continue;
         const demand=freeAgentDemand(p),cap=clubCapPosition(G,club.id);
-        if(!(cap.capRoom>=demand.annualM || demand.annualM<=3.5))continue;
+        if(!canSignSalary(G,club,demand.annualM).ok)continue;
         const sc=needAwareScore(club,p,{direction});
         if(sc>bestScore){bestScore=sc;best=p;}
       }
@@ -22440,7 +22450,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 315",ENGINE_VERSION="E2.26-PROD315";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 316",ENGINE_VERSION="E2.26-PROD316";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25762,7 +25772,7 @@ function clubProfile(){
     ${club.id===me()?.id?`<div class="teamProfileTopActions"><button id="clubScheduleBtn" class="btn primary">View Fixtures</button></div>`:""}
     <div class="profileMetricGrid"><div class="profileMetric2"><b>${squadOvr(club)}</b><small>Team OVR</small></div><div class="profileMetric2"><b>${r.w||0}–${r.l||0}</b><small>Record</small></div><div class="profileMetric2"><b>#${rank>0?rank:"—"}</b><small>${club.conference} Seed</small></div><div class="profileMetric2"><b>$${payroll.toFixed(1)}M</b><small>Payroll</small></div></div>
 
-    <div class="sectionTitle">Club Honours</div><div class="teamHonourGrid compact3"><div class="teamHonour"><b>${honours.nba}</b><small>League Championships</small></div><div class="teamHonour"><b>${honours.cup}</b><small>The Cups</small></div><div class="teamHonour"><b>${honours.best}</b><small>League-Best Seasons</small></div></div>
+    <div class="sectionTitle">Club Honours</div><div class="teamHonourGrid compact3 clubHonourAligned"><div class="teamHonour"><b>${honours.nba}</b><small>League Championships</small></div><div class="teamHonour"><b>${honours.cup}</b><small>The Cups</small></div><div class="teamHonour"><b>${honours.best}</b><small>League-Best Seasons</small></div></div>
     <div class="profilePanel franchiseBestSeasonPanel" style="margin-top:10px"><h4>Franchise Regular Season</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Best Regular-Season Record</small><b>${franchiseBest?.record||"—"}</b></div><div class="profileDataRow"><small>Best Season</small><b>${franchiseBest?basketballSeasonLabel(franchiseBest.season):"No completed season yet"}</b></div><div class="profileDataRow"><small>League-Best Seasons</small><b>${honours.best}</b></div></div></div>
 
     <div class="profileSectionGrid" style="margin-top:10px">
