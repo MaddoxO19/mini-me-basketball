@@ -3490,11 +3490,168 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
  .page .legacyAwardGroupHead>b{font-size:12px}
 }
 @media(prefers-reduced-motion:reduce){.page button,.page [role="button"]{scroll-behavior:auto}}
+
+/* Build 318 — statistics and table usability: contained, mobile-first.
+   Preserve the original table columns, sort controls and data bindings. */
+.performanceTableWrap,.playerBoxScroll,.awardVoteTableWrap,.asBoxScroll,
+.lineScoreWrap,.fibaLineScoreWrap{
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  scrollbar-width:thin;
+  scrollbar-color:var(--accent) transparent;
+}
+.performanceTableWrap:focus-visible,.playerBoxScroll:focus-visible,
+.awardVoteTableWrap:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.performanceTable th,.performanceTable td{font-variant-numeric:tabular-nums;white-space:nowrap}
+.leaguePerformancePage .performanceTable th:nth-child(2),
+.leaguePerformancePage .performanceTable td:nth-child(2){
+  position:sticky;left:0;z-index:2;
+  background:var(--panel);
+  box-shadow:1px 0 0 var(--line),7px 0 10px -10px #000;
+}
+.leaguePerformancePage .performanceTable th:nth-child(2){
+  z-index:3;background:#111820;
+}
+.leaguePerformancePage .performanceTable tbody tr:nth-child(even) td:nth-child(2){
+  background:var(--panel2);
+}
+.leaguePerformancePage .performanceTable tbody tr:nth-child(even) td{
+  background-color:rgba(255,255,255,.018);
+}
+.leaguePerformancePage .performanceTable tbody tr:nth-child(even) td:nth-child(2){
+  background:var(--panel2);
+}
+.leaguePerformancePage .performanceTable td:nth-child(n+3){
+  font-variant-numeric:tabular-nums;
+}
+.leaguePerformancePage .performanceTable td:nth-child(3){
+  font-weight:900;color:var(--accent2);
+}
+@media(max-width:600px){
+  .leaguePerformancePage .performanceTable th:nth-child(2),
+  .leaguePerformancePage .performanceTable td:nth-child(2){
+    min-width:165px;width:165px;
+  }
+  .leaguePerformancePage .performanceTable td,
+  .leaguePerformancePage .performanceTable th{
+    padding:9px 7px;
+  }
+  .performanceToolbar{align-items:flex-start;flex-wrap:wrap}
+  .performanceToolbar>div{max-width:100%;padding-bottom:3px}
+}
+
+
+/* Build 319 — profile navigation and context preservation */
+.profileHeadActions{display:flex;align-items:center;gap:6px}
+.profileIconBtn{min-width:40px;min-height:40px;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation}
+.profileLink,.clubLink,.standingsClubLink{text-underline-offset:2px;-webkit-tap-highlight-color:rgba(212,175,55,.14)}
+@media(max-width:600px){.profilePageHead.compact{gap:8px}.profileHeadActions{flex:0 0 auto}}
+
+/* Build 321 — Legacy presentation refinement.
+   Presentation only: no record, history, honours or Greats calculations changed. */
+.legacyHub .sectionHead,
+.legacyHub .archiveHead,
+.legacyHub .card h3{
+  letter-spacing:.01em;
+}
+.legacyHub .muted,
+.legacyHub .hint{
+  line-height:1.38;
+}
+.legacyHub table th{
+  font-size:10px;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.legacyHub table td{
+  font-variant-numeric:tabular-nums;
+  vertical-align:middle;
+}
+.legacyHub .recordValue,
+.legacyHub .record-value,
+.legacyHub .honourCount,
+.legacyHub .honour-count{
+  font-variant-numeric:tabular-nums;
+  font-weight:900;
+}
+.legacyHub .awardCard,
+.legacyHub .honourCard,
+.legacyHub .historyCard,
+.legacyHub .recordCard{
+  min-width:0;
+}
+.legacyHub .awardCard *,
+.legacyHub .honourCard *,
+.legacyHub .historyCard *,
+.legacyHub .recordCard *{
+  overflow-wrap:anywhere;
+}
+@media(max-width:600px){
+  .legacyHub .card{padding:12px}
+  .legacyHub table th,.legacyHub table td{padding:8px 7px}
+  .legacyHub .hint{font-size:11px}
+  .legacyHub h2{line-height:1.16}
+  .legacyHub h3{line-height:1.22}
+}
+
+
+/* Build 322 — contained CSS/mobile responsiveness consolidation */
+html{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+body{
+  overflow-wrap:break-word;
+}
+button,.btn,select,input{
+  touch-action:manipulation;
+}
+button,.btn{
+  min-height:38px;
+}
+table{
+  font-variant-numeric:tabular-nums;
+}
+.tableWrap,.tableScroll,.performanceTableWrap,.playerBoxScroll,
+.awardVoteTableWrap,.asBoxScroll,.lineScoreWrap,.fibaLineScoreWrap{
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+}
+.card,.panel,.tile,.statCard,.awardCard,.honourCard,.historyCard,.recordCard{
+  min-width:0;
+}
+.card h1,.card h2,.card h3,.panel h1,.panel h2,.panel h3{
+  overflow-wrap:anywhere;
+}
+@media(max-width:600px){
+  button,.btn{min-height:40px}
+  input,select{font-size:16px}
+  .tabs,.subtabs{
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+  }
+  table th{white-space:nowrap}
+  .modalCard,.sheetCard{
+    max-width:calc(100vw - 20px);
+  }
+}
+@media(max-width:380px){
+  .card{padding-left:10px;padding-right:10px}
+  button,.btn{padding-left:10px;padding-right:10px}
+}
+@supports(padding:max(0px)){
+  body{
+    padding-left:max(0px,env(safe-area-inset-left));
+    padding-right:max(0px,env(safe-area-inset-right));
+  }
+}
+
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 317</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 322</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -22476,9 +22633,9 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 317",ENGINE_VERSION="E2.26-PROD317";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 322",ENGINE_VERSION="E2.26-PROD322";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function show(id){$$(".screen").forEach(x=>x.classList.remove("active"));$("#"+id).classList.add("active")}
 function nextPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
@@ -24655,31 +24812,34 @@ function rememberProfileReturn(){
   ui.profileReturnPage=ui.page;
   ui.profileReturnTab=ui.page==="legacyHub"?ui.archiveTab:ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:ui.page==="international"?ui.intlTab:ui.page==="facilities"?ui.facilitiesTab:null;
   ui.profileReturnClubId=ui.page==="clubProfile"?ui.clubProfileId:null;
+  ui.profileReturnPlayerId=ui.page==="playerProfile"?ui.playerProfileId:null;
+  ui.profileReturnScrollY=Math.max(0,window.scrollY||document.documentElement.scrollTop||0);
+}
+function restoreProfileReturnScroll(y){
+  const target=Math.max(0,+y||0);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo({top:target,left:0,behavior:"auto"})));
 }
 function returnFromProfile(){
   clearProfileRouteHash();
   ui.playerEditMode=null;
-  ui.playerProfileTab="overview";
-  ui.playerCareerSplit="current";
   const returnPage=ui.profileReturnPage||"team";
   const returnClubId=ui.profileReturnClubId;
+  const returnPlayerId=ui.profileReturnPlayerId;
+  const returnScrollY=ui.profileReturnScrollY||0;
   ui.page=returnPage;
-
-  if(returnPage==="clubProfile"){
-    ui.clubProfileId=returnClubId||me()?.id||null;
-  }else{
-    ui.clubProfileId=null;
-  }
-
+  if(returnPage==="clubProfile")ui.clubProfileId=returnClubId||me()?.id||null;
+  else if(returnPage!=="playerProfile")ui.clubProfileId=null;
+  if(returnPage==="playerProfile")ui.playerProfileId=returnPlayerId||ui.playerProfileId;
+  else{ui.playerProfileTab="overview";ui.playerCareerSplit="current";}
   if(returnPage==="team"&&ui.profileReturnTab)ui.teamTab=ui.profileReturnTab;
   if(returnPage==="club"&&ui.profileReturnTab)ui.clubTab=ui.profileReturnTab;
   if(returnPage==="legacyHub"&&ui.profileReturnTab)ui.archiveTab=ui.profileReturnTab;
   if(returnPage==="league"&&ui.profileReturnTab)ui.leagueTab=ui.profileReturnTab;
   if(returnPage==="international"&&ui.profileReturnTab)ui.intlTab=ui.profileReturnTab;
   if(returnPage==="facilities"&&ui.profileReturnTab)ui.facilitiesTab=ui.profileReturnTab;
-
-  ui.profileReturnClubId=null;
+  ui.profileReturnClubId=null;ui.profileReturnPlayerId=null;ui.profileReturnScrollY=0;
   render();
+  restoreProfileReturnScroll(returnScrollY);
 }
 function closeProfileBlockingWindows(){
   const draftHost=$("#draftWindow");if(draftHost?.classList.contains("open"))draftHost.classList.remove("open");
@@ -24696,6 +24856,7 @@ function openPlayerProfileDirect(id,e){
   ui.page="playerProfile";
   closeProfileBlockingWindows();
   render();
+  requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:"auto"}));
   return false;
 }
 function openClubProfileDirect(id,e){
@@ -24707,6 +24868,7 @@ function openClubProfileDirect(id,e){
   ui.page="clubProfile";
   closeProfileBlockingWindows();
   render();
+  requestAnimationFrame(()=>window.scrollTo({top:0,left:0,behavior:"auto"}));
   return false;
 }
 function playerNameLink(p){
