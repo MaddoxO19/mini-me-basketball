@@ -3886,11 +3886,63 @@ table{
 .internationalUpcomingFixtures .fixtureGameLabel{font-size:11px!important;line-height:1.2!important;font-weight:700!important;white-space:normal!important}
 .internationalUpcomingFixtures .fixtureOpponent{display:flex!important;align-items:center!important;gap:6px!important;min-width:0!important;white-space:normal!important;font-size:12px!important;line-height:1.25!important;overflow:visible!important}
 .internationalUpcomingFixtures .fixtureOpponent .flag{flex-shrink:0}
+
+/* Build 336: three-slot save manager, compact iPhone presentation. */
+#saveManager .saveWrap{padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+#saveManager .saveHead{margin-bottom:15px}
+#saveManager .saveSlots{gap:10px}
+#saveManager .saveSlot{padding:14px 15px;border-radius:17px}
+#saveManager .saveSlotIdentity h3{margin:5px 0 3px!important;line-height:1.24;overflow-wrap:anywhere}
+#saveManager .saveSlotIdentity p{line-height:1.35}
+#saveManager .saveActions{margin-top:11px;gap:8px}
+#saveManager .saveActions button{min-height:43px;padding:10px 12px}
+#saveManager .saveSlot.empty{padding:17px 14px}
+@media(max-width:390px){#saveManager .saveSlot{padding:12px 13px}#saveManager .saveActions button{padding:9px 10px}}
+
+/* Build 337: prevent contract roster plan column headers from wrapping on narrow phones. */
+.compactConstruction .constructionRows{padding:0 12px 7px;min-width:0}
+.compactConstruction .constructionRow{grid-template-columns:minmax(0,1fr) minmax(66px,72px) minmax(66px,72px);column-gap:8px;min-width:0}
+.compactConstruction .constructionRow.head{padding:9px 0 8px;align-items:center}
+.compactConstruction .constructionRow.head>span{white-space:nowrap;overflow:visible;font-size:10px!important;letter-spacing:0;text-align:center;line-height:1.2}
+.compactConstruction .constructionRow.head>span:first-child{text-align:left}
+.compactConstruction .constructionRow>strong{text-align:center}
+.compactConstruction .constructionRow:not(.head)>span{text-align:center;white-space:nowrap}
+.compactConstruction .constructionRow>div{min-width:0}
+.compactConstruction .constructionRow>div b{font-size:11px!important;line-height:1.35;overflow-wrap:normal}
+@media(max-width:370px){.compactConstruction .constructionRow{grid-template-columns:minmax(0,1fr) 61px 61px;column-gap:5px}.compactConstruction .constructionRows{padding-left:9px;padding-right:9px}.compactConstruction .constructionRow.head>span{font-size:9px!important}}
+
+/* Build 338 — concise offseason brief and touch-accessible contract information */
+.offseasonBrief .newSeasonHead{padding:14px 15px 12px}
+.offseasonBrief .newSeasonHead h2{font-size:clamp(20px,5.5vw,26px);line-height:1.12;margin:8px 0 4px;overflow-wrap:anywhere}
+.offseasonBrief .newSeasonOutcome{margin-top:7px;flex-wrap:wrap;gap:5px 10px}
+.offseasonBrief .newSeasonOutcome b{color:var(--accent2)}
+.offseasonBrief .newSeasonMetric{padding:10px 5px}
+.offseasonBrief .newSeasonPriorities{padding:12px 15px 4px}
+.offseasonReadiness{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.offseasonReadiness h3{margin:0;font-size:14px}
+.offseasonReadiness>span{font-size:10px;font-weight:800;color:var(--accent2)}
+.offseasonReadiness>span.ready{color:#85c9a1}
+.offseasonBrief .newSeasonPriority{padding:7px 0}
+.offseasonReadyNote{font-size:10px;color:var(--muted);padding:8px 0}
+.offseasonBrief .homeActionRow{padding-top:8px}
+.cbaToolGrid .cbaTool{position:relative;min-width:0;overflow:visible}
+.cbaToolTop{display:flex;justify-content:space-between;align-items:flex-start;gap:3px}
+.cbaToolTop small{min-width:0;overflow-wrap:break-word;line-height:1.2}
+.cbaHelp{flex:none;position:relative}
+.cbaHelp summary{list-style:none;display:grid;place-items:center;width:23px;height:23px;border:1px solid #637080;border-radius:50%;color:var(--accent2);font-size:13px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.cbaHelp summary::-webkit-details-marker{display:none}
+.cbaHelp[open] summary{background:#283343;border-color:var(--accent2)}
+.cbaHelpText{position:absolute;z-index:80;top:29px;right:-4px;width:min(245px,calc(100vw - 44px));padding:12px;border:1px solid #8b6b35;border-radius:10px;background:#1b222d;color:var(--text);box-shadow:0 8px 25px #000b;text-align:left}
+.cbaHelpText b{font-size:12px!important;color:var(--accent2)}
+.cbaHelpText p{font-size:11px;line-height:1.45;margin:5px 0 0;color:#c9d0dc}
+.cbaToolGrid .cbaTool:first-child .cbaHelpText{right:auto;left:-85px}
+.cbaToolGrid .cbaTool:nth-child(2) .cbaHelpText{right:-75px}
+@media(max-width:380px){.cbaHelpText{width:205px}.cbaToolGrid .cbaTool:first-child .cbaHelpText{left:-72px}.cbaToolGrid .cbaTool:nth-child(2) .cbaHelpText{right:-62px}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 335</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 338</div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -22873,9 +22925,9 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 335",ENGINE_VERSION="E2.26-PROD335";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 338",ENGINE_VERSION="E2.26-PROD338";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
-const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
+const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
 function openGameGuide(){const panel=document.getElementById("gameGuideOverlay");if(panel){panel.hidden=false;panel.querySelector(".guideScroll").scrollTop=0;document.getElementById("closeGameGuide")?.focus()}}
 function closeGameGuide(){const panel=document.getElementById("gameGuideOverlay");if(panel)panel.hidden=true}
@@ -23445,6 +23497,7 @@ function saveSlotMetaOnly(rec){
   return {slot:+rec.slot||0,meta:rec.meta||null,updatedAt:+rec.updatedAt||0,persisted:true};
 }
 async function writeSlot(slot,state,meta){
+  if(!Number.isInteger(+slot)||+slot<1||+slot>MAX_SAVES)return false;
   // v117: IndexedDB can structured-clone the live career object directly.
   // Avoiding JSON.stringify removes the largest JS-side duplicate allocation
   // from ordinary saves on mature iPhone/Safari careers. Legacy string payloads
@@ -23474,6 +23527,7 @@ async function writeSlot(slot,state,meta){
   }
 }
 async function readSlot(slot){
+  if(!Number.isInteger(+slot)||+slot<1||+slot>MAX_SAVES)return null;
   try{
     const db=await openSaveDB();
     const rec=await new Promise((res,rej)=>{const q=db.transaction(SAVE_STORE,"readonly").objectStore(SAVE_STORE).get(slot);q.onsuccess=()=>res(q.result||null);q.onerror=()=>rej(q.error)});
@@ -23533,7 +23587,7 @@ function markSessionClosed(){
   updateResumeButton();
 }
 function sessionRecoveryCandidate(){
-  const g=readSessionGuard();if(!g||g.status==="closed"||!g.slot)return null;
+  const g=readSessionGuard();if(!g||g.status==="closed"||!g.slot||+g.slot<1||+g.slot>MAX_SAVES)return null;
   if(Date.now()-(+g.updatedAt||0)>SESSION_RECOVERY_WINDOW_MS)return null;
   return g;
 }
@@ -23553,6 +23607,7 @@ async function attemptUnexpectedSessionRecovery(){
 }
 
 async function removeSlot(slot){
+  if(!Number.isInteger(+slot)||+slot<1||+slot>MAX_SAVES)return;
   delete memorySlots[slot];
   try{const db=await openSaveDB();await new Promise((res,rej)=>{const tx=db.transaction([SAVE_STORE,SAVE_META_STORE],"readwrite");tx.objectStore(SAVE_STORE).delete(slot);tx.objectStore(SAVE_META_STORE).delete(slot);tx.oncomplete=res;tx.onerror=()=>rej(tx.error)});db.close()}catch(e){}
   try{localStorage.removeItem(`MMB_SAVE_SLOT_${slot}`)}catch(e){}
@@ -23991,6 +24046,7 @@ function syncCounter(){
   G.runtimeMeta=G.runtimeMeta||{};G.runtimeMeta.nextIdCounter=Math.max(m,typeof _idCounter!=="undefined"?_idCounter:m);
 }
 async function loadSlot(slot,options={}){
+  if(!Number.isInteger(+slot)||+slot<1||+slot>MAX_SAVES)return false;
   try{
     const rec=await readSlot(slot);if(!rec){toast("This save slot is empty");return}
     G=rec?.state&&typeof rec.state==="object"?rec.state:JSON.parse(rec.payload);activeSlot=slot;syncCounter();
@@ -24199,6 +24255,7 @@ async function openSaveManager(mode){
   show("saveManager");
 }
 async function beginNewCareerInSlot(slot,replace=false){
+  if(!Number.isInteger(+slot)||+slot<1||+slot>MAX_SAVES)return;
   if(replace&&!confirm(`Replace Save Slot ${slot} with a new career? The existing career will be deleted.`))return;
   if(replace)await removeSlot(slot);
   clearAwardPresentationCheckpoint(slot);
@@ -29276,26 +29333,27 @@ function newSeasonOffseasonHubHtml(){
   const capText=offseasonCapSummary(club);
   const priorOutcome=prev.finish||"Season complete";
   const cupTag=prev.cup?" · The Cup Champion":"";
-  const priorities=[
-    {label:"Contracts",value:expiring?`${expiring} contract${expiring===1?"":"s"} expiring at end of ${basketballSeasonLabel(G.season)}`:"Not Applicable"},
-    {label:"Roster",value:rosterOpen?`${rosterOpen} standard spot${rosterOpen===1?"":"s"} open`:"Standard roster full"},
-    {label:"Two-Way",value:twoWayOpen?`${twoWayOpen} spot${twoWayOpen===1?"":"s"} open`:"3/3 filled"},
-    {label:"Draft Assets",value:`${draftPicks} pick${draftPicks===1?"":"s"} owned`}
-  ];
-  return `<div class="newSeasonHub">
+  const attention=[];
+  if(expiring)attention.push({label:"Contracts",value:`${expiring} expiring — review needed`});
+  if(rosterOpen)attention.push({label:"Roster",value:`${rosterOpen} open standard spot${rosterOpen===1?"":"s"}`});
+  if(twoWayOpen)attention.push({label:"Two-Way",value:`${twoWayOpen} available spot${twoWayOpen===1?"":"s"}`});
+  const isChampion=prev.last?.championClubId===club.id;
+  const finishLabel=isChampion?"Defending Champions":priorOutcome;
+  const readiness=attention.length?`${attention.length} item${attention.length===1?"":"s"} to review`:"Ready for Offseason";
+  return `<div class="newSeasonHub offseasonBrief">
     <div class="newSeasonHead">
-      <div class="newSeasonKicker"><span>NEW SEASON</span><span>OFFSEASON</span></div>
-      <h2>${basketballSeasonLabel(G.season)} · ${club.name}</h2>
-      <p>Review the current roster, resolve expiring contracts and check draft assets before moving into Draft Night.</p>
-      <div class="newSeasonOutcome"><b>Last season</b><span>${priorOutcome}${cupTag}${prev.record&&prev.record!=="—"?` · ${prev.record}`:""}</span></div>
+      <div class="newSeasonKicker"><span>NEW SEASON · ${basketballSeasonLabel(G.season)}</span><span>OFFSEASON</span></div>
+      <h2>${club.name}</h2>
+      <div class="newSeasonOutcome"><b>${finishLabel}</b>${prev.record&&prev.record!=="—"?`<span>${prev.record}</span>`:""}${cupTag?`<span>The Cup Champion</span>`:""}</div>
     </div>
     <div class="newSeasonMetrics">
-      <div class="newSeasonMetric"><b>${standard.length}/${club.regularRosterLimit||15}</b><small>Current Roster</small></div>
+      <div class="newSeasonMetric"><b>${standard.length}/${club.regularRosterLimit||15}</b><small>Roster</small></div>
       <div class="newSeasonMetric"><b>${draftPicks}</b><small>Draft Picks</small></div>
-      <div class="newSeasonMetric"><b>${capText}</b><small>Cap Position</small></div>
+      <div class="newSeasonMetric"><b>${capText}</b><small>Salary Cap</small></div>
     </div>
-    <div class="newSeasonPriorities"><h3>Offseason Priorities</h3>${priorities.map(x=>`<div class="newSeasonPriority"><span>${x.label}</span><b>${x.value}</b></div>`).join("")}</div>
-    
+    <div class="newSeasonPriorities"><div class="offseasonReadiness"><h3>Offseason Readiness</h3><span class="${attention.length?"needsReview":"ready"}">${readiness}</span></div>
+    ${attention.length?attention.map(x=>`<div class="newSeasonPriority"><span>${x.label}</span><b>${x.value}</b></div>`).join(""):`<div class="offseasonReadyNote">No outstanding roster or contract actions require attention.</div>`}
+    </div>
     ${homeActionHtml()}
   </div>`;
 }
@@ -31083,7 +31141,12 @@ function contracts(){
   return `<div class="contractEconomy compactConstruction"><div class="contractEconomyHead"><b>Recommended Roster Plan</b><small>Current salaries against the recommended roster build.</small></div>
     <div class="constructionRows"><div class="constructionRow head"><span>ROLE</span><span>CURRENT</span><span>TARGET</span></div>${salaryPlan.recommended.map(x=>`<div class="constructionRow"><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.note}</small></div><strong>${salaryPlan.slots[x.key]||0}</strong><span>${x.target}</span></div>`).join("")}</div>
   </div>
-  <div class="cbaToolGrid">${tools.map(x=>`<div class="cbaTool"><small>${x.label==="Economy"?"Market":x.label}</small><b>${x.value}</b><span>${x.note}</span></div>`).join("")}</div>
+  <div class="cbaToolGrid">${tools.map(x=>{const label=x.label==="Economy"?"Market":x.label;
+    const tip=label==="Salary Cap"?(G.settings.salaryCap===false?"Salary cap restrictions are off. Contract demands and roster rules still apply.":"Salary cap rules restrict available spending and some transactions.")
+      :label==="Market Economy"?"Player salary expectations and negotiations remain active even with the salary cap disabled."
+      :label==="Roster Limit"?`Standard roster: ${club.roster.length}/${club.regularRosterLimit||15}. Two-way contracts: ${(club.twoWayRoster||[]).length}/${club.twoWayLimit||3}. Two-way slots are separate from the standard roster.`
+      :x.note;
+    return `<div class="cbaTool"><div class="cbaToolTop"><small>${label}</small><details class="cbaHelp"><summary aria-label="Information about ${label}" title="${label} information">?</summary><div class="cbaHelpText"><b>${label}</b><p>${tip}</p></div></details></div><b>${x.value}</b></div>`;}).join("")}</div>
   
   ${negotiation}
   <div class="sectionTitle">Squad Cap</div>${groups.map(tableFor).join("")}${twoWayContractsHtml()}`;
