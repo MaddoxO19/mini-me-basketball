@@ -3446,17 +3446,22 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .playInRecapTeams span.winner{color:var(--text)!important;font-weight:650!important}
 .playInRecapRow strong{font-size:12px!important;font-weight:650!important}
 
-/* Build 314 — Legacy season summary and compact honours typography */
+/* Build 315 — Legacy season summary and compact honours typography */
 .legacySeasonSummary{grid-template-columns:minmax(120px,.9fr) minmax(0,1.2fr) minmax(0,1fr);gap:12px}
 .legacySeasonSummary>div:last-child{text-align:right}
 .legacySeasonOutcome{min-width:0;text-align:right}.legacySeasonOutcome>small{display:block;margin:0 0 3px;color:var(--muted);font-size:8px;font-weight:900;letter-spacing:.55px}.legacySeasonOutcome>strong{font-size:11px;line-height:1.25}.legacySeasonOutcome>strong.won{color:var(--accent2)}
 .legacyAwardGroups{gap:8px;margin-top:8px}.legacyAwardGroup{border-radius:12px}.legacyAwardGroupHead{padding:10px 12px}.legacyAwardGroupHead>b{font-size:12px}.legacyAwardGroupHead>strong{min-width:26px;font-size:12px}.legacyAwardWinner{grid-template-columns:76px minmax(0,1fr);gap:9px;padding:8px 12px}.legacyAwardWinner>span{font-size:10px}.legacyAwardWinner>b{font-size:11px}.legacyAwardWinner .playerLink{font-size:11px}
 @media(max-width:430px){.legacySeasonSummary{grid-template-columns:78px minmax(0,1fr);gap:7px 10px;padding:10px 11px}.legacySeasonIdentity{grid-row:1 / span 2}.legacySeasonOutcome{grid-column:2;text-align:right}.legacySeasonOutcome>strong{font-size:10px}.legacySeasonOutcome>small{font-size:7px}.legacyAwardGroupHead{padding:9px 11px}.legacyAwardGroupHead>b{font-size:11px}.legacyAwardWinner{grid-template-columns:72px minmax(0,1fr);padding:7px 11px}.legacyAwardWinner>span{font-size:9px}.legacyAwardWinner>b,.legacyAwardWinner .playerLink{font-size:10px}}
+
+/* Build 315: scroll-independent contract extension dialog */
+.contractModalBackdrop{position:fixed;inset:0;z-index:99990;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));overflow-y:auto;overscroll-behavior:contain}
+.contractModalBackdrop .contractNegotiation{width:min(100%,520px);max-height:calc(100dvh - 40px);overflow-y:auto;margin:0;box-shadow:0 18px 60px rgba(0,0,0,.65);-webkit-overflow-scrolling:touch}
+@media(max-width:440px){.contractModalBackdrop .contractNegotiation{padding:12px}.contractModalBackdrop .contractNegHead h3{font-size:18px}}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div><div class="build launchDisclaimer">Player identities, team identities and in-game league branding are fictional. Legacy Basketball is an independent simulation and is not affiliated with or endorsed by any real-world basketball league, team, player or governing body.</div>
-<div class="launchBuildId">v0.9.0 Stable · Build 314</div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 315</div></div></div></section>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
 
@@ -17334,6 +17339,14 @@ function finalizeRetirementReview(G){
   pending.acknowledged=false;
   return pending;
 }
+function retirementAffiliationLabel(x){
+  const raw=String(x?.club||"Free Agency").trim();
+  if(raw==="Free Agency"||raw==="Free Agent")return"Retired as Free Agent";
+  if(raw==="Career Complete"||raw==="—")return"Final club not recorded";
+  const leagues=["Italian LBA","French LNB","Spanish ACB","Australian NBL","German BBL","Turkish BSL","Greek Basket League","Israeli Basketball Premier League","Japanese B.League","Chinese CBA","Korean KBL","Lithuanian LKL"];
+  if(leagues.some(l=>l.toLowerCase()===raw.toLowerCase()))return`Last league: ${raw}`;
+  return`Retired from: ${raw}`;
+}
 function retirementHonoursSummary(x){
   const parts=[
     x.titles?`${x.titles}× Champion`:"",
@@ -17367,7 +17380,7 @@ function retirementReviewHtml(){
       <div><b>${basketballSeasonLabel(G.season)}</b><small>New Season</small></div>
     </div>
     <div class="retirementCards">${shown.map(x=>`<div class="retirementCard">
-      <div class="retirementCardTop"><div><small>${x.tier}</small><h3>${x.name}</h3><p>${x.position} · ${x.club}</p></div><b>${x.age}</b></div>
+      <div class="retirementCardTop"><div><small>${x.tier}</small><h3>${x.name}</h3><p>${x.position} · ${retirementAffiliationLabel(x)}</p></div><b>${x.age}</b></div>
       <div class="retirementCareerLine">
         <div class="retirementDataRow"><b>Career</b>${x.seasons} seasons · ${x.points.toLocaleString()} PTS</div>
         ${retirementHonoursSummary(x)?`<div class="retirementDataRow"><b>Honours</b>${retirementHonoursSummary(x)}</div>`:""}
@@ -22427,7 +22440,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 314",ENGINE_VERSION="E2.26-PROD314";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 315",ENGINE_VERSION="E2.26-PROD315";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=5;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -24580,7 +24593,8 @@ function archiveRetiredPlayer(G,p,club=null){
   p.retirementSeason=G.season;
   p.retirementAge=p.age;
   p.retiredFromClubId=club?.id||p.retiredFromClubId||null;
-  p.retiredFromClubName=club?.name||p.retiredFromClubName||"Free Agency";
+  p.retiredFromClubName=club?.name||p.retiredFromClubName||(
+    p.externalTeamName||p.externalTeam||p.externalClubName||p.externalClub||p.externalLeague||"Free Agency");
   p.contractYearsLeft=0;
   p.contractStatus="Retired";
   p.contractType="Retired";
@@ -25932,7 +25946,7 @@ function openResultWindow(game,returnMode=null){
   if(!game)return false;
   if(!isNationalResultGame(game)){
     repairLegacyGameBox(game);
-    // Build 314 — post-game box scores open on the user's club by default.
+    // Build 315 — post-game box scores open on the user's club by default.
     // The opponent tab remains available for review after the result opens.
     const userClubId=G?.userClubGM?.clubId||me()?.id||null;
     if(userClubId&&String(game.homeClubId)===String(userClubId))ui.boxSide="home";
@@ -30588,7 +30602,7 @@ function contracts(){
   let negotiation="";
   if(target){
     const demand=extensionDemand(target,2),fb=ui.extFeedback?.playerId===target.id?ui.extFeedback:null;
-    negotiation=`<div class="contractNegotiation">
+    negotiation=`<div class="contractModalBackdrop" id="contractModalBackdrop" role="presentation"><div class="contractNegotiation" role="dialog" aria-modal="true" aria-label="Contract extension">
       <div class="contractNegHead"><div><div class="eyebrow">Contract Extension</div><h3>${playerNameLink(target)}</h3><small>${positionLabel(target)} · Age ${target.age} · OVR ${target.ovr} · ${rosterSalarySlot(target).label}</small></div><button id="closeExtension" class="pick">Close</button></div>
       <div class="contractAskLine"><span>PLAYER ASK</span><b>${demand.years} added year${demand.years===1?"":"s"} · $${demand.annualM.toFixed(1)}M / year</b></div>
       <div class="contractStepperGrid">
@@ -30598,7 +30612,7 @@ function contracts(){
       <div class="smallcopy" style="margin-top:8px">The current contract continues to count down normally. Any agreed extension begins only after the current term expires.</div>
       <div class="contractOfferActions"><button id="submitExtension" class="btn primary">Offer Extension</button><button id="resetExtensionAsk" class="pick contractMatchAsk">Match Ask</button></div>
       ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Extension Agreed":"Extension Rejected"}</b><small>${fb.message}</small></div>`:""}
-    </div>`;
+    </div></div>`;
   }
 
   const tableFor=(group)=>{
@@ -33634,6 +33648,7 @@ $$("[data-go]").forEach(b=>b.onclick=()=>{ui.page=b.dataset.go;render()});$$("[d
 $$("[data-intltabgo]").forEach(b=>b.onclick=()=>{ui.intlTab=b.dataset.intltabgo;render()});$$("[data-intlregion]").forEach(b=>b.onclick=()=>{ui.intlRegionFilter=b.dataset.intlregion;render()});$$("[data-pick]").forEach(b=>b.onclick=()=>{let r=makeUserDraftSelection(G,b.dataset.pick);if(r.ok){toast(`Pick #${r.entry.overallPickNum}: ${r.player.name}`);ui.teamTab="draft";save();render()}else toast(r.reason)});if($("#acceptNation"))$("#acceptNation").onclick=()=>{appointNationalGM(G,$("#nation").value);save();render()};if($("#saveNow"))$("#saveNow").onclick=()=>save(false);if($("#globalExit"))$("#globalExit").onclick=async()=>{await save();markSessionClosed();ui.page="home";show("landing")};
 $$("[data-negotiateext]").forEach(b=>b.onclick=()=>{ui.extTargetId=b.dataset.negotiateext;ui.extFeedback=null;render()});
 if($("#closeExtension"))$("#closeExtension").onclick=()=>{ui.extTargetId=null;ui.extFeedback=null;render()};
+if($("#contractModalBackdrop"))$("#contractModalBackdrop").onclick=e=>{if(e.target.id==="contractModalBackdrop"){ui.extTargetId=null;ui.extFeedback=null;render()}};
 if($("#resetExtensionAsk"))$("#resetExtensionAsk").onclick=()=>{
   const p=playerByAnyId(ui.extTargetId);if(!p)return;
   const d=extensionDemand(p,2);$("#extYears").value=String(d.years);$("#extSalary").value=d.annualM.toFixed(1);
