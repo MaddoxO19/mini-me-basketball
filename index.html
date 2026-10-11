@@ -4047,11 +4047,39 @@ table{
 .newsInboxBar button{background:#1a2430;color:#f5a340;border:1px solid #344152;border-radius:10px;padding:9px 12px;font-weight:700}
 .newsItem.unread{border-left:3px solid var(--accent);background:rgba(244,163,64,.045)}
 .newsUnreadDot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-right:6px}
+
+/* Build 362 — Expansion protection switches: independent fixed-size control.
+   The generic national toggle is overridden only in this expansion UI. */
+button.intlPlayerToggle[data-exp-protect]{
+  display:block!important;position:relative!important;flex:0 0 46px!important;
+  width:46px!important;min-width:46px!important;max-width:46px!important;
+  height:27px!important;min-height:27px!important;max-height:27px!important;
+  padding:0!important;margin:0!important;line-height:normal!important;
+  border:1px solid #46515e!important;border-radius:999px!important;
+  background:#202733!important;box-sizing:border-box!important;
+  appearance:none!important;-webkit-appearance:none!important;
+  box-shadow:none!important;overflow:hidden!important;
+  align-self:center!important;touch-action:manipulation;
+}
+button.intlPlayerToggle[data-exp-protect].on{
+  background:var(--accent)!important;border-color:var(--accent)!important;
+}
+button.intlPlayerToggle[data-exp-protect] > span{
+  display:block!important;position:absolute!important;top:3px!important;left:3px!important;
+  width:19px!important;min-width:19px!important;max-width:19px!important;
+  height:19px!important;min-height:19px!important;max-height:19px!important;
+  margin:0!important;padding:0!important;border:0!important;
+  border-radius:50%!important;box-sizing:border-box!important;
+  background:#f2f4f7!important;transform:translateX(0)!important;
+}
+button.intlPlayerToggle[data-exp-protect].on > span{
+  transform:translateX(19px)!important;background:#111!important;
+}
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 360 <span class="launchEngine">E2.26-PROD360</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 363 <span class="launchEngine">E2.26-PROD363</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -9013,7 +9041,7 @@ function playerStatIdentity(player) {
   }
   return base;
 }
-function statisticalIdentityLabel(player){const s=player?.statisticalIdentity;return s?.tier&&s.tier!=="Standard"?`${s.tier} · ${s.type}`:(s?.type||player?.archetype||"Balanced");}
+function statisticalIdentityLabel(player){const s=player?.statisticalIdentity;return s?.tier&&s.tier!=="Standard"?`Signature · ${s.type}`:(s?.type||player?.archetype||"Balanced");}
 // One pulse per player per game. Most nights stay close to expectation; rare elite nights widen the tail.
 function playerGamePulse(player, identityOverride=null) {
   const statId=identityOverride||playerStatIdentity(player),ovr=player?.ovr||70;
@@ -23092,7 +23120,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 360",ENGINE_VERSION="E2.26-PROD360";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 363",ENGINE_VERSION="E2.26-PROD363";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -26388,7 +26416,7 @@ function playerProfile(){
     <div class="sectionTitle">Injury History</div><div class="profileTimeline">${playerInjuryRows(p).length?playerInjuryRows(p).map(x=>`<div class="timelineRow"><div class="season">${basketballSeasonLabel(x.season)}</div><div><b>${x.label==="Economy"?"Market":x.label}</b><small>${x.current?x.returnLabel:(x.returnSerial?`Returned ${basketballDateLabel(x.returnSerial,{year:true})}`:"Recovered")}${x.age?` · Age ${x.age}`:""}${x.ovr?` · OVR ${x.ovr}`:""}</small></div><div class="right">${x.current?x.stage:"Recovered"}</div></div>`).join(""):`<div class="empty">No recorded injuries.</div>`}</div>`;
   const profileAffiliationLabel=p.retired?"Retired":(club?.name||worldLoc.club||"Free Agent");
   return `<div class="profilePageHead compact"><div><h2>Player Profile</h2><p>${profileAffiliationLabel} · ${pos}</p></div><div class="profileHeadActions"><button id="profileClose" class="profileIconBtn" aria-label="Close player profile">×</button></div></div>
-    <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
+    <div class="profileHero ${editing?"profileEditing":""}"><div class="profileHeroMain hasHeroAction"><div class="profileHeroBadge" style="background:${club?.color||"#d9ae55"}">${editing?`<input id="epJersey" class="heroBadgeInput" type="number" min="0" max="99" value="${p.jerseyNumber??0}" aria-label="Jersey number">`:(p.jerseyNumber!==undefined?`#${p.jerseyNumber}`:(p.position||"P"))}</div><div class="profileHeroText"><div class="eyebrow">${flagEmoji(p.nationality)} ${nation?.name||nationName(p.nationality)}</div>${editing?`<input id="epName" class="profileNameInput" value="${p.name}" aria-label="Player name">`:`<h2>${p.name}</h2>`}<p>${pos} · Age ${p.age} · ${fmtHeight(p.heightCm)}</p><div class="identityLine"><span class="identityChip">${ovrBand(p.ovr)}</span><span class="identityChip">${p.archetype||"Basketball Player"}</span><span class="identityChip">${p.playerBuild||derivePlayerBuild(p)}</span>${generationalBuildLabel(p)?`<span class="identityChip generationalChip">${generationalBuildLabel(p)}</span>`:""}${!generationalBuildLabel(p)&&p.statisticalIdentity?.tier&&p.statisticalIdentity.tier!=="Standard"?`<span class="identityChip">${statisticalIdentityLabel(p)}</span>`:""}<span class="identityChip">${p.rotationRole||"Depth"}</span><span class="identityChip">${injury}</span></div></div>${editable&&!editing?`<button id="editPlayerBtn" class="heroEditBtn" aria-label="Edit player">✎</button>`:""}</div></div>
     ${editing?`<div class="profileCompactActions"><button id="cancelPlayerEdit" class="btn secondary">Cancel</button><button id="savePlayerEdit" class="btn primary">Save Changes</button></div><div class="inlineEditNotice"><b>Editing ${editContext}</b><span>This edits the single underlying player record, so changes appear in both club and national-team views. Salary and contract terms remain unchanged. League experience is separate from contract type. Changing age will reset recorded career history after confirmation. Player Build choices are constrained by the player's underlying identity, position, size and archetype rather than exposing the full build library. Statistical identity remains engine-controlled. At 97+ OVR, eligible players automatically adopt one active Generational Build from their position, size and archetype; Generational Builds cannot be selected manually and deactivate below 97 OVR.</span></div>`:""}
     <div class="profileTabs profileTabs5">
       <button data-playerprofiletab="overview" class="${tab==="overview"?"active":""}" aria-label="Overview">${playerProfileNavIcon("overview")}<span>Overview</span></button>
@@ -30030,26 +30058,76 @@ function courtsideCurrentStreak(G){
 function courtsideLastUserGame(G){
   const games=courtsideUserRegularGames(G);return games[games.length-1]||null;
 }
-function courtsideLastGameStar(G,game){
-  if(!game?.boxScore)return null;
-  const userId=G.userClubGM?.clubId,lines=game.homeClubId===userId?game.boxScore.home:game.boxScore.away;
-  return [...(lines||[])].sort((a,b)=>(b.pts||0)-(a.pts||0))[0]||null;
+// Build 363: league-wide box-score milestones. Presentation only; no simulation changes.
+function courtsideGameMilestone(line){
+  const v=k=>Math.max(0,+line?.[k]||0);
+  const pts=v("pts"),reb=v("reb"),ast=v("ast"),stl=v("stl"),blk=v("blk");
+  const categories=[pts,reb,ast,stl,blk];
+  const doubles=categories.filter(n=>n>=10).length;
+  const fiveByFive=categories.every(n=>n>=5);
+  const triple=doubles>=3,quad=doubles>=4;
+  const lineText=`${pts} PTS · ${reb} REB · ${ast} AST · ${stl} STL · ${blk} BLK`;
+  const features=[];
+  // Highest-priority achievement wins, preventing multiple alerts for one box score.
+  if(quad)features.push({rank:125,flash:true,name:"quadruple-double"});
+  if(fiveByFive)features.push({rank:115,flash:true,name:"five-by-five"});
+  if(triple&&((pts>=20&&reb>=20&&ast>=20)||(pts>=30&&(reb>=15||ast>=15))))features.push({rank:106,flash:true,name:"historic triple-double"});
+  if(pts>=55)features.push({rank:90+(pts-55),flash:true,name:`${pts}-point explosion`});
+  if(ast>=23)features.push({rank:89+(ast-23),flash:true,name:`${ast}-assist masterclass`});
+  if(reb>=30)features.push({rank:88+(reb-30),flash:true,name:`${reb}-rebound performance`});
+  if(stl>=8)features.push({rank:87+(stl-8),flash:true,name:`${stl}-steal defensive showcase`});
+  if(blk>=10)features.push({rank:87+(blk-10),flash:true,name:`${blk}-block rim-protection showcase`});
+  if(triple)features.push({rank:48,flash:false,name:"triple-double"});
+  if((pts>=30&&reb>=20)||(pts>=20&&reb>=20&&ast>=10))features.push({rank:46,flash:false,name:"exceptional double-double"});
+  if(pts>=45)features.push({rank:40,flash:false,name:`${pts}-point night`});
+  if(ast>=18)features.push({rank:40,flash:false,name:`${ast}-assist night`});
+  if(reb>=23)features.push({rank:40,flash:false,name:`${reb}-rebound night`});
+  if(stl>=6)features.push({rank:43,flash:false,name:`${stl}-steal game`});
+  if(blk>=7)features.push({rank:43,flash:false,name:`${blk}-block game`});
+  if(pts>=20&&reb>=20)features.push({rank:35,flash:false,name:"20/20 double-double"});
+  if(!features.length)return null;
+  features.sort((x,y)=>y.rank-x.rank);
+  return {...features[0],lineText};
 }
 function courtsideCheckLastGame(G,round){
-  const s=courtsideAnalystState(G),game=courtsideLastUserGame(G);if(!game||game.id===s.lastGameId)return;
-  s.lastGameId=game.id;
-  const club=me(),streak=courtsideCurrentStreak(G),star=courtsideLastGameStar(G,game),opp=clubById(G,game.homeClubId===club.id?game.awayClubId:game.homeClubId);
-  if(streak.type==="W"&&streak.count>=7){
-    courtsidePublish(G,`WINSTREAK_${streak.count}`,`${club.name} is becoming impossible to ignore`,`${club.name} has pushed its winning streak to ${streak.count}. This is no longer just a good week. The rotations look settled, the confidence is obvious and the rest of the league has to start treating this group like a problem.`,{flash:streak.count===7||streak.count===10,label:"MADDON'S TAKE",quote:streak.count>=10});
-  }else if(streak.type==="L"&&streak.count>=5){
-    courtsidePublish(G,`LOSINGSTREAK_${streak.count}`,`Pressure building as ${club.name} slide reaches ${streak.count}`,`${club.name} has now dropped ${streak.count} straight. One loss can be noise. Five becomes a pattern. The question now is whether this is simply a bad stretch or the first sign that something in the rotation needs to change.`,{flash:streak.count===5||streak.count===8,label:"MADDON'S TAKE",quote:true});
-  }
-  if(star){
-    const p=playerByAnyId(star.playerId),triple=[star.pts,star.reb,star.ast].filter(x=>(+x||0)>=10).length>=3;
-    if((star.pts||0)>=45||(star.ast||0)>=16||(star.reb||0)>=22||triple){
-      const feat=triple?`${star.pts} points, ${star.reb} rebounds and ${star.ast} assists`:(star.pts||0)>=45?`${star.pts}-point performance`:(star.ast||0)>=16?`${star.ast}-assist night`:`${star.reb}-rebound performance`;
-      courtsidePublish(G,`BIGGAME_${game.id}_${star.playerId}`,`${p?.name||star.name} puts the league on notice`,`${p?.name||star.name} delivered a ${feat} against ${opp?.name||"the opposition"}. Nights like this change the conversation around a player, especially when they arrive in meaningful games.`,{flash:(star.pts||0)>=55||triple,label:"GAME NIGHT",quote:false});
+  const s=courtsideAnalystState(G),games=G.regularSeasonLive?.games||[];
+  // Legacy saves begin with the newest round, not a re-broadcast of every past game.
+  if(!Number.isFinite(s.milestoneGameCursor))s.milestoneGameCursor=Math.max(0,games.length-32);
+  const fresh=games.slice(s.milestoneGameCursor);
+  s.milestoneGameCursor=games.length;
+  const userGame=courtsideLastUserGame(G);
+  if(userGame&&userGame.id!==s.lastGameId){
+    s.lastGameId=userGame.id;
+    const club=me(),streak=courtsideCurrentStreak(G);
+    if(club&&streak.type==="W"&&streak.count>=7){
+      courtsidePublish(G,`WINSTREAK_${streak.count}`,`${club.name} is becoming impossible to ignore`,`${club.name} has pushed its winning streak to ${streak.count}. This is no longer just a good week. The rotations look settled, the confidence is obvious and the rest of the league has to start treating this group like a problem.`,{flash:streak.count===7||streak.count===10,label:"MADDON'S TAKE",quote:streak.count>=10});
+    }else if(club&&streak.type==="L"&&streak.count>=5){
+      courtsidePublish(G,`LOSINGSTREAK_${streak.count}`,`Pressure building as ${club.name} slide reaches ${streak.count}`,`${club.name} has now dropped ${streak.count} straight. One loss can be noise. Five becomes a pattern. The question now is whether this is simply a bad stretch or the first sign that something in the rotation needs to change.`,{flash:streak.count===5||streak.count===8,label:"MADDON'S TAKE",quote:true});
     }
+  }
+  const candidates=[];
+  for(const game of fresh){
+    if(!game?.boxScore)continue;
+    for(const [side,clubId] of [["home",game.homeClubId],["away",game.awayClubId]]){
+      for(const line of game.boxScore[side]||[]){
+        const feat=courtsideGameMilestone(line);if(!feat)continue;
+        candidates.push({game,line,clubId,feat});
+      }
+    }
+  }
+  // Publish one lead story per game and cap other articles, preserving mobile news-feed performance.
+  candidates.sort((a,b)=>b.feat.rank-a.feat.rank);
+  const featuredGames=new Set();let published=0;
+  for(const c of candidates){
+    const gameKey=String(c.game.id||`${c.game.homeClubId}_${c.game.awayClubId}_${round}`);
+    if(featuredGames.has(gameKey)||published>=5)continue;
+    featuredGames.add(gameKey);
+    const player=playerByAnyId(c.line.playerId),name=player?.name||c.line.name||"A league player";
+    const club=clubById(G,c.clubId),opponent=clubById(G,c.game.homeClubId===c.clubId?c.game.awayClubId:c.game.homeClubId);
+    const title=`${name} delivers ${c.feat.name}`;
+    const body=`${name}${club?` of ${club.name}`:""} produced ${c.feat.lineText}${opponent?` against ${opponent.name}`:""}. ${c.feat.flash?"A remarkable individual performance deserving the league's attention.":"An outstanding all-round contribution highlighted in tonight's league coverage."}`;
+    courtsidePublish(G,`BOX_${gameKey}_${c.line.playerId}`,title,body,{flash:c.feat.flash,label:"GAME NIGHT",quote:false});
+    published++;
   }
 }
 function courtsideCheckExpectation(G,round){
