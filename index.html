@@ -4103,7 +4103,7 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 .courtsideHistoricFlash h3{color:#fff4dc;line-height:1.17}
 .courtsideHistoricFlash .newsFlashActions button:first-child{background:#eeb466!important;color:#1a1208!important}
 
-/* Build 370: compact administrative settings cog and career-centred primary header */
+/* Build 373: compact administrative settings cog and career-centred primary header */
 #game .status .statusHeaderActions{display:flex!important;align-items:center!important;gap:8px!important;flex:none!important}
 #game .status .statusHeaderActions>.headerSettingsCog{width:46px!important;height:46px!important;min-width:46px!important;min-height:46px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:#111821!important;color:#b0b8c6!important;border:1px solid #354150!important;border-radius:12px!important;padding:0!important;cursor:pointer!important;touch-action:manipulation!important}
 #game .status .headerSettingsCog svg{width:20px!important;height:20px!important;display:block!important}
@@ -4111,11 +4111,24 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 #game .status .globalTabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
 #game .status .globalTabs>.globalUtilTab{min-height:48px!important;width:100%!important;justify-content:center!important;white-space:nowrap!important}
 @media(max-width:380px){#game .status .statusHeaderActions{gap:5px!important}#game .status .statusHeaderActions>.headerSettingsCog{width:44px!important;min-width:44px!important;height:44px!important;min-height:44px!important}#game .status .globalTabs>.globalUtilTab{font-size:11px!important;gap:4px!important}}
+
+/* Build 373: editorial popup controls — compact two-action footer and real mute switch. */
+.newsFlashCard .newsFlashActions:has(.newsFlashMuteSwitch){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:9px;align-items:stretch}
+.newsFlashCard .newsFlashActions .newsFlashMuteSwitch{grid-column:1/-1;display:flex!important;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:10px 13px!important;min-height:55px!important;background:#111922!important;border:1px solid #3a4859!important;color:#d5dce6!important;text-align:left;font-size:11px!important;font-weight:750;border-radius:12px;cursor:pointer}
+.newsFlashMuteCopy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.newsFlashMuteCopy small{font-weight:450;color:#98a3b2;font-size:10px}
+.newsFlashMuteTrack{flex:0 0 46px;display:flex;align-items:center;padding:2px;width:46px;height:27px;box-sizing:border-box;border:1px solid #46515f;border-radius:99px;background:#252e3a}
+.newsFlashMuteKnob{display:block;flex:0 0 21px;width:21px;height:21px;border-radius:50%;background:#d9e0e8;transition:transform .15s ease}
+.newsFlashMuteSwitch[aria-checked="true"] .newsFlashMuteTrack{background:#aa712d;border-color:#edaa55}
+.newsFlashMuteSwitch[aria-checked="true"] .newsFlashMuteKnob{transform:translateX(19px);background:#121820}
+.courtsideCast .cnAnalyst{grid-template-columns:52px minmax(0,1fr)!important}
+@media(max-width:520px){.courtsideCast .cnAnalyst{grid-template-columns:42px minmax(0,1fr)!important}}
+
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 370 <span class="launchEngine">E2.26-PROD370</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 373 <span class="launchEngine">E2.26-PROD373</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -14574,15 +14587,15 @@ function newsFlashHtml(){
       ?`<div class="cnOddsBoard">${n.board.map((x,i)=>`<div><span>${i+1}</span><b>${x.name}</b><strong>${x.value}</strong></div>`).join("")}</div>`:"";
     return `<div class="newsFlashOverlay courtsideOverlay"><div class="newsFlashCard courtsideCast">
       <div class="cnTopBar"><div><small>COURTSIDE NETWORK</small><b>${n.broadcastLabel||"BREAKING ANALYSIS"}</b></div><span>LIVE</span></div>
-      <div class="cnAnalyst"><div class="cnAvatar">CM</div><div><b>CHASE MADDON</b><small>SENIOR BASKETBALL ANALYST</small></div><button type="button" id="closeNewsFlash">×</button></div>
+      <div class="cnAnalyst"><div class="cnAvatar">CM</div><div><b>CHASE MADDON</b><small>SENIOR BASKETBALL ANALYST</small></div></div>
       <h3>${n.headline}</h3><p>${n.body||""}</p>${board}
       ${n.quote?`<blockquote>${n.quote}<small>CHASE MADDON</small></blockquote>`:""}
-      <div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button><button id="muteNewsFlash" class="newsFlashMute">Mute Popups</button></div>
+      <div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button><button type="button" id="muteNewsFlash" class="newsFlashMuteSwitch" role="switch" aria-checked="${editorialPopupPrefs(G).mode==="off"?"true":"false"}" aria-label="Mute Courtside popups"><span class="newsFlashMuteCopy">Mute news popups<small>Stories remain in News</small></span><span class="newsFlashMuteTrack"><span class="newsFlashMuteKnob"></span></span></button></div>
     </div></div>`;
   }
   const historic=courtsideFlashTier(n)==="historic";
   const label=historic?courtsideFlashDescription(n):"NEWS UPDATE";
-  return `<div class="newsFlashOverlay"><div class="newsFlashCard ${historic?"courtsideHistoricFlash":""}"><div class="newsFlashHead"><div><small>${historic?"COURTSIDE NETWORK · HISTORIC MOMENT":n.category||"SPORTS DESK"}</small><b>${label}</b></div><button type="button" id="closeNewsFlash">×</button></div><h3>${n.headline}</h3><p>${n.body||""}</p><div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button><button id="muteNewsFlash" class="newsFlashMute">Mute Popups</button></div></div></div>`;
+  return `<div class="newsFlashOverlay"><div class="newsFlashCard ${historic?"courtsideHistoricFlash":""}"><div class="newsFlashHead"><div><small>${historic?"COURTSIDE NETWORK · HISTORIC MOMENT":n.category||"SPORTS DESK"}</small><b>${label}</b></div></div><h3>${n.headline}</h3><p>${n.body||""}</p><div class="newsFlashActions"><button id="openNewsFlash">Open News</button><button id="dismissNewsFlash">Continue</button><button type="button" id="muteNewsFlash" class="newsFlashMuteSwitch" role="switch" aria-checked="${editorialPopupPrefs(G).mode==="off"?"true":"false"}" aria-label="Mute Courtside popups"><span class="newsFlashMuteCopy">Mute news popups<small>Stories remain in News</small></span><span class="newsFlashMuteTrack"><span class="newsFlashMuteKnob"></span></span></button></div></div></div>`;
 }
 function gmCareerState(G) {
   if(!G.gmCareer) G.gmCareer={reputation:50,seasons:[],jobs:[],milestones:[],championships:0,cupTitles:0,playoffAppearances:0,playoffWins:0,careerW:0,careerL:0,nationalHonours:0};
@@ -23226,7 +23239,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 370",ENGINE_VERSION="E2.26-PROD370";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 373",ENGINE_VERSION="E2.26-PROD373";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=2,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -23813,13 +23826,21 @@ async function writeSlot(slot,state,meta){
   const rec={slot,state:nativeState,meta,updatedAt,storageVersion:"STATE1"};
   const lite={slot,meta,updatedAt,persisted:true};
   try{
+    const dbOpenStarted=perfNow();
     const db=await openSaveDB();
+    const dbOpenedAt=perfNow();
     await new Promise((res,rej)=>{
       const tx=db.transaction([SAVE_STORE,SAVE_META_STORE],"readwrite");
       tx.objectStore(SAVE_STORE).put(rec);
       tx.objectStore(SAVE_META_STORE).put(lite);
       tx.oncomplete=res;tx.onerror=()=>rej(tx.error);tx.onabort=()=>rej(tx.error||new Error("Save transaction aborted"));
     });
+    const dbWrittenAt=perfNow();
+    if(state?.runtimeMeta){
+      state.runtimeMeta.lastSaveDbOpenMs=roundPerfMs(dbOpenedAt-dbOpenStarted);
+      state.runtimeMeta.lastSaveDbTransactionMs=roundPerfMs(dbWrittenAt-dbOpenedAt);
+      state.runtimeMeta.lastSaveStoragePath="IndexedDB";
+    }
     db.close();memorySlots[slot]=lite;return true;
   }catch(e){
     // Last-resort fallback preserves the established legacy string format. It is
@@ -23827,7 +23848,8 @@ async function writeSlot(slot,state,meta){
     try{
       const payload=JSON.stringify(nativeState,careerSaveReplacer);
       const legacy={slot,payload,meta,updatedAt};memorySlots[slot]=legacy;
-      localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(legacy));return true;
+      localStorage.setItem(`MMB_SAVE_SLOT_${slot}`,JSON.stringify(legacy));
+      if(state?.runtimeMeta)state.runtimeMeta.lastSaveStoragePath="localStorage fallback";return true;
     }catch(f){console.warn("Persistent save unavailable",e,f);return false}
   }
 }
@@ -31141,10 +31163,31 @@ function commissionerControlCentreHtml(state){
     </div>`;
 }
 
+// Build 373: On-demand, read-only career data growth audit. No full JSON clone or save mutation.
+function longCareerFootprintAudit(state=G){
+  if(!state)return null;
+  const started=perfNow();
+  const collections=[];
+  const inspect=(name,value)=>{
+    if(!value||typeof value!=="object")return;
+    if(Array.isArray(value))collections.push({name,kind:"array",entries:value.length});
+    else if(value instanceof Map||value instanceof Set)collections.push({name,kind:value instanceof Map?"map":"set",entries:value.size});
+    else collections.push({name,kind:"object",entries:Object.keys(value).length});
+  };
+  for(const [key,value] of Object.entries(state)){
+    if(key==="runtimeMeta")continue;
+    inspect(key,value);
+  }
+  const clubRosters=(state.clubs||[]).reduce((n,c)=>n+(Array.isArray(c.roster)?c.roster.length:0),0);
+  const result={version:"LCDA1",season:state.season,phase:state.phase,storageModel:state.runtimeMeta?.saveMemoryModel||"unknown",clubRosters,largestCollections:collections.sort((a,b)=>b.entries-a.entries).slice(0,24),collectionCount:collections.length,scanMs:roundPerfMs(perfNow()-started),note:"Entry counts are diagnostic indicators, not byte sizes. Nested collections are not exhaustively traversed. No save data has been altered."};
+  return result;
+}
 function diagnosticReportText(){
   const data={game:"Legacy Basketball",build:BUILD_ID,engine:ENGINE_VERSION,
     season:G?.season??null,phase:G?.phase??null,saveSlot:G?.saveSlot??null,
     leagueClubs:G?leagueClubCount(G):null,
+    longCareerAudit:longCareerFootprintAudit(G),
+    saveTimingBreakdown:{preparationMs:G?.runtimeMeta?.lastSavePrepMs??null,compactionMs:G?.runtimeMeta?.lastSaveCompactMs??null,integrityMs:G?.runtimeMeta?.lastSaveIntegrityMs??null,dbOpenMs:G?.runtimeMeta?.lastSaveDbOpenMs??null,dbTransactionMs:G?.runtimeMeta?.lastSaveDbTransactionMs??null,storagePath:G?.runtimeMeta?.lastSaveStoragePath??null,totalMs:G?.runtimeMeta?.lastSaveTotalMs??null},
     lastSaveMs:G?.runtimeMeta?.lastSaveWriteMs??null,
     lastAdvanceMs:G?.runtimeMeta?.lastCareerAdvancePerformance?.totalMs??null,
     lastAdvanceDetail:G?.runtimeMeta?.lastCareerAdvancePerformance??null,
@@ -31168,6 +31211,11 @@ function gameDataSettingsContent(){
   return `<div class="gameDataHero"><div class="eyebrow">GAME DATA</div><h3>Career & Support</h3></div>
     <div class="card gameConfigCard"><div class="more"><div><b>Game Version</b></div><b>${BUILD_ID}</b></div><div class="more"><div><b>Save Slot</b></div><b>${G.saveSlot?`Slot ${G.saveSlot}`:"—"}</b></div></div>
     <div class="card gameConfigCard" style="margin-top:10px"><div class="more"><div><b>Diagnostics & Support</b><small>Open when reporting a problem</small></div></div><div class="supportActions"><button type="button" id="copyDiagnosticReport" class="btn">Copy Report</button><button type="button" id="downloadDiagnosticReport" class="btn">Download Report</button></div></div>
+    <div class="card gameConfigCard" style="margin-top:10px"><div class="more"><div><b>Long Career Save Audit · LCDA1</b><small>Read-only measurements. Detailed collection counts are captured when you copy or download a support report.</small></div><b>Season ${G.season}</b></div>
+    <div class="more"><div><b>Save preparation</b><small>Compaction ${G.runtimeMeta?.lastSaveCompactMs??"—"} ms · integrity ${G.runtimeMeta?.lastSaveIntegrityMs??"—"} ms</small></div><b>${G.runtimeMeta?.lastSavePrepMs!=null?`${G.runtimeMeta.lastSavePrepMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Database open</b><small>Time opening IndexedDB on the previous save</small></div><b>${G.runtimeMeta?.lastSaveDbOpenMs!=null?`${G.runtimeMeta.lastSaveDbOpenMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Database write transaction</b><small>Includes browser structured cloning and transaction completion</small></div><b>${G.runtimeMeta?.lastSaveDbTransactionMs!=null?`${G.runtimeMeta.lastSaveDbTransactionMs} ms`:"—"}</b></div>
+    <div class="more"><div><b>Last complete save</b><small>${G.runtimeMeta?.lastSaveStoragePath||"IndexedDB"} · actual time varies with device load</small></div><b>${G.runtimeMeta?.lastSaveTotalMs!=null?`${G.runtimeMeta.lastSaveTotalMs} ms`:"—"}</b></div></div>
     <details class="supportDetails"><summary>Advanced Diagnostics</summary><div class="supportAdvanced">
     <div class="sectionTitle">Runtime Status</div><div class="card gameConfigCard"><div class="more"><div><b>League Structure</b><small>${leagueClubCount(G)} clubs · East ${leagueConferenceSize(G,"East")} / West ${leagueConferenceSize(G,"West")}</small></div><b>${G.leagueStructure?.version||LEAGUE_STRUCTURE_VERSION}</b></div>
     <div class="more"><div><b>Career Framework</b><small>Career control and expansion lifecycle versions</small></div><b>${G.careerControl?.version||CAREER_CONTROL_VERSION} · ${G.expansionState?.version||EXPANSION_EVENT_VERSION}</b></div>
@@ -34558,7 +34606,12 @@ function bind(){
     p[key]=!p[key];suppressMutedEditorialFlash(G);await save();render();
   });
   if($("#muteNewsFlash"))$("#muteNewsFlash").onclick=async()=>{
-    muteEditorialPopups(G);await save();toast("Courtside popups muted. Stories remain in News.");render();
+    const prefs=editorialPopupPrefs(G);
+    const wasMuted=prefs.mode==="off";
+    if(wasMuted){prefs.mode="major";}else{muteEditorialPopups(G);}
+    await save();
+    toast(wasMuted?"Courtside popups restored to Major only.":"Courtside popups muted. Stories remain in News.");
+    render();
   };
   if($("#careerInjurySwitch"))$("#careerInjurySwitch").onclick=async()=>{
     G.settings=G.settings||{};
