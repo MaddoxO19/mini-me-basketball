@@ -4133,7 +4133,7 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 
 
 
-/* Build 394 — official, compact club operations recruitment appointment */
+/* Build 395 — official, compact club operations recruitment appointment */
 .gmAppointmentOverlay{padding:clamp(12px,4vw,22px);padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}
 .gmAppointmentCard{width:min(540px,100%);max-height:calc(100dvh - 28px);overflow-y:auto;overscroll-behavior:contain;background:#111823;border:1px solid rgba(232,169,73,.72);border-radius:18px;padding:0;box-shadow:0 24px 65px rgba(0,0,0,.55)}
 .gmAppointmentHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:17px 18px 13px;border-bottom:1px solid #303a48}
@@ -4190,11 +4190,22 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 .faMarketEmpty{font-size:12px;color:var(--muted);padding:20px 12px;text-align:center}
 @media(max-width:380px){.faMarketPanel{padding:10px!important}.faMarketPills button{font-size:10px;padding:8px}.faMarketPlayer{padding:10px}.faMarketNegotiate{padding:7px 8px!important;font-size:10px!important}.faMarketPlayerName{font-size:12px}}
 
+
+/* Build 395: Free Agent and International Recruitment negotiation modal.
+   The market remains mounted and its filters retain their current selection. */
+.faNegotiationOverlay{position:fixed;inset:0;z-index:12000;background:rgba(2,5,12,.78);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top)) 14px max(16px,env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain}
+.faNegotiationOverlay .faNegotiationDialog{display:block;position:relative;width:min(100%,520px);max-height:calc(100dvh - 32px);overflow-y:auto;overscroll-behavior:contain;margin:auto;background:var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.65);border:1px solid var(--accent);border-radius:20px;padding:18px}
+.faNegotiationOverlay .faHead{align-items:center}
+.faNegotiationOverlay .faHead h3{overflow-wrap:anywhere}
+.faNegotiationOverlay .faAskLine{gap:12px}
+.faNegotiationOverlay .faAskLine b{overflow-wrap:anywhere;text-align:right}
+@media(max-width:420px){.faNegotiationOverlay .faNegotiationDialog{padding:14px}.faNegotiationOverlay .faStepperGrid{gap:8px}.faNegotiationOverlay .faOfferActions.modern{gap:8px}}
+
 </style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 394 <span class="launchEngine">E2.26-PROD394</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 396 <span class="launchEngine">E2.26-PROD396</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -5216,9 +5227,10 @@ function queueExpansionPreparationCheckpoint(state){
     body:"Seattle and Las Vegas are scheduled to enter this season. Complete your protection list and the Expansion Draft before league activation.",
     tag:`EXPANSION_CHECKPOINT_S${state.season}`
   };
-  if(state.newsFlashPending)ensureNewsFlashQueue(state).push(flash);
-  else state.newsFlashPending=flash;
-  return true;
+  // Build 396: the Home expansion preparation panel is the single entry point.
+  // Do not queue a blocking second-stage popup after the offseason contracts hub.
+  // Existing older saves with a queued checkpoint are handled in render().
+  return false;
 }
 function ensureExpansionEntryPreparationState(state){
   if(!state||leagueClubCount(state)>=32)return null;
@@ -23436,7 +23448,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 394",ENGINE_VERSION="E2.26-PROD394";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 396",ENGINE_VERSION="E2.26-PROD396";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -32687,12 +32699,12 @@ function freeagency(){
     const p=playerByAnyId(target.id)||target,d=freeAgentDemand(p),international=target._source==="overseas",remaining=Math.max(0,+p.contractYearsLeft||0);
     const fee=remaining?Math.round(Math.min(12,Math.max(.3,(+p.ovr||65)-62)*.095*remaining)*10)/10:0;
     const fb=ui.faFeedback?.playerId===target.id?ui.faFeedback:null;
-    negotiate=`<div class="faNegotiate modernFaNegotiate"><div class="faHead"><div><div class="eyebrow">${international?"International Recruitment":"Free Agent Negotiation"}</div><h3>${playerNameLink(p)}</h3><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age} · OVR ${p.ovr}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
+    negotiate=`<div class="faNegotiationOverlay" id="faNegotiationOverlay" role="presentation"><section class="faNegotiate modernFaNegotiate faNegotiationDialog" role="dialog" aria-modal="true" aria-label="Player contract negotiation"><div class="faHead"><div><div class="eyebrow">${international?"International Recruitment":"Free Agent Negotiation"}</div><h3>${playerNameLink(p)}</h3><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age} · OVR ${p.ovr}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
     ${international?`<div class="faAskLine"><span>CURRENT CLUB</span><b>${recruitmentEscape(p.externalTeamName||publicCompetitionLabel(p.externalLeague)||"Overseas")} · ${clubCountryLabel(p.externalTeamLeague||p.externalLeague)}</b></div><div class="faAskLine"><span>CONTRACT / RELEASE</span><b>${remaining} yr remaining · $${fee.toFixed(1)}M estimated buyout</b></div>`:""}
     <div class="faAskLine"><span>ASKING CONTRACT</span><b>${d.years} years · $${d.annualM.toFixed(1)}M / year</b></div>
     <div class="faStepperGrid"><div class="faStepper"><small>OFFER TERM</small><div><button type="button" data-fa-years="-1">−</button><input id="faOfferYears" type="number" min="1" max="4" step="1" value="${d.years}" aria-label="Offer years"><button type="button" data-fa-years="1">+</button></div><span>Years</span></div><div class="faStepper"><small>SALARY / YEAR</small><div><button type="button" data-fa-salary="-1">−</button><input id="faOfferSalary" type="number" min="1.4" max="60" step="0.5" value="${d.annualM.toFixed(1)}" aria-label="Offer salary"><button type="button" data-fa-salary="1">+</button></div><span>Millions</span></div></div>
     <div class="faOfferActions modern"><button id="submitFaOffer" class="btn primary">${international?"Approach & Sign":"Make Offer"}</button><button id="resetFaAsk" class="pick matchAsk">Match Asking Price</button></div>
-    ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${recruitmentEscape(fb.message)}</small></div>`:""}</div>`;
+    ${fb?`<div class="faFeedback ${fb.accepted?"accept":"reject"}"><b>${fb.accepted?"Offer Accepted":"Offer Not Accepted"}</b><small>${recruitmentEscape(fb.message)}</small></div>`:""}</section></div>`;
   }
   const posTabs=[["all","All Positions"],["guards","Guards"],["wings","Wings / Forwards"],["centers","Centers"]];
   return `<div class="metrics faTopMetrics"><div class="metric"><b>$${cap.payrollM.toFixed(1)}M</b><small>Payroll</small></div><div class="metric">${signedMoneyBadge(cap.capSpaceM)}<small>Cap Room</small></div><div class="metric"><b>${rosterCount}/15</b><small>Roster · ${twoWayCount}/${twoWayLimit} Two-Way</small></div></div>
@@ -35664,8 +35676,19 @@ function render(){
   if(G&&typeof repairRepeatedExpansionDraftExecutions==="function")repairRepeatedExpansionDraftExecutions(G);
   if(G&&typeof maybeQueueExpansionVote==="function")maybeQueueExpansionVote(G);
   if(G&&typeof ensureExpansionEntryPreparationState==="function")ensureExpansionEntryPreparationState(G);
+  // Build 396: repair late/stale expansion checkpoint notices from existing saves.
+  // The protection/draft Home panel is already a blocking progression gate; it
+  // must not be hidden by another modal requiring a costly save to dismiss.
+  if(G?.newsFlashPending?.type==="expansion_checkpoint")G.newsFlashPending=null;
+  if(G?.expansionState?.stage==="preparation"&&G?.expansionDraftState?.status!=="complete"&&expansionActionWindowOpen(G)&&G?.newsFlashPending){
+    const notice=G.newsFlashPending;
+    if(notice.type!=="expansion_checkpoint"&&!((G.newsFlashQueue||[]).some(n=>n?.tag===notice.tag)))ensureNewsFlashQueue(G).unshift(notice);
+    G.newsFlashPending=null;
+  }
+  if(Array.isArray(G?.newsFlashQueue))G.newsFlashQueue=G.newsFlashQueue.filter(n=>n?.type!=="expansion_checkpoint");
+  if(G?.expansionState?.stage==="preparation"&&G?.expansionDraftState?.status!=="complete"&&expansionActionWindowOpen(G))ui.page="home";
   if(G&&typeof suppressMutedEditorialFlash==="function")suppressMutedEditorialFlash(G);
-  if(G&&typeof promoteQueuedNewsFlash==="function")promoteQueuedNewsFlash(G);
+  if(!(G?.expansionState?.stage==="preparation"&&G?.expansionDraftState?.status!=="complete"&&expansionActionWindowOpen(G))&&G&&typeof promoteQueuedNewsFlash==="function")promoteQueuedNewsFlash(G);
   ensureCareerBaselineMetadata(G);
   ensureVerifiedProductionBio(G);
   ensureProductionLaunchAudit(G);
@@ -35741,11 +35764,12 @@ function bind(){
     const n=G.newsFlashPending;if(n?.type==="award_results"){writeAwardPresentationCheckpoint(n,{complete:true});G.awardVotingPresentationSeen=G.awardVotingPresentationSeen||{};G.awardVotingPresentationSeen[`S${n.season}`]=true;}
     G.newsFlashPending=null;ui.page="news";const ok=await save();if(ok)clearAwardPresentationCheckpoint();render();
   };
-  if($("#openExpansionCheckpoint"))$("#openExpansionCheckpoint").onclick=async()=>{
+  if($("#openExpansionCheckpoint"))$("#openExpansionCheckpoint").onclick=()=>{
     G.expansionCheckpointAcknowledgedSeason=G.season;
-    G.newsFlashPending=null;promoteQueuedNewsFlash(G);
+    G.newsFlashPending=null;
     ui.page="home";
-    await save();render();
+    render();
+    void save();
   };
   if($("#approveExpansionVote"))$("#approveExpansionVote").onclick=async()=>{
     const r=resolveExpansionVote(G,true);
@@ -36184,6 +36208,7 @@ $$("[data-twoway-convert]").forEach(b=>b.onclick=()=>{let r=convertTwoWayToStand
 $$("[data-twoway-waive]").forEach(b=>b.onclick=()=>{waiveTwoWay(G,me().id,b.dataset.twowayWaive);toast("Two-way player waived");save();render()});
 $$("[data-negotiatefa]").forEach(b=>b.onclick=()=>{ui.faTargetId=b.dataset.negotiatefa;ui.faFeedback=null;render()});
 if($("#closeFaNegotiation"))$("#closeFaNegotiation").onclick=()=>{ui.faTargetId=null;ui.faFeedback=null;render()};
+if($("#faNegotiationOverlay"))$("#faNegotiationOverlay").onclick=e=>{if(e.target===e.currentTarget){ui.faTargetId=null;ui.faFeedback=null;render()}};
 $$("[data-faband]").forEach(b=>b.onclick=()=>{ui.faBandFilter=b.dataset.faband;ui.faTargetId=null;ui.faFeedback=null;render()});
 $$("[data-fapos]").forEach(b=>b.onclick=()=>{ui.faPosFilter=b.dataset.fapos;ui.faTargetId=null;ui.faFeedback=null;render()});
 if($("#faPlayerSearch"))$("#faPlayerSearch").oninput=e=>{ui.faSearch=e.target.value;const caret=e.target.selectionStart;const scroll=window.scrollY;render();const input=$("#faPlayerSearch");if(input){input.focus();try{input.setSelectionRange(caret,caret)}catch(_){}}window.scrollTo(0,scroll)};
