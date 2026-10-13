@@ -217,6 +217,13 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .finalsPreviewMatch{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:8px;align-items:center}
 .finalsPreviewTeam{display:flex;align-items:center;gap:8px;min-width:0}.finalsPreviewTeam.right{justify-content:flex-end;text-align:right}.finalsPreviewTeam b{font-size:10px;line-height:1.2;overflow-wrap:anywhere}
 .finalsPreviewVs{text-align:center;color:var(--muted);font-size:9px;font-weight:950}
+/* Build 388: clearer championship preview, without changing postseason logic. */
+.finalsPreview388 .finalsPreviewLabel{text-align:center;margin-bottom:12px}
+.finalsPreview388 .finalsPreviewIdentity{display:flex;flex-direction:column;gap:4px;min-width:0}
+.finalsPreview388 .finalsPreviewIdentity small{font-size:9px;line-height:1.3;color:var(--muted);font-weight:650}
+.finalsPreview388 .finalsPreviewTeam{align-items:center}
+.finalsPreview388 .finalsPreviewTeam.right .finalsPreviewIdentity{text-align:right}
+
 .postConferenceSection{margin:14px 0 0}.postConferenceSection>h3{margin:0 2px 7px;font-size:16px}
 .postRoundWinnerCard{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px;cursor:pointer}
 .postRoundWinnerCard:hover{border-color:#526170}.postRoundWinnerCard .teamMiniCrest{width:40px;height:40px;flex-basis:40px}
@@ -4128,7 +4135,7 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 386 <span class="launchEngine">E2.26-PROD386</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 388 <span class="launchEngine">E2.26-PROD388</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -23239,7 +23246,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 386",ENGINE_VERSION="E2.26-PROD386";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 388",ENGINE_VERSION="E2.26-PROD388";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25707,37 +25714,39 @@ function boxQualityLegend(){
   return `<div class="boxTierLegend"><span><i class="boxTierStar goat">★</i> GOAT 97+</span><span><i class="boxTierStar superstar">★</i> Superstar 94–96</span><span><i class="boxTierStar allnba">★</i> All-NBA 90–93</span><span><i class="boxTierStar allstar">★</i> All-Star 86–89</span><span><i class="boxTierStar highstarter">★</i> High Starter 82–85</span></div>`;
 }
 
+// Build 387: assign club jersey numbers before squad rendering, not only on player-profile access.
+// Preserve valid existing/manual numbers; repair only missing, invalid or conflicting values.
 function ensurePlayerJerseys(club){
-  if(!club)return;
-  const used=new Set();
-
-  // League-club jersey numbers are shared only by players who can appear for
-  // that club: the standard roster and its two-way players. Development
-  // affiliate players belong to a separate roster environment and do not
-  // reserve parent-club jersey numbers.
-  const leagueRoster=[...(club.roster||[]),...(club.twoWayRoster||[])];
-  for(const p of leagueRoster){
-    let n=Number.isFinite(+p.jerseyNumber)?+p.jerseyNumber:null;
-    if(n===null||n<0||n>99||used.has(n)){
-      const seed=(String(p.id||"").split("").reduce((s,ch)=>s+ch.charCodeAt(0),0)%99);
-      n=seed;while(used.has(n))n=(n+1)%100;
-      p.jerseyNumber=n;
+  if(!club)return false;
+  let changed=false;
+  const assign=(roster)=>{
+    const used=new Set();
+    const list=[...roster].filter(Boolean);
+    // Manual overrides have first claim on their selected number. Other existing
+    // numbers take precedence over unassigned newcomers, independently of OVR.
+    list.sort((a,b)=>
+      Number(!!b.manualJerseyOverride)-Number(!!a.manualJerseyOverride) ||
+      Number(normalizeJerseyNumber(b.jerseyNumber)!==null)-Number(normalizeJerseyNumber(a.jerseyNumber)!==null)
+    );
+    for(const p of list){
+      const existing=normalizeJerseyNumber(p.jerseyNumber);
+      let number=existing;
+      if(number===null||used.has(number)){
+        const preference=normalizeJerseyNumber(p.preferredJerseyNumber);
+        number=nextAvailableJerseyFromUsed(used,preference);
+        if(number===null)continue;
+        p.jerseyNumber=number;
+        p.jerseyAutoAssigned=true;
+        if(existing!==null&&used.has(existing))p.jerseyConflictResolved=true;
+        changed=true;
+      }
+      used.add(number);
     }
-    used.add(n);
-  }
-
-  // Affiliate numbers are valid independently. Only repair invalid numbers;
-  // do not compare them against the parent League roster.
-  const affiliateUsed=new Set();
-  for(const p of club.gLeagueRoster||[]){
-    let n=Number.isFinite(+p.jerseyNumber)?+p.jerseyNumber:null;
-    if(n===null||n<0||n>99||affiliateUsed.has(n)){
-      const seed=(String(p.id||"").split("").reduce((s,ch)=>s+ch.charCodeAt(0),0)%99);
-      n=seed;while(affiliateUsed.has(n))n=(n+1)%100;
-      p.jerseyNumber=n;
-    }
-    affiliateUsed.add(n);
-  }
+  };
+  // Two-way players wear numbers from the same club pool; affiliates are separate.
+  assign([...(club.roster||[]),...(club.twoWayRoster||[])]);
+  assign(club.gLeagueRoster||[]);
+  return changed;
 }
 function fmtHeight(cm){
   if(!cm)return"—";
@@ -29478,7 +29487,7 @@ function postseasonUserHome(){
 function renderPostseasonUpdate(){
   ensureCurrentPostseasonSeriesRecognition(G);
   const d=ui.postUpdate;if(!d){show("game");ui.page="home";render();return}
-  $("#postseasonUpdateTitle").textContent=d.roundChanged?`${d.roundBefore} Complete`:`${d.roundBefore} Update`;
+  $("#postseasonUpdateTitle").textContent=d.roundChanged&&d.roundBefore==="Conference Finals"?"Finals Preview":d.roundChanged?`${d.roundBefore} Complete`:`${d.roundBefore} Update`;
 
   const grouped={East:[],West:[],Finals:[]};
   for(const s of(d.completedSeries||[])){
@@ -29498,16 +29507,17 @@ function renderPostseasonUpdate(){
   const finalsB=finalsSeries?c(finalsSeries.teamBId):null;
   const isConferenceFinalsComplete=d.roundChanged&&d.roundBefore==="Conference Finals"&&finalsA&&finalsB;
 
-  const finalsPreview=isConferenceFinalsComplete?`<div class="finalsPreview">
-    <div class="finalsPreviewLabel">Finals Preview</div>
+  // Build 388: presentation-only Finals preview; team selection and series state are unchanged.
+  const finalsPreview=isConferenceFinalsComplete?`<div class="finalsPreview finalsPreview388">
+    <div class="finalsPreviewLabel">The Championship Matchup</div>
     <div class="finalsPreviewMatch">
-      <div class="finalsPreviewTeam">${teamMark(finalsA,"teamMiniCrest")}<b>${finalsA.name}</b></div>
+      <div class="finalsPreviewTeam">${teamMark(finalsA,"teamMiniCrest")}<div class="finalsPreviewIdentity"><b>${finalsA.name}</b><small>Eastern Champion</small></div></div>
       <div class="finalsPreviewVs">VS</div>
-      <div class="finalsPreviewTeam right"><b>${finalsB.name}</b>${teamMark(finalsB,"teamMiniCrest")}</div>
+      <div class="finalsPreviewTeam right"><div class="finalsPreviewIdentity"><b>${finalsB.name}</b><small>Western Champion</small></div>${teamMark(finalsB,"teamMiniCrest")}</div>
     </div>
   </div>`:"";
 
-  const heroTitle=d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`;
+  const heroTitle=isConferenceFinalsComplete?"Finals Preview":d.phaseAfter==="CHAMPION"?"Postseason complete":d.roundChanged?`${d.roundBefore} complete`:`${d.roundBefore} update`;
   const heroCopy=isConferenceFinalsComplete
     ?`${recapCopy} ${finalsA.name} and ${finalsB.name} advance to the Finals.`
     :d.phaseAfter==="CHAMPION"
@@ -29521,7 +29531,7 @@ function renderPostseasonUpdate(){
 
   const seriesHtml=["East","West","Finals"].map(conf=>{
     const rows=grouped[conf]||[];if(!rows.length)return"";
-    const sectionTitle=conf==="Finals"?"Finals":`${conf}ern Conference`;
+    const sectionTitle=conf==="Finals"?"Finals":isConferenceFinalsComplete?`${conf}ern Conference Finals Result`:`${conf}ern Conference`;
     const cards=rows.map(s=>{
       const winner=c(s.winnerClubId),teamA=c(s.teamAId),teamB=c(s.teamBId);
       const loser=String(s.winnerClubId)===String(s.teamAId)?teamB:teamA;
@@ -32677,6 +32687,9 @@ function twoWayCandidates(){
 }
 function squad(){
   const club=me();
+  // Avoid profile-open side effects: incoming draftees and signings must show
+  // their shirt numbers immediately on the depth chart, including old saves.
+  ensurePlayerJerseys(club);
   repairHealthyRotationState(G,club);
   const d=rosterDepthSnapshot(G,club.id),twLimit=club.twoWayLimit||3;
   const players=(club.roster||[]).map(p=>({player:p,depth:d.nba.find(x=>x.id===p.id)||{mins:p.targetMinutes||0,role:p.rotationRole||"Depth"}}));
