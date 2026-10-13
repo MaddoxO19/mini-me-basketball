@@ -217,7 +217,7 @@ h1{font-size:32px;margin:0 0 7px}.muted{color:var(--muted)}.btn{width:100%;borde
 .finalsPreviewMatch{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);gap:8px;align-items:center}
 .finalsPreviewTeam{display:flex;align-items:center;gap:8px;min-width:0}.finalsPreviewTeam.right{justify-content:flex-end;text-align:right}.finalsPreviewTeam b{font-size:10px;line-height:1.2;overflow-wrap:anywhere}
 .finalsPreviewVs{text-align:center;color:var(--muted);font-size:9px;font-weight:950}
-/* Build 392: recorded World Cup and Olympic finishes on tournament recap cards. */
+/* Build 393: recorded World Cup and Olympic finishes on tournament recap cards. */
 .finalsPreview388 .finalsPreviewLabel{text-align:center;margin-bottom:12px}
 .finalsPreview388 .finalsPreviewIdentity{display:flex;flex-direction:column;gap:4px;min-width:0}
 .finalsPreview388 .finalsPreviewIdentity small{font-size:9px;line-height:1.3;color:var(--muted);font-weight:650}
@@ -4132,7 +4132,37 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 @media(max-width:520px){.courtsideCast .cnAnalyst{grid-template-columns:42px minmax(0,1fr)!important}}
 
 
-/* Build 392 — unified, mobile-first Player Market. Existing recruitment handlers are unchanged. */
+
+/* Build 394 — official, compact club operations recruitment appointment */
+.gmAppointmentOverlay{padding:clamp(12px,4vw,22px);padding-top:max(12px,env(safe-area-inset-top));padding-bottom:max(12px,env(safe-area-inset-bottom))}
+.gmAppointmentCard{width:min(540px,100%);max-height:calc(100dvh - 28px);overflow-y:auto;overscroll-behavior:contain;background:#111823;border:1px solid rgba(232,169,73,.72);border-radius:18px;padding:0;box-shadow:0 24px 65px rgba(0,0,0,.55)}
+.gmAppointmentHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:17px 18px 13px;border-bottom:1px solid #303a48}
+.gmAppointmentHeader small{display:block;color:#eab35c;font-size:10px;font-weight:900;letter-spacing:.12em;line-height:1.5}
+.gmAppointmentHeader b{display:block;color:#f1f3f7;font-size:14px;letter-spacing:.04em;margin-top:3px}
+.gmAppointmentHeader span{display:block;font-size:10px;color:#919dad;letter-spacing:.075em;margin-top:5px;font-weight:750}
+.gmAppointmentHeader button{flex:none;width:35px;height:35px;background:#19212c;border:1px solid #394657;color:#f0f2f5;border-radius:10px;font-size:22px;line-height:1}
+.gmAppointmentMain{padding:19px 18px 18px}
+.gmAppointmentCard .gmAppointmentMain h3{font-size:clamp(20px,4.9vw,27px);line-height:1.2;margin:0 0 10px;font-weight:850;letter-spacing:-.025em}
+.gmAppointmentCard .gmAppointmentMain>p{font-size:13px;line-height:1.53;color:#a7b0be;margin:0}
+.gmAppointmentMetrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:17px 0}
+.gmAppointmentMetrics>div{min-width:0;background:#1a222e;border:1px solid #303d4c;border-radius:11px;padding:12px 5px;text-align:center}
+.gmAppointmentMetrics b{display:block;font-size:20px;line-height:1.2;color:#f3f5f7;white-space:nowrap}
+.gmAppointmentMetrics small{display:block;margin-top:5px;color:#a1adba;font-size:10px;line-height:1.25}
+.gmAppointmentObjective{padding:11px 0 13px;border-bottom:1px solid #303a48}
+.gmAppointmentObjective small{display:block;font-weight:850;letter-spacing:.1em;color:#e7af56;font-size:10px;margin-bottom:5px}
+.gmAppointmentObjective strong{font-size:15px;line-height:1.35;color:#f0f3f5}
+.gmAppointmentCard .gmAppointmentMain .gmAppointmentNote{font-size:11px;line-height:1.5;margin:12px 0 0}
+.gmAppointmentActions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
+.gmAppointmentActions button{min-width:0;min-height:46px;border-radius:11px;font-size:14px;font-weight:850;border:1px solid #344051;background:#1a222e;color:#f1f3f7}
+.gmAppointmentActions #acceptGMOffer{background:#f1ba65;border-color:#f1ba65;color:#131313}
+.gmAppointmentActions button:disabled{opacity:.55}
+.gmAppointmentConfirm{margin-top:14px;border:1px solid rgba(237,174,84,.55);background:rgba(237,174,84,.075);border-radius:12px;padding:12px}
+.gmAppointmentConfirm[hidden]{display:none!important}
+.gmAppointmentConfirm b{font-size:13px;color:#f6c57d}
+.gmAppointmentCard .gmAppointmentConfirm p{font-size:11px;line-height:1.45;color:#c5ced9;margin-top:5px}
+@media(max-width:365px){.gmAppointmentHeader{padding:13px}.gmAppointmentMain{padding:15px 13px}.gmAppointmentMetrics b{font-size:17px}.gmAppointmentMetrics small{font-size:9px}.gmAppointmentActions button{font-size:12px}}
+
+/* Build 393 — unified, mobile-first Player Market. Existing recruitment handlers are unchanged. */
 .faMarketPanel{margin-top:10px;padding:13px!important;overflow:hidden}
 .faMarketPanel>label{display:block;font-size:11px;letter-spacing:.08em;font-weight:850;color:var(--muted);margin:0 0 8px}
 .faMarketPanel #faPlayerSearch{display:block;width:100%;max-width:100%;box-sizing:border-box;margin:0 0 12px!important;background:#131a23!important;color:var(--text)!important;border:1px solid #344150!important;border-radius:11px!important;min-height:44px;padding:11px 13px!important;font-size:15px!important;-webkit-appearance:none;appearance:none}
@@ -4156,6 +4186,7 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 .faMarketPlayerBottom{margin-top:9px;padding-top:8px;border-top:1px solid rgba(130,150,170,.14)}
 .faMarketTerms>b{font-size:11px;line-height:1.35;display:block;overflow-wrap:anywhere}
 .faMarketNegotiate{flex-shrink:0;align-self:center;min-height:36px;padding:8px 10px!important;background:rgba(244,163,64,.08)!important;border-color:#956d34!important;color:var(--accent2)!important;font-size:11px!important;font-weight:850!important;border-radius:9px!important}
+.faMarketClubCountry{color:#aebaca!important;font-size:10px!important;margin-top:2px!important}
 .faMarketEmpty{font-size:12px;color:var(--muted);padding:20px 12px;text-align:center}
 @media(max-width:380px){.faMarketPanel{padding:10px!important}.faMarketPills button{font-size:10px;padding:8px}.faMarketPlayer{padding:10px}.faMarketNegotiate{padding:7px 8px!important;font-size:10px!important}.faMarketPlayerName{font-size:12px}}
 
@@ -4163,7 +4194,7 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 392 <span class="launchEngine">E2.26-PROD392</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 394 <span class="launchEngine">E2.26-PROD394</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -12953,7 +12984,7 @@ function makeFreeAgentOffer(G, clubId, playerId, years, annualM) {
   return {accepted:true,reason:'Offer accepted',offer,player:p};
 }
 
-// Build 392: international club recruitment; the existing STATE1/segmented persistence owns the complete player.
+// Build 393: international club recruitment; the existing STATE1/segmented persistence owns the complete player.
 function internationalRecruitmentOffer(state,clubId,playerId,years,annualM){
   const club=clubById(state,clubId);
   const pool=Array.isArray(state.externalProfessionals)?state.externalProfessionals:[];
@@ -14660,15 +14691,23 @@ function newsFlashHtml(){
   if(n.type==="award_results")return awardVotingPopupHtml(n);
   if(n.type==="gm_recruitment"&&n.offer){
     const o=n.offer;
-    return `<div class="newsFlashOverlay"><div class="newsFlashCard gmRecruitmentCard">
-      <div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>GM CAREER OPPORTUNITY</b></div><button type="button" id="closeNewsFlash">×</button></div>
-      <h3>${n.headline}</h3><p>${n.body||""}</p>
-      <div class="gmOfferGrid">
-        <div><b>${o.record}</b><small>Last Record</small></div><div><b>${o.squadOvr}</b><small>Squad OVR</small></div>
-        <div><b>${o.draftAssets}</b><small>3-Year Picks</small></div><div><b>${o.expectation}</b><small>Board Brief</small></div>
+    const clubName=escapeHtml(String(o.targetClubName||"the offering club"));
+    const priorName=escapeHtml(String(o.previousClubName||"your current club"));
+    return `<div class="newsFlashOverlay gmAppointmentOverlay"><div class="newsFlashCard gmRecruitmentCard gmAppointmentCard">
+      <div class="gmAppointmentHeader"><div><small>${clubName.toUpperCase()}</small><b>CLUB OPERATIONS</b><span>CONFIDENTIAL · GM APPOINTMENT</span></div><button type="button" id="closeNewsFlash" aria-label="Close offer">×</button></div>
+      <div class="gmAppointmentMain">
+        <h3>An opportunity to lead ${clubName}</h3>
+        <p>${clubName} have approached you regarding their General Manager position, following your work with ${priorName}.</p>
+        <div class="gmAppointmentMetrics" aria-label="Club overview">
+          <div><b>${escapeHtml(String(o.record??"—"))}</b><small>Last Season</small></div>
+          <div><b>${escapeHtml(String(o.squadOvr??"—"))}</b><small>Squad OVR</small></div>
+          <div><b>${escapeHtml(String(o.draftAssets??"—"))}</b><small>Draft Picks · 3 Yrs</small></div>
+        </div>
+        <div class="gmAppointmentObjective"><small>BOARD OBJECTIVE</small><strong>${escapeHtml(String(o.expectation||"Build a competitive team"))}</strong></div>
+        <p class="gmAppointmentNote">Your GM reputation and national-team appointment remain unchanged. Club facilities stay with their respective organisations.</p>
+        <div class="gmAppointmentConfirm" id="gmAppointmentConfirm" hidden><b>Confirm club appointment</b><p>Leave ${priorName} and become General Manager of ${clubName}?</p></div>
+        <div class="gmAppointmentActions"><button type="button" id="declineGMOffer">Decline</button><button type="button" id="acceptGMOffer">Accept Offer</button></div>
       </div>
-      <div class="gmOfferNote">Your GM reputation, career record and national-team role remain with you. Club facilities stay with each organisation, but proven organisational experience can generate transition development credit.</div>
-      <div class="newsFlashActions"><button id="acceptGMOffer">Accept Role</button><button id="declineGMOffer">Decline</button></div>
     </div></div>`;
   }
   if(n.analyst==="Chase Maddon"){
@@ -15618,13 +15657,82 @@ const EXTERNAL_CLUB_POOLS={
   "Philippine PBA":["Barangay Ginebra","San Miguel Beermen","TNT Tropang Giga","Magnolia Hotshots","Rain or Shine","Meralco Bolts","NLEX Road Warriors","NorthPort Batang Pier","Converge FiberXers","Phoenix Fuel Masters"]
 };
 
+// Build 393: persistent worldwide club identities. Local league aliases are
+// country-specific; no contract, league, or player attributes are changed.
+const WORLD_LOCAL_CLUBS={
+ SLO:["Cedevita Olimpija","Krka Novo Mesto","Helios Domžale","Šenčur","Rogaška","Šentjur","Podčetrtek","Triglav Kranj"],
+ EGY:["Al Ahly","Zamalek","Al Ittihad Alexandria","Sporting Alexandria","Gezira","Smouha","El Shams","Al Jazira Cairo"],
+ SSD:["Juba City Basketball","Nimule Eagles","Wau Warriors","Malakal Lions","Bor Basketball","Yambio Stars","Torit Falcons","Rumbek Hoopers"],
+ LAT:["VEF Rīga","Rīgas Zeļļi","Ventspils","Liepāja","Ogre","Valmiera Glass","Latvijas Universitāte","Jūrmala"],
+ CRO:["Cibona","Zadar","Split","Cedevita Junior","Dubrava","Šibenka","Dinamo Zagreb","Alkar"],
+ BIH:["Igokea","Bosna Sarajevo","Široki","Borac Banja Luka","Sloboda Tuzla","Spars Sarajevo","Leotar","Posušje"],
+ MNE:["Budućnost VOLI","SC Derby","Mornar Bar","Sutjeska","Podgorica","Teodo Tivat","Primorje","Lovćen"],
+ POL:["Śląsk Wrocław","Legia Warszawa","Anwil Włocławek","King Szczecin","Trefl Sopot","Start Lublin","Stal Ostrów","Arka Gdynia"],
+ UKR:["Budivelnyk Kyiv","Dnipro","Kyiv-Basket","Cherkaski Mavpy","Zaporizhzhia","Kryvbas","Hoverla","Old Lutsk"],
+ GEO:["TSU Tbilisi","Kutaisi 2010","Rustavi","Batumi","Tbilisi State","Olimpi Tbilisi","Vera","Kavkasia"],
+ ROU:["U-BT Cluj-Napoca","CSO Voluntari","CSM Oradea","Dinamo București","Rapid București","FC Argeș","CSM Constanța","SCM Timișoara"],
+ POR:["Benfica","Porto","Sporting CP","Oliveirense","Ovarense","Galitos","Imortal","Vitória SC"],
+ DEN:["Bakken Bears","Svendborg Rabbits","Team FOG Næstved","Horsens IC","Randers Cimbria","BMS Herlev","Værløse","Copenhagen"],
+ NED:["ZZ Leiden","Den Bosch","Donar Groningen","Landstede Hammers","Feyenoord Basketball","BAL Weert","Yoast United","Amsterdam"],
+ BEL:["Oostende","Antwerp Giants","Spirou Charleroi","Limburg United","Leuven Bears","Mons-Hainaut","Brussels Basketball","Mechelen"],
+ SUI:["Fribourg Olympic","Lions de Genève","Union Neuchâtel","Lugano Tigers","Starwings Basel","BBC Monthey","Lausanne","Nyon"],
+ GBR:["London Lions","Leicester Riders","Newcastle Eagles","Sheffield Sharks","Cheshire Phoenix","Bristol Flyers","Surrey 89ers","Manchester Basketball"],
+ ISL:["Valur","KR Reykjavík","Keflavík","Njarðvík","Grindavík","Tindastóll","Þór Þorlákshöfn","Stjarnan"],
+ FIN:["Helsinki Seagulls","Kauhajoki Karhu","Salon Vilpas","Bisons Loimaa","Kataja Basket","KTP Basket","Tampereen Pyrintö","Korihait"],
+ SWE:["Norrköping Dolphins","Södertälje Kings","Borås Basket","Jämtland Basket","Uppsala Basket","Nässjö Basket","Luleå Basket","Köping Stars"],
+ CZE:["Nymburk","Opava","Brno","Pardubice","Ústí nad Labem","Děčín","Olomoucko","Kolín"],
+ SVK:["Patrioti Levice","Inter Bratislava","Spišskí Rytieri","Prievidza","Komárno","Handlová","Nitra","Lučenec"],
+ HUN:["Falco Szombathely","Szolnoki Olaj","Alba Fehérvár","Körmend","Atomerőmű SE","Sopron KC","Kecskemét","Pécs"],
+ EST:["Kalev/Cramo","Tartu Ülikool","TalTech","Viimsi","Pärnu Sadam","Rapla","Keila","Rakvere"],
+ NZL:["Auckland Tuatara","Canterbury Rams","Wellington Saints","Otago Nuggets","Nelson Giants","Taranaki Airs","Southland Sharks","Franklin Bulls"],
+ JPN:["Alvark Tokyo","Chiba Jets","Ryukyu Golden Kings","Utsunomiya Brex","Osaka Evessa","Shimane Susanoo Magic","Nagoya Diamond Dolphins","Sunrockers Shibuya"],
+ KOR:["Seoul SK Knights","Busan KCC Egis","Changwon LG Sakers","Ulsan Hyundai Mobis Phoebus","Anyang Jung Kwan Jang","Seoul Samsung Thunders","Wonju DB Promy","Suwon KT Sonicboom"],
+ BRA:["Flamengo","Franca","Minas Tênis Clube","São Paulo FC","Bauru Basket","Corinthians","Paulistano","Pinheiros"],
+ CAN:["Scarborough Shooting Stars","Niagara River Lions","Edmonton Stingers","Brampton Honey Badgers","Ottawa BlackJacks","Saskatchewan Rattlers","Calgary Surge","Vancouver Bandits"],
+ MEX:["Fuerza Regia","Soles de Mexicali","Astros de Jalisco","Diablos Rojos","Mineros de Zacatecas","Dorados de Chihuahua","Panteras de Aguascalientes","Abejas de León"],
+ PUR:["Vaqueros de Bayamón","Capitanes de Arecibo","Cangrejeros de Santurce","Leones de Ponce","Piratas de Quebradillas","Mets de Guaynabo","Atléticos de San Germán","Indios de Mayagüez"],
+ DOM:["Metros de Santiago","Titanes del Distrito","Reales de La Vega","Indios de San Francisco","Cañeros del Este","Leones de Santo Domingo","Soles de Santo Domingo","Marineros de Puerto Plata"],
+ VEN:["Gladiadores de Anzoátegui","Trotamundos de Carabobo","Cocodrilos de Caracas","Guaiqueríes de Margarita","Marinos de Anzoátegui","Broncos de Caracas","Piratas de La Guaira","Spartans Distrito Capital"],
+ COL:["Titanes de Barranquilla","Caribbean Storm","Motilones del Norte","Toros del Valle","Piratas de Bogotá","Cimarrones del Chocó","Búcaros","Cóndores"],
+ URU:["Peñarol","Nacional","Aguada","Malvín","Defensor Sporting","Biguá","Hebraica Macabi","Trouville"],
+ CHI:["Universidad de Concepción","Colegio Los Leones","Deportivo Valdivia","Español de Osorno","CD Las Ánimas","Universidad Católica","Puerto Varas","Ancud"],
+ NGR:["Rivers Hoopers","Kwara Falcons","Kano Pillars","Gombe Bulls","Lagos Islanders","Police Batons","Niger Potters","Lagos Customs"],
+ SEN:["ASC Ville de Dakar","AS Douanes","Dakar Université Club","Jeanne d'Arc Dakar","US Ouakam","Saint-Louis Basket","ASFA Dakar","Mermoz Basket"],
+ ANG:["Petro de Luanda","Primeiro de Agosto","Interclube","Vila Clotilde","Sporting de Luanda","ASA Luanda","Bravos do Maquis","Libolo"],
+ TUN:["US Monastir","Club Africain","Étoile Sportive du Sahel","ES Radès","JS Kairouan","Ezzahra Sports","Stade Nabeulien","DS Grombalia"],
+ MAR:["AS Salé","FUS Rabat","Wydad Casablanca","IR Tanger","Maghreb de Fès","Kawkab Marrakech","AS FAR","Raja Casablanca"],
+ CIV:["ABC Fighters","SOA Abidjan","JCA Kings","ASEC Mimosas","Azur Basket","Warriors Abidjan","Fusion Basket","Abidjan Basket"],
+ CMR:["FAP Yaoundé","BEAC Yaoundé","Onyx Yaoundé","Douala Firebirds","Ecole de Basket","Bafia Basketball","Université de Douala","Yaoundé Lions"],
+ KEN:["Nairobi City Thunder","KPA Dockers","Ulinzi Warriors","Equity Dumas","Strathmore Blades","Kenyatta University","Thunder Nairobi","Eldonets"],
+ UGA:["City Oilers","Namuwongo Blazers","KIU Titans","UCU Canons","Kampala Rockets","Jinja Hippos","Ndejje Angels","JKL Dolphins"],
+ RWA:["APR Basketball","Patriots BBC","REG Basketball","Tigers BBC","Espoir BBC","UGB","Kigali Titans","Kepler BBC"],
+ RSA:["Cape Town Tigers","Soweto Panthers","Tshwane Suns","Egoli Magic","Jozi Nuggets","KwaZulu Marlins","Pretoria Heat","Durban Warriors"]
+};
+const WORLD_LOCAL_SUFFIXES=["Basketball","Hoopers","Lions","Falcons","Warriors","Eagles","Titans","Stars"];
+function externalLeagueNationCode(league){
+ const raw=String(league||"");
+ const match=raw.match(/^([A-Z]{3}) Basketball(?: Club(?: \d+)?)?$/);
+ if(match)return match[1];
+ const known={"Australian NBL":"AUS","Liga ACB (Spain)":"ESP","Turkish BSL":"TUR","Greek Basket League":"GRE","Italian LBA":"ITA","French LNB":"FRA","German BBL":"GER","Israeli Basketball Premier League":"ISR","VTB United League":"RUS","Serbian KLS":"SRB","Lithuanian LKL":"LTU","Chinese CBA":"CHN","Argentine Liga Nacional":"ARG","Philippine PBA":"PHI"};
+ return known[raw]||"";
+}
+function clubCountryLabel(league){const code=externalLeagueNationCode(canonicalExternalLeague(league));return code?`${flagEmoji(code)} ${nationName(code)}`:"International";}
+function legacyExternalClubPlaceholder(name){return !name||/\bBasketball Club \d+$/i.test(String(name));}
+function persistentClubPool(league){
+ const code=externalLeagueNationCode(league);
+ if(WORLD_LOCAL_CLUBS[code]?.length)return WORLD_LOCAL_CLUBS[code];
+ // Identifiable, fixed fictional club names where no verified pool is provided.
+ // Avoid inventing actual club affiliations or changing the player's country.
+ const city=nationName(code)||"International";
+ return WORLD_LOCAL_SUFFIXES.map((suffix,i)=>`${city} ${suffix}`);
+}
 function externalClubPoolForLeague(league){
   league=canonicalExternalLeague(league);
   const explicit=EXTERNAL_CLUB_POOLS[league];
   if(explicit?.length)return explicit;
   if(league==="G League")return["Development League"];
   const label=publicCompetitionLabel(league||"International Basketball");
-  return Array.from({length:8},(_,i)=>`${label} Club ${i+1}`);
+  return persistentClubPool(league);
 }
 function externalClubIdentity(league,name){
   return `EXT_${`${league||"EXT"}|${name||"Club"}`.normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]+/gi,"_").replace(/^_+|_+$/g,"").toUpperCase()}`;
@@ -15777,7 +15885,7 @@ function canonicalizeExternalPlayerHistory(G,p){
   p.externalCareerHistory=Array.isArray(p.externalCareerHistory)?p.externalCareerHistory:[];
   for(const row of p.externalCareerHistory){
     const rowLeague=canonicalExternalLeague(row.league||canonical);
-    const oldGeneric=!row.clubName||/ Basketball Club \d+$/i.test(String(row.clubName));
+    const oldGeneric=!row.clubName||legacyExternalClubPlaceholder(row.clubName);
     row.league=rowLeague;
     if(oldGeneric||canonicalExternalLeague(row.league)!==canonicalExternalLeague(rowLeague)){
       const pool=externalClubPoolForLeague(rowLeague);
@@ -15787,10 +15895,10 @@ function canonicalizeExternalPlayerHistory(G,p){
   }
   if(p.externalCurrentSeason){
     const currentLeague=canonicalExternalLeague(p.externalCurrentSeason.league||canonical);
-    const generic=!p.externalCurrentSeason.clubName||/ Basketball Club \d+$/i.test(String(p.externalCurrentSeason.clubName));
+    const generic=!p.externalCurrentSeason.clubName||legacyExternalClubPlaceholder(p.externalCurrentSeason.clubName);
     if(leagueChanged||generic||currentLeague!==p.externalCurrentSeason.league)delete p.externalCurrentSeason;
   }
-  if(leagueChanged||!p.externalTeamName||/ Basketball Club \d+$/i.test(String(p.externalTeamName))){
+  if(leagueChanged||!p.externalTeamName||legacyExternalClubPlaceholder(p.externalTeamName)){
     delete p.externalTeamName;delete p.externalTeamId;delete p.externalTeamLeague;
     assignExternalClub(p,canonical,`CANON|S${G?.season||0}`,true);
   }
@@ -23328,7 +23436,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 392",ENGINE_VERSION="E2.26-PROD392";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 394",ENGINE_VERSION="E2.26-PROD394";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -30034,7 +30142,7 @@ function olympicRecapPendingTournament(){
   if(!pending)return null;
   return [...(G.olympicHistory||[])].reverse().find(o=>o.status==="COMPLETE"&&o.year===pending.year&&o.season===pending.season)||null;
 }
-// Build 392: presentation-only tournament finishes derived from recorded results.
+// Build 393: presentation-only tournament finishes derived from recorded results.
 // Never infer an exact placing where the tournament did not record a decider.
 function recapMatchLoser(game){return game?.winner===game?.teamA?game.teamB:game?.winner===game?.teamB?game.teamA:null;}
 function recapTournamentFinish(t,code,kind){
@@ -32572,7 +32680,7 @@ function freeagency(){
   const overseas=(G.externalProfessionals||[]).map(p=>({...p,_source:"overseas"}));
   const search=String(ui.faSearch||"").trim().toLocaleLowerCase(),source=ui.faSource||"all",posFilter=ui.faPosFilter||"all";
   const posClass=p=>p.position==="PG"||p.position==="SG"?"guards":p.position==="C"?"centers":"wings";
-  const players=[...free,...overseas].filter(p=>(source==="all"||p._source===source)&&(posFilter==="all"||posClass(p)===posFilter)&&(!search||[p.name,p.nationality,p.externalTeamName,p.externalLeague,p.position].some(v=>String(v||"").toLocaleLowerCase().includes(search)))).sort((a,b)=>(+b.ovr||0)-(+a.ovr||0)).slice(0,250);
+  const players=[...free,...overseas].filter(p=>(source==="all"||p._source===source)&&(posFilter==="all"||posClass(p)===posFilter)&&(!search||[p.name,p.nationality,p.externalTeamName,p.externalLeague,clubCountryLabel(p.externalLeague),p.position].some(v=>String(v||"").toLocaleLowerCase().includes(search)))).sort((a,b)=>(+b.ovr||0)-(+a.ovr||0)).slice(0,250);
   const target=ui.faTargetId?[...free,...overseas].find(p=>String(p.id)===String(ui.faTargetId)):null;
   let negotiate="";
   if(target){
@@ -32580,7 +32688,7 @@ function freeagency(){
     const fee=remaining?Math.round(Math.min(12,Math.max(.3,(+p.ovr||65)-62)*.095*remaining)*10)/10:0;
     const fb=ui.faFeedback?.playerId===target.id?ui.faFeedback:null;
     negotiate=`<div class="faNegotiate modernFaNegotiate"><div class="faHead"><div><div class="eyebrow">${international?"International Recruitment":"Free Agent Negotiation"}</div><h3>${playerNameLink(p)}</h3><small>${nationDisplay(p.nationality)} · ${p.position} · Age ${p.age} · OVR ${p.ovr}</small></div><button id="closeFaNegotiation" class="pick">Close</button></div>
-    ${international?`<div class="faAskLine"><span>CURRENT CLUB</span><b>${recruitmentEscape(p.externalTeamName||publicCompetitionLabel(p.externalLeague)||"Overseas")}</b></div><div class="faAskLine"><span>CONTRACT / RELEASE</span><b>${remaining} yr remaining · $${fee.toFixed(1)}M estimated buyout</b></div>`:""}
+    ${international?`<div class="faAskLine"><span>CURRENT CLUB</span><b>${recruitmentEscape(p.externalTeamName||publicCompetitionLabel(p.externalLeague)||"Overseas")} · ${clubCountryLabel(p.externalTeamLeague||p.externalLeague)}</b></div><div class="faAskLine"><span>CONTRACT / RELEASE</span><b>${remaining} yr remaining · $${fee.toFixed(1)}M estimated buyout</b></div>`:""}
     <div class="faAskLine"><span>ASKING CONTRACT</span><b>${d.years} years · $${d.annualM.toFixed(1)}M / year</b></div>
     <div class="faStepperGrid"><div class="faStepper"><small>OFFER TERM</small><div><button type="button" data-fa-years="-1">−</button><input id="faOfferYears" type="number" min="1" max="4" step="1" value="${d.years}" aria-label="Offer years"><button type="button" data-fa-years="1">+</button></div><span>Years</span></div><div class="faStepper"><small>SALARY / YEAR</small><div><button type="button" data-fa-salary="-1">−</button><input id="faOfferSalary" type="number" min="1.4" max="60" step="0.5" value="${d.annualM.toFixed(1)}" aria-label="Offer salary"><button type="button" data-fa-salary="1">+</button></div><span>Millions</span></div></div>
     <div class="faOfferActions modern"><button id="submitFaOffer" class="btn primary">${international?"Approach & Sign":"Make Offer"}</button><button id="resetFaAsk" class="pick matchAsk">Match Asking Price</button></div>
@@ -32596,7 +32704,7 @@ function freeagency(){
     <div class="faMarketFilterGroup"><small>POSITION</small><div class="faMarketPills">${posTabs.map(([k,label])=>`<button data-fapos="${k}" class="${posFilter===k?"active":""}" aria-pressed="${posFilter===k}">${label}</button>`).join("")}</div></div>
     <p class="faMarketHint">Overseas contracts may require a release fee. National-team selection is unaffected.</p>
     <div class="faMarketSummary"><div class="sectionTitle">Player Market</div><small>${players.length} shown${players.length===250?" · refine search":""}</small></div>
-    ${players.length?`<div class="faMarketResults">${players.map(p=>{const d=freeAgentDemand(p),intl=p._source==="overseas",remaining=Math.max(0,+p.contractYearsLeft||0),clubName=intl?recruitmentEscape(p.externalTeamName||publicCompetitionLabel(p.externalLeague)||"Overseas Club"):"Free Agent";return `<article class="faMarketPlayer"><div class="faMarketPlayerMain"><div class="faMarketIdentity"><b class="faMarketPlayerName">${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(p.nationality)} · ${recruitmentEscape(p.position||"—")}${p.secondaryPosition?`/${recruitmentEscape(p.secondaryPosition)}`:""} · Age ${p.age}</small></div><div class="faMarketRating"><strong>${p.ovr}</strong><small>OVR</small></div></div><div class="faMarketPlayerBottom"><div class="faMarketTerms"><b>${clubName}</b><small>${intl?`${remaining} yr${remaining===1?"":"s"} remaining · `:""}$${d.annualM.toFixed(1)}M/year ask</small></div><button type="button" class="pick faMarketNegotiate" data-negotiatefa="${recruitmentEscape(p.id)}">Negotiate</button></div></article>`}).join("")}</div>`:`<div class="faMarketEmpty">No players match your search.</div>`}
+    ${players.length?`<div class="faMarketResults">${players.map(p=>{const d=freeAgentDemand(p),intl=p._source==="overseas",remaining=Math.max(0,+p.contractYearsLeft||0),clubName=intl?recruitmentEscape(p.externalTeamName||publicCompetitionLabel(p.externalLeague)||"Overseas Club"):"Free Agent";return `<article class="faMarketPlayer"><div class="faMarketPlayerMain"><div class="faMarketIdentity"><b class="faMarketPlayerName">${playerNameLink(playerByAnyId(p.id)||p)}</b><small>${nationDisplay(p.nationality)} · ${recruitmentEscape(p.position||"—")}${p.secondaryPosition?`/${recruitmentEscape(p.secondaryPosition)}`:""} · Age ${p.age}</small></div><div class="faMarketRating"><strong>${p.ovr}</strong><small>OVR</small></div></div><div class="faMarketPlayerBottom"><div class="faMarketTerms"><b>${clubName}</b>${intl?`<small class="faMarketClubCountry">${clubCountryLabel(p.externalTeamLeague||p.externalLeague)}</small>`:""}<small>${intl?`${remaining} yr${remaining===1?"":"s"} remaining · `:""}$${d.annualM.toFixed(1)}M/year ask</small></div><button type="button" class="pick faMarketNegotiate" data-negotiatefa="${recruitmentEscape(p.id)}">Negotiate</button></div></article>`}).join("")}</div>`:`<div class="faMarketEmpty">No players match your search.</div>`}
   </section>`;
 }
 function tradePartners(){return G.clubs.filter(x=>x.id!==me().id).slice().sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),undefined,{sensitivity:"base"}))}
@@ -35654,7 +35762,13 @@ function bind(){
   if($("#closeNewsFlash"))$("#closeNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#dismissNewsFlash"))$("#dismissNewsFlash").onclick=()=>{G.newsFlashPending=null;save();render()};
   if($("#openNewsFlash"))$("#openNewsFlash").onclick=()=>{G.newsFlashPending=null;ui.page="news";save();render()};
-  if($("#acceptGMOffer"))$("#acceptGMOffer").onclick=async()=>{const r=acceptGMRecruitmentOffer(G);if(!r.ok){toast(r.reason);return;}ui.page="home";ui.clubTab="current";await save();toast(r.transitionDevelopmentCredit?`You are now GM of ${r.clubName} · +${r.transitionDevelopmentCredit} development points`:`You are now GM of ${r.clubName}`);render()};
+  if($("#acceptGMOffer"))$("#acceptGMOffer").onclick=async()=>{
+    const confirmPanel=$("#gmAppointmentConfirm"),acceptButton=$("#acceptGMOffer"),declineButton=$("#declineGMOffer");
+    if(confirmPanel&&confirmPanel.hidden){confirmPanel.hidden=false;acceptButton.textContent="Confirm Appointment";if(declineButton){declineButton.textContent="Back";declineButton.onclick=()=>{confirmPanel.hidden=true;acceptButton.textContent="Accept Offer";declineButton.textContent="Decline";declineButton.onclick=async()=>{declineGMRecruitmentOffer(G);await save();toast("GM offer declined");render()};};}return;}
+    acceptButton.disabled=true;
+    const r=acceptGMRecruitmentOffer(G);if(!r.ok){acceptButton.disabled=false;toast(r.reason);return;}
+    ui.page="home";ui.clubTab="current";await save();toast(r.transitionDevelopmentCredit?`You are now GM of ${r.clubName} · +${r.transitionDevelopmentCredit} development points`:`You are now GM of ${r.clubName}`);render()
+  };
   if($("#declineGMOffer"))$("#declineGMOffer").onclick=async()=>{declineGMRecruitmentOffer(G);await save();toast("GM offer declined");render()};
   $$("a[data-playerprofile]").forEach(a=>a.onclick=e=>openPlayerProfileDirect(a.dataset.playerprofile,e));
   $$("a[data-clubprofile]").forEach(a=>a.onclick=e=>openClubProfileDirect(a.dataset.clubprofile,e));
