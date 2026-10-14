@@ -2790,7 +2790,16 @@ button,[role="button"],.pick,.profileLink,.clubLink{touch-action:manipulation}
 .settingsMiniStat{padding:10px 11px;border:1px solid #293440;border-radius:10px;background:#111821}.settingsMiniStat small{display:block;color:var(--muted);font-size:9.5px}.settingsMiniStat b{display:block;margin-top:3px;font-size:11px}
 
 .commissionerPanel{margin-top:14px}
-.commissionerControlGrid{display:grid;gap:12px}
+.commissionerControlGrid{display:grid;gap:12px;min-width:0;max-width:100%}
+.commissionerControlGrid>*{min-width:0;max-width:100%;box-sizing:border-box}
+#commissionerDatabaseCard{width:100%;min-width:0;overflow:hidden}
+#commissionerDatabaseCard input,#commissionerDatabaseCard select{box-sizing:border-box;max-width:100%}
+#commissionerDatabaseCard .dbTableViewport{width:100%;max-width:100%;min-width:0;overflow:auto;max-height:520px;overscroll-behavior:contain}
+#commissionerDatabaseCard .dbTools{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+#commissionerDatabaseCard .dbTools button{padding:9px 12px;max-width:100%}
+#commissionerDatabaseCard .dbPager{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:10px}
+#commissionerDatabaseCard .dbPager button{padding:8px 12px}
+#commissionerDatabaseCard .dbPager button:disabled{opacity:.4}
 .commissionerControlCard{padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--card)}
 .commissionerControlCard h4{margin:0 0 4px;font-size:13px}
 .commissionerControlCard>p{margin:0 0 12px;color:var(--muted);font-size:10.5px;line-height:1.45}
@@ -4200,11 +4209,124 @@ button.intlPlayerToggle[data-exp-protect].on > span{
 .faNegotiationOverlay .faAskLine b{overflow-wrap:anywhere;text-align:right}
 @media(max-width:420px){.faNegotiationOverlay .faNegotiationDialog{padding:14px}.faNegotiationOverlay .faStepperGrid{gap:8px}.faNegotiationOverlay .faOfferActions.modern{gap:8px}}
 
-</style></head>
+
+/* Build 410.4: desktop-only Safari Courtside action alignment (superseded by 410.4.1). */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .courtsideUnified.internationalCourtside .allStarAction,
+  .courtsideUnified.internationalCourtside .postHomeActions {width:100%;max-width:none;box-sizing:border-box;}
+  .courtsideUnified.internationalCourtside .allStarAction > button,
+  .courtsideUnified.internationalCourtside .allStarAction .primaryProgress,
+  .courtsideUnified.internationalCourtside .postHomeActions button {display:block;width:100%;max-width:none;box-sizing:border-box;}
+}
+
+/* Build 410.4.1 — Safari layout correction: fix the actual two-column
+   Courtside action grid and prevent settings-tab mid-word wrapping.
+   These selectors are scoped to the affected components. */
+.courtsideUnified.internationalCourtside .postHomeActions {
+  grid-template-columns:minmax(0,1fr)!important;
+  width:auto;
+  margin-left:12px;
+  margin-right:12px;
+}
+.courtsideUnified.internationalCourtside .postHomeActions > button {
+  width:100%!important;
+  min-width:0;
+  max-width:none!important;
+  box-sizing:border-box;
+}
+.page > .tabs.subTabs.gmProfileSubTabs {
+  display:flex;
+  flex-wrap:wrap;
+  grid-template-columns:none;
+  gap:8px;
+  overflow:visible;
+}
+.page > .tabs.subTabs.gmProfileSubTabs > button {
+  flex:0 0 auto;
+  width:auto;
+  min-width:max-content;
+  max-width:100%;
+  white-space:nowrap;
+  overflow-wrap:normal;
+  word-break:normal;
+  padding:10px 14px;
+  line-height:1.2;
+}
+@media (max-width:430px) {
+  .page > .tabs.subTabs.gmProfileSubTabs {gap:6px;}
+  .page > .tabs.subTabs.gmProfileSubTabs > button {padding:9px 10px;font-size:10px;}
+}
+
+/* Build 410.9: Commissioner interface cohesion, Safari-safe sizing and navigation. */
+.commissionerControlGrid{width:100%;min-width:0;grid-template-columns:minmax(0,1fr)}
+.commissionerControlCard{width:100%;min-width:0;overflow:hidden}
+#commissionerDatabaseCard .dbTools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#commissionerDatabaseCard .dbTools button{width:100%;min-width:0;white-space:normal;overflow-wrap:normal;font-size:11px}
+#commissionerDatabaseCard .dbImportBox[hidden]{display:none!important}
+#commissionerDatabaseCard .dbTableViewport{overflow-x:auto;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#commissionerDatabaseCard .dbPager{justify-content:center}
+.commissionerAuditCard .commissionerLogRow{overflow-wrap:anywhere}
+.gmProfileSubTabs{display:flex;flex-wrap:wrap;gap:8px}
+.gmProfileSubTabs>[data-settingstab]{flex:0 1 auto;min-width:max-content;white-space:nowrap;word-break:normal;padding-inline:12px}
+@media(max-width:600px){#commissionerDatabaseCard .dbTools{grid-template-columns:1fr 1fr}#commissionerDatabaseCard .dbTools button:last-child{grid-column:1/-1}.gmProfileSubTabs>[data-settingstab]{min-width:0;white-space:normal;word-break:keep-all}}
+
+/* Build 410.10.5 — unified Commissioner player-creation presentation */
+.cmCreateBackdrop[hidden],#cmNewSuccessActions[hidden],#cmNewFormActions[hidden]{display:none!important}
+.cmCreateBackdrop{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(1,4,9,.82);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-sizing:border-box}
+.cmCreateModal{width:min(100%,490px);max-height:calc(100dvh - 36px);display:flex;flex-direction:column;overflow:hidden;box-sizing:border-box;background:#0d141e;color:#e8eef7;border:1px solid #2b394a;border-radius:15px;box-shadow:0 24px 90px rgba(0,0,0,.66);font-family:inherit}
+.cmCreateHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:21px 22px 17px;border-bottom:1px solid #263342;background:linear-gradient(160deg,#121d29,#0d141e)}
+.cmCreateHeadingGroup{min-width:0}.cmCreateEyebrow{display:block;font-size:9px;letter-spacing:2px;font-weight:850;color:#f5a53c;margin-bottom:10px}.cmCreateEyebrowDot{padding:0 4px;color:#64758b}
+.cmCreateHeader h3{font-size:22px;line-height:1.12;margin:0 0 7px;font-weight:850;color:#f5f7fb}.cmCreateHeader p{font-size:12px;color:#9caabe;line-height:1.45;margin:0}
+.cmCreateClose{flex:none;width:36px;height:36px;display:grid;place-items:center;background:#111b27;border:1px solid #344354;border-radius:9px;color:#c3ccda;font-size:22px;line-height:1;cursor:pointer}.cmCreateClose:hover{background:#202e3d;color:#fff}
+.cmCreateBody{overflow-y:auto;overscroll-behavior:contain;padding:0 22px;min-height:0}.cmCreateSection{padding:17px 0 18px;border-bottom:1px solid #23303f}.cmCreateSection:last-of-type{border-bottom:0}
+.cmCreateSectionTitle{display:flex;align-items:center;gap:9px;margin-bottom:14px;color:#cbd5e2;font-size:10px;font-weight:850;letter-spacing:1.2px}.cmCreateSectionIndex{display:grid;place-items:center;width:24px;height:24px;background:#1c2b39;color:#f5a53c;border-radius:6px;font-size:10px;letter-spacing:0}
+.cmCreateGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cmCreateField{min-width:0;display:flex;flex-direction:column;gap:7px;font-size:11px;font-weight:700;color:#aab8c9}.cmCreateField small{font-size:10px;color:#6e8198;font-weight:650}.cmCreateFull{grid-column:1/-1}
+.cmCreateModal .cmCreateField input,.cmCreateModal .cmCreateField select{width:100%;height:42px;min-width:0;box-sizing:border-box;padding:0 12px;border-radius:8px;border:1px solid #344354;background:#090f17;color:#f0f4fa;font-size:14px;font-family:inherit;font-weight:650;outline:none;color-scheme:dark;appearance:auto;-webkit-appearance:auto}
+.cmCreateModal .cmCreateField input:focus,.cmCreateModal .cmCreateField select:focus{border-color:#f5a53c;box-shadow:0 0 0 2px rgba(245,165,60,.15)}.cmCreateModal .cmCreateField input::placeholder{color:#65778d;font-weight:400}
+.cmCreateHelp{font-size:11px;color:#8395aa;line-height:1.55;margin:11px 0 0}.cmCreateStatus{font-size:12px;color:#d6e4f5;line-height:1.55;margin:0}.cmCreateStatus:not(:empty){padding:12px;margin:0 0 16px;background:#142638;border:1px solid #38536b;border-radius:8px}
+.cmCreateFooter{flex:none;padding:15px 22px 18px;border-top:1px solid #263342;background:#0c131c}.cmCreateActions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap}.cmCreateActions .btn{min-height:42px;padding:10px 15px;border-radius:8px;font-size:12px;font-weight:800;flex:1 1 auto}.cmCreateActions .cmCreatePrimary{background:#f5a53c!important;color:#11151b!important;border:1px solid #f5a53c!important}.cmCreateActions .cmCreateSecondary{background:#151f2b!important;color:#d4dfeb!important;border:1px solid #344354!important}
+@media(max-width:420px){.cmCreateBackdrop{padding:8px}.cmCreateModal{max-height:calc(100dvh - 16px)}.cmCreateHeader{padding:17px 15px 14px}.cmCreateBody{padding:0 15px}.cmCreateFooter{padding:12px 15px 15px}.cmCreateGrid{gap:10px}.cmCreateActions .btn{font-size:11px;padding:9px 10px}}
+
+</style><style>
+
+/* Build 410.9.3 — shared Player Profile navigation from Commissioner database */
+#commissionerDatabaseCard .dbSearchWrap{position:relative;display:flex;align-items:center;flex:1;min-width:180px}
+#commissionerDatabaseCard .dbSearchWrap input{width:100%;padding:11px 34px 11px 35px!important}
+#commissionerDatabaseCard .dbSearchGlyph{position:absolute;left:12px;color:var(--muted);pointer-events:none}
+#commissionerDatabaseCard .dbSearchClear{position:absolute;right:6px;background:transparent;border:0;color:var(--muted);font-size:19px;cursor:pointer;padding:4px 8px}
+#commissionerDatabaseCard .dbFilterChips{display:flex;gap:6px;overflow-x:auto;max-width:100%;padding:3px 0 8px;scrollbar-width:thin}
+#commissionerDatabaseCard .dbFilterChip{flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--muted);padding:8px 12px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+#commissionerDatabaseCard .dbFilterChip.active{background:var(--accent);color:#141414;border-color:var(--accent)}
+#commissionerDatabaseCard .dbPlayerRow{cursor:pointer}
+#commissionerDatabaseCard .dbPlayerRow:hover,#commissionerDatabaseCard .dbPlayerRow:focus-visible{background:rgba(245,161,55,.11);outline:2px solid var(--accent);outline-offset:-2px}
+/* Build 410.9.1 — Commissioner controls */
+#commissionerDatabaseCard .dbActionGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0 14px}
+#commissionerDatabaseCard .dbAction{display:flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:10px 9px;background:var(--card);border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:12px;font-weight:750;white-space:normal}
+#commissionerDatabaseCard .dbAction:hover,#commissionerDatabaseCard .dbAction.active{border-color:var(--accent);color:var(--accent)}
+#commissionerDatabaseCard .dbActionIcon{font-size:18px;font-weight:800;line-height:1;color:var(--accent)}
+#commissionerDatabaseCard .dbPager{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:9px;padding:14px 0 4px}
+#commissionerDatabaseCard .dbPageButton{min-height:40px;border:1px solid var(--line);background:var(--card);color:var(--text);border-radius:10px;font-size:12px;font-weight:700;padding:8px 12px}
+#commissionerDatabaseCard .dbPageButton:disabled{opacity:.32;cursor:default}
+#commissionerDatabaseCard .dbPageIndicator{font-weight:800;color:var(--accent);font-size:13px;min-width:48px;text-align:center}
+#commissionerDatabaseCard .dbPageJump{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:11px}
+#commissionerDatabaseCard .dbPageJump select{width:auto;min-width:55px;background:var(--card);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px}
+@media(max-width:430px){#commissionerDatabaseCard .dbAction{font-size:11px;gap:5px}#commissionerDatabaseCard .dbPager{gap:6px}}
+</style>
+<style>
+.cmCreateBackdrop[hidden],#cmNewSuccessActions[hidden],#cmNewFormActions[hidden]{display:none!important}
+.cmCreateBackdrop{position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.78);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+.cmCreateModal{width:min(100%,520px);max-height:calc(100dvh - 32px);overflow:auto;background:var(--card,#101720);color:var(--text,#fff);box-shadow:0 24px 80px rgba(0,0,0,.5);box-sizing:border-box}
+.cmCreateHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;font-size:18px}
+.cmCreateHeader button{min-width:42px;min-height:42px}
+.cmCreateModal input,.cmCreateModal select{background:var(--bg,#0b1018)!important;color:var(--text,#fff)!important;border:1px solid var(--line,#364252)!important;border-radius:7px;padding:9px;box-sizing:border-box;min-width:0;font-size:16px}
+.cmCreateModal label{min-width:0;font-size:12px}
+@media(max-width:420px){.cmCreateModal{padding:12px!important}.cmCreateBackdrop{padding:8px}}
+</style>
+</head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId">v0.9.0 Stable · Build 409 <span class="launchEngine">E2.26-PROD409</span></div></div></div></section>
+<div class="launchBuildId">v0.9.0 Stable · Build 410.10.7 · Prospect Draft-Year Integrity <span class="launchEngine">E2.26-PROD431</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -8088,6 +8210,7 @@ function applyPersonalSourceIdentityLayer(G){
     ...(G.freeAgents||[]),
     ...(G.gLeaguePlayers||[]),
     ...(G.upcomingDraftClass?.prospects||[]),
+    ...(G.futureProspects||[]),
     ...(G.draftClass?.prospects||[]),
     ...(G.summerLeagueLive?.invitees||[])
   ];
@@ -10776,9 +10899,40 @@ function makeMappedPlayer(t,rank,teamId){
   elitePotentialFloorForSource(p);
   return p;
 }
+// Build 410.1: launch-only calibration. The supplied 2026/27 source OVRs are
+// authoritative; do not flatten team strengths or rewrite veteran ratings.
+// Calibrate *unverified* young-player upside conservatively and publish a
+// compact audit, without adding per-season work or changing existing saves.
+function calibrateLaunchRoster410(roster){
+  const report={version:"410.1",players:roster.length,sourceRated:0,estimatedRated:0,
+    elite90:0,star85:0,rotation75:0,developmentUnder75:0,youngUpsideAdjusted:0,
+    averageOvr:0,minimumOvr:null,maximumOvr:null};
+  let total=0;
+  for(const p of roster){
+    const o=Number(p.ovr)||0;
+    total+=o;
+    if(p.productionRatingEstimated)report.estimatedRated++;else report.sourceRated++;
+    if(o>=90)report.elite90++;
+    if(o>=85)report.star85++;
+    if(o>=75)report.rotation75++;else report.developmentUnder75++;
+    report.minimumOvr=report.minimumOvr===null?o:Math.min(report.minimumOvr,o);
+    report.maximumOvr=report.maximumOvr===null?o:Math.max(report.maximumOvr,o);
+    // Only players without a verified source rating are adjusted. Preserve
+    // launch rookies, historical baselines and known potential overrides.
+    if(p.productionRatingEstimated && p.age<=23 && !p.launchRookieRating &&
+       !p.preCareerBaseline && !p.launchRookieSleeper){
+      const floor=Math.min(94,o+(p.age<=20?7:p.age<=22?5:3));
+      if(Number(p.potential)<floor){p.potential=floor;report.youngUpsideAdjusted++;}
+    }
+  }
+  report.averageOvr=roster.length?Math.round(total/roster.length*10)/10:0;
+  return report;
+}
+
 function makeMappedClub(identity){
   const templates=[...(SEASON1_ROSTER_TEMPLATES[identity.id]||[])].filter(t=>!isOfficial2026DraftTemplate(t));
   const roster=templates.map((t,i)=>makeMappedPlayer(t,i,identity.id));
+  const launchCalibration410=calibrateLaunchRoster410(roster);
   return {
     id:identity.id,name:identity.name,city:identity.city,mark:identity.mark,style:identity.style,color:identity.color,
     conference:identity.conference,division:identity.division,roster,gLeagueRoster:[],twoWayRoster:[],twoWayLimit:3,
@@ -10786,7 +10940,8 @@ function makeMappedClub(identity){
     capUsed:roster.reduce((a,p)=>a+(p.salaryM||0),0),offseasonRosterLimit:20,regularRosterLimit:15,
     draftHistory:{lastNo1Season:null,top5Seasons:[]},rosterFoundationVersion:ROSTER_FOUNDATION_VERSION,
     franchiseLegacy:franchiseLegacyFor(identity.id),
-    productionSourceOvr:sourceRosterOvr(identity.id),productionSnapshot:PRODUCTION_DATA_SNAPSHOT
+    productionSourceOvr:sourceRosterOvr(identity.id),productionSnapshot:PRODUCTION_DATA_SNAPSHOT,
+    launchCalibration410
   };
 }
 
@@ -17527,6 +17682,28 @@ function aiExtensionDecision(club,p) {
   const threshold=direction==="CONTEND"?75:direction==="DEVELOP"?72:74;
   return score>=threshold || (score>=threshold-3 && Math.random()<0.48);
 }
+// Build 410.5: deterministic, eligibility-aware AI free-agent shortlist.
+// Never consider external-contract players as signable free agents; check salary
+// affordability before scoring rather than repeatedly retrying impossible offers.
+function aiFreeAgentShortlist(G,club,direction,{upgrade=false}={}){
+  const cap=clubCapPosition(G,club.id);
+  const unrestricted=G?.settings?.salaryCap===false;
+  const candidates=[];
+  for(const p of (G.freeAgents||[])){
+    if(!p || p.contractStatus==="External League" || p.contractType==="International" || p.nbaAvailability==="External Contract")continue;
+    if(upgrade && (+p.ovr||0)<75)continue;
+    const demand=freeAgentDemand(p);
+    if(!canSignSalary(G,club,demand.annualM).ok)continue;
+    const fit=needAwareScore(club,p,{direction});
+    const age=+p.age||27,ovr=+p.ovr||0,pot=+p.potential||ovr;
+    const upside=Math.max(0,pot-ovr);
+    const ageFit=direction==="DEVELOP"?(age<=25?Math.min(4,upside*.38):age>=32?-4:0):
+      direction==="CONTEND"?(ovr>=78?2:0):0;
+    const salaryPressure=unrestricted?0:(cap.capRoom>=demand.annualM?0:1.5);
+    candidates.push({player:p,score:fit+ageFit-salaryPressure});
+  }
+  return candidates.sort((a,b)=>b.score-a.score || (+b.player.ovr||0)-(+a.player.ovr||0));
+}
 function ensureRosterCompliance(G, club, isUser=false) {
   const max=club.regularRosterLimit||15, min=12;
   if(isUser && (club.roster.length>max || club.roster.length<min)) {
@@ -17538,20 +17715,17 @@ function ensureRosterCompliance(G, club, isUser=false) {
     club.roster.sort((a,b)=>needAwareScore(club,b,{excludePlayerId:b.id,direction})-needAwareScore(club,a,{excludePlayerId:a.id,direction}));
     const p=club.roster[club.roster.length-1]; releasePlayer(G,club.id,p.id);
   }
-  let failedTargets=0;
-  while(club.roster.length<15 && G.freeAgents.length && failedTargets<Math.min(12,G.freeAgents.length)) {
-    const cap=clubCapPosition(G,club.id);
-    let best=null,bestScore=-Infinity;
-    for(const p of G.freeAgents){
-      const demand=freeAgentDemand(p),fit=needAwareScore(club,p,{direction});
-      const unrestricted=G?.settings?.salaryCap===false;
-      const affordability=unrestricted?2:(cap.capRoom>=demand.annualM?2:(canSignSalary(G,club,demand.annualM).ok?0:-12));
-      const sc=fit+affordability;
-      if(sc>bestScore){bestScore=sc;best=p;}
+  // Build 410.5: recruit only eligible and affordable targets; no failed-offer
+  // rotation that can repeatedly revisit an impossible contract.
+  let recruitmentAttempts=0;
+  while(club.roster.length<15 && recruitmentAttempts++<18){
+    const shortlist=aiFreeAgentShortlist(G,club,direction);
+    if(!shortlist.length)break;
+    let signed=false;
+    for(const target of shortlist.slice(0,8)){
+      if(signFreeAgent(G,club.id,target.player.id,direction==="DEVELOP"?rand(2,4):rand(1,3))){signed=true;break;}
     }
-    if(!best)break;
-    if(!signFreeAgent(G,club.id,best.id,direction==="DEVELOP"?rand(2,4):rand(1,3))){failedTargets++;G.freeAgents.push(G.freeAgents.splice(G.freeAgents.indexOf(best),1)[0]);}
-    else failedTargets=0;
+    if(!signed)break;
   }
   if(!isUser && club.roster.length===15 && G.freeAgents?.length){
     let upgrades=0;
@@ -17560,14 +17734,8 @@ function ensureRosterCompliance(G, club, isUser=false) {
       const ranked=[...club.roster].sort((a,b)=>needAwareScore(club,a,{excludePlayerId:a.id,direction})-needAwareScore(club,b,{excludePlayerId:b.id,direction}));
       const worst=ranked[0];if(!worst)break;
       const worstScore=needAwareScore(club,worst,{excludePlayerId:worst.id,direction});
-      let best=null,bestScore=-Infinity;
-      for(const p of G.freeAgents){
-        if((+p.ovr||0)<75)continue;
-        const demand=freeAgentDemand(p),cap=clubCapPosition(G,club.id);
-        if(!canSignSalary(G,club,demand.annualM).ok)continue;
-        const sc=needAwareScore(club,p,{direction});
-        if(sc>bestScore){bestScore=sc;best=p;}
-      }
+      const shortlist=aiFreeAgentShortlist(G,club,direction,{upgrade:true});
+      const best=shortlist[0]?.player||null,bestScore=shortlist[0]?.score??-Infinity;
       if(!best || bestScore<worstScore+4 || (+best.ovr||0)<(+worst.ovr||0)+2)break;
       const worstId=worst.id;
       if(!releasePlayer(G,club.id,worstId))break;
@@ -19105,17 +19273,91 @@ function ensureReference2027DraftClass(G){
   }
   return prospects;
 }
+// Build 410.2: Persisted, per-season draft ecology. Only newly created future
+// classes use these distributions; existing/scouted classes are never rewritten.
+function draftEcology410(G,year){
+  G.draftEcology410=G.draftEcology410||{};
+  if(G.draftEcology410[year])return G.draftEcology410[year];
+  const r=Math.random();
+  const tier=r<.05?"GENERATIONAL":r<.25?"STRONG":r<.75?"AVERAGE":r<.95?"WEAK":"VERY_WEAK";
+  const profile={year,tier,focus:["PG","SG","SF","PF","C"][Math.floor(Math.random()*5)],
+    scoutBias:Math.random()<.2?(Math.random()<.5?-1:1):0};
+  G.draftEcology410[year]=profile;
+  // Keep save size bounded during very long careers.
+  const keys=Object.keys(G.draftEcology410).map(Number).sort((a,b)=>a-b);
+  for(const old of keys.slice(0,Math.max(0,keys.length-12)))delete G.draftEcology410[old];
+  return profile;
+}
+function applyDraftEcology410(prospects,profile){
+  const adjustments={GENERATIONAL:3,STRONG:2,AVERAGE:0,WEAK:-2,VERY_WEAK:-3};
+  const modifier=adjustments[profile.tier]||0;
+  for(let i=0;i<prospects.length;i++){
+    const p=prospects[i];
+    const focused=p.position===profile.focus||p.secondaryPosition===profile.focus;
+    const delta=modifier+(focused&&Math.random()<.35?1:0);
+    p.ovr=Math.max(62,Math.min(88,p.ovr+delta));
+    p.potential=Math.max(p.ovr,Math.min(99,(+p.potential||p.ovr)+delta));
+    // Uncommon high-upside players are possible even in weaker classes.
+    if(Math.random()<.025)p.potential=Math.min(99,Math.max(p.potential,rand(89,95)));
+    if(profile.tier==="GENERATIONAL"&&i===0)p.potential=Math.max(p.potential,97);
+    p.draftEcologyTier=profile.tier;
+    p.draftEcologyFocus=profile.focus;
+  }
+  return prospects;
+}
+// Build 410.3 — persistent fictional prospect identities and lightweight eligibility.
+// Never replace a saved class or rewrite completed draft histories.
+function prospectIdentity4103(p,year,index){
+  if(!p||typeof p!=="object")return p;
+  if(!p.prospectCareerId)p.prospectCareerId=String(p.id||`prospect-${year}-${index}`);
+  if(!Number.isFinite(+p.firstEligibleDraftSeason))p.firstEligibleDraftSeason=year;
+  if(!Number.isFinite(+p.targetDraftSeason))p.targetDraftSeason=year;
+  if(!p.prospectPathway)p.prospectPathway=p.entryPath||"Draft Prospect";
+  if(!p.prospectStatus)p.prospectStatus="Eligible";
+  return p;
+}
+function ensureUniqueDraftIdentities4103(G,prospects,year){
+  const seen=new Set();
+  // Identity repair is limited to a newly created class; saved players are never renamed.
+  for(let i=0;i<prospects.length;i++){
+    const p=prospectIdentity4103(prospects[i],year,i);
+    let key=String(p.prospectCareerId);
+    if(seen.has(key)){
+      key=`${key}-class${year}-slot${i}`;
+      p.prospectCareerId=key;
+      if(prospects.some((q,j)=>j!==i&&String(q.id)===String(p.id)))p.id=`${p.id}-class${year}-slot${i}`;
+    }
+    seen.add(key);
+  }
+  return prospects;
+}
+function draftScoutingOutlook4103(ecology){
+  if(!ecology)return null;
+  const labels={GENERATIONAL:"Exceptional",STRONG:"Above average",AVERAGE:"Average",WEAK:"Below average",VERY_WEAK:"Uncertain"};
+  const tiers=["VERY_WEAK","WEAK","AVERAGE","STRONG","GENERATIONAL"];
+  const trueIndex=tiers.indexOf(ecology.tier);
+  const publicIndex=Math.max(0,Math.min(4,trueIndex+(ecology.scoutBias||0)));
+  return {assessment:labels[tiers[publicIndex]],positionalFocus:ecology.focus,
+    confidence:"Preliminary",note:"Early scouting projections may differ from eventual player development."};
+}
 function ensureUpcomingDraftClass(G){
   ensureScoutingState(G);
   const targetYear=upcomingDraftYear(G);
   if(targetYear===1)return ensureOfficial2026DraftClass(G);
   if(targetYear===2)return ensureReference2027DraftClass(G);
   if(G.upcomingDraftClass?.season===targetYear&&Array.isArray(G.upcomingDraftClass.prospects)&&G.upcomingDraftClass.prospects.length===90){
-    G.upcomingDraftClass.prospects.forEach((p,i)=>enrichDraftProspect(p,G,i));
+    G.upcomingDraftClass.prospects.forEach((p,i)=>{
+      enrichDraftProspect(p,G,i);
+      // Only fill missing metadata; do not alter established identities or ratings.
+      prospectIdentity4103(p,targetYear,i);
+    });
+    if(G.upcomingDraftClass.ecology&&!G.upcomingDraftClass.scoutingOutlook)
+      G.upcomingDraftClass.scoutingOutlook=draftScoutingOutlook4103(G.upcomingDraftClass.ecology);
     ensureOriginalDraftBoardRanks(G,G.upcomingDraftClass.prospects);
     return G.upcomingDraftClass.prospects;
   }
   const prospects=[],eraMod=talentEraModifier(G);
+  const ecology=draftEcology410(G,targetYear);
   for(let i=0;i<90;i++){
     const roll=Math.random();
     let base=roll<0.08?rand(81,86):roll<0.45?rand(74,80):rand(67,76);
@@ -19126,11 +19368,137 @@ function ensureUpcomingDraftClass(G){
     if(eraMod<0&&Math.random()<0.25)p.potential=Math.max(p.ovr,p.potential-rand(1,2));
     enrichDraftProspect(p,G,i);prospects.push(p);
   }
-  G.upcomingDraftClass={season:targetYear,generatedSeason:G.season,era:G.talentHealth?.era?.type||"NORMAL",prospects};
+  applyDraftEcology410(prospects,ecology);
+  ensureUniqueDraftIdentities4103(G,prospects,targetYear);
+  G.upcomingDraftClass={season:targetYear,generatedSeason:G.season,era:G.talentHealth?.era?.type||"NORMAL",productionClass:"410_3_CONTINUITY",ecology,
+    scoutingOutlook:draftScoutingOutlook4103(ecology),prospects};
   ensureOriginalDraftBoardRanks(G,prospects);
   // Future prospects are part of the same country-based identity model as NBA,
   // free-agent and developmental players.
   if(typeof ensureCountryBasedPlayerNames==="function")ensureCountryBasedPlayerNames();
+  return prospects;
+}
+// Build 410.10 — bounded, persistent multi-year junior prospect pathway.
+// Never replaces the official launch draft or the 2027 reference class.
+// Build 410.10.2 — annual prospect entry review. Draft year is a target,
+// not an irreversible lock; elite 18-year-olds can declare exceptionally.
+function prospectEntryYear410102(p,state){
+  const draft=upcomingDraftYear(state), age=+p.age||16;
+  const ovr=+p.ovr||60, pot=+p.potential||ovr;
+  const exceptional=age>=18&&pot>=94&&ovr>=78;
+  const high=pot>=88&&ovr>=71;
+  const earliest=draft+Math.max(0,(exceptional?18:19)-age);
+  // Normal players can stay for development; outstanding prospects advance.
+  const readiness=exceptional?draft:high?draft+Math.max(0,19-age):draft+Math.max(0,20-age);
+  return {year:Math.max(earliest,readiness),exceptional,earliest};
+}
+function reviewFutureProspectEntry410102(p,state){
+  const year=upcomingDraftYear(state), age=+p.age||16;
+  const review=prospectEntryYear410102(p,state);
+  const previous=Number.isFinite(+p.targetDraftSeason)?+p.targetDraftSeason:review.year;
+  // Don't defer eligible players beyond age 22; preserve deliberate later
+  // assignments for younger developing players unless their talent merits entry.
+  const desired=(age>=22||review.exceptional||(+p.potential>=88&&age>=19))
+    ?review.year:Math.min(previous,Math.max(review.year,year+Math.max(0,19-age)+1));
+  p.targetDraftSeason=Math.max(review.earliest,desired);
+  p.firstEligibleDraftSeason=review.earliest;
+  p.prospectStatus=p.targetDraftSeason<=year?"Eligible":review.exceptional?"Early Entry Watch":"Developing";
+  return p.targetDraftSeason<=year;
+}
+function ensureFutureProspectPathway41010(state){
+  if(!state||!state.settings?.commissionerMode)return [];
+  const current=upcomingDraftYear(state);
+  state.futureProspects=Array.isArray(state.futureProspects)?state.futureProspects:[];
+  // A future class is generated only once, then retained across career seasons.
+  for(let year=Math.max(3,current+1);year<=current+3;year++){
+    if(state.futureProspects.some(p=>+p.targetDraftSeason===year))continue;
+    for(let i=0;i<18;i++){
+      const age=Math.max(16,Math.min(20,19-(year-current)+rand(0,3)));
+      const p=normalizeProspectPotential(makePlayer({age,draftYear:year,ovr:rand(56,72),isProspect:true}));
+      p.entryPath="Junior Prospect";p.prospectPathway="Junior Prospect";
+      p.targetDraftSeason=year;p.firstEligibleDraftSeason=year;
+      p.developmentEntrySeason=state.season;p.lastJuniorDevelopmentSeason=state.season;
+      p.prospectStatus="Developing";
+      p.prospectCareerId=String(p.id);
+      state.futureProspects.push(p);
+    }
+  }
+  // Exactly one progression per elapsed season, including loaded older careers.
+  for(const p of state.futureProspects){
+    const last=Number.isFinite(+p.lastJuniorDevelopmentSeason)?+p.lastJuniorDevelopmentSeason:state.season;
+    const elapsed=Math.max(0,Math.min(50,state.season-last));
+    for(let n=0;n<elapsed;n++){
+      p.age=Math.min(45,(+p.age||16)+1);
+      const gap=Math.max(0,(+p.potential||p.ovr)-(+p.ovr||60));
+      const growth=gap>0?Math.min(gap,rand(0,2)):0;
+      p.ovr=Math.min(99,(+p.ovr||60)+growth);
+    }
+    p.lastJuniorDevelopmentSeason=state.season;
+    reviewFutureProspectEntry410102(p,state);
+  }
+  // Keep only a small rolling horizon, but never discard commissioner-edited juniors.
+  return state.futureProspects;
+}
+// Build 410.10.1 — Commissioner junior eligibility, without modifying pro career history.
+function commissionerJuniorCategory410101(p,state){
+  if(!p||!state?.settings?.commissionerMode)return null;
+  const id=String(p.id);
+  const inPool=(arr)=>Array.isArray(arr)&&arr.some(q=>String(q?.id)===id);
+  if(inPool(state.futureProspects)||inPool(state.upcomingDraftClass?.prospects)||inPool(state.draftState?.prospects)||inPool(state.draftPool))return "prospect";
+  if(inPool(state.externalProfessionals)&&!((+p.experienceYears||0)>0||(+p.professionalExperienceYears||0)>0))return "overseas-junior";
+  return null;
+}
+function deferCommissionerJunior410101(state,p){
+  const kind=commissionerJuniorCategory410101(p,state);
+  if(kind!=="prospect"||(+p.age||0)>=19)return false;
+  if(prospectEntryYear410102(p,state).exceptional)return false;
+  const year=upcomingDraftYear(state);
+  const eligible=year+Math.max(1,19-(+p.age||16));
+  p.targetDraftSeason=eligible;
+  p.firstEligibleDraftSeason=eligible;
+  reviewFutureProspectEntry410102(p,state);p.draftYear=p.targetDraftSeason;
+  p.origin="Junior Prospect";
+  p.prospectStatus="Developing";p.prospectPathway="Junior Prospect";
+  p.lastJuniorDevelopmentSeason=state.season;
+  state.futureProspects=Array.isArray(state.futureProspects)?state.futureProspects:[];
+  if(!state.futureProspects.some(x=>String(x.id)===String(p.id)))state.futureProspects.push(p);
+  for(const pool of [state.upcomingDraftClass?.prospects,state.draftState?.prospects,state.draftPool]){
+    if(!Array.isArray(pool))continue;
+    for(let i=pool.length-1;i>=0;i--)if(String(pool[i]?.id)===String(p.id))pool.splice(i,1);
+  }
+  return true;
+}
+function integrateFutureProspects41010(state,prospects){
+  if(!state?.settings?.commissionerMode||!Array.isArray(prospects))return prospects;
+  ensureFutureProspectPathway41010(state);
+  const year=upcomingDraftYear(state);
+  // Editing a current-class prospect to age 16 automatically defers draft entry.
+  for(let i=prospects.length-1;i>=0;i--){
+    const p=prospects[i];
+    if((+p.age||0)>=19)continue;
+    if(reviewFutureProspectEntry410102(p,state))continue;
+    p.targetDraftSeason=Math.max(year+1,+p.targetDraftSeason||0);
+    p.firstEligibleDraftSeason=prospectEntryYear410102(p,state).earliest;
+    p.prospectStatus="Developing";p.prospectPathway="Junior Prospect";
+    p.lastJuniorDevelopmentSeason=state.season;
+    if(!state.futureProspects.some(q=>String(q.id)===String(p.id)))state.futureProspects.push(p);
+    prospects.splice(i,1);
+  }
+  const eligible=state.futureProspects.filter(p=>reviewFutureProspectEntry410102(p,state)&&((+p.age||0)>=19||prospectEntryYear410102(p,state).exceptional));
+  const present=new Set(prospects.map(p=>String(p.id)));
+  for(const p of eligible){
+    if(present.has(String(p.id)))continue;
+    if(prospects.length>=90)prospects.pop();
+    p.entryPath="Draft Prospect";p.prospectStatus="Eligible";
+    prospects.push(p);present.add(String(p.id));
+  }
+  if(eligible.length)state.futureProspects=state.futureProspects.filter(p=>!eligible.includes(p));
+  // Restore the 90-player draft pool if underage players were deferred.
+  while(prospects.length<90){
+    const p=normalizeProspectPotential(makePlayer({age:rand(19,22),draftYear:year,ovr:rand(64,75),isProspect:true}));
+    p.entryPath="Draft Prospect";p.targetDraftSeason=year;p.firstEligibleDraftSeason=year;
+    enrichDraftProspect(p,state,prospects.length);prospects.push(p);
+  }
   return prospects;
 }
 function scoutingEstimate(p,G){
@@ -19302,7 +19670,7 @@ function initializeDraftState(G) {
     G.upcomingDraftClass=null;
     ensureUpcomingDraftClass(G);
   }
-  const liveProspects=G.upcomingDraftClass?.prospects||prospects;
+  const liveProspects=integrateFutureProspects41010(G,G.upcomingDraftClass?.prospects||prospects);
   const eraMod=talentEraModifier(G);
   let queue=[];
   if(G.season===1){
@@ -19540,6 +19908,26 @@ function advanceDraftOneControlledPick(G){
   }
   return {ok:true,entry,player:best,userPick:!!ds.pendingUserPick};
 }
+// Build 410.4 — forward-looking AI draft evaluation. Only generated future drafts
+// use this model; the established 2026 reference sequence is preserved.
+function aiDraftEvaluation4104(G,club,prospect,pickNumber,direction){
+  const ovr=+prospect.ovr||65,pot=Math.max(ovr,+prospect.potential||ovr);
+  const upside=pot-ovr,age=+prospect.age||21;
+  const primary=rosterPositionNeed(club,prospect.position||"SF");
+  const secondary=prospect.secondaryPosition?rosterPositionNeed(club,prospect.secondaryPosition):0;
+  const need=Math.max(primary,secondary*.65);
+  const young=age<=21?1:age>=24?-1:0;
+  const build=direction==="DEVELOP"?.65:direction==="CONTEND"?.18:.40;
+  const current=direction==="CONTEND"?1.05:.85;
+  // Need informs close calls; it cannot routinely eclipse an elite talent gap.
+  let score=ovr*current+pot*.44+upside*build+Math.min(7,Math.max(-3,need)*.48)+young;
+  // A low-cost, deterministic variation by pick and prospect prevents identical
+  // club evaluations while remaining stable across save/load and re-render.
+  const seed=String(prospect.prospectCareerId||prospect.id||"")+":"+String(club?.id||"")+":"+pickNumber;
+  let h=2166136261;for(let i=0;i<seed.length;i++)h=Math.imul(h^seed.charCodeAt(i),16777619);
+  score+=((h>>>0)%1000/1000-.5)*2.2;
+  return score;
+}
 function advanceDraftUntilUserDecision(G) {
   ensureExpansionEntryPreparationState(G);
   if(expansionDraftBlocksLeagueDraft(G))return false;
@@ -19559,7 +19947,9 @@ function advanceDraftUntilUserDecision(G) {
       best=G.draftPool[0];
       const direction=aiTeamDirection(club);
       for(const pr of G.draftPool){
-        const sc=needAwareScore(club,pr,{direction,ignoreContract:true});
+        const sc=G.season<=2
+          ?needAwareScore(club,pr,{direction,ignoreContract:true})
+          :aiDraftEvaluation4104(G,club,pr,entry.overallPickNum,direction);
         if(sc>bestScore){bestScore=sc;best=pr;}
       }
     }
@@ -23539,7 +23929,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 409",ENGINE_VERSION="E2.26-PROD409";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 410.10.7 · Prospect Draft-Year Integrity",ENGINE_VERSION="E2.26-PROD431";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25740,6 +26130,7 @@ function allPlayerObjectsForNaming(){
   for(const club of(G.clubs||[])){(club.roster||[]).forEach(add);(club.gLeagueRoster||[]).forEach(add);(club.twoWayRoster||[]).forEach(add)}
   (G.freeAgents||[]).forEach(add);(G.externalProfessionals||[]).forEach(add);(G.draftPool||[]).forEach(add);(G.draftState?.prospects||[]).forEach(add);
   (G.upcomingDraftClass?.prospects||[]).forEach(add);
+  (G.futureProspects||[]).forEach(add);
   // v111: retired players remain part of the permanent career record and must
   // receive the same identity repair as active players. Older saves could archive
   // a generated player before the country-name migration ran, leaving labels such
@@ -25849,16 +26240,24 @@ function archiveRetiredPlayer(G,p,club=null){
 function playerByAnyId(id){
   if(!id)return null;
   const key=String(id);
-  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[]),...(G.externalProfessionals||[]),...retiredPlayerPool(G)].find(p=>String(p.id)===key)||null;
+  return [...G.clubs.flatMap(cl=>[...(cl.roster||[]),...(cl.twoWayRoster||[]),...(cl.gLeagueRoster||[])]),...(G.freeAgents||[]),...(G.externalProfessionals||[]),...(G.draftPool||[]),...(G.draftState?.prospects||[]),...(G.upcomingDraftClass?.prospects||[]),...(G.futureProspects||[]),...retiredPlayerPool(G)].find(p=>String(p.id)===key)||null;
 }
 
 
+function commissionerDatabaseRemember41093(){
+  const search=document.getElementById("commissionerDatabaseSearch");
+  const filter=document.getElementById("commissionerDatabaseFilter");
+  const jump=document.getElementById("commissionerDatabaseJump");
+  if(!search||!filter)return;
+  ui.commissionerDatabaseView41093={query:search.value,filter:filter.value,page:Math.max(0,Number(jump?.value)||0)};
+}
 function rememberProfileReturn(){
   ui.profileReturnPage=ui.page;
   ui.profileReturnTab=ui.page==="legacyHub"?ui.archiveTab:ui.page==="team"?ui.teamTab:ui.page==="club"?ui.clubTab:ui.page==="league"?ui.leagueTab:ui.page==="international"?ui.intlTab:ui.page==="facilities"?ui.facilitiesTab:null;
   ui.profileReturnClubId=ui.page==="clubProfile"?ui.clubProfileId:null;
   ui.profileReturnPlayerId=ui.page==="playerProfile"?ui.playerProfileId:null;
   ui.profileReturnScrollY=Math.max(0,window.scrollY||document.documentElement.scrollTop||0);
+  if(ui.page==="settings"&&ui.settingsTab==="commissioner")commissionerDatabaseRemember41093();
 }
 function restoreProfileReturnScroll(y){
   const target=Math.max(0,+y||0);
@@ -26067,8 +26466,24 @@ function clubRosterGroup(p){
   if(p.position==="C")return"Centers";
   return"Forwards";
 }
+// Build 410.10.7 — one effective draft assignment for junior prospects.
+// Draft season values are internal season indices, not calendar years.
+function prospectDraftIdentity410107(p,state){
+  if(!p)return null;
+  const inFuture=!!(state?.futureProspects||[]).some(q=>String(q?.id)===String(p.id));
+  const junior=inFuture||p.prospectPathway==="Junior Prospect"||p.entryPath==="Junior Prospect";
+  if(!junior)return null;
+  const current=state?upcomingDraftYear(state):2;
+  const raw=Number(p.targetDraftSeason);
+  const target=Number.isFinite(raw)&&raw>=1?(raw>=2000?raw-2025:raw):current+Math.max(0,19-(+p.age||16));
+  const eligible=+p.age>=19||(+p.age>=18&&+p.potential>=94&&+p.ovr>=78);
+  const effective=Math.max(current,Math.round(target));
+  return {season:effective,year:gameYearForSeason(effective),junior:!eligible||effective>current,eligible};
+}
 function playerDraftLabel(p){
   if(p?.careerHistoryReset)return"N/A";
+  const juniorIdentity=prospectDraftIdentity410107(p,typeof G!=="undefined"?G:null);
+  if(juniorIdentity)return juniorIdentity.junior?"Junior Prospect":"Draft Prospect";
   if(p.historicalDraftPick)return `#${p.historicalDraftPick} · R${p.historicalDraftRound||Math.ceil(p.historicalDraftPick/30)}`;
   if(p.draftPick)return `#${p.draftPick} · R${p.draftRound||Math.ceil(p.draftPick/30)}`;
   const entry=String(p.entryPath||p.origin||"").trim();
@@ -26768,7 +27183,12 @@ function leagueHonourBreakdown(rows){
     if(leagueHonourWeight(a)<=0)continue;
     const season=String(a?.season??a?.year??"");
     const bucket=canonicalLeagueHonourBucket(a);
-    const key=`${season}|${bucket}`;
+    // Historical summaries have season 0 and may contain separate club-era
+    // championship totals (e.g. Miami 2, Cleveland 1, Los Angeles 1).
+    // Distinguish those curated rows without changing normal season deduplication.
+    const historic=!Number.isFinite(+season)||+season<=0;
+    const clubKey=historic&&bucket==="nba championship"?`|${a?.clubId||"unknown"}`:"";
+    const key=`${season}|${bucket}${clubKey}`;
     if(seen.has(key))continue;
     seen.add(key);clean.push(a);
   }
@@ -26867,6 +27287,7 @@ function playerProfileNavIcon(type){
   if(type==="squad"||type==="home")return `<svg ${common}><circle cx="9" cy="8" r="3"></circle><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path><circle cx="17" cy="9" r="2.4"></circle><path d="M15 20c.3-2.5 2-4.3 4.5-4.8"></path></svg>`;
   if(type==="schedule"||type==="fixtures")return `<svg ${common}><rect x="4" y="5" width="16" height="15" rx="2"></rect><path d="M8 3v4"></path><path d="M16 3v4"></path><path d="M4 10h16"></path></svg>`;
   if(type==="performance"||type==="standings"||type==="rankings"||type==="leaders")return `<svg ${common}><path d="M4 18V10"></path><path d="M10 18V6"></path><path d="M16 18v-5"></path><path d="M3 18h18"></path></svg>`;
+  if(type==="preview")return `<svg ${common}><circle cx="7" cy="12" r="3.5"></circle><circle cx="17" cy="12" r="3.5"></circle><path d="M10.5 12h3M3.5 11l1.5-5h4l1.5 5M13.5 11 15 6h4l1.5 5"></path></svg>`;
   if(type==="draft")return `<svg ${common}><path d="M12 3l2.6 5.3 5.9.9-4.2 4.1 1 5.8-5.3-2.8-5.3 2.8 1-5.8-4.2-4.1 5.9-.9Z"></path></svg>`;
   if(type==="contracts"||type==="transactions"||type==="frontoffice")return `<svg ${common}><path d="M7 3h8l3 3v15H7Z"></path><path d="M15 3v4h4"></path><path d="M10 11h5"></path><path d="M10 15h5"></path></svg>`;
   if(type==="freeagency")return `<svg ${common}><circle cx="12" cy="8" r="3"></circle><path d="M5 20c.8-4.2 3.1-6.3 7-6.3 2.3 0 4.1.7 5.3 2.1"></path><path d="M18 14v6M15 17h6"></path></svg>`;
@@ -26908,7 +27329,7 @@ function playerProfile(){
   const buildOptionsHtml=editing?buildOptions.map(x=>`<option value="${x.build}" ${x.build===(p.playerBuild||derivePlayerBuild(p))?"selected":""}>${x.build}</option>`).join(""):"";
   const market=typeof marketSalaryForPlayer==="function"?marketSalaryForPlayer(p):(+p.salaryM||0),teams=playerCareerTeams(p),intl=playerInternationalSummary(p),hc=playerHonourCounts(p),allTimeRanks=playerAllTimeRanks(p),peak=playerPeakSeason(p),worldLoc=playerBasketballLocation(p);
   const abilityMetric=playerProfileAbilityMetric(p);
-  const draftLabel=playerDraftLabel(p),draftSeason=p.careerHistoryReset?"N/A":p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=p.careerHistoryReset?"N/A":(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
+  const juniorDraft=prospectDraftIdentity410107(p,G),draftLabel=playerDraftLabel(p),draftSeason=juniorDraft?`${juniorDraft.year} Draft`:p.careerHistoryReset?"N/A":p.historicalDraftYear?`${p.historicalDraftYear} Draft`:p.draftYear?`${gameYearForSeason(p.draftYear)} Draft`:(draftLabel==="Undrafted"?"Undrafted":draftLabel==="Free Agent"?"Free Agent":draftLabel==="International Pro"?"International Pro":"N/A"),draftDetail=juniorDraft?(juniorDraft.junior?"Junior Prospect":"Draft Eligible"):p.careerHistoryReset?"N/A":(p.historicalDraftPick||p.draftPick)?`${draftLabel} · ${playerDraftClubName(p)}`:(draftLabel||"N/A");
   const externalLive=(!club&&(G.externalProfessionals||[]).some(x=>x.id===p.id))?ensureExternalCurrentSeasonRow(G,p):null;
   const currentDisplayStats=externalLive?.stats||s;
   const careerStints=playerCareerTimelineStints(p);
@@ -26918,7 +27339,7 @@ function playerProfile(){
     return `<div class="timelineRow"><div class="season">${careerStintYearLabel(stint)}</div><div><b>${stint.clubName||clubById(G,stint.clubId)?.name||"Club"}</b><small>${stint.gp||0} GP · ${av.ppg.toFixed(1)} PPG · ${av.rpg.toFixed(1)} RPG · ${av.apg.toFixed(1)} APG</small></div><div class="right">${right}</div></div>`;
   }).join(""):`<div class="empty">Career club history will appear as verified source data or future seasons are completed.</div>`;
   const overview=`
-    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="18" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerExperienceYears(p)}</b>`}<small>League Experience</small></div></div>
+    <div class="profileMetricGrid"><div class="profileMetric2">${editing?`<input id="epOvr" class="metricEditInput" type="number" min="40" max="99" value="${p.ovr}">`:`<b>${p.ovr}</b>`}<small>Overall</small></div><div class="profileMetric2">${editing?`<input id="epPot" class="metricEditInput" type="number" min="40" max="99" value="${p.potential??p.ovr}">`:`<b>${abilityMetric.value}</b>`}<small>${editing?"Potential":abilityMetric.label}</small></div><div class="profileMetric2">${editing?`<input id="epAge" class="metricEditInput" type="number" min="${commissionerJuniorCategory410101(p,G)?16:18}" max="45" value="${p.age}">`:`<b>${p.age}</b>`}<small>Age</small></div><div class="profileMetric2">${editing?`<input id="epExp" class="metricEditInput" type="number" min="0" max="24" value="${playerExperienceYears(p)}">`:`<b>${playerExperienceYears(p)}</b>`}<small>League Experience</small></div></div>
     <div class="draftIdentity compact3 profileDraftIdentity"><div><b>${draftSeason}</b><small>Draft Class</small></div><div><b>${draftDetail}</b><small>Entry</small></div><div><b>${teams.length}</b><small>League Clubs</small></div></div>
     ${p.retired?`<div class="sectionTitle">Career Status</div><div class="profilePanel retiredOverview"><div><small>RETIRED</small><b>Career complete</b><span>Retired in ${p.retirementSeason?basketballSeasonLabel(p.retirementSeason):"—"} at age ${p.retirementAge||p.age}</span></div><div><small>CAREER GAMES</small><b>${cs.gp||0}</b><span>${hc.total} recorded honours</span></div></div>`:""}
     <div class="profileSectionGrid" style="margin-top:10px"><div class="profilePanel playerIdentityPanel"><h4>Player Identity</h4><div class="profilePanelBody"><div class="profileDataRow"><small>Club</small><b>${club?clubNameLink(club):worldLoc.club}</b></div><div class="profileDataRow"><small>League</small><b>${worldLoc.league}</b></div><div class="profileDataRow"><small>Status</small><b>${worldLoc.status}</b></div><div class="profileDataRow"><small>Country</small>${editing?`<select id="epNation" class="inlineProfileControl">${nationOptions}</select>`:`<b>${nationDisplay(p.nationality)}</b>`}</div><div class="profileDataRow"><small>Primary Position</small>${editing?`<select id="epPos" class="inlineProfileControl">${POSITIONS.map(x=>`<option value="${x}" ${x===p.position?"selected":""}>${x}</option>`).join("")}</select>`:`<b>${p.position}</b>`}</div>${editing?`<div class="profileDataRow"><small>Secondary Position</small><select id="epPos2" class="inlineProfileControl">${secOptions}</select></div>`:`<div class="profileDataRow"><small>Position</small><b>${pos}</b></div>`}<div class="profileDataRow"><small>Height</small>${editing?`<div class="inlineNumberUnit"><input id="epHeight" class="inlineProfileControl" type="number" min="160" max="231" value="${p.heightCm||200}"><span>cm</span></div>`:`<b>${fmtHeight(p.heightCm)}</b>`}</div><div class="profileDataRow"><small>Archetype</small>${editing?`<select id="epArch" class="inlineProfileControl">${archOptions}</select>`:`<b>${p.archetype||"—"}</b>`}</div><div class="profileDataRow"><small>Player Build</small>${editing?`<div style="min-width:0"><select id="epBuild" class="inlineProfileControl">${buildOptionsHtml}</select><small class="fieldHint">Build choices are limited to this player's underlying identity.</small></div>`:`<b class="playerBuildTag">${p.playerBuild||derivePlayerBuild(p)}</b>`}</div><div class="profileDataRow"><small>Origin</small><b>${publicPlayerOriginLabel(p.origin||p.entryPath||"League")}</b></div></div></div></div>
@@ -28492,15 +28913,15 @@ function draftProspectUi(p){
 }
 function draftProspectViability(p,nextPick,rank){
   const distance=Math.abs((rank||1)-(+nextPick||1));
-  if(distance<=4)return"Likely Available";
-  if((rank||1)<(+nextPick||1)-4)return"May Be Gone";
+  if(distance<=4)return"Projected Pick Range";
+  if((rank||1)<(+nextPick||1)-4)return"High-Value Option";
   if(distance<=10)return"Viable Range";
-  return"Later Value";
+  return"Development Value";
 }
 function draftScoutRecommendations(prospects,nextPick){
   const needs=draftRosterNeeds(),needScore=Object.fromEntries(needs.map(x=>[x.pos,x.score]));
   const ranked=prospects.map((p,i)=>({...draftProspectUi(p),boardRank:i+1}));
-  const pool=ranked.filter(p=>p.boardRank<=Math.max(18,(+nextPick||8)+10));
+  const pool=ranked.filter(p=>p.boardRank<=Math.max(24,(+nextPick||8)+12));
   const scored=pool.map(p=>{
     const primary=needScore[p.position]||0,secondary=p.secondaryPosition?needScore[p.secondaryPosition]||0:0;
     const fit=primary+secondary*.45;
@@ -28730,7 +29151,7 @@ function annualPreviewSnapshot(){
 }
 function annualLeaguePreviewHtml(){
   const x=annualPreviewSnapshot();
-  if(!x)return `<div class="card"><h3>Annual League Preview</h3><p class="smallcopy">The first league preview becomes available at Preseason Readiness.</p></div>`;
+  if(!x)return `<div class="card"><h3>Season Outlook</h3><p class="smallcopy">The first league preview becomes available at Preseason Readiness.</p></div>`;
   const fmt=n=>Number.isFinite(n)?n.toFixed(1):"—";
   const total=x.total||1;
   const countryTotals=annualPreviewCountryTotals(x.nations);
@@ -28756,7 +29177,7 @@ function annualLeaguePreviewHtml(){
   const leap=x.players.filter(p=>p.delta!==null).sort((a,b)=>b.delta-a.delta)[0];
   if(leap&&leap.delta>0)stories.push(`${leap.name} improved ${leap.delta} OVR since the previous league preview.`);
   if(x.clubs.length)stories.push(`${(x.clubs[0].ovr-x.clubs[x.clubs.length-1].ovr).toFixed(1)} OVR separates the league's strongest and lowest-rated top-eight squads.`);
-  return `<div class="annualPreview"><div class="eventHero"><div class="eventHeroTop"><b>Courtside Network · Preseason Special</b><small>${basketballSeasonLabel(x.season)}</small></div><div class="eventHeroBody"><h3>Annual League Preview</h3><p>Emerging talent, projected contenders and the global makeup of the league. All figures are drawn from the current career.</p><div class="eventMetrics"><div class="eventMetric"><b>${x.clubs.length}</b><small>Clubs</small></div><div class="eventMetric"><b>${x.total}</b><small>Roster Players</small></div><div class="eventMetric"><b>${countryTotals.length}</b><small>Countries</small></div></div></div></div>
+  return `<div class="annualPreview"><div class="eventHero"><div class="eventHeroTop"><b>Courtside Network · Preseason Special</b><small>${basketballSeasonLabel(x.season)}</small></div><div class="eventHeroBody"><h3>Season Outlook</h3><p>Emerging talent, projected contenders and the global makeup of the league. All figures are drawn from the current career.</p><div class="eventMetrics"><div class="eventMetric"><b>${x.clubs.length}</b><small>Clubs</small></div><div class="eventMetric"><b>${x.total}</b><small>Roster Players</small></div><div class="eventMetric"><b>${countryTotals.length}</b><small>Countries</small></div></div></div></div>
   <div class="sectionTitle">Emerging Players · Top 20</div><div class="card"><p class="smallcopy">Players aged 26 or younger, ranked by current OVR. Year-on-year improvement breaks ties, followed by potential. “New” indicates no prior-season comparison.</p><div class="table"><table><thead><tr><th>#</th><th>PLAYER</th><th>OVR</th><th>CHANGE</th></tr></thead><tbody>${rising||'<tr><td colspan="4">No eligible players</td></tr>'}</tbody></table></div></div>
   <div class="sectionTitle">Preseason Power Rankings</div><div class="card"><p class="smallcopy">A roster-strength projection, not a predetermined season finish. Showing the top ten of ${x.clubs.length} clubs.</p>${ranks}</div>
   <div class="sectionTitle">Countries Represented</div><div class="card"><p class="smallcopy">Active standard rosters only, including expansion clubs. Country totals count players rather than games.</p>${nations}</div>
@@ -31624,6 +32045,355 @@ function commissionerSecondaryOptions(pos,current){
 // Club and national-team control, editing access and audit UI.
 // Search this heading in the Developer Reference Guide.
 // ================================================================
+// Build 410.6 — read-only master database, available only to enabled Commissioners.
+// Read-only first stage: existing profile editing remains the supported edit path.
+function commissionerDatabaseEntries(state){
+  const entries=[],seen=new Set();
+  const add=(p,club,league)=>{
+    if(!p||p.retired)return;
+    const id=String(p.id??"");if(!id||seen.has(id))return;seen.add(id);
+    entries.push({id,name:String(p.name||"Unknown"),club,league,age:p.age??"—",pos:p.pos||p.position||"—",ovr:p.ovr??"—",pot:p.potential??p.pot??"—"});
+  };
+  for(const c of state.clubs||[]){for(const p of c.roster||[])add(p,c.name,"League");for(const p of c.twoWayRoster||[])add(p,c.name,"Two-way");}
+  for(const p of state.freeAgents||[])add(p,"Free Agent","Free Agency");
+  for(const p of state.externalProfessionals||[])add(p,p.externalClubName||p.overseasTeam||p.clubName||p.teamName||"Overseas",p.externalLeague||p.leagueName||"Overseas");
+  for(const p of state.draftPool||[])add(p,"Draft Pool","Prospects");
+  for(const p of state.draftState?.prospects||[])add(p,"Draft Pool","Prospects");
+  for(const p of state.upcomingDraftClass?.prospects||[])add(p,"Upcoming Draft","Prospects");
+  if(state.settings?.commissionerMode){ensureFutureProspectPathway41010(state);for(const p of state.futureProspects||[])add(p,`${prospectDraftIdentity410107(p,state)?.year||gameYearForSeason(upcomingDraftYear(state))} Draft · ${p.prospectStatus==="Early Entry Watch"?"Early Entry Watch":"Junior Prospect"}`,"Prospects");}
+  return entries.sort((a,b)=>a.name.localeCompare(b.name));
+}
+function commissionerDatabaseHtml(state){
+  if(!state?.settings?.commissionerMode)return "";
+  const rows=commissionerDatabaseEntries(state);
+  const counts={league:rows.filter(x=>x.league==="League").length,overseas:rows.filter(x=>x.league!=="League"&&x.league!=="Free Agency"&&x.league!=="Two-way"&&x.league!=="Prospects").length};
+  return `<div class="commissionerControlCard" id="commissionerDatabaseCard">
+    <h4>Commissioner Master Database <small style="color:var(--muted)">· ${rows.length} players</small></h4>
+    <p>Search all active league, two-way, free-agent, overseas and available draft-pool players. Browse the complete player database, including generated upcoming draft prospects. Create individual players or import new players in bulk using blank IDs, with a validation preview. Team imports support name changes only; structural realignment is blocked for safety.</p>
+    <div class="dbSearchWrap" style="margin-bottom:8px"><span class="dbSearchGlyph" aria-hidden="true">⌕</span><input id="commissionerDatabaseSearch" type="search" placeholder="Search player, club, league or position" aria-label="Search commissioner database" style="background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px"><button id="commissionerDatabaseSearchClear" class="dbSearchClear" type="button" aria-label="Clear search">×</button></div>
+    <div class="dbFilterChips" id="commissionerDatabaseChips" aria-label="Filter players">${[["all","All"],["League","League"],["Two-way","Two-way"],["Free Agency","Free Agents"],["overseas","Overseas"],["Prospects","Prospects"]].map(([v,label])=>`<button type="button" class="dbFilterChip ${v==="all"?"active":""}" data-filter="${v}" aria-pressed="${v==="all"}">${label}</button>`).join("")}</div>
+    <select id="commissionerDatabaseFilter" hidden aria-hidden="true"><option value="all">All players</option><option value="League">League</option><option value="Two-way">Two-way</option><option value="Free Agency">Free agents</option><option value="overseas">Overseas</option><option value="Prospects">Prospects</option></select>
+    <div id="commissionerDatabaseCount" class="smallcopy" style="margin-bottom:8px">${rows.length} players · ${counts.league} league · ${counts.overseas} overseas</div>
+    <div class="dbActionGrid">
+      <button type="button" id="commissionerCreatePlayer" class="btn dbAction" style="grid-column:1/-1;border-color:var(--accent,#f7a638)">+ Create Player</button>
+      <button type="button" id="commissionerExportPlayers" class="btn dbAction"><span class="dbActionIcon">↓</span><span>Export Players</span></button>
+      <button type="button" id="commissionerImportToggle" class="btn dbAction" aria-expanded="false" aria-controls="commissionerImportPanel"><span class="dbActionIcon">↑</span><span>Import Players</span></button>
+      <button type="button" id="commissionerExportTeams" class="btn dbAction"><span class="dbActionIcon">↓</span><span>Export Teams</span></button>
+      <button type="button" id="commissionerImportTeamsToggle" class="btn dbAction" aria-expanded="false" aria-controls="commissionerImportTeamsPanel"><span class="dbActionIcon">↑</span><span>Import Teams</span></button>
+    </div>
+    <div id="commissionerCreateBackdrop" class="cmCreateBackdrop" hidden>
+      <section class="cmCreateModal" id="commissionerCreatePanel" role="dialog" aria-modal="true" aria-labelledby="cmCreateHeading">
+        <header class="cmCreateHeader"><div class="cmCreateHeadingGroup"><span class="cmCreateEyebrow">COMMISSIONER MODE <span class="cmCreateEyebrowDot">•</span> PLAYER DATABASE</span><h3 id="cmCreateHeading">Create Player</h3><p>Introduce a new player into your basketball world.</p></div><button type="button" id="cmNewClose" class="cmCreateClose" aria-label="Close player creation">×</button></header>
+        <div class="cmCreateBody">
+          <div class="cmCreateSection"><div class="cmCreateSectionTitle"><span class="cmCreateSectionIndex">01</span><span>PLAYER IDENTITY</span></div><div class="cmCreateGrid">
+            <label class="cmCreateField cmCreateFull"><span>Full name</span><input id="cmNewName" maxlength="90" placeholder="Enter player's full name" autocomplete="off"></label>
+            <label class="cmCreateField"><span>Age</span><input id="cmNewAge" type="number" min="16" max="45" value="19"></label>
+            <label class="cmCreateField"><span>Nationality</span><select id="cmNewCountry" aria-label="Nationality">${NATIONAL_TEAMS.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(n=>`<option value="${n.code}" ${n.code==="AUS"?"selected":""}>${flagEmoji(n.code)} ${n.name}</option>`).join("")}</select></label>
+            <label class="cmCreateField cmCreateFull"><span>Primary position</span><select id="cmNewPos"><option>PG</option><option>SG</option><option>SF</option><option>PF</option><option>C</option></select></label>
+          </div></div>
+          <div class="cmCreateSection"><div class="cmCreateSectionTitle"><span class="cmCreateSectionIndex">02</span><span>PLAYER ATTRIBUTES</span></div><div class="cmCreateGrid">
+            <label class="cmCreateField"><span>Overall rating <small>OVR</small></span><input id="cmNewOvr" type="number" min="25" max="99" value="65"></label>
+            <label class="cmCreateField"><span>Potential <small>POT</small></span><input id="cmNewPot" type="number" min="25" max="99" value="85"></label>
+          </div></div>
+          <div class="cmCreateSection"><div class="cmCreateSectionTitle"><span class="cmCreateSectionIndex">03</span><span>CAREER ENTRY</span></div><div class="cmCreateGrid">
+            <label class="cmCreateField cmCreateFull"><span>Initial destination</span><select id="cmNewDest"><option>Future Prospect</option><option>Upcoming Draft</option><option>Free Agent</option><option>Overseas</option>${(state.clubs||[]).map(c=>`<option value="club:${String(c.id).replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${String(c.name).replace(/&/g,'&amp;').replace(/</g,'&lt;')}</option>`).join("")}</select></label>
+          </div><p class="cmCreateHelp">A permanent player ID is assigned on confirmation. Junior prospects enter the future development pathway automatically.</p></div>
+          <div id="cmNewStatus" class="cmCreateStatus" aria-live="polite"></div>
+        </div>
+        <footer class="cmCreateFooter"><div class="cmCreateActions" id="cmNewFormActions"><button type="button" id="cmNewCancel" class="btn cmCreateSecondary">Cancel</button><button type="button" id="cmNewConfirm" class="btn primary cmCreatePrimary">Create Player</button></div><div class="cmCreateActions" id="cmNewSuccessActions" hidden><button type="button" id="cmNewDone" class="btn primary cmCreatePrimary">Done</button><button type="button" id="cmNewOpenProfile" class="btn cmCreateSecondary">Open Player Profile</button><button type="button" id="cmNewAnother" class="btn cmCreateSecondary">Create Another</button></div></footer>
+      </section>
+    </div>
+    <div class="dbImportBox" id="commissionerImportPanel" hidden style="margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:10px;max-width:100%;box-sizing:border-box">
+      <b>Import Edited Players CSV</b><p class="smallcopy">Use Export Players as your template. Existing IDs update players; blank IDs create players. For new rows, Club must be Future Prospect, Upcoming Draft, Free Agent, Overseas, or an exact league club name. League must be Prospects, Free Agency, Overseas or League respectively. Existing club/league assignments remain locked.</p>
+      <input type="file" id="commissionerImportPlayersFile" accept=".csv,text/csv" style="display:block;max-width:100%;margin:10px 0;color:var(--text)">
+      <div id="commissionerImportPreview" class="smallcopy" aria-live="polite">No file selected.</div>
+      <div class="dbTools" style="margin-top:10px"><button type="button" id="commissionerImportApply" class="btn primary" disabled>Confirm Player Import</button><button type="button" id="commissionerImportCancel" class="btn">Clear Preview</button></div>
+    </div>
+    <div class="dbImportBox" id="commissionerImportTeamsPanel" hidden style="margin:12px 0;padding:12px;border:1px solid var(--line);border-radius:10px;max-width:100%;box-sizing:border-box">
+      <b>Import Edited Teams CSV</b><p class="smallcopy">Use Export Teams as the template. Only Team Name can be edited. Team IDs, conferences, divisions and roster counts are locked. Structural changes are rejected to protect schedules, standings and historical results.</p>
+      <input type="file" id="commissionerImportTeamsFile" accept=".csv,text/csv" style="display:block;max-width:100%;margin:10px 0;color:var(--text)">
+      <div id="commissionerImportTeamsPreview" class="smallcopy" aria-live="polite">No file selected.</div>
+      <div class="dbTools"><button type="button" id="commissionerImportTeamsApply" class="btn primary" disabled>Confirm Team Changes</button><button type="button" id="commissionerImportTeamsCancel" class="btn">Clear Preview</button></div>
+    </div>
+    <div class="dbTableViewport" style="border:1px solid var(--line);border-radius:10px"><table style="width:100%;border-collapse:collapse;min-width:600px;font-size:12px"><thead><tr><th style="text-align:left;padding:9px">Player</th><th style="text-align:left">Club</th><th style="text-align:left">League</th><th>Age</th><th>Pos</th><th>OVR</th><th>POT</th></tr></thead><tbody id="commissionerDatabaseRows"></tbody></table></div>
+    <div class="dbPager"><button type="button" id="commissionerDatabasePrev" class="btn dbPageButton">‹ Previous</button><span id="commissionerDatabasePage" class="dbPageIndicator" aria-live="polite"></span><label class="dbPageJump">Go to <select id="commissionerDatabaseJump" aria-label="Jump to database page"></select></label><button type="button" id="commissionerDatabaseNext" class="btn dbPageButton">Next ›</button></div>
+    <p style="margin-top:10px">Select a player to open their existing Player Profile, then use the Commissioner pencil to edit. CSV import and export remain available.</p>
+  </div>`;
+}
+function commissionerDownloadCsv(filename,headers,records){
+  // Quote CSV values, guard spreadsheet formula injection, and include UTF-8 BOM for Excel.
+  const cell=value=>{let v=String(value??"");if(/^[\s]*[=+@-]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';};
+  const csv="\uFEFF"+[headers,...records].map(row=>row.map(cell).join(",")).join("\r\n");
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+// Build 410.8: CSV parser and guarded, existing-record-only Commissioner import.
+function commissionerParseCsv4108(text,customHeaders){
+  const data=String(text||"").replace(/^\uFEFF/,"");let rows=[],row=[],cell="",quoted=false;
+  for(let i=0;i<data.length;i++){
+    const c=data[i];if(quoted){if(c==='"'&&data[i+1]==='"'){cell+='"';i++}else if(c==='"')quoted=false;else cell+=c;continue}
+    if(c==='"'){if(cell)throw Error("Invalid CSV quote");quoted=true}
+    else if(c===','){row.push(cell);cell=""}
+    else if(c==='\n'||c==='\r'){if(c==='\r'&&data[i+1]==='\n')i++;row.push(cell);if(row.some(v=>v!==""))rows.push(row);row=[];cell=""}
+    else cell+=c;
+  }
+  if(quoted)throw Error("Unclosed CSV quote");row.push(cell);if(row.some(v=>v!==""))rows.push(row);
+  if(rows.length<2)throw Error("CSV must contain a header and at least one player");
+  const header=rows.shift().map(x=>x.trim());const expected=customHeaders||["Player ID","Name","Club","League","Age","Position","OVR","Potential"];
+  if(header.length!==expected.length||expected.some((h,i)=>h!==header[i]))throw Error("Use the unmodified exported CSV column headers");
+  if(rows.some(r=>r.length!==expected.length))throw Error("A CSV row has an incorrect number of columns");
+  return rows.map(r=>Object.fromEntries(expected.map((h,i)=>[h,r[i]])));
+}
+function commissionerPlayerMap4108(state){
+  const map=new Map();const add=p=>{if(!p||p.retired||p.id==null)return;const id=String(p.id);if(!map.has(id))map.set(id,p)};
+  for(const c of state.clubs||[]){(c.roster||[]).forEach(add);(c.twoWayRoster||[]).forEach(add)}
+  for(const key of ["freeAgents","externalProfessionals","draftPool"])(state[key]||[]).forEach(add);
+  (state.draftState?.prospects||[]).forEach(add);(state.upcomingDraftClass?.prospects||[]).forEach(add);(state.futureProspects||[]).forEach(add);
+  return map;
+}
+// Build 410.10.3 — common validation and destination routing for individual/CSV creation.
+function commissionerCreationCheck410103(state,data,counts){
+  const errors=[];const name=String(data.name||"").trim(),pos=String(data.pos||"").toUpperCase(),age=Number(data.age),ovr=Number(data.ovr),potential=Number(data.potential);
+  if(!name||name.length>90||/[<>\x00-\x1f]/.test(name))errors.push("invalid name");
+  if(!Number.isInteger(age)||age<16||age>45)errors.push("age must be 16–45");
+  if(!/^(PG|SG|SF|PF|C)(\/(PG|SG|SF|PF|C))?$/.test(pos)||new Set(pos.split('/')).size!==pos.split('/').length)errors.push("invalid position");
+  if(!Number.isInteger(ovr)||ovr<25||ovr>99)errors.push("OVR must be 25–99");
+  if(!Number.isInteger(potential)||potential<25||potential>99||potential<ovr)errors.push("potential must be 25–99 and at least OVR");
+  const dest=String(data.destination||"").trim();let club=null,kind="";
+  if(dest==="Future Prospect")kind="future";
+  else if(dest==="Upcoming Draft")kind="draft";
+  else if(dest==="Free Agent")kind="free";
+  else if(dest==="Overseas")kind="overseas";
+  else {club=(state.clubs||[]).find(c=>c.name===dest||`club:${c.id}`===dest);if(club)kind="club";else errors.push("unknown destination");}
+  if(kind==="draft"&&age<19&&!(age===18&&potential>=94&&ovr>=78))errors.push("underage player must enter Future Prospect");
+  if(kind==="club"&&age<18)errors.push("league roster requires age 18+");
+  if(kind==="club"){
+    const key=String(club.id),already=(club.roster||[]).length+(counts.get(key)||0);
+    if(already>=15)errors.push(`${club.name} active roster is full (15)`);
+    else counts.set(key,(counts.get(key)||0)+1);
+  }
+  // Resolve against the same canonical country codes used by Player Profile and international squads.
+  // Accept country names in CSV, but never store free-form nationality text.
+  const countryInput=String(data.nationality||"AUS").trim();
+  const nation=NATIONAL_TEAMS.find(n=>n.code.toUpperCase()===countryInput.toUpperCase()||n.name.toLocaleLowerCase()===countryInput.toLocaleLowerCase());
+  if(!nation)errors.push(`unrecognised nationality: ${countryInput||"(empty)"}`);
+  return {errors,kind,club,data:{name,age,pos,ovr,potential,nationality:nation?.code||"AUS"}};
+}
+function commissionerCreatePlayer410103(state,validated){
+  const {kind,club,data}=validated,year=upcomingDraftYear(state);
+  const p=makePlayer({age:data.age,position:data.pos.split('/')[0],ovr:data.ovr,isProspect:kind==="future"||kind==="draft",nationality:data.nationality,draftYear:year});
+  p.name=data.name;p.age=data.age;p.ovr=data.ovr;p.peakOvr=data.ovr;p.potential=data.potential;
+  p.position=data.pos.split('/')[0];p.secondaryPosition=data.pos.split('/')[1]||null;
+  if(kind==="future"){
+    p.entryPath="Junior Prospect";p.prospectPathway="Junior Prospect";p.developmentEntrySeason=state.season;p.lastJuniorDevelopmentSeason=state.season;
+    p.targetDraftSeason=Math.max(year+1,prospectEntryYear410102(p,state).year);p.draftYear=p.targetDraftSeason;p.origin="Junior Prospect";p.firstEligibleDraftSeason=prospectEntryYear410102(p,state).earliest;p.prospectStatus="Developing";
+    (state.futureProspects||(state.futureProspects=[])).push(p);
+  }else if(kind==="draft"){
+    p.entryPath="Draft Prospect";p.targetDraftSeason=year;p.firstEligibleDraftSeason=year;
+    if(state.upcomingDraftClass?.prospects)state.upcomingDraftClass.prospects.push(p);
+    else (state.draftPool||(state.draftPool=[])).push(p);
+  }else if(kind==="free"){
+    p.contractYearsLeft=0;p.contractStatus="Free Agent";p.salaryM=0;(state.freeAgents||(state.freeAgents=[])).push(p);
+  }else if(kind==="overseas"){
+    p.externalLeague="Overseas";p.externalClubName="Unassigned Overseas";p.contractYearsLeft=0;(state.externalProfessionals||(state.externalProfessionals=[])).push(p);
+  }else if(kind==="club"){
+    p.contractYearsLeft=1;p.contractType="Standard";p.salaryM=salaryForOvr(p.ovr,p.age);club.roster.push(p);
+    club.capUsed=(club.capUsed||0)+p.salaryM;
+  }
+  return p;
+}
+function commissionerValidateImport4108(state,records){
+  const original=new Map(commissionerDatabaseEntries(state).map(r=>[String(r.id),r]));
+  const players=commissionerPlayerMap4108(state),seen=new Set(),errors=[],changes=[],creations=[],counts=new Map();
+  if(records.length>10000)errors.push("Too many rows (maximum 10,000)");
+  const safeInt=(v,min,max)=>/^\d+$/.test(String(v).trim())&&+v>=min&&+v<=max;
+  for(let i=0;i<records.length;i++){
+    const r=records[i],id=String(r["Player ID"]||"").trim(),old=original.get(id),p=players.get(id),issues=[];
+    const name=String(r.Name||"").trim(),pos=String(r.Position||"").trim().toUpperCase();
+    if(!id){
+      const v=commissionerCreationCheck410103(state,{name,age:r.Age,pos,ovr:r.OVR,potential:r.Potential,destination:r.Club,nationality:r.Nationality||r.Country||"AUS"},counts);
+      issues.push(...v.errors);
+      const expected=v.kind==="club"?"League":v.kind==="free"?"Free Agency":v.kind==="overseas"?"Overseas":"Prospects";
+      if(!issues.length&&String(r.League||"").trim()!==expected)issues.push(`League must be ${expected}`);
+      if(!issues.length)creations.push(v);
+    }else{
+      if(!old||!p)issues.push("unknown player ID");
+      if(seen.has(id))issues.push("duplicate player ID");seen.add(id);
+      if(!name||name.length>90||/[<>\x00-\x1f]/.test(name))issues.push("invalid name");
+      if(!safeInt(r.Age,16,65))issues.push("age must be 16–65");
+      if(!/^(PG|SG|SF|PF|C)(\/(PG|SG|SF|PF|C))?$/.test(pos)||new Set(pos.split('/')).size!==pos.split('/').length)issues.push("invalid position");
+      if(!safeInt(r.OVR,25,99))issues.push("OVR must be 25–99");
+      if(!safeInt(r.Potential,25,99)||+r.Potential<+r.OVR)issues.push("invalid potential");
+      if(old&&(r.Club!==old.club||r.League!==old.league))issues.push("club/league columns cannot be changed for existing players");
+      if(!issues.length){const patch={name,age:+r.Age,pos,ovr:+r.OVR,potential:+r.Potential};if(Object.keys(patch).some(k=>String(p[k]??(k==="pos"?p.position:""))!==String(patch[k])))changes.push({id,player:p,before:Object.fromEntries(Object.keys(patch).map(k=>[k,p[k]])),after:patch})}
+    }
+    if(issues.length&&errors.length<25)errors.push(`Row ${i+2}: ${issues.join(', ')}`);
+  }
+  return {errors,changes,creations,records:records.length};
+}
+function bindCommissionerImport4108(refresh){
+  const file=document.getElementById("commissionerImportPlayersFile"),preview=document.getElementById("commissionerImportPreview"),apply=document.getElementById("commissionerImportApply"),clear=document.getElementById("commissionerImportCancel");
+  if(!file||!G?.settings?.commissionerMode)return;let pending=null;
+  const reset=()=>{pending=null;file.value="";apply.disabled=true;preview.textContent="No file selected."};clear.addEventListener("click",reset);
+  file.addEventListener("change",async()=>{
+    pending=null;apply.disabled=true;const selected=file.files?.[0];if(!selected)return;
+    if(selected.size>3000000){preview.textContent="File too large (3 MB maximum).";return}
+    try{const parsed=commissionerParseCsv4108(await selected.text());const result=commissionerValidateImport4108(G,parsed);
+      if(result.errors.length){preview.textContent=`Import blocked: ${result.errors.join(' | ')}`;return}
+      pending=result;preview.textContent=`Validated ${result.records} rows: ${result.changes.length} edits, ${result.creations.length} new players. Confirm to apply. Existing player IDs and team assignments remain protected.`;
+      apply.disabled=!(result.changes.length||result.creations.length);
+    }catch(e){preview.textContent=`Import blocked: ${e.message||e}`}
+  });
+  apply.addEventListener("click",async()=>{
+    if(!pending||!G?.settings?.commissionerMode)return;
+    const {changes,creations}=pending;
+    // Revalidate against live state in case roster or player data changed since preview.
+    const parsed=commissionerParseCsv4108(await file.files[0].text()),verified=commissionerValidateImport4108(G,parsed);
+    if(verified.errors.length){preview.textContent=`Import blocked: ${verified.errors.join(' | ')}`;return}
+    if(!confirm(`Apply ${changes.length} edits and create ${creations.length} new players? A pre-import CSV backup will download first.`))return;
+    const rows=commissionerDatabaseEntries(G);commissionerDownloadCsv(`Legacy_Basketball_PreImport_Backup_${Date.now()}.csv`,["Player ID","Name","Club","League","Age","Position","OVR","Potential"],rows.map(r=>[r.id,r.name,r.club,r.league,r.age,r.pos,r.ovr,r.pot]));
+    const snapshot=changes.map(x=>({player:x.player,before:{...x.before}}));
+    const arrays={freeAgents:[...(G.freeAgents||[])],externalProfessionals:[...(G.externalProfessionals||[])],futureProspects:[...(G.futureProspects||[])],draftPool:[...(G.draftPool||[])],upcoming:G.upcomingDraftClass?.prospects?[...G.upcomingDraftClass.prospects]:null,clubs:(G.clubs||[]).map(c=>({c,roster:[...(c.roster||[])],capUsed:c.capUsed}))};
+    apply.disabled=true;
+    try{
+      for(const x of changes){Object.assign(x.player,x.after);if(Object.prototype.hasOwnProperty.call(x.player,"position"))x.player.position=x.after.pos.split('/')[0];if(x.after.age<19)deferCommissionerJunior410101(G,x.player)}
+      const created=verified.creations.map(v=>commissionerCreatePlayer410103(G,v));
+      const saved=await save(true);if(!saved)throw Error("Career save was not confirmed");
+      commissionerLogAction(G,"Database CSV Import",`${changes.length} player edits; ${created.length} new players`,{edited:changes.length,created:created.length});
+      preview.textContent=`Saved ${changes.length} edits and created ${created.length} players. Pre-import backup downloaded.`;pending=null;file.value="";refresh();
+    }catch(e){for(const x of snapshot)Object.assign(x.player,x.before);for(const k of ["freeAgents","externalProfessionals","futureProspects","draftPool"])G[k]=arrays[k];if(arrays.upcoming&&G.upcomingDraftClass)G.upcomingDraftClass.prospects=arrays.upcoming;for(const x of arrays.clubs){x.c.roster=x.roster;x.c.capUsed=x.capUsed}preview.textContent=`Import rolled back: ${e.message||e}`;apply.disabled=false}
+  });
+}
+function bindCommissionerCreate410103(refresh){
+  const toggle=document.getElementById("commissionerCreatePlayer"),backdrop=document.getElementById("commissionerCreateBackdrop"),panel=document.getElementById("commissionerCreatePanel"),status=document.getElementById("cmNewStatus"),saveBtn=document.getElementById("cmNewConfirm");
+  if(!toggle||!backdrop||!G?.settings?.commissionerMode)return;
+  const formActions=document.getElementById("cmNewFormActions"),successActions=document.getElementById("cmNewSuccessActions");
+  let createdId=null,previousFocus=null;
+  const close=()=>{backdrop.hidden=true;createdId=null;status.textContent="";formActions.hidden=false;successActions.hidden=true;previousFocus?.focus?.()};
+  const open=()=>{previousFocus=document.activeElement;createdId=null;status.textContent="";formActions.hidden=false;successActions.hidden=true;backdrop.hidden=false;document.getElementById("cmNewName").focus()};
+  toggle.addEventListener("click",open);
+  document.getElementById("cmNewCancel").addEventListener("click",close);
+  document.getElementById("cmNewClose").addEventListener("click",close);
+  document.getElementById("cmNewDone").addEventListener("click",close);
+  document.getElementById("cmNewAnother").addEventListener("click",()=>{createdId=null;status.textContent="";document.getElementById("cmNewName").value="";formActions.hidden=false;successActions.hidden=true;document.getElementById("cmNewName").focus()});
+  document.getElementById("cmNewOpenProfile").addEventListener("click",()=>{if(!createdId)return;const id=createdId;close();openPlayerProfileDirect(id)});
+  backdrop.addEventListener("click",e=>{if(e.target===backdrop)close()});
+  backdrop.addEventListener("keydown",e=>{if(e.key==="Escape"){e.preventDefault();close()}if(e.key==="Tab"){const focusable=[...panel.querySelectorAll('button:not([disabled]):not([hidden]),input:not([disabled]),select:not([disabled])')].filter(x=>x.offsetParent!==null);if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+  saveBtn.addEventListener("click",async()=>{
+    const get=id=>document.getElementById(id).value;
+    const v=commissionerCreationCheck410103(G,{name:get("cmNewName"),age:get("cmNewAge"),pos:get("cmNewPos"),ovr:get("cmNewOvr"),potential:get("cmNewPot"),nationality:get("cmNewCountry"),destination:get("cmNewDest")},new Map());
+    if(v.errors.length){status.textContent=v.errors.join(" · ");return}
+    if(!confirm(`Create ${v.data.name}, age ${v.data.age}, in ${get("cmNewDest")}?`))return;
+    saveBtn.disabled=true;let created=null;
+    try{created=commissionerCreatePlayer410103(G,v);const ok=await save(true);if(!ok)throw Error("Career save not confirmed");commissionerLogAction(G,"Player Created",`${created.name} (${created.id})`,{playerId:created.id,destination:v.kind});createdId=created.id;status.textContent=`Successfully created ${created.name} · Player ID: ${created.id}.`;formActions.hidden=true;successActions.hidden=false;refresh()}
+    catch(e){if(created){for(const arr of [G.freeAgents,G.externalProfessionals,G.futureProspects,G.draftPool,G.upcomingDraftClass?.prospects,...(G.clubs||[]).map(c=>c.roster)])if(Array.isArray(arr)){const i=arr.indexOf(created);if(i>=0)arr.splice(i,1)}if(v.club)v.club.capUsed=Math.max(0,(v.club.capUsed||0)-(created.salaryM||0))}status.textContent=`Creation rolled back: ${e.message||e}`}
+    finally{saveBtn.disabled=false}
+  });
+}
+
+function bindCommissionerDatabase(){
+  const body=document.getElementById("commissionerDatabaseRows");if(!body||!G?.settings?.commissionerMode)return;
+  let rows=commissionerDatabaseEntries(G);const search=document.getElementById("commissionerDatabaseSearch"),filter=document.getElementById("commissionerDatabaseFilter"),counter=document.getElementById("commissionerDatabaseCount");
+  const prev=document.getElementById("commissionerDatabasePrev"),next=document.getElementById("commissionerDatabaseNext"),indicator=document.getElementById("commissionerDatabasePage"),jump=document.getElementById("commissionerDatabaseJump");
+  const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  let page=0;const pageSize=100;
+  const chips=document.getElementById("commissionerDatabaseChips");
+  const openDatabaseProfile=(id)=>{
+    if(!G?.settings?.commissionerMode)return;
+    const record=commissionerDatabaseEntries(G).find(x=>String(x.id)===String(id));
+    if(!record)return;
+    // The shared resolver now covers draft-pool players as well as club, FA and overseas players.
+    openPlayerProfileDirect(record.id);
+  };
+  const restored=ui.commissionerDatabaseView41093;
+  if(restored){
+    search.value=String(restored.query||"");
+    filter.value=String(restored.filter||"all");
+    page=Math.max(0,Number(restored.page)||0);
+    chips?.querySelectorAll("[data-filter]").forEach(b=>{
+      const active=b.dataset.filter===filter.value;
+      b.classList.toggle("active",active);
+      b.setAttribute("aria-pressed",String(active));
+    });
+  }
+  const paint=()=>{
+    rows=commissionerDatabaseEntries(G);
+    const q=search.value.trim().toLowerCase(),f=filter.value;
+    const matching=rows.filter(r=>(f==="all"||(f==="overseas"?!["League","Two-way","Free Agency","Prospects"].includes(r.league):r.league===f))&&(!q||[r.name,r.club,r.league,r.pos].some(v=>String(v).toLowerCase().includes(q))));
+    const pages=Math.max(1,Math.ceil(matching.length/pageSize));page=Math.max(0,Math.min(page,pages-1));
+    const from=page*pageSize,to=Math.min(from+pageSize,matching.length);
+    counter.textContent=matching.length?`Showing ${from+1}–${to} of ${matching.length} matching players (${rows.length} total)`:`No matching players (${rows.length} total)`;
+    indicator.textContent=`${page+1} / ${pages}`;if(jump){if(jump.options.length!==pages)jump.innerHTML=Array.from({length:pages},(_,i)=>`<option value="${i}">${i+1}</option>`).join("");jump.value=String(page)}prev.disabled=page===0;next.disabled=page>=pages-1;
+    body.innerHTML=matching.slice(from,to).map(r=>`<tr class="dbPlayerRow" tabindex="0" role="button" aria-label="Open player profile for ${esc(r.name)}" data-player-id="${esc(r.id)}" style="border-top:1px solid var(--line)"><td style="padding:9px"><b>${esc(r.name)}</b></td><td>${esc(r.club)}</td><td>${esc(r.league)}</td><td style="text-align:center">${esc(r.age)}</td><td style="text-align:center">${esc(r.pos)}</td><td style="text-align:center">${esc(r.ovr)}</td><td style="text-align:center">${esc(r.pot)}</td></tr>`).join("")||'<tr><td colspan="7" style="padding:16px">No matching players</td></tr>';
+  };
+  body.addEventListener("click",e=>{const row=e.target.closest("tr[data-player-id]");if(row)openDatabaseProfile(row.dataset.playerId)});
+  body.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches("tr[data-player-id]")){e.preventDefault();openDatabaseProfile(e.target.dataset.playerId)}});
+  chips?.addEventListener("click",e=>{const chip=e.target.closest("[data-filter]");if(!chip)return;filter.value=chip.dataset.filter;chips.querySelectorAll("[data-filter]").forEach(b=>{const active=b===chip;b.classList.toggle("active",active);b.setAttribute("aria-pressed",String(active))});page=0;paint()});
+  document.getElementById("commissionerDatabaseSearchClear")?.addEventListener("click",()=>{search.value="";page=0;paint();search.focus()});
+  search.addEventListener("input",()=>{page=0;paint()});filter.addEventListener("change",()=>{page=0;paint()});
+  prev.addEventListener("click",()=>{page--;paint()});next.addEventListener("click",()=>{page++;paint()});if(jump)jump.addEventListener("change",()=>{page=Number(jump.value)||0;paint()});
+  document.getElementById("commissionerExportPlayers").addEventListener("click",()=>{
+    commissionerDownloadCsv("Legacy_Basketball_Players.csv",["Player ID","Name","Club","League","Age","Position","OVR","Potential"],rows.map(r=>[r.id,r.name,r.club,r.league,r.age,r.pos,r.ovr,r.pot]));
+  });
+  document.getElementById("commissionerExportTeams").addEventListener("click",()=>{
+    const clubs=[...(G.clubs||[])].sort((a,b)=>String(a.name||"").localeCompare(String(b.name||"")));
+    commissionerDownloadCsv("Legacy_Basketball_Teams.csv",["Team ID","Team Name","Conference","Division","Active Roster","Two-Way Roster"],clubs.map(c=>[c.id,c.name,c.conference||c.conf||"",c.division||"",(c.roster||[]).length,(c.twoWayRoster||[]).length]));
+  });
+  const toggle=document.getElementById("commissionerImportToggle"),panel=document.getElementById("commissionerImportPanel");
+  if(toggle&&panel)toggle.addEventListener("click",()=>{panel.hidden=!panel.hidden;toggle.setAttribute("aria-expanded",String(!panel.hidden));toggle.classList.toggle("active",!panel.hidden)});
+  paint();
+  bindCommissionerImport4108(paint);
+  bindCommissionerCreate410103(paint);
+  bindCommissionerTeamImport41091(paint);
+}
+// Build 410.9.1: conservative team importer; no league realignment or ID creation.
+function bindCommissionerTeamImport41091(refresh){
+  const file=document.getElementById("commissionerImportTeamsFile"),preview=document.getElementById("commissionerImportTeamsPreview"),apply=document.getElementById("commissionerImportTeamsApply"),clear=document.getElementById("commissionerImportTeamsCancel"),toggle=document.getElementById("commissionerImportTeamsToggle"),panel=document.getElementById("commissionerImportTeamsPanel");
+  if(!file||!G?.settings?.commissionerMode)return;
+  let pending=null;
+  if(toggle&&panel)toggle.addEventListener("click",()=>{panel.hidden=!panel.hidden;toggle.setAttribute("aria-expanded",String(!panel.hidden));toggle.classList.toggle("active",!panel.hidden)});
+  const reset=()=>{pending=null;file.value="";apply.disabled=true;preview.textContent="No file selected."};clear.addEventListener("click",reset);
+  const headers=["Team ID","Team Name","Conference","Division","Active Roster","Two-Way Roster"];
+  file.addEventListener("change",async()=>{
+    pending=null;apply.disabled=true;const selected=file.files?.[0];if(!selected)return;
+    if(selected.size>1000000){preview.textContent="Import blocked: file exceeds 1 MB.";return}
+    try{
+      const parsed=commissionerParseCsv4108(await selected.text(),headers);
+      const clubs=G.clubs||[],byId=new Map(clubs.map(c=>[String(c.id),c])),seen=new Set(),errors=[],changes=[];
+      if(parsed.length!==clubs.length)errors.push(`Expected ${clubs.length} teams; found ${parsed.length}.`);
+      for(let i=0;i<parsed.length;i++){
+        const r=parsed[i],id=String(r["Team ID"]||"").trim(),c=byId.get(id);
+        if(!c||seen.has(id)){errors.push(`Row ${i+2}: unknown or duplicate team ID`);continue}seen.add(id);
+        if(String(r.Conference)!==String(c.conference||c.conf||"")||String(r.Division)!==String(c.division||""))errors.push(`Row ${i+2}: conference/division changes are not supported; league realignment requires a separate integrity audit.`);
+        if(String(r["Active Roster"])!==String((c.roster||[]).length)||String(r["Two-Way Roster"])!==String((c.twoWayRoster||[]).length))errors.push(`Row ${i+2}: roster counts cannot be edited.`);
+        const name=String(r["Team Name"]||"").trim();if(!name||name.length>40||/[<>\x00-\x1f]/.test(name))errors.push(`Row ${i+2}: invalid team name.`);
+        if(name&&c.name!==name)changes.push({club:c,before:c.name,after:name});
+      }
+      if(new Set(clubs.map(c=>changes.find(x=>x.club===c)?.after||c.name).map(n=>n.toLowerCase())).size!==clubs.length)errors.push("Team names must be unique.");
+      if(errors.length){preview.textContent="Import blocked: "+errors.slice(0,8).join(" | ");return}
+      pending=changes;preview.textContent=`Validated ${parsed.length} teams. ${changes.length} team name changes proposed. IDs, divisions, conferences and rosters remain unchanged.`;apply.disabled=!changes.length;
+    }catch(e){preview.textContent=`Import blocked: ${e.message||e}`}
+  });
+  apply.addEventListener("click",async()=>{
+    if(!pending||!G?.settings?.commissionerMode)return;
+    const changes=pending;if(!confirm(`Rename ${changes.length} teams? A pre-import CSV backup will download first. Division and conference changes are not supported.`))return;
+    const clubs=G.clubs||[];commissionerDownloadCsv(`Legacy_Basketball_Teams_PreImport_${Date.now()}.csv`,headers,clubs.map(c=>[c.id,c.name,c.conference||c.conf||"",c.division||"",(c.roster||[]).length,(c.twoWayRoster||[]).length]));
+    apply.disabled=true;
+    try{
+      for(const x of changes)x.club.name=x.after;
+      const saved=await save(true);if(!saved)throw Error("Career save was not confirmed");
+      commissionerLogAction(G,"Team Database CSV Import",`${changes.length} team names edited`,{count:changes.length});
+      pending=null;file.value="";preview.textContent=`Successfully saved ${changes.length} team name changes. Backup downloaded.`;refresh();
+    }catch(e){for(const x of changes)x.club.name=x.before;preview.textContent=`Import rolled back: ${e.message||e}`;apply.disabled=false}
+  });
+}
+function commissionerLogSettingsHtml(state){
+  if(!state?.settings?.commissionerMode)return "";
+  const logs=[...(state.commissionerState?.log||[])].slice().reverse();
+  const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+  return `<div class="settingsHero"><div class="eyebrow">COMMISSIONER MODE</div><h3>Commissioner Log</h3><p>Audit history of manual Commissioner actions. ${logs.length} recorded event${logs.length===1?"":"s"}.</p></div>
+    <div class="commissionerControlCard commissionerAuditCard">${logs.length?logs.map(x=>`<div class="commissionerLogRow"><b>${esc(x.action)}</b><small>${esc(x.seasonLabel||basketballSeasonLabel(x.season))} · ${esc(String(x.phase||"Career").replaceAll("_"," "))} · ${esc(x.detail)}</small></div>`).join(""):`<div class="empty">No Commissioner actions recorded yet.</div>`}</div>`;
+}
 function commissionerControlCentreHtml(state){
   if(!state?.settings?.commissionerMode)return `<div class="settingsHero"><div class="eyebrow">COMMISSIONER</div><h3>Commissioner Mode Off</h3><p>This career was created without Commissioner Mode.</p></div>`;
 
@@ -31631,7 +32401,6 @@ function commissionerControlCentreHtml(state){
   const gmId=ui.commissionerGMClubId&&clubs.some(c=>c.id===ui.commissionerGMClubId)?ui.commissionerGMClubId:(me()?.id||clubs[0]?.id);
   ui.commissionerGMClubId=gmId;
   const gmOptions=clubs.map(c=>`<option value="${c.id}" ${c.id===gmId?"selected":""}>${c.name}</option>`).join("");
-  const logs=[...(state.commissionerState?.log||[])].slice().reverse().slice(0,50);
 
   return `<div class="settingsHero">
       <div class="eyebrow">COMMISSIONER MODE</div>
@@ -31640,6 +32409,15 @@ function commissionerControlCentreHtml(state){
     </div>
 
     <div class="commissionerControlGrid">
+      <div class="commissionerControlCard">
+        <h4>Editing Access</h4>
+        <p>Use the pencil icon on any Team Profile to rename that team, or on any Player Profile to edit that player.</p>
+        <div class="settingsMiniGrid">
+          <div class="settingsMiniStat"><small>Team Editing</small><b>Team Profile ✎</b></div>
+          <div class="settingsMiniStat"><small>Player Editing</small><b>Player Profile ✎</b></div>
+        </div>
+      </div>
+      ${commissionerDatabaseHtml(state)}
       <div class="commissionerControlCard">
         <h4>GM / Team Control</h4>
         <p>Take direct control of another club while preserving your GM career record, reputation and appointment history.</p>
@@ -31654,20 +32432,9 @@ function commissionerControlCentreHtml(state){
         <div class="commissionerActions"><button id="commissionerSwitchGMNation" class="btn primary">Take Control of Nation</button></div>
       </div>
 
-      <div class="commissionerControlCard">
-        <h4>Editing Access</h4>
-        <p>Use the pencil icon on any Team Profile to rename that team, or on any Player Profile to edit that player.</p>
-        <div class="settingsMiniGrid">
-          <div class="settingsMiniStat"><small>Team Editing</small><b>Team Profile ✎</b></div>
-          <div class="settingsMiniStat"><small>Player Editing</small><b>Player Profile ✎</b></div>
-        </div>
-      </div>
 
-      <div class="commissionerControlCard">
-        <h4>Commissioner Log</h4>
-        <p>Permanent audit trail of manual Commissioner actions.</p>
-        ${logs.length?logs.map(x=>`<div class="commissionerLogRow"><b>${x.action}</b><small>${x.seasonLabel||basketballSeasonLabel(x.season)} · ${String(x.phase||"Career").replaceAll("_"," ")} · ${x.detail}</small></div>`).join(""):`<div class="empty">No Commissioner actions recorded yet.</div>`}
-      </div>
+
+
     </div>`;
 }
 
@@ -32569,11 +33336,12 @@ function gameDataSettingsContent(){
 function gameSettings(){
   ensureCareerControlState(G);
   const expansionOn=!!G.settings?.leagueExpansion,commissionerOn=!!G.settings?.commissionerMode;
-  const mode=ui.settingsTab==="data"?"data":ui.settingsTab==="commissioner"?"commissioner":"career";
-  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="career"?"active":""}" data-settingstab="career">Career Settings</button>${commissionerOn?`<button class="${mode==="commissioner"?"active":""}" data-settingstab="commissioner">Commissioner</button>`:""}<button class="${mode==="data"?"active":""}" data-settingstab="data">Game Data</button></div>`;
+  const mode=ui.settingsTab==="data"?"data":ui.settingsTab==="commissioner"&&commissionerOn?"commissioner":ui.settingsTab==="commissionerLog"&&commissionerOn?"commissionerLog":"career";
+  const tabs=`<div class="tabs subTabs gmProfileSubTabs"><button class="${mode==="career"?"active":""}" data-settingstab="career">Career Settings</button>${commissionerOn?`<button class="${mode==="commissioner"?"active":""}" data-settingstab="commissioner">Commissioner</button><button class="${mode==="commissionerLog"?"active":""}" data-settingstab="commissionerLog">Commissioner Log</button>`:""}<button class="${mode==="data"?"active":""}" data-settingstab="data">Game Data</button></div>`;
   const guideEntry="";
   if(mode==="data")return `${header("Game Settings","Game Data",false,false)}${tabs}${guideEntry}${gameDataSettingsContent()}`;
   if(mode==="commissioner")return `${header("Game Settings","Commissioner Control Centre",false,false)}${tabs}${guideEntry}${commissionerControlCentreHtml(G)}`;
+  if(mode==="commissionerLog")return `${header("Game Settings","Commissioner Audit History",false,false)}${tabs}${guideEntry}${commissionerLogSettingsHtml(G)}`;
   const expansionSummary=leagueClubCount(G)>=32
     ?"32-team league active"
     :(expansionOn?"Enabled for this career":"30-team league");
@@ -33966,7 +34734,7 @@ function writersTop50Rows(){
     const p=bySource.get(writersSourceNorm(seed.sourcePlayerName))||null;
     let live=null;
     if(p){live=writersLegacyIndexForPlayer(p,rankingMap);usedPlayers.add(p.id);}
-    rows.push({kind:p?"seed-live":"seed",seed,p,score:Math.max(seed.seedScore,live?.index||0),live});
+    rows.push({kind:p?"seed-live":"seed",seed,p,score:Math.max(seed.seedScore,Math.round((live?.index||0)*0.42)),live});
   }
   for(const p of unique){
     if(usedPlayers.has(p.id))continue;
@@ -33974,7 +34742,7 @@ function writersTop50Rows(){
     // The threshold is deliberately high enough that a player needs a genuinely
     // historic NBA career to displace a 2026 writers-ballot member.
     if(live.index<700)continue;
-    rows.push({kind:"career",p,score:live.index,live});
+    rows.push({kind:"career",p,score:Math.round(live.index*0.42),live});
   }
   return rows.sort((a,b)=>b.score-a.score||((a.seed?.seedRank||999)-(b.seed?.seedRank||999))||String(a.p?.name||a.seed?.playerName||"").localeCompare(String(b.p?.name||b.seed?.playerName||""))).slice(0,50);
 }
@@ -34680,7 +35448,7 @@ function leaguePerformancePage(){
 // Search this heading in the Developer Reference Guide.
 // ================================================================
 function league(){
-  const tabs=[["standings","Standings"],["preview","Preview"],["performance","Performance"],["cup","The Cup"],["post","Postseason"],["transactions","Transactions"],["injuries","Injuries"],["awards","Awards"]];
+  const tabs=[["standings","Standings"],["preview","Season Outlook"],["performance","Performance"],["cup","The Cup"],["post","Postseason"],["transactions","Transactions"],["injuries","Injuries"],["awards","Awards"]];
   let body=ui.leagueTab==="standings"?standings():ui.leagueTab==="preview"?annualLeaguePreviewHtml():ui.leagueTab==="performance"?leaguePerformancePage():ui.leagueTab==="cup"?nbaCupPage():ui.leagueTab==="transactions"?leagueTransactionsPage():ui.leagueTab==="leaders"?leagueRecordsPage():ui.leagueTab==="injuries"?leagueInjuries():ui.leagueTab==="awards"?awardRace():ui.leagueTab==="legacy"?leagueLegacy():ui.leagueTab==="honours"?leagueHonours():postseasonPage();
   return `<div class="leaguePageHead"><h2>League</h2><p>Standings, competitions and awards</p></div><div class="tabs compactTabRow globalLevel1Tabs iconLevel1Tabs leagueIconTabs">${tabs.map(x=>compactMenuTab(x[0],x[1],ui.leagueTab,"data-leaguetab")).join("")}</div>`+body;
 }
@@ -35649,7 +36417,7 @@ function legacyLeagueChampions(){const old=ui.leagueHistoryTab;ui.leagueHistoryT
 function legacyLeagueAwards(){const old=ui.leagueHistoryTab,oldAward=ui.leagueAwardHistoryType;ui.leagueHistoryTab="awards";if(!ui.leagueAwardHistoryType)ui.leagueAwardHistoryType="Most Valuable Player";const html=leagueLegacy();ui.leagueHistoryTab=old;ui.leagueAwardHistoryType=oldAward;return html;}
 function legacyLeagueGreats(){
   const rows=writersTop50Rows().slice(0,25);
-  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League Greats</div><h3>Basketball Writers' Top 50</h3><p>A living historical ranking. Career-era players can rise into the list as their achievements accumulate.</p></div><div class="legacyGreatsList">${rows.map((x,i)=>`<div class="legacyGreatRow"><strong>${i+1}</strong><div><b>${writersRowName(x)}</b><small>${writersRowMeta(x)} · ${writersRowEvidence(x)}</small></div><span class="legacyGreatScore">${Math.round(x.score||0)} INDEX</span></div>`).join("")}</div>`;
+  return `<div class="recordBookIntro compactArchiveIntro"><div class="eyebrow">League Greats</div><h3>Basketball Writers' Top 50</h3><p>A blended editorial ballot and career-achievement index. Historical seed positions are estimates, not complete statistical comparisons; career-era players can rise as achievements accumulate.</p></div><div class="legacyGreatsList">${rows.map((x,i)=>`<div class="legacyGreatRow"><strong>${i+1}</strong><div><b>${writersRowName(x)}</b><small>${writersRowMeta(x)} · ${writersRowEvidence(x)}</small></div><span class="legacyGreatScore">${Math.round(x.score||0)} INDEX</span></div>`).join("")}</div>`;
 }
 
 function legacyRecordValue(r,decimals=0){return r&&Number.isFinite(+r.value)?formatRecordValue(r.value,decimals):"—";}
@@ -35973,6 +36741,7 @@ function renderFailureCard(err){
   return `<div class="card" style="padding:18px"><b>This screen could not be displayed</b><p style="color:var(--muted);margin:8px 0 14px">Your career is safe. ${onHome?"You can keep playing from here.":"Return to Home to continue."}</p>${onHome?`<button id="homeMainAction" class="primaryProgress">Continue</button>`:`<button class="primaryProgress" data-go="home">Return Home</button>`}</div>`;
 }
 function bind(){
+  bindCommissionerDatabase();
   installMainActionDelegation();
   installRecruitmentReviewClick();
 
@@ -36306,7 +37075,8 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
   if($("#savePlayerEdit"))$("#savePlayerEdit").onclick=async()=>{
     const p=playerByAnyId(ui.playerProfileId),club=playerClub(p?.id);if(!p||!userCanEditPlayerProfile(p))return;
     const oldAge=+p.age,oldNation=p.nationality,oldName=p.name,oldExp=playerExperienceYears(p),oldJersey=normalizeJerseyNumber(p.jerseyNumber),lockedStatIdentity=p.statisticalIdentity?JSON.parse(JSON.stringify(p.statisticalIdentity)):null;
-    const nextAge=Math.max(18,Math.min(45,+$("#epAge").value||oldAge));
+    const juniorKind=commissionerJuniorCategory410101(p,G);
+    const nextAge=Math.max(juniorKind?16:18,Math.min(45,+$("#epAge").value||oldAge));
     const nextExp=Math.max(0,Math.min(24,Number.isFinite(+$("#epExp")?.value)?+$("#epExp").value:oldExp));
     const nextOvr=Math.max(40,Math.min(99,+$("#epOvr").value||p.ovr));
     const enteredPot=Math.max(40,Math.min(99,+$("#epPot").value||p.potential||nextOvr));
@@ -36314,7 +37084,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     const nextHeight=Math.max(160,Math.min(231,+$("#epHeight").value||p.heightCm||200));
     const nextJersey=Math.max(0,Math.min(99,Number.isFinite(+$("#epJersey")?.value)?+$("#epJersey").value:(oldJersey??0)));
 
-    if(nextAge!==oldAge&&!confirm(`Changing ${p.name}'s age from ${oldAge} to ${nextAge} will reset the player's previous career history. Current-season statistics and all seasons from this point onward will be retained. Continue?`))return;
+    if(nextAge!==oldAge&&!juniorKind&&!confirm(`Changing ${p.name}'s age from ${oldAge} to ${nextAge} will reset the player's previous career history. Current-season statistics and all seasons from this point onward will be retained. Continue?`))return;
 
     if(club){
       const jerseyConflict=[...(club.roster||[]),...(club.twoWayRoster||[])]
@@ -36371,7 +37141,8 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     p.playerBuildMappingVersion=BUILD_MAPPING_VERSION;
     if(lockedStatIdentity)p.statisticalIdentity=lockedStatIdentity;
     else assignEngineStatisticalIdentity(p);
-    if(nextAge!==oldAge)resetPlayerHistoryAfterAgeEdit(p);
+    if(nextAge!==oldAge&&!juniorKind)resetPlayerHistoryAfterAgeEdit(p);
+    if(juniorKind==="prospect")deferCommissionerJunior410101(G,p);
     if(club){
       refreshClubRotation(club);
       if(G.phase==="SUMMER_LEAGUE")syncSummerLeagueRosterForClub(G,club.id);
