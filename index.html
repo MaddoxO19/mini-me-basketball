@@ -19703,7 +19703,13 @@ function integrateExceptionalOverseas415(state,prospects){
     if(age<18||(+p.firstEligibleDraftSeason||0)>year||(+p.lastOverseasDraftReviewSeason||0)>=year)return false;
     return (age>=18&&ovr>=78&&pot>=94)||(age>=19&&(ovr>=75||pot>=90))||(age>=20&&ovr>=72);
   }).sort((a,b)=>((+b.ovr||0)+Math.max(0,(+b.potential||0)-(+b.ovr||0))*.65)-((+a.ovr||0)+Math.max(0,(+a.potential||0)-(+a.ovr||0))*.65));
-  for(const p of candidates.slice(0,12)){
+  let olderEntrants=0,veteranEntrants=0,added=0;
+  for(const p of candidates){
+    if(added>=8)break;
+    const age=+p.age||0;
+    if(age>=24&&(veteranEntrants>=1||(+p.ovr||0)<86))continue;
+    if(age>=22&&(olderEntrants>=3||(+p.ovr||0)<81))continue;
+
     if(prospects.length>=90){
       let worst=-1,score=Infinity;
       for(let i=0;i<prospects.length;i++){
@@ -19715,7 +19721,7 @@ function integrateExceptionalOverseas415(state,prospects){
     }
     p.overseasDraftCandidate415=true;p.lastOverseasDraftReviewSeason=year;
     p.targetDraftSeason=year;p.prospectStatus="Draft Eligible";
-    prospects.push(p);existing.add(String(p.id));
+    prospects.push(p);existing.add(String(p.id));added++;if(age>=22)olderEntrants++;if(age>=24)veteranEntrants++;
   }
   return prospects;
 }
@@ -24043,7 +24049,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 419",ENGINE_VERSION="E2.26-PROD440";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 420",ENGINE_VERSION="E2.26-PROD441";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -36034,7 +36040,7 @@ function internationalSquad(n,code){
     <div class="sectionTitle">National Team Depth Chart</div>${nationalDepthChartHtml(selected)}
     ${autoMode?"":`<div class="intlManualActions"><button id="resetManualSquadBtn" class="btn secondary">Reset Selection</button><button id="saveSquadBtn" class="btn primary">Save Manual Squad</button></div>`}
     <div class="intlPoolHeader"><div class="sectionTitle">Eligible Player Pool</div><span class="intlModeBadge ${autoMode?"on":""}">${autoMode?"AUTO":"MANUAL"}</span></div>
-    <div class="smallcopy intlPoolCopy">${autoMode?"Automatic selection is active. Turn it off above to edit the squad manually.":"Select 8–12 eligible players. The pool is ordered by OVR; injured or opted-out players remain unavailable."}</div>
+    <div class="smallcopy intlPoolCopy">${autoMode?"Automatic selection is active. Turn it off above to edit the squad manually.":`Select 8–12 eligible players. ${ui.natSelected.length>=12?"Squad full — remove a player to select another. ":""}The pool is ordered by OVR; injured or opted-out players remain unavailable.`}</div>
     <div class="table intlEligibleTable mobileFit ${autoMode?"autoMode":""}"><table><thead><tr><th>PLAYER</th><th>POS</th><th>OVR</th><th>IN SQUAD</th></tr></thead><tbody>${rows}</tbody></table></div>`;
 }
 function internationalFixtures(n){
@@ -37241,11 +37247,25 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
   $$('[data-draftplanning]').forEach(b=>b.onclick=()=>{ui.draftPlanningTab=b.dataset.draftplanning;render()});
   $$('[data-fa-years]').forEach(b=>b.onclick=()=>{const el=$("#faOfferYears");if(!el)return;el.value=String(Math.max(1,Math.min(4,(+el.value||1)+(+b.dataset.faYears||0))))});
   $$('[data-fa-salary]').forEach(b=>b.onclick=()=>{const el=$("#faOfferSalary");if(!el)return;el.value=(Math.max(1.2,Math.min(60,(+el.value||1.2)+(+b.dataset.faSalary||0)*0.5))).toFixed(1)});
+  // Preserve the visible profile location when an inline editor changes page height.
+  const keepPlayerProfileViewport420=(focusEditor=false)=>{
+    const target=document.querySelector(".profileHero")||document.getElementById("host");
+    if(!target)return;
+    // Re-anchor at the profile hero rather than retaining an obsolete bottom offset.
+    const y=Math.max(0,target.getBoundingClientRect().top+(window.scrollY||0)-12);
+    const apply=()=>window.scrollTo({top:y,left:0,behavior:"instant"});
+    apply();requestAnimationFrame(apply);
+    if(focusEditor)requestAnimationFrame(()=>{
+      const field=document.getElementById("epOvr");
+      // Do not autofocus: iOS Safari otherwise scrolls the entire page to the input.
+      if(field)field.setAttribute("autocomplete","off");
+    });
+  };
   if($("#editPlayerBtn"))$("#editPlayerBtn").onclick=()=>{
     const p=playerByAnyId(ui.playerProfileId);if(!p||!userCanEditPlayerProfile(p))return;
-    ui.playerEditMode=p.id;render();
+    ui.playerEditMode=p.id;render();keepPlayerProfileViewport420(true);
   };
-  if($("#cancelPlayerEdit"))$("#cancelPlayerEdit").onclick=()=>{ui.playerEditMode=null;render()};
+  if($("#cancelPlayerEdit"))$("#cancelPlayerEdit").onclick=()=>{ui.playerEditMode=null;render();keepPlayerProfileViewport420()};
   const refreshPlayerBuildChoices=()=>{
     const p=playerByAnyId(ui.playerProfileId),sel=$("#epBuild");if(!p||!sel)return;
     const pos=$("#epPos")?.value||p.position,arch=$("#epArch")?.value||p.archetype;
@@ -37364,7 +37384,7 @@ if($("#saveTeamIdentity"))$("#saveTeamIdentity").onclick=async()=>{
     if(nextExp!==oldExp)changedParts.push("experience");
     if(nextJersey!==oldJersey)changedParts.push("jersey");
     toast(changedParts.length?`Player updated · ${changedParts.join(", ")}`:"Player profile updated");
-    render();
+    render();keepPlayerProfileViewport420();
   };
   $('#openAllStarHome')?.addEventListener('click',openAllStarWindow);
   $('#openFibaHome')?.addEventListener('click',openFibaWindow);
