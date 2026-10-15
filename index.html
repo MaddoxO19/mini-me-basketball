@@ -24060,7 +24060,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 421",ENGINE_VERSION="E2.26-PROD442";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 422",ENGINE_VERSION="E2.26-PROD443";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
 const $=s=>document.querySelector(s);const $$=s=>[...document.querySelectorAll(s)];
@@ -25612,11 +25612,24 @@ function nationalFlagLabel(code,name=null,cls=""){
   const label=name||nationName(code);
   return `<span class="nationalFlagLabel ${cls}">${nationalFlagMark(code,"small")}<span>${label}</span></span>`;
 }
-const EXTRA_NATION_NAMES={RUS:"Russia",HAI:"Haiti"};
+// Display-only country resolution. Preserve stored nationality codes and save data.
+const EXTRA_NATION_NAMES={RUS:"Russia",HAI:"Haiti",NGA:"Nigeria",NGR:"Nigeria",DEU:"Germany",SVN:"Slovenia",GB:"United Kingdom",UK:"United Kingdom",NG:"Nigeria",US:"United States",AU:"Australia",NZ:"New Zealand",CA:"Canada",FR:"France",ES:"Spain",RS:"Serbia",BA:"Bosnia and Herzegovina",CM:"Cameroon",UNK:"Unknown"};
 function nationName(code){
   const raw=String(code||"").trim();
   if(!raw)return"International";
-  return NATIONAL_TEAMS.find(n=>n.code===raw)?.name||EXTRA_NATION_NAMES[raw]||raw;
+  const upper=raw.toUpperCase();
+  const direct=NATIONAL_TEAMS.find(n=>n.code===upper);
+  if(direct)return direct.name;
+  if(EXTRA_NATION_NAMES[upper])return EXTRA_NATION_NAMES[upper];
+  // Other legacy three-letter aliases are resolved through the existing flag ISO map.
+  const iso=NATIONAL_FLAG_ISO[upper];
+  if(iso){
+    const match=NATIONAL_TEAMS.find(n=>NATIONAL_FLAG_ISO[n.code]===iso);
+    if(match)return match.name;
+  }
+  // Preserve already human-readable names; never display an unknown code as a false country.
+  if(/^[a-z]{2,3}$/i.test(raw))return raw;
+  return raw;
 }
 function nationDisplay(code){return `${flagEmoji(code)} ${nationName(code)}`}
 function validArchetypesForPosition(pos){return ARCHETYPES_BY_POSITION[pos]||[]}
@@ -29228,7 +29241,7 @@ function annualPreviewNationCode(value){
   if(NATIONAL_FLAG_ISO[upper]){
     // Legacy aliases may use multiple three-letter codes for the same country.
     const iso=NATIONAL_FLAG_ISO[upper];
-    const primary=({NG:"NGA"})[iso];
+    const primary=({NG:"NGR"})[iso];
     if(primary)return primary;
     const national=(NATIONAL_TEAMS||[]).find(n=>n.code===upper);
     if(national)return upper;
@@ -29239,7 +29252,7 @@ function annualPreviewNationCode(value){
   if(iso){
     const official=(NATIONAL_TEAMS||[]).find(n=>NATIONAL_FLAG_ISO[n.code]===iso);
     if(official)return official.code;
-    const special={RU:"RUS",HT:"HAI",NG:"NGA"};
+    const special={RU:"RUS",HT:"HAI",NG:"NGR"};
     if(special[iso])return special[iso];
     return iso;
   }
