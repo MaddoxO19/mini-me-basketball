@@ -4398,11 +4398,19 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 .cmCreateModal label{min-width:0;font-size:12px}
 @media(max-width:420px){.cmCreateModal{padding:12px!important}.cmCreateBackdrop{padding:8px}}
 </style>
-</head>
+<style id="nationProfileStyles426">
+.nationProfileLink426{cursor:pointer}.nationProfileLink426:focus-visible{outline:2px solid #e8a64d;outline-offset:3px;border-radius:5px}
+.nationBackdrop426{position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.79);display:flex;align-items:center;justify-content:center;padding:16px;box-sizing:border-box}
+.nationPanel426{width:min(100%,620px);max-height:min(88dvh,850px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;background:#111821;border:1px solid #b98a41;border-radius:20px;color:#f0f2f5;box-shadow:0 20px 65px #000b;font-size:14px}
+.nationPanel426 header{position:sticky;top:0;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;background:#111821;border-bottom:1px solid #34404f;padding:18px}
+.nationPanel426 header h2{font-size:23px;line-height:1.25;margin:7px 0 4px}.nationPanel426 header p{color:#a3acba;margin:0}.nationClose426{border:1px solid #465263;background:#1a2330;color:white;border-radius:10px;width:40px;height:40px;font-size:27px;flex-shrink:0}
+.nationStats426{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:16px}.nationStats426>div{background:#18212c;border:1px solid #34404f;border-radius:12px;text-align:center;padding:12px 4px}.nationStats426 b{display:block;font-size:20px}.nationStats426 small{font-size:10px;color:#a3acba}
+.nationSquadTitle426{padding:0 17px 14px}.nationSquadTitle426 h3{font-size:18px;margin:0 0 3px}.nationSquadTitle426 small{color:#a3acba}.nationPlayerHead426,.nationPlayer426{display:grid;grid-template-columns:minmax(0,1fr) 46px 42px 12px;align-items:center;gap:8px;padding:11px 16px}.nationPlayerHead426{font-size:10px;color:#a3acba;font-weight:700;background:#0d141d}.nationPlayer426{width:100%;border:0;border-top:1px solid #2e3845;background:transparent;color:inherit;text-align:left;font:inherit;cursor:pointer}.nationPlayer426:active{background:#263243}.nationPlayer426 b{display:block;font-size:13px}.nationPlayer426 small{display:block;color:#9da7b6;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nationPlayer426 strong{color:#e9b15d}.nationEmpty426{padding:18px;color:#a3acba}
+</style></head>
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 425</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD446</span></div></div></div></section>
+<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 426</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD447</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -24099,7 +24107,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 425",ENGINE_VERSION="E2.26-PROD446";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 426",ENGINE_VERSION="E2.26-PROD447";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 try{const syncLaunchVersion=()=>{const b=document.getElementById("launchBuildVersion"),e=document.getElementById("launchEngineVersion");if(b)b.textContent=BUILD_ID;if(e)e.textContent=ENGINE_VERSION;};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",syncLaunchVersion,{once:true});else syncLaunchVersion();}catch(_e){}
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
@@ -25650,7 +25658,7 @@ function nationalFlagMark(code,cls=""){
 }
 function nationalFlagLabel(code,name=null,cls=""){
   const label=name||nationName(code);
-  return `<span class="nationalFlagLabel ${cls}">${nationalFlagMark(code,"small")}<span>${label}</span></span>`;
+  return `<span class="nationalFlagLabel ${cls} nationProfileLink426" data-nation-profile426="${escapeHtml(String(code||""))}" role="button" tabindex="0" title="View ${escapeHtml(label)} national squad">${nationalFlagMark(code,"small")}<span>${escapeHtml(label)}</span></span>`;
 }
 // Display-only country resolution. Preserve stored nationality codes and save data.
 const EXTRA_NATION_NAMES={RUS:"Russia",HAI:"Haiti",NGA:"Nigeria",NGR:"Nigeria",DEU:"Germany",SVN:"Slovenia",GB:"United Kingdom",UK:"United Kingdom",NG:"Nigeria",US:"United States",AU:"Australia",NZ:"New Zealand",CA:"Canada",FR:"France",ES:"Spain",RS:"Serbia",BA:"Bosnia and Herzegovina",CM:"Cameroon",UNK:"Unknown"};
@@ -36144,11 +36152,52 @@ function internationalWorldRankingRows(){
   }).filter(x=>x.rank<999).sort((a,b)=>a.rank-b.rank||a.name.localeCompare(b.name));
   return teams;
 }
+// Build 426: read-only, on-demand national team viewer. No roster generation or save mutation.
+function showNationalTeamProfile426(code){
+  if(!G)return;
+  const team=(G.nationalTeams||[]).find(n=>n.code===String(code||'').toUpperCase());
+  if(!team)return;
+  document.getElementById('nationProfile426')?.remove();
+  const selectedIds=(team.selectedSquadPlayerIds||[]).length?team.selectedSquadPlayerIds:(team.rosterPlayerIds||[]);
+  const byId=new Map(allPlayers(G).map(p=>[String(p.id),p]));
+  let squad=selectedIds.map(id=>byId.get(String(id))).filter(Boolean);
+  const actualSelection=squad.length>0;
+  if(!actualSelection)squad=nationalCandidates(G,team.code).slice(0,12);
+  const region={AsiaOceania:'Asia & Oceania',Americas:'Americas',Europe:'Europe',Africa:'Africa'}[team.region]||String(team.region||'International').replace(/([a-z])([A-Z])/g,'$1 $2');
+  const rank=nationalWorldRank(team.code),record=G.nationalRecords?.[team.code]||team.record||{};
+  const row=p=>{
+    const club=(G.clubs||[]).find(c=>[...(c.roster||[]),...(c.twoWayRoster||[])].some(x=>String(x.id)===String(p.id)));
+    const affiliation=club?.name||p.overseasClubName||p.externalClubName||p.clubName||p.overseasLeague||'Free Agent';
+    return `<button type="button" class="nationPlayer426" data-nation-player426="${escapeHtml(String(p.id))}"><span><b>${escapeHtml(p.name||'Unnamed Player')}</b><small>${escapeHtml(String(affiliation))}</small></span><span>${escapeHtml(String(p.pos||p.position||'—'))}</span><strong>${Math.round(+p.ovr||0)}</strong><span aria-hidden="true">›</span></button>`;
+  };
+  const el=document.createElement('div');el.id='nationProfile426';el.className='nationBackdrop426';
+  el.innerHTML=`<section class="nationPanel426" role="dialog" aria-modal="true" aria-label="${escapeHtml(team.name)} national squad"><header><div><div class="eyebrow">NATIONAL TEAM PROFILE</div><h2>${nationalFlagMark(team.code,'small')} ${escapeHtml(team.name)}</h2><p>${escapeHtml(region)}</p></div><button type="button" class="nationClose426" aria-label="Close national team profile">×</button></header><div class="nationStats426"><div><b>${rank?'#'+rank:'—'}</b><small>WORLD RANK</small></div><div><b>${(+record.w||0)}–${(+record.l||0)}</b><small>RECORD</small></div><div><b>${squad.length}</b><small>PLAYERS</small></div></div><div class="nationSquadTitle426"><h3>${actualSelection?'National Squad':'Eligible Player Pool'}</h3><small>${actualSelection?'Current recorded selection':'No squad recorded · highest-rated eligible players'}</small></div><div class="nationPlayerHead426"><span>PLAYER / CLUB</span><span>POS</span><span>OVR</span><span></span></div><div>${squad.length?squad.map(row).join(''):'<p class="nationEmpty426">No eligible players available.</p>'}</div></section>`;
+  document.body.appendChild(el);
+  const close=()=>el.remove();
+  el.addEventListener('click',e=>{
+    if(e.target===el||e.target.closest('.nationClose426')){close();return;}
+    const player=e.target.closest('[data-nation-player426]');
+    if(player){const id=player.getAttribute('data-nation-player426');close();openPlayerProfileDirect(id,e);}
+  });
+  el.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();close();}});
+  el.querySelector('.nationClose426')?.focus({preventScroll:true});
+}
+document.addEventListener('click',e=>{
+  const target=e.target.closest?.('[data-nation-profile426]');
+  if(!target)return;
+  e.preventDefault();e.stopPropagation();showNationalTeamProfile426(target.getAttribute('data-nation-profile426'));
+},true);
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Enter'&&e.key!==' ')return;
+  const target=e.target.closest?.('[data-nation-profile426]');
+  if(!target)return;
+  e.preventDefault();showNationalTeamProfile426(target.getAttribute('data-nation-profile426'));
+});
 function internationalWorldRankings(){
   const rows=internationalWorldRankingRows(),userCode=G.userNationalGM?.nationCode;
   return `<div class="intlRankingsHero"><div><div class="eyebrow">FIBA WORLD RANKINGS</div><h2>World Rankings</h2><p>${FIBA_RANKING_ENGINE_VERSION} · launch ratings seeded from the official 13 Jul 2026 FIBA table, then evolved by career results.</p></div><div class="intlRankingsTotal"><b>${rows.length}</b><small>NATIONS</small></div></div>
     <div class="intlRankingsTable"><div class="intlRankingsHead"><span>RANK</span><span>NATION</span><span>REGION</span><span>PTS</span></div>
-    ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${r.name}</b><small>#${r.regionalRank||"—"} ${r.region}${r.code===userCode?" · Your Nation":""}</small></div></div><span>${r.region}</span><b>${r.points.toFixed(1)}</b></div>`).join("")}</div>`;
+    ${rows.map(r=>`<div class="intlRankingRow ${r.code===userCode?"me":""}"><strong>#${r.rank}</strong><div class="intlRankingNation nationProfileLink426" data-nation-profile426="${escapeHtml(r.code)}" role="button" tabindex="0" title="View national squad">${nationalFlagMark(r.code,"rankingFlag")}<div><b>${escapeHtml(r.name)}</b><small>#${r.regionalRank||"—"} ${r.region}${r.code===userCode?" · Your Nation":""}</small></div></div><span>${r.region}</span><b>${r.points.toFixed(1)}</b></div>`).join("")}</div>`;
 }
 
 function intlWorldCupNavStages(){
