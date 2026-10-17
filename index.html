@@ -4443,6 +4443,19 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 #host.profileEditModal421 .playerIdentityPanel .fieldHint{font-size:10px!important;line-height:1.35}
 #host.profileEditModal421 .profileCompactActions .btn{font-size:13px!important;min-height:42px!important}
 @media(max-width:430px){.clubProfileIdentityTags{font-size:9px!important;letter-spacing:.035em!important}.profileHeroMain.hasHeroAction{gap:9px!important}.profileHeroMain.hasHeroAction .profileHeroBadge{width:60px;height:60px}.profileHeroMain.hasHeroAction .profileHeroText h2{font-size:21px}}
+
+/* Build 449 — combined rating chart, compact legend and paired statistics. */
+.dev449Legend{display:flex;gap:17px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:#d6dce6;font-weight:650}
+.dev449Legend>span{display:inline-flex;gap:7px;align-items:center}
+.dev449Line{display:inline-block;width:27px;height:0;border-top:3px solid #eaa54a;border-radius:3px}
+.dev449Line.ovr{border-top:3px dashed #6bb9dc}
+.dev449Stats{display:grid;grid-template-columns:1fr 1fr;gap:9px;border-top:1px solid #364253;padding-top:13px}
+.dev449StatGroup{min-width:0;background:#111925;border:1px solid #344052;border-radius:11px;padding:10px}
+.dev449StatGroup>strong{display:block;font-size:12px;margin-bottom:8px;color:#eaa54a}
+.dev449StatGroup>div{display:flex;flex-wrap:wrap;gap:6px 12px}
+.dev449StatGroup span{font-size:11px;color:#a8b2c0;white-space:nowrap}
+.dev449StatGroup b{color:#f0f3f8;font-size:13px}
+@media(max-width:390px){.dev449Stats{grid-template-columns:1fr}.dev449Legend{gap:10px}}
 </style><style>
 
 /* Build 410.9.3 — shared Player Profile navigation from Commissioner database */
@@ -4494,7 +4507,7 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 448</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD469</span></div></div></div></section>
+<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 449</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD470</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -13636,7 +13649,7 @@ function makeCareer() {
   }
   const launchRosterRepairs=ensureLaunchRosterTemplateIntegrity(clubs);
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
-  // Build 448: reconciliation diagnostics for new careers only.
+  // Build 449: reconciliation diagnostics for new careers only.
   // Contract references are not a second roster: missing reference names are
   // reported for review rather than silently injected into the playable world.
   const launchContractReconciliation=(()=>{
@@ -16417,7 +16430,7 @@ function ensureExternalCurrentSeasonRow(G,p){
   };
   return p.externalCurrentSeason;
 }
-// Build 448: preserve each overseas stint when a player changes employers.
+// Build 449: preserve each overseas stint when a player changes employers.
 // Progress is the fraction of the season played, not a complete season award.
 function closeExternalProfessionalStint(G,p){
   if(!G||!p)return null;
@@ -23787,7 +23800,7 @@ function addAward(G,p,award){
   const club=clubForPlayer(G,p);
   pushPlayerAwardRecord(p,{season:G.season,award,clubId:club?.id||null,clubName:club?.name||null});
 }
-// Build 448: League rookie status is based on League service, not draft entry.
+// Build 449: League rookie status is based on League service, not draft entry.
 // Overseas professional seasons count toward Pro Years, never League experience.
 function leagueRookieEligible448(G,p){
   if(!G||!p)return false;
@@ -24457,7 +24470,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 448",ENGINE_VERSION="E2.26-PROD469";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 449",ENGINE_VERSION="E2.26-PROD470";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 try{const syncLaunchVersion=()=>{const b=document.getElementById("launchBuildVersion"),e=document.getElementById("launchEngineVersion");if(b)b.textContent=BUILD_ID;if(e)e.textContent=ENGINE_VERSION;};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",syncLaunchVersion,{once:true});else syncLaunchVersion();}catch(_e){}
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
@@ -34489,32 +34502,35 @@ function squadDevelopment428(){
 }
 // Build 429 — dedicated full-width, data-grounded player development chart.
 let developmentSelected429='';
-let developmentMetric429='ovr';
+// Build 449: show both recorded ratings together, without altering progression data.
 function squadDevelopment429(){
  const club=me();if(!club)return '<div class="empty">No club selected.</div>';
  const roster=[...(club.roster||[]),...(club.twoWayRoster||[])].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
  if(!roster.length)return '<div class="dev429Empty">No roster players are available.</div>';
- let p=roster.find(x=>String(x.id)===String(developmentSelected429))||roster[0];developmentSelected429=String(p.id);
- const points=developmentHistory428(p),metric=developmentMetric429;
- const vals=points.filter(r=>metric==='ovr'||r.pot!=null).map(r=>({year:r.year,value:metric==='ovr'?r.ovr:r.pot}));
- const start=vals[0],end=vals.at(-1),peak=vals.length?Math.max(...vals.map(r=>r.value)):null;
- const fmt=n=>n==null?'—':String(n);
- const change=start&&end?end.value-start.value:null;
  const escape=x=>String(x??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+ let p=roster.find(x=>String(x.id)===String(developmentSelected429))||roster[0];developmentSelected429=String(p.id);
+ const points=developmentHistory428(p);
+ const ovr=points.filter(r=>Number.isFinite(r.ovr)),pot=points.filter(r=>Number.isFinite(r.pot));
+ const fmt=n=>n==null?'—':String(n);
  let graph='<div class="dev429Empty">Fewer than two historical ratings are available for this player. Future season records will extend the chart.</div>';
- if(vals.length>=2){
+ if(points.length>=2){
   const w=640,h=290,left=43,right=18,top=25,bottom=38;
-  const low=Math.max(0,Math.floor((Math.min(...vals.map(r=>r.value))-5)/10)*10),high=Math.min(110,Math.max(low+10,Math.ceil((Math.max(...vals.map(r=>r.value))+5)/10)*10));
-  const x=i=>left+(w-left-right)*i/Math.max(1,vals.length-1),y=v=>top+(h-top-bottom)*(high-v)/(high-low);
-  const path=vals.map((r,i)=>(i?'L':'M')+x(i).toFixed(1)+' '+y(r.value).toFixed(1)).join(' ');
+  const all=[...ovr.map(r=>r.ovr),...pot.map(r=>r.pot)];
+  const low=Math.max(0,Math.floor((Math.min(...all)-5)/10)*10),high=Math.min(110,Math.max(low+10,Math.ceil((Math.max(...all)+5)/10)*10));
+  const x=year=>left+(w-left-right)*(year-points[0].year)/Math.max(1,points.at(-1).year-points[0].year);
+  const y=v=>top+(h-top-bottom)*(high-v)/(high-low);
+  const path=(rows,key)=>rows.map((r,i)=>(i?'L':'M')+x(r.year).toFixed(1)+' '+y(r[key]).toFixed(1)).join(' ');
   const grid=Array.from({length:5},(_,i)=>{const v=low+(high-low)*i/4,yy=y(v);return `<line x1="${left}" y1="${yy}" x2="${w-right}" y2="${yy}" stroke="#344052" stroke-dasharray="4 5"/><text x="${left-9}" y="${yy+4}" text-anchor="end" fill="#a8b2c0" font-size="12">${Math.round(v)}</text>`}).join('');
-  const labels=vals.map((r,i)=>`<text x="${x(i)}" y="${h-11}" text-anchor="middle" fill="#a8b2c0" font-size="${vals.length>10?9:12}">${vals.length>12?String(r.year).slice(-2):r.year}</text>`).join('');
-  graph=`<svg viewBox="0 0 ${w} ${h}" class="dev429Graph" role="img" aria-label="${escape(p.name)} ${metric==='ovr'?'overall':'potential'} rating progression"><g>${grid}</g><path d="${path} L${x(vals.length-1)} ${h-bottom} L${x(0)} ${h-bottom} Z" fill="#eaa54a" fill-opacity=".1"/><path d="${path}" fill="none" stroke="#eaa54a" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round"/>${vals.map((r,i)=>`<circle cx="${x(i)}" cy="${y(r.value)}" r="4.5" fill="#eaa54a"><title>${r.year}: ${r.value}</title></circle>`).join('')}${labels}</svg>`;
+  const labels=points.map(r=>`<text x="${x(r.year)}" y="${h-11}" text-anchor="middle" fill="#a8b2c0" font-size="${points.length>10?9:12}">${points.length>12?String(r.year).slice(-2):r.year}</text>`).join('');
+  const series=(rows,key,color,dash)=>rows.length<2?'':`<path d="${path(rows,key)}" fill="none" stroke="${color}" stroke-width="3.5" ${dash?'stroke-dasharray="5 7"':''} stroke-linejoin="round" stroke-linecap="round"/>`;
+  const dots=(rows,key,color)=>rows.map(r=>`<circle cx="${x(r.year)}" cy="${y(r[key])}" r="4" fill="${color}"><title>${r.year}: ${r[key]}</title></circle>`).join('');
+  graph=`<svg viewBox="0 0 ${w} ${h}" class="dev429Graph" role="img" aria-label="${escape(p.name)} potential solid line and overall rating dotted line"><g>${grid}</g>${series(pot,'pot','#eaa54a',false)}${series(ovr,'ovr','#6bb9dc',true)}${dots(pot,'pot','#eaa54a')}${dots(ovr,'ovr','#6bb9dc')}${labels}</svg>`;
  }
- return `<section class="dev429Page"><div class="dev429Header"><div class="eyebrow">SQUAD / DEVELOPMENT</div><h2>Career Progression</h2><p>${escape(club.name)} · Recorded player ratings</p></div><div class="dev429Controls"><label for="dev429Player">SELECT PLAYER</label><select id="dev429Player">${roster.map(r=>`<option value="${escape(r.id)}" ${String(r.id)===String(p.id)?'selected':''}>${escape(r.name)} · ${escape(positionLabel(r))}</option>`).join('')}</select><div class="dev429Metric" role="group" aria-label="Rating metric"><button type="button" data-dev429-metric="ovr" class="${metric==='ovr'?'active':''}">Overall Rating</button><button type="button" data-dev429-metric="pot" class="${metric==='pot'?'active':''}">Potential</button></div></div><div class="dev429Panel"><div class="dev429ChartHeading"><div><small>${metric==='ovr'?'OVERALL RATING':'POTENTIAL'} · CAREER HISTORY</small><div class="dev429Current">${fmt(end?.value)} <span class="${change>0?'up':change<0?'down':''}">${change==null?'':(change>0?'+':'')+change+' since '+start.year}</span></div></div><span class="dev429Meta">${escape(positionLabel(p))} · Age ${p.age}</span></div>${graph}<div class="dev429Stats"><div><small>FIRST RECORDED</small><b>${fmt(start?.value)}</b><span>${start?.year||'—'}</span></div><div><small>RECORDED PEAK</small><b>${fmt(peak)}</b></div><div><small>CURRENT</small><b>${fmt(end?.value)}</b><span>${end?.year||'—'}</span></div></div></div><p class="dev429Footnote">Only recorded historical ratings are plotted. Earlier seasons without snapshots are not estimated.</p></section>`;
+ const stats=(rows,key,title)=>{const first=rows[0],end=rows.at(-1),peak=rows.length?Math.max(...rows.map(r=>r[key])):null;return `<div class="dev449StatGroup"><strong>${title}</strong><div><span>First <b>${fmt(first?.[key])}</b></span><span>Peak <b>${fmt(peak)}</b></span><span>Current <b>${fmt(end?.[key])}</b></span></div></div>`};
+ return `<section class="dev429Page"><div class="dev429Header"><div class="eyebrow">SQUAD / DEVELOPMENT</div><h2>Career Progression</h2><p>${escape(club.name)} · Recorded player ratings</p></div><div class="dev429Controls"><label for="dev429Player">SELECT PLAYER</label><select id="dev429Player">${roster.map(r=>`<option value="${escape(r.id)}" ${String(r.id)===String(p.id)?'selected':''}>${escape(r.name)} · ${escape(positionLabel(r))}</option>`).join('')}</select></div><div class="dev429Panel"><div class="dev429ChartHeading"><div><small>PLAYER DEVELOPMENT · CAREER HISTORY</small><div class="dev449Legend"><span><i class="dev449Line pot"></i>Potential</span><span><i class="dev449Line ovr"></i>Overall Rating</span></div></div><span class="dev429Meta">${escape(positionLabel(p))} · Age ${p.age}</span></div>${graph}<div class="dev449Stats">${stats(ovr,'ovr','Overall Rating')}${stats(pot,'pot','Potential')}</div></div><p class="dev429Footnote">Only recorded historical ratings are plotted. Earlier seasons without snapshots are not estimated.</p></section>`;
 }
 document.addEventListener('change',e=>{if(e.target?.id==='dev429Player'){developmentSelected429=e.target.value;render();}});
-document.addEventListener('click',e=>{const b=e.target.closest('[data-dev429-metric]');if(b){developmentMetric429=b.dataset.dev429Metric;render();}});
+
 function squadNav428(){return `<nav class="dev428Nav" aria-label="Squad sections"><button type="button" data-dev428-view="roster" class="${squadDevelopmentView428==='roster'?'active':''}">Roster & Depth</button><button type="button" data-dev428-view="development" class="${squadDevelopmentView428==='development'?'active':''}">Development ↗</button></nav>`;}
 function squad(){
   const club=me();
@@ -38043,7 +38059,7 @@ if($("#resetExtensionAsk"))$("#resetExtensionAsk").onclick=()=>{
   const p=playerByAnyId(ui.extTargetId);if(!p)return;
   const d=extensionDemand(p,2);$("#extYears").value=String(d.years);$("#extSalary").value=d.annualM.toFixed(1);
 };
-$$('[data-ext-years]').forEach(b=>b.onclick=()=>{const el=$("#extYears");if(!el)return;el.value=String(Math.max(1,Math.min(4,(+el.value||1)+(+b.dataset.extYears||0))))});
+$$('[data-ext-years]').forEach(b=>b.onclick=()=>{const el=$("#extYears");if(!el)return;el.value=String(Math.max(1,Math.min(Number(el.max)||4,(+el.value||1)+(+b.dataset.extYears||0))))});
 $$('[data-ext-salary]').forEach(b=>b.onclick=()=>{const el=$("#extSalary");if(!el)return;el.value=Math.max(1.2,Math.min(65,(+el.value||1.2)+(+b.dataset.extSalary||0))).toFixed(1)});
 if($("#submitExtension"))$("#submitExtension").onclick=()=>{
   const id=ui.extTargetId,p=playerByAnyId(id),years=+$("#extYears").value,salary=+$("#extSalary").value;
