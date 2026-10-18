@@ -4444,7 +4444,7 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 #host.profileEditModal421 .profileCompactActions .btn{font-size:13px!important;min-height:42px!important}
 @media(max-width:430px){.clubProfileIdentityTags{font-size:9px!important;letter-spacing:.035em!important}.profileHeroMain.hasHeroAction{gap:9px!important}.profileHeroMain.hasHeroAction .profileHeroBadge{width:60px;height:60px}.profileHeroMain.hasHeroAction .profileHeroText h2{font-size:21px}}
 
-/* Build 449 — combined rating chart, compact legend and paired statistics. */
+/* Build 450 — combined rating chart, compact legend and paired statistics. */
 .dev449Legend{display:flex;gap:17px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:#d6dce6;font-weight:650}
 .dev449Legend>span{display:inline-flex;gap:7px;align-items:center}
 .dev449Line{display:inline-block;width:27px;height:0;border-top:3px solid #eaa54a;border-radius:3px}
@@ -4456,6 +4456,16 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 .dev449StatGroup span{font-size:11px;color:#a8b2c0;white-space:nowrap}
 .dev449StatGroup b{color:#f0f3f8;font-size:13px}
 @media(max-width:390px){.dev449Stats{grid-template-columns:1fr}.dev449Legend{gap:10px}}
+
+/* Build 450 — compact Play-In qualifiers, long names wrap inside their own card. */
+.playInResultsHome .playInQualifierGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-items:stretch}
+.playInResultsHome .playInQualifier{min-width:0;padding:10px 9px;border-radius:12px}
+.playInResultsHome .playInQualifier>small{font-size:10px;letter-spacing:.035em;line-height:1.3;margin-bottom:8px;overflow-wrap:anywhere}
+.playInResultsHome .playInQualifiedTeam{display:grid;grid-template-columns:25px minmax(0,1fr);align-items:start;gap:5px;margin:0;padding:6px 0;font-size:12px!important;line-height:1.3!important;font-weight:750;min-width:0}
+.playInResultsHome .playInQualifiedTeam+.playInQualifiedTeam{border-top:1px solid var(--line)}
+.playInResultsHome .playInQualifiedTeam .playInSeed{display:block;margin:0;color:var(--accent2);font-size:11px;white-space:nowrap}
+.playInResultsHome .playInQualifiedTeam .playInTeamName{display:block;margin:0;min-width:0;overflow-wrap:anywhere;color:var(--text)}
+@media(max-width:360px){.playInResultsHome .playInQualifierGrid{grid-template-columns:1fr}}
 </style><style>
 
 /* Build 410.9.3 — shared Player Profile navigation from Commissioner database */
@@ -4507,7 +4517,7 @@ html.profileEditOpen421,html.profileEditOpen421 body{overscroll-behavior:none!im
 <body>
 <div class="app">
 <section id="landing" class="screen active"><div class="center"><div class="brand footballLaunch seriesLaunch"><div class="launchEyebrow">H³O INTERACTIVE PRESENTS</div><h1>LEGACY BASKETBALL</h1><div class="launchRule" aria-hidden="true"></div><div class="launchTagline">Build the Team. Shape the Legacy.</div><div class="launchWorld">A basketball world that grows with every season.</div><button id="newBtn" class="btn primary">NEW CAREER</button><button id="resumeBtn" class="btn secondary" style="display:none">RESUME CAREER</button><button id="loadBtn" class="btn secondary">LOAD CAREER</button><div id="landingSaveCount" class="landingSaveCount"></div>
-<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 449</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD470</span></div></div></div></section>
+<div class="launchBuildId"><span id="launchBuildVersion">v0.9.0 Stable · Build 450</span> <span class="launchEngine" id="launchEngineVersion">E2.26-PROD471</span></div></div></div></section>
 <div id="gameGuideOverlay" role="dialog" aria-modal="true" aria-label="Game Guide" hidden><div class="guideTop"><strong>Game Guide</strong><button id="closeGameGuide" type="button" aria-label="Close Game Guide">×</button></div><div class="guideScroll"><div class="guideEyebrow">H³O Interactive</div><h2 class="guideHeadline">Build the Team. Shape the Legacy.</h2><p class="guideMuted">A quick reference for your basketball GM career.</p><div class="guideIntroCard"><b>Your Career as General Manager</b><p class="guideMuted">Lead a franchise, build a championship roster and create a lasting legacy in club and international basketball.</p></div><div class="guideEyebrow">Find Your Way</div><div class="guideNavGrid"><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11L12 3l9 8"/><path d="M5 10v10a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1V10"/></svg></span><b>Home</b></div><span class="guideNavDescription">Fixtures, results and season progression.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.5"/><path d="M15 20c.3-2.6 2-4.5 4.5-4.9"/></svg></span><b>Squad</b></div><span class="guideNavDescription">Players, rotations, contracts and development.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg></span><b>Club</b></div><span class="guideNavDescription">Facilities and franchise management.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v4a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 5"/><path d="M17 6h3a3 3 0 0 1-3 5"/></svg></span><b>League</b></div><span class="guideNavDescription">Standings, Draft and competitions.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.5 4 5.7 4 9s-1.5 6.5-4 9c-2.5-2.5-4-5.7-4-9s1.5-6.5 4-9z"/></svg></span><b>Intl</b></div><span class="guideNavDescription">National squads and world tournaments.</span></div><div class="guideNavItem"><div class="guideNavTitle"><span class="guideNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M10 3v7l2-1.4 2 1.4V3"/></svg></span><b>Legacy</b></div><span class="guideNavDescription">Records, history and honours.</span></div></div><div class="guideEyebrow">The Basics</div><div class="guideBasics"><div class="guideBasicRow"><b>Build</b><span>Manage up to 15 standard-roster players and 3 two-way contracts.</span></div><div class="guideBasicRow"><b>Compete</b><span>Play the regular season, The Cup and postseason.</span></div><div class="guideBasicRow"><b>Develop</b><span>Scout, draft and develop future stars.</span></div><div class="guideBasicRow"><b>Represent</b><span>Optionally manage a national team alongside your club.</span></div><div class="guideBasicRow"><b>Achieve</b><span>Win titles, earn honours and build your GM reputation.</span></div></div></div></div>
 <section id="saveManager" class="screen"><div class="saveWrap"><div class="saveHead"><button id="saveBack" class="back">‹</button><div class="saveTitle"><div class="eyebrow" id="saveModeLabel">Career Saves</div><h2 id="saveModeTitle">Career Saves</h2></div></div><div id="saveSlotList" class="saveSlots"></div></div></section>
 <section id="seasonTransition" class="screen"><div class="seasonTransitionWrap"><div class="seasonTransitionCard"><div class="eyebrow">NEW SEASON</div><h2 id="seasonTransitionTitle">Preparing Next Season</h2><p>Updating the league, rosters and career history for the new season.</p><div class="seasonTransitionProgress"><i id="seasonTransitionBar"></i></div><div class="seasonTransitionStatus"><b id="seasonTransitionStatus">Preparing league</b><span id="seasonTransitionPercent">0%</span></div><div id="seasonTransitionTasks" class="seasonTransitionTasks" aria-hidden="true"></div></div></div></section>
@@ -13649,7 +13659,7 @@ function makeCareer() {
   }
   const launchRosterRepairs=ensureLaunchRosterTemplateIntegrity(clubs);
   const launchRosterAudit=launchRosterIntegrityAudit(clubs);
-  // Build 449: reconciliation diagnostics for new careers only.
+  // Build 450: reconciliation diagnostics for new careers only.
   // Contract references are not a second roster: missing reference names are
   // reported for review rather than silently injected into the playable world.
   const launchContractReconciliation=(()=>{
@@ -15104,7 +15114,7 @@ function awardVotingPopupHtml(n){
     const rows=keys.map(key=>{
       const vote=G.awardVoting?.[`S${n.season}_${key}`],player=awardPlayerById(G,vote?.winnerId);
       const club=player?clubForPlayer(G,player):null,st=player?.seasonStats,gp=Math.max(1,+st?.gp||1);
-      const line=st?`${((+st.pts||0)/gp).toFixed(1)} PPG · ${((+st.reb||0)/gp).toFixed(1)} RPG · ${((+st.ast||0)/gp).toFixed(1)} APG`:"";
+      const line=st?(key==="DPOY"?`${((+st.blk||0)/gp).toFixed(1)} BPG · ${((+st.stl||0)/gp).toFixed(1)} SPG · ${((+st.reb||0)/gp).toFixed(1)} RPG`:`${((+st.pts||0)/gp).toFixed(1)} PPG · ${((+st.reb||0)/gp).toFixed(1)} RPG · ${((+st.ast||0)/gp).toFixed(1)} APG`):"";
       return `<div class="more"><div><small style="color:var(--accent2)">${awardVoteLabel(key)}</small><b>${player?.name||"—"}</b><small>${club?.name||""} · ${line}</small></div></div>`;
     }).join("");
     return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard"><div class="awardVoteTop"><div class="newsFlashHead"><div><small>COURTSIDE NETWORK</small><b>LEAGUE AWARDS</b></div></div><div class="awardVoteKicker">${basketballSeasonLabel(n.season)} · MEDIA VOTING RESULTS</div><h3>Season Awards</h3><p>Official award winners determined by the simulated media panel.</p></div><div style="padding:4px 17px;max-height:57vh;overflow:auto">${rows}</div><div class="awardVoteFoot"><div class="newsFlashActions"><button id="awardResultsNext">Continue</button><button id="openAwardResultsNews">Open News</button></div></div></div></div>`;
@@ -15112,7 +15122,7 @@ function awardVotingPopupHtml(n){
   const keys=n.awardKeys||["MVP","ROY","DPOY","SixthMan","MIP"],idx=clampAward(+n.index||0,0,Math.max(0,keys.length-1)),key=keys[idx];
   const vote=G.awardVoting?.[`S${n.season}_${key}`];if(!vote)return"";
   const winner=awardPlayerById(G,vote.winnerId),club=winner?clubForPlayer(G,winner):null,s=winner?.seasonStats,gp=Math.max(1,+s?.gp||1);
-  const statLine=winner&&s?(key==="DPOY"?`${(s.reb/gp).toFixed(1)} RPG · ${(s.stl/gp).toFixed(1)} SPG · ${(s.blk/gp).toFixed(1)} BPG`:`${(s.pts/gp).toFixed(1)} PPG · ${(s.reb/gp).toFixed(1)} RPG · ${(s.ast/gp).toFixed(1)} APG`):"";
+  const statLine=winner&&s?(key==="DPOY"?`${(s.blk/gp).toFixed(1)} BPG · ${(s.stl/gp).toFixed(1)} SPG · ${(s.reb/gp).toFixed(1)} RPG`:`${(s.pts/gp).toFixed(1)} PPG · ${(s.reb/gp).toFixed(1)} RPG · ${(s.ast/gp).toFixed(1)} APG`):"";
   const rows=(vote.results||[]).map((r,i)=>{const p=awardPlayerById(G,r.playerId),cl=p?clubForPlayer(G,p):null;return `<tr class="${i===0?"winner":""}"><td><b>${p?.name||"Player"}</b><small>${cl?.name||""}</small></td><td>${r.first}</td><td>${r.second}</td><td>${r.third}</td><td>${r.fourth}</td><td>${r.fifth}</td><td>${r.points}</td></tr>`;}).join("");
   const last=idx>=keys.length-1;
   return `<div class="newsFlashOverlay"><div class="newsFlashCard awardVoteCard">
@@ -16430,7 +16440,7 @@ function ensureExternalCurrentSeasonRow(G,p){
   };
   return p.externalCurrentSeason;
 }
-// Build 449: preserve each overseas stint when a player changes employers.
+// Build 450: preserve each overseas stint when a player changes employers.
 // Progress is the fraction of the season played, not a complete season award.
 function closeExternalProfessionalStint(G,p){
   if(!G||!p)return null;
@@ -19047,7 +19057,7 @@ function retirementReviewHtml(){
   const r=G.retirementReviewPending;
   if(!r||r.acknowledged||r.season!==G.season||!r.total)return"";
   const notable=(r.snapshots||[]).filter(x=>x.tier!=="Retirement");
-  const shown=(notable.length?notable:(r.snapshots||[])).slice(0,5);
+  const shown=notable.slice(0,5);
   const other=Math.max(0,r.total-shown.length);
   return `<div class="retirementReview retirementReviewCompact">
     <div class="retirementReviewHead">
@@ -19055,14 +19065,14 @@ function retirementReviewHtml(){
       <h2>Professional Basketball Retirements</h2>
       <p>${r.total} player${r.total===1?"":"s"} retired · ${r.notableCount} notable career${r.notableCount===1?"":"s"}</p>
     </div>
-    <div class="retirementCards">${shown.map(x=>`<div class="retirementCard">
+    <div class="retirementCards">${!shown.length?`<div class="empty">No notable careers to report this offseason.</div>`:""}${shown.map(x=>`<div class="retirementCard">
       <div class="retirementCardTop"><div><h3>${x.name}</h3><p>${x.position} · ${retirementAffiliationLabel(x)}</p></div><span class="retirementAge">Age ${x.age}</span></div>
       <div class="retirementCareerLine">
         <div class="retirementCareerStats"><span>${x.proYears??x.seasons} Pro Years</span><strong>${(+x.points||0).toLocaleString()} League PTS</strong>${x.externalPoints?`<span>${(+x.externalPoints||0).toLocaleString()} Overseas PTS</span>`:""}</div>
         ${retirementHonoursSummary(x)?`<div class="retirementHonours">${retirementHonoursSummary(x)}</div>`:""}
       </div>
     </div>`).join("")}</div>
-    ${other?`<p class="retirementOther">${other} additional player${other===1?"":"s"} retired this offseason.</p>`:""}
+    ${other?`<p class="retirementOther">${other} other player${other===1?"":"s"} retired this offseason.</p>`:""}
     <div class="retirementReviewActions"><button id="continueRetirementReview">Continue to Draft Night</button></div>
   </div>`;
 }
@@ -21260,29 +21270,60 @@ function advanceSummerLeagueFinalFour(G){
   return {ok:false,reason:"Unknown Summer League Final Four stage"};
 }
 
+// Build 450: reconstruct the Summer League award ballot from played box scores.
+// A participant transferred/released after playing remains eligible for that competition.
+function summerLeagueRecordedAwardCandidates(G){
+  const live=G?.summerLeagueLive;
+  const lookup=summerLeaguePlayerIndex(G);
+  const totals=new Map();
+  for(const game of live?.games||[]){
+    for(const side of ["home","away"]){
+      for(const line of game?.boxScore?.[side]||[]){
+        if(!line?.playerId)continue;
+        const id=line.playerId;
+        const record=totals.get(id)||{gp:0,min:0,pts:0,reb:0,ast:0,stl:0,blk:0,tov:0,plusMinus:0};
+        record.gp++;
+        for(const k of ["min","pts","reb","ast","stl","blk","tov","plusMinus"])
+          record[k]+=(+line[k]||0);
+        totals.set(id,record);
+      }
+    }
+  }
+  const candidates=[];
+  for(const [id,stats] of totals){
+    const player=lookup.get(id);
+    if(!player||!summerLeagueAwardEligible(G,player))continue;
+    candidates.push({player,stats,score:summerPerformanceScore(stats)});
+  }
+  return candidates.sort((a,b)=>b.score-a.score||b.stats.gp-a.stats.gp);
+}
 function finalizeSummerLeagueLive(G){
   const live=G.summerLeagueLive;if(!live||live.complete)return;
   live.complete=true; summerLeagueSnapshot(G);
-  const liveParticipantIds=new Set((live.teams||[]).flatMap(t=>t.playerIds||[]));
-  const liveParticipantPool=[
-    ...G.clubs.flatMap(c=>[...(c.roster||[]),...(c.twoWayRoster||[]),...(c.gLeagueRoster||[])]),
-    ...(G.freeAgents||[]),
-    ...(live.invitees||[])
-  ].filter((p,i,a)=>p&&a.findIndex(x=>x.id===p.id)===i);
-  const participants=liveParticipantPool.filter(p=>liveParticipantIds.has(p.id)&&p.summerLeagueStats?.gp>0&&summerLeagueAwardEligible(G,p));
-  const ranked=[...participants].sort((a,b)=>summerPerformanceScore(b.summerLeagueStats)-summerPerformanceScore(a.summerLeagueStats));
+  const awardCandidates=summerLeagueRecordedAwardCandidates(G);
+  const ranked=awardCandidates.map(x=>x.player);
+  const participants=ranked;
   const mvp=ranked[0]||null,first=[];
   for(const pos of POSITIONS){const p=ranked.find(x=>canPlayPosition(x,pos)&&!first.includes(x));if(p)first.push(p);}
   for(const p of ranked){if(first.length>=5)break;if(!first.includes(p))first.push(p);}
   const second=ranked.filter(p=>!first.includes(p)).slice(0,5);
   if(mvp)pushPlayerAwardRecord(mvp,{season:G.season,award:"Summer League MVP"});for(const p of first)pushPlayerAwardRecord(p,{season:G.season,award:"All-Summer First Team"});for(const p of second)pushPlayerAwardRecord(p,{season:G.season,award:"All-Summer Second Team"});
   const contracted=participants.filter(p=>p.draftYear===G.season||p.draftYear===G.season-1);
-  const vals=contracted.map(p=>summerPerformanceScore(p.summerLeagueStats)).filter(Number.isFinite).sort((a,b)=>a-b);
+  const candidateStats=new Map(awardCandidates.map(x=>[x.player.id,x.stats]));
+  const vals=contracted.map(p=>summerPerformanceScore(candidateStats.get(p.id))).filter(Number.isFinite).sort((a,b)=>a-b);
   const lo=vals.length?vals[Math.floor(vals.length*.2)]:0,hi=vals.length?vals[Math.floor(vals.length*.75)]:0,development=[];
-  for(const p of contracted){const perf=summerPerformanceScore(p.summerLeagueStats);let n=perf>=hi?1:perf<=lo?-1:0;if(perf>=hi&&p.potential>=85&&Math.random()<.35)n=2;if(n>0){const cap=typeof developmentCeilingFor==="function"?developmentCeilingFor(p):p.potential;n=Math.max(0,Math.min(n,cap-p.ovr));}p.ovr=Math.max(35,Math.min(99,p.ovr+n));p.peakOvr=Math.max(+p.peakOvr||0,p.ovr);development.push({playerId:p.id,nudge:n,performanceScore:Math.round(perf*10)/10});}
+  for(const p of contracted){const perf=summerPerformanceScore(candidateStats.get(p.id));let n=perf>=hi?1:perf<=lo?-1:0;if(perf>=hi&&p.potential>=85&&Math.random()<.35)n=2;if(n>0){const cap=typeof developmentCeilingFor==="function"?developmentCeilingFor(p):p.potential;n=Math.max(0,Math.min(n,cap-p.ovr));}p.ovr=Math.max(35,Math.min(99,p.ovr+n));p.peakOvr=Math.max(+p.peakOvr||0,p.ovr);development.push({playerId:p.id,nudge:n,performanceScore:Math.round(perf*10)/10});}
   Object.assign(G.summerLeague,{mvpPlayerId:mvp?.id||null,allSummerFirstTeam:first.map(p=>p.id),allSummerSecondTeam:second.map(p=>p.id),development,complete:true});
   G.awards[`S${G.season}_SummerLeagueMVP`]=mvp?.id||null;G.awards[`S${G.season}_AllSummerFirstTeam`]=first.map(p=>p.id);G.awards[`S${G.season}_AllSummerSecondTeam`]=second.map(p=>p.id);
   summerLeagueSnapshot(G);
+  // Snapshot overwrites its own leaders: restore the authoritative played-game ballot.
+  G.summerLeague.leaders=awardCandidates.slice(0,15).map(({player:p,stats,score})=>({
+    playerId:p.id,name:p.name,position:p.position,gp:stats.gp,
+    ppg:Math.round(stats.pts/stats.gp*10)/10,rpg:Math.round(stats.reb/stats.gp*10)/10,
+    apg:Math.round(stats.ast/stats.gp*10)/10,performanceScore:Math.round(score*10)/10
+  }));
+  G.summerLeagueAwardIntegrity={season:G.season,recordedCandidates:awardCandidates.length,
+    missingMvp:!!(live.games||[]).length&&!mvp?.id};
   logEvent(G,`Summer League complete: ${live.games.length} games, MVP ${mvp?.name||"n/a"}.`);
   G.phase="SUMMER_LEAGUE_COMPLETE";
 }
@@ -22723,10 +22764,13 @@ function threePointContestRoundScore(p,G){
 function dunkContestDunkScore(p,G,roundIndex=1,dunkIndex=1){
   const prof=dunkContestProfile(p,G);
   const merit=Math.max(0,Math.min(100,+prof?.score||70));
-  const difficulty=Math.max(-1.2,Math.min(1.8,(merit-78)*.045+rand(-1,1)*.35+(roundIndex===2?.18:0)+(dunkIndex===2?.08:0)));
+  // Ability affects difficulty, but does not also give every judge a full merit bonus.
+  // Shared execution variance makes a brilliant or missed dunk consequential on the night.
+  const difficulty=Math.max(-.6,Math.min(1.1,(merit-78)*.022+rand(-.55,.55)+(roundIndex===2?.12:0)));
+  const execution=rand(-1.25,1.25);
   const judges=[];
   for(let j=0;j<5;j++){
-    const raw=7.4+(merit-70)*.055+difficulty+rand(-1,1)*.45;
+    const raw=8.1+(merit-75)*.020+difficulty+execution+rand(-.7,.7);
     judges.push(Math.max(6,Math.min(10,Math.round(raw))));
   }
   return{judges,score:judges.reduce((a,b)=>a+b,0),maxScore:50};
@@ -22772,14 +22816,14 @@ function simulateAllStarContest(G,kind){
   const finals=qualifying.filter(x=>finalistIds.has(x.playerId)).map(x=>{
     const p=lookup.get(x.playerId),round2=dunkContestRoundScore(p,G,2);
     return{...x,round2:round2.score,round2Dunks:round2.dunks,total:x.round1+round2.score};
-  }).sort((a,b)=>b.total-a.total||b.round2-a.round2||b.round1-a.round1||b.tieBreak-a.tieBreak);
+  }).sort((a,b)=>b.round2-a.round2||b.total-a.total||b.round1-a.round1||b.tieBreak-a.tieBreak);
   const nonFinalists=qualifying.filter(x=>!finalistIds.has(x.playerId)).sort((a,b)=>b.round1-a.round1||b.tieBreak-a.tieBreak).map(x=>({...x,round2:null,total:x.round1}));
   const scores=[...finals,...nonFinalists].map((x,i)=>({...x,score:x.total,place:i+1}));
   return{
     kind,formatVersion:"DUNK-5J-2D-R2-2",maxRoundScore:100,maxTotalScore:200,advancers:4,
     scores,qualifying,finals,
     winnerPlayerId:finals[0]?.playerId||null,winnerName:finals[0]?.name||"—",
-    winningScore:finals[0]?.total||0
+    winningScore:finals[0]?.round2||0
   };
 }
 function advanceAllStarEvent(G){
@@ -23800,7 +23844,7 @@ function addAward(G,p,award){
   const club=clubForPlayer(G,p);
   pushPlayerAwardRecord(p,{season:G.season,award,clubId:club?.id||null,clubName:club?.name||null});
 }
-// Build 449: League rookie status is based on League service, not draft entry.
+// Build 450: League rookie status is based on League service, not draft entry.
 // Overseas professional seasons count toward Pro Years, never League experience.
 function leagueRookieEligible448(G,p){
   if(!G||!p)return false;
@@ -24470,7 +24514,7 @@ if (typeof module !== "undefined") {
 // Build 313 — GM ballot Auto Pick and Draft Lottery Auto Reveal quality-of-life controls.
 // Build 312 — Generational Builds 2.1: preserves all 15 identities, adds Power Point Forward and Scoring Apex naming, and uses position + archetype + Player Build for generated-player assignment.
 // Build 311 — replaces redundant Home Squad OVR with competitive H2H record and normalises Play-In recap result typography.
-const BUILD_ID="v0.9.0 Stable · Build 449",ENGINE_VERSION="E2.26-PROD470";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
+const BUILD_ID="v0.9.0 Stable · Build 450",ENGINE_VERSION="E2.26-PROD471";console.info("Legacy Basketball",BUILD_ID,"Engine",ENGINE_VERSION);
 try{const syncLaunchVersion=()=>{const b=document.getElementById("launchBuildVersion"),e=document.getElementById("launchEngineVersion");if(b)b.textContent=BUILD_ID;if(e)e.textContent=ENGINE_VERSION;};if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",syncLaunchVersion,{once:true});else syncLaunchVersion();}catch(_e){}
 
 const LEGACY_SAVE_KEY="MMB_UI_BUILD_1",SAVE_DB="MiniMeBasketballSaves",SAVE_STORE="careers",SAVE_META_STORE="careerMeta",SAVE_DB_VERSION=3,MAX_SAVES=3;let G=null,activeSlot=null,saveMode="load";let ui={page:"home",gmProfileTab:"profile",gmHistoryTab:"club",settingsTab:"career",commissionerGMClubId:null,teamTab:"squad",clubTab:"current",clubRecordMode:"overview",clubHistoryMode:"franchise",h2hOpponentId:null,facilitiesTab:"overview",leagueTab:"standings",leaguePerformanceMode:"impact",leagueRecordMode:"overview",leagueHistoryTab:"overview",leagueAwardHistoryType:"Most Valuable Player",archiveTab:"records",archiveScope:"club",leagueTransactionFilter:"all",leagueTransactionLimit:24,standingsView:"conference",postseasonStage:"bracket",postConference:"East",postSeriesId:null,intlTab:"home",intlRecordMode:"career",debug:false,tradePartner:null,tradeOut:null,tradeIn:null,tradeEval:null,natSelected:null,natCode:null,boxSide:"home",newsFilter:"all",resultGameId:null,postUpdate:null,playerProfileId:null,clubProfileId:null,playerProfileTab:"overview",playerCareerSplit:"current",profileReturnPage:"team",profileReturnTab:"squad",profileReturnClubId:null,profileReturnPlayerId:null,profileReturnScrollY:0,scheduleFilter:"all",intlRegionFilter:"ALL",intlGroupFilter:null,recruitmentReview:null,faTargetId:null,faFeedback:null,faBandFilter:"all",faPosFilter:"all",faSearch:"",faSource:"all",extTargetId:null,extFeedback:null,tradeView:"builder",tradeFinderGroup:"Auto",tradeCounter:null,twoWayPathFilter:"all",twoWayPosFilter:"all",postSeriesCelebrationId:null};let setup={step:1,name:"",team:"BOS",conf:"East",nation:null,cap:true,inj:true,expansion:false,commissioner:false,previewCareer:null};
@@ -28651,7 +28695,7 @@ function playInResultsRecapHtml(){
 
   const qualifier=(conf,obj)=>{
     const s7=obj?.seed7?c(obj.seed7):null,s8=obj?.seed8?c(obj.seed8):null;
-    return `<div class="playInQualifier"><small>${conf.toUpperCase()} · PLAYOFF QUALIFIERS</small><div class="playInQualifiedTeam">#7 ${s7?.name||"—"}</div><div class="playInQualifiedTeam">#8 ${s8?.name||"—"}</div></div>`;
+    return `<div class="playInQualifier"><small>${conf.toUpperCase()} · PLAYOFF QUALIFIERS</small><div class="playInQualifiedTeam"><span class="playInSeed">#7</span><span class="playInTeamName">${s7?.name||"—"}</span></div><div class="playInQualifiedTeam"><span class="playInSeed">#8</span><span class="playInTeamName">${s8?.name||"—"}</span></div></div>`;
   };
 
   return `<div class="postseasonHome playInResultsHome">
@@ -34502,7 +34546,7 @@ function squadDevelopment428(){
 }
 // Build 429 — dedicated full-width, data-grounded player development chart.
 let developmentSelected429='';
-// Build 449: show both recorded ratings together, without altering progression data.
+// Build 450: show both recorded ratings together, without altering progression data.
 function squadDevelopment429(){
  const club=me();if(!club)return '<div class="empty">No club selected.</div>';
  const roster=[...(club.roster||[]),...(club.twoWayRoster||[])].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||'')));
